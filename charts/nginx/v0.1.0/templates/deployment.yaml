@@ -25,9 +25,3 @@ spec:
             - name: https
               containerPort: 80
               protocol: TCP
-          volumeMounts:
-            - name: data
-              mountPath: /data
-      volumes:
-        - name: data
-          emptyDir: {}
