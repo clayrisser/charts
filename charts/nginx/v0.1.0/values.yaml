@@ -1,0 +1,4 @@
+image:
+  repository: docker.io/drone/drone
+  tag: 1.15.3
+  pullPolicy: IfNotPresent
