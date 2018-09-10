@@ -8,7 +8,21 @@ ingress:
   hosts: []
 
 service:
-  type: LoadBalancer
+  type: NodePort
+  externalTrafficPolicy: Cluster
   nodePorts:
     http: ''
-    https: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

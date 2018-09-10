@@ -39,11 +39,3 @@ questions:
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
         label: 'http port'
-      - variable: service.nodePorts.https
-        default: ''
-        description: 'NodePort https port (to set explicitly, choose port between 30000-32767)'
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false&&service.type=NodePort
-        label: 'https port'

@@ -21,3 +21,13 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+{{ toYaml .Values.probes.readiness | indent 12 }}
