@@ -9,7 +9,6 @@ ingress:
 
 service:
   type: LoadBalancer
-  externalTrafficPolicy: Local
   nodePorts:
     http: ''
     https: ''
