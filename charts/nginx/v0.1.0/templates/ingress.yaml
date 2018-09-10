@@ -3,12 +3,12 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "nginx.fullname" . }}
+  name: {{ template "nginx.fullname" $ }}
   labels:
-    app: {{ template "nginx.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app: {{ template "nginx.name" $ }}
+    chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
 spec:
   rules:
     - host: {{ .name }}
@@ -16,7 +16,7 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: {{ template "nginx.fullname" . }}
+              serviceName: {{ template "nginx.fullname" $ }}
               servicePort: 80
 ---
 {{- end }}
