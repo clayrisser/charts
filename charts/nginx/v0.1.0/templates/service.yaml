@@ -8,8 +8,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: NodePort
-  externalTrafficPolicy: Cluster
+  type: LoadBalancer
+  externalTrafficPolicy: Local
   ports:
     - name: http
       port: 80
