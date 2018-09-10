@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta1
+kind: Service
+metadata:
+  name: {{ template "nginx.fullname" . }}
+  labels:
+    app: {{ template "nginx.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app: {{ template "nginx.name" . }}
+    release: {{ .Release.Name }}
