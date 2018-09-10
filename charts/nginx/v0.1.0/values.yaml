@@ -1,4 +1,4 @@
 image:
-  repository: docker.io/_/nginx
+  repository: _/nginx
   tag: latest
   pullPolicy: IfNotPresent
