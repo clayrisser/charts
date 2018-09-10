@@ -2,3 +2,14 @@ image:
   repository: nginx
   tag: latest
   pullPolicy: IfNotPresent
+
+ingress:
+  enabled: false
+  hosts: []
+
+service:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  nodePorts:
+    http: ''
+    https: ''
