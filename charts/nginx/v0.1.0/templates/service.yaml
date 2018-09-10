@@ -15,5 +15,4 @@ spec:
       port: 80
       targetPort: http
   selector:
-    app: {{ template "nginx.name" . }}
-    release: {{ .Release.Name }}
+    app: {{ template "nginx.fullname" . }}
