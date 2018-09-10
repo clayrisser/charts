@@ -37,7 +37,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false&&serviceType=NodePort
+        show_if: ingress.enabled=false&&service.type=NodePort
         label: 'http port'
       - variable: service.nodePorts.https
         default: ''
@@ -45,5 +45,5 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false&&serviceType=NodePort
+        show_if: ingress.enabled=false&&service.type=NodePort
         label: 'https port'
