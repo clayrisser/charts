@@ -31,3 +31,14 @@ spec:
               path: /
               port: http
 {{ toYaml .Values.probes.readiness | indent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "nginx.fullname" .) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end -}}

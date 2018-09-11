@@ -24,5 +24,5 @@ spec:
       nodePort: {{ .Values.service.nodePorts.http }}
       {{- end }}
   selector:
-    app: {{ template "taiga.name" . }}-back
+    app: {{ template "taiga.name" . }}
     release: {{ .Release.Name }}

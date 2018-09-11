@@ -7,6 +7,11 @@ ingress:
   enabled: false
   hosts: []
 
+persistence:
+  enabled: false
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
 service:
   type: NodePort
   externalTrafficPolicy: Cluster
