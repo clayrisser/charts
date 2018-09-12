@@ -1,27 +1,26 @@
 categories:
   - Server
 questions:
-
 # Persistence
-- variable: persistence.enabled
-  default: false
-  description: 'enable persistent volume'
-  type: boolean
-  required: true
-  label: 'persistent volume enabled'
-  show_subquestion_if: true
-  group: Persistence
-  subquestions:
-  - variable: persistence.size
-    default: 1Gi
-    description: 'persistent volume size'
-    type: string
-    label: 'volume size'
-  - variable: persistence.storageClass
-    default: ''
-    description: 'if undefined or null, uses the default storageclass. default to null'
-    type: storageclass
-    label: 'default storageclass'
+  - variable: persistence.enabled
+    default: false
+    description: 'enable persistent volume'
+    type: boolean
+    required: true
+    label: 'persistent volume enabled'
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: 'persistent volume size'
+        type: string
+        label: 'volume size'
+      - variable: persistence.storageClass
+        default: ''
+        description: 'if undefined or null, uses the default storageclass. default to null'
+        type: storageclass
+        label: 'default storageclass'
 
 # Services and Load Balancing
   - variable: ingress.enabled
