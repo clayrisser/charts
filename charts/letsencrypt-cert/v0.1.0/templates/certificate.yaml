@@ -7,9 +7,7 @@ spec:
   issuerRef:
     name: {{ .Values.issuer.name }}
     kind: {{ .Values.issuer.kind }}
-  commonName: '*.{{ .Values.domain }}'
-  domains:
-    - {{ .Values.domain }}
+  commonName: '{{ .Values.domain }}'
   acme:
     config:
     - http01:
