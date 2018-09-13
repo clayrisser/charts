@@ -13,7 +13,7 @@ questions:
   - variable: domains
     description: 'domains to secure with letsencrypt'
     default: '{}'
-    type: array
+    type: array/list
     required: true
     label: domains
     group: Certificates
