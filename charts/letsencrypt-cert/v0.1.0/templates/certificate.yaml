@@ -10,7 +10,7 @@ spec:
   commonName: {{ .Values.domains[0] }}
   dnsNames:
     {{- range $index, $domain := .Values.domains }}
-    {{- (if (ne $index 0)) }}
+    {{- if (ne $index 0) }}
     - {{ $domain }}
     {{- end }}
     {{- end }}

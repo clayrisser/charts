@@ -1,5 +1,5 @@
 issuer:
-  name: some-issuer-ref
+  name: ''
   kind: ClusterIssuer
 
 domains: []
