@@ -12,38 +12,38 @@ questions:
     group: Issuer
 
 # Domains
-- variable: domains.domain0
-  description: 'domain to secure with letsencrypt'
-  default: ''
-  type: string
-  required: true
-  label: domain
-  group: Domains
-- variable: domains.domain1
-  description: 'domain to secure with letsencrypt'
-  default: ''
-  type: string
-  required: false
-  label: domain
-  group: Domains
-- variable: domains.domain2
-  description: 'domain to secure with letsencrypt'
-  default: ''
-  type: string
-  required: false
-  label: domain
-  group: Domains
-- variable: domains.domain3
-  description: 'domain to secure with letsencrypt'
-  default: ''
-  type: string
-  required: false
-  label: domain
-  group: Domains
-- variable: domains.domain4
-  description: 'domain to secure with letsencrypt'
-  default: ''
-  type: string
-  required: false
-  label: domain
-  group: Domains
+  - variable: domains.domain0
+    description: 'domain to secure with letsencrypt'
+    default: ''
+    type: string
+    required: true
+    label: domain
+    group: Domains
+  - variable: domains.domain1
+    description: 'domain to secure with letsencrypt'
+    default: ''
+    type: string
+    required: false
+    label: domain
+    group: Domains
+  - variable: domains.domain2
+    description: 'domain to secure with letsencrypt'
+    default: ''
+    type: string
+    required: false
+    label: domain
+    group: Domains
+  - variable: domains.domain3
+    description: 'domain to secure with letsencrypt'
+    default: ''
+    type: string
+    required: false
+    label: domain
+    group: Domains
+  - variable: domains.domain4
+    description: 'domain to secure with letsencrypt'
+    default: ''
+    type: string
+    required: false
+    label: domain
+    group: Domains
