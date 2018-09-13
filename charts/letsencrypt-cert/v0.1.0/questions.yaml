@@ -10,3 +10,12 @@ questions:
     required: true
     label: domain
     group: Settings
+  - variable: issuer.name
+    default: letsencrypt-staging
+    description: 'letsencrypt issuer environment'
+    type: enum
+    options:
+      - letsencrypt-staging
+      - letsencrypt-prod
+    required: true
+    label: issuer
