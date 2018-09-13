@@ -1,6 +1,6 @@
 name: letsencrypt-cert
 home: https://letsencrypt.org
-icon: https://avatars0.githubusercontent.com/u/9289019?s=200&v=4
+icon: 'https://avatars0.githubusercontent.com/u/9289019?s=200&v=4'
 version: 0.1.0
 appVersion: 1.15.3
 description: |
@@ -13,7 +13,7 @@ keywords:
   - wildcard
 sources:
   - https://letsencrypt.org
-  - https://www.youtube.com/watch?v=xc8Jg9ItDVk
+  - 'https://www.youtube.com/watch?v=xc8Jg9ItDVk'
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
