@@ -13,4 +13,4 @@ spec:
     - http01:
         ingressClass: nginx
       domains:
-        - {{ .Values.domain }}
+        - '{{ .Values.domain }}'
