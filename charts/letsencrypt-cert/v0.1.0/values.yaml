@@ -3,5 +3,3 @@ issuer:
   kind: ClusterIssuer
 
 domain: ''
-
-namespace: ''

@@ -3,13 +3,6 @@ categories:
 questions:
 
 # Settings
-  - variable: namespace
-    default: ''
-    description: 'namespace to install the certificate'
-    type: string
-    required: true
-    label: namespace
-    group: Settings
   - variable: domain
     default: ''
     description: 'domain name to create wildcard and standard certificate'
