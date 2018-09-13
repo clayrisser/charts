@@ -2,4 +2,9 @@ issuer:
   name: ''
   kind: ClusterIssuer
 
-domains: []
+domains:
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''

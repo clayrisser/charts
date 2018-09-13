@@ -1,24 +1,43 @@
-# apiVersion: certmanager.k8s.io/v1alpha1
-# kind: Certificate
-# metadata:
-#   name: {{ template "letsencrypt-cert.fullname" . }}
-# spec:
-#   secretName: {{ template "letsencrypt-cert.fullname" . }}
-#   issuerRef:
-#     name: {{ .Values.issuer.name }}
-#     kind: {{ .Values.issuer.kind }}
-#   commonName: {{ .Values.domains[0] }}
-#   dnsNames:
-#     {{- range $index, $domain := .Values.domains }}
-#     {{- if (ne $index 0) }}
-#     - {{ $domain }}
-#     {{- end }}
-#     {{- end }}
-#   acme:
-#     config:
-#       - http01:
-#           ingressClass: nginx
-#         domains:
-#           {{- range .Values.domains }}
-#           - {{ . }}
-#           {{- end }}
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ template "letsencrypt-cert.fullname" . }}
+spec:
+  secretName: {{ template "letsencrypt-cert.fullname" . }}
+  issuerRef:
+    name: {{ .Values.issuer.name }}
+    kind: {{ .Values.issuer.kind }}
+  commonName: {{ .Values.domains[0] }}
+  dnsNames:
+    {{- if (ne .Values.domains[1] "") }}
+    - {{ .Values.domains[1] }}
+    {{- end }}
+    {{- if (ne .Values.domains[2] "") }}
+    - {{ .Values.domains[2] }}
+    {{- end }}
+    {{- if (ne .Values.domains[3] "") }}
+    - {{ .Values.domains[3] }}
+    {{- end }}
+    {{- if (ne .Values.domains[4] "") }}
+    - {{ .Values.domains[4] }}
+    {{- end }}
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx
+        domains:
+          {{- if (ne .Values.domains[0] "") }}
+          - {{ .Values.domains[0] }}
+          {{- end }}
+          {{- if (ne .Values.domains[1] "") }}
+          - {{ .Values.domains[1] }}
+          {{- end }}
+          {{- if (ne .Values.domains[2] "") }}
+          - {{ .Values.domains[2] }}
+          {{- end }}
+          {{- if (ne .Values.domains[3] "") }}
+          - {{ .Values.domains[3] }}
+          {{- end }}
+          {{- if (ne .Values.domains[4] "") }}
+          - {{ .Values.domains[4] }}
+          {{- end }}

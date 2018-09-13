@@ -2,18 +2,48 @@ categories:
   - Certificates
 questions:
 
-# Certificates
+# Issuer
   - variable: issuer.name
     default: ''
     description: 'letsencrypt certificate issuer name'
     type: string
     required: true
     label: 'issuer name'
-    group: Certificates
-  - variable: domains
-    description: 'domains to secure with letsencrypt'
-    default: '{}'
-    type: list
-    required: true
-    label: domains
-    group: Certificates
+    group: Issuer
+
+# Domains
+- variable: domains[0]
+  description: 'domain to secure with letsencrypt'
+  default: ''
+  type: string
+  required: true
+  label: domain
+  group: Domains
+- variable: domains[1]
+  description: 'domain to secure with letsencrypt'
+  default: ''
+  type: string
+  required: false
+  label: domain
+  group: Domains
+- variable: domains[2]
+  description: 'domain to secure with letsencrypt'
+  default: ''
+  type: string
+  required: false
+  label: domain
+  group: Domains
+- variable: domains[3]
+  description: 'domain to secure with letsencrypt'
+  default: ''
+  type: string
+  required: false
+  label: domain
+  group: Domains
+- variable: domains[4]
+  description: 'domain to secure with letsencrypt'
+  default: ''
+  type: string
+  required: false
+  label: domain
+  group: Domains
