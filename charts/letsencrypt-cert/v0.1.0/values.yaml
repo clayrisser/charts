@@ -3,8 +3,8 @@ issuer:
   kind: ClusterIssuer
 
 domains:
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
+  domain0: ''
+  domain1: ''
+  domain2: ''
+  domain3: ''
+  domain4: ''

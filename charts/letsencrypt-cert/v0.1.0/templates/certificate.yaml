@@ -7,37 +7,37 @@ spec:
   issuerRef:
     name: {{ .Values.issuer.name }}
     kind: {{ .Values.issuer.kind }}
-  commonName: {{ .Values.domains[0] }}
+  commonName: {{ .Values.domains.domain0 }}
   dnsNames:
-    {{- if (ne .Values.domains[1] "") }}
-    - {{ .Values.domains[1] }}
+    {{- if (ne .Values.domains.domain1 "") }}
+    - {{ .Values.domains.domain1 }}
     {{- end }}
-    {{- if (ne .Values.domains[2] "") }}
-    - {{ .Values.domains[2] }}
+    {{- if (ne .Values.domains.domain2 "") }}
+    - {{ .Values.domains.domain2 }}
     {{- end }}
-    {{- if (ne .Values.domains[3] "") }}
-    - {{ .Values.domains[3] }}
+    {{- if (ne .Values.domains.domain3 "") }}
+    - {{ .Values.domains.domain3 }}
     {{- end }}
-    {{- if (ne .Values.domains[4] "") }}
-    - {{ .Values.domains[4] }}
+    {{- if (ne .Values.domains.domain4 "") }}
+    - {{ .Values.domains.domain4 }}
     {{- end }}
   acme:
     config:
       - http01:
           ingressClass: nginx
         domains:
-          {{- if (ne .Values.domains[0] "") }}
-          - {{ .Values.domains[0] }}
+          {{- if (ne .Values.domains.domain0 "") }}
+          - {{ .Values.domains.domain0 }}
           {{- end }}
-          {{- if (ne .Values.domains[1] "") }}
-          - {{ .Values.domains[1] }}
+          {{- if (ne .Values.domains.domain1 "") }}
+          - {{ .Values.domains.domain1 }}
           {{- end }}
-          {{- if (ne .Values.domains[2] "") }}
-          - {{ .Values.domains[2] }}
+          {{- if (ne .Values.domains.domain2 "") }}
+          - {{ .Values.domains.domain2 }}
           {{- end }}
-          {{- if (ne .Values.domains[3] "") }}
-          - {{ .Values.domains[3] }}
+          {{- if (ne .Values.domains.domain3 "") }}
+          - {{ .Values.domains.domain3 }}
           {{- end }}
-          {{- if (ne .Values.domains[4] "") }}
-          - {{ .Values.domains[4] }}
+          {{- if (ne .Values.domains.domain4 "") }}
+          - {{ .Values.domains.domain4 }}
           {{- end }}
