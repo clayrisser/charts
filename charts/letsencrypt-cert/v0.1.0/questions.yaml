@@ -2,48 +2,18 @@ categories:
   - Certificates
 questions:
 
-# Issuer
-  - variable: issuer.name
+# Settings
+  - variable: namespace
     default: ''
-    description: 'letsencrypt certificate issuer name'
+    description: 'namespace to install the certificate'
     type: string
     required: true
-    label: 'issuer name'
-    group: Issuer
-
-# Domains
-  - variable: domains.domain0
-    description: 'domain to secure with letsencrypt'
+    label: namespace
+    group: Settings
+  - variable: domain
     default: ''
+    description: 'domain name to create wildcard and standard certificate'
     type: string
     required: true
     label: domain
-    group: Domains
-  - variable: domains.domain1
-    description: 'domain to secure with letsencrypt'
-    default: ''
-    type: string
-    required: false
-    label: domain
-    group: Domains
-  - variable: domains.domain2
-    description: 'domain to secure with letsencrypt'
-    default: ''
-    type: string
-    required: false
-    label: domain
-    group: Domains
-  - variable: domains.domain3
-    description: 'domain to secure with letsencrypt'
-    default: ''
-    type: string
-    required: false
-    label: domain
-    group: Domains
-  - variable: domains.domain4
-    description: 'domain to secure with letsencrypt'
-    default: ''
-    type: string
-    required: false
-    label: domain
-    group: Domains
+    group: Settings

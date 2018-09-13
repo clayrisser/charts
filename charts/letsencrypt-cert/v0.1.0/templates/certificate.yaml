@@ -2,42 +2,18 @@ apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
   name: {{ template "letsencrypt-cert.fullname" . }}
+  namespace: {{ .Values.namespace }}
 spec:
-  secretName: {{ template "letsencrypt-cert.fullname" . }}
+  secretName: letsencrypt-staging
   issuerRef:
     name: {{ .Values.issuer.name }}
     kind: {{ .Values.issuer.kind }}
-  commonName: {{ .Values.domains.domain0 }}
-  dnsNames:
-    {{- if (ne .Values.domains.domain1 "") }}
-    - {{ .Values.domains.domain1 }}
-    {{- end }}
-    {{- if (ne .Values.domains.domain2 "") }}
-    - {{ .Values.domains.domain2 }}
-    {{- end }}
-    {{- if (ne .Values.domains.domain3 "") }}
-    - {{ .Values.domains.domain3 }}
-    {{- end }}
-    {{- if (ne .Values.domains.domain4 "") }}
-    - {{ .Values.domains.domain4 }}
-    {{- end }}
+  commonName: '*.{{ .Values.domain }}'
+  domains:
+    - {{ .Values.domain }}
   acme:
     config:
-      - http01:
-          ingressClass: nginx
-        domains:
-          {{- if (ne .Values.domains.domain0 "") }}
-          - {{ .Values.domains.domain0 }}
-          {{- end }}
-          {{- if (ne .Values.domains.domain1 "") }}
-          - {{ .Values.domains.domain1 }}
-          {{- end }}
-          {{- if (ne .Values.domains.domain2 "") }}
-          - {{ .Values.domains.domain2 }}
-          {{- end }}
-          {{- if (ne .Values.domains.domain3 "") }}
-          - {{ .Values.domains.domain3 }}
-          {{- end }}
-          {{- if (ne .Values.domains.domain4 "") }}
-          - {{ .Values.domains.domain4 }}
-          {{- end }}
+    - http01:
+        ingressClass: nginx
+      domains:
+        - {{ .Values.domain }}

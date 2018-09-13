@@ -1,10 +1,7 @@
 issuer:
-  name: ''
+  name: letsencrypt-staging
   kind: ClusterIssuer
 
-domains:
-  domain0: ''
-  domain1: ''
-  domain2: ''
-  domain3: ''
-  domain4: ''
+domain: ''
+
+namespace: ''
