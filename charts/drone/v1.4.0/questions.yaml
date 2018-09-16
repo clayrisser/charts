@@ -85,7 +85,7 @@ questions:
     group: 'Drone Settings'
   - variable: config.secret
     default: ''
-    description: provider
+    description: secret
     type: password
     required: true
     label: secret
