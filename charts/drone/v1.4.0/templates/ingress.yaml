@@ -33,8 +33,10 @@ spec:
               serviceName: {{ $fullName }}
               servicePort: {{ $httpPort }}
   {{- end -}}
-  {{- if .Values.ingress.tls }}
+  {{- if .Values.ingress.ssl }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
+    - hosts:
+        - {{ . }}
+        secretName: letsencrypt-staging
+  {{- end }}
 {{- end -}}
