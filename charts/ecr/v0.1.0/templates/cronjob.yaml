@@ -14,7 +14,7 @@ spec:
         metadata:
           creationTimestamp: null
         spec:
-          serviceAccountName: system:serviceaccount:default:default
+          serviceAccountName: {{ .Release.Namespace }}
           dnsPolicy: Default
           hostNetwork: true
           restartPolicy: Never
