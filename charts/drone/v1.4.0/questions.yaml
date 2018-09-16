@@ -65,7 +65,7 @@ questions:
   - variable: config.provider
     default: github
     description: provider
-    type: string
+    type: enum
     required: true
     label: provider
     group: 'Drone Settings'
