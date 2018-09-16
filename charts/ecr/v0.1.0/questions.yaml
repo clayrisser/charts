@@ -13,7 +13,7 @@ questions:
   - variable: config.aws.secretKey
     default: ''
     description: 'aws secret key'
-    type: password
+    type: string
     required: true
     label: 'secret key'
     group: AWS
