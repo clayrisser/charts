@@ -19,7 +19,7 @@ service:
     http: ''
 
 config:
-  homepage: 'hello world'
+  homepage: 'Hello, world!'
 
 probes:
   liveness:

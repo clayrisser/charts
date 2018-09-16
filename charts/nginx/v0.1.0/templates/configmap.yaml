@@ -7,5 +7,5 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-spec:
-  index.html: "{{ .Values.config.homepage }}"
+data:
+  index.html: {{ .Values.config.homepage | quote }}

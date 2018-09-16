@@ -25,7 +25,7 @@ questions:
 
 # Configuration
   - variable: config.homepage
-    default: 'Hello, world!'
+    default: 'hello world'
     description: 'homepage content'
     type: string
     label: 'homepage content'
