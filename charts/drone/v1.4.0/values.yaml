@@ -22,6 +22,12 @@ ingress:
   enabled: false
 
 server:
+  config:
+    provider: github
+    open: true
+    client: ''
+    secret: ''
+    username: ''
   annotations: {}
   resources: {}
   affinity: {}

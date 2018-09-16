@@ -62,6 +62,41 @@ questions:
         description: 'If undefined or null, uses the default StorageClass. Default to null'
         type: storageclass
         label: Default StorageClass for Drone
+  - variable: server.config.provider
+    default: github
+    description: provider
+    type: string
+    required: true
+    label: provider
+    group: 'Drone Settings'
+  - variable: server.config.open
+    default: true
+    description: open
+    type: boolean
+    required: true
+    label: open
+    group: 'Drone Settings'
+  - variable: server.config.client
+    default: ''
+    description: provider
+    type: string
+    required: true
+    label: provider
+    group: 'Drone Settings'
+  - variable: server.config.secret
+    default: ''
+    description: provider
+    type: string
+    required: true
+    label: secret
+    group: 'Drone Settings'
+  - variable: server.config.username
+    default: ''
+    description: username
+    type: string
+    required: true
+    label: username
+    group: 'Drone Settings'
 
 # Services and Load Balancing
   - variable: ingress.enabled
