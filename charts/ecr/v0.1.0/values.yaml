@@ -1,0 +1,5 @@
+config:
+  aws:
+    accessKey: ''
+    secretKey: ''
+    region: ''

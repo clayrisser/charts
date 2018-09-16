@@ -1,0 +1,26 @@
+categories:
+  - Certificates
+questions:
+
+# AWS
+  - variable: config.aws.accessKey
+    default: ''
+    description: 'aws access key'
+    type: string
+    required: true
+    label: 'access key'
+    group: AWS
+  - variable: config.aws.secretKey
+    default: ''
+    description: 'aws secret key'
+    type: password
+    required: true
+    label: 'secret key'
+    group: AWS
+  - variable: config.aws.region
+    default: us-west-2
+    description: 'aws region'
+    type: string
+    required: true
+    label: region
+    group: AWS

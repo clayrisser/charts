@@ -1,0 +1,18 @@
+name: ecr
+home: https://letsencrypt.org
+icon: https://www.metricly.com/wp-content/uploads/2017/07/ECSIcon.png
+version: 0.1.0
+appVersion: 1.15.3
+description: |
+  connect to aws elastic container registry
+keywords:
+  - letsencrypt
+  - certificate
+  - cert
+  - ssl
+  - wildcard
+sources:
+  - https://medium.com/@damitj07/how-to-configure-and-use-aws-ecr-with-kubernetes-rancher2-0-6144c626d42c
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
