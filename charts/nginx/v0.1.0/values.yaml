@@ -18,6 +18,9 @@ service:
   nodePorts:
     http: ''
 
+config:
+  homepage: 'hello world'
+
 probes:
   liveness:
     initialDelaySeconds: 120

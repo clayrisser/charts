@@ -40,5 +40,6 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "nginx.fullname" .) }}
           {{- else }}
-          emptyDir: {}
+          configMap:
+            name: {{ template "nginx.fullname" . }}
           {{- end -}}

@@ -1,6 +1,7 @@
 categories:
   - Server
 questions:
+
 # Persistence
   - variable: persistence.enabled
     default: false
@@ -21,6 +22,14 @@ questions:
         description: 'if undefined or null, uses the default storageclass. default to null'
         type: storageclass
         label: 'default storageclass'
+
+# Configuration
+  - variable: config.homepage
+    default: 'Hello, world!'
+    description: 'homepage content'
+    type: string
+    label: 'homepage content'
+    group: Configuration
 
 # Services and Load Balancing
   - variable: ingress.enabled
