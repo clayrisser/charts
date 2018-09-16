@@ -36,9 +36,9 @@ spec:
   {{- if .Values.ingress.ssl }}
   tls:
     - hosts:
-      {{- range .Values.ingress.hosts }}
-      - name: {{ . }}
-        secretName: letsencrypt-staging
-      {{- end }}
+        {{- range .Values.ingress.hosts }}
+        - {{ . }}
+        {{- end }}
+      secretName: letsencrypt-staging
   {{- end }}
 {{- end }}
