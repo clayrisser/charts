@@ -24,6 +24,7 @@ spec:
                 - |-
                   SECRET_NAME=${AWS_DEFAULT_REGION}-ecr-registry
                   TOKEN=`aws ecr get-login --region ${AWS_DEFAULT_REGION} --registry-ids ${AWS_ACCOUNT} | cut -d' ' -f6`
+                  echo token $TOKEN
                   echo "ENV variables setup done."
                   kubectl delete secret --ignore-not-found $SECRET_NAME
                   kubectl create secret docker-registry $SECRET_NAME \
