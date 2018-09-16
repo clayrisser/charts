@@ -8,17 +8,17 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  DRONE_DEBUG: false
+  DRONE_DEBUG: 'false'
   DRONE_DATABASE_DRIVER: sqlite3
   DRONE_DATABASE_DATASOURCE: /var/lib/drone/drone.sqlite
   DRONE_PROVIDER: {{ .Values.config.provider | quote }}
   DRONE_OPEN: {{ .Values.config.open | quote }}
-  DRONE_GITHUB: true
+  DRONE_GITHUB: 'true'
   DRONE_GITHUB_CLIENT: {{ .Values.config.client | quote }}
-  DRONE_GITHUB_SCOPE: 'repo,repo:status,user:email,read:org'
+  DRONE_GITHUB_SCOPE: repo,repo:status,user:email,read:org
   DRONE_GITHUB_GIT_USERNAME: {{ .Values.config.username | quote }}
   DRONE_ADMIN: {{ .Values.config.username | quote }}
-  DRONE_GITHUB_PRIVATE_MODE: false
-  DRONE_GITHUB_MERGE_REF: true
+  DRONE_GITHUB_PRIVATE_MODE: 'false'
+  DRONE_GITHUB_MERGE_REF: 'true'
   DRONE_GITHUB_CONTEXT: continuous-integration/drone
-  DRONE_GITHUB_SKIP_VERIFY: true
+  DRONE_GITHUB_SKIP_VERIFY: 'true'
