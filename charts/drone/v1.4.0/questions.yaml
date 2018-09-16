@@ -86,31 +86,28 @@ questions:
     default: ''
     description: client
     type: string
-    required: true
+    required: false
     label: client
-    show_if: config.provider!=gogs&&config.provider!=gitea
     group: 'Drone Settings'
   - variable: config.secret
     default: ''
     description: secret
     type: password
-    required: true
+    required: false
     label: secret
-    show_if: config.provider!=gogs&&config.provider!=gitea
     group: 'Drone Settings'
   - variable: config.username
     default: ''
     description: username
     type: string
-    required: true
+    required: false
     label: username
     group: 'Drone Settings'
   - variable: config.providerUrl
     default: ''
     description: 'provider url'
     type: string
-    show_if: config.provider!=gitlab&&config.provider!=bitbucket-cloud
-    required: true
+    required: false
     label: 'provider url'
     group: 'Drone Settings'
 
