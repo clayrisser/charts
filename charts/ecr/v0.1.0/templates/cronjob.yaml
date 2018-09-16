@@ -14,11 +14,17 @@ spec:
         metadata:
           creationTimestamp: null
         spec:
+          serviceAccountName: system:serviceaccount:default:default
+          dnsPolicy: Default
+          hostNetwork: true
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
           containers:
             - name: {{ template "ecr.fullname" . }}
               image: odaniait/aws-kubectl:latest
               imagePullPolicy: IfNotPresent
-              serviceAccountName: system:serviceaccount:default:default
               command:
                 - /bin/sh
                 - -c
@@ -52,12 +58,6 @@ spec:
                 capabilities: {}
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
-          dnsPolicy: Default
-          hostNetwork: true
-          restartPolicy: Never
-          schedulerName: default-scheduler
-          securityContext: {}
-          terminationGracePeriodSeconds: 30
   schedule: '* * * * *'
   successfulJobsHistoryLimit: 3
   suspend: false
