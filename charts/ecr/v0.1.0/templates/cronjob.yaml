@@ -21,15 +21,12 @@ spec:
                 - /bin/sh
                 - -c
                 - |-
-                  ACCOUNT=1234567890
-                  REGION=my-region-1
-                  SECRET_NAME=${REGION}-ecr-registry
-                  EMAIL=anymail.doesnt.matter@email.com
-                  TOKEN=`aws ecr get-login --region ${REGION} --registry-ids ${ACCOUNT} | cut -d' ' -f6`
+                  SECRET_NAME=${AWS_DEFAULT_REGION}-ecr-registry
+                  TOKEN=`aws ecr get-login --region ${AWS_DEFAULT_REGION} --registry-ids ${AWS_ACCOUNT} | cut -d' ' -f6`
                   echo "ENV variables setup done."
                   kubectl delete secret --ignore-not-found $SECRET_NAME
                   kubectl create secret docker-registry $SECRET_NAME \
-                  --docker-server=https://${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com \
+                  --docker-server=https://${AWS_ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com \
                   --docker-username=AWS \
                   --docker-password="${TOKEN}" \
                   --docker-email="${EMAIL}"
@@ -37,6 +34,10 @@ spec:
                   kubectl patch serviceaccount default -p '{"imagePullSecrets":[{"name":"'$SECRET_NAME'"}]}'
                   echo "All done."
               env:
+                - name: EMAIL
+                  value: {{ .Values.config.email }}
+                - name: AWS_ACCOUNT
+                  value: {{ .Values.config.aws.account }}
                 - name: AWS_DEFAULT_REGION
                   value: {{ .Values.config.aws.region }}
                 - name: AWS_SECRET_ACCESS_KEY
