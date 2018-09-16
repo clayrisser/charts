@@ -42,6 +42,7 @@ config:
   client: ''
   secret: ''
   username: ''
+  providerUrl: ''
 
 dind:
   enabled: true

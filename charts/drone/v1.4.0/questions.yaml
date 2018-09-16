@@ -1,5 +1,5 @@
 categories:
-- CI/CD
+  - CI/CD
 questions:
 
 # Container Images
@@ -69,6 +69,12 @@ questions:
     required: true
     label: provider
     group: 'Drone Settings'
+    options:
+      - github
+      - gitlab
+      - gitea
+      - gogs
+      - bitbucket-cloud
   - variable: config.open
     default: true
     description: open
@@ -82,6 +88,7 @@ questions:
     type: string
     required: true
     label: client
+    show_if: config.provider!=gogs&&config.provider!=gitea
     group: 'Drone Settings'
   - variable: config.secret
     default: ''
@@ -89,6 +96,7 @@ questions:
     type: password
     required: true
     label: secret
+    show_if: config.provider!=gogs&&config.provider!=gitea
     group: 'Drone Settings'
   - variable: config.username
     default: ''
@@ -96,6 +104,14 @@ questions:
     type: string
     required: true
     label: username
+    group: 'Drone Settings'
+  - variable: config.providerUrl
+    default: ''
+    description: 'provider url'
+    type: string
+    show_if: config.provider!=gitlab&&config.provider!=bitbucket-cloud
+    required: true
+    label: 'provider url'
     group: 'Drone Settings'
 
 # Services and Load Balancing
