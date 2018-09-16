@@ -20,6 +20,12 @@ service:
 
 ingress:
   enabled: false
+  ssl: false
+  hosts: []
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
 
 server:
   annotations: {}

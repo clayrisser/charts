@@ -126,6 +126,22 @@ questions:
         type: hostname
         required: true
         label: Hostname
+      - variable: ingress.ssl
+        default: false
+        description: 'generate letsencrypt ssl certificate'
+        type: boolean
+        required: true
+        label: ssl
+      - variable: issuer.name
+        default: letsencrypt-staging
+        description: 'letsencrypt issuer environment'
+        type: enum
+        show_if: ingress.ssl=true
+        options:
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: issuer
   - variable: service.type
     default: NodePort
     description: 'drone service type'
