@@ -15,7 +15,8 @@ spec:
           creationTimestamp: null
         spec:
           containers:
-            - image: odaniait/aws-kubectl:latest
+            - name: {{ template "ecr.fullname" . }}
+              image: odaniait/aws-kubectl:latest
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/sh
@@ -35,16 +36,15 @@ spec:
                   echo "All done."
               env:
                 - name: EMAIL
-                  value: {{ .Values.config.email }}
+                  value: {{ .Values.config.email | quote }}
                 - name: AWS_ACCOUNT
-                  value: {{ .Values.config.aws.account }}
+                  value: {{ .Values.config.aws.account | quote }}
                 - name: AWS_DEFAULT_REGION
-                  value: {{ .Values.config.aws.region }}
+                  value: {{ .Values.config.aws.region | quote }}
                 - name: AWS_SECRET_ACCESS_KEY
-                  value: {{ .Values.config.aws.accessKey }}
+                  value: {{ .Values.config.aws.accessKey | quote }}
                 - name: AWS_ACCESS_KEY_ID
-                  value: {{ .Values.config.aws.secretKey }}
-              name: ecr-cred-helper
+                  value: {{ .Values.config.aws.secretKey | quote }}
               resources: {}
               securityContext:
                 capabilities: {}
