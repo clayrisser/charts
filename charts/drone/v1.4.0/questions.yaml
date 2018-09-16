@@ -78,10 +78,10 @@ questions:
     group: 'Drone Settings'
   - variable: server.config.client
     default: ''
-    description: provider
+    description: client
     type: string
     required: true
-    label: provider
+    label: client
     group: 'Drone Settings'
   - variable: server.config.secret
     default: ''
@@ -119,8 +119,8 @@ questions:
     type: enum
     show_if: 'ingress.enabled=false'
     options:
-      - 'ClusterIP'
-      - 'NodePort'
+      - ClusterIP
+      - NodePort
     required: true
     label: 'drone service type'
     show_subquestion_if: NodePort
