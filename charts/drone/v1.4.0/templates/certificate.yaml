@@ -9,11 +9,11 @@ spec:
   issuerRef:
     name: {{ .Values.issuer.name }}
     kind: {{ .Values.issuer.kind }}
-  commonName: {{ (index .Values.ingress.hosts 0).name | quote }}
+  commonName: {{ (index .Values.ingress.hosts 0) | quote }}
   acme:
     config:
     - http01:
         ingressClass: nginx
       domains:
-        - {{ (index .Values.ingress.hosts 0).name | quote }}
+        - {{ (index .Values.ingress.hosts 0) | quote }}
 {{- end }}
