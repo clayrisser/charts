@@ -22,12 +22,6 @@ ingress:
   enabled: false
 
 server:
-  config:
-    provider: github
-    open: true
-    client: ''
-    secret: ''
-    username: ''
   annotations: {}
   resources: {}
   affinity: {}
@@ -41,6 +35,13 @@ agent:
   resources: {}
   affinity: {}
   nodeSelector: {}
+
+config:
+  provider: github
+  open: true
+  client: ''
+  secret: ''
+  username: ''
 
 dind:
   enabled: true

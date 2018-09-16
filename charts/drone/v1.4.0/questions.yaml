@@ -62,35 +62,35 @@ questions:
         description: 'If undefined or null, uses the default StorageClass. Default to null'
         type: storageclass
         label: Default StorageClass for Drone
-  - variable: server.config.provider
+  - variable: config.provider
     default: github
     description: provider
     type: string
     required: true
     label: provider
     group: 'Drone Settings'
-  - variable: server.config.open
+  - variable: config.open
     default: true
     description: open
     type: boolean
     required: true
     label: open
     group: 'Drone Settings'
-  - variable: server.config.client
+  - variable: config.client
     default: ''
     description: client
     type: string
     required: true
     label: client
     group: 'Drone Settings'
-  - variable: server.config.secret
+  - variable: config.secret
     default: ''
     description: provider
-    type: string
+    type: password
     required: true
     label: secret
     group: 'Drone Settings'
-  - variable: server.config.username
+  - variable: config.username
     default: ''
     description: username
     type: string
