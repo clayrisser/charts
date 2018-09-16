@@ -18,6 +18,7 @@ spec:
             - name: {{ template "ecr.fullname" . }}
               image: odaniait/aws-kubectl:latest
               imagePullPolicy: IfNotPresent
+              serviceAccountName: system:serviceaccount:default:default
               command:
                 - /bin/sh
                 - -c
@@ -57,6 +58,6 @@ spec:
           schedulerName: default-scheduler
           securityContext: {}
           terminationGracePeriodSeconds: 30
-  schedule: '0 */6 * * *'
+  schedule: '* * * * *'
   successfulJobsHistoryLimit: 3
   suspend: false
