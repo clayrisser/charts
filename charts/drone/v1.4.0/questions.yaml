@@ -120,12 +120,6 @@ questions:
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.hosts[0]
-        default: 'xip.io'
-        description: 'hostname to your drone application'
-        type: hostname
-        required: true
-        label: Hostname
       - variable: ingress.ssl
         default: false
         description: 'generate letsencrypt ssl certificate'
@@ -142,6 +136,12 @@ questions:
           - letsencrypt-prod
         required: true
         label: issuer
+      - variable: ingress.hosts[0]
+        default: 'xip.io'
+        description: 'hostname to your drone application'
+        type: hostname
+        required: true
+        label: Hostname
   - variable: service.type
     default: NodePort
     description: 'drone service type'
