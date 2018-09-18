@@ -13,8 +13,8 @@ data:
   DRONE_DATABASE_DATASOURCE: /var/lib/drone/drone.sqlite
   DRONE_PROVIDER: {{ .Values.config.provider }}
   DRONE_OPEN: {{ .Values.config.open | quote }}
-  DRONE_ADMIN: "{{ .Values.config.admin }}"
-  DRONE_ORGS: "{{ .Values.config.organizations }}"
+  DRONE_ADMIN: {{ .Values.config.admin | quote }}
+  DRONE_ORGS: {{ .Values.config.organizations | quote }}
   {{- if (eq .Values.config.provider "github") }}
   DRONE_GITHUB: 'true'
   DRONE_GITHUB_CLIENT: {{ .Values.config.client }}
