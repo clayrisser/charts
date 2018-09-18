@@ -96,12 +96,19 @@ questions:
     required: false
     label: secret
     group: 'Drone Settings'
-  - variable: config.username
+  - variable: config.admin
     default: ''
-    description: username
+    description: 'list of admins for drone comma seperated'
     type: string
     required: false
-    label: username
+    label: admin
+    group: 'Drone Settings'
+  - variable: config.organizations
+    default: ''
+    description: 'list of organizations for drone comma seperated'
+    type: string
+    required: false
+    label: organizations
     group: 'Drone Settings'
   - variable: config.providerUrl
     default: ''
@@ -113,7 +120,7 @@ questions:
 
 # Services and Load Balancing
   - variable: ingress.enabled
-    default: false
+    default: true
     description: 'expose app using layer 7 load balancer - ingress'
     type: boolean
     label: 'expose app using layer 7 load balancer'

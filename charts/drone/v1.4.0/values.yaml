@@ -47,7 +47,9 @@ config:
   open: true
   client: ''
   secret: ''
-  username: ''
+  admin: ''
+  organizations: ''
+  orgs: ''
   providerUrl: ''
 
 dind:
