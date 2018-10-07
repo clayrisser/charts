@@ -1,0 +1,14 @@
+name: rocketchat
+home: https://rocket.chat
+icon: https://rocket.chat/images/default/logo--dark.svg
+version: 0.1.0
+appVersion: 0.69.1
+description: 'the ultimate open source webchat platform'
+keywords:
+  - rocketchat
+  - chat
+sources:
+  - https://github.com/RocketChat/Rocket.Chat
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
