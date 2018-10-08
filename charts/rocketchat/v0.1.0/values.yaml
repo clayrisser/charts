@@ -12,7 +12,7 @@ config:
   base_url: ''
   mongo:
     host: ''
-    name: rocketchat
+    database: rocketchat
     password: ''
     port: 27017
     url: ''

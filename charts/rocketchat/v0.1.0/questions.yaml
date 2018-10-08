@@ -19,12 +19,12 @@ questions:
     required: false
     label: 'mongo host'
     group: 'Mongo Config'
-  - variable: config.mongo.name
+  - variable: config.mongo.database
     default: rocketchat
-    description: 'mongo name'
+    description: 'mongo database'
     type: string
     required: false
-    label: 'mongo name'
+    label: 'mongo database'
     group: 'Mongo Config'
   - variable: config.mongo.password
     default: ''
