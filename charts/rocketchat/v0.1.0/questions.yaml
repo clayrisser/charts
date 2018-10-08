@@ -11,49 +11,49 @@ questions:
     label: 'base url'
     group: 'Database Config'
 
-# Database Config
-  - variable: config.database.host
+# Mongo Config
+  - variable: config.mongo.host
     default: ''
-    description: 'database host'
+    description: 'mongo host'
     type: string
     required: false
-    label: 'database host'
-    group: 'Database Config'
-  - variable: config.database.name
+    label: 'mongo host'
+    group: 'Mongo Config'
+  - variable: config.mongo.name
     default: rocketchat
-    description: 'database name'
+    description: 'mongo name'
     type: string
     required: false
-    label: 'database name'
-    group: 'Database Config'
-  - variable: config.database.password
+    label: 'mongo name'
+    group: 'Mongo Config'
+  - variable: config.mongo.password
     default: ''
-    description: 'database password'
+    description: 'mongo password'
     type: password
     required: false
-    label: 'database password'
-    group: 'Database Config'
-  - variable: config.database.port
+    label: 'mongo password'
+    group: 'Mongo Config'
+  - variable: config.mongo.port
     default: 27017
-    description: 'database port'
+    description: 'mongo port'
     type: int
     required: false
-    label: 'database port'
-    group: 'Database Config'
-  - variable: config.database.url
+    label: 'mongo port'
+    group: 'Mongo Config'
+  - variable: config.mongo.url
     default: ''
-    description: 'database url'
+    description: 'mongo url'
     type: string
     required: false
-    label: 'database url'
-    group: 'Database Config'
-  - variable: config.database.username
+    label: 'mongo url'
+    group: 'Mongo Config'
+  - variable: config.mongo.username
     default: ''
-    description: 'database username'
+    description: 'mongo username'
     type: string
     required: false
-    label: 'database username'
-    group: 'Database Config'
+    label: 'mongo username'
+    group: 'Mongo Config'
 
 # Email Config
   - variable: config.email.smtp.host

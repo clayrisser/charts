@@ -8,20 +8,9 @@ images:
     tag: latest
     pullPolicy: IfNotPresent
 
-issuer:
-  name: letsencrypt-staging
-  kind: ClusterIssuer
-
-ingress:
-  enabled: false
-  ssl: false
-  hosts:
-    - name: ''
-      path: /
-
 config:
   base_url: ''
-  database:
+  mongo:
     host: ''
     name: rocketchat
     password: ''
@@ -52,6 +41,17 @@ service:
   externalTrafficPolicy: Cluster
   nodePorts:
     http: ''
+
+ingress:
+  enabled: false
+  ssl: false
+  hosts:
+    - name: ''
+      path: /
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
 
 persistence:
   enabled: false

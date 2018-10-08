@@ -1,4 +1,4 @@
-{{- if (and (eq .Values.config.database.url "") (eq .Values.config.database.host "")) }}
+{{- if (and (not .Values.config.database.url) (eq .Values.config.database.host (cat (template "rocketchat.name") "-mongo"))) }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:

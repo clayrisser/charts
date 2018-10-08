@@ -8,18 +8,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- if (eq .Values.config.database.url "") }}
-  {{- if (eq .Values.config.database.host "") }}
-  database_url: mongodb://{{ template "rocketchat.name" . }}-mongo:27017/rocketchat
-  {{- else }}
-  {{- if (eq .Values.config.database.username "") }}
+  {{- if (and (not .Values.config.database.url) (not .Values.config.database.password))  }}
   database_url: mongodb://{{ .Values.config.database.host }}:{{ .Values.config.database.port }}/{{ .Values.config.database.name }}
-  {{- else }}
-  database_url: mongodb://{{ .Values.config.database.username }}:{{ .Values.config.database.password }}@{{ .Values.config.database.host }}:{{ .Values.config.database.port }}/{{ .Values.config.database.name }}
-  {{- end }}
-  {{- end }}
-  {{- else }}
-  database_url: {{ .Values.config.database.url }}
   {{- end }}
   base_url: {{ .Values.config.base_url }}
   email_smtp_host: {{ .Values.config.email.smtp.host }}
