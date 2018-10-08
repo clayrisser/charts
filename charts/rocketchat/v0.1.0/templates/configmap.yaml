@@ -9,16 +9,3 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   base_url: {{ .Values.config.base_url }}
-  email_smtp_host: {{ .Values.config.email.smtp.host }}
-  email_smtp_port: {{ .Values.config.email.smtp.port }}
-  email_smtp_username: {{ .Values.config.email.smtp.username }}
-  email_from: {{ .Values.config.email.from }}
-  jitsi_enabled: {{ .Values.config.jitsi.enabled }}
-  jitsi_domain: {{ .Values.config.jitsi.domain }}
-  jitsi_url_room_prefix: {{ .Values.config.jitsi.url_room_prefix }}
-  jitsi_open_new_window: {{ .Values.config.jitsi.open_new_window }}
-  jitsi_enable_channels: {{ .Values.config.jitsi.enable_channels }}
-  jitsi_chrome_extension: {{ .Values.config.jitsi.chrome_extension }}
-  webrtc_enable_channel: {{ .Values.config.webrtc.enable_channel }}
-  webrtc_enable_private: {{ .Values.config.webrtc.enable_private }}
-  webrtc_enable_direct: {{ .Values.config.webrtc.enable_direct }}
