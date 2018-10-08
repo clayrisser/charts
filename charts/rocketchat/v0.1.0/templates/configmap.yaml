@@ -8,6 +8,11 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+
+  {{- $mongo := .Values.config.mongo }}
+  {{- if (not (or $mongo.url $mongo.username $mongo.password)) }}
+  mongo_url: howdy
+  {{- end }}
   {{- if .Values.config.base_url }}
   base_url: {{ .Values.config.base_url }}
   {{- else }}
@@ -22,16 +27,16 @@ data:
   base_url: http://{{ template "rocketchat.fullname" . }}
   {{- end }}
   {{- end }}
-  email_smtp_host: {{ .Values.config.email.smtp.host | quote }}
+  email_smtp_host: {{ .Values.config.email.smtp.host }}
   email_smtp_port: {{ .Values.config.email.smtp.port | quote }}
-  email_smtp_username: {{ .Values.config.email.smtp.username | quote }}
-  email_from: {{ .Values.config.email.from | quote }}
+  email_smtp_username: {{ .Values.config.email.smtp.username }}
+  email_from: {{ .Values.config.email.from }}
   jitsi_enabled: {{ .Values.config.jitsi.enabled | quote }}
-  jitsi_domain: {{ .Values.config.jitsi.domain | quote }}
-  jitsi_url_room_prefix: {{ .Values.config.jitsi.url_room_prefix | quote }}
+  jitsi_domain: {{ .Values.config.jitsi.domain }}
+  jitsi_url_room_prefix: {{ .Values.config.jitsi.url_room_prefix }}
   jitsi_open_new_window: {{ .Values.config.jitsi.open_new_window | quote }}
   jitsi_enable_channels: {{ .Values.config.jitsi.enable_channels | quote }}
-  jitsi_chrome_extension: {{ .Values.config.jitsi.chrome_extension | quote }}
+  jitsi_chrome_extension: {{ .Values.config.jitsi.chrome_extension }}
   webrtc_enable_channel: {{ .Values.config.webrtc.enable_channel | quote }}
   webrtc_enable_private: {{ .Values.config.webrtc.enable_private | quote }}
   webrtc_enable_direct: {{ .Values.config.webrtc.enable_direct | quote }}
