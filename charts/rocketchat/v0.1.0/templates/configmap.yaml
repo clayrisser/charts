@@ -8,9 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- if (and (not .Values.config.database.url) (not .Values.config.database.password))  }}
-  database_url: mongodb://{{ .Values.config.database.host }}:{{ .Values.config.database.port }}/{{ .Values.config.database.name }}
-  {{- end }}
   base_url: {{ .Values.config.base_url }}
   email_smtp_host: {{ .Values.config.email.smtp.host }}
   email_smtp_port: {{ .Values.config.email.smtp.port }}
