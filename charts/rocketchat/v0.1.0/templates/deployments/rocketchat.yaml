@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: {{ template "rocketchat.fullname" . }}-rocketchat
-          image: {{ .Values.images.api.repository }}:{{ .Values.images.api.tag }}
-          imagePullPolicy: {{ .Values.images.api.pullPolicy }}
+          image: {{ .Values.images.rocketchat.repository }}:{{ .Values.images.rocketchat.tag }}
+          imagePullPolicy: {{ .Values.images.rocketchat.pullPolicy }}
           ports:
             - name: container
               containerPort: 3002
