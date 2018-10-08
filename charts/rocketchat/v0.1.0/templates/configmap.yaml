@@ -9,9 +9,9 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   {{- if .Values.config.base_url }}
-  base_url: {{ .Values.config.base_url | quote }}
+  base_url: {{ .Values.config.base_url }}
   {{- else }}
-  base_url: {{ cat "http://" (template "rocketchat.fullname" . ) | quote }}
+  base_url: http://{{ template "rocketchat.fullname" . }}
   {{- end }}
   email_smtp_host: {{ .Values.config.email.smtp.host | quote }}
   email_smtp_port: {{ .Values.config.email.smtp.port | quote }}
