@@ -10,7 +10,7 @@ metadata:
 data:
 
   {{- $mongo := .Values.config.mongo }}
-  {{- if (not (or $mongo.url (or $mongo.username $mongo.password))) }}
+  {{- if (not (or $mongo.url $mongo.username $mongo.password)) }}
   mongo_url: howdy
   {{- end }}
   {{- if .Values.config.base_url }}
