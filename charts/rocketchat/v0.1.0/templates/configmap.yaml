@@ -11,7 +11,7 @@ data:
   {{- $mongo := .Values.config.mongo }}
   {{- if (not (or $mongo.url $mongo.username $mongo.password)) }}
   {{- if $mongo.host }}
-  mongo_url: mongodb://{{ $mongo.host }}:{{ $mongo.port }}/${{ $mongo.database }}
+  mongo_url: mongodb://{{ $mongo.host }}:{{ $mongo.port }}/{{ $mongo.database }}
   {{- else }}
   mongo_url: mongodb://{{ template "rocketchat.name" . }}:27017/rocketchat
   {{- end }}
