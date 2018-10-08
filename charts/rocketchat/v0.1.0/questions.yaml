@@ -7,7 +7,7 @@ questions:
     default: ''
     description: 'base url'
     type: string
-    required: true
+    required: false
     label: 'base url'
     group: 'Database Config'
 

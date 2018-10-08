@@ -7,7 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    somelabel: {{ .Files.Get "../configmap.yaml" | b64enc }}
 spec:
   template:
     metadata:

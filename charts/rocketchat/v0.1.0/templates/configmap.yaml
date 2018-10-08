@@ -8,6 +8,20 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  {{- if .Values.config.base_url }}
+  base_url: {{ .Values.config.base_url }}
+  {{- else }}
+  {{- if .Values.ingress.enabled }}
+  {{- $host := (index .Values.ingress.hosts 0) }}
+  {{- $protocol := "http" }}
+  {{- if .Values.ingress.ssl }}
+  {{- $protocol := (cat $protocol "s") }}
+  {{- end }}
+  base_url: {{ $protocol }}://{{ $host.name }}{{ $host.path) }}
+  {{- else }}
+  base_url: http://{{ template "rocketchat.fullname" . }}
+  {{- end }}
+  {{- end }}
   base_url: {{ .Values.config.base_url | quote }}
   email_smtp_host: {{ .Values.config.email.smtp.host | quote }}
   email_smtp_port: {{ .Values.config.email.smtp.port | quote }}
