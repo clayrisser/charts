@@ -221,7 +221,7 @@ questions:
       - variable: ingress.hosts[0].path
         default: /
         description: 'pathname to your rocketchat installation'
-        type: hostname
+        type: string
         required: true
         label: 'rocketchat path'
   - variable: service.type
