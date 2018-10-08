@@ -1,0 +1,24 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "rocketchat.fullname" . }}-rocketchat
+  labels:
+    app: {{ template "rocketchat.name" . }}-rocketchat
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    somelabel: {{ .Files.Get "../configmap.yaml" | b64enc }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "rocketchat.name" . }}-rocketchat
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "rocketchat.fullname" . }}-rocketchat
+          image: {{ .Values.images.api.repository }}:{{ .Values.images.api.tag }}
+          imagePullPolicy: {{ .Values.images.api.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 3002

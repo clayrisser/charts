@@ -85,7 +85,7 @@ questions:
     label: 'smtp host'
     group: 'Email Config'
   - variable: config.email.from
-    default: 25
+    default: ''
     description: 'email from'
     type: string
     required: false
