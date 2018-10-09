@@ -4,9 +4,9 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "rocketchat.fullname" $ }}
+  name: {{ template "rocketchat.fullname" $ }}-jitsi
   labels:
-    app: {{ template "rocketchat.name" $ }}
+    app: {{ template "rocketchat.name" $ }}-jitsi
     chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
     release: {{ $.Release.Name }}
     heritage: {{ $.Release.Service }}
@@ -17,7 +17,7 @@ spec:
         paths:
           - path: {{ .path }}
             backend:
-              serviceName: {{ template "rocketchat.fullname" $ }}
+              serviceName: {{ template "rocketchat.fullname" $ }}-jitsi
               servicePort: http
   {{- if (and $.Values.ingress.enabled $.Values.ingress.ssl) }}
   tls:
