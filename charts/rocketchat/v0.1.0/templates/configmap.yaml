@@ -23,7 +23,7 @@ data:
   {{- $host := (index .Values.ingress.hosts 0) }}
   {{- $protocol := "http" }}
   {{- if .Values.ingress.ssl }}
-  {{- $protocol := (cat $protocol "s") }}
+  {{- $protocol = (cat $protocol "s") }}
   {{- end }}
   base_url: {{ $protocol }}://{{ $host.name }}{{ $host.path }}
   {{- else }}
