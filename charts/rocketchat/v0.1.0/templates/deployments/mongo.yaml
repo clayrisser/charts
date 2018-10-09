@@ -36,5 +36,5 @@ spec:
             claimName: {{ .Values.persistence.existingClaim | default (include "rocketchat.fullname" . ) }}
           {{- else }}
           emptyDir: {}
-          {{- end -}}
+          {{- end }}
 {{- end }}
