@@ -26,9 +26,9 @@ spec:
             - name: data
               mountPath: /data/db
               subPath: mongo
-         env:
-           - name: MONGO_INITDB_DATABASE
-             value: rocketchat
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: rocketchat
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
