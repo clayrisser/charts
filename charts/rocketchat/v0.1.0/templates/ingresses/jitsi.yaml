@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled }}
-{{- if .Values.config.jitsi.enabled }}
+{{- if (and .Values.config.jitsi.enabled (not .Values.config.jitsi.domain)) }}
 {{- range .Values.ingress.hosts.jitsi }}
 apiVersion: extensions/v1beta1
 kind: Ingress
