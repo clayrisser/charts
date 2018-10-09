@@ -72,6 +72,28 @@ spec:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: jitsi_chrome_extension
+            - name: Jitsi_SSL
+              value: {{ .Values.ingress.tls }}
+            - name: SMTP_Host
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_host
+            - name: SMTP_Port
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_port
+            - name: SMTP_Username
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_username
+            - name: SMTP_Password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_password
             - name: WebRTC_Enable_Channel
               valueFrom:
                 configMapKeyRef:
