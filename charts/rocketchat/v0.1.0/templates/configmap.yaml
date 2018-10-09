@@ -1,4 +1,5 @@
 {{- $mongo := .Values.config.mongo }}
+{{- $mail := .Values.config.mail }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -30,9 +31,6 @@ data:
   base_url: http://{{ template "rocketchat.name" . }}
   {{- end }}
   {{- end }}
-  email_smtp_host: {{ .Values.config.email.smtp.host }}
-  email_smtp_port: {{ .Values.config.email.smtp.port | quote }}
-  email_smtp_username: {{ .Values.config.email.smtp.username }}
   email_from: {{ .Values.config.email.from }}
   jitsi_enabled: {{ .Values.config.jitsi.enabled | quote }}
   jitsi_domain: {{ .Values.config.jitsi.domain }}

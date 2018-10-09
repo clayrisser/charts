@@ -1,5 +1,6 @@
 {{- if .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts }}
+{{- if .Values.config.jitsi.enabled }}
+{{- range .Values.ingress.hosts.jitsi }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -25,5 +26,6 @@ spec:
         - {{ .name }}
   {{- end }}
 ---
+{{- end }}
 {{- end }}
 {{- end }}

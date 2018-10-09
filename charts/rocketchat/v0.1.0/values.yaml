@@ -21,7 +21,7 @@ config:
     port: 27017
     url: ''
     username: ''
-  email:
+  mail:
     smtp:
       host: ''
       port: 25
@@ -44,14 +44,21 @@ service:
   type: NodePort
   externalTrafficPolicy: Cluster
   nodePorts:
-    http: ''
+    rocketchat:
+      http: ''
+    jitsi:
+      http: ''
 
 ingress:
   enabled: false
   ssl: false
   hosts:
-    - name: ''
-      path: /
+    rocketchat:
+      - name: ''
+        path: /
+    jitsi:
+      - name: ''
+        path: /
 
 issuer:
   name: letsencrypt-staging

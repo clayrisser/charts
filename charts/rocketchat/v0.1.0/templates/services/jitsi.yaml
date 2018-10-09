@@ -1,3 +1,4 @@
+{{- if (and .Values.config.jitsi.enabled (not .Values.config.jitsi.domain)) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,9 +21,10 @@ spec:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.api.http))) }}
-      nodePort: {{ .Values.service.nodePorts.api.http }}
+      {{- if (and (eq .Values.service.type "NodePort") .Values.service.nodePorts.jitsi.http) }}
+      nodePort: {{ .Values.service.nodePorts.jitsi.http }}
       {{- end }}
   selector:
     app: {{ template "rocketchat.name" . }}-jitsi
     release: {{ .Release.Name }}
+{{- end }}

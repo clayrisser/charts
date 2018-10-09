@@ -57,29 +57,29 @@ questions:
     label: 'mongo username'
     group: 'Mongo Config'
 
-# Email Config
-  - variable: config.email.smtp.host
+# Mail Config
+  - variable: config.mail.smtp.host
     default: ''
     description: 'smtp host'
     type: string
     required: false
     label: 'smtp host'
-    group: 'Email Config'
-  - variable: config.email.smtp.username
+    group: 'Mail Config'
+  - variable: config.mail.smtp.username
     default: ''
     description: 'smtp username'
     type: string
     required: false
     label: 'smtp username'
-    group: 'Email Config'
-  - variable: config.email.smtp.password
+    group: 'Mail Config'
+  - variable: config.mail.smtp.password
     default: ''
     description: 'smtp password'
     type: password
     required: false
     label: 'smtp password'
-    group: 'Email Config'
-  - variable: config.email.smtp.port
+    group: 'Mail Config'
+  - variable: config.mail.smtp.port
     default: 25
     description: 'smtp host'
     type: int
@@ -87,14 +87,14 @@ questions:
     max: 50000
     required: false
     label: 'smtp host'
-    group: 'Email Config'
-  - variable: config.email.from
+    group: 'Mail Config'
+  - variable: config.mail.from
     default: ''
-    description: 'email from'
+    description: 'mail from'
     type: string
     required: false
-    label: 'email from'
-    group: 'Email Config'
+    label: 'mail from'
+    group: 'Mail Config'
 
 # Jitsi Config
   - variable: config.jitsi.enabled
@@ -216,18 +216,32 @@ questions:
           - letsencrypt-prod
         required: true
         label: issuer
-      - variable: ingress.hosts[0].name
+      - variable: ingress.hosts.rocketchat[0].name
         default: xip.io
         description: 'hostname to your rocketchat installation'
         type: hostname
         required: true
         label: 'rocketchat hostname'
-      - variable: ingress.hosts[0].path
+      - variable: ingress.hosts.rocketchat[0].path
         default: /
         description: 'pathname to your rocketchat installation'
         type: string
         required: true
         label: 'rocketchat path'
+      - variable: ingress.hosts.jitsi[0].name
+        default: xip.io
+        description: 'hostname to your jitsi installation'
+        type: hostname
+        show_if: config.jitsi.enabled=true
+        required: true
+        label: 'jitsi hostname'
+      - variable: ingress.hosts.jitsi[0].path
+        default: /
+        description: 'pathname to your jitsi installation'
+        type: string
+        show_if: config.jitsi.enabled=true
+        required: true
+        label: 'jitsi path'
   - variable: service.type
     default: NodePort
     description: 'service type'
@@ -242,7 +256,7 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.http
+      - variable: service.nodePorts.jitsi.http
         default: ''
         description: 'NodePort rocketchat http port (to set explicitly, choose port between 30000-32767)'
         type: int
@@ -250,3 +264,11 @@ questions:
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
         label: 'rocketchat http port'
+      - variable: service.nodePorts.jitsi.http
+        default: ''
+        description: 'NodePort jitsi http port (to set explicitly, choose port between 30000-32767)'
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false&&service.type=NodePort&config.jitsi.enabled=true
+        label: 'jitsi http port'

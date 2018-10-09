@@ -32,32 +32,22 @@ spec:
                 {{- end }}
                   name: {{ template "rocketchat.fullname" . }}
                   key: mongo_url
-            - name: Email_Smtp_Host
+            - name: ROOT_URL
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
-                  key: email_smtp_host
-            - name: Email_Smtp_Username
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "rocketchat.fullname" . }}
-                  key: email_smtp_username
-            - name: Email_Smtp_Password
+                  key: base_url
+            - name: MAIL_URL
               valueFrom:
                 secretKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
-                  key: email_smtp_password
-            - name: Email_From
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "rocketchat.fullname" . }}
-                  key: email_from
+                  key: mail_url
             - name: Jitsi_Enabled
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: jitsi_enabled
-            - name: Jitsi_Url_Room_Prefix
+            - name: Jitsi_URL_Room_Prefix
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
@@ -77,17 +67,17 @@ spec:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: jitsi_chrome_extension
-            - name: Webrtc_Enable_Channel
+            - name: WebRTC_Enable_Channel
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: webrtc_enable_channel
-            - name: Webrtc_Enable_Private
+            - name: WebRTC_Enable_Private
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: webrtc_enable_private
-            - name: Webrtc_Enable_Direct
+            - name: WebRTC_Enable_Direct
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}

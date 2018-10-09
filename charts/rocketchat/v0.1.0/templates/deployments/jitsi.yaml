@@ -1,3 +1,4 @@
+{{- if (and .Values.config.jitsi.enabled (not .Values.config.jitsi.domain)) }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -21,3 +22,4 @@ spec:
           ports:
             - name: container
               containerPort: 3002
+{{- end }}
