@@ -13,7 +13,7 @@ data:
   {{- if $mongo.host }}
   mongo_url: mongodb://{{ $mongo.host }}:{{ $mongo.port }}/{{ $mongo.database }}
   {{- else }}
-  mongo_url: mongodb://{{ template "rocketchat.name" . }}:27017/rocketchat
+  mongo_url: mongodb://{{ template "rocketchat.fullname" . }}:27017/rocketchat
   {{- end }}
   {{- end }}
   {{- if .Values.config.base_url }}
@@ -27,7 +27,7 @@ data:
   {{- end }}
   base_url: {{ $protocol }}://{{ $host.name }}{{ $host.path }}
   {{- else }}
-  base_url: http://{{ template "rocketchat.name" . }}
+  base_url: http://{{ template "rocketchat.fullname" . }}
   {{- end }}
   {{- end }}
   mail_from: {{ .Values.config.mail.from }}
