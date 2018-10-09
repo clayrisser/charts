@@ -19,7 +19,7 @@ spec:
             backend:
               serviceName: {{ template "rocketchat.fullname" $ }}-jitsi
               servicePort: http
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.ssl) }}
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:
     - secretName: letsencrypt-staging
       hosts:

@@ -201,12 +201,12 @@ questions:
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.ssl
+      - variable: ingress.tls
         default: false
         description: 'generate letsencrypt ssl certificate'
         type: boolean
         required: true
-        label: ssl
+        label: tls
       - variable: issuer.name
         default: letsencrypt-staging
         description: 'letsencrypt issuer environment'

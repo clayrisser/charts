@@ -22,7 +22,7 @@ data:
   {{- if .Values.ingress.enabled }}
   {{- $host := (index .Values.ingress.hosts.rocketchat 0) }}
   {{- $protocol := "http" }}
-  {{- if .Values.ingress.ssl }}
+  {{- if .Values.ingress.tls }}
   {{- $protocol := (printf "%s%s" $protocol "s") }}
   {{- end }}
   base_url: {{ $protocol }}://{{ $host.name }}{{ $host.path }}
