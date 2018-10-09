@@ -37,6 +37,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: base_url
+            - name: MAIL_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_url
             - name: From_Email
               valueFrom:
                 configMapKeyRef:
