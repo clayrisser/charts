@@ -20,7 +20,7 @@ data:
   base_url: {{ .Values.config.base_url }}
   {{- else }}
   {{- if .Values.ingress.enabled }}
-  {{- $host := (index .Values.ingress.hosts 0) }}
+  {{- $host := (index .Values.ingress.hosts.rocketchat 0) }}
   {{- $protocol := "http" }}
   {{- if .Values.ingress.ssl }}
   {{- $protocol := (printf "%s%s" $protocol "s") }}
