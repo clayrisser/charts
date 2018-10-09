@@ -31,8 +31,8 @@ data:
   {{- end }}
   {{- end }}
   mail_from: {{ .Values.config.mail.from }}
-  mail_smtp_host: {{ .Values.config.mail.smtp.host | quote }}
-  mail_smtp_username: {{ .Values.config.mail.smtp.username | quote }}
+  mail_smtp_host: {{ .Values.config.mail.smtp.host }}
+  mail_smtp_username: {{ .Values.config.mail.smtp.username }}
   mail_smtp_port: {{ .Values.config.mail.smtp.port | quote }}
   jitsi_enabled: {{ .Values.config.jitsi.enabled | quote }}
   jitsi_domain: {{ .Values.config.jitsi.domain }}

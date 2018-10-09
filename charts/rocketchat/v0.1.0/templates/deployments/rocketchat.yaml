@@ -73,7 +73,7 @@ spec:
                   name: {{ template "rocketchat.fullname" . }}
                   key: jitsi_chrome_extension
             - name: Jitsi_SSL
-              value: {{ .Values.ingress.tls }}
+              value: {{ .Values.ingress.tls | quote }}
             - name: SMTP_Host
               valueFrom:
                 configMapKeyRef:
