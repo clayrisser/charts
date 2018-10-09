@@ -1,3 +1,4 @@
+{{- $mongo := .Values.config.mongo }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,7 +9,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- $mongo := .Values.config.mongo }}
   {{- if (not (or $mongo.url $mongo.username $mongo.password)) }}
   {{- if $mongo.host }}
   mongo_url: mongodb://{{ $mongo.host }}:{{ $mongo.port }}/{{ $mongo.database }}
@@ -23,7 +23,7 @@ data:
   {{- $host := (index .Values.ingress.hosts 0) }}
   {{- $protocol := "http" }}
   {{- if .Values.ingress.ssl }}
-  {{- $protocol := (cat $protocol "s") }}
+  {{- $protocol := (printf "%s%s" $protocol "s") }}
   {{- end }}
   base_url: {{ $protocol }}://{{ $host.name }}{{ $host.path }}
   {{- else }}

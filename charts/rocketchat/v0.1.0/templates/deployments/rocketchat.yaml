@@ -21,3 +21,74 @@ spec:
           ports:
             - name: container
               containerPort: 3002
+          env:
+            - name: MONGO_URL
+              valueFrom:
+                {{- $mongo := .Values.config.mongo }}
+                {{- if (or $mongo.url $mongo.username $mongo.password) }}
+                secretKeyRef:
+                {{- else }}
+                configMapKeyRef:
+                {{- end }}
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mongo_url
+            - name: Email_Smtp_Host
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: email_smtp_host
+            - name: Email_Smtp_Username
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: email_smtp_username
+            - name: Email_Smtp_Password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: email_smtp_password
+            - name: Email_From
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: email_from
+            - name: Jitsi_Enabled
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_enabled
+            - name: Jitsi_Url_Room_Prefix
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_url_room_prefix
+            - name: Jitsi_Open_New_Window
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_open_new_window
+            - name: Jitsi_Enable_Channels
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_enable_channels
+            - name: Jitsi_Chrome_Extension
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_chrome_extension
+            - name: Webrtc_Enable_Channel
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: webrtc_enable_channel
+            - name: Webrtc_Enable_Private
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: webrtc_enable_private
+            - name: Webrtc_Enable_Direct
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: webrtc_enable_direct

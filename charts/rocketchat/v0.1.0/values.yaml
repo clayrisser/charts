@@ -54,10 +54,11 @@ issuer:
   kind: ClusterIssuer
 
 persistence:
-  enabled: false
   accessMode: ReadWriteOnce
-  size: 10Gi
+  enabled: false
   existingClaim: ''
+  size: 10Gi
+  storageClass: ''
 
 probes:
   liveness:
