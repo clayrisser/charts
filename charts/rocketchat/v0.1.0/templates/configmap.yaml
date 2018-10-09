@@ -30,7 +30,7 @@ data:
   base_url: http://{{ template "rocketchat.name" . }}
   {{- end }}
   {{- end }}
-  email_from: {{ .Values.config.email.from }}
+  mail_from: {{ .Values.config.mail.from }}
   jitsi_enabled: {{ .Values.config.jitsi.enabled | quote }}
   jitsi_domain: {{ .Values.config.jitsi.domain }}
   jitsi_url_room_prefix: {{ .Values.config.jitsi.url_room_prefix }}

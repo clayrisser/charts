@@ -42,6 +42,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: mail_url
+            - name: From_Email
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_from
             - name: Jitsi_Enabled
               valueFrom:
                 configMapKeyRef:
