@@ -37,6 +37,8 @@ questions:
     default: 27017
     description: 'mongo port'
     type: int
+    min: 0
+    max: 50000
     required: false
     label: 'mongo port'
     group: 'Mongo Config'
@@ -81,6 +83,8 @@ questions:
     default: 25
     description: 'smtp host'
     type: int
+    min: 0
+    max: 50000
     required: false
     label: 'smtp host'
     group: 'Email Config'

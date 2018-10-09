@@ -1,4 +1,8 @@
 images:
+  jitsi:
+    repository: jitsi
+    tag: latest
+    pullPolicy: IfNotPresent
   rocketchat:
     repository: rocket.chat
     tag: 0.69.1
