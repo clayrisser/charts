@@ -20,7 +20,7 @@ spec:
           imagePullPolicy: {{ .Values.images.rocketchat.pullPolicy }}
           ports:
             - name: container
-              containerPort: 3002
+              containerPort: 3000
           env:
             - name: MONGO_URL
               valueFrom:
@@ -87,3 +87,13 @@ spec:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: webrtc_enable_direct
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
