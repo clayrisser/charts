@@ -1,5 +1,4 @@
 {{- $mongo := .Values.config.mongo }}
-{{- $mail := .Values.config.mail }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
