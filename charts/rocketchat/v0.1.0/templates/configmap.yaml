@@ -23,7 +23,7 @@ data:
   {{- $host := (index .Values.ingress.hosts.rocketchat 0) }}
   {{- $protocol := "http" }}
   {{- if .Values.ingress.tls }}
-  {{- $protocol := (printf "%s%s" $protocol "s") }}
+  {{- $protocol := (printf "%ss" $protocol) }}
   {{- end }}
   base_url: {{ $protocol }}://{{ $host.name }}{{ $host.path }}
   {{- else }}
