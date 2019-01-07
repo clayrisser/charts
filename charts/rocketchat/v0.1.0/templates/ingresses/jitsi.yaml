@@ -8,8 +8,8 @@ metadata:
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   annotations:
     certmanager.k8s.io/cluster-issuer: {{ $.Values.issuer.name }}
-    kubernetes.io/tls-acme: true
-    nginx.ingress.kubernetes.io/secure-backends: true
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/secure-backends: "true"
   {{- end }}
   labels:
     app: {{ template "rocketchat.name" $ }}-jitsi
