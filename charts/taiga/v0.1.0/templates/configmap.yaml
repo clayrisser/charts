@@ -1,5 +1,5 @@
 {{- $email := .Values.config.email }}
-{{- $host := .Values.config.host }}
+{{- $hostname := .Values.config.host }}
 {{- $postgres := .Values.config.postgres }}
 apiVersion: v1
 kind: ConfigMap
