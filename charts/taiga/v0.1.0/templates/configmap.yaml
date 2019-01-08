@@ -16,7 +16,7 @@ data:
   frontend_host: {{ $hostname }}
   protocol: http
   {{- if (and (not $hostname) .Values.ingress.enabled) }}
-  {{- $host := (index .Values.ingress.hosts.taigaBack 0) }}
+  {{- $host := (index .Values.ingress.hosts.taiga 0) }}
   {{- $protocol := "http" }}
   {{- if .Values.ingress.tls }}
   {{- $protocol := (printf "%ss" $protocol) }}
