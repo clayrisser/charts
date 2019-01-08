@@ -1,0 +1,35 @@
+{{- $hostname := .Values.config.hostname }}
+{{- $email := .Values.config.email }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "taiga.fullname" . }}
+  labels:
+    app: {{ template "taiga.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+
+  # config
+  {{- if $hostname }}
+  backend_host: {{ $hostname }}/api
+  frontend_host: {{ $hostname }}
+  protocol: http
+  {{- else }}
+  {{- if .Values.ingress.enabled }}
+  {{- $host := (index .Values.ingress.hosts.taigaBack 0) }}
+  {{- $protocol := "http" }}
+  {{- if .Values.ingress.tls }}
+  {{- $protocol := (printf "%ss" $protocol) }}
+  {{- end }}
+  backend_host: {{ $host.name }}{{ $host.path }}/api
+  frontend_host: {{ $host.name }}{{ $host.path }}
+  protocol: {{ $protocol }}
+  {{- end }}
+
+  # mail config
+  email_from: {{ $email.from }}
+  email_smtp_host: {{ $email.smtp.host }}
+  email_smtp_username: {{ $email.smtp.username }}
+  email_smtp_port: {{ $email.smtp.port | quote }}

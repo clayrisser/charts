@@ -1,0 +1,96 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "taiga.fullname" . }}-taiga
+  labels:
+    app: {{ template "taiga.name" . }}-taiga
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "taiga.name" . }}-taiga
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "taiga.fullname" . }}-taiga-back
+          image: {{ .Values.images.taigaBack.repository }}:{{ .Values.images.taigaBack.tag }}
+          imagePullPolicy: {{ .Values.images.taigaBack.pullPolicy }}
+          ports:
+            - name: backend
+              containerPort: 8000
+          env:
+            - name: EMAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_smtp_host
+            - name: EMAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_smtp_port
+            - name: EMAIL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_smtp_username
+            - name: EMAIL_HOST_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: email_smtp_password
+            - name: DEFAULT_FROM_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_from
+            - name: BASE_PROTOCOL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: protocol
+            - name: BASE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: backend_host
+          livenessProbe:
+            httpGet:
+              path: /
+              port: backend
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: backend
+{{ toYaml .Values.probes.readiness | indent 12 }}
+        - name: {{ template "taiga.fullname" . }}-taiga-front
+          image: {{ .Values.images.taigaFront.repository }}:{{ .Values.images.taigaFront.tag }}
+          imagePullPolicy: {{ .Values.images.taigaFront.pullPolicy }}
+          ports:
+            - name: frontend
+              containerPort: 80
+          env:
+            - name: BASE_PROTOCOL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: protocol
+            - name: BASE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: frontend_host
+          livenessProbe:
+            httpGet:
+              path: /
+              port: frontend
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: frontend
+{{ toYaml .Values.probes.readiness | indent 12 }}

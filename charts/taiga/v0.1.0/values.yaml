@@ -1,31 +1,50 @@
 images:
-  taigaFront:
-    repository: ipedrazas/taiga-front
-    tag: latest
-    pullPolicy: IfNotPresent
-    baseProtocol: http
-    baseDomain: example.com
   taigaBack:
     repository: ipedrazas/taiga-back
     tag: latest
     pullPolicy: IfNotPresent
-    emailHost: some-email-host
-    emailPort: 4444
-    emailHostUser: some-email-host-user
-    emailHostPassword: some-email-host-password
-    defaultFromEmail: email@example.com
-    baseProtocol: http
-    baseDomain: api.example.com
+  taigaFront:
+    repository: ipedrazas/taiga-front
+    tag: latest
+    pullPolicy: IfNotPresent
 
-ingress:
-  enabled: false
-  hosts: []
+config:
+  hostname: example.com
+  email:
+    from: email@example.com
+    smtp:
+      host: ''
+      password: ''
+      port: 4444
+      username: ''
 
 service:
   type: NodePort
   externalTrafficPolicy: Cluster
   nodePorts:
-    http: ''
+    taigaBack:
+      http: ''
+    taigaFront:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  hosts:
+    taiga:
+      - name: ''
+        path: /
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 10Gi
+  storageClass: ''
 
 probes:
   liveness:

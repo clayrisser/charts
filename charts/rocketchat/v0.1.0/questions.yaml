@@ -9,7 +9,7 @@ questions:
     type: string
     required: false
     label: 'base url'
-    group: 'Database Config'
+    group: Config
 
 # Mongo Config
   - variable: config.mongo.host
