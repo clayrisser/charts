@@ -14,6 +14,11 @@ spec:
         app: {{ template "taiga.name" . }}-taiga
         release: {{ .Release.Name }}
     spec:
+      hostAliases:
+        - ip: '127.0.0.1'
+          hostnames:
+            - taiga-back
+    spec:
       containers:
         - name: {{ template "taiga.fullname" . }}-taiga-back
           image: {{ .Values.images.taigaBack.repository }}:{{ .Values.images.taigaBack.tag }}
