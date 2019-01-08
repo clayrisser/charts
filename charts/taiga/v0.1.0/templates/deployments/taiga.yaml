@@ -63,7 +63,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "taiga.fullname" . }}
-                  key: email_smtp_username
+                  key: email_smtp_user
             - name: TAIGA_EMAIL_PASS
               valueFrom:
                 secretKeyRef:
