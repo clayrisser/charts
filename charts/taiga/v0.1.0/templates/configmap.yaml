@@ -16,13 +16,8 @@ data:
   host: {{ $hostname }}
   protocol: http
   {{- if (and (not $hostname) .Values.ingress.enabled) }}
-  {{- $host := (index .Values.ingress.hosts.taiga 0) }}
-  {{- $protocol := "http" }}
-  {{- if .Values.ingress.tls }}
-  {{- $protocol := (printf "%ss" $protocol) }}
-  {{- end }}
-  host: {{ $host.name }}{{ $host.path }}
-  protocol: {{ $protocol }}
+  {{- $host0 := (index .Values.ingress.hosts.taiga 0) }}
+  host: {{ $host0.name }}
   {{- end }}
 
   # mail config
