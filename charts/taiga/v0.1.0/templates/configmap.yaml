@@ -19,6 +19,11 @@ data:
   {{- $host0 := (index .Values.ingress.hosts.taiga 0) }}
   host: {{ $host0.name }}
   {{- end }}
+  {{- if .Values.ingress.tls }}
+  ssl: true
+  {{- else }}
+  ssl: false
+  {{- end }}
 
   # mail config
   email_from: {{ $email.from }}

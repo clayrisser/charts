@@ -74,6 +74,17 @@ spec:
                 configMapKeyRef:
                   name: {{ template "taiga.fullname" . }}
                   key: email_from
+            - name: TAIGA_SSL_BY_REVERSE_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: ssl
+            - name: TAIGA_ENABLE_EMAIL
+            {{- if .Values.config.email.smtp.host }}
+              value: 'true'
+            {{- else }}
+              value: 'false'
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /
