@@ -23,7 +23,7 @@ spec:
               containerPort: 80
           env:
             - name: TAIGA_SLEEP
-              value: 15
+              value: '15'
             - name: TAIGA_HOSTNAME
               valueFrom:
                 configMapKeyRef:
