@@ -7,7 +7,7 @@ questions:
     default: 'example.com'
     description: hostname
     type: string
-    required: true
+    required: false
     label: hostname
     group: Config
 
