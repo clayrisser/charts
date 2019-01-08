@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "taiga.fullname" . }}-taiga
+  name: {{ template "taiga.fullname" . }}-taiga-front
   labels:
-    app: {{ template "taiga.name" . }}-taiga
+    app: {{ template "taiga.name" . }}-taiga-front
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

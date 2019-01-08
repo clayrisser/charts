@@ -24,10 +24,10 @@ spec:
             backend:
               serviceName: {{ template "taiga.fullname" $ }}-taiga-front
               servicePort: http
-          - path: {{ .path }}/api
-            backend:
-              serviceName: {{ template "taiga.fullname" $ }}-taiga-back
-              servicePort: http
+          # - path: {{ .path }}/api
+          #   backend:
+          #     serviceName: {{ template "taiga.fullname" $ }}-taiga-back
+          #     servicePort: http
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:
     - secretName: some-secret-name
