@@ -40,7 +40,7 @@ spec:
             - name: EMAIL_HOST_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "rocketchat.fullname" . }}
+                  name: {{ template "taiga.fullname" . }}
                   key: email_smtp_password
             - name: DEFAULT_FROM_EMAIL
               valueFrom:
