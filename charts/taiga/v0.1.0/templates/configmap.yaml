@@ -35,7 +35,7 @@ data:
   {{- if (not (or $postgres.host $postgres.user $postgres.password)) }}
   postgres_database: taiga
   postgres_host: {{ template "taiga.fullname" . }}-postgres
-  postgres_port: 5432
+  postgres_port: '5432'
   postgres_user: taiga
   {{- else }}
   postgres_database: {{ $postgres.database }}
