@@ -82,5 +82,5 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: backend
+              port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
