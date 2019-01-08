@@ -4,7 +4,7 @@ questions:
 
 # Config
   - variable: config.hostname
-    default: 'example.com'
+    default: ''
     description: hostname
     type: string
     required: false

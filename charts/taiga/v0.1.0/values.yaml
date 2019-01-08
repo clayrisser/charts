@@ -9,13 +9,13 @@ images:
     pullPolicy: IfNotPresent
 
 config:
-  hostname: example.com
+  hostname: ''
   email:
     from: email@example.com
     smtp:
       host: ''
       password: ''
-      port: 4444
+      port: 25
       username: ''
 
 service:
