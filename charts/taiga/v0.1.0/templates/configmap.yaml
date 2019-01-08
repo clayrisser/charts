@@ -40,6 +40,6 @@ data:
   {{- else }}
   postgres_database: {{ $postgres.database }}
   postgres_host: {{ $postgres.host }}
-  postgres_port: {{ $postgres.port }}
+  postgres_port: {{ $postgres.port | quote }}
   postgres_user: {{ $postgres.user }}
   {{- end }}
