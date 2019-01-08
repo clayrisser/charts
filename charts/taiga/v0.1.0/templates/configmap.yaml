@@ -23,6 +23,7 @@ data:
   {{- if .Values.ingress.tls }}
   {{- $protocol := (printf "%ss" $protocol) }}
   {{- end }}
+  {{- end }}
   backend_host: {{ $host.name }}{{ $host.path }}/api
   frontend_host: {{ $host.name }}{{ $host.path }}
   protocol: {{ $protocol }}
