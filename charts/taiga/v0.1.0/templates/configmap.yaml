@@ -20,9 +20,9 @@ data:
   host: {{ $host0.name }}
   {{- end }}
   {{- if .Values.ingress.tls }}
-  ssl: true
+  ssl: 'true'
   {{- else }}
-  ssl: false
+  ssl: 'false'
   {{- end }}
 
   # mail config
