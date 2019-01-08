@@ -1,5 +1,6 @@
-{{- $hostname := .Values.config.hostname }}
 {{- $email := .Values.config.email }}
+{{- $host := .Values.config.host }}
+{{- $postgres := .Values.config.postgres }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -12,8 +13,7 @@ metadata:
 data:
 
   # config
-  backend_host: {{ $hostname }}/api
-  frontend_host: {{ $hostname }}
+  host: {{ $hostname }}
   protocol: http
   {{- if (and (not $hostname) .Values.ingress.enabled) }}
   {{- $host := (index .Values.ingress.hosts.taiga 0) }}
@@ -21,13 +21,25 @@ data:
   {{- if .Values.ingress.tls }}
   {{- $protocol := (printf "%ss" $protocol) }}
   {{- end }}
-  backend_host: {{ $host.name }}{{ $host.path }}/api
-  frontend_host: {{ $host.name }}{{ $host.path }}
+  host: {{ $host.name }}{{ $host.path }}
   protocol: {{ $protocol }}
   {{- end }}
 
   # mail config
   email_from: {{ $email.from }}
   email_smtp_host: {{ $email.smtp.host }}
-  email_smtp_username: {{ $email.smtp.username }}
+  email_smtp_user: {{ $email.smtp.user }}
   email_smtp_port: {{ $email.smtp.port | quote }}
+
+  # postgres config
+  {{- if (not (or $postgres.host $postgres.user $postgres.password)) }}
+  postgres_database: taiga
+  postgres_host: {{ template "taiga.fullname" . }}-postgres
+  postgres_port: 5432
+  postgres_user: taiga
+  {{- else }}
+  postgres_database: {{ $postgres.database }}
+  postgres_host: {{ $postgres.host }}
+  postgres_port: {{ $postgres.port }}
+  postgres_user: {{ $postgres.user }}
+  {{- end }}

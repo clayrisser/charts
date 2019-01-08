@@ -3,12 +3,12 @@ categories:
 questions:
 
 # Config
-  - variable: config.hostname
+  - variable: config.host
     default: ''
-    description: hostname
+    description: host
     type: string
     required: false
-    label: hostname
+    label: host
     group: Config
 
 # Mail Config
@@ -19,12 +19,12 @@ questions:
     required: false
     label: 'smtp host'
     group: 'Email Config'
-  - variable: config.email.smtp.username
+  - variable: config.email.smtp.user
     default: ''
-    description: 'smtp username'
+    description: 'smtp user'
     type: string
     required: false
-    label: 'smtp username'
+    label: 'smtp user'
     group: 'Email Config'
   - variable: config.email.smtp.password
     default: ''
@@ -49,6 +49,45 @@ questions:
     required: false
     label: 'email from'
     group: 'Email Config'
+
+# Postgres Config
+  - variable: config.postgres.host
+    default: ''
+    description: 'postgres host'
+    type: string
+    required: false
+    label: 'postgres host'
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    default: rocketchat
+    description: 'postgres database'
+    type: string
+    required: false
+    label: 'postgres database'
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    default: ''
+    description: 'postgres password'
+    type: password
+    required: false
+    label: 'postgres password'
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: 27017
+    description: 'postgres port'
+    type: int
+    min: 0
+    max: 50000
+    required: false
+    label: 'postgres port'
+    group: 'Postgres Config'
+  - variable: config.postgres.user
+    default: ''
+    description: 'postgres user'
+    type: string
+    required: false
+    label: 'postgres user'
+    group: 'Postgres Config'
 
 # Persistence
   - variable: persistence.enabled
@@ -129,19 +168,11 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.taigaBack.http
+      - variable: service.nodePorts.taiga.http
         default: ''
-        description: 'taiga backend http port (30000-32767)'
+        description: 'taiga http port (30000-32767)'
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
-        label: 'taiga backend http port'
-      - variable: service.nodePorts.taigaFront.http
-        default: ''
-        description: 'taiga frontend http port (30000-32767)'
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false&&service.type=NodePort
-        label: 'taiga frontend http port'
+        label: 'taiga http port'

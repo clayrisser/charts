@@ -14,87 +14,73 @@ spec:
         app: {{ template "taiga.name" . }}-taiga
         release: {{ .Release.Name }}
     spec:
-      # hostAliases:
-      #   - ip: '127.0.0.1'
-      #     hostnames:
-      #       - taiga-back
       containers:
-#         - name: {{ template "taiga.fullname" . }}-taiga-back
-#           image: {{ .Values.images.taigaBack.repository }}:{{ .Values.images.taigaBack.tag }}
-#           imagePullPolicy: {{ .Values.images.taigaBack.pullPolicy }}
-#           ports:
-#             - name: backend
-#               containerPort: 8000
-#           env:
-#             - name: EMAIL_HOST
-#               valueFrom:
-#                 configMapKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: email_smtp_host
-#             - name: EMAIL_PORT
-#               valueFrom:
-#                 configMapKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: email_smtp_port
-#             - name: EMAIL_USER
-#               valueFrom:
-#                 configMapKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: email_smtp_username
-#             - name: EMAIL_HOST_PASSWORD
-#               valueFrom:
-#                 secretKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: email_smtp_password
-#             - name: DEFAULT_FROM_EMAIL
-#               valueFrom:
-#                 configMapKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: email_from
-#             - name: BASE_PROTOCOL
-#               valueFrom:
-#                 configMapKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: protocol
-#             - name: BASE_DOMAIN
-#               valueFrom:
-#                 configMapKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: backend_host
-#           livenessProbe:
-#             httpGet:
-#               path: /
-#               port: backend
-# {{ toYaml .Values.probes.liveness | indent 12 }}
-#           readinessProbe:
-#             httpGet:
-#               path: /
-#               port: backend
-# {{ toYaml .Values.probes.readiness | indent 12 }}
-        - name: {{ template "taiga.fullname" . }}-taiga-front
-          image: {{ .Values.images.taigaFront.repository }}:{{ .Values.images.taigaFront.tag }}
-          imagePullPolicy: {{ .Values.images.taigaFront.pullPolicy }}
+        - name: {{ template "taiga.fullname" . }}-taiga
+          image: {{ .Values.images.taiga.repository }}:{{ .Values.images.taiga.tag }}
+          imagePullPolicy: {{ .Values.images.taiga.pullPolicy }}
           ports:
-            - name: frontend
+            - name: container
               containerPort: 80
-#           env:
-#             - name: BASE_PROTOCOL
-#               valueFrom:
-#                 configMapKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: protocol
-#             - name: BASE_DOMAIN
-#               valueFrom:
-#                 configMapKeyRef:
-#                   name: {{ template "taiga.fullname" . }}
-#                   key: frontend_host
-#           livenessProbe:
-#             httpGet:
-#               path: /
-#               port: frontend
-# {{ toYaml .Values.probes.liveness | indent 12 }}
-#           readinessProbe:
-#             httpGet:
-#               path: /
-#               port: frontend
-# {{ toYaml .Values.probes.readiness | indent 12 }}
+          env:
+            - name: TAIGA_SLEEP
+              value: 15
+            - name: TAIGA_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: host
+            - name: TAIGA_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: postgres_database
+            - name: TAIGA_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: postgres_host
+            - name: TAIGA_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: postgres_user
+            - name: TAIGA_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: postgres_password
+            - name: TAIGA_EMAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_smtp_host
+            - name: TAIGA_EMAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_smtp_port
+            - name: TAIGA_EMAIL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_smtp_username
+            - name: TAIGA_EMAIL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_smtp_password
+            - name: TAIGA_EMAIL_FROM
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "taiga.fullname" . }}
+                  key: email_from
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: backend
+{{ toYaml .Values.probes.readiness | indent 12 }}
