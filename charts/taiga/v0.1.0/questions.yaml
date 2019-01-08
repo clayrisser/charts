@@ -103,18 +103,18 @@ questions:
           - letsencrypt-prod
         required: true
         label: issuer
-      - variable: ingress.hosts.tiaga[0].name
+      - variable: ingress.hosts.taiga[0].name
         default: xip.io
-        description: 'tiaga hostname'
+        description: 'taiga hostname'
         type: hostname
         required: true
-        label: 'tiaga hostname'
-      - variable: ingress.hosts.tiaga[0].path
+        label: 'taiga hostname'
+      - variable: ingress.hosts.taiga[0].path
         default: /
-        description: 'tiaga path'
+        description: 'taiga path'
         type: string
         required: true
-        label: 'tiaga path'
+        label: 'taiga path'
   - variable: service.type
     default: NodePort
     description: 'service type'
@@ -129,19 +129,19 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.tiagaBack.http
+      - variable: service.nodePorts.taigaBack.http
         default: ''
-        description: 'tiaga backend http port (30000-32767)'
+        description: 'taiga backend http port (30000-32767)'
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
-        label: 'tiaga backend http port'
-      - variable: service.nodePorts.tiagaFront.http
+        label: 'taiga backend http port'
+      - variable: service.nodePorts.taigaFront.http
         default: ''
-        description: 'tiaga frontend http port (30000-32767)'
+        description: 'taiga frontend http port (30000-32767)'
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
-        label: 'tiaga frontend http port'
+        label: 'taiga frontend http port'
