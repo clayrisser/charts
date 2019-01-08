@@ -59,7 +59,7 @@ questions:
     label: 'postgres host'
     group: 'Postgres Config'
   - variable: config.postgres.database
-    default: rocketchat
+    default: taiga
     description: 'postgres database'
     type: string
     required: false
