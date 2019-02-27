@@ -9,7 +9,6 @@ metadata:
   annotations:
     certmanager.k8s.io/cluster-issuer: {{ $.Values.issuer.name }}
     kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/secure-backends: "true"
   {{- end }}
   labels:
     app: {{ template "rocketchat.name" $ }}-jitsi
