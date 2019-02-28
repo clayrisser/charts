@@ -8,4 +8,4 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  users: "{{ .Values.config.username }}:{{ .Values.config.password | b64enc }}"
+  users: "{{ .Values.config.username }}:lax"
