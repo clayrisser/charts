@@ -28,12 +28,12 @@ spec:
             - name: USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "rocketchat.fullname" . }}
+                  name: {{ template "webdav.fullname" . }}
                   key: username
             - name: PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "rocketchat.fullname" . }}
+                  name: {{ template "webdav.fullname" . }}
                   key: password
           livenessProbe:
             httpGet:
