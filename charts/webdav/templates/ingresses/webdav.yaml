@@ -23,7 +23,7 @@ spec:
             backend:
               serviceName: {{ template "webdav.fullname" $ }}-webdav
               servicePort: http
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.ssl) }}
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:
     - secretName: {{ .Values.issuer.name }}
       hosts:
