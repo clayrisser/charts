@@ -1,0 +1,18 @@
+name: webdav
+home: https://github.com/codejamninja/webdav
+icon: http://www.pvhc.net/img87/emmugcxybtnqmazbcdxh.png
+version: 0.0.1
+appVersion: latest
+description: 'an apache webdav server'
+keywords:
+  - webdav
+  - webdav
+  - file
+  - server
+  - docker
+  - helm
+sources:
+  - https://github.com/codejamninja/webdav
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

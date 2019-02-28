@@ -1,0 +1,55 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "webdav.fullname" . }}-webdav
+  labels:
+    app: {{ template "webdav.name" . }}-webdav
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "webdav.name" . }}-webdav
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "webdav.fullname" . }}-webdav
+          image: {{ .Values.images.webdav.repository }}:{{ .Values.images.webdav.tag }}
+          imagePullPolicy: {{ .Values.images.webdav.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          volumeMounts:
+            - name: data
+              mountPath: '/var/lib/dav'
+          env:
+            - name: USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: password
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "webdav.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
