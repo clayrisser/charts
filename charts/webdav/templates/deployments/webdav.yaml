@@ -23,7 +23,9 @@ spec:
               containerPort: 80
           volumeMounts:
             - name: data
-              mountPath: '/var/lib/dav'
+              mountPath: /var/lib/dav
+            - name: users
+              mountPath: /
           env:
             - name: USERNAME
               valueFrom:
@@ -51,3 +53,9 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        - name: users
+          configMap:
+            name: {{ template "webdav.fullname" . }}-users
+            items:
+              - key: users
+                path: user.passwd
