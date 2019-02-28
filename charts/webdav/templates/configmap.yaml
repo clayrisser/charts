@@ -8,4 +8,5 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  auth_type: {{ .Values.config.authType | quote }}
   username: {{ .Values.config.username | quote }}

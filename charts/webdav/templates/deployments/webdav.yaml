@@ -25,16 +25,21 @@ spec:
             - name: data
               mountPath: '/var/lib/dav'
           env:
-            - name: USERNAME
+            - name: AUTH_TYPE
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "webdav.fullname" . }}
-                  key: username
+                  key: auth_type
             - name: PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "webdav.fullname" . }}
                   key: password
+            - name: USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "webdav.fullname" . }}
+                  key: username
           livenessProbe:
             tcpSocket:
               port: container

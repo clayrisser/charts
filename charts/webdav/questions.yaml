@@ -3,6 +3,16 @@ categories:
 questions:
 
 # Config
+  - variable: config.authType
+    default: Digest
+    description: 'auth type'
+    type: enum
+    options:
+      - Digest
+      - Basic
+    required: true
+    label: 'auth type'
+    group: Config
   - variable: config.username
     default: 'admin'
     description: 'username'

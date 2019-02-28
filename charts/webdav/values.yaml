@@ -5,8 +5,9 @@ images:
     pullPolicy: IfNotPresent
 
 config:
-  username: 'admin'
-  password: 'pass'
+  authType: Digest
+  password: pass
+  username: admin
 
 service:
   type: NodePort
