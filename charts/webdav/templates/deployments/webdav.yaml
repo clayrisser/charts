@@ -25,7 +25,8 @@ spec:
             - name: data
               mountPath: /var/lib/dav
             - name: users
-              mountPath: /
+              mountPath: /user.passwd
+              subPath: user.passwd
           env:
             - name: USERNAME
               valueFrom:
