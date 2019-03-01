@@ -25,7 +25,7 @@ spec:
           imagePullPolicy: {{ .Values.images.sks.pullPolicy }}
           volumeMounts:
             - name: data
-              mountPath: /data
+              mountPath: /var/lib/sks
           command: ['sks-init']
       volumes:
         - name: data

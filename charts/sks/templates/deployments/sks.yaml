@@ -23,7 +23,7 @@ spec:
               containerPort: 11371
           volumeMounts:
             - name: data
-              mountPath: /data
+              mountPath: /var/lib/sks
           env: []
       volumes:
         - name: data
