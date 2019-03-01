@@ -25,14 +25,6 @@ spec:
             - name: data
               mountPath: /data
           env: []
-#           livenessProbe:
-#             tcpSocket:
-#               port: container
-# {{ toYaml .Values.probes.liveness | indent 12 }}
-#           readinessProbe:
-#             tcpSocket:
-#               port: container
-# {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
