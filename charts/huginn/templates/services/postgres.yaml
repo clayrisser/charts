@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "huginn.fullname" . }}-postgres
+  labels:
+    app: {{ template "huginn.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: container
+  selector:
+    app: {{ template "huginn.name" . }}-postgres
+    release: {{ .Release.Name }}

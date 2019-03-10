@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "huginn.fullname" . }}-huginn
+  labels:
+    app: {{ template "huginn.name" . }}-huginn
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "huginn.name" . }}-huginn
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "huginn.fullname" . }}-huginn
+          image: {{ .Values.images.huginn.repository }}:{{ .Values.images.huginn.tag }}
+          imagePullPolicy: {{ .Values.images.huginn.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 3000
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

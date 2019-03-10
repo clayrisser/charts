@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "huginn.fullname" . }}
+  labels:
+    app: {{ template "huginn.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- $postgres := .Values.config.postgres }}
+  postgres_host: {{ .Values.config.postgres.host | quote }}
+  postgres_database: {{ .Values.config.postgres.database | quote }}
+  postgres_port: {{ .Values.config.postgres.port | quote }}
+  postgres_username: {{ .Values.config.postgres.username | quote }}

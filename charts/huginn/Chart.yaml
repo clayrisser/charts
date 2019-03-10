@@ -1,0 +1,15 @@
+name: huginn
+home: https://github.com/codejamninja/huginn
+icon: https://camo.githubusercontent.com/f7da893be2c2f5f765f2436296656e7d25962437/68747470733a2f2f7261772e6769746875622e636f6d2f687567696e6e2f687567696e6e2f6d61737465722f6d656469612f687567696e6e2d6c6f676f2e706e67
+version: 0.0.1
+appVersion: latest
+description: 'create agents that monitor and act on your behalf'
+keywords:
+  - huginn
+  - huginn
+  - ifttt
+sources:
+  - https://github.com/codejamninja/huginn
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
