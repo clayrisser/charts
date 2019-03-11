@@ -25,6 +25,8 @@ spec:
             - name: data
               mountPath: '/var/www/html'
           env:
+            - name: NEXTCLOUD_TRUSTED_DOMAINS
+              value: {{ (index .Values.ingress.hosts.nextcloud 0).name | quote }}
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
