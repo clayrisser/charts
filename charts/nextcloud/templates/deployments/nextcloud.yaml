@@ -25,26 +25,26 @@ spec:
             - name: data
               mountPath: '/var/www/html'
           env:
-            - name: POSTGRES_HOST
+            - name: MYSQL_HOST
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_host
-            - name: POSTGRES_USER
+                  key: mysql_host
+            - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_username
-            - name: POSTGRES_PASSWORD
+                  key: mysql_username
+            - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_password
-            - name: POSTGRES_DB
+                  key: mysql_password
+            - name: MYSQL_DB
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_database
+                  key: mysql_database
             - name: NEXTCLOUD_ADMIN_USER
               valueFrom:
                 configMapKeyRef:
@@ -56,13 +56,11 @@ spec:
                   name: {{ template "nextcloud.fullname" . }}
                   key: admin_password
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
