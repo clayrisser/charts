@@ -29,11 +29,6 @@ spec:
           env:
             - name: MYSQL_RANDOM_ROOT_PASSWORD
               value: 'true'
-            - name: MYSQL_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
-                  key: mysql_database
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
