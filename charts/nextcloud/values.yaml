@@ -15,8 +15,6 @@ config:
     host: ''
     database: nextcloud
     password: ''
-    port: 5432
-    url: ''
     username: ''
 
 service:

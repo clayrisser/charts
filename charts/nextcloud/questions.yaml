@@ -40,22 +40,6 @@ questions:
     required: false
     label: 'postgres password'
     group: 'Postgres Config'
-  - variable: config.postgres.port
-    default: 5432
-    description: 'postgres port'
-    type: int
-    min: 0
-    max: 50000
-    required: false
-    label: 'postgres port'
-    group: 'Postgres Config'
-  - variable: config.postgres.url
-    default: ''
-    description: 'postgres url'
-    type: string
-    required: false
-    label: 'postgres url'
-    group: 'Postgres Config'
   - variable: config.postgres.username
     default: ''
     description: 'postgres username'
