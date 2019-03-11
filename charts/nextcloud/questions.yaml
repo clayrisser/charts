@@ -47,6 +47,13 @@ questions:
     required: false
     label: 'postgres username'
     group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: '5432'
+    description: 'postgres port'
+    type: int
+    required: false
+    label: 'postgres port'
+    group: 'Postgres Config'
 
 # Persistence
   - variable: persistence.enabled

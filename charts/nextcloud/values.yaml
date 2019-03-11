@@ -12,9 +12,10 @@ config:
   adminUser: 'admin'
   adminPassword: 'pass'
   postgres:
-    host: ''
     database: nextcloud
+    host: ''
     password: ''
+    port: '5432'
     username: ''
 
 service:
