@@ -36,7 +36,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_user
+                  key: postgres_username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
