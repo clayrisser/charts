@@ -11,11 +11,11 @@ data:
   admin_user: {{ .Values.config.adminUser | quote }}
   {{- $postgres := .Values.config.postgres }}
   {{- if (empty $postgres.host) }}
-  postgres_host: '{{ template "nextcloud.fullname" . }}-postgres:5432'
+  postgres_host: '{{ template "nextcloud.fullname" . }}-postgres'
   postgres_database: {{ $postgres.database | quote }}
   postgres_username: 'postgres'
   {{- else }}
-  postgres_host: '{{ $postgres.host }}:{{ $postgres.port }}'
+  postgres_host: '{{ $postgres.host }}'
   postgres_database: {{ $postgres.database | quote }}
   postgres_username: {{ $postgres.username | quote }}
   {{- end }}
