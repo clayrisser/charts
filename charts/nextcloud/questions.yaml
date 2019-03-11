@@ -34,14 +34,14 @@ questions:
     label: 'postgres database'
     group: 'Postgres Config'
   - variable: config.postgres.password
-    default: ''
+    default: postgres
     description: 'postgres password'
     type: password
     required: false
     label: 'postgres password'
     group: 'Postgres Config'
   - variable: config.postgres.username
-    default: ''
+    default: postgres
     description: 'postgres username'
     type: string
     required: false
