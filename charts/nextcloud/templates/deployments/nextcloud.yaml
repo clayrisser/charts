@@ -25,26 +25,26 @@ spec:
             - name: data
               mountPath: '/var/www/html'
           env:
-            - name: MYSQL_HOST
+            - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: mysql_host
-            - name: MYSQL_USER
+                  key: postgres_host
+            - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: mysql_username
-            - name: MYSQL_PASSWORD
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: mysql_password
-            - name: MYSQL_DATABASE
+                  key: postgres_password
+            - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: mysql_database
+                  key: postgres_database
             - name: NEXTCLOUD_ADMIN_USER
               valueFrom:
                 configMapKeyRef:

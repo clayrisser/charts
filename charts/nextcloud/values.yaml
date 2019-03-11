@@ -3,19 +3,18 @@ images:
     repository: nextcloud
     tag: 15.0.5-apache
     pullPolicy: IfNotPresent
-  mysql:
-    repository: mysql
+  postgres:
+    repository: postgres
     tag: latest
     pullPolicy: IfNotPresent
 
 config:
   adminUser: 'admin'
   adminPassword: 'pass'
-  mysql:
+  postgres:
     host: ''
     database: nextcloud
     password: ''
-    port: 3306
     username: ''
 
 service:
