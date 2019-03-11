@@ -28,10 +28,7 @@ spec:
               subPath: postgres
           env:
             - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_database
+              value: db
             - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
