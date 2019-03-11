@@ -18,35 +18,44 @@ questions:
     label: 'admin password'
     group: Config
 
-# Postgres Config
-  - variable: config.postgres.host
+# MySQL Config
+  - variable: config.mysql.host
     default: ''
-    description: 'postgres host'
+    description: 'mysql host'
     type: string
     required: false
-    label: 'postgres host'
-    group: 'Postgres Config'
-  - variable: config.postgres.database
+    label: 'mysql host'
+    group: 'MySQL Config'
+  - variable: config.mysql.database
     default: nextcloud
-    description: 'postgres database'
+    description: 'mysql database'
     type: string
     required: false
-    label: 'postgres database'
-    group: 'Postgres Config'
-  - variable: config.postgres.password
-    default: ''
-    description: 'postgres password'
+    label: 'mysql database'
+    group: 'MySQL Config'
+  - variable: config.mysql.password
+    default: nextcloud
+    description: 'mysql password'
     type: password
     required: false
-    label: 'postgres password'
-    group: 'Postgres Config'
-  - variable: config.postgres.username
-    default: ''
-    description: 'postgres username'
+    label: 'mysql password'
+    group: 'MySQL Config'
+  - variable: config.mysql.port
+    default: 3306
+    description: 'mysql port'
+    type: int
+    min: 0
+    max: 50000
+    required: false
+    label: 'mysql port'
+    group: 'MySQL Config'
+  - variable: config.mysql.username
+    default: nextcloud
+    description: 'mysql username'
     type: string
     required: false
-    label: 'postgres username'
-    group: 'Postgres Config'
+    label: 'mysql username'
+    group: 'MySQL Config'
 
 # Persistence
   - variable: persistence.enabled
@@ -156,21 +165,21 @@ questions:
         description: 'secret name'
         type: string
         required: true
-        show_if: persistence.type=azureDisk
+        show_if: persistence.type=azureFile
         label: 'secret name'
       - variable: persistence.secretNamespace
         default: ''
         description: 'secret namespace'
         type: string
         required: false
-        show_if: persistence.type=azureDisk
+        show_if: persistence.type=azureFile
         label: 'secret namespace'
       - variable: persistence.shareName
         default: ''
         description: 'share name'
         type: string
         required: true
-        show_if: persistence.type=azureDisk
+        show_if: persistence.type=azureFile
         label: 'share name'
 
 # Services and Load Balancing

@@ -9,11 +9,13 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   admin_user: {{ .Values.config.adminUser | quote }}
-  {{- $postgres := .Values.config.postgres }}
-  {{- if (empty $postgres.host) }}
-  postgres_host: {{ template "nextcloud.fullname" . }}-postgres
+  {{- $mysql := .Values.config.mysql }}
+  {{- if (empty $mysql.host) }}
+  mysql_host: {{ template "nextcloud.fullname" . }}-mysql
+  mysql_port: 3306
   {{- else }}
-  postgres_host: {{ $postgres.host | quote }}
+  mysql_host: {{ $mysql.host | quote }}
+  mysql_port: {{ $mysql.port | quote }}
   {{- end }}
-  postgres_database: {{ $postgres.database | quote }}
-  postgres_username: {{ $postgres.username | quote }}
+  mysql_database: {{ $mysql.database | quote }}
+  mysql_username: {{ $mysql.username | quote }}
