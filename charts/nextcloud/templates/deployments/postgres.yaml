@@ -27,8 +27,6 @@ spec:
               mountPath: /var/lib/postgresql/data
               subPath: postgres
           env:
-            - name: POSTGRES_DB
-              value: db
             - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
