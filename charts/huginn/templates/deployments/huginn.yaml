@@ -21,7 +21,34 @@ spec:
           ports:
             - name: container
               containerPort: 3000
-          env: []
+          env:
+            - name: DATABASE_ADAPTER
+              value: postgresql
+            - name: DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "huginn.fullname" . }}
+                  key: postgres_port
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "huginn.fullname" . }}
+                  key: postgres_host
+            - name: DATABASE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "huginn.fullname" . }}
+                  key: postgres_username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "huginn.fullname" . }}
+                  key: postgres_password
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "huginn.fullname" . }}
+                  key: postgres_database
           livenessProbe:
             httpGet:
               path: /

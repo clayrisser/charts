@@ -14,7 +14,6 @@ config:
     database: huginn
     password: ''
     port: 5432
-    url: ''
     username: ''
 
 service:

@@ -33,13 +33,6 @@ questions:
     required: false
     label: 'postgres port'
     group: 'Postgres Config'
-  - variable: config.postgres.url
-    default: ''
-    description: 'postgres url'
-    type: string
-    required: false
-    label: 'postgres url'
-    group: 'Postgres Config'
   - variable: config.postgres.username
     default: ''
     description: 'postgres username'
