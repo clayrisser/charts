@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "nextcloud.fullname" . }}
+  labels:
+    app: {{ template "nextcloud.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  adminUser: {{ .Values.config.adminUser | quote }}
+  {{- $postgres := .Values.config.postgres }}
+  {{- if (empty $postgres.host) }}
+  postgres_host: {{ template "nextcloud.fullname" . }}-postgres
+  postgres_port: 5432
+  {{- else }}
+  postgres_host: {{ $postgres.host | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  {{- end }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_username: {{ $postgres.username | quote }}

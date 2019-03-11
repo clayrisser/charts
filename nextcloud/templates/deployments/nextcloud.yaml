@@ -1,0 +1,91 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "nextcloud.fullname" . }}-nextcloud
+  labels:
+    app: {{ template "nextcloud.name" . }}-nextcloud
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "nextcloud.name" . }}-nextcloud
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "nextcloud.fullname" . }}-nextcloud
+          image: {{ .Values.images.nextcloud.repository }}:{{ .Values.images.nextcloud.tag }}
+          imagePullPolicy: {{ .Values.images.nextcloud.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          volumeMounts:
+            - name: data
+              mountPath: '/var/www/html'
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          {{- if (eq .Values.persistence.type "persistentVolumeClaim") }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "nextcloud.fullname" . ) }}
+          {{- elif (eq .Values.persistence.type "awsElasticBlockStore") }}
+          awsElasticBlockStore:
+            volumeID: {{ .Values.persistence.volumeId }}
+            fsType: {{ .Values.persistence.fsType }}
+          {{- elif (eq .Values.persistence.type "azureDisk") }}
+          azureDisk:
+            cachingMode: {{ .Values.persistence.cachingMode }}
+            diskName: {{ .Values.persistence.diskName }}
+            diskURI: {{ .Values.persistence.diskUri }}
+            fsType: {{ .Values.persistence.fsType }}
+            kind: {{ .Values.persistence.diskKind }}
+            readOnly: {{ .Values.persistence.readOnly | quote }}
+          {{- elif (eq .Values.persistence.type "azureFile") }}
+          azureFile:
+            readOnly: {{ .Values.persistence.readOnly | quote }}
+            secretName: {{ .Values.persistence.secretName }}
+            shareName: {{ .Values.persistence.shareName }}
+            {{- if (not (empty .Values.persistence.secretNamespace)) }}
+            secretNamespace: {{ .Values.persistence.secretNamespace }}
+            {{- end }}
+          {{- elif (eq .Values.persistence.type "cephfs") }}
+          cephfs:
+          {{- elif (eq .Values.persistence.type "flocker") }}
+          flocker:
+          {{- elif (eq .Values.persistence.type "gcePersistentDisk") }}
+          gcePersistentDisk:
+          {{- elif (eq .Values.persistence.type "glusterfs") }}
+          glusterfs:
+          {{- elif (eq .Values.persistence.type "local") }}
+          local:
+          {{- elif (eq .Values.persistence.type "nfs") }}
+          nfs:
+          {{- elif (eq .Values.persistence.type "portworxVolume") }}
+          portworxVolume:
+          {{- elif (eq .Values.persistence.type "quobyte") }}
+          quobyte:
+          {{- elif (eq .Values.persistence.type "rbd") }}
+          rbd:
+          {{- elif (eq .Values.persistence.type "scaleIO") }}
+          scaleIO:
+          {{- elif (eq .Values.persistence.type "storageOS") }}
+          storageOS:
+          {{- elif (eq .Values.persistence.type "vsphereVolume") }}
+          vsphereVolume:
+          {{- end }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
