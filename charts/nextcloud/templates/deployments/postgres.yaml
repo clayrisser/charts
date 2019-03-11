@@ -1,10 +1,10 @@
-{{- if (not .Values.config.mysql.host) }}
+{{- if (not .Values.config.postgres.host) }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "nextcloud.fullname" . }}-mysql
+  name: {{ template "nextcloud.fullname" . }}-postgres
   labels:
-    app: {{ template "nextcloud.name" . }}-mysql
+    app: {{ template "nextcloud.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,38 +12,36 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "nextcloud.name" . }}-mysql
+        app: {{ template "nextcloud.name" . }}-postgres
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "nextcloud.fullname" . }}-mysql
-          image: {{ .Values.images.mysql.repository }}:{{ .Values.images.mysql.tag }}
-          imagePullPolicy: {{ .Values.images.mysql.pullPolicy }}
+        - name: {{ template "nextcloud.fullname" . }}-postgres
+          image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
+          imagePullPolicy: {{ .Values.images.postgres.pullPolicy }}
           ports:
             - name: container
-              containerPort: 3306
+              containerPort: 5432
           volumeMounts:
             - name: data
-              mountPath: /var/lib/mysql
-              subPath: mysql
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
           env:
-            - name: MYSQL_RANDOM_ROOT_PASSWORD
-              value: 'true'
-            - name: MYSQL_DATABASE
+            - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: mysql_database
-            - name: MYSQL_USER
+                  key: postgres_database
+            - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: mysql_username
-            - name: MYSQL_PASSWORD
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
-                  key: mysql_password
+                  key: postgres_password
           livenessProbe:
             tcpSocket:
               port: container

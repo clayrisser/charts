@@ -18,35 +18,35 @@ questions:
     label: 'admin password'
     group: Config
 
-# Mysql Config
-  - variable: config.mysql.host
+# Postgres Config
+  - variable: config.postgres.host
     default: ''
-    description: 'mysql host'
+    description: 'postgres host'
     type: string
     required: false
-    label: 'mysql host'
-    group: 'Mysql Config'
-  - variable: config.mysql.database
+    label: 'postgres host'
+    group: 'Postgres Config'
+  - variable: config.postgres.database
     default: nextcloud
-    description: 'mysql database'
+    description: 'postgres database'
     type: string
     required: false
-    label: 'mysql database'
-    group: 'Mysql Config'
-  - variable: config.mysql.password
+    label: 'postgres database'
+    group: 'Postgres Config'
+  - variable: config.postgres.password
     default: ''
-    description: 'mysql password'
+    description: 'postgres password'
     type: password
     required: false
-    label: 'mysql password'
-    group: 'Mysql Config'
-  - variable: config.mysql.username
+    label: 'postgres password'
+    group: 'Postgres Config'
+  - variable: config.postgres.username
     default: ''
-    description: 'mysql username'
+    description: 'postgres username'
     type: string
     required: false
-    label: 'mysql username'
-    group: 'Mysql Config'
+    label: 'postgres username'
+    group: 'Postgres Config'
 
 # Persistence
   - variable: persistence.enabled
