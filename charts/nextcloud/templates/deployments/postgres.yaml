@@ -26,7 +26,17 @@ spec:
             - name: data
               mountPath: /var/lib/postgresql/data
               subPath: postgres
-          env: []
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: postgres_password
           livenessProbe:
             tcpSocket:
               port: container
