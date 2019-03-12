@@ -45,7 +45,7 @@ questions:
     description: ''
     type: string
     required: false
-    show_if: config.postgres.host!=''
+    show_if: config.postgres.host!=internal
     label: 'postgres username'
     group: 'Postgres Config'
 
