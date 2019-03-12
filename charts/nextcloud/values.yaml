@@ -14,8 +14,9 @@ config:
   postgres:
     database: nextcloud
     host: ''
+    internal: true
     password: ''
-    username: ''
+    username: postgres
 
 service:
   type: NodePort

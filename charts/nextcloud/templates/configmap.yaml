@@ -10,11 +10,10 @@ metadata:
 data:
   admin_user: {{ .Values.config.adminUser | quote }}
   {{- $postgres := .Values.config.postgres }}
-  {{- if (empty $postgres.host) }}
+  {{- if $postgres.internal }}
   postgres_host: {{ template "nextcloud.fullname" . }}-postgres
-  postgres_username: postgres
   {{- else }}
   postgres_host: {{ $postgres.host | quote }}
-  postgres_username: {{ $postgres.username | quote }}
   {{- end }}
   postgres_database: {{ $postgres.database | quote }}
+  postgres_username: {{ $postgres.username | quote }}

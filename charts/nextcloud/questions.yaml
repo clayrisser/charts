@@ -19,12 +19,20 @@ questions:
     group: Config
 
 # Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: 'internal username is postgres'
+    type: boolean
+    required: true
+    label: 'postgres internal'
+    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
-    description: 'internal database will spin up if not specified'
+    description: 'postgres host'
     type: string
     required: false
     label: 'postgres host'
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.database
     default: nextcloud
@@ -42,11 +50,11 @@ questions:
     group: 'Postgres Config'
   - variable: config.postgres.username
     default: postgres
-    description: ''
+    description: 'postgres username'
     type: string
-    required: false
-    show_if: config.postgres.host!=internal
+    required: true
     label: 'postgres username'
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
 
 # Persistence
