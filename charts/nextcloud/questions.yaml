@@ -21,7 +21,7 @@ questions:
 # Postgres Config
   - variable: config.postgres.host
     default: ''
-    description: 'postgres host'
+    description: 'internal database will spin up if not specified'
     type: string
     required: false
     label: 'postgres host'
@@ -30,21 +30,22 @@ questions:
     default: nextcloud
     description: 'postgres database'
     type: string
-    required: false
+    required: true
     label: 'postgres database'
     group: 'Postgres Config'
   - variable: config.postgres.password
     default: postgres
     description: 'postgres password'
     type: password
-    required: false
+    required: true
     label: 'postgres password'
     group: 'Postgres Config'
   - variable: config.postgres.username
     default: postgres
-    description: 'postgres username'
+    description: ''
     type: string
     required: false
+    show_if: config.postgres.host!=
     label: 'postgres username'
     group: 'Postgres Config'
 
