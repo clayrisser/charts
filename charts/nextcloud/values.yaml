@@ -15,7 +15,7 @@ config:
     database: nextcloud
     host: ''
     internal: true
-    password: ''
+    password: postgres
     username: postgres
 
 service:
