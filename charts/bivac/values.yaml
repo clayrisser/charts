@@ -1,0 +1,26 @@
+images:
+  bivac:
+    repository: camptocamp/bivac
+    tag: 2.0.0
+    pullPolicy: IfNotPresent
+
+config:
+  awsAccessKey: ''
+  awsSecretKey: ''
+  serverPsk: bivac
+  resticPassword: bivac
+  targetUrl: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

@@ -1,0 +1,21 @@
+name: bivac
+home: https://camptocamp.github.io/bivac
+icon: https://camptocamp.github.io/bivac/images/bivac.png
+version: 0.0.1
+appVersion: latest
+description: 'backup interface for volumes attached to containers'
+keywords:
+  - bivac
+  - backup
+  - restore
+  - volume
+  - s3
+  - duplicity
+  - restic
+  - deduplication
+  - dedup
+sources:
+  - https://github.com/camptocamp/bivac
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
