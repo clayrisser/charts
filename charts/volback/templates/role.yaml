@@ -10,7 +10,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "volback.fullname" . }}-volback
+  name: everything
 subjects:
   - kind: ServiceAccount
     name: system:serviceaccounts
@@ -22,7 +22,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "volback.fullname" . }}-volback
+  name: everything
   labels:
     app: {{ template "volback.name" . }}-volback
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -31,24 +31,14 @@ metadata:
 rules:
   - apiGroups: ['']
     resources:
+      - pods/log
+      - pods/exec
+      - persistentvolumeclaims
+      - namespaces
       - pods
     verbs:
       - create
       - delete
       - get
-      - list
-  - apiGroups: ['']
-    resources:
-      - persistentvolumeclaims
-      - namespaces
-    verbs:
-      - get
-      - list
-  - apiGroups: ['']
-    resources:
-      - pods/log
-      - pods/exec
-    verbs:
-      - get
       - post
-      - create
+      - list
