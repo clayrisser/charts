@@ -61,7 +61,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "volback.fullname" . }}
-                  key: volback_server_psk
+                  key: server_psk
           livenessProbe:
             tcpSocket:
               port: container
