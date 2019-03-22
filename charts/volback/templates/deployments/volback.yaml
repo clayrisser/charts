@@ -19,7 +19,7 @@ spec:
           image: {{ .Values.images.volback.repository }}:{{ .Values.images.volback.tag }}
           imagePullPolicy: {{ .Values.images.volback.pullPolicy }}
           command:
-            - 'manager -v'
+            - 'volback manager -v'
           ports:
             - name: container
               containerPort: 8182
