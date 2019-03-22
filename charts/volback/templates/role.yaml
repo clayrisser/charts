@@ -39,6 +39,7 @@ rules:
       - ''
     resources:
       - persistentvolumeclaims
+      - namespaces
     verbs:
       - get
       - list
