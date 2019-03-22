@@ -14,11 +14,8 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ template "volback.fullname" . }}-volback
-    namespace: kube-system
-  - kind: ServiceAccount
-    name: {{ template "volback.fullname" . }}-volback
-    namespace: volback
-
+    namespace: {{ .Release.Namespace }}
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -31,14 +28,24 @@ metadata:
 rules:
   - apiGroups: ['']
     resources:
-      - pods/log
-      - pods/exec
-      - persistentvolumeclaims
-      - namespaces
       - pods
     verbs:
       - create
       - delete
       - get
-      - post
       - list
+  - apiGroups: ['']
+    resources:
+      - persistentvolumeclaims
+      - namespaces
+    verbs:
+      - get
+      - list
+  - apiGroups: ['']
+    resources:
+      - pods/log
+      - pods/exec
+    verbs:
+      - get
+      - post
+      - create
