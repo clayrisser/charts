@@ -13,7 +13,7 @@ roleRef:
   name: {{ template "volback.fullname" . }}-volback
 subjects:
   - kind: ServiceAccount
-    name: system:serviceaccount:{{ .Release.Namespace }}:default
+    name: {{ .Release.Namespace }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
