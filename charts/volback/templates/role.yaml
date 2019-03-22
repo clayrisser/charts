@@ -1,15 +1,3 @@
-{{ if .Values.serviceAccount.create }}
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ template "volback.serviceAccountName" . }}
-  labels:
-    app: {{ template "volback.name" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-{{ end }}
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -25,7 +13,7 @@ roleRef:
   name: {{ template "volback.fullname" . }}-volback
 subjects:
   - kind: ServiceAccount
-    name: {{ template "volback.serviceAccountName" . }}
+    name: system:serviceaccount:{{ .Release.Namespace }}:default
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
