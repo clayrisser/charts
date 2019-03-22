@@ -1,0 +1,72 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "volback.fullname" . }}-volback
+  labels:
+    app: {{ template "volback.name" . }}-volback
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "volback.name" . }}-volback
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "volback.fullname" . }}-volback
+          image: {{ .Values.images.volback.repository }}:{{ .Values.images.volback.tag }}
+          imagePullPolicy: {{ .Values.images.volback.pullPolicy }}
+          command:
+            - 'manager -v'
+          ports:
+            - name: container
+              containerPort: 8182
+          env:
+            - name: VOLBACK_ORCHESTRATOR
+              value: kubernetes
+            - name: KUBERNETES_ALL_NAMESPACES
+              value: 'true'
+            # - name: KUBERNETES_KUBECONFIG
+            #   value: ''
+            - name: KUBERNETES_AGENT_SERVICE_ACCOUNT
+              value: {{ template "volback.fullname" . }}-volback
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: aws_access_key
+            - name: RESTIC_FORGET_ARGS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: forget_args
+            - name: VOLBACK_TARGET_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: target_url
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: aws_secret_key
+            - name: RESTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: restic_password
+            - name: VOLBACK_SERVER_PSK
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: volback_server_psk
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
