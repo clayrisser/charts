@@ -23,8 +23,14 @@ spec:
               containerPort: 80
           volumeMounts:
             - name: data
-              mountPath: '/var/www/html'
-              subPath: files
+              mountPath: /var/www/html/data
+              subPath: data
+            - name: data
+              mountPath: /var/www/html/apps
+              subPath: apps
+            - name: data
+              mountPath: /var/www/html/themes
+              subPath: themes
           env:
             - name: NEXTCLOUD_TRUSTED_DOMAINS
               value: {{ (index .Values.ingress.hosts.nextcloud 0).name | quote }}
