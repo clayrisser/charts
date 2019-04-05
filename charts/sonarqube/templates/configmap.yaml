@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "sonarqube.fullname" . }}
+  labels:
+    app: {{ template "sonarqube.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_jdbc_url: jdbc:postgresql://{{ template "sonarqube.fullname" . }}-postgres/{{ $postgres.database | quote }}
+  {{- else }}
+  postgres_jdbc_url: jdbc:postgresql://{{ $postgres.host | quote }}/{{ $postgres.database | quote }}
+  {{- end }}
+  postgres_username: {{ $postgres.username | quote }}

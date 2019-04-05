@@ -1,9 +1,10 @@
+{{- if .Values.config.postgres.internal }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "sonarqube.fullname" . }}-sonarqube
+  name: {{ template "sonarqube.fullname" . }}-postgres
   labels:
-    app: {{ template "sonarqube.name" . }}-sonarqube
+    app: {{ template "sonarqube.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,47 +12,37 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "sonarqube.name" . }}-sonarqube
+        app: {{ template "sonarqube.name" . }}-postgres
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "sonarqube.fullname" . }}-sonarqube
-          image: {{ .Values.images.sonarqube.repository }}:{{ .Values.images.sonarqube.tag }}
-          imagePullPolicy: {{ .Values.images.sonarqube.pullPolicy }}
+        - name: {{ template "sonarqube.fullname" . }}-postgres
+          image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
+          imagePullPolicy: {{ .Values.images.postgres.pullPolicy }}
           ports:
             - name: container
-              containerPort: 9000
+              containerPort: 5432
           volumeMounts:
             - name: data
-              mountPath: '/opt/sonarqube/conf'
-              subPath: conf
-            - name: data
-              mountPath: '/opt/sonarqube/extensions'
-              subPath: extensions
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
           env:
-            - name: sonar.jdbc.username
+            - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_username
-            - name: sonar.jdbc.url
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_jdbc_url
-            - name: sonar.jdbc.password
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_database
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
+                  name: {{ template "sonarqube.fullname" . }}
                   key: postgres_password
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
@@ -108,3 +99,4 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+{{- end }}

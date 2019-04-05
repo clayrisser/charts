@@ -3,6 +3,20 @@ images:
     repository: sonarqube
     tag: 7.7-community
     pullPolicy: IfNotPresent
+  postgres:
+    repository: postgres
+    tag: latest
+    pullPolicy: IfNotPresent
+
+config:
+  postgres:
+    database: sonarqube
+    host: ''
+    internal: true
+    password: postgres
+    port: 5432
+    url: ''
+    username: postgres
 
 service:
   type: NodePort
