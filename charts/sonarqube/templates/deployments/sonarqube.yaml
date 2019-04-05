@@ -33,11 +33,13 @@ spec:
               subPath: extensions
           env: []
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /api/system/health
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /api/system/health
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
