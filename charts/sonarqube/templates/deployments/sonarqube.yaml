@@ -34,12 +34,12 @@ spec:
           env: []
           livenessProbe:
             httpGet:
-              path: /api/system/health
+              path: /
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /api/system/health
+              path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
