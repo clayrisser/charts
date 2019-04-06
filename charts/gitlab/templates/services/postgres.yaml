@@ -1,0 +1,20 @@
+{{- if .Values.config.postgres.internal }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "gitlab.fullname" . }}-postgres
+  labels:
+    app: {{ template "gitlab.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: container
+  selector:
+    app: {{ template "gitlab.name" . }}-postgres
+    release: {{ .Release.Name }}
+{{- end }}

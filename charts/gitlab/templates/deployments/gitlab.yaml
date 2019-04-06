@@ -1,0 +1,135 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gitlab.fullname" . }}-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gitlab.name" . }}-gitlab
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gitlab.fullname" . }}-gitlab
+          image: {{ .Values.images.gitlab.repository }}:{{ .Values.images.gitlab.tag }}
+          imagePullPolicy: {{ .Values.images.gitlab.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          volumeMounts:
+            - name: data
+              mountPath: /etc/gitlab
+              subPath: etc
+            - name: data
+              mountPath: /gitlab-data
+              subPath: data
+          env:
+            - name: EXTERNAL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: base_url
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_host
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_username
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_database
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: redis_host
+            - name: GITLAB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: password
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: redis_password
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          {{- if (eq .Values.persistence.type "persistentVolumeClaim") }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+          {{- else if (eq .Values.persistence.type "awsElasticBlockStore") }}
+          awsElasticBlockStore:
+            volumeID: {{ .Values.persistence.volumeId }}
+            fsType: {{ .Values.persistence.fsType }}
+          {{- else if (eq .Values.persistence.type "azureDisk") }}
+          azureDisk:
+            cachingMode: {{ .Values.persistence.cachingMode }}
+            diskName: {{ .Values.persistence.diskName }}
+            diskURI: {{ .Values.persistence.diskUri }}
+            fsType: {{ .Values.persistence.fsType }}
+            kind: {{ .Values.persistence.diskKind }}
+            readOnly: {{ .Values.persistence.readOnly | quote }}
+          {{- else if (eq .Values.persistence.type "azureFile") }}
+          azureFile:
+            readOnly: {{ .Values.persistence.readOnly | quote }}
+            secretName: {{ .Values.persistence.secretName }}
+            shareName: {{ .Values.persistence.shareName }}
+            {{- if (not (empty .Values.persistence.secretNamespace)) }}
+            secretNamespace: {{ .Values.persistence.secretNamespace }}
+            {{- end }}
+          {{- else if (eq .Values.persistence.type "cephfs") }}
+          cephfs:
+          {{- else if (eq .Values.persistence.type "flocker") }}
+          flocker:
+          {{- else if (eq .Values.persistence.type "gcePersistentDisk") }}
+          gcePersistentDisk:
+          {{- else if (eq .Values.persistence.type "glusterfs") }}
+          glusterfs:
+          {{- else if (eq .Values.persistence.type "local") }}
+          local:
+          {{- else if (eq .Values.persistence.type "nfs") }}
+          nfs:
+          {{- else if (eq .Values.persistence.type "portworxVolume") }}
+          portworxVolume:
+          {{- else if (eq .Values.persistence.type "quobyte") }}
+          quobyte:
+          {{- else if (eq .Values.persistence.type "rbd") }}
+          rbd:
+          {{- else if (eq .Values.persistence.type "scaleIO") }}
+          scaleIO:
+          {{- else if (eq .Values.persistence.type "storageOS") }}
+          storageOS:
+          {{- else if (eq .Values.persistence.type "vsphereVolume") }}
+          vsphereVolume:
+          {{- end }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
