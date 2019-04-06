@@ -32,17 +32,17 @@ spec:
             - name: sonar.jdbc.username
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
+                  name: {{ template "sonarqube.fullname" . }}
                   key: postgres_username
             - name: sonar.jdbc.url
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
+                  name: {{ template "sonarqube.fullname" . }}
                   key: postgres_jdbc_url
             - name: sonar.jdbc.password
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
+                  name: {{ template "sonarqube.fullname" . }}
                   key: postgres_password
           livenessProbe:
             httpGet:
