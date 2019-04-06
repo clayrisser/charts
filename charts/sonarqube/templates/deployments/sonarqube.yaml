@@ -14,7 +14,17 @@ spec:
         app: {{ template "sonarqube.name" . }}-sonarqube
         release: {{ .Release.Name }}
     spec:
-      containers:
+      initContainers:
+        - name: {{ template "sonarqube.fullname" . }}-sonarqube-init
+          image: busybox
+          command: ["sh", "-c", "chown -R sonarqube:sonarqube /opt/sonarqube"]
+          volumeMounts:
+            - name: data
+              mountPath: /opt/sonarqube/conf
+              subPath: conf
+            - name: data
+              mountPath: /opt/sonarqube/extensions
+              subPath: extensions
         - name: {{ template "sonarqube.fullname" . }}-sonarqube
           image: {{ .Values.images.sonarqube.repository }}:{{ .Values.images.sonarqube.tag }}
           imagePullPolicy: {{ .Values.images.sonarqube.pullPolicy }}
@@ -26,8 +36,8 @@ spec:
               mountPath: /opt/sonarqube/conf
               subPath: conf
             - name: data
-              mountPath: /opt/sonarqube/extensions/plugins
-              subPath: plugins
+              mountPath: /opt/sonarqube/extensions
+              subPath: extensions
           env:
             - name: sonar.jdbc.username
               valueFrom:
