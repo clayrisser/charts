@@ -14,6 +14,14 @@ spec:
         app: {{ template "sonarqube.name" . }}-sonarqube
         release: {{ .Release.Name }}
     spec:
+      initContainers:
+        - name:  {{ template "sonarqube.fullname" . }}-sonarqube-init
+          image: alpine:latest
+          command: ['mkdir', '-p', '/opt/sonarqube/extensions/downloads']
+          volumeMounts:
+            - name: data
+              mountPath: /opt/sonarqube/extensions/downloads
+              subPath: extensions
       containers:
         - name: {{ template "sonarqube.fullname" . }}-sonarqube
           image: {{ .Values.images.sonarqube.repository }}:{{ .Values.images.sonarqube.tag }}
@@ -23,10 +31,10 @@ spec:
               containerPort: 9000
           volumeMounts:
             - name: data
-              mountPath: '/opt/sonarqube/conf'
+              mountPath: /opt/sonarqube/conf
               subPath: conf
             - name: data
-              mountPath: '/opt/sonarqube/extensions'
+              mountPath: /opt/sonarqube/extensions
               subPath: extensions
           env:
             - name: sonar.jdbc.username
