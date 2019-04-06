@@ -17,7 +17,7 @@ spec:
       initContainers:
         - name: {{ template "sonarqube.fullname" . }}-sonarqube-init
           image: busybox
-          command: ["sh", "-c", "chown -R sonarqube:sonarqube /opt/sonarqube"]
+          command: ["sh", "-c", "adduser -D -H sonarqube && chown -R sonarqube:sonarqube /opt/sonarqube"]
           volumeMounts:
             - name: data
               mountPath: /opt/sonarqube/conf
