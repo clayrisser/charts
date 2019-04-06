@@ -10,8 +10,8 @@ metadata:
 data:
   {{- $postgres := .Values.config.postgres }}
   {{- if $postgres.internal }}
-  postgres_jdbc_url: jdbc:postgresql://{{ template "sonarqube.fullname" . }}-postgres/{{ $postgres.database | quote }}
+  postgres_jdbc_url: 'jdbc:postgresql://{{ template "sonarqube.fullname" . }}-postgres/{{ $postgres.database }}'
   {{- else }}
-  postgres_jdbc_url: jdbc:postgresql://{{ $postgres.host | quote }}/{{ $postgres.database | quote }}
+  postgres_jdbc_url: 'jdbc:postgresql://{{ $postgres.host | quote }}/{{ $postgres.database }}'
   {{- end }}
   postgres_username: {{ $postgres.username | quote }}
