@@ -32,42 +32,42 @@ spec:
             - name: EXTERNAL_URL
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "sonarqube.fullname" . }}
+                  name: {{ template "gitlab.fullname" . }}
                   key: base_url
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "sonarqube.fullname" . }}
+                  name: {{ template "gitlab.fullname" . }}
                   key: postgres_host
             - name: DB_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "sonarqube.fullname" . }}
+                  name: {{ template "gitlab.fullname" . }}
                   key: postgres_username
             - name: DB_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "sonarqube.fullname" . }}
+                  name: {{ template "gitlab.fullname" . }}
                   key: postgres_database
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "sonarqube.fullname" . }}
+                  name: {{ template "gitlab.fullname" . }}
                   key: redis_host
             - name: GITLAB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "sonarqube.fullname" . }}
+                  name: {{ template "gitlab.fullname" . }}
                   key: password
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "sonarqube.fullname" . }}
+                  name: {{ template "gitlab.fullname" . }}
                   key: postgres_password
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "sonarqube.fullname" . }}
+                  name: {{ template "gitlab.fullname" . }}
                   key: redis_password
           livenessProbe:
             httpGet:
