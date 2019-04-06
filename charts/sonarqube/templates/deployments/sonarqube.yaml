@@ -37,8 +37,8 @@ spec:
               mountPath: /opt/sonarqube/conf
               subPath: conf
             - name: data
-              mountPath: /opt/sonarqube/extensions
-              subPath: extensions
+              mountPath: /opt/sonarqube/extensions/plugins
+              subPath: plugins
           env:
             - name: sonar.jdbc.username
               valueFrom:
