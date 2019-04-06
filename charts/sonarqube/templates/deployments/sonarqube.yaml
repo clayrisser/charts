@@ -25,6 +25,7 @@ spec:
             - name: data
               mountPath: /opt/sonarqube/extensions
               subPath: extensions
+      containers:
         - name: {{ template "sonarqube.fullname" . }}-sonarqube
           image: {{ .Values.images.sonarqube.repository }}:{{ .Values.images.sonarqube.tag }}
           imagePullPolicy: {{ .Values.images.sonarqube.pullPolicy }}
