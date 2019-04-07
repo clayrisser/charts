@@ -3,10 +3,6 @@ images:
     repository: dpage/pgadmin4
     tag: latest
     pullPolicy: IfNotPresent
-  postgres:
-    repository: postgres
-    tag: latest
-    pullPolicy: IfNotPresent
 
 config:
   awsAccessKey: ''
@@ -21,6 +17,7 @@ config:
   bucketPrefix: ''
   googleProjectId: ''
   googleServiceKey: ''
+  pgadmin: true
   pgadminEmail: 'admin'
   pgadminPassword: 'admin'
   prometheus: false
@@ -49,20 +46,8 @@ issuer:
 
 persistence:
   accessMode: ReadWriteOnce
-  cachingMode: None
-  diskName: ''
-  diskURI: ''
   enabled: false
-  existingClaim: ''
-  fsType: ext4
-  kind: Shared
-  readOnly: false
-  secretName: ''
-  secretNamespace: ''
-  shareName: ''
   size: 10Gi
-  type: persistentVolumeClaim
-  volumeId: ''
 
 probes:
   liveness:

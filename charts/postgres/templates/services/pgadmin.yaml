@@ -1,3 +1,4 @@
+{{- if .Values.config.pgadmin }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -26,3 +27,4 @@ spec:
   selector:
     app: {{ template "postgres.name" . }}-pgadmin
     release: {{ .Release.Name }}
+{{- end }}

@@ -19,11 +19,13 @@ spec:
     agent: prometheus.io/builtin
   {{- end }}
   storage:
+    {{- if .Values.persistence.enabled }}
     {{- if .Values.persistence.storageClass }}
     {{- if (eq "-" .Values.persistence.storageClass) }}
     storageClassName: ''
     {{- else }}
     storageClassName: {{ .Values.persistence.storageClass }}
+    {{- end }}
     {{- end }}
     {{- end }}
     accessModes:
@@ -36,13 +38,13 @@ spec:
     cronExpression: {{ .Values.config.backupCron | quote }}
     storageSecretName: {{ template "postgres.fullname" . }}-postgres
     {{ .Values.config.backup }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup) (eq "s3" .Values.persistence.backup)) }}
+      {{- if (or (eq "gcs" .Values.config.backup) (eq "s3" .Values.config.backup)) }}
       bucket: {{ .Values.config.bucket | quote }}
       {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup) }}
+      {{- if (eq "s3" .Values.config.backup) }}
       endpoint: {{ .Values.config.bucketEndpoint | quote }}
       {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup) }}
+      {{- if (eq "azure" .Values.config.backup) }}
       container: {{ .Values.config.bucketContainer | quote }}
       {{- end }}
       prefix: {{ .Values.config.bucketPrefix | quote }}
