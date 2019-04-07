@@ -1,0 +1,55 @@
+apiVersion: kubedb.com/v1alpha1
+kind: Postgres
+metadata:
+  name: {{ template "postgres.fullname" . }}-postgres
+  labels:
+    app: {{ template "postgres.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  version: 10.2-v2
+  configSource:
+    configMap:
+      name: {{ template "postgres.fullname" . }}-postgres
+  storageType: Durable
+  standbyMode: {{ .Values.config.standbyMode | quote }}
+  {{- if .Values.config.prometheus }}
+  monitor:
+    agent: prometheus.io/builtin
+  {{- end }}
+  storage:
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+    storageClassName: ''
+    {{- else }}
+    storageClassName: {{ .Values.persistence.storageClass }}
+    {{- end }}
+    {{- end }}
+    accessModes:
+      - {{ .Values.persistence.accessMode }}
+    resources:
+      requests:
+        storage: {{ .Values.persistence.size }}
+  {{- if (not (empty .Values.config.backup)) }}
+  backupSchedule:
+    cronExpression: {{ .Values.config.backupCron | quote }}
+    storageSecretName: {{ template "postgres.fullname" . }}-postgres
+    {{ .Values.config.backup }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup) (eq "s3" .Values.persistence.backup)) }}
+      bucket: {{ .Values.config.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup) }}
+      endpoint: {{ .Values.config.bucketEndpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup) }}
+      container: {{ .Values.config.bucketContainer | quote }}
+      {{- end }}
+      prefix: {{ .Values.config.bucketPrefix | quote }}
+  {{- end }}
+  {{- if (not (empty .Values.config.restoreFromSnapshot)) }}
+  init:
+    snapshotSource:
+      name: {{ .Values.config.restoreFromSnapshot | quote }}
+      namespace: {{ .Release.Namespace }}
+  {{- end }}
