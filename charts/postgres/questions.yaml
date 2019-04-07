@@ -17,22 +17,15 @@ questions:
     required: true
     label: tag
     group: Images
-  - variable: images.postgres.repository
-    default: postgres
-    description: ''
-    type: string
-    required: true
-    label: repository
-    group: Images
-  - variable: images.postgres.tag
-    default: latest
-    description: ''
-    type: string
-    required: true
-    label: tag
-    group: Images
 
 # Config
+  - variable: config.version
+    default: 10.2-v2
+    description: version
+    type: string
+    required: true
+    label: version
+    group: Config
   - variable: config.pgadminEmail
     default: 'admin'
     description: 'pgadmin email'

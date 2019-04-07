@@ -24,6 +24,7 @@ config:
   restoreFromSnapshot: ''
   standbyMode: ''
   userConfig: ''
+  version: 10.2-v2
 
 service:
   type: NodePort

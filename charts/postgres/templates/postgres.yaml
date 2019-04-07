@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  version: 10.2-v2
+  version: {{ .Values.config.version | quote }}
   configSource:
     configMap:
       name: {{ template "postgres.fullname" . }}-postgres
