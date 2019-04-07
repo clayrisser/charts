@@ -27,6 +27,13 @@ questions:
     required: true
     label: version
     group: Config
+  - variable: config.phpmyadmin
+    default: true
+    description: phpmyadmin
+    type: boolean
+    required: true
+    label: phpmyadmin
+    group: Config
   - variable: config.standbyMode
     default: hot
     description: 'standby mode'

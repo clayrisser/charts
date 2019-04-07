@@ -5,10 +5,11 @@ images:
     pullPolicy: IfNotPresent
 
 config:
+  customConfig: ''
+  phpmyadmin: true
   prometheus: false
   restoreFromSnapshot: ''
   standbyMode: ''
-  customConfig: ''
   version: 8.0-v2
   backup:
     awsAccessKey: ''

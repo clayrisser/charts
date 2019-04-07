@@ -1,4 +1,4 @@
-{{- if .Values.config.phpmyadmin.enabled }}
+{{- if .Values.config.phpmyadmin }}
 {{- if .Values.ingress.enabled }}
 {{- range .Values.ingress.hosts.phpmyadmin }}
 apiVersion: extensions/v1beta1
