@@ -1,6 +1,6 @@
 name: mysql
 home: https://www.mysql.com
-icon: https://labs.mysql.com/common/logos/mysql-logo.svg?v2
+icon: https://www.mysql.com/common/logos/logo-mysql-170x115.png
 version: 0.0.1
 appVersion: latest
 description: 'most popular open source database'
