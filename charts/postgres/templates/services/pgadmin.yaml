@@ -12,17 +12,17 @@ spec:
   {{- if .Values.ingress.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.type }}
-  {{- if (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  type: {{ .Values.service.pgadmin.type }}
+  {{- if (or (eq .Values.service.pgadmin.type "LoadBalancer") (eq .Values.service.pgadmin.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.pgadmin.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.pgadmin.http))) }}
-      nodePort: {{ .Values.service.nodePorts.pgadmin.http }}
+      {{- if (and (eq .Values.service.pgadmin.type "NodePort") (not (empty .Values.service.pgadmin.nodePorts.pgadmin.http))) }}
+      nodePort: {{ .Values.service.pgadmin.nodePorts.pgadmin.http }}
       {{- end }}
   selector:
     app: {{ template "postgres.name" . }}-pgadmin

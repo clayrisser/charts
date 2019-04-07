@@ -1,7 +1,7 @@
 images:
   phpmyadmin:
     repository: phpmyadmin/phpmyadmin
-    tag: latest
+    tag: 4.7
     pullPolicy: IfNotPresent
 
 config:
@@ -27,11 +27,18 @@ config:
     type: ''
 
 service:
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  nodePorts:
-    phpmyadmin:
-      http: ''
+  phpmyadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      phpmyadmin:
+        http: ''
+  mysql:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql:
+        port: ''
 
 ingress:
   enabled: false

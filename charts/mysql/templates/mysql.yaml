@@ -57,3 +57,36 @@ spec:
       name: {{ .Values.config.restoreFromSnapshot | quote }}
       namespace: {{ .Release.Namespace }}
   {{- end }}
+  serviceTemplate:
+    metadata:
+      annotations:
+        passMe: ToService
+    spec:
+      type: {{ .Values.service.mysql.type }}
+      {{- if (or (eq .Values.service.mysql.type "LoadBalancer") (eq .Values.service.mysql.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name: http
+          port: 5432
+          targetPort: http
+          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
+          nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
+          {{- end }}
+  replicaServiceTemplate:
+    annotations:
+      passMe: ToReplicaService
+    spec:
+      type: {{ .Values.service.mysql.type }}
+      {{- if (or (eq .Values.service.mysql.type "LoadBalancer") (eq .Values.service.mysql.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name:  http
+          port:  5432
+          targetPort: http
+          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
+          nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
+          {{- end }}
+  updateStrategy:
+    type: RollingUpdate

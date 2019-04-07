@@ -30,11 +30,18 @@ config:
     password: pass
 
 service:
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  nodePorts:
-    pgadmin:
-      http: ''
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      pgadmin:
+        http: ''
+  postgres:
+    type: CluserIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres:
+        port: ''
 
 ingress:
   enabled: false

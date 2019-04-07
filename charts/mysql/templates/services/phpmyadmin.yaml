@@ -12,17 +12,17 @@ spec:
   {{- if .Values.ingress.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.type }}
-  {{- if (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  type: {{ .Values.service.phpmyadmin.type }}
+  {{- if (or (eq .Values.service.phpmyadmin.type "LoadBalancer") (eq .Values.service.phpmyadmin.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.phpmyadmin.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.phpmyadmin.http))) }}
-      nodePort: {{ .Values.service.nodePorts.phpmyadmin.http }}
+      {{- if (and (eq .Values.service.phpmyadmin.type "NodePort") (not (empty .Values.service.phpmyadmin.nodePorts.phpmyadmin.http))) }}
+      nodePort: {{ .Values.service.phpmyadmin.nodePorts.phpmyadmin.http }}
       {{- end }}
   selector:
     app: {{ template "mysql.name" . }}-phpmyadmin

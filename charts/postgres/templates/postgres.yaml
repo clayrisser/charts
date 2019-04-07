@@ -57,3 +57,36 @@ spec:
       name: {{ .Values.config.restoreFromSnapshot | quote }}
       namespace: {{ .Release.Namespace }}
   {{- end }}
+  serviceTemplate:
+    metadata:
+      annotations:
+        passMe: ToService
+    spec:
+      type: {{ .Values.service.postgres.type }}
+      {{- if (or (eq .Values.service.postgres.type "LoadBalancer") (eq .Values.service.postgres.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.postgres.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name: http
+          port: 5432
+          targetPort: http
+          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres.port))) }}
+          nodePort: {{ .Values.service.postgres.nodePorts.postgres.port }}
+          {{- end }}
+  replicaServiceTemplate:
+    annotations:
+      passMe: ToReplicaService
+    spec:
+      type: {{ .Values.service.postgres.type }}
+      {{- if (or (eq .Values.service.postgres.type "LoadBalancer") (eq .Values.service.postgres.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.postgres.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name:  http
+          port:  5432
+          targetPort: http
+          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres.port))) }}
+          nodePort: {{ .Values.service.postgres.nodePorts.postgres.port }}
+          {{- end }}
+  updateStrategy:
+    type: RollingUpdate
