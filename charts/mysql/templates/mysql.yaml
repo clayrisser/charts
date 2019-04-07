@@ -1,5 +1,5 @@
 apiVersion: kubedb.com/v1alpha1
-kind: Mysql
+kind: MySQL
 metadata:
   name: {{ template "mysql.fullname" . }}-mysql
   labels:
