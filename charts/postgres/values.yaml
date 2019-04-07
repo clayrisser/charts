@@ -5,26 +5,29 @@ images:
     pullPolicy: IfNotPresent
 
 config:
-  awsAccessKey: ''
-  awsSecretKey: ''
-  azureAccountKey: ''
-  azureAccountName: ''
-  backup: ''
-  backupContainer: ''
-  backupCron: '@daily'
-  bucket: ''
-  bucketEndpoint: ''
-  bucketPrefix: ''
-  googleProjectId: ''
-  googleServiceKey: ''
-  pgadmin: true
-  pgadminEmail: 'admin'
-  pgadminPassword: 'admin'
   prometheus: false
   restoreFromSnapshot: ''
   standbyMode: ''
   userConfig: ''
   version: 10.2-v2
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    cron: '@daily'
+    enabled: false
+    endpoint: ''
+    googleProjectId: ''
+    googleServiceKey: ''
+    prefix: ''
+    type: ''
+  pgadmin:
+    email: admin
+    enabled: true
+    password: pass
 
 service:
   type: NodePort

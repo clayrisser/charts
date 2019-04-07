@@ -18,8 +18,8 @@ spec:
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
+  {{- if .Values.persistence.enabled }}
   storage:
-    {{- if .Values.persistence.enabled }}
     {{- if .Values.persistence.storageClass }}
     {{- if (eq "-" .Values.persistence.storageClass) }}
     storageClassName: ''
@@ -27,27 +27,27 @@ spec:
     storageClassName: {{ .Values.persistence.storageClass }}
     {{- end }}
     {{- end }}
-    {{- end }}
     accessModes:
       - {{ .Values.persistence.accessMode }}
     resources:
       requests:
         storage: {{ .Values.persistence.size }}
-  {{- if (not (empty .Values.config.backup)) }}
+  {{- end }}
+  {{- if (not (empty .Values.config.backup.enabled)) }}
   backupSchedule:
-    cronExpression: {{ .Values.config.backupCron | quote }}
+    cronExpression: {{ .Values.config.backup.cron | quote }}
     storageSecretName: {{ template "postgres.fullname" . }}-postgres
-    {{ .Values.config.backup }}:
-      {{- if (or (eq "gcs" .Values.config.backup) (eq "s3" .Values.config.backup)) }}
-      bucket: {{ .Values.config.bucket | quote }}
+    {{ .Values.config.backup.type }}:
+      {{- if (or (eq "gcs" .Values.config.backup.type) (eq "s3" .Values.config.backup.type)) }}
+      bucket: {{ .Values.config.backup.bucket | quote }}
       {{- end }}
-      {{- if (eq "s3" .Values.config.backup) }}
-      endpoint: {{ .Values.config.bucketEndpoint | quote }}
+      {{- if (eq "s3" .Values.config.backup.type) }}
+      endpoint: {{ .Values.config.backup.endpoint | quote }}
       {{- end }}
-      {{- if (eq "azure" .Values.config.backup) }}
-      container: {{ .Values.config.bucketContainer | quote }}
+      {{- if (eq "azure" .Values.config.backup.type) }}
+      container: {{ .Values.config.backup.container | quote }}
       {{- end }}
-      prefix: {{ .Values.config.bucketPrefix | quote }}
+      prefix: {{ .Values.config.backup.prefix | quote }}
   {{- end }}
   {{- if (not (empty .Values.config.restoreFromSnapshot)) }}
   init:

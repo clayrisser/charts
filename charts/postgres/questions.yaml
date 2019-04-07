@@ -1,5 +1,6 @@
 categories:
-  - Server
+  - Backup
+  - Database
 questions:
 
 # Images
@@ -26,131 +27,6 @@ questions:
     required: true
     label: version
     group: Config
-  - variable: config.pgadminEmail
-    default: 'admin'
-    description: 'pgadmin email'
-    type: string
-    required: true
-    label: 'pgadmin email'
-    group: Config
-  - variable: config.pgadminPassword
-    default: 'admin'
-    description: 'pgadmin password'
-    type: password
-    required: true
-    label: 'pgadmin password'
-    group: Config
-  - variable: config.userConfig
-    default: ''
-    description: 'user config'
-    type: string
-    required: false
-    label: 'user config'
-    group: Config
-  - variable: config.restoreFromSnapshot
-    default: ''
-    description: 'restore from snapshot'
-    type: string
-    required: false
-    label: 'restore from snapshot'
-    group: Config
-  - variable: config.backup
-    default: ''
-    description: backup
-    type: enum
-    options:
-      - gcs
-      - s3
-      - azure
-    required: false
-    label: backup
-    group: Config
-  - variable: config.backupCron
-    default: '@daily'
-    description: 'backup cron'
-    type: string
-    required: false
-    label: 'backup cron'
-    group: Config
-  - variable: config.awsAccessKey
-    default: ''
-    description: 'aws access key'
-    type: string
-    required: false
-    label: 'aws access key'
-    show_if: config.backup=s3
-    group: Config
-  - variable: config.awsSecretKey
-    default: ''
-    description: 'aws secret key'
-    type: password
-    required: false
-    label: 'aws secret key'
-    show_if: config.backup=s3
-    group: Config
-  - variable: config.googleProjectId
-    default: ''
-    description: 'google project id'
-    type: string
-    required: false
-    label: 'google project id'
-    show_if: config.backup=gcs
-    group: Config
-  - variable: config.googleServiceKey
-    default: ''
-    description: 'google service key'
-    type: password
-    required: false
-    label: 'google service key'
-    show_if: config.backup=gcs
-    group: Config
-  - variable: config.azureAccountName
-    default: ''
-    description: 'azure account name'
-    type: string
-    required: false
-    label: 'azure account name'
-    show_if: config.backup=azure
-    group: Config
-  - variable: config.azureAccountKey
-    default: ''
-    description: 'azure account key'
-    type: password
-    required: false
-    label: 'azure account key'
-    show_if: config.backup=azure
-    group: Config
-  - variable: config.bucket
-    default: ''
-    description: bucket
-    type: string
-    required: false
-    label: bucket
-    show_if: config.backup=gcs||config.backup=s3
-    group: Config
-  - variable: config.bucketPrefix
-    default: ''
-    description: 'bucket prefix'
-    type: string
-    required: false
-    label: 'bucket prefix'
-    group: Config
-  - variable: config.bucketEndpoint
-    default: ''
-    description: 'bucket endpoint'
-    type: string
-    required: false
-    label: 'bucket endpoint'
-    show_if: config.backup=s3
-    group: Config
-  - variable: config.backupContainer
-    default: ''
-    description: 'backup container'
-    type: string
-    required: false
-    label: 'backup container'
-    show_if: config.backup=azure
-    group: Config
   - variable: config.standbyMode
     default: hot
     description: 'standby mode'
@@ -162,19 +38,153 @@ questions:
     label: 'standby mode'
     group: Config
   - variable: config.prometheus
-    default: 'false'
+    default: false
     description: prometheus
     type: boolean
     required: true
     label: prometheus
     group: Config
-  - variable: config.pgadmin
-    default: 'true'
-    description: 'pgadmin'
+  - variable: config.restoreFromSnapshot
+    default: ''
+    description: 'restore from snapshot'
+    type: string
+    required: false
+    label: 'restore from snapshot'
+    group: Config
+  - variable: config.userConfig
+    default: ''
+    description: 'user config'
+    type: string
+    required: false
+    label: 'user config'
+    group: Config
+  - variable: config.awsAccessKey
+    default: ''
+    description: 'aws access key'
+    type: string
+    required: false
+    label: 'aws access key'
+    group: Config
+  - variable: config.awsSecretKey
+    default: ''
+    description: 'aws secret key'
+    type: password
+    required: false
+    label: 'aws secret key'
+    group: Config
+  - variable: config.googleProjectId
+    default: ''
+    description: 'google project id'
+    type: string
+    required: false
+    label: 'google project id'
+    group: Config
+  - variable: config.googleServiceKey
+    default: ''
+    description: 'google service key'
+    type: password
+    required: false
+    label: 'google service key'
+    group: Config
+  - variable: config.azureAccountName
+    default: ''
+    description: 'azure account name'
+    type: string
+    required: false
+    label: 'azure account name'
+    group: Config
+  - variable: config.azureAccountKey
+    default: ''
+    description: 'azure account key'
+    type: password
+    required: false
+    label: 'azure account key'
+    group: Config
+
+# PGAdmin
+  - variable: config.pgadmin.enabled
+    default: true
+    description: pgadmin
     type: boolean
     required: true
-    label: 'pgadmin'
-    group: Config
+    label: pgadmin
+    show_subquestion_if: true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.email
+        default: 'admin'
+        description: 'pgadmin email'
+        type: string
+        required: true
+        label: 'pgadmin email'
+        group: PGAdmin
+      - variable: config.pgadmin.password
+        default: 'admin'
+        description: 'pgadmin password'
+        type: password
+        required: true
+        label: 'pgadmin password'
+        group: PGAdmin
+
+# Backup
+  - variable: config.backup.enabled
+    default: false
+    description: backup
+    type: boolean
+    required: true
+    label: backup
+    show_subquestion_if: true
+    group: Backup
+    subquestions:
+      - variable: config.backup.type
+        default: ''
+        description: 'backup type'
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        label: 'backup type'
+        group: Backup
+      - variable: config.backup.cron
+        default: '@daily'
+        description: 'backup cron'
+        type: string
+        required: false
+        label: 'backup cron'
+        group: Backup
+      - variable: config.backup.bucket
+        default: ''
+        description: 'backup bucket'
+        type: string
+        required: false
+        label: 'backup bucket'
+        show_if: config.backup.type=gcs||config.backup=s3
+        group: Backup
+      - variable: config.backup.endpoint
+        default: ''
+        description: 'backup endpoint'
+        type: string
+        required: false
+        label: 'backup endpoint'
+        show_if: config.backup.type=s3
+        group: Backup
+      - variable: config.backup.container
+        default: ''
+        description: 'backup container'
+        type: string
+        required: false
+        label: 'backup container'
+        show_if: config.backup.type=azure
+        group: Backup
+      - variable: config.backup.prefix
+        default: ''
+        description: 'backup prefix'
+        type: string
+        required: false
+        label: 'backup prefix'
+        group: Backup
 
 # Persistence
   - variable: persistence.enabled

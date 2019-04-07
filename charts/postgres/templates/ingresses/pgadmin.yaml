@@ -1,3 +1,4 @@
+{{- if .Values.config.pgadmin.enabled }}
 {{- if .Values.ingress.enabled }}
 {{- range .Values.ingress.hosts.pgadmin }}
 apiVersion: extensions/v1beta1
@@ -30,5 +31,6 @@ spec:
         - {{ .name }}
   {{- end }}
 ---
+{{- end }}
 {{- end }}
 {{- end }}
