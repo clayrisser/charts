@@ -1,15 +1,15 @@
 images:
-  pgadmin:
-    repository: dpage/pgadmin4
+  phpmyadmin:
+    repository: phpmyadmin/phpmyadmin
     tag: latest
     pullPolicy: IfNotPresent
 
 config:
-  customConfig: ''
   prometheus: false
   restoreFromSnapshot: ''
   standbyMode: ''
-  version: 10.2-v2
+  customConfig: ''
+  version: 8.0-v2
   backup:
     awsAccessKey: ''
     awsSecretKey: ''
@@ -24,23 +24,19 @@ config:
     googleServiceKey: ''
     prefix: ''
     type: ''
-  pgadmin:
-    email: admin
-    enabled: true
-    password: pass
 
 service:
   type: NodePort
   externalTrafficPolicy: Cluster
   nodePorts:
-    pgadmin:
+    phpmyadmin:
       http: ''
 
 ingress:
   enabled: false
   tls: false
   hosts:
-    pgadmin:
+    phpmyadmin:
       - name: ''
         path: /
 

@@ -1,0 +1,36 @@
+{{- if .Values.config.phpmyadmin.enabled }}
+{{- if .Values.ingress.enabled }}
+{{- range .Values.ingress.hosts.phpmyadmin }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "mysql.fullname" $ }}-phpmyadmin
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  annotations:
+    certmanager.k8s.io/cluster-issuer: {{ $.Values.issuer.name }}
+    kubernetes.io/tls-acme: "true"
+  {{- end }}
+  labels:
+    app: {{ template "mysql.name" $ }}-phpmyadmin
+    chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+spec:
+  rules:
+    - host: {{ .name }}
+      http:
+        paths:
+          - path: {{ .path }}
+            backend:
+              serviceName: {{ template "mysql.fullname" $ }}-phpmyadmin
+              servicePort: http
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  tls:
+    - secretName: letsencrypt-staging
+      hosts:
+        - {{ .name }}
+  {{- end }}
+---
+{{- end }}
+{{- end }}
+{{- end }}

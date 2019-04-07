@@ -4,14 +4,14 @@ categories:
 questions:
 
 # Images
-  - variable: images.pgadmin.repository
-    default: dpage/pgadmin4
+  - variable: images.phpmyadmin.repository
+    default: phpmyadmin/phpmyadmin
     description: ''
     type: string
     required: true
     label: repository
     group: Images
-  - variable: images.pgadmin.tag
+  - variable: images.phpmyadmin.tag
     default: latest
     description: ''
     type: string
@@ -21,7 +21,7 @@ questions:
 
 # Config
   - variable: config.version
-    default: 10.2-v2
+    default: 8.0-v2
     description: version
     type: string
     required: true
@@ -100,31 +100,6 @@ questions:
     required: false
     label: 'azure account key'
     group: Config
-
-# PGAdmin
-  - variable: config.pgadmin.enabled
-    default: true
-    description: pgadmin
-    type: boolean
-    required: true
-    label: pgadmin
-    show_subquestion_if: true
-    group: PGAdmin
-    subquestions:
-      - variable: config.pgadmin.email
-        default: 'admin'
-        description: 'pgadmin email'
-        type: string
-        required: true
-        label: 'pgadmin email'
-        group: PGAdmin
-      - variable: config.pgadmin.password
-        default: 'admin'
-        description: 'pgadmin password'
-        type: password
-        required: true
-        label: 'pgadmin password'
-        group: PGAdmin
 
 # Backup
   - variable: config.backup.enabled
@@ -239,18 +214,18 @@ questions:
           - letsencrypt-prod
         required: true
         label: issuer
-      - variable: ingress.hosts.pgadmin[0].name
+      - variable: ingress.hosts.phpmyadmin[0].name
         default: xip.io
-        description: 'hostname to your pgadmin installation'
+        description: 'hostname to your phpmyadmin installation'
         type: hostname
         required: true
-        label: 'pgadmin hostname'
-      - variable: ingress.hosts.pgadmin[0].path
+        label: 'phpmyadmin hostname'
+      - variable: ingress.hosts.phpmyadmin[0].path
         default: /
-        description: 'pathname to your pgadmin installation'
+        description: 'pathname to your phpmyadmin installation'
         type: string
         required: true
-        label: 'pgadmin path'
+        label: 'phpmyadmin path'
   - variable: service.type
     default: NodePort
     description: 'service type'
@@ -265,11 +240,11 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.pgadmin.http
+      - variable: service.nodePorts.phpmyadmin.http
         default: ''
-        description: 'NodePort pgadmin http port (to set explicitly, choose port between 30000-32767)'
+        description: 'NodePort phpmyadmin http port (to set explicitly, choose port between 30000-32767)'
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
-        label: 'pgadmin http port'
+        label: 'phpmyadmin http port'

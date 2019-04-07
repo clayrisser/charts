@@ -1,0 +1,17 @@
+name: mysql
+home: https://www.mysql.com
+icon: https://labs.mysql.com/common/logos/mysql-logo.svg?v2
+version: 0.0.1
+appVersion: latest
+description: 'most popular open source database'
+keywords:
+  - mysql
+  - database
+  - relation
+  - relational
+  - db
+sources:
+  - https://github.com/mysql/mysql-server
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
