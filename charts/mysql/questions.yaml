@@ -152,10 +152,10 @@ questions:
         show_if: config.backup.type=gcs||config.backup.type=s3
         group: Backup
       - variable: config.backup.endpoint
-        default: ''
+        default: s3.amazonaws.com
         description: ''
         type: string
-        required: false
+        required: true
         label: 'backup endpoint'
         show_if: config.backup.type=s3
         group: Backup
