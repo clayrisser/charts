@@ -49,10 +49,10 @@ questions:
 # Config
   - variable: config.password
     default: ''
-    description: 'password'
+    description: password
     type: password
     required: true
-    label: 'password'
+    label: password
     group: Config
   - variable: config.baseUrl
     default: ''
