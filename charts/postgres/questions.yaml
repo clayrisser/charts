@@ -282,6 +282,7 @@ questions:
         default: ''
         description: ''
         type: int
+        show_if: ingress.enabled=false&&config.pgadmin.enabled=true
         min: 30000
         max: 32767
         label: 'pgadmin http port'

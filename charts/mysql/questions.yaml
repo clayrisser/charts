@@ -260,6 +260,7 @@ questions:
         default: ''
         description: ''
         type: int
+        show_if: ingress.enabled=false&&config.phpmyadmin=true
         min: 30000
         max: 32767
         label: 'phpmyadmin http port'
