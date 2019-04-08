@@ -62,13 +62,6 @@ questions:
     required: false
     label: 'restore from snapshot'
     group: Config
-  - variable: config.customConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'custom config'
-    group: Config
   - variable: config.awsAccessKey
     default: ''
     description: ''
@@ -110,6 +103,13 @@ questions:
     type: password
     required: false
     label: 'azure account key'
+    group: Config
+  - variable: config.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
     group: Config
 
 # PGAdmin
@@ -246,6 +246,7 @@ questions:
         default: letsencrypt-staging
         description: ''
         type: enum
+        show_if: ingress.tls=true
         options:
           - letsencrypt-staging
           - letsencrypt-prod
@@ -267,7 +268,7 @@ questions:
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.enabled=false&&config.mysql=true
+    show_if: ingress.enabled=false&&config.pgadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
