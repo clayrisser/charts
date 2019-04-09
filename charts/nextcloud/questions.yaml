@@ -35,14 +35,14 @@ questions:
 # Config
   - variable: config.adminUser
     default: 'admin'
-    description: 'admin user'
+    description: ''
     type: string
     required: true
     label: 'admin user'
     group: Config
   - variable: config.adminPassword
     default: 'pass'
-    description: 'admin password'
+    description: ''
     type: password
     required: true
     label: 'admin password'
@@ -90,7 +90,7 @@ questions:
 # Persistence
   - variable: persistence.enabled
     default: false
-    description: 'enable persistent volume'
+    description: ''
     type: boolean
     required: true
     label: 'persistent volume enabled'
@@ -99,7 +99,7 @@ questions:
     subquestions:
       - variable: persistence.type
         default: persistentVolumeClaim
-        description: 'persistence type'
+        description: ''
         type: enum
         options:
           - persistentVolumeClaim
@@ -110,28 +110,28 @@ questions:
         label: 'persistence type'
       - variable: persistence.size
         default: 10Gi
-        description: 'persistent volume size'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=persistentVolumeClaim
         label: 'volume size'
       - variable: persistence.storageClass
         default: ''
-        description: 'if undefined or null, uses the default storageclass. default to null'
+        description: ''
         type: storageclass
         required: false
         show_if: persistence.type=persistentVolumeClaim
         label: 'default storageclass'
       - variable: persistence.existingClaim
         default: ''
-        description: 'If not empty, uses the specified existing PVC instead of creating new one'
+        description: ''
         type: string
         required: false
         show_if: persistence.type=persistentVolumeClaim
         label: 'Existing Persistent Volume Claim for MariaDB'
       - variable: persistence.fsType
         default: ''
-        description: 'fs type'
+        description: ''
         type: enum
         options:
           - ext4
@@ -142,14 +142,14 @@ questions:
         label: 'fs type'
       - variable: persistence.volumeId
         default: ''
-        description: 'volume id'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=awsElasticBlockStore
         label: 'volume id'
       - variable: persistence.cachingMode
         default: None
-        description: 'caching mode'
+        description: ''
         type: enum
         options:
           - None
@@ -160,21 +160,21 @@ questions:
         label: 'caching mode'
       - variable: persistence.diskName
         default: ''
-        description: 'disk name'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=azureDisk
         label: 'disk name'
       - variable: persistence.diskUri
         default: ''
-        description: 'disk uri'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=azureDisk
         label: 'disk uri'
       - variable: persistence.kind
         default: Shared
-        description: kind
+        description: ''
         type: enum
         options:
           - Shared
@@ -185,37 +185,43 @@ questions:
         label: kind
       - variable: persistence.readOnly
         default: false
-        description: 'read only'
+        description: ''
         type: boolean
         required: false
         show_if: persistence.type=azureDisk
         label: 'read only'
       - variable: persistence.secretName
         default: ''
-        description: 'secret name'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=azureFile
         label: 'secret name'
       - variable: persistence.secretNamespace
         default: ''
-        description: 'secret namespace'
+        description: ''
         type: string
         required: false
         show_if: persistence.type=azureFile
         label: 'secret namespace'
       - variable: persistence.shareName
         default: ''
-        description: 'share name'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=azureFile
         label: 'share name'
+      - variable: persistence.volbackBackup
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'volback backup'
 
 # Services and Load Balancing
   - variable: ingress.enabled
     default: true
-    description: 'expose app using Layer 7 load balancer - ingress'
+    description: ''
     type: boolean
     label: 'load balancer enabled'
     show_subquestion_if: true
@@ -223,13 +229,13 @@ questions:
     subquestions:
       - variable: ingress.tls
         default: false
-        description: 'generate letsencrypt ssl certificate'
+        description: ''
         type: boolean
         required: true
         label: tls
       - variable: issuer.name
         default: letsencrypt-staging
-        description: 'letsencrypt issuer environment'
+        description: ''
         type: enum
         options:
           - letsencrypt-staging
@@ -238,19 +244,19 @@ questions:
         label: issuer
       - variable: ingress.hosts.nextcloud[0].name
         default: xip.io
-        description: 'hostname to your nextcloud installation'
+        description: ''
         type: hostname
         required: true
         label: 'nextcloud hostname'
       - variable: ingress.hosts.nextcloud[0].path
         default: /
-        description: 'pathname to your nextcloud installation'
+        description: ''
         type: string
         required: true
         label: 'nextcloud path'
   - variable: service.type
     default: NodePort
-    description: 'service type'
+    description: ''
     type: enum
     show_if: ingress.enabled=false
     options:
@@ -264,7 +270,7 @@ questions:
     subquestions:
       - variable: service.nodePorts.nextcloud.http
         default: ''
-        description: 'NodePort nextcloud http port (to set explicitly, choose port between 30000-32767)'
+        description: ''
         type: int
         min: 30000
         max: 32767

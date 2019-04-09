@@ -52,6 +52,7 @@ persistence:
   shareName: ''
   size: 10Gi
   type: persistentVolumeClaim
+  volbackBackup: false
   volumeId: ''
 
 probes:
