@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "wikijs.fullname" . }}-wikijs
+  labels:
+    app: {{ template "wikijs.name" . }}-wikijs
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  config.yml: |
+    title: {{ .Values.config.title | quote }}
+    host: {{ template "wikijs.base_url" . }}
+    paths:
+      repo: /var/wiki/repo
+      data: /var/wiki/data
+    lang: en
+    langRtl: false
+    public: false
+    defaultReadAccess: false
+    auth:
+      local:
+        enabled: true
+    sessionSecret: 1234567890abcdefghijklmnopqrstuvxyz
+    db: mongodb://localhost:27017/wiki
+    git:
+      url: https://github.com/Organization/Repo
+      branch: master
+      auth:
+        type: ssh
+        username: marty
+        password: MartyMcFly88
+        privateKey: /etc/wiki/keys/git.pem
+        sslVerify: true
+      serverEmail: marty@example.com
+      showUserEmail: true

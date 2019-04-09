@@ -39,3 +39,4 @@ data:
   {{- end }}
   redis_port: {{ $redis.port | quote }}
   redis_username: {{ $redis.username | quote }}
+  omnibus_config: ''

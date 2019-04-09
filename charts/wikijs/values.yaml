@@ -1,0 +1,72 @@
+images:
+  wikijs:
+    repository: requarks/wiki
+    tag: latest
+    pullPolicy: IfNotPresent
+  mongo:
+    repository: mongo
+    tag: latest
+    pullPolicy: IfNotPresent
+
+config:
+  mongo:
+    database: wikijs
+    host: ''
+    internal: true
+    password: ''
+    port: 27017
+    url: ''
+    username: ''
+  email: ''
+  title: 'wikijs'
+  baseUrl: ''
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:
+    wikijs:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  hosts:
+    wikijs:
+      - name: ''
+        path: /
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  cachingMode: None
+  diskName: ''
+  diskURI: ''
+  enabled: false
+  existingClaim: ''
+  fsType: ext4
+  kind: Shared
+  readOnly: false
+  secretName: ''
+  secretNamespace: ''
+  shareName: ''
+  size: 10Gi
+  type: persistentVolumeClaim
+  volumeId: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

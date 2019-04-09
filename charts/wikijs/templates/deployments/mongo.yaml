@@ -1,9 +1,10 @@
+{{- if .Values.config.mongo.internal }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "gitlab.fullname" . }}-gitlab
+  name: {{ template "wikijs.fullname" . }}-mongo
   labels:
-    app: {{ template "gitlab.name" . }}-gitlab
+    app: {{ template "wikijs.name" . }}-mongo
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,77 +12,32 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "gitlab.name" . }}-gitlab
+        app: {{ template "wikijs.name" . }}-mongo
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "gitlab.fullname" . }}-gitlab
-          image: {{ .Values.images.gitlab.repository }}:{{ .Values.images.gitlab.tag }}
-          imagePullPolicy: {{ .Values.images.gitlab.pullPolicy }}
+        - name: {{ template "wikijs.fullname" . }}-mongo
+          image: {{ .Values.images.mongo.repository }}:{{ .Values.images.mongo.tag }}
+          imagePullPolicy: {{ .Values.images.mongo.pullPolicy }}
           ports:
             - name: container
-              containerPort: 80
+              containerPort: 27017
           volumeMounts:
             - name: data
-              mountPath: /etc/gitlab
-              subPath: etc
-            - name: data
-              mountPath: /gitlab-data
-              subPath: data
+              mountPath: /data/db
+              subPath: mongo
           env:
-            - name: GITLAB_OMNIBUS_CONFIG
+            - name: MONGO_INITDB_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: omnibus_config
-            - name: EXTERNAL_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: base_url
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: postgres_host
-            - name: DB_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: postgres_username
-            - name: DB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: postgres_database
-            - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: redis_host
-            - name: GITLAB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: password
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: postgres_password
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: redis_password
+                  name: {{ template "wikijs.fullname" . }}
+                  key: mongo_database
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
@@ -89,7 +45,7 @@ spec:
           {{- if .Values.persistence.enabled }}
           {{- if (eq .Values.persistence.type "persistentVolumeClaim") }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim | default (include "wikijs.fullname" . ) }}
           {{- else if (eq .Values.persistence.type "awsElasticBlockStore") }}
           awsElasticBlockStore:
             volumeID: {{ .Values.persistence.volumeId }}
@@ -138,3 +94,4 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+{{- end }}
