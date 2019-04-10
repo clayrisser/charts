@@ -10,7 +10,7 @@ metadata:
 data:
   config.yml: |
     title: {{ .Values.config.title | quote }}
-    host: {{ template "wikijs.name" . }}
+    host: {{ template "wikijs.base_url" . }}
     paths:
       repo: /var/wiki/repo
       data: /var/wiki/data
