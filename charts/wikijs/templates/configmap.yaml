@@ -9,3 +9,4 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   email: {{ .Values.config.email | quote }}
+  mongo_database: {{ .Values.mongo.database | quote }}
