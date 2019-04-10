@@ -19,7 +19,7 @@ spec:
           image: {{ .Values.images.wikijs.repository }}:{{ .Values.images.wikijs.tag }}
           imagePullPolicy: {{ .Values.images.wikijs.pullPolicy }}
           command: ["/bin/sh", "-c"]
-          arguments: "cp /tmp/wiki/config.yml /var/wiki/config.yml && node server"
+          args: ["cp /tmp/wiki/config.yml /var/wiki/config.yml && node server"]
           ports:
             - name: container
               containerPort: 3000
