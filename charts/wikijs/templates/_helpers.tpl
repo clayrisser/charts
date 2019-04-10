@@ -24,7 +24,6 @@ Calculate base_url
 {{- printf .Values.config.base_url }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-
 {{- $host := (index .Values.ingress.hosts.wikijs 0) }}
 
 {{- $protocol := "http" }}
@@ -32,13 +31,8 @@ Calculate base_url
 {{- $protocol := (printf "%ss" $protocol) }}
 {{- end }}
 
-{{- $path := "a" }}
-{{- if (not (eq $host.path "/")) }}
-{{- $path := (printf "%s" $host.path) }}
-{{- end }}
-
+{{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
-
 {{- else }}
 {{- printf "http://%s-wikijs" (include "wikijs.fullname" . ) }}
 {{- end }}
