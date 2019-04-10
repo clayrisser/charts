@@ -35,7 +35,7 @@ Calculate base_url
 {{- end }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
 {{- else }}
-{{- printf "http://%s-wikijs" (include "fullname" . ) }}
+{{- printf "http://%s-wikijs" (include "wikijs.fullname" . ) }}
 {{- end }}
 {{- end }}
 {{- end }}
