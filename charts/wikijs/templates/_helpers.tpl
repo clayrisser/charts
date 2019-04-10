@@ -31,7 +31,7 @@ Calculate base_url
 {{- end }}
 {{- $path := "" }}
 {{- if (not (eq $host.path "/")) }}
-{{- $path := $host.path }}
+{{- $path := (printf $host.path) }}
 {{- end }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
 {{- else }}
