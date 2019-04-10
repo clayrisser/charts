@@ -46,7 +46,6 @@ Calculate mongo_url
 {{- printf $mongo.url }}
 {{- else }}
 {{- $credentials := (empty $mongo.username | ternary "" (printf "%s:%s" $mongo.username $mongo.password)) }}
-{{- end }}
 {{- printf "mongodb://%s@%s:%s/%s" $credentials $mongo.host $mongo.port $mongo.database }}
 {{- end }}
 {{- end }}
