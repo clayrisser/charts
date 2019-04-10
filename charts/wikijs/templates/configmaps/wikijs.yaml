@@ -22,7 +22,7 @@ data:
       local:
         enabled: true
     sessionSecret: 1234567890abcdefghijklmnopqrstuvxyz
-    db: mongodb://localhost:27017/wiki
+    db: {{ template "wikijs.mongo_url" . }}
     git:
       url: https://github.com/Organization/Repo
       branch: master

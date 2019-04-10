@@ -39,3 +39,23 @@ Calculate base_url
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Calculate mongo_url
+*/}}
+{{- define "wikijs.mongo_url" }}
+{{- $mongo := .Values.config.mongo }}
+{{- if $mongo.internal }}
+{{- printf "mongodb://%s-mongo:27017/%s" (include "wikijs.fullname" . ) $mongo.database }}
+{{- else }}
+{{- if $mongo.url }}
+{{- printf $mongo.url }}
+{{- else }}
+{{- $credentials := "" }}
+{{- if (not (empty $mongo.username)) }}
+{{- $credentials := (printf "%s:%s" $mongo.username $mongo.password) }}
+{{- end }}
+{{- printf "mongodb://%s@%s:%s/%s" $credentials $mongo.host $mongo.port $mongo.database }}
+{{- end }}
+{{- end }}
+{{- end }}
