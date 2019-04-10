@@ -22,7 +22,7 @@ spec:
           args: ["cp /tmp/wiki/config.yml /var/wiki/config.yml && node server"]
           ports:
             - name: container
-              containerPort: 3000
+              containerPort: 80
           volumeMounts:
             - name: data
               mountPath: /var/wiki/repo
