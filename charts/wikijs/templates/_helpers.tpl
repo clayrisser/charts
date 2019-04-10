@@ -1,21 +1,19 @@
-{{- $name := default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- $fullname := printf "%s-%s" .Release.Name (default .Chart.Name .Values.nameOverride) | trunc 63 | trimSuffix "-" }}
-
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "wikijs.name" }}
-{{- $name }}
-{{- end }}
+{{- define "wikijs.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this
 (by the DNS naming spec).
 */}}
-{{- define "wikijs.fullname" }}
-{{- printf $fullname }}
+{{- define "wikijs.fullname" -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -37,7 +35,7 @@ Calculate base_url
 {{- end }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
 {{- else }}
-{{- printf "http://%s-wikijs" $fullname }}
+{{- printf "http://%s-wikijs" (include "fullname" . ) }}
 {{- end }}
 {{- end }}
 {{- end }}
