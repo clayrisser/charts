@@ -31,7 +31,7 @@ Calculate base_url
 {{- end }}
 {{- printf "%s://%s%s" $protocol $host.name $host.path }}
 {{- else }}
-{{- printf "http://%s-wikijs" (template "wikijs.fullname" .) }}
+http://{{ template "wikijs.fullname" . }}-wikijs
 {{- end }}
 {{- end }}
 {{- end }}
