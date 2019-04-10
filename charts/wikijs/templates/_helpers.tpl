@@ -25,12 +25,7 @@ Calculate base_url
 {{- else }}
 {{- if .Values.ingress.enabled }}
 {{- $host := (index .Values.ingress.hosts.wikijs 0) }}
-
-{{- $protocol := "http" }}
-{{- if .Values.ingress.tls }}
-{{- $protocol := (printf "%ss" $protocol) }}
-{{- end }}
-
+{{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
 {{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
 {{- else }}
@@ -50,9 +45,7 @@ Calculate mongo_url
 {{- if $mongo.url }}
 {{- printf $mongo.url }}
 {{- else }}
-{{- $credentials := "" }}
-{{- if (not (empty $mongo.username)) }}
-{{- $credentials := (printf "%s:%s" $mongo.username $mongo.password) }}
+{{- $credentials := (empty $mongo.username | ternary "" (printf "%s:%s" $mongo.username $mongo.password)) }}
 {{- end }}
 {{- printf "mongodb://%s@%s:%s/%s" $credentials $mongo.host $mongo.port $mongo.database }}
 {{- end }}
