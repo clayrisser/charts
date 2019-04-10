@@ -24,13 +24,12 @@ data:
     sessionSecret: 1234567890abcdefghijklmnopqrstuvxyz
     db: {{ template "wikijs.mongo_url" . }}
     git:
-      url: https://github.com/Organization/Repo
+      url: {{ .Values.config.gitUrl | quote }}
       branch: master
       auth:
-        type: ssh
-        username: marty
-        password: MartyMcFly88
-        privateKey: /etc/wiki/keys/git.pem
+        type: basic
+        username: {{ .Values.config.gitUsername | quote }}
+        password: {{ .Values.config.gitPassword | quote }}
         sslVerify: true
-      serverEmail: marty@example.com
+      serverEmail: {{ .Values.config.email | quote }}
       showUserEmail: true

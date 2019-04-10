@@ -20,6 +20,9 @@ config:
   email: ''
   title: 'wikijs'
   baseUrl: ''
+  gitUrl: ''
+  gitUsername: ''
+  gitPassword: ''
 
 service:
   type: NodePort

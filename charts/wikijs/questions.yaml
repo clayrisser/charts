@@ -24,6 +24,27 @@ questions:
     required: false
     label: 'base url'
     group: Config
+  - variable: config.gitUrl
+    default: ''
+    description: 'git url'
+    type: string
+    required: true
+    label: 'git url'
+    group: Config
+  - variable: config.gitUsername
+    default: ''
+    description: 'git username'
+    type: string
+    required: true
+    label: 'git username'
+    group: Config
+  - variable: config.gitPassword
+    default: ''
+    description: 'git password'
+    type: password
+    required: true
+    label: 'git password'
+    group: Config
 
 # Images
   - variable: images.wikijs.repository
