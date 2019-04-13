@@ -3,25 +3,52 @@ categories:
 questions:
 
 # Images
-  - variable: images.bastion.repository
-    default: codejamninja/oh-my-zsh
+  - variable: images.docker-ssh.repository
+    default: jeroenpeeters/docker-ssh
     description: ''
     type: string
     required: true
     label: repository
     group: Images
-  - variable: images.bastion.tag
-    default: latest
+  - variable: images.docker-ssh.tag
+    default: 1.5.1
     description: ''
     type: string
     required: true
     label: tag
     group: Images
 
+# Config
+  - variable: config.authorizedKeys
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'authorized keys'
+    group: Config
+  - variable: config.users
+    default: 'admin:pass'
+    description: ''
+    type: password
+    required: true
+    label: users
+    group: Config
+  - variable: config.authMechanism
+    default: multiUser
+    description: 'auth mechanism'
+    type: enum
+    options:
+      - multiUser
+      - noAuth
+      - publicKey
+    required: true
+    label: 'auth mechanism'
+    group: Config
+
 # Persistence
   - variable: persistence.enabled
     default: false
-    description: 'enable persistent volume'
+    description: ''
     type: boolean
     required: true
     label: 'persistent volume enabled'
@@ -30,7 +57,7 @@ questions:
     subquestions:
       - variable: persistence.type
         default: persistentVolumeClaim
-        description: 'persistence type'
+        description: ''
         type: enum
         options:
           - persistentVolumeClaim
@@ -41,28 +68,28 @@ questions:
         label: 'persistence type'
       - variable: persistence.size
         default: 10Gi
-        description: 'persistent volume size'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=persistentVolumeClaim
         label: 'volume size'
       - variable: persistence.storageClass
         default: ''
-        description: 'if undefined or null, uses the default storageclass. default to null'
+        description: ''
         type: storageclass
         required: false
         show_if: persistence.type=persistentVolumeClaim
         label: 'default storageclass'
       - variable: persistence.existingClaim
         default: ''
-        description: 'If not empty, uses the specified existing PVC instead of creating new one'
+        description: ''
         type: string
         required: false
         show_if: persistence.type=persistentVolumeClaim
         label: 'Existing Persistent Volume Claim for MariaDB'
       - variable: persistence.fsType
         default: ''
-        description: 'fs type'
+        description: ''
         type: enum
         options:
           - ext4
@@ -73,14 +100,14 @@ questions:
         label: 'fs type'
       - variable: persistence.volumeId
         default: ''
-        description: 'volume id'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=awsElasticBlockStore
         label: 'volume id'
       - variable: persistence.cachingMode
         default: None
-        description: 'caching mode'
+        description: ''
         type: enum
         options:
           - None
@@ -91,21 +118,21 @@ questions:
         label: 'caching mode'
       - variable: persistence.diskName
         default: ''
-        description: 'disk name'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=azureDisk
         label: 'disk name'
       - variable: persistence.diskUri
         default: ''
-        description: 'disk uri'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=azureDisk
         label: 'disk uri'
       - variable: persistence.kind
         default: Shared
-        description: kind
+        description: ''
         type: enum
         options:
           - Shared
@@ -116,38 +143,74 @@ questions:
         label: kind
       - variable: persistence.readOnly
         default: false
-        description: 'read only'
+        description: ''
         type: boolean
         required: false
         show_if: persistence.type=azureDisk
         label: 'read only'
       - variable: persistence.secretName
         default: ''
-        description: 'secret name'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=azureFile
         label: 'secret name'
       - variable: persistence.secretNamespace
         default: ''
-        description: 'secret namespace'
+        description: ''
         type: string
         required: false
         show_if: persistence.type=azureFile
         label: 'secret namespace'
       - variable: persistence.shareName
         default: ''
-        description: 'share name'
+        description: ''
         type: string
         required: true
         show_if: persistence.type=azureFile
         label: 'share name'
 
 # Services and Load Balancing
+  - variable: ingress.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'load balancer enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: tls
+      - variable: issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        options:
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: issuer
+      - variable: ingress.hosts.docker-ssh[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'docker-ssh hostname'
+      - variable: ingress.hosts.docker-ssh[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'docker-ssh path'
   - variable: service.type
     default: NodePort
-    description: 'service type'
+    description: ''
     type: enum
+    show_if: ingress.enabled=false
     options:
       - ClusterIP
       - NodePort
@@ -157,11 +220,11 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.bastion.ssh
+      - variable: service.nodePorts.docker-ssh.http
         default: ''
-        description: 'NodePort bastion http port (to set explicitly, choose port between 30000-32767)'
+        description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: service.type=NodePort
-        label: 'bastion http port'
+        show_if: ingress.enabled=false&&service.type=NodePort
+        label: 'docker-ssh http port'

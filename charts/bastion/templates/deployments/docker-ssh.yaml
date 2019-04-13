@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "bastion.fullname" . }}-bastion
+  name: {{ template "bastion.fullname" . }}-docker-ssh
   labels:
-    app: {{ template "bastion.name" . }}-bastion
+    app: {{ template "bastion.name" . }}-docker-ssh
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,20 +11,32 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "bastion.name" . }}-bastion
+        app: {{ template "bastion.name" . }}-docker-ssh
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "bastion.fullname" . }}-bastion
-          image: {{ .Values.images.bastion.repository }}:{{ .Values.images.bastion.tag }}
-          imagePullPolicy: {{ .Values.images.bastion.pullPolicy }}
+        - name: {{ template "bastion.fullname" . }}-docker-ssh
+          image: {{ .Values.images.docker-ssh.repository }}:{{ .Values.images.docker-ssh.tag }}
+          imagePullPolicy: {{ .Values.images.docker-ssh.pullPolicy }}
           ports:
             - name: container
-              containerPort: 22
+              containerPort: 8022
           volumeMounts:
             - name: data
-              mountPath: '/root'
-          env: []
+              mountPath: '/home'
+          env:
+            - name: HTTP_ENABLED
+              value: false
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}

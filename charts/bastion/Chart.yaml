@@ -1,20 +1,16 @@
 name: bastion
-home: https://github.com/codejamninja/charts
-icon: https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/white/png/256/server.png
+home: https://github.com/jeroenpeeters/docker-ssh
+icon: 
 version: 0.0.1
 appVersion: latest
-description: 'bastion server with oh-my-zsh'
+description: 'bastion server'
 keywords:
   - bastion
   - bastion
-  - server
   - ssh
-  - git
-  - remote
-  - zsh
-  - oh-my-zsh
+  - jeroenpeeters
 sources:
-  - https://github.com/codejamninja/charts
+  - https://github.com/jeroenpeeters/docker-ssh
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
