@@ -12,25 +12,6 @@ config:
   serverPsk: 'volback'
   targetUrl: ''
 
-service:
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  nodePorts:
-    volback:
-      http: ''
-
-ingress:
-  enabled: false
-  tls: false
-  hosts:
-    volback:
-      - name: ''
-        path: /
-
-issuer:
-  name: letsencrypt-staging
-  kind: ClusterIssuer
-
 probes:
   liveness:
     initialDelaySeconds: 120

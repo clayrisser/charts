@@ -8,55 +8,55 @@ questions:
     description: ''
     type: string
     required: true
-    label: repository
+    label: 'volback repository'
     group: Images
   - variable: images.volback.tag
     default: 3.0.0
     description: ''
     type: string
     required: true
-    label: tag
+    label: 'volback tag'
     group: Images
 
 # Config
   - variable: config.awsAccessKey
     default: ''
-    description: 'aws access key'
+    description: ''
     type: string
     required: true
     label: 'aws access key'
     group: Config
   - variable: config.awsSecretKey
     default: ''
-    description: 'aws secret key'
+    description: ''
     type: password
     required: true
     label: 'aws secret key'
     group: Config
   - variable: config.targetUrl
     default: ''
-    description: 'target url'
+    description: ''
     type: string
     required: true
     label: 'target url'
     group: Config
   - variable: config.resticPassword
     default: 'volback'
-    description: 'restic password'
+    description: ''
     type: password
     required: true
     label: 'restic password'
     group: Config
   - variable: config.serverPsk
     default: 'volback'
-    description: 'server psk'
+    description: ''
     type: password
     required: true
     label: 'server psk'
     group: Config
   - variable: config.forgetArgs
     default: '--keep-last 3'
-    description: 'forget args'
+    description: ''
     type: string
     required: false
     label: 'forget args'

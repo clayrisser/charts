@@ -2,6 +2,22 @@ categories:
   - Server
 questions:
 
+# Images
+  - variable: images.webdav.repository
+    default: bytemark/webdav
+    description: ''
+    type: string
+    required: true
+    label: 'volback repository'
+    group: Images
+  - variable: images.webdav.tag
+    default: 2.4
+    description: ''
+    type: string
+    required: true
+    label: 'volback tag'
+    group: Images
+
 # Config
   - variable: config.authType
     default: Digest
