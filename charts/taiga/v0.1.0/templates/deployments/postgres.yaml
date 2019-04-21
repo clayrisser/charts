@@ -35,7 +35,7 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
+                  name: {{ template "taiga.fullname" . }}
                   key: postgres_password
       volumes:
         - name: data
