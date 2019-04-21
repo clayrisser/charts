@@ -34,14 +34,12 @@ service:
 ingress:
   enabled: false
   tls: false
+  issuer:
+    name: letsencrypt-staging
   hosts:
     taiga:
       - name: ''
         path: /
-
-issuer:
-  name: letsencrypt-staging
-  kind: ClusterIssuer
 
 persistence:
   accessMode: ReadWriteOnce
@@ -49,6 +47,7 @@ persistence:
   existingClaim: ''
   size: 10Gi
   storageClass: ''
+  volbackBackup: false
 
 probes:
   liveness:

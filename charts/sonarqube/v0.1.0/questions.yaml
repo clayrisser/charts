@@ -1,122 +1,74 @@
 categories:
-  - Projects
+  - Server
 questions:
 
 # Images
-  - variable: images.taiga.repository
-    default: benhutchins/taiga
+  - variable: images.sonarqube.repository
+    default: sonarqube
     description: ''
     type: string
     required: true
-    label: 'taiga repository'
+    label: repository
     group: Images
-  - variable: images.taiga.tag
-    default: latest
+  - variable: images.sonarqube.tag
+    default: 7.7-community
     description: ''
     type: string
     required: true
-    label: 'taiga tag'
+    label: tag
     group: Images
   - variable: images.postgres.repository
     default: postgres
     description: ''
     type: string
     required: true
-    label: 'postgres repository'
+    label: repository
     group: Images
   - variable: images.postgres.tag
     default: latest
     description: ''
     type: string
     required: true
-    label: 'postgres tag'
+    label: tag
     group: Images
 
-# Config
-  - variable: config.host
-    default: ''
-    description: host
-    type: string
-    required: false
-    label: host
-    group: Config
-
-# Mail Config
-  - variable: config.email.smtp.host
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'smtp host'
-    group: 'Email Config'
-  - variable: config.email.smtp.user
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'smtp user'
-    group: 'Email Config'
-  - variable: config.email.smtp.password
-    default: ''
-    description: ''
-    type: password
-    required: false
-    label: 'smtp password'
-    group: 'Email Config'
-  - variable: config.email.smtp.port
-    default: 25
-    description: ''
-    type: int
-    min: 0
-    max: 50000
-    required: false
-    label: 'smtp host'
-    group: 'Email Config'
-  - variable: config.email.from
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'email from'
-    group: 'Email Config'
-
 # Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'postgres internal'
+    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
     description: ''
     type: string
     required: false
     label: 'postgres host'
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.database
-    default: taiga
+    default: sonarqube
     description: ''
     type: string
-    required: false
+    required: true
     label: 'postgres database'
     group: 'Postgres Config'
   - variable: config.postgres.password
-    default: ''
+    default: postgres
     description: ''
     type: password
-    required: false
+    required: true
     label: 'postgres password'
     group: 'Postgres Config'
-  - variable: config.postgres.port
-    default: 27017
-    description: ''
-    type: int
-    min: 0
-    max: 50000
-    required: false
-    label: 'postgres port'
-    group: 'Postgres Config'
-  - variable: config.postgres.user
-    default: ''
+  - variable: config.postgres.username
+    default: postgres
     description: ''
     type: string
-    required: false
-    label: 'postgres user'
+    required: true
+    label: 'postgres username'
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
 
 # Persistence
@@ -177,19 +129,19 @@ questions:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'ingress issuer name'
-      - variable: ingress.hosts.taiga[0].name
+        label: 'ingress issuer'
+      - variable: ingress.hosts.sonarqube[0].name
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'taiga ingress hostname'
-      - variable: ingress.hosts.taiga[0].path
+        label: 'sonarqube ingress hostname'
+      - variable: ingress.hosts.sonarqube[0].path
         default: /
         description: ''
         type: string
         required: true
-        label: 'taiga ingress path'
+        label: 'sonarqube ingress path'
   - variable: service.type
     default: NodePort
     description: ''
@@ -197,18 +149,18 @@ questions:
     show_if: ingress.enabled=false
     options:
       - ClusterIP
-      - LoadBalancer
       - NodePort
+      - LoadBalancer
     required: true
     label: 'service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.taiga.http
+      - variable: service.nodePorts.sonarqube.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false
-        label: 'taiga http port'
+        label: 'sonarqube http port'
