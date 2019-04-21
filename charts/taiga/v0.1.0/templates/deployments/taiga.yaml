@@ -43,7 +43,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "taiga.fullname" . }}
-                  key: postgres_user
+                  key: postgres_username
             - name: TAIGA_DB_PASSWORD
               valueFrom:
                 secretKeyRef:

@@ -10,8 +10,9 @@ images:
 
 config:
   postgres:
-    host: ''
     database: huginn
+    host: ''
+    internal: true
     password: postgres
     port: 5432
     username: postgres

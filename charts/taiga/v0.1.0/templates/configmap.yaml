@@ -36,10 +36,10 @@ data:
   postgres_database: {{ $postgres.database }}
   postgres_host: {{ template "taiga.fullname" . }}-postgres
   postgres_port: '5432'
-  postgres_user: postgres
+  postgres_username: postgres
   {{- else }}
   postgres_database: {{ $postgres.database }}
   postgres_host: {{ $postgres.host }}
   postgres_port: {{ $postgres.port | quote }}
-  postgres_user: {{ $postgres.user }}
+  postgres_username: {{ $postgres.username }}
   {{- end }}
