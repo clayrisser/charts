@@ -9,12 +9,11 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   {{- $postgres := .Values.config.postgres }}
-  {{- if (empty $postgres.host) }}
-  postgres_host: {{ template "huginn.fullname" . }}-postgres
-  postgres_port: 5432
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "<%- name %>.fullname" . }}-postgres
   {{- else }}
   postgres_host: {{ $postgres.host | quote }}
-  postgres_port: {{ $postgres.port | quote }}
   {{- end }}
   postgres_database: {{ $postgres.database | quote }}
-  postgres_username: {{ $postgres.username | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}<% } %>
