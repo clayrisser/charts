@@ -1,7 +1,7 @@
 name: webdav
 home: https://github.com/codejamninja/webdav
 icon: http://www.pvhc.net/img87/emmugcxybtnqmazbcdxh.png
-version: 0.0.1
+version: 0.1.0
 appVersion: latest
 description: 'an apache webdav server'
 keywords:

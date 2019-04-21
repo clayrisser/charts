@@ -5,7 +5,7 @@ questions:
 # Config
   - variable: config.authType
     default: Digest
-    description: 'auth type'
+    description: ''
     type: enum
     options:
       - Digest
@@ -14,88 +14,94 @@ questions:
     label: 'auth type'
     group: Config
   - variable: config.username
-    default: 'admin'
-    description: 'username'
+    default: admin
+    description: ''
     type: string
     required: true
-    label: 'username'
+    label: username
     group: Config
   - variable: config.password
-    default: 'pass'
-    description: 'password'
+    default: pass
+    description: ''
     type: password
     required: true
-    label: 'password'
+    label: password
     group: Config
 
 # Persistence
   - variable: persistence.enabled
     default: false
-    description: 'enable persistent volume'
+    description: ''
     type: boolean
     required: true
-    label: 'persistent volume enabled'
+    label: enabled
     show_subquestion_if: true
     group: Persistence
     subquestions:
       - variable: persistence.size
         default: 10Gi
-        description: 'persistent volume size'
+        description: ''
         type: string
         required: false
-        label: 'volume size'
+        label: size
       - variable: persistence.storageClass
         default: ''
-        description: 'if undefined or null, uses the default storageclass. default to null'
+        description: ''
         type: storageclass
         required: false
-        label: 'default storageclass'
+        label: 'storage class'
       - variable: persistence.existingClaim
         default: ''
-        description: 'If not empty, uses the specified existing PVC instead of creating new one'
+        description: ''
         type: string
         required: false
-        label: 'Existing Persistent Volume Claim for MariaDB'
+        label: 'existing claim'
+      - variable: persistence.volbackBackup
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'volback backup'
 
 # Services and Load Balancing
   - variable: ingress.enabled
     default: true
-    description: 'expose app using Layer 7 load balancer - ingress'
+    description: ''
     type: boolean
-    label: 'load balancer enabled'
+    label: 'ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
       - variable: ingress.tls
         default: false
-        description: 'generate letsencrypt ssl certificate'
+        description: ''
         type: boolean
         required: true
-        label: tls
-      - variable: issuer.name
+        label: 'ingress tls'
+      - variable: ingress.issuer.name
         default: letsencrypt-staging
-        description: 'letsencrypt issuer environment'
+        description: ''
         type: enum
         options:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: issuer
+        label: 'ingress issuer name'
       - variable: ingress.hosts.webdav[0].name
         default: xip.io
-        description: 'hostname to your webdav installation'
+        description: ''
         type: hostname
         required: true
-        label: 'webdav hostname'
+        label: 'webdav ingress hostname'
       - variable: ingress.hosts.webdav[0].path
         default: /
-        description: 'pathname to your webdav installation'
+        description: ''
         type: string
         required: true
-        label: 'webdav path'
+        label: 'webdav ingress path'
   - variable: service.type
     default: NodePort
-    description: 'service type'
+    description: ''
     type: enum
     show_if: ingress.enabled=false
     options:
@@ -109,7 +115,7 @@ questions:
     subquestions:
       - variable: service.nodePorts.webdav.http
         default: ''
-        description: 'NodePort webdav http port (to set explicitly, choose port between 30000-32767)'
+        description: ''
         type: int
         min: 30000
         max: 32767
