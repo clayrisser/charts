@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ template "sks.fullname" . }}
+  annotations:
+    volback.backup: {{ .Values.persistence.volbackBackup | quote }}
   labels:
     app: {{ template "sks.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

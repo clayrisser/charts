@@ -1,7 +1,7 @@
 name: sks
 home: https://github.com/codejamninja/sks
 icon: http://seowebworld.com/wp-content/uploads/2016/11/pgp-privacy-300x300.png
-version: 0.0.1
+version: 0.1.0
 appVersion: latest
 description: 'an openpgp keyserver'
 keywords:

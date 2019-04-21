@@ -1,9 +1,9 @@
 name: sonarqube
 home: https://www.sonarqube.org
 icon: https://www.sonarqube.org/assets/logo-31ad3115b1b4b120f3d1efd63e6b13ac9f1f89437f0cf6881cc4d8b5603a52b4.svg
-version: 0.0.1
+version: 0.1.0
 appVersion: latest
-description: 'The leading product for continuous code quality'
+description: 'the leading product for continuous code quality'
 keywords:
   - sonarqube
   - qc

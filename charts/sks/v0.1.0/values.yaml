@@ -4,7 +4,7 @@ images:
     tag: latest
     pullPolicy: IfNotPresent
 
-config:
+config: {}
 
 service:
   type: NodePort
@@ -16,20 +16,20 @@ service:
 ingress:
   enabled: false
   tls: false
+  issuer:
+    name: letsencrypt-staging
   hosts:
     sks:
       - name: ''
         path: /
 
-issuer:
-  name: letsencrypt-staging
-  kind: ClusterIssuer
-
 persistence:
-  enabled: false
   accessMode: ReadWriteOnce
-  size: 10Gi
+  enabled: false
   existingClaim: ''
+  size: 10Gi
+  storageClass: ''
+  volbackBackup: false
 
 probes:
   liveness:

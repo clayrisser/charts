@@ -1,3 +1,3 @@
 # sonarqube
 
-> The leading product for continuous code quality
+> the leading product for continuous code quality
