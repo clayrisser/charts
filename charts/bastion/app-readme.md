@@ -1,3 +1,0 @@
-# bastion
-
-> bastion server
