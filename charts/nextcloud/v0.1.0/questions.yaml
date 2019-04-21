@@ -34,14 +34,14 @@ questions:
 
 # Config
   - variable: config.adminUser
-    default: 'admin'
+    default: admin
     description: ''
     type: string
     required: true
     label: 'admin user'
     group: Config
   - variable: config.adminPassword
-    default: 'pass'
+    default: pass
     description: ''
     type: password
     required: true
@@ -93,124 +93,28 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'persistent volume enabled'
+    label: enabled
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: persistence.type
-        default: persistentVolumeClaim
-        description: ''
-        type: enum
-        options:
-          - persistentVolumeClaim
-          - awsElasticBlockStore
-          - azureDisk
-          - azureFile
-        required: true
-        label: 'persistence type'
       - variable: persistence.size
         default: 10Gi
         description: ''
         type: string
-        required: true
-        show_if: persistence.type=persistentVolumeClaim
-        label: 'volume size'
+        required: false
+        label: size
       - variable: persistence.storageClass
         default: ''
         description: ''
         type: storageclass
         required: false
-        show_if: persistence.type=persistentVolumeClaim
-        label: 'default storageclass'
+        label: 'storage class'
       - variable: persistence.existingClaim
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.type=persistentVolumeClaim
-        label: 'Existing Persistent Volume Claim for MariaDB'
-      - variable: persistence.fsType
-        default: ''
-        description: ''
-        type: enum
-        options:
-          - ext4
-          - ext3
-          - xfs
-        required: true
-        show_if: persistence.type=awsElasticBlockStore||persistence.type=azureDisk||persistence.type=azureFile
-        label: 'fs type'
-      - variable: persistence.volumeId
-        default: ''
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.type=awsElasticBlockStore
-        label: 'volume id'
-      - variable: persistence.cachingMode
-        default: None
-        description: ''
-        type: enum
-        options:
-          - None
-          - ReadOnly
-          - ReadWrite
-        required: false
-        show_if: persistence.type=azureDisk
-        label: 'caching mode'
-      - variable: persistence.diskName
-        default: ''
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.type=azureDisk
-        label: 'disk name'
-      - variable: persistence.diskUri
-        default: ''
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.type=azureDisk
-        label: 'disk uri'
-      - variable: persistence.kind
-        default: Shared
-        description: ''
-        type: enum
-        options:
-          - Shared
-          - Dedicated
-          - Managed
-        required: false
-        show_if: persistence.type=azureDisk
-        label: kind
-      - variable: persistence.readOnly
-        default: false
-        description: ''
-        type: boolean
-        required: false
-        show_if: persistence.type=azureDisk
-        label: 'read only'
-      - variable: persistence.secretName
-        default: ''
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.type=azureFile
-        label: 'secret name'
-      - variable: persistence.secretNamespace
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.type=azureFile
-        label: 'secret namespace'
-      - variable: persistence.shareName
-        default: ''
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.type=azureFile
-        label: 'share name'
+        label: 'existing claim'
       - variable: persistence.volbackBackup
         default: false
         description: ''
@@ -223,7 +127,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    label: 'load balancer enabled'
+    label: 'ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
@@ -232,8 +136,8 @@ questions:
         description: ''
         type: boolean
         required: true
-        label: tls
-      - variable: issuer.name
+        label: 'ingress tls'
+      - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
@@ -241,19 +145,19 @@ questions:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: issuer
+        label: 'ingress issuer name'
       - variable: ingress.hosts.nextcloud[0].name
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'nextcloud hostname'
+        label: 'nextcloud ingress hostname'
       - variable: ingress.hosts.nextcloud[0].path
         default: /
         description: ''
         type: string
         required: true
-        label: 'nextcloud path'
+        label: 'nextcloud ingress path'
   - variable: service.type
     default: NodePort
     description: ''
@@ -274,5 +178,5 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false&&service.type=NodePort
+        show_if: ingress.enabled=false&&
         label: 'nextcloud http port'

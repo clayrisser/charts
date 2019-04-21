@@ -15,8 +15,9 @@ images:
 config:
   base_url: ''
   mongo:
+    database: wikijs
     host: ''
-    database: rocketchat
+    internal: true
     password: ''
     port: 27017
     url: ''

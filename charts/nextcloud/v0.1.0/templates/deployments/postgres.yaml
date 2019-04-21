@@ -1,10 +1,10 @@
-{{- if .Values.config.mongo.internal }}
+{{- if .Values.config.postgres.internal }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "rocketchat.fullname" . }}-mongo
+  name: {{ template "nextcloud.fullname" . }}-postgres
   labels:
-    app: {{ template "rocketchat.name" . }}-mongo
+    app: {{ template "nextcloud.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,23 +12,26 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "rocketchat.name" . }}-mongo
+        app: {{ template "nextcloud.name" . }}-postgres
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "rocketchat.fullname" . }}-mongo
-          image: {{ .Values.images.mongo.repository }}:{{ .Values.images.mongo.tag }}
-          imagePullPolicy: {{ .Values.images.mongo.pullPolicy }}
+        - name: {{ template "nextcloud.fullname" . }}-postgres
+          image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
+          imagePullPolicy: {{ .Values.images.postgres.pullPolicy }}
           ports:
             - name: container
-              containerPort: 27017
+              containerPort: 5432
           volumeMounts:
             - name: data
-              mountPath: /data/db
-              subPath: mongo
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
           env:
-            - name: MONGO_INITDB_DATABASE
-              value: rocketchat
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: postgres_password
           livenessProbe:
             tcpSocket:
               port: container
@@ -41,7 +44,7 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "rocketchat.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim | default (include "nextcloud.fullname" . ) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
