@@ -1,0 +1,46 @@
+{{- if .Values.config.redis.internal }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gitlab.fullname" . }}-redis
+  labels:
+    app: {{ template "gitlab.name" . }}-redis
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gitlab.name" . }}-redis
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gitlab.fullname" . }}-redis
+          image: {{ .Values.images.redis.repository }}:{{ .Values.images.redis.tag }}
+          imagePullPolicy: {{ .Values.images.redis.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 6379
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              subPath: redis
+          env: []
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- end }}

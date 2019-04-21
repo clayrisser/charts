@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ template "gitlab.fullname" . }}
+  annotations:
+    volback.backup: {{ .Values.persistence.volbackBackup | quote }}
   labels:
     app: {{ template "gitlab.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
