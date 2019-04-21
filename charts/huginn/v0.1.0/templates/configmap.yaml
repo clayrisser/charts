@@ -10,7 +10,7 @@ metadata:
 data:
   {{- $postgres := .Values.config.postgres }}
   {{- if $postgres.internal }}
-  postgres_host: {{ template "<%- name %>.fullname" . }}-postgres
+  postgres_host: {{ template "huginn.fullname" . }}-postgres
   {{- else }}
   postgres_host: {{ $postgres.host | quote }}
   {{- end }}
