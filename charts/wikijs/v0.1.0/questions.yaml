@@ -52,28 +52,28 @@ questions:
     description: ''
     type: string
     required: true
-    label: repository
+    label: 'wikijs repository'
     group: Images
   - variable: images.wikijs.tag
     default: latest
     description: ''
     type: string
     required: true
-    label: tag
+    label: 'wikijs tag'
     group: Images
   - variable: images.mongo.repository
     default: mongo
     description: ''
     type: string
     required: true
-    label: repository
+    label: 'mongo repository'
     group: Images
   - variable: images.mongo.tag
     default: latest
     description: ''
     type: string
     required: true
-    label: tag
+    label: 'mongo tag'
     group: Images
 
 # Mongo Config
@@ -82,14 +82,14 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'mongo internal'
+    label: internal
     group: 'Mongo Config'
   - variable: config.mongo.host
     default: ''
     description: ''
     type: string
     required: false
-    label: 'mongo host'
+    label: host
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.database
@@ -97,14 +97,14 @@ questions:
     description: ''
     type: string
     required: true
-    label: 'mongo database'
+    label: database
     group: 'Mongo Config'
   - variable: config.mongo.password
     default: ''
     description: ''
     type: password
     required: false
-    label: 'mongo password'
+    label: password
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.port
@@ -114,7 +114,7 @@ questions:
     min: 0
     max: 50000
     required: true
-    label: 'mongo port'
+    label: port
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.url
@@ -122,7 +122,7 @@ questions:
     description: ''
     type: string
     required: false
-    label: 'mongo url'
+    label: url
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.username
@@ -130,7 +130,7 @@ questions:
     description: ''
     type: string
     required: false
-    label: 'mongo username'
+    label: username
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
 
@@ -140,7 +140,7 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'persistent enabled'
+    label: enabled
     show_subquestion_if: true
     group: Persistence
     subquestions:
@@ -150,34 +150,34 @@ questions:
         type: string
         required: true
         show_if: persistence.enabled
-        label: 'persistence size'
+        label: size
       - variable: persistence.storageClass
         default: ''
         description: ''
         type: storageclass
         required: false
         show_if: persistence.enabled
-        label: 'persistence storage class'
+        label: 'storage class'
       - variable: persistence.existingClaim
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.enabled
-        label: 'persistence existing claim'
+        label: 'existing claim'
       - variable: persistence.volbackBackup
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'persistence volback backup'
+        label: 'volback backup'
 
 # Services and Load Balancing
   - variable: ingress.enabled
     default: true
     description: ''
     type: boolean
-    label: 'load balancer enabled'
+    label: 'ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
@@ -186,8 +186,8 @@ questions:
         description: ''
         type: boolean
         required: true
-        label: tls
-      - variable: issuer.name
+        label: 'ingress tls'
+      - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
@@ -195,19 +195,19 @@ questions:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: issuer
+        label: 'ingress issuer name'
       - variable: ingress.hosts.wikijs[0].name
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'wikijs hostname'
+        label: 'wikijs ingress hostname'
       - variable: ingress.hosts.wikijs[0].path
         default: /
         description: ''
         type: string
         required: true
-        label: 'wikijs path'
+        label: 'wikijs ingress path'
   - variable: service.type
     default: NodePort
     description: ''
