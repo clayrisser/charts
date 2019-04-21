@@ -81,42 +81,49 @@ questions:
     group: 'Email Config'
 
 # Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
     description: ''
     type: string
     required: false
-    label: 'postgres host'
+    label: host
     group: 'Postgres Config'
   - variable: config.postgres.database
     default: taiga
     description: ''
     type: string
-    required: false
-    label: 'postgres database'
+    required: true
+    label: database
     group: 'Postgres Config'
   - variable: config.postgres.password
-    default: ''
+    default: postgres
     description: ''
     type: password
-    required: false
-    label: 'postgres password'
+    required: true
+    label: password
     group: 'Postgres Config'
   - variable: config.postgres.port
-    default: 27017
+    default: 5432
     description: ''
     type: int
     min: 0
     max: 50000
-    required: false
-    label: 'postgres port'
+    required: true
+    label: port
     group: 'Postgres Config'
-  - variable: config.postgres.user
-    default: ''
+  - variable: config.postgres.username
+    default: postgres
     description: ''
     type: string
-    required: false
-    label: 'postgres user'
+    required: true
+    label: username
     group: 'Postgres Config'
 
 # Persistence

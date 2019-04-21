@@ -38,14 +38,14 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'postgres internal'
+    label: internal
     group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
     description: ''
     type: string
     required: false
-    label: 'postgres host'
+    label: host
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.database
@@ -53,21 +53,21 @@ questions:
     description: ''
     type: string
     required: true
-    label: 'postgres database'
+    label: database
     group: 'Postgres Config'
   - variable: config.postgres.password
     default: postgres
     description: ''
     type: password
     required: true
-    label: 'postgres password'
+    label: password
     group: 'Postgres Config'
   - variable: config.postgres.username
     default: postgres
     description: ''
     type: string
     required: true
-    label: 'postgres username'
+    label: username
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
 

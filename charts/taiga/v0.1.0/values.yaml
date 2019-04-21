@@ -18,11 +18,12 @@ config:
       port: 25
       user: ''
   postgres:
-    database: ''
+    database: taiga
     host: ''
-    password: ''
+    internal: true
+    password: postgres
     port: 5432
-    user: ''
+    username: postgres
 
 service:
   type: NodePort

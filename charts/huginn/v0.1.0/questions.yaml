@@ -33,6 +33,13 @@ questions:
     group: Images
 
 # Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
     description: ''
@@ -44,14 +51,14 @@ questions:
     default: huginn
     description: ''
     type: string
-    required: false
+    required: true
     label: database
     group: 'Postgres Config'
   - variable: config.postgres.password
-    default: ''
+    default: postgres
     description: ''
     type: password
-    required: false
+    required: true
     label: password
     group: 'Postgres Config'
   - variable: config.postgres.port
@@ -60,14 +67,14 @@ questions:
     type: int
     min: 0
     max: 50000
-    required: false
+    required: true
     label: port
     group: 'Postgres Config'
   - variable: config.postgres.username
-    default: ''
+    default: postgres
     description: ''
     type: string
-    required: false
+    required: true
     label: username
     group: 'Postgres Config'
 
