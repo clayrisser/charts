@@ -165,6 +165,12 @@ questions:
         required: false
         show_if: persistence.enabled
         label: 'persistence existing claim'
+      - variable: persistence.volbackBackup
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'persistence volback backup'
 
 # Services and Load Balancing
   - variable: ingress.enabled

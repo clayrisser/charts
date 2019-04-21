@@ -1,7 +1,7 @@
 name: wikijs
 home: https://wiki.js.org
 icon: https://wiki.js.org/assets/svg/logo.svg
-version: 0.0.1
+version: 0.1.0
 appVersion: latest
 description: 'modern and powerful wiki app'
 keywords:
