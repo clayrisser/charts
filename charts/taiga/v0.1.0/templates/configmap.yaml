@@ -32,11 +32,11 @@ data:
   email_smtp_port: {{ $email.smtp.port | quote }}
 
   # postgres config
-  {{- if (not (or $postgres.host $postgres.user $postgres.password)) }}
-  postgres_database: taiga
+  {{- if .Values.config.postgres.internal }}
+  postgres_database: {{ $postgres.database }}
   postgres_host: {{ template "taiga.fullname" . }}-postgres
   postgres_port: '5432'
-  postgres_user: taiga
+  postgres_user: postgres
   {{- else }}
   postgres_database: {{ $postgres.database }}
   postgres_host: {{ $postgres.host }}

@@ -32,15 +32,10 @@ spec:
                 configMapKeyRef:
                   name: {{ template "taiga.fullname" . }}
                   key: postgres_database
-            - name: POSTGRES_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "taiga.fullname" . }}
-                  key: postgres_user
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "taiga.fullname" . }}
+                  name: {{ template "nextcloud.fullname" . }}
                   key: postgres_password
       volumes:
         - name: data
