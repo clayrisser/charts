@@ -16,4 +16,4 @@ data:
   {{- end }}
   postgres_database: {{ $postgres.database | quote }}
   postgres_port: {{ $postgres.port | quote }}
-  postgres_username: {{ $postgres.username | quote }}<% } %>
+  postgres_username: {{ $postgres.username | quote }}
