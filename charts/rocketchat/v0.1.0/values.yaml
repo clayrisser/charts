@@ -52,6 +52,8 @@ service:
 ingress:
   enabled: false
   tls: false
+  issuer:
+    name: letsencrypt-staging
   hosts:
     rocketchat:
       - name: ''
@@ -60,16 +62,13 @@ ingress:
       - name: ''
         path: /
 
-issuer:
-  name: letsencrypt-staging
-  kind: ClusterIssuer
-
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
   existingClaim: ''
   size: 10Gi
   storageClass: ''
+  volbackBackup: false
 
 probes:
   liveness:

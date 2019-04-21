@@ -2,6 +2,22 @@ categories:
   - Server
 questions:
 
+# Images
+  - variable: images.sks.repository
+    default: zhusj/sks
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.sks.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images
+
 # Persistence
   - variable: persistence.enabled
     default: false

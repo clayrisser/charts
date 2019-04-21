@@ -2,10 +2,54 @@ categories:
   - Server
 questions:
 
+# Images
+  - variable: images.jitsi.repository
+    default: jitsi
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.jitsi.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images
+  - variable: images.rocketchat.repository
+    default: rocket.chat
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.rocketchat.tag
+    default: 0.69.1
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images
+  - variable: images.mongo.repository
+    default: mongo
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.mongo.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images
+
 # Config
   - variable: config.base_url
     default: ''
-    description: 'base url'
+    description: ''
     type: string
     required: false
     label: 'base url'
@@ -14,28 +58,28 @@ questions:
 # Mongo Config
   - variable: config.mongo.host
     default: ''
-    description: 'mongo host'
+    description: ''
     type: string
     required: false
     label: 'mongo host'
     group: 'Mongo Config'
   - variable: config.mongo.database
     default: rocketchat
-    description: 'mongo database'
+    description: ''
     type: string
     required: false
     label: 'mongo database'
     group: 'Mongo Config'
   - variable: config.mongo.password
     default: ''
-    description: 'mongo password'
+    description: ''
     type: password
     required: false
     label: 'mongo password'
     group: 'Mongo Config'
   - variable: config.mongo.port
     default: 27017
-    description: 'mongo port'
+    description: ''
     type: int
     min: 0
     max: 50000
@@ -44,14 +88,14 @@ questions:
     group: 'Mongo Config'
   - variable: config.mongo.url
     default: ''
-    description: 'mongo url'
+    description: ''
     type: string
     required: false
     label: 'mongo url'
     group: 'Mongo Config'
   - variable: config.mongo.username
     default: ''
-    description: 'mongo username'
+    description: ''
     type: string
     required: false
     label: 'mongo username'
@@ -60,28 +104,28 @@ questions:
 # Mail Config
   - variable: config.mail.smtp.host
     default: ''
-    description: 'smtp host'
+    description: ''
     type: string
     required: false
     label: 'smtp host'
     group: 'Mail Config'
   - variable: config.mail.smtp.username
     default: ''
-    description: 'smtp username'
+    description: ''
     type: string
     required: false
     label: 'smtp username'
     group: 'Mail Config'
   - variable: config.mail.smtp.password
     default: ''
-    description: 'smtp password'
+    description: ''
     type: password
     required: false
     label: 'smtp password'
     group: 'Mail Config'
   - variable: config.mail.smtp.port
     default: 25
-    description: 'smtp host'
+    description: ''
     type: int
     min: 0
     max: 50000
@@ -90,7 +134,7 @@ questions:
     group: 'Mail Config'
   - variable: config.mail.from
     default: ''
-    description: 'mail from'
+    description: ''
     type: string
     required: false
     label: 'mail from'
@@ -99,42 +143,42 @@ questions:
 # Jitsi Config
   - variable: config.jitsi.enabled
     default: false
-    description: 'jitsi enabled'
+    description: ''
     type: boolean
     required: false
     label: 'jitsi enabled'
     group: 'Jitsi Config'
   - variable: config.jitsi.domain
     default: meet.jit.si
-    description: 'jitsi domain'
+    description: ''
     type: string
     required: false
     label: 'jitsi domain'
     group: 'Jitsi Config'
   - variable: config.jitsi.url_room_prefix
     default: RocketChat
-    description: 'jitsi url room prefix'
+    description: ''
     type: string
     required: false
     label: 'jitsi url room prefix'
     group: 'Jitsi Config'
   - variable: config.jitsi.open_new_window
     default: false
-    description: 'jitsi open new window'
+    description: ''
     type: boolean
     required: false
     label: 'jitsi open new window'
     group: 'Jitsi Config'
   - variable: config.jitsi.enable_channels
     default: false
-    description: 'jitsi enable channels'
+    description: ''
     type: boolean
     required: false
     label: 'jitsi enable channels'
     group: 'Jitsi Config'
   - variable: config.jitsi.chrome_extension
     default: ''
-    description: 'jitsi chrome extension'
+    description: ''
     type: string
     required: false
     label: 'jitsi chrome extension'
@@ -143,21 +187,21 @@ questions:
 # WebRTC Config
   - variable: config.webrtc.enable_channel
     default: false
-    description: 'webrtc enable channel'
+    description: ''
     type: boolean
     required: false
     label: 'webrtc enable channel'
     group: 'WebRTC Config'
   - variable: config.webrtc.enable_private
     default: false
-    description: 'webrtc enable private'
+    description: ''
     type: boolean
     required: false
     label: 'webrtc enable private'
     group: 'WebRTC Config'
   - variable: config.webrtc.enable_direct
     default: false
-    description: 'webrtc enable direct'
+    description: ''
     type: boolean
     required: false
     label: 'webrtc enable direct'
@@ -166,85 +210,91 @@ questions:
 # Persistence
   - variable: persistence.enabled
     default: false
-    description: 'enable persistent volume'
+    description: ''
     type: boolean
     required: true
-    label: 'persistent volume enabled'
+    label: enabled
     show_subquestion_if: true
     group: Persistence
     subquestions:
       - variable: persistence.size
         default: 10Gi
-        description: 'persistent volume size'
+        description: ''
         type: string
         required: false
-        label: 'volume size'
+        label: size
       - variable: persistence.storageClass
         default: ''
-        description: 'if undefined or null, uses the default storageclass. default to null'
+        description: ''
         type: storageclass
         required: false
-        label: 'default storageclass'
+        label: 'storage class'
       - variable: persistence.existingClaim
         default: ''
-        description: 'If not empty, uses the specified existing PVC instead of creating new one'
+        description: ''
         type: string
         required: false
-        label: 'Existing Persistent Volume Claim for MariaDB'
+        label: 'existing claim'
+      - variable: persistence.volbackBackup
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'volback backup'
 
 # Services and Load Balancing
   - variable: ingress.enabled
     default: true
-    description: 'expose app using Layer 7 load balancer - ingress'
+    description: ''
     type: boolean
-    label: 'load balancer enabled'
+    label: 'ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
       - variable: ingress.tls
         default: false
-        description: 'generate letsencrypt ssl certificate'
+        description: ''
         type: boolean
         required: true
-        label: tls
-      - variable: issuer.name
+        label: 'ingress tls'
+      - variable: ingress.issuer.name
         default: letsencrypt-staging
-        description: 'letsencrypt issuer environment'
+        description: ''
         type: enum
         options:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: issuer
+        label: 'ingress issuer name'
       - variable: ingress.hosts.rocketchat[0].name
         default: xip.io
-        description: 'hostname to your rocketchat installation'
+        description: ''
         type: hostname
         required: true
-        label: 'rocketchat hostname'
+        label: 'rocketchat ingress hostname'
       - variable: ingress.hosts.rocketchat[0].path
         default: /
-        description: 'pathname to your rocketchat installation'
+        description: ''
         type: string
         required: true
-        label: 'rocketchat path'
+        label: 'rocketchat ingress path'
       - variable: ingress.hosts.jitsi[0].name
         default: xip.io
-        description: 'hostname to your jitsi installation'
+        description: ''
         type: hostname
         show_if: config.jitsi.enabled=true
         required: true
-        label: 'jitsi hostname'
+        label: 'jitsi ingress hostname'
       - variable: ingress.hosts.jitsi[0].path
         default: /
-        description: 'pathname to your jitsi installation'
+        description: ''
         type: string
         show_if: config.jitsi.enabled=true
         required: true
-        label: 'jitsi path'
+        label: 'jitsi ingress path'
   - variable: service.type
     default: NodePort
-    description: 'service type'
+    description: ''
     type: enum
     show_if: ingress.enabled=false
     options:
@@ -258,17 +308,17 @@ questions:
     subquestions:
       - variable: service.nodePorts.jitsi.http
         default: ''
-        description: 'NodePort rocketchat http port (to set explicitly, choose port between 30000-32767)'
+        description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false&&service.type=NodePort
+        show_if: ingress.enabled=false
         label: 'rocketchat http port'
       - variable: service.nodePorts.jitsi.http
         default: ''
-        description: 'NodePort jitsi http port (to set explicitly, choose port between 30000-32767)'
+        description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false&&service.type=NodePort&config.jitsi.enabled=true
+        show_if: ingress.enabled=false&&config.jitsi.enabled=true
         label: 'jitsi http port'
