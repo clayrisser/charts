@@ -1,11 +1,10 @@
 name: volback
 home: https://github.com/codejamninja/volback
 icon: https://github.com/encharm/Font-Awesome-SVG-PNG/blob/master/white/png/128/floppy-o.png
-version: 0.1.0
+version: 0.0.1
 appVersion: latest
 description: 'backup and restore docker volumes'
 keywords:
-  - volback
   - volback
   - backup
   - bivac

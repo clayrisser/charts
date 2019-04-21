@@ -7,10 +7,33 @@ images:
 config:
   awsAccessKey: ''
   awsSecretKey: ''
-  forgetArgs: '--keep-last 3'
+  blacklist: ''
+  forgetArgs: '--group-by host --keep-daily 3 --prune'
+  refreshTime: 10
   resticPassword: 'volback'
   serverPsk: 'volback'
   targetUrl: ''
+  whitelist: ''
+  whitelistAnnotation: true
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:
+    volback:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  hosts:
+    volback:
+      - name: ''
+        path: /
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
 
 probes:
   liveness:

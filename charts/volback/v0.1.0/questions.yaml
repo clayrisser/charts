@@ -8,14 +8,14 @@ questions:
     description: ''
     type: string
     required: true
-    label: 'volback repository'
+    label: repository
     group: Images
   - variable: images.volback.tag
     default: 3.0.0
     description: ''
     type: string
     required: true
-    label: 'volback tag'
+    label: tag
     group: Images
 
 # Config
@@ -60,4 +60,34 @@ questions:
     type: string
     required: false
     label: 'forget args'
+    group: Config
+  - variable: config.refreshTime
+    default: 10
+    description: ''
+    type: int
+    min: 1
+    max: 99999
+    required: true
+    label: 'refresh time'
+    group: Config
+  - variable: config.whitelist
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: whitelist
+    group: Config
+  - variable: config.blacklist
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: blacklist
+    group: Config
+  - variable: config.whitelistAnnotation
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'whitelist annotation'
     group: Config

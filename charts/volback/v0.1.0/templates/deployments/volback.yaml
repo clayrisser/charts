@@ -27,8 +27,6 @@ spec:
               value: kubernetes
             - name: KUBERNETES_ALL_NAMESPACES
               value: 'true'
-            - name: KUBERNETES_AGENT_SERVICE_ACCOUNT
-              value: {{ template "volback.fullname" . }}-volback
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 configMapKeyRef:
@@ -44,6 +42,26 @@ spec:
                 configMapKeyRef:
                   name: {{ template "volback.fullname" . }}
                   key: target_url
+            - name: VOLBACK_REFRESH_TIME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: refresh_time
+            - name: VOLBACK_WHITELIST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: whitelist
+            - name: VOLBACK_BLACKLIST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: blacklist
+            - name: VOLBACK_WHITELIST_ANNOTATION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "volback.fullname" . }}
+                  key: whitelist_annotation
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
