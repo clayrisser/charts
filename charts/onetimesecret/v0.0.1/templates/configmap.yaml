@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "onetimesecret.fullname" . }}
+  labels:
+    app: {{ template "onetimesecret.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  name: {{ .Values.config.name | quote }}
+  {{- $redis := .Values.config.redis }}
+  {{- if $redis.internal }}
+  redis_host: {{ template "onetimesecret.fullname" . }}-redis
+  {{- else }}
+  redis_host: {{ $redis.host | quote }}
+  {{- end }}
+  redis_port: {{ $redis.port | quote }}
+  redis_username: {{ $redis.username | quote }}

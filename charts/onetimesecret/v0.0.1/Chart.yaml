@@ -1,0 +1,17 @@
+name: onetimesecret
+home: https://onetimesecret.com
+icon: 
+version: 0.0.1
+appVersion: latest
+description: 'keep sensitive info out of your email and chat logs'
+keywords:
+  - onetimesecret
+  - password
+  - secret
+  - sensative
+  - email
+sources:
+  - https://github.com/onetimesecret/onetimesecret
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
