@@ -1,0 +1,62 @@
+images:
+  keycloak:
+    repository: jboss/keycloak
+    tag: 6.0.1
+    pullPolicy: IfNotPresent
+  postgres:
+    repository: postgres
+    tag: latest
+    pullPolicy: IfNotPresent
+
+config:
+  hostname: ''
+  loglevel: 'INFO'
+  user: 'admin'
+  password: 'pass'
+  postgres:
+    database: keycloak
+    host: ''
+    internal: true
+    password: postgres
+    port: 5432
+    url: ''
+    username: postgres
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:
+    keycloak:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    keycloak:
+      - name: ''
+        path: /
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 10Gi
+  storageClass: ''
+  volbackBackup: false
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

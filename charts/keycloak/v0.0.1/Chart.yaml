@@ -1,0 +1,21 @@
+name: keycloak
+home: https://www.keycloak.org
+icon: https://www.keycloak.org/resources/images/keycloak_logo_480x108.png
+version: 0.0.1
+appVersion: latest
+description: 'an open source identity and access management solution'
+keywords:
+  - keycloak
+  - key
+  - identity
+  - provider
+  - ldap
+  - oauth
+  - saml
+  - access
+  - management
+sources:
+  - https://github.com/jboss-dockerfiles/keycloak
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

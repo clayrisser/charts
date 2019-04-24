@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "keycloak.fullname" . }}-keycloak
+  labels:
+    app: {{ template "keycloak.name" . }}-keycloak
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "keycloak.name" . }}-keycloak
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "keycloak.fullname" . }}-keycloak
+          image: {{ .Values.images.keycloak.repository }}:{{ .Values.images.keycloak.tag }}
+          imagePullPolicy: {{ .Values.images.keycloak.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 8080
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
