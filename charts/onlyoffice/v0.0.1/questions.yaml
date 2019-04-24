@@ -1,0 +1,266 @@
+categories:
+  - Server
+questions:
+
+# Images
+  - variable: images.onlyoffice.repository
+    default: onlyoffice/documentserver
+    description: ''
+    type: string
+    required: true
+    label: 'onlyoffice repository'
+    group: Images
+  - variable: images.onlyoffice.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'onlyoffice tag'
+    group: Images  - variable: images.rabbitmq.repository
+    default: rabbitmq
+    description: ''
+    type: string
+    required: true
+    label: 'rabbitmq repository'
+    group: Images
+  - variable: images.rabbitmq.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'rabbitmq tag'
+    group: Images
+  - variable: images.postgres.repository
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: 'postgres repository'
+    group: Images
+  - variable: images.postgres.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'postgres tag'
+    group: Images
+  - variable: images.redis.repository
+    default: redis
+    description: ''
+    type: string
+    required: true
+    label: 'redis repository'
+    group: Images
+  - variable: images.redis.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'redis tag'
+    group: Images
+
+# Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Postgres Config'
+  - variable: config.postgres.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    default: onlyoffice
+    description: ''
+    type: string
+    required: true
+    label: database
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    default: postgres
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: 5432
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+
+# Redis Config
+  - variable: config.redis.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Redis Config'
+  - variable: config.redis.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.password
+    default: ''
+    description: ''
+    type: password
+    required: false
+    label: password
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.port
+    default: 6379
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.username
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: username
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 10Gi
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.enabled
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        show_if: persistence.enabled
+        label: 'storage class'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.enabled
+        label: 'existing claim'
+      - variable: persistence.volbackBackup
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'volback backup'
+
+# Services and Load Balancing
+  - variable: ingress.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'ingress tls'
+      - variable: ingress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.tls=true
+        options:
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'ingress issuer name'
+      - variable: ingress.hosts.onlyoffice[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'onlyoffice ingress hostname'
+      - variable: ingress.hosts.onlyoffice[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'onlyoffice ingress path'
+  - variable: service.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.nodePorts.onlyoffice.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'onlyoffice http port'

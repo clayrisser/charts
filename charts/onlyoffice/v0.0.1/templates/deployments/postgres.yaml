@@ -1,0 +1,56 @@
+{{- if .Values.config.postgres.internal }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "onlyoffice.fullname" . }}-postgres
+  labels:
+    app: {{ template "onlyoffice.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "onlyoffice.name" . }}-postgres
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "onlyoffice.fullname" . }}-postgres
+          image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
+          imagePullPolicy: {{ .Values.images.postgres.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 5432
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: postgres_database
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: postgres_password
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "onlyoffice.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- end }}

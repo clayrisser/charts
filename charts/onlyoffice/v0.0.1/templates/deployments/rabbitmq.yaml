@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "onlyoffice.fullname" . }}-rabbitmq
+  labels:
+    app: {{ template "onlyoffice.name" . }}-rabbitmq
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "onlyoffice.name" . }}-rabbitmq
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "onlyoffice.fullname" . }}-rabbitmq
+          image: {{ .Values.images.rabbitmq.repository }}:{{ .Values.images.rabbitmq.tag }}
+          imagePullPolicy: {{ .Values.images.rabbitmq.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 5672
+          env: []
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

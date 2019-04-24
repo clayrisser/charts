@@ -1,0 +1,15 @@
+name: onlyoffice
+home: https://www.onlyoffice.com
+icon: https://static-www.onlyoffice.com/images/logo_small.svg
+version: 0.0.1
+appVersion: latest
+description: 'the most secure way to create, edit and collaborate on business documents online'
+keywords:
+  - onlyoffice
+  - office
+  - productivity
+sources:
+  - https://github.com/ONLYOFFICE/CommunityServer
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

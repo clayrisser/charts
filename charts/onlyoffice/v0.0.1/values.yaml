@@ -1,0 +1,78 @@
+images:
+  onlyoffice:
+    repository: onlyoffice/documentserver
+    tag: latest
+    pullPolicy: IfNotPresent
+  rabbitmq:
+    repository: rabbitmq
+    tag: latest
+    pullPolicy: IfNotPresent
+  postgres:
+    repository: postgres
+    tag: latest
+    pullPolicy: IfNotPresent
+  redis:
+    repository: redis
+    tag: latest
+    pullPolicy: IfNotPresent
+
+config:
+  postgres:
+    database: onlyoffice
+    host: ''
+    internal: true
+    password: postgres
+    port: 5432
+    url: ''
+    username: postgres
+  redis:
+    host: ''
+    internal: true
+    password: ''
+    port: 6379
+    url: ''
+    username: ''
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:
+    onlyoffice:
+      http: ''
+    rabbitmq:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    onlyoffice:
+      - name: ''
+        path: /
+    rabbitmq:
+      - name: ''
+        path: /
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 10Gi
+  storageClass: ''
+  volbackBackup: false
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
