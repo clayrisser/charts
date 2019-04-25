@@ -23,9 +23,49 @@ spec:
               containerPort: 80
           volumeMounts:
             - name: data
-              mountPath: '/var/lib/onlyoffice/documentserver/App_Data/cache/files'
+              mountPath: /var/lib/onlyoffice/documentserver/App_Data/cache/files
               subPath: cache
-          env: []
+            - name: data
+              mountPath: /var/www/onlyoffice/Data
+              subPath: certificates
+          env:
+            - name: RABBITMQ_SERVER_URL
+              value: amqp://guest:guest@{{ template "onlyoffice.fullname" . }}-rabbitmq
+            - name: POSTGRESQL_SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: postgres_host
+            - name: POSTGRESQL_SERVER_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: postgres_database
+            - name: POSTGRESQL_SERVER_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: postgres_username
+            - name: POSTGRESQL_SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: postgres_port
+            - name: REDIS_SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: redis_host
+            - name: REDIS_SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: redis_port
+            - name: POSTGRESQL_SERVER_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "onlyoffice.fullname" . }}
+                  key: postgres_password
           livenessProbe:
             httpGet:
               path: /healthcheck
