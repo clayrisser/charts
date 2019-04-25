@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "xbrowsersync.fullname" . }}-xbrowsersync
+  labels:
+    app: {{ template "xbrowsersync.name" . }}-xbrowsersync
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  settings.json: |
+    {
+      "db": {
+        "host": "db"
+        {{- $mongo := .Values.config.mongo }}
+        {{- if $mongo.internal }}
+        "host": {{ printf '"' }}{{ template "xbrowsersync.fullname" . }}-mongo{{ printf '"' }}
+        {{- else }}
+        "host": "{{ $mongo.host }}"
+        {{- end }}
+      }
+    }

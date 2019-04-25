@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "xbrowsersync.fullname" . }}-xbrowsersync
+  labels:
+    app: {{ template "xbrowsersync.name" . }}-xbrowsersync
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "xbrowsersync.name" . }}-xbrowsersync
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "xbrowsersync.fullname" . }}-xbrowsersync
+          image: {{ .Values.images.xbrowsersync.repository }}:{{ .Values.images.xbrowsersync.tag }}
+          imagePullPolicy: {{ .Values.images.xbrowsersync.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /usr/src/api/config
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "xbrowsersync.fullname" . }}-xbrowsersync

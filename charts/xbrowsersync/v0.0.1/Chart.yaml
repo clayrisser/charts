@@ -1,0 +1,17 @@
+name: xbrowsersync
+home: https://www.xbrowsersync.org
+icon: https://www.xbrowsersync.org/assets/89e40751d0e7b7f69bd0e2dec3e98f18.svg
+version: 0.0.1
+appVersion: latest
+description: 'a free tool for syncing browser data between different browsers and devices'
+keywords:
+  - xbrowsersync
+  - browser
+  - sync
+  - secure
+  - private
+sources:
+  - https://github.com/xBrowserSync/API
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

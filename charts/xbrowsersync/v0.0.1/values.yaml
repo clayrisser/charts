@@ -1,0 +1,58 @@
+images:
+  xbrowsersync:
+    repository: xbrowsersync/api
+    tag: 1.1.8
+    pullPolicy: IfNotPresent
+  mongo:
+    repository: mongo
+    tag: latest
+    pullPolicy: IfNotPresent
+
+config:
+  mongo:
+    database: xbrowsersync
+    host: ''
+    internal: true
+    password: ''
+    port: 27017
+    url: ''
+    username: ''
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:
+    xbrowsersync:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    xbrowsersync:
+      - name: ''
+        path: /
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 10Gi
+  storageClass: ''
+  volbackBackup: false
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

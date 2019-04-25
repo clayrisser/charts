@@ -1,0 +1,189 @@
+categories:
+  - Server
+questions:
+
+# Images
+  - variable: images.xbrowsersync.repository
+    default: xbrowsersync/api
+    description: ''
+    type: string
+    required: true
+    label: 'xbrowsersync repository'
+    group: Images
+  - variable: images.xbrowsersync.tag
+    default: 1.1.8
+    description: ''
+    type: string
+    required: true
+    label: 'xbrowsersync tag'
+    group: Images
+  - variable: images.mongo.repository
+    default: mongo
+    description: ''
+    type: string
+    required: true
+    label: 'mongo repository'
+    group: Images
+  - variable: images.mongo.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'mongo tag'
+    group: Images
+
+# Mongo Config
+  - variable: config.mongo.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Mongo Config'
+  - variable: config.mongo.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.mongo.internal=false
+    group: 'Mongo Config'
+  - variable: config.mongo.database
+    default: xbrowsersync
+    description: ''
+    type: string
+    required: true
+    label: database
+    group: 'Mongo Config'
+  - variable: config.mongo.password
+    default: ''
+    description: ''
+    type: password
+    required: false
+    label: password
+    show_if: config.mongo.internal=false
+    group: 'Mongo Config'
+  - variable: config.mongo.port
+    default: 27017
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.mongo.internal=false
+    group: 'Mongo Config'
+  - variable: config.mongo.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.mongo.internal=false
+    group: 'Mongo Config'
+  - variable: config.mongo.username
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: username
+    show_if: config.mongo.internal=false
+    group: 'Mongo Config'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 10Gi
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.enabled
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        show_if: persistence.enabled
+        label: 'storage class'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.enabled
+        label: 'existing claim'
+      - variable: persistence.volbackBackup
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'volback backup'
+
+# Services and Load Balancing
+  - variable: ingress.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'ingress tls'
+      - variable: ingress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.tls=true
+        options:
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'ingress issuer name'
+      - variable: ingress.hosts.xbrowsersync[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'xbrowsersync ingress hostname'
+      - variable: ingress.hosts.xbrowsersync[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'xbrowsersync ingress path'
+  - variable: service.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.nodePorts.xbrowsersync.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'xbrowsersync http port'
