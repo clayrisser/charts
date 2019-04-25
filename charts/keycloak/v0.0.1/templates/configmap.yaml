@@ -8,9 +8,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  hostname: {{ .Values.config.hostname | quote }}
+  hostname: {{ template "keycloak.hostname" . }}
   loglevel: {{ .Values.config.loglevel | quote }}
-  user: {{ .Values.config.user | quote }}
+  username: {{ .Values.config.username | quote }}
   {{- $postgres := .Values.config.postgres }}
   {{- if $postgres.internal }}
   postgres_host: {{ template "keycloak.fullname" . }}-postgres

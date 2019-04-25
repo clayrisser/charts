@@ -21,7 +21,51 @@ spec:
           ports:
             - name: container
               containerPort: 8080
-          env: []
+          env:
+            - name: DB_VENDOR
+              value: POSTGRES
+            - name: DB_SCHEMA
+              value: public
+            - name: DB_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: postgres_host
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: postgres_database
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: postgres_username
+            - name: KEYCLOAK_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: hostname
+            - name: KEYCLOAK_LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: loglevel
+            - name: KEYCLOAK_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: username
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: password
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: postgres_password
           livenessProbe:
             httpGet:
               path: /

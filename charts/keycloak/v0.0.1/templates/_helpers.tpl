@@ -17,6 +17,21 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 
 {{/*
+Calculate hostname
+*/}}
+{{- define "keycloak.hostname" }}
+{{- if (not (empty .Values.config.hostname)) }}
+{{- printf .Values.config.hostname }}
+{{- else }}
+{{- if .Values.ingress.enabled }}
+{{- printf (index .Values.ingress.hosts.keycloak 0) }}
+{{- else }}
+{{- printf "%s-keycloak" (include "keycloak.fullname" . ) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate base_url
 */}}
 {{- define "keycloak.base_url" }}
@@ -24,12 +39,16 @@ Calculate base_url
 {{- printf .Values.config.base_url }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- $host := (index .Values.ingress.hosts.keycloak 0) }}
+{{- $host := ((empty (include "keycloak.hostname" . )) | (index .Values.ingress.hosts.keycloak 0) (include "keycloak.hostname" . ) }}
 {{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
 {{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
 {{- else }}
-{{- printf "http://%s-keycloak" (include "keycloak.fullname" . ) }}
+{{- if (empty (include "keycloak.hostname" . )) }}
+{{- printf "http://%s-keycloak" (include "keycloak.hostname" . ) }}
+{{- else }}
+{{- printf "http://%s" (include "keycloak.hostname" . ) }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

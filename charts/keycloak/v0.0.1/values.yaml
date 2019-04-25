@@ -10,9 +10,9 @@ images:
 
 config:
   hostname: ''
-  loglevel: 'INFO'
-  user: 'admin'
-  password: 'pass'
+  loglevel: INFO
+  password: pass
+  username: admin
   postgres:
     database: keycloak
     host: ''

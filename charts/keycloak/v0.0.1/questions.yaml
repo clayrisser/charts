@@ -35,31 +35,40 @@ questions:
 # Config
   - variable: config.hostname
     default: ''
-    description: 'hostname'
+    description: ''
     type: string
     required: false
-    label: 'hostname'
+    label: hostname
     group: Config
   - variable: config.loglevel
-    default: 'INFO'
-    description: 'loglevel'
+    default: INFO
+    description: ''
     type: enum
+    options:
+      - ALL
+      - DEBUG
+      - ERROR
+      - FATAL
+      - INFO
+      - OFF
+      - TRACE
+      - WARN
     required: true
-    label: 'loglevel'
+    label: loglevel
     group: Config
-  - variable: config.user
-    default: 'admin'
-    description: 'user'
+  - variable: config.username
+    default: admin
+    description: ''
     type: string
     required: true
-    label: 'user'
+    label: user
     group: Config
   - variable: config.password
-    default: 'pass'
-    description: 'password'
+    default: pass
+    description: ''
     type: password
     required: true
-    label: 'password'
+    label: password
     group: Config
 
 # Postgres Config
