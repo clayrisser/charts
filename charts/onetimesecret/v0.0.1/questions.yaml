@@ -17,80 +17,29 @@ questions:
     required: true
     label: 'onetimesecret tag'
     group: Images
-  - variable: images.redis.repository
-    default: redis
-    description: ''
-    type: string
-    required: true
-    label: 'redis repository'
-    group: Images
-  - variable: images.redis.tag
-    default: latest
-    description: ''
-    type: string
-    required: true
-    label: 'redis tag'
-    group: Images
 
 # Config
   - variable: config.name
     default: ''
-    description: 'name'
+    description: ''
     type: string
     required: false
-    label: 'name'
+    label: name
     group: Config
-
-# Redis Config
-  - variable: config.redis.internal
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: internal
-    group: 'Redis Config'
-  - variable: config.redis.host
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: host
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-  - variable: config.redis.password
-    default: ''
+  - variable: config.secret
+    default: some-secret
     description: ''
     type: password
-    required: false
-    label: password
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-  - variable: config.redis.port
-    default: 6379
-    description: ''
-    type: int
-    min: 0
-    max: 50000
     required: true
-    label: port
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-  - variable: config.redis.url
+    label: secret
+    group: Config
+  - variable: config.adminEmail
     default: ''
     description: ''
     type: string
-    required: false
-    label: url
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-  - variable: config.redis.username
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: username
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
+    required: true
+    label: 'admin email'
+    group: Config
 
 # Persistence
   - variable: persistence.enabled

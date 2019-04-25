@@ -9,11 +9,3 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   name: {{ .Values.config.name | quote }}
-  {{- $redis := .Values.config.redis }}
-  {{- if $redis.internal }}
-  redis_host: {{ template "onetimesecret.fullname" . }}-redis
-  {{- else }}
-  redis_host: {{ $redis.host | quote }}
-  {{- end }}
-  redis_port: {{ $redis.port | quote }}
-  redis_username: {{ $redis.username | quote }}

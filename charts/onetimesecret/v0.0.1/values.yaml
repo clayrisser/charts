@@ -3,20 +3,11 @@ images:
     repository: dismantl/onetimesecret
     tag: latest
     pullPolicy: IfNotPresent
-  redis:
-    repository: redis
-    tag: latest
-    pullPolicy: IfNotPresent
 
 config:
   name: ''
-  redis:
-    host: ''
-    internal: true
-    password: ''
-    port: 6379
-    url: ''
-    username: ''
+  secret: some-secret
+  adminEmail: ''
 
 service:
   type: NodePort
