@@ -1,0 +1,44 @@
+images:
+  teleport:
+    repository: quay.io/gravitational/teleport-ent
+    tag: 2.7.0-alpha.3
+    pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:
+    teleport:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    teleport:
+      - name: ''
+        path: /
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 10Gi
+  storageClass: ''
+  volbackBackup: false
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

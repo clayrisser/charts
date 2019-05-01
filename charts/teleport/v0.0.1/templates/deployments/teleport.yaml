@@ -1,0 +1,49 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "teleport.fullname" . }}-teleport
+  labels:
+    app: {{ template "teleport.name" . }}-teleport
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "teleport.name" . }}-teleport
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "teleport.fullname" . }}-teleport
+          image: {{ .Values.images.teleport.repository }}:{{ .Values.images.teleport.tag }}
+          imagePullPolicy: {{ .Values.images.teleport.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 3080
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/teleport
+              subPath: data
+            - name: data
+              mountPath: /var/lib/certs
+              subPath: certs
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "teleport.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

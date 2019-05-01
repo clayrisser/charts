@@ -1,0 +1,26 @@
+name: teleport
+home: https://gravitational.com/teleport
+icon: https://gravitational.com/gravitational/images/logos/logo-teleport.svg
+version: 0.0.1
+appVersion: latest
+description: 'privileged access management for elastic infrastructure'
+keywords:
+  - teleport
+  - ssh
+  - server
+  - certificate
+  - auth
+  - authentication
+  - authorization
+  - rbac
+  - role
+  - secure
+  - admin
+  - bastion
+  - host
+  - node
+sources:
+  - https://github.com/gravitational/teleport
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
