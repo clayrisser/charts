@@ -2,15 +2,6 @@ categories:
   - Server
 questions:
 
-# Config
-  - variable: config.hostname
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: hostname
-    group: Config
-
 # Images
   - variable: images.teleport.repository
     default: quay.io/gravitational/teleport
@@ -20,12 +11,21 @@ questions:
     label: 'teleport repository'
     group: Images
   - variable: images.teleport.tag
-    default: 2.7.0-alpha.3
+    default: 3.2.4
     description: ''
     type: string
     required: true
     label: 'teleport tag'
     group: Images
+
+# Config
+  - variable: config.hostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Config
 
 # Persistence
   - variable: persistence.enabled
