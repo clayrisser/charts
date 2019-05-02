@@ -22,6 +22,8 @@ spec:
             - name: container
               containerPort: 3080
           volumeMounts:
+            - name: config
+              mountPath: /etc/teleport
             - name: data
               mountPath: /var/lib/teleport
               subPath: data
@@ -40,6 +42,9 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
+        - name: config
+          configMap:
+            name: {{ template "teleport.fullname" . }}-teleport
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
