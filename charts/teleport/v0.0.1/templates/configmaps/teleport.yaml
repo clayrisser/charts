@@ -30,5 +30,3 @@ data:
       public_addr: {{ template "teleport.hostname" . }}
       web_listen_addr: 0.0.0.0:3080
       listen_addr: 0.0.0.0:3023
-      https_key_file: /var/lib/certs/tls.key
-      https_cert_file: /var/lib/certs/tls.crt
