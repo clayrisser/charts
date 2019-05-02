@@ -24,7 +24,7 @@ Calculate hostname
 {{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.teleport 0) }}
+{{- printf (index .Values.ingress.hosts.teleport 0).name }}
 {{- else }}
 {{- printf "%s-teleport" (include "teleport.fullname" . ) }}
 {{- end }}
@@ -39,7 +39,7 @@ Calculate base_url
 {{- printf .Values.config.base_url }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- $host := ((empty (include "teleport.hostname" . )) | (index .Values.ingress.hosts.teleport 0) (include "teleport.hostname" . ) }}
+{{- $host := ((empty (include "teleport.hostname" . )) | (index .Values.ingress.hosts.teleport 0) (include "teleport.hostname" . )) }}
 {{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
 {{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
@@ -52,4 +52,3 @@ Calculate base_url
 {{- end }}
 {{- end }}
 {{- end }}
-
