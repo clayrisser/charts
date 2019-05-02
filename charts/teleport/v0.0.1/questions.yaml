@@ -13,7 +13,7 @@ questions:
 
 # Images
   - variable: images.teleport.repository
-    default: quay.io/gravitational/teleport-ent
+    default: quay.io/gravitational/teleport
     description: ''
     type: string
     required: true
