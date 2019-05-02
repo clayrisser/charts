@@ -24,7 +24,7 @@ Calculate hostname
 {{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.keycloak 0) }}
+{{- printf (index .Values.ingress.hosts.keycloak 0).name }}
 {{- else }}
 {{- printf "%s-keycloak" (include "keycloak.fullname" . ) }}
 {{- end }}
