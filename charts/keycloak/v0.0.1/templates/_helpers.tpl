@@ -39,7 +39,7 @@ Calculate base_url
 {{- printf .Values.config.base_url }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- $host := ((empty (include "keycloak.hostname" . )) | (index .Values.ingress.hosts.keycloak 0) (include "keycloak.hostname" . ) }}
+{{- $host := ((empty (include "keycloak.hostname" . )) | (index .Values.ingress.hosts.keycloak 0) (include "keycloak.hostname" . )) }}
 {{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
 {{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}

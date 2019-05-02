@@ -208,6 +208,7 @@ questions:
         default: letsencrypt-staging
         description: ''
         type: enum
+        show_if: ingress.tls=true
         options:
           - letsencrypt-staging
           - letsencrypt-prod
