@@ -2,6 +2,15 @@ categories:
   - Server
 questions:
 
+# Config
+  - variable: config.hostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Config
+
 # Images
   - variable: images.teleport.repository
     default: quay.io/gravitational/teleport-ent
