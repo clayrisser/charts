@@ -32,6 +32,3 @@ data:
       listen_addr: 0.0.0.0:3023
       https_key_file: /var/lib/certs/tls.key
       https_cert_file: /var/lib/certs/tls.crt
-      kubernetes:
-        enabled: yes
-        listen_addr: 0.0.0.0:3026
