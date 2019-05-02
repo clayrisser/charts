@@ -24,7 +24,7 @@ Calculate hostname
 {{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.xbrowsersync 0) }}
+{{- printf (index .Values.ingress.hosts.xbrowsersync 0).name }}
 {{- else }}
 {{- printf "%s-xbrowsersync" (include "xbrowsersync.fullname" . ) }}
 {{- end }}
@@ -39,7 +39,7 @@ Calculate base_url
 {{- printf .Values.config.base_url }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- $host := ((empty (include "xbrowsersync.hostname" . )) | (index .Values.ingress.hosts.xbrowsersync 0) (include "xbrowsersync.hostname" . ) }}
+{{- $host := ((empty (include "xbrowsersync.hostname" . )) | (index .Values.ingress.hosts.xbrowsersync 0) (include "xbrowsersync.hostname" . )) }}
 {{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
 {{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
