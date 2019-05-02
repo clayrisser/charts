@@ -1,6 +1,6 @@
 images:
   teleport:
-    repository: quay.io/gravitational/teleport-ent
+    repository: quay.io/gravitational/teleport
     tag: 2.7.0-alpha.3
     pullPolicy: IfNotPresent
 
