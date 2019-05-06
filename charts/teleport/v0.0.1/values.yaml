@@ -16,6 +16,7 @@ service:
   nodePorts:
     teleport:
       http: ''
+      proxy: ''
 
 ingress:
   enabled: false

@@ -32,10 +32,17 @@ spec:
       port: 2023
       protocol: TCP
       targetPort: proxy
+      {{- if (not (empty .Values.service.nodePorts.teleport.proxy)) }}
+      nodePort: {{ .Values.service.nodePorts.teleport.proxy }}
+      {{- end }}
     - name: auth
       port: 3025
       protocol: TCP
       targetPort: http
+    - name: kubernetes
+      port: 3026
+      protocol: TCP
+      targetPort: kubernetes
   selector:
     app: {{ template "teleport.name" . }}-teleport
     release: {{ .Release.Name }}
