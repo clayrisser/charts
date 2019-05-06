@@ -32,10 +32,6 @@ spec:
       port: 2023
       protocol: TCP
       targetPort: proxy
-    - name: tunnel
-      port: 3024
-      protocol: TCP
-      targetPort: tunnel
     - name: auth
       port: 3025
       protocol: TCP

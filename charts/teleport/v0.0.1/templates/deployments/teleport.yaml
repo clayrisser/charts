@@ -20,39 +20,45 @@ spec:
           imagePullPolicy: {{ .Values.images.teleport.pullPolicy }}
           ports:
             - name: http
-              containerPort: 3080
+              containerPort: 80
             - name: ssh
               containerPort: 3022
             - name: proxy
               containerPort: 3023
-            - name: tunnel
-              containerPort: 3024
             - name: auth
               containerPort: 3025
+            - name: kubernetes
+              containerPort: 3026
           volumeMounts:
             - name: config
               mountPath: /etc/teleport
             - name: data
               mountPath: /var/lib/teleport
               subPath: data
-            - name: data
+            {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+            - name: certs
               mountPath: /var/lib/certs
-              subPath: certs
+            {{- end }}
           env: []
           livenessProbe:
             httpGet:
               path: /
-              port: container
+              port: http
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
               path: /
-              port: container
+              port: http
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: config
           configMap:
             name: {{ template "teleport.fullname" . }}-teleport
+        {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+        - name: certs
+          secret:
+            secretName: letsencrypt-staging
+        {{- end }}
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

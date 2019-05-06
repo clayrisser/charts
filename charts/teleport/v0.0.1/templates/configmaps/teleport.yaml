@@ -27,10 +27,10 @@ data:
     auth_service:
       enabled: yes
       client_idle_timeout: never
-      cluster_name: main
+      cluster_name: {{ template "teleport.hostname" . }}
       disconnect_expired_cert: no
       listen_addr: 0.0.0.0:3025
-      public_addr: {{ template "teleport.hostname" . }}:3025
+      public_addr: {{ template "teleport.name" . }}-teleport:3025
       session_recording: node
       authentication:
         second_factor: {{ .Values.config.twoFactor | quote }}
@@ -40,7 +40,7 @@ data:
       labels: []
       listen_addr: 0.0.0.0:3022
       permit_user_env: false
-      public_addr: {{ template "teleport.hostname" . }}:3022
+      public_addr: {{ template "teleport.name" . }}:3022
       commands:
         - command: ['/bin/uname', '-p']
           name: arch
@@ -50,15 +50,16 @@ data:
         service_name: teleport
     proxy_service:
       enabled: yes
-      http_cert_file: ''
-      https_key_file: ''
+      {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+      https_cert_file: /var/lib/certs/tls.key
+      https_key_file: /var/lib/certs/tls.crt
+      {{- end }}
       listen_addr: 0.0.0.0:3023
-      public_addr: {{ template "teleport.hostname" . }}:3023
-      ssh_public_addr: {{ template "teleport.hostname" . }}:3022
-      tunnel_listen_addr: 0.0.0.0:3024
-      web_listen_addr: 0.0.0.0:3080
-      kubernets:
+      public_addr: {{ template "teleport.hostname" . }}
+      ssh_public_addr: {{ template "teleport.hostname" . }}:3023
+      web_listen_addr: 0.0.0.0:80
+      kubernetes:
         enabled: false
         kubeconfig_file: /path/to/kubeconfig
         listen_addr: 0.0.0.0:3026
-        public_addr: {{ template "teleport.hostname" . }}:3026
+        public_addr: {{ template "teleport.name" . }}:3026
