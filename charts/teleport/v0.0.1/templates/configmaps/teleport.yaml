@@ -10,23 +10,55 @@ metadata:
 data:
   teleport.yaml: |
     teleport:
+      data_dir: /var/lib/teleport
+      nodename: {{ template "teleport.fullname" . }}-teleport
+      connection_limits:
+        max_connections: 1000
+        max_users: 250
       log:
         output: stderr
-        severity: DEBUG
-      data_dir: /var/lib/teleport
+        severity: ERROR
       storage:
+        audit_events_uri:
+          - {{ .Values.config.auditEventsUri | quote }}
+        audit_sessions_uri:
+          - {{ .Values.config.auditSessionsUri | quote }}
         type: dir
     auth_service:
       enabled: yes
-      authentication:
-        type: oidc
+      client_idle_timeout: never
+      cluster_name: main
+      disconnect_expired_cert: no
+      listen_addr: 0.0.0.0:3025
       public_addr: {{ template "teleport.hostname" . }}:3025
-      cluster_name: {{ template "teleport.hostname" . }}
+      session_recording: node
+      authentication:
+        second_factor: {{ .Values.config.twoFactor | quote }}
+        type: local
     ssh_service:
       enabled: yes
+      labels: []
+      listen_addr: 0.0.0.0:3022
+      permit_user_env: false
       public_addr: {{ template "teleport.hostname" . }}:3022
+      commands:
+        - command: ['/bin/uname', '-p']
+          name: arch
+          period: 1h0m0s
+      pam:
+        enabled: no
+        service_name: teleport
     proxy_service:
       enabled: yes
-      public_addr: {{ template "teleport.hostname" . }}
-      web_listen_addr: 0.0.0.0:3080
+      http_cert_file: ''
+      https_key_file: ''
       listen_addr: 0.0.0.0:3023
+      public_addr: {{ template "teleport.hostname" . }}:3023
+      ssh_public_addr: {{ template "teleport.hostname" . }}:3022
+      tunnel_listen_addr: 0.0.0.0:3024
+      web_listen_addr: 0.0.0.0:3080
+      kubernets:
+        enabled: false
+        kubeconfig_file: /path/to/kubeconfig
+        listen_addr: 0.0.0.0:3026
+        public_addr: {{ template "teleport.hostname" . }}:3026

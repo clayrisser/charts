@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "teleport.fullname" . }}
+  labels:
+    app: {{ template "teleport.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  auditSessionsUri: {{ .Values.config.auditSessionsUri | quote }}

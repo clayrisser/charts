@@ -6,6 +6,9 @@ images:
 
 config:
   hostname: ''
+  twoFactor: 'off'
+  auditEventsUri: 'file:///var/lib/teleport/log'
+  auditSessionsUri: 'file:///var/lib/teleport/audit/sessions'
 
 service:
   type: NodePort

@@ -26,6 +26,31 @@ questions:
     required: false
     label: hostname
     group: Config
+  - variable: config.twoFactor
+    default: 'off'
+    description: ''
+    type: enum
+    options:
+      - 'off'
+      - otp
+      - u2f
+    required: true
+    label: 'two factor'
+    group: Config
+  - variable: config.auditEventsUri
+    default: 'file:///var/lib/teleport/log'
+    description: ''
+    type: string
+    required: true
+    label: 'audit evnets uri'
+    group: Config
+  - variable: config.auditSessionsUri
+    default: 'file:///var/lib/teleport/audit/sessions'
+    description: ''
+    type: string
+    required: true
+    label: 'audit sessions uri'
+    group: Config
 
 # Persistence
   - variable: persistence.enabled

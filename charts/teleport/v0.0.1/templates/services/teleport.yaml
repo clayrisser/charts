@@ -19,10 +19,27 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: container
+      protocol: TCP
+      targetPort: http
       {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.teleport.http))) }}
       nodePort: {{ .Values.service.nodePorts.teleport.http }}
       {{- end }}
+    - name: ssh
+      port: 3022
+      protocol: TCP
+      targetPort: ssh
+    - name: proxy
+      port: 2023
+      protocol: TCP
+      targetPort: proxy
+    - name: tunnel
+      port: 3024
+      protocol: TCP
+      targetPort: tunnel
+    - name: auth
+      port: 3025
+      protocol: TCP
+      targetPort: http
   selector:
     app: {{ template "teleport.name" . }}-teleport
     release: {{ .Release.Name }}
