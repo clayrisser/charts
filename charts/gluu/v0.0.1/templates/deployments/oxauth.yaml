@@ -1,0 +1,52 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gluu.fullname" . }}-oxauth
+  labels:
+    app: {{ template "gluu.name" . }}-oxauth
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gluu.name" . }}-oxauth
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gluu.fullname" . }}-oxauth
+          image: {{ .Values.images.oxauth.repository }}:{{ .Values.images.oxauth.tag }}
+          imagePullPolicy: {{ .Values.images.oxauth.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: '/opt/gluu/jetty/oxauth/custom/static'
+              subPath: static
+            - name: data
+              mountPath: '/opt/gluu/jetty/oxauth/custom/pages'
+              subPath: pages
+            - name: data
+              mountPath: '/opt/gluu/jetty/oxauth/lib/ext'
+              subPath: ext
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gluu.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

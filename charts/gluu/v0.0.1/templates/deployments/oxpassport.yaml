@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gluu.fullname" . }}-oxpassport
+  labels:
+    app: {{ template "gluu.name" . }}-oxpassport
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gluu.name" . }}-oxpassport
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gluu.fullname" . }}-oxpassport
+          image: {{ .Values.images.oxpassport.repository }}:{{ .Values.images.oxpassport.tag }}
+          imagePullPolicy: {{ .Values.images.oxpassport.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 8090
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

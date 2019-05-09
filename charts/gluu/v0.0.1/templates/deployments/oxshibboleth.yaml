@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gluu.fullname" . }}-oxshibboleth
+  labels:
+    app: {{ template "gluu.name" . }}-oxshibboleth
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gluu.name" . }}-oxshibboleth
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gluu.fullname" . }}-oxshibboleth
+          image: {{ .Values.images.oxshibboleth.repository }}:{{ .Values.images.oxshibboleth.tag }}
+          imagePullPolicy: {{ .Values.images.oxshibboleth.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: '/opt/shared-shibboleth-idp'
+              subPath: shared
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gluu.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

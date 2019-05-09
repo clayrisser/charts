@@ -1,0 +1,29 @@
+name: gluu
+home: https://www.gluu.org
+icon: https://support.gluu.org/static/img/logo.png
+version: 0.0.1
+appVersion: latest
+description: 'central authentication and authorization'
+keywords:
+  - gluu
+  - federation
+  - oauth
+  - saml
+  - ldap
+  - oxauth
+  - oxtrust
+  - oxshibboleth
+  - shibboleth
+  - auth
+  - trust
+  - gateway
+  - proxy
+  - kong
+  - authorization
+  - authentication
+  - uma
+sources:
+  - https://github.com/GluuFederation/oxAuth
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

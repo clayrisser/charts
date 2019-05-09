@@ -1,0 +1,84 @@
+images:
+  oxtrust:
+    repository: gluufederation/oxtrust
+    tag: 3.1.5_03
+    pullPolicy: IfNotPresent
+  oxshibboleth:
+    repository: gluufederation/oxshibboleth
+    tag: 3.1.5_02
+    pullPolicy: IfNotPresent
+  oxpassport:
+    repository: gluufederation/oxpassport
+    tag: 3.1.5_02
+    pullPolicy: IfNotPresent
+  oxauth:
+    repository: gluufederation/oxauth
+    tag: 3.1.5_03
+    pullPolicy: IfNotPresent
+  redis:
+    repository: redis
+    tag: latest
+    pullPolicy: IfNotPresent
+
+config:
+  redis:
+    host: ''
+    internal: true
+    password: ''
+    port: 6379
+    url: ''
+    username: ''
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:
+    oxtrust:
+      http: ''
+    oxshibboleth:
+      http: ''
+    oxpassport:
+      http: ''
+    oxauth:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    oxtrust:
+      - name: ''
+        path: /
+    oxshibboleth:
+      - name: ''
+        path: /
+    oxpassport:
+      - name: ''
+        path: /
+    oxauth:
+      - name: ''
+        path: /
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 10Gi
+  storageClass: ''
+  volbackBackup: false
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
