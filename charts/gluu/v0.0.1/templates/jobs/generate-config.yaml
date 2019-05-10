@@ -14,6 +14,7 @@ spec:
         app: {{ template "gluu.name" . }}-generate-config
         release: {{ .Release.Name }}
     spec:
+      restartPolicy: Never
       containers:
         - name: {{ template "gluu.fullname" . }}-generate-config
           image: {{ .Values.images.init.repository }}:{{ .Values.images.init.tag }}
