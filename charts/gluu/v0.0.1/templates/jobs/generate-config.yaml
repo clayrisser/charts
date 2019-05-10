@@ -23,7 +23,6 @@ spec:
             - name: data
               mountPath: /opt/config-init/db
               subPath: config
-          command: ['echo']
           args: ['generate', '--admin-pw', '$(ADMIN_PW)', '--email', '$(EMAIL)', '--domain', '$(DOMAIN)', '--org-name', '$(ORG_NAME)', '--country-code', '$(COUNTRY_CODE)', '--state', '$(STATE)', '--city', '$(CITY)', '--ldap-type', '$(LDAP_TYPE)']
           env:
             - name: GLUU_CONFIG_ADAPTER
@@ -41,10 +40,7 @@ spec:
                   name: {{ template "gluu.fullname" . }}
                   key: email
             - name: DOMAIN
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gluu.fullname" . }}
-                  key: hostname
+              value: {{ template "gluu.hostname" . }}
             - name: ORG_NAME
               valueFrom:
                 configMapKeyRef:
