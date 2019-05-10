@@ -17,8 +17,8 @@ spec:
   {{- end }}
   {{- end }}
   ports:
-    - name: http
-      port: 80
+    - name: admin
+      port: 4444
       targetPort: admin
       {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.opendj.http))) }}
       nodePort: {{ .Values.service.nodePorts.opendj.http }}

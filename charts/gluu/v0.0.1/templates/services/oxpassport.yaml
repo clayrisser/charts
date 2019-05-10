@@ -18,7 +18,7 @@ spec:
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: 8090
       targetPort: container
       {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.oxpassport.http))) }}
       nodePort: {{ .Values.service.nodePorts.oxpassport.http }}

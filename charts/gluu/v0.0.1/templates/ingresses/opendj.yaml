@@ -17,7 +17,7 @@ metadata:
 spec:
   rules:
     - host: {{ .name }}
-      http:
+      admin:
         paths:
           - path: {{ .path }}
             backend:
