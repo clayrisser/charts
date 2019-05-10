@@ -15,7 +15,7 @@ spec:
         release: {{ .Release.Name }}
     spec:
       restartPolicy: Never
-      containers:
+      initContainers:
         - name: {{ template "gluu.fullname" . }}-generate-config
           image: {{ .Values.images.init.repository }}:{{ .Values.images.init.tag }}
           imagePullPolicy: {{ .Values.images.init.pullPolicy }}
