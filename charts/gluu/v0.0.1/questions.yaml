@@ -131,33 +131,12 @@ questions:
     required: true
     label: email
     group: Config
-  - variable: config.oxauthHostname
+  - variable: config.hostname
     default: ''
     description: ''
     type: string
     required: false
-    label: 'oxauth hostname'
-    group: Config
-  - variable: config.oxpassportHostname
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'oxpassport hostname'
-    group: Config
-  - variable: config.oxshibbolethHostname
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'oxshibboleth hostname'
-    group: Config
-  - variable: config.oxtrustHostname
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'oxtrust hostname'
+    label: hostname
     group: Config
 
 # Redis Config

@@ -48,7 +48,7 @@ spec:
                   name: {{ template "gluu.fullname" . }}
                   key: email
             - name: DOMAIN
-              value: {{ template "gluu.oxauth_hostname" . }}
+              value: {{ template "gluu.hostname" . }}
             - name: ORG_NAME
               valueFrom:
                 configMapKeyRef:
