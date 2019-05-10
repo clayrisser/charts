@@ -46,13 +46,13 @@ spec:
             - name: GLUU_SECRET_ADAPTER
               value: kubernetes
             - name: GLUU_LDAP_INIT
-              value: true
+              value: 'true'
             - name: GLUU_LDAP_INIT_HOST
               value: {{ template "gluu.fullname" . }}-opendj
             - name: GLUU_LDAP_INIT_PORT
               value: 1636
             - name: GLUU_OXTRUST_CONFIG_GENERATION
-              value: true
+              value: 'true'
             - name: GLUU_CACHE_TYPE
               value: NATIVE_PERSISTENCE
             - name: GLUU_CACHE_TYPE
