@@ -24,7 +24,7 @@ Calculate hostname
 {{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.gluu 0).name }}
+{{- printf (index .Values.ingress.hosts.opendj 0).name }}
 {{- else }}
 {{- printf "%s-gluu" (include "gluu.fullname" . ) }}
 {{- end }}
