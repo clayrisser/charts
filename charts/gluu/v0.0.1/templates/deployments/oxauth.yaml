@@ -18,28 +18,43 @@ spec:
         - name: {{ template "gluu.fullname" . }}-oxauth
           image: {{ .Values.images.oxauth.repository }}:{{ .Values.images.oxauth.tag }}
           imagePullPolicy: {{ .Values.images.oxauth.pullPolicy }}
+          resources:
+            requests:
+              memory: 1000Mi
+            limits:
+              memory: 1536Mi
           ports:
             - name: container
               containerPort: 8080
           volumeMounts:
             - name: data
-              mountPath: '/opt/gluu/jetty/oxauth/custom/static'
-              subPath: static
+              mountPath: /opt/gluu/jetty/oxauth/custom/static
+              subPath: oxauth/static
             - name: data
-              mountPath: '/opt/gluu/jetty/oxauth/custom/pages'
-              subPath: pages
+              mountPath: /opt/gluu/jetty/oxauth/custom/pages
+              subPath: oxauth/pages
             - name: data
-              mountPath: '/opt/gluu/jetty/oxauth/lib/ext'
-              subPath: ext
-          env: []
+              mountPath: /opt/gluu/jetty/oxauth/lib/ext
+              subPath: oxauth/ext
+          env:
+            - name: GLUU_CONFIG_ADAPTER
+              value: kubernetes
+            - name: GLUU_SECRET_ADAPTER
+              value: kubernetes
+            - name: GLUU_LDAP_URL
+              value: {{ template "gluu.fullname" . }}-opendj:1636
+            - name: GLUU_OXAUTH_BACKEND
+              value: {{ template "gluu.fullname" . }}-oxauth:8080
+            - name: GLUU_MAX_RAM_FRACTION
+              value: '1'
           livenessProbe:
             httpGet:
-              path: /
+              path: /oxauth/.well-known/openid-configuration
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /oxauth/.well-known/openid-configuration
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:

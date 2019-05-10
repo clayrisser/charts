@@ -23,20 +23,36 @@ spec:
               containerPort: 8080
           volumeMounts:
             - name: data
-              mountPath: '/opt/gluu/jetty/identity/custom/static'
-              subPath: static
+              mountPath: /opt/gluu/jetty/identity/custom/static
+              subPath: oxtrust/static
             - name: data
-              mountPath: '/opt/gluu/jetty/identity/custom/pages'
-              subPath: pages
-          env: []
+              mountPath: /opt/gluu/jetty/identity/custom/pages
+              subPath: oxtrust/pages
+            - name: data
+              mountPath: /opt/gluu/jetty/identity/lib/ext
+              subPath: oxtrust/ext
+            - name: data
+              mountPath: /opt/shared-shibboleth-idp
+              subPath: shared
+          env:
+            - name: GLUU_CONFIG_ADAPTER
+              value: kubernetes
+            - name: GLUU_SECRET_ADAPTER
+              value: kubernetes
+            - name: GLUU_LDAP_URL
+              value: {{ template "gluu.fullname" . }}-opendj:1636
+            - name: GLUU_OXAUTH_BACKEND
+              value: {{ template "gluu.fullname" . }}-oxauth:8080
+            - name: GLUU_MAX_RAM_FRACTION
+              value: '1'
           livenessProbe:
             httpGet:
-              path: /
+              path: /identity/restv1/scim-configuration
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /identity/restv1/scim-configuration
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:

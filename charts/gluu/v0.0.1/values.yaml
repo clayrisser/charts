@@ -1,26 +1,41 @@
 images:
   oxtrust:
     repository: gluufederation/oxtrust
-    tag: 3.1.5_03
+    tag: 3.1.5_04
     pullPolicy: IfNotPresent
   oxshibboleth:
     repository: gluufederation/oxshibboleth
-    tag: 3.1.5_02
+    tag: 3.1.5_03
     pullPolicy: IfNotPresent
   oxpassport:
     repository: gluufederation/oxpassport
-    tag: 3.1.5_02
+    tag: 3.1.5_03
     pullPolicy: IfNotPresent
   oxauth:
     repository: gluufederation/oxauth
-    tag: 3.1.5_03
+    tag: 3.1.5_04
+    pullPolicy: IfNotPresent
+  init:
+    repository: gluufederation/init
+    tag: 3.1.5_05
     pullPolicy: IfNotPresent
   redis:
     repository: redis
     tag: latest
     pullPolicy: IfNotPresent
+  opendj:
+    repository: gluufederation/opendj
+    tag: 3.1.5_03
+    pullPolicy: IfNotPresent
 
 config:
+  city: Austin
+  countryCode: US
+  email: email@example.com
+  hostname: ''
+  organization: Gluu
+  password: pass
+  state: Texas
   redis:
     host: ''
     internal: true
@@ -41,6 +56,8 @@ service:
       http: ''
     oxauth:
       http: ''
+    opendj:
+      http: ''
 
 ingress:
   enabled: false
@@ -58,6 +75,9 @@ ingress:
       - name: ''
         path: /
     oxauth:
+      - name: ''
+        path: /
+    opendj:
       - name: ''
         path: /
 

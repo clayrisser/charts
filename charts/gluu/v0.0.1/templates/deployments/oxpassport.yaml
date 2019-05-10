@@ -21,14 +21,18 @@ spec:
           ports:
             - name: container
               containerPort: 8090
-          env: []
+          env:
+            - name: GLUU_CONFIG_ADAPTER
+              value: kubernetes
+            - name: GLUU_SECRET_ADAPTER
+              value: kubernetes
           livenessProbe:
             httpGet:
-              path: /
+              path: /passport
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /passport
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}

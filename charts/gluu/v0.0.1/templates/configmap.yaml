@@ -16,3 +16,9 @@ data:
   {{- end }}
   redis_port: {{ $redis.port | quote }}
   redis_username: {{ $redis.username | quote }}
+  city: {{ .Values.config.city | quote }}
+  country_code: {{ .Values.config.countryCode | quote }}
+  email: {{ .Values.config.email | quote }}
+  hostname: {{ .Values.config.hostname | quote }}
+  organization: {{ .Values.config.organization | quote }}
+  state: {{ .Values.config.state | quote }}

@@ -18,22 +18,35 @@ spec:
         - name: {{ template "gluu.fullname" . }}-oxshibboleth
           image: {{ .Values.images.oxshibboleth.repository }}:{{ .Values.images.oxshibboleth.tag }}
           imagePullPolicy: {{ .Values.images.oxshibboleth.pullPolicy }}
+          resources:
+            requests:
+              memory: 1000Mi
+            limits:
+              memory: 1536Mi
           ports:
             - name: container
               containerPort: 8080
           volumeMounts:
             - name: data
-              mountPath: '/opt/shared-shibboleth-idp'
+              mountPath: /opt/shared-shibboleth-idp
               subPath: shared
-          env: []
+          env:
+            - name: GLUU_CONFIG_ADAPTER
+              value: kubernetes
+            - name: GLUU_SECRET_ADAPTER
+              value: kubernetes
+            - name: GLUU_LDAP_URL
+              value: {{ template "gluu.fullname" . }}-opendj:1636
+            - name: GLUU_MAX_RAM_FRACTION
+              value: '1'
           livenessProbe:
             httpGet:
-              path: /
+              path: /idp
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /idp
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:

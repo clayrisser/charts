@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "gluu.fullname" . }}-load-config
+  labels:
+    app: {{ template "gluu.name" . }}-load-config
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gluu.name" . }}-load-config
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gluu.fullname" . }}-load-config
+          image: {{ .Values.images.init.repository }}:{{ .Values.images.init.tag }}
+          imagePullPolicy: {{ .Values.images.init.pullPolicy }}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/config-init/db
+              subPath: config
+          args: ['load']
+          env:
+            - name: GLUU_CONFIG_ADAPTER
+              value: kubernetes
+            - name: GLUU_SECRET_ADAPTER
+              value: kubernetes
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gluu.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

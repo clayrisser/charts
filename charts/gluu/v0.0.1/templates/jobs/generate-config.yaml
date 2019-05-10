@@ -1,0 +1,75 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "gluu.fullname" . }}-generate-config
+  labels:
+    app: {{ template "gluu.name" . }}-generate-config
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gluu.name" . }}-generate-config
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gluu.fullname" . }}-generate-config
+          image: {{ .Values.images.init.repository }}:{{ .Values.images.init.tag }}
+          imagePullPolicy: {{ .Values.images.init.pullPolicy }}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/config-init/db
+              subPath: config
+          args: ['generate', '--admin-pw', '$ADMIN_PW', '--email', '$EMAIL', '--domain', '$DOMAIN', '--org-name', '$ORG_NAME', '--country-code', '$COUNTRY_CODE', '--state', '$STATE', '--city', '$CITY', '--ldap-type', '$LDAP_TYPE']
+          env:
+            - name: GLUU_CONFIG_ADAPTER
+              value: kubernetes
+            - name: GLUU_SECRET_ADAPTER
+              value: kubernetes
+            - name: ADMIN_PW
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: password
+            - name: EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: email
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: hostname
+            - name: ORG_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: organization
+            - name: COUNTRY_CODE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: country_code
+            - name: STATE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: state
+            - name: CITY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: city
+            - name: LDAP_TYPE
+              value: opendj
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gluu.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
