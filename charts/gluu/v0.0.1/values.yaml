@@ -32,11 +32,8 @@ config:
   city: Austin
   countryCode: US
   email: email@example.com
+  hostname: ''
   organization: Gluu
-  oxauthHostname: ''
-  oxpassportHostname: ''
-  oxshibbolethHostname: ''
-  oxtrustHostname: ''
   password: pass
   state: Texas
   redis:
@@ -51,13 +48,13 @@ service:
   type: NodePort
   externalTrafficPolicy: Cluster
   nodePorts:
-    oxtrust:
-      http: ''
-    oxshibboleth:
+    oxauth:
       http: ''
     oxpassport:
       http: ''
-    oxauth:
+    oxshibboleth:
+      http: ''
+    oxtrust:
       http: ''
 
 ingress:
@@ -66,16 +63,7 @@ ingress:
   issuer:
     name: letsencrypt-staging
   hosts:
-    oxtrust:
-      - name: ''
-        path: /
-    oxshibboleth:
-      - name: ''
-        path: /
-    oxpassport:
-      - name: ''
-        path: /
-    oxauth:
+    gluu:
       - name: ''
         path: /
 

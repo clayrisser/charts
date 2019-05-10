@@ -274,54 +274,18 @@ questions:
           - letsencrypt-prod
         required: true
         label: 'ingress issuer name'
-      - variable: ingress.hosts.oxtrust[0].name
+      - variable: ingress.hosts.gluu[0].name
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'oxtrust ingress hostname'
-      - variable: ingress.hosts.oxtrust[0].path
+        label: 'gluu ingress hostname'
+      - variable: ingress.hosts.gluu[0].path
         default: /
         description: ''
         type: string
         required: true
-        label: 'oxtrust ingress path'
-      - variable: ingress.hosts.oxshibboleth[0].name
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'oxshibboleth ingress hostname'
-      - variable: ingress.hosts.oxshibboleth[0].path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'oxshibboleth ingress path'
-      - variable: ingress.hosts.oxpassport[0].name
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'oxpassport ingress hostname'
-      - variable: ingress.hosts.oxpassport[0].path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'oxpassport ingress path'
-      - variable: ingress.hosts.oxauth[0].name
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'oxauth ingress hostname'
-      - variable: ingress.hosts.oxauth[0].path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'oxauth ingress path'
+        label: 'gluu ingress path'
   - variable: service.type
     default: NodePort
     description: ''
@@ -336,30 +300,6 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.oxtrust.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false
-        label: 'oxtrust http port'
-      - variable: service.nodePorts.oxshibboleth.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false
-        label: 'oxshibboleth http port'
-      - variable: service.nodePorts.oxpassport.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false
-        label: 'oxpassport http port'
       - variable: service.nodePorts.oxauth.http
         default: ''
         description: ''
@@ -368,3 +308,27 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'oxauth http port'
+      - variable: service.nodePorts.oxpassport.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'oxpassport http port'
+      - variable: service.nodePorts.oxshibboleth.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'oxshibboleth http port'
+      - variable: service.nodePorts.oxtrust.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'oxtrust http port'

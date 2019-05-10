@@ -17,61 +17,16 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 
 {{/*
-Calculate oxauth_hostname
+Calculate hostname
 */}}
-{{- define "gluu.oxauth_hostname" }}
-{{- if (not (empty .Values.config.oxauthHostname)) }}
-{{- printf .Values.config.oxauthHostname }}
+{{- define "gluu.hostname" }}
+{{- if (not (empty .Values.config.hostname)) }}
+{{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.oxauth 0).name }}
+{{- printf (index .Values.ingress.hosts.gluu 0).name }}
 {{- else }}
-{{- printf "%s-oxauth" (include "gluu.fullname" . ) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate oxtrust_hostname
-*/}}
-{{- define "gluu.oxtrust_hostname" }}
-{{- if (not (empty .Values.config.oxtrustHostname)) }}
-{{- printf .Values.config.oxtrustHostname }}
-{{- else }}
-{{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.oxtrust 0).name }}
-{{- else }}
-{{- printf "%s-oxtrust" (include "gluu.fullname" . ) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate oxpassport_hostname
-*/}}
-{{- define "gluu.oxpassport_hostname" }}
-{{- if (not (empty .Values.config.oxpassportHostname)) }}
-{{- printf .Values.config.oxpassportHostname }}
-{{- else }}
-{{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.oxpassport 0).name }}
-{{- else }}
-{{- printf "%s-oxpassport" (include "gluu.fullname" . ) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate oxshibboleth_hostname
-*/}}
-{{- define "gluu.oxshibboleth_hostname" }}
-{{- if (not (empty .Values.config.oxshibbolethHostname)) }}
-{{- printf .Values.config.oxshibbolethHostname }}
-{{- else }}
-{{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.oxshibboleth 0).name }}
-{{- else }}
-{{- printf "%s-oxshibboleth" (include "gluu.fullname" . ) }}
+{{- printf "%s-gluu" (include "gluu.fullname" . ) }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -80,14 +35,14 @@ Calculate oxshibboleth_hostname
 Calculate oxauth_url
 */}}
 {{- define "gluu.oxauth_url" }}
-{{- if (empty (include "gluu.oxauth_hostname" . )) }}
+{{- if (empty (include "gluu.hostname" . )) }}
 {{- if .Values.ingress.enabled }}
-{{- printf ((empty (include "gluu.oxauth_hostname" . )) | (index .Values.ingress.hosts.gluu 0).name (include "gluu.oxauth_hostname" . )) }}
+{{- printf (index .Values.ingress.hosts.gluu 0).name }}
 {{- else }}
-{{- printf "%s-gluu:8080" (include "gluu.oxauth_hostname" . ) }}
+{{- printf "%s-oxauth:8080" (include "gluu.fullname" . ) }}
 {{- end }}
 {{- else }}
-{{- printf (include "gluu.oxauth_hostname" . ) }}
+{{- printf (include "gluu.hostname" . ) }}
 {{- end }}
 {{- end }}
 

@@ -1,16 +1,16 @@
 {{- if .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts.oxshibboleth }}
+{{- range .Values.ingress.hosts.gluu }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "gluu.fullname" $ }}-oxshibboleth
+  name: {{ template "gluu.fullname" $ }}-gluu
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   annotations:
     certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
     kubernetes.io/tls-acme: "true"
   {{- end }}
   labels:
-    app: {{ template "gluu.name" $ }}-oxshibboleth
+    app: {{ template "gluu.name" $ }}-gluu
     chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
     release: {{ $.Release.Name }}
     heritage: {{ $.Release.Service }}
@@ -19,9 +19,21 @@ spec:
     - host: {{ .name }}
       http:
         paths:
-          - path: {{ .path }}
+          - path: {{ (eq .path "/") | ternary "" .path }}/oxauth
+            backend:
+              serviceName: {{ template "gluu.fullname" $ }}-oxauth
+              servicePort: http
+          - path: {{ (eq .path "/") | ternary "" .path }}/passport
+            backend:
+              serviceName: {{ template "gluu.fullname" $ }}-oxpassport
+              servicePort: http
+          - path: {{ (eq .path "/") | ternary "" .path }}/idp
             backend:
               serviceName: {{ template "gluu.fullname" $ }}-oxshibboleth
+              servicePort: http
+          - path: {{ (eq .path "/") | ternary "" .path }}/identity
+            backend:
+              serviceName: {{ template "gluu.fullname" $ }}-oxtrust
               servicePort: http
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:
