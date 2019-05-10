@@ -50,7 +50,7 @@ spec:
             - name: GLUU_LDAP_INIT_HOST
               value: {{ template "gluu.fullname" . }}-opendj
             - name: GLUU_LDAP_INIT_PORT
-              value: 1636
+              value: '1636'
             - name: GLUU_OXTRUST_CONFIG_GENERATION
               value: 'true'
             - name: GLUU_CACHE_TYPE
