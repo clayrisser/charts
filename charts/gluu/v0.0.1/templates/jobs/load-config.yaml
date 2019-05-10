@@ -27,8 +27,16 @@ spec:
           env:
             - name: GLUU_CONFIG_ADAPTER
               value: kubernetes
+            - name: GLUU_CONFIG_KUBERNETES_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: GLUU_CONFIG_KUBERNETES_CONFIGMAP
+              value: {{ template "gluu.fullname" . }}-config
             - name: GLUU_SECRET_ADAPTER
               value: kubernetes
+            - name: GLUU_SECRET_KUBERNETES_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: GLUU_SECRET_KUBERNETES_CONFIGMAP
+              value: {{ template "gluu.fullname" . }}-secret
             - name: ADMIN_PW
               valueFrom:
                 secretKeyRef:
@@ -75,8 +83,16 @@ spec:
           env:
             - name: GLUU_CONFIG_ADAPTER
               value: kubernetes
+            - name: GLUU_CONFIG_KUBERNETES_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: GLUU_CONFIG_KUBERNETES_CONFIGMAP
+              value: {{ template "gluu.fullname" . }}-config
             - name: GLUU_SECRET_ADAPTER
               value: kubernetes
+            - name: GLUU_SECRET_KUBERNETES_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: GLUU_SECRET_KUBERNETES_CONFIGMAP
+              value: {{ template "gluu.fullname" . }}-secret
       volumes:
         - name: data
           emptyDir: {}
