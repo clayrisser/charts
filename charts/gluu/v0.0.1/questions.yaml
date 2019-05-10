@@ -60,7 +60,7 @@ questions:
     label: 'oxauth tag'
     group: Images
   - variable: images.init.repository
-    default: gluufederation/init
+    default: gluufederation/config-init
     description: ''
     type: string
     required: true
