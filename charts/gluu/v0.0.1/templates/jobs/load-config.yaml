@@ -63,6 +63,7 @@ spec:
                   key: city
             - name: LDAP_TYPE
               value: opendj
+      containers:
         - name: {{ template "gluu.fullname" . }}-load-config
           image: {{ .Values.images.init.repository }}:{{ .Values.images.init.tag }}
           imagePullPolicy: {{ .Values.images.init.pullPolicy }}
