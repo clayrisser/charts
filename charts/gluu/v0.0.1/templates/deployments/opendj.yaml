@@ -30,16 +30,16 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /opt/opendj/config
-              subPath: config
+              subPath: opendj/config
             - name: data
               mountPath: /opt/opendj/ldif
-              subPath: ldif
+              subPath: opendj/ldif
             - name: data
               mountPath: /opt/opendj/db
-              subPath: db
+              subPath: opendj/db
             - name: data
               mountPath: /flag
-              subPath: flag
+              subPath: opendj/flag
           env:
             - name: GLUU_CONFIG_ADAPTER
               value: kubernetes
