@@ -50,7 +50,7 @@ spec:
             - name: GLUU_LDAP_URL
               value: {{ template "gluu.fullname" . }}-opendj:1636
             - name: GLUU_OXAUTH_BACKEND
-              value: {{ template "gluu.oxauth_base_url" . }}
+              value: {{ template "gluu.oxauth_url" . }}
             - name: GLUU_MAX_RAM_FRACTION
               value: '1'
           livenessProbe:

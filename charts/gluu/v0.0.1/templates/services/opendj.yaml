@@ -12,17 +12,11 @@ spec:
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.type }}
-  {{- if (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
-  {{- end }}
   {{- end }}
   ports:
     - name: admin
       port: 4444
       targetPort: admin
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.opendj.http))) }}
-      nodePort: {{ .Values.service.nodePorts.opendj.http }}
-      {{- end }}
     - name: ldaps
       port: 1636
       targetPort: ldaps

@@ -322,18 +322,6 @@ questions:
         type: string
         required: true
         label: 'oxauth ingress path'
-      - variable: ingress.hosts.opendj[0].name
-        default: xip.io
-        description: 'hostname to your opendj installation'
-        type: hostname
-        required: true
-        label: 'opendj hostname'
-      - variable: ingress.hosts.opendj[0].path
-        default: /
-        description: 'pathname to your opendj installation'
-        type: string
-        required: true
-        label: 'opendj path'
   - variable: service.type
     default: NodePort
     description: ''
@@ -380,11 +368,3 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'oxauth http port'
-      - variable: service.nodePorts.opendj.http
-        default: ''
-        description: 'NodePort opendj http port (to set explicitly, choose port between 30000-32767)'
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false&&service.type=NodePort
-        label: 'opendj http port'

@@ -77,24 +77,17 @@ Calculate oxshibboleth_hostname
 {{- end }}
 
 {{/*
-Calculate oxauth_base_url
+Calculate oxauth_url
 */}}
-{{- define "gluu.oxauth_base_url" }}
-{{- if (not (empty .Values.config.oxauthBaseUrl)) }}
-{{- printf .Values.config.oxauthBaseUrl }}
-{{- else }}
-{{- if .Values.ingress.enabled }}
-{{- $host := ((empty (include "gluu.oxauth_hostname" . )) | (index .Values.ingress.hosts.gluu 0) (include "gluu.oxauth_hostname" . )) }}
-{{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
-{{- $path := (eq $host.path "/" | ternary "" $host.path) }}
-{{- printf "%s://%s%s" $protocol $host.name $path }}
-{{- else }}
+{{- define "gluu.oxauth_url" }}
 {{- if (empty (include "gluu.oxauth_hostname" . )) }}
-{{- printf "http://%s-gluu" (include "gluu.oxauth_hostname" . ) }}
+{{- if .Values.ingress.enabled }}
+{{- printf ((empty (include "gluu.oxauth_hostname" . )) | (index .Values.ingress.hosts.gluu 0).name (include "gluu.oxauth_hostname" . )) }}
 {{- else }}
-{{- printf "http://%s" (include "gluu.oxauth_hostname" . ) }}
+{{- printf "%s-gluu:8080" (include "gluu.oxauth_hostname" . ) }}
 {{- end }}
-{{- end }}
+{{- else }}
+{{- printf (include "gluu.oxauth_hostname" . ) }}
 {{- end }}
 {{- end }}
 

@@ -59,8 +59,6 @@ service:
       http: ''
     oxauth:
       http: ''
-    opendj:
-      http: ''
 
 ingress:
   enabled: false
@@ -78,9 +76,6 @@ ingress:
       - name: ''
         path: /
     oxauth:
-      - name: ''
-        path: /
-    opendj:
       - name: ''
         path: /
 
