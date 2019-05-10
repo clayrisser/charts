@@ -13,7 +13,7 @@ roleRef:
   name: {{ template "gluu.fullname" . }}-gluu
 subjects:
   - kind: User
-    name: default
+    name: system:serviceaccount:gluu:default
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
