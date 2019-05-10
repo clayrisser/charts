@@ -32,8 +32,11 @@ config:
   city: Austin
   countryCode: US
   email: email@example.com
-  hostname: ''
   organization: Gluu
+  oxauthHostname: ''
+  oxpassportHostname: ''
+  oxshibbolethHostname: ''
+  oxtrustHostname: ''
   password: pass
   state: Texas
   redis:

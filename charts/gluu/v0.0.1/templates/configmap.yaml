@@ -22,3 +22,7 @@ data:
   hostname: {{ .Values.config.hostname | quote }}
   organization: {{ .Values.config.organization | quote }}
   state: {{ .Values.config.state | quote }}
+  oxauthHostname: {{ .Values.config.oxauthHostname | quote }}
+  oxpassportHostname: {{ .Values.config.oxpassportHostname | quote }}
+  oxshibbolethHostname: {{ .Values.config.oxshibbolethHostname | quote }}
+  oxtrustHostname: {{ .Values.config.oxtrustHostname | quote }}

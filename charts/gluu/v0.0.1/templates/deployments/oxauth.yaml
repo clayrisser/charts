@@ -52,7 +52,7 @@ spec:
             - name: GLUU_LDAP_URL
               value: {{ template "gluu.fullname" . }}-opendj:1636
             - name: GLUU_OXAUTH_BACKEND
-              value: {{ template "gluu.fullname" . }}-oxauth:8080
+              value: {{ template "gluu.oxauth_base_url" . }}
             - name: GLUU_MAX_RAM_FRACTION
               value: '1'
           livenessProbe:

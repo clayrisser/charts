@@ -96,13 +96,6 @@ questions:
     required: true
     label: password
     group: Config
-  - variable: config.hostname
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: hostname
-    group: Config
   - variable: config.organization
     default: Gluu
     description: ''
@@ -137,6 +130,34 @@ questions:
     type: string
     required: true
     label: email
+    group: Config
+  - variable: config.oxauthHostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'oxauth hostname'
+    group: Config
+  - variable: config.oxpassportHostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'oxpassport hostname'
+    group: Config
+  - variable: config.oxshibbolethHostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'oxshibboleth hostname'
+    group: Config
+  - variable: config.oxtrustHostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'oxtrust hostname'
     group: Config
 
 # Redis Config
