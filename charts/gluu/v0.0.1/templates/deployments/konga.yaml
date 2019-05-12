@@ -1,0 +1,112 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gluu.fullname" . }}-konga
+  labels:
+    app: {{ template "gluu.name" . }}-konga
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gluu.name" . }}-konga
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gluu.fullname" . }}-konga
+          image: {{ .Values.images.konga.repository }}:{{ .Values.images.gg-konga.tag }}
+          imagePullPolicy: {{ .Values.images.konga.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 1338
+          env:
+            - name: COMMON_NAME
+              value: {{ template "gluu.hostname" . }}
+            - name: KONG_ADMIN_URL
+              value: http://{{ template "gluu.fullname" . }}-kong:8001
+            - name: ORGANIZATION_NAME
+              value: Gluu
+            - name: OXD_WEB
+              value: https://{{ template "gluu.fullname" . }}-oxd:8443
+            - name: BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: konga_base_url
+            - name: COUNTRY_CODE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: country_code
+            - name: COUNTRY_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: country_code
+            - name: COUNTRY_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: country_code
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: postgres_database
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: postgres_host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: postgres_port
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: postgres_username
+            - name: EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: email
+            - name: LOCALITY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: city
+            - name: OP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: openid_uri
+            - name: STATE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: state
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_password
+            - name: SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: secret
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

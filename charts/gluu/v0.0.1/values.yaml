@@ -19,6 +19,10 @@ images:
     repository: gluufederation/config-init
     tag: 3.1.5_05
     pullPolicy: IfNotPresent
+  postgres:
+    repository: postgres
+    tag: latest
+    pullPolicy: IfNotPresent
   redis:
     repository: redis
     tag: latest
@@ -26,6 +30,10 @@ images:
   opendj:
     repository: gluufederation/opendj
     tag: 3.1.5_03
+    pullPolicy: IfNotPresent
+  gg-konga:
+    repository: codejamninja/gg-konga
+    tag: 0.0.1
     pullPolicy: IfNotPresent
 
 config:
@@ -36,6 +44,14 @@ config:
   organization: Gluu
   password: pass
   state: Texas
+  postgres:
+    database: kong
+    host: ''
+    internal: true
+    password: postgres
+    port: 5432
+    url: ''
+    username: postgres
   redis:
     host: ''
     internal: true
@@ -43,6 +59,8 @@ config:
     port: 6379
     url: ''
     username: ''
+  openidUri: 'https://accounts.gluu.org/oxauth'
+  secret: 'some-secret'
 
 service:
   type: NodePort
@@ -56,6 +74,8 @@ service:
       http: ''
     oxtrust:
       http: ''
+    gg-konga:
+      http: ''
 
 ingress:
   enabled: false
@@ -64,6 +84,9 @@ ingress:
     name: letsencrypt-staging
   hosts:
     gluu:
+      - name: ''
+        path: /
+    gg-konga:
       - name: ''
         path: /
 

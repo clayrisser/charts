@@ -73,6 +73,20 @@ questions:
     required: true
     label: 'init tag'
     group: Images
+  - variable: images.postgres.repository
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.postgres.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images
   - variable: images.redis.repository
     default: redis
     description: ''
@@ -138,6 +152,69 @@ questions:
     required: false
     label: hostname
     group: Config
+  - variable: config.openidUri
+    default: 'https://accounts.gluu.org/oxauth'
+    description: ''
+    type: string
+    required: true
+    label: 'openid uri'
+    group: Config
+  - variable: config.secret
+    default: 'some-secret'
+    description: ''
+    type: password
+    required: true
+    label: 'secret'
+    group: Config
+
+# Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Postgres Config'
+  - variable: config.postgres.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    default: gitlab
+    description: ''
+    type: string
+    required: true
+    label: database
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    default: postgres
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: 5432
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
 
 # Redis Config
   - variable: config.redis.internal
@@ -265,6 +342,18 @@ questions:
         type: string
         required: true
         label: 'gluu ingress path'
+      - variable: ingress.hosts.gg-konga[0].name
+        default: xip.io
+        description: 'hostname to your gg-konga installation'
+        type: hostname
+        required: true
+        label: 'gg-konga hostname'
+      - variable: ingress.hosts.gg-konga[0].path
+        default: /
+        description: 'pathname to your gg-konga installation'
+        type: string
+        required: true
+        label: 'gg-konga path'
   - variable: service.type
     default: NodePort
     description: ''
@@ -311,3 +400,11 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'oxtrust http port'
+      - variable: service.nodePorts.gg-konga.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'gg-konga http port'
