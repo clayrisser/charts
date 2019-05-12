@@ -49,10 +49,13 @@ spec:
               value: {{ template "gluu.fullname" . }}-secret
             - name: GLUU_LDAP_URL
               value: {{ template "gluu.fullname" . }}-opendj:1636
-            - name: GLUU_OXAUTH_BACKEND
-              value: {{ template "gluu.oxauth_url" . }}
             - name: GLUU_MAX_RAM_FRACTION
               value: '1'
+            - name: GLUU_OXAUTH_BACKEND
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: oxauth_url
           livenessProbe:
             httpGet:
               path: /identity/restv1/scim-configuration

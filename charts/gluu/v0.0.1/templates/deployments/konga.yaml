@@ -79,7 +79,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
-                  key: openid_uri
+                  key: openid_url
             - name: STATE
               valueFrom:
                 configMapKeyRef:

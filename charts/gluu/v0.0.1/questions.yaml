@@ -152,19 +152,12 @@ questions:
     required: false
     label: hostname
     group: Config
-  - variable: config.openidUri
-    default: 'https://accounts.gluu.org/oxauth'
-    description: ''
-    type: string
-    required: true
-    label: 'openid uri'
-    group: Config
   - variable: config.secret
-    default: 'some-secret'
+    default: some-secret
     description: ''
     type: password
     required: true
-    label: 'secret'
+    label: secret
     group: Config
 
 # Postgres Config

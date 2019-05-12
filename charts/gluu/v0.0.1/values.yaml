@@ -31,7 +31,7 @@ images:
     repository: gluufederation/opendj
     tag: 3.1.5_03
     pullPolicy: IfNotPresent
-  gg-konga:
+  konga:
     repository: codejamninja/gg-konga
     tag: 0.0.1
     pullPolicy: IfNotPresent
@@ -51,6 +51,7 @@ config:
   hostname: ''
   organization: Gluu
   password: pass
+  secret: some-secret
   state: Texas
   postgres:
     database: kong
@@ -67,8 +68,6 @@ config:
     port: 6379
     url: ''
     username: ''
-  openidUri: 'https://accounts.gluu.org/oxauth'
-  secret: 'some-secret'
 
 service:
   type: NodePort
