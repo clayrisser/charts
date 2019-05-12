@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gluu.fullname" . }}-oxd
+  labels:
+    app: {{ template "gluu.name" . }}-oxd
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gluu.name" . }}-oxd
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gluu.fullname" . }}-oxd
+          image: {{ .Values.images.oxd.repository }}:{{ .Values.images.oxd.tag }}
+          imagePullPolicy: {{ .Values.images.oxd.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 8443
+          env:
+            - name: PROTECT_COMMANDS_WITH_ACCESS_TOKEN
+              value: 'true'
+            - name: DEFAULT_SITE_CONFIG_OP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: openid_uri
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

@@ -1,16 +1,16 @@
 {{- if .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts.gg-konga }}
+{{- range .Values.ingress.hosts.kong }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "gluu.fullname" $ }}-gg-konga
+  name: {{ template "gluu.fullname" $ }}-kong
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   annotations:
     certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
     kubernetes.io/tls-acme: "true"
   {{- end }}
   labels:
-    app: {{ template "gluu.name" $ }}-gg-konga
+    app: {{ template "gluu.name" $ }}-kong
     chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
     release: {{ $.Release.Name }}
     heritage: {{ $.Release.Service }}
@@ -21,7 +21,7 @@ spec:
         paths:
           - path: {{ .path }}
             backend:
-              serviceName: {{ template "gluu.fullname" $ }}-gg-konga
+              serviceName: {{ template "gluu.fullname" $ }}-kong
               servicePort: http
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:

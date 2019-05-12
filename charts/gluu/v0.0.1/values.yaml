@@ -35,6 +35,14 @@ images:
     repository: codejamninja/gg-konga
     tag: 0.0.1
     pullPolicy: IfNotPresent
+  kong:
+    repository: codejamninja/gg-kong
+    tag: 0.0.1
+    pullPolicy: IfNotPresent
+  oxd:
+    repository: gluufederation/oxd-server
+    tag: 4.0
+    pullPolicy: IfNotPresent
 
 config:
   city: Austin
@@ -74,7 +82,9 @@ service:
       http: ''
     oxtrust:
       http: ''
-    gg-konga:
+    konga:
+      http: ''
+    kong:
       http: ''
 
 ingress:
@@ -86,7 +96,10 @@ ingress:
     gluu:
       - name: ''
         path: /
-    gg-konga:
+    konga:
+      - name: ''
+        path: /
+    kong:
       - name: ''
         path: /
 

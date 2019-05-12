@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "gluu.fullname" . }}-konga
+  name: {{ template "gluu.fullname" . }}-kong
   labels:
-    app: {{ template "gluu.name" . }}-konga
+    app: {{ template "gluu.name" . }}-kong
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,56 +11,37 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "gluu.name" . }}-konga
+        app: {{ template "gluu.name" . }}-kong
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "gluu.fullname" . }}-konga
-          image: {{ .Values.images.konga.repository }}:{{ .Values.images.gg-konga.tag }}
-          imagePullPolicy: {{ .Values.images.konga.pullPolicy }}
+        - name: {{ template "gluu.fullname" . }}-kong
+          image: {{ .Values.images.kong.repository }}:{{ .Values.images.kong.tag }}
+          imagePullPolicy: {{ .Values.images.kong.pullPolicy }}
           ports:
             - name: container
-              containerPort: 1338
-          env:
+              containerPort: 8000
+          env: []
             - name: COMMON_NAME
               value: {{ template "gluu.hostname" . }}
-            - name: KONG_ADMIN_URL
-              value: http://{{ template "gluu.fullname" . }}-kong:8001
             - name: ORGANIZATION_NAME
               value: Gluu
-            - name: OXD_WEB
-              value: https://{{ template "gluu.fullname" . }}-oxd:8443
-            - name: BASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gluu.fullname" . }}
-                  key: konga_base_url
-            - name: COUNTRY_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gluu.fullname" . }}
-                  key: country_code
-            - name: COUNTRY_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gluu.fullname" . }}
-                  key: country_code
-            - name: DB_DATABASE
+            - name: KONG_PG_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
                   key: postgres_database
-            - name: DB_HOST
+            - name: KONG_PG_HOST
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
                   key: postgres_host
-            - name: DB_PORT
+            - name: KONG_PG_PORT
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
                   key: postgres_port
-            - name: DB_USER
+            - name: KONG_PG_USER
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
@@ -75,26 +56,21 @@ spec:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
                   key: city
-            - name: OP_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gluu.fullname" . }}
-                  key: openid_uri
             - name: STATE
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
                   key: state
-            - name: DB_PASSWORD
+            - name: COUNTRY_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: country_code
+            - name: KONG_PG_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "gluu.fullname" . }}
                   key: postgres_password
-            - name: SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "gluu.fullname" . }}
-                  key: secret
           livenessProbe:
             httpGet:
               path: /

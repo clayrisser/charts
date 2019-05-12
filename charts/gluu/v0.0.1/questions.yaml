@@ -342,18 +342,30 @@ questions:
         type: string
         required: true
         label: 'gluu ingress path'
-      - variable: ingress.hosts.gg-konga[0].name
+      - variable: ingress.hosts.konga[0].name
         default: xip.io
-        description: 'hostname to your gg-konga installation'
+        description: 'hostname to your konga installation'
         type: hostname
         required: true
-        label: 'gg-konga hostname'
-      - variable: ingress.hosts.gg-konga[0].path
+        label: 'konga hostname'
+      - variable: ingress.hosts.konga[0].path
         default: /
-        description: 'pathname to your gg-konga installation'
+        description: 'pathname to your konga installation'
         type: string
         required: true
-        label: 'gg-konga path'
+        label: 'konga path'
+      - variable: ingress.hosts.kong[0].name
+        default: xip.io
+        description: 'hostname to your kong installation'
+        type: hostname
+        required: true
+        label: 'kong hostname'
+      - variable: ingress.hosts.kong[0].path
+        default: /
+        description: 'pathname to your kong installation'
+        type: string
+        required: true
+        label: 'kong path'
   - variable: service.type
     default: NodePort
     description: ''
@@ -400,11 +412,19 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'oxtrust http port'
-      - variable: service.nodePorts.gg-konga.http
+      - variable: service.nodePorts.konga.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false
-        label: 'gg-konga http port'
+        label: 'konga http port'
+      - variable: service.nodePorts.kong.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'kong http port'
