@@ -21,7 +21,7 @@ spec:
           ports:
             - name: container
               containerPort: 8000
-          env: []
+          env:
             - name: COMMON_NAME
               value: {{ template "gluu.hostname" . }}
             - name: ORGANIZATION_NAME
