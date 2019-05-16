@@ -41,7 +41,7 @@ images:
     pullPolicy: IfNotPresent
   oxd:
     repository: gluufederation/oxd-server
-    tag: 4.0
+    tag: '4.0'
     pullPolicy: IfNotPresent
 
 config:

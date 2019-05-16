@@ -73,6 +73,48 @@ questions:
     required: true
     label: 'init tag'
     group: Images
+  - variable: images.konga.repository
+    default: codejamninja/gg-konga
+    description: ''
+    type: string
+    required: true
+    label: 'konga repository'
+    group: Images
+  - variable: images.konga.tag
+    default: 0.0.1
+    description: ''
+    type: string
+    required: true
+    label: 'konga tag'
+    group: Images
+  - variable: images.kong.repository
+    default: codejamninja/gg-kong
+    description: ''
+    type: string
+    required: true
+    label: 'kong repository'
+    group: Images
+  - variable: images.kong.tag
+    default: 0.0.1
+    description: ''
+    type: string
+    required: true
+    label: 'kong tag'
+    group: Images
+  - variable: images.oxd.repository
+    default: gluufederation/oxd-server
+    description: ''
+    type: string
+    required: true
+    label: 'oxd repository'
+    group: Images
+  - variable: images.oxd.tag
+    default: '4.0'
+    description: ''
+    type: string
+    required: true
+    label: 'oxd tag'
+    group: Images
   - variable: images.postgres.repository
     default: postgres
     description: ''
