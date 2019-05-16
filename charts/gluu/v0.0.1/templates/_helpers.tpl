@@ -47,6 +47,24 @@ Calculate oxauth_url
 {{- end }}
 
 {{/*
+Calculate konga_base_url
+*/}}
+{{- define "gluu.konga_base_url" }}
+{{- if (not (empty .Values.config.konga_base_url)) }}
+{{- printf .Values.config.konga_base_url }}
+{{- else }}
+{{- if .Values.ingress.enabled }}
+{{- $host := (index .Values.ingress.hosts.konga 0) }}
+{{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
+{{- $path := (eq $host.path "/" | ternary "" $host.path) }}
+{{- printf "%s://%s%s" $protocol $host.name $path }}
+{{- else }}
+{{- printf "http://%s-konga" (include "gluu.fullname" . ) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate redis_url
 */}}
 {{- define "gluu.redis_url" }}

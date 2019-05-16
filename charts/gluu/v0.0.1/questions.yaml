@@ -159,6 +159,13 @@ questions:
     required: true
     label: secret
     group: Config
+  - variable: config.kongaBaseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'konga_base_url'
+    group: Config
 
 # Postgres Config
   - variable: config.postgres.internal

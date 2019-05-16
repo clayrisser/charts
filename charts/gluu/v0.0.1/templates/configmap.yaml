@@ -29,6 +29,7 @@ data:
   country_code: {{ .Values.config.countryCode | quote }}
   email: {{ .Values.config.email | quote }}
   hostname: {{ .Values.config.hostname | quote }}
+  konga_base_url: {{ template "gluu.konga_base_url" . }}
   openid_url: {{ template "gluu.oxauth_url" . }}/oxauth
   organization: {{ .Values.config.organization | quote }}
   oxauth_hostname: {{ .Values.config.oxauthHostname | quote }}
