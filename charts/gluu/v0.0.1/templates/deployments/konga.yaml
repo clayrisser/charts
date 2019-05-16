@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ template "gluu.fullname" . }}-konga
-          image: {{ .Values.images.konga.repository }}:{{ .Values.images.gg-konga.tag }}
+          image: {{ .Values.images.konga.repository }}:{{ .Values.images.konga.tag }}
           imagePullPolicy: {{ .Values.images.konga.pullPolicy }}
           ports:
             - name: container
