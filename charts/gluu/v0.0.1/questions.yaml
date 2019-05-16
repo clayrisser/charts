@@ -225,13 +225,20 @@ questions:
     label: host
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
-  - variable: config.postgres.database
-    default: gitlab
+  - variable: config.postgres.kongDatabase
+    default: kong
     description: ''
     type: string
     required: true
     label: database
-    group: 'Postgres Config'
+    group: 'Postgres Kong Config'
+  - variable: config.postgres.kongaDatabase
+    default: konga
+    description: ''
+    type: string
+    required: true
+    label: database
+    group: 'Postgres Konga Config'
   - variable: config.postgres.password
     default: postgres
     description: ''

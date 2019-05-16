@@ -27,11 +27,6 @@ spec:
               mountPath: /var/lib/postgresql/data
               subPath: postgres
           env:
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gluu.fullname" . }}
-                  key: postgres_database
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:

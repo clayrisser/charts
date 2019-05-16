@@ -14,7 +14,8 @@ data:
   {{- else }}
   postgres_host: {{ $postgres.host | quote }}
   {{- end }}
-  postgres_database: {{ $postgres.database | quote }}
+  postgres_kong_database: {{ $postgres.kongDatabase | quote }}
+  postgres_konga_database: {{ $postgres.kongaDatabase | quote }}
   postgres_port: {{ $postgres.port | quote }}
   postgres_username: {{ $postgres.username | quote }}
   {{- $redis := .Values.config.redis }}

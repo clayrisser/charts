@@ -54,9 +54,10 @@ config:
   secret: some-secret
   state: Texas
   postgres:
-    database: kong
     host: ''
     internal: true
+    kongDatabase: kong
+    kongaDatabase: konga
     password: postgres
     port: 5432
     url: ''

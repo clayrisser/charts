@@ -30,7 +30,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
-                  key: postgres_database
+                  key: postgres_kong_database
             - name: KONG_PG_HOST
               valueFrom:
                 configMapKeyRef:
