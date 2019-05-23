@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled }}
-{{- $host := (item .Values.ingress.hosts.gluu 0) }}
+{{- $host := (index .Values.ingress.hosts.gluu 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
