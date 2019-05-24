@@ -49,7 +49,8 @@ config:
   countryCode: US
   email: email@example.com
   hostname: ''
-  organization: Gluu
+  kongaBaseUrl: ''
+  organization: 'Code Jam Ninja'
   password: pass
   secret: some-secret
   state: Texas
@@ -69,7 +70,6 @@ config:
     port: 6379
     url: ''
     username: ''
-  kongaBaseUrl: ''
 
 service:
   type: NodePort

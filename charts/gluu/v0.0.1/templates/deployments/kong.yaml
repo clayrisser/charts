@@ -25,7 +25,10 @@ spec:
             - name: COMMON_NAME
               value: {{ template "gluu.hostname" . }}
             - name: ORGANIZATION_NAME
-              value: Gluu
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: organization
             - name: KONG_PG_DATABASE
               valueFrom:
                 configMapKeyRef:

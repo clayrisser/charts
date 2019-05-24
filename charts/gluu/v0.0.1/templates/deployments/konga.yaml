@@ -26,20 +26,18 @@ spec:
               value: {{ template "gluu.hostname" . }}
             - name: KONG_ADMIN_URL
               value: http://{{ template "gluu.fullname" . }}-kong:8001
-            - name: ORGANIZATION_NAME
-              value: Gluu
             - name: OXD_WEB
               value: https://{{ template "gluu.fullname" . }}-oxd:8443
+            - name: ORGANIZATION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gluu.fullname" . }}
+                  key: organization
             - name: BASE_URL
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
                   key: konga_base_url
-            - name: COUNTRY_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gluu.fullname" . }}
-                  key: country_code
             - name: COUNTRY_NAME
               valueFrom:
                 configMapKeyRef:
