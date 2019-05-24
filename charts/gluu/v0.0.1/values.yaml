@@ -40,8 +40,8 @@ images:
     tag: 0.0.1
     pullPolicy: IfNotPresent
   oxd:
-    repository: gluufederation/oxd-server
-    tag: '4.0'
+    repository: codejamninja/oxd
+    tag: 0.0.1
     pullPolicy: IfNotPresent
 
 config:

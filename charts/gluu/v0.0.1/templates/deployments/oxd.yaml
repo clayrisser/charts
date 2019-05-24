@@ -22,9 +22,7 @@ spec:
             - name: container
               containerPort: 8443
           env:
-            - name: PROTECT_COMMANDS_WITH_ACCESS_TOKEN
-              value: 'true'
-            - name: DEFAULT_SITE_CONFIG_OP_HOST
+            - name: OP_HOST
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gluu.fullname" . }}
