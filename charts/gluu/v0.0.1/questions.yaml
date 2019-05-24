@@ -102,14 +102,14 @@ questions:
     label: 'kong tag'
     group: Images
   - variable: images.oxd.repository
-    default: gluufederation/oxd-server
+    default: codejamninja/oxd
     description: ''
     type: string
     required: true
     label: 'oxd repository'
     group: Images
   - variable: images.oxd.tag
-    default: '4.0'
+    default: 0.0.1
     description: ''
     type: string
     required: true
