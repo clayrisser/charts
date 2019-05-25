@@ -21,7 +21,6 @@ spec:
           ports:
             - name: container
               containerPort: 1338
-          command: ['tail', '-f', '/dev/null']
           env:
             - name: COMMON_NAME
               value: {{ template "gluu.hostname" . }}
