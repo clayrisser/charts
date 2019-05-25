@@ -27,7 +27,7 @@ spec:
             - name: KONG_ADMIN_URL
               value: http://{{ template "gluu.fullname" . }}-kong:8001
             - name: OXD_WEB
-              value: https://{{ template "gluu.fullname" . }}-oxd:8443
+              value: https://{{ template "gluu.fullname" . }}-oxd
             - name: ORGANIZATION_NAME
               valueFrom:
                 configMapKeyRef:

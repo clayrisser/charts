@@ -21,6 +21,8 @@ spec:
           ports:
             - name: container
               containerPort: 8000
+            - name: admin
+              containerPort: 8001
           env:
             - name: COMMON_NAME
               value: {{ template "gluu.hostname" . }}

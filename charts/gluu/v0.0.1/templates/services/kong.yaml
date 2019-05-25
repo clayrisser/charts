@@ -23,6 +23,9 @@ spec:
       {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.kong.http))) }}
       nodePort: {{ .Values.service.nodePorts.kong.http }}
       {{- end }}
+    - name: admin
+      port: 8001
+      targetPort: admin
   selector:
     app: {{ template "gluu.name" . }}-kong
     release: {{ .Release.Name }}
