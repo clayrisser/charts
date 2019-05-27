@@ -14,14 +14,7 @@ questions:
   - variable: images.phpmyadmin.tag
     default: 4.7
     description: ''
-    type: enum
-    options:
-      - 4.6
-      - 4.7
-      - edge
-      - edge-4.7
-      - edge-4.8
-      - latest
+    type: string
     required: true
     label: tag
     group: Images
@@ -249,12 +242,12 @@ questions:
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.enabled=false&&config.phpmyadmin=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
+    show_if: ingress.enabled=false&&config.phpmyadmin=true
     label: 'phpmyadmin service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
@@ -276,6 +269,7 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
+    show_if: config.phpmyadmin=true
     label: 'postgres service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
@@ -286,4 +280,5 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: ingress.enabled=false&&config.phpmyadmin=true
         label: 'postgres port'

@@ -14,18 +14,7 @@ questions:
   - variable: images.pgadmin.tag
     default: 4.4
     description: ''
-    type: enum
-    options:
-      - 3.3
-      - 3.4
-      - 3.5
-      - 3.6
-      - 4.0
-      - 4.1
-      - 4.2
-      - 4.3
-      - 4.4
-      - latest
+    type: string
     required: true
     label: tag
     group: Images
@@ -271,12 +260,12 @@ questions:
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.enabled=false&&config.pgadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
+    show_if: ingress.enabled=false&&config.pgadmin.enabled=true
     label: 'service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
@@ -298,6 +287,7 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
+    show_if: config.pgadmin=true
     label: 'postgres service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
@@ -308,4 +298,5 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: ingress.enabled=false&&config.pgadmin.enabled=true
         label: 'postgres port'
