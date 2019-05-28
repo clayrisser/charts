@@ -21,8 +21,7 @@ data:
       storage:
         audit_events_uri:
           - {{ .Values.config.auditEventsUri | quote }}
-        audit_sessions_uri:
-          - {{ .Values.config.auditSessionsUri | quote }}
+        audit_sessions_uri: {{ .Values.config.auditSessionsUri | quote }}
         type: dir
     auth_service:
       enabled: yes
