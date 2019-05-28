@@ -37,7 +37,6 @@ data:
         type: local
     ssh_service:
       enabled: yes
-      labels: []
       listen_addr: 0.0.0.0:3022
       permit_user_env: false
       public_addr: {{ template "teleport.name" . }}:3022
