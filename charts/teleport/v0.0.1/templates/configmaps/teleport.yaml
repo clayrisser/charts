@@ -21,9 +21,9 @@ data:
         severity: ERROR
       storage:
         type: dir
-        audit_sessions_uri: {{ .Values.config.auditSessionsUri | quote }}
-        audit_events_uri:
-          - {{ .Values.config.auditEventsUri | quote }}
+        # audit_sessions_uri: {{ .Values.config.auditSessionsUri | quote }}
+        # audit_events_uri:
+        #   - {{ .Values.config.auditEventsUri | quote }}
 
     auth_service:
       client_idle_timeout: never
