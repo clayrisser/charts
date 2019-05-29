@@ -1,34 +1,36 @@
 {{- if .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts.gitlab }}
+{{- $host := (index .Values.ingress.hosts.nextcloud 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "gitlab.fullname" $ }}-gitlab
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  name: {{ template "gitlab.fullname" . }}-gitlab
   annotations:
-    certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
+    kubernetes.io/ingress.class: nginx
+    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+    {{- if (not (empty .Values.ingress.certificate)) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
     kubernetes.io/tls-acme: 'true'
-  {{- end }}
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
   labels:
-    app: {{ template "gitlab.name" $ }}-gitlab
-    chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
-    release: {{ $.Release.Name }}
-    heritage: {{ $.Release.Service }}
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ .name }}
+    - host: {{ $host.name }}
       http:
         paths:
-          - path: {{ .path }}
+          - path: {{ $host.path }}
             backend:
-              serviceName: {{ template "gitlab.fullname" $ }}-gitlab
+              serviceName: {{ template "gitlab.fullname" . }}-gitlab
               servicePort: http
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
   tls:
-    - secretName: letsencrypt-staging
+    - secretName: {{ template "gitlab.certificate" . }}
       hosts:
-        - {{ .name }}
+        - {{ $host.name }}
   {{- end }}
----
-{{- end }}
 {{- end }}

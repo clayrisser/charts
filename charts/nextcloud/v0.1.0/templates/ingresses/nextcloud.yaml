@@ -3,7 +3,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "nextcloud.fullname" $ }}-nextcloud
+  name: {{ template "nextcloud.fullname" . }}-nextcloud
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
@@ -14,23 +14,23 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "nextcloud.name" $ }}-nextcloud
-    chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
-    release: {{ $.Release.Name }}
-    heritage: {{ $.Release.Service }}
+    app: {{ template "nextcloud.name" . }}-nextcloud
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ .name }}
+    - host: {{ $host.name }}
       http:
         paths:
-          - path: {{ .path }}
+          - path: {{ $host.path }}
             backend:
-              serviceName: {{ template "nextcloud.fullname" $ }}-nextcloud
+              serviceName: {{ template "nextcloud.fullname" . }}-nextcloud
               servicePort: http
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
   tls:
-    - secretName: {{ template "nextcloud.certificate" $ }}
+    - secretName: {{ template "nextcloud.certificate" . }}
       hosts:
-        - {{ .name }}
+        - {{ $host.name }}
   {{- end }}
 {{- end }}
