@@ -25,7 +25,7 @@ spec:
               servicePort: http
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:
-    - secretName: letsencrypt-staging
+    - secretName: {{ template "nextcloud.fullname" $ }}-letsencrypt
       hosts:
         - {{ .name }}
   {{- end }}
