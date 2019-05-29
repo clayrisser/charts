@@ -141,14 +141,14 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.teleport.http
+      - variable: service.nodePorts.teleport.https
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false
-        label: 'teleport http port'
+        label: 'teleport https port'
       - variable: service.nodePorts.teleport.proxy
         default: ''
         description: ''

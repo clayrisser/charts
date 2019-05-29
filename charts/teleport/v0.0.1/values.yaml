@@ -5,17 +5,17 @@ images:
     pullPolicy: IfNotPresent
 
 config:
-  hostname: ''
-  twoFactor: 'off'
   auditEventsUri: 'file:///var/lib/teleport/log'
   auditSessionsUri: 'file:///var/lib/teleport/audit/sessions'
+  hostname: ''
+  twoFactor: 'off'
 
 service:
   type: NodePort
   externalTrafficPolicy: Cluster
   nodePorts:
     teleport:
-      http: ''
+      https: ''
       proxy: ''
 
 ingress:

@@ -9,3 +9,4 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   auditSessionsUri: {{ .Values.config.auditSessionsUri | quote }}
+  hostname: {{ .Values.config.hostname | quote }}

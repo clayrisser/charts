@@ -19,9 +19,7 @@ spec:
           image: {{ .Values.images.teleport.repository }}:{{ .Values.images.teleport.tag }}
           imagePullPolicy: {{ .Values.images.teleport.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 80
-            - name: ssh
+            - name: node
               containerPort: 3022
             - name: proxy
               containerPort: 3023
@@ -29,6 +27,8 @@ spec:
               containerPort: 3025
             - name: kubernetes
               containerPort: 3026
+            - name: https
+              containerPort: 443
           volumeMounts:
             - name: config
               mountPath: /etc/teleport

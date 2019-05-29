@@ -10,8 +10,9 @@ metadata:
 data:
   teleport.yaml: |
     teleport:
-      data_dir: /var/lib/teleport
       nodename: {{ template "teleport.fullname" . }}-teleport
+      data_dir: /var/lib/teleport
+      advertise_ip: {{ template "teleport.hostname" . }}
       connection_limits:
         max_connections: 1000
         max_users: 250
@@ -19,26 +20,28 @@ data:
         output: stderr
         severity: ERROR
       storage:
+        type: dir
+        audit_sessions_uri: {{ .Values.config.auditSessionsUri | quote }}
         audit_events_uri:
           - {{ .Values.config.auditEventsUri | quote }}
-        audit_sessions_uri: {{ .Values.config.auditSessionsUri | quote }}
-        type: dir
+
     auth_service:
-      enabled: yes
       client_idle_timeout: never
       cluster_name: {{ template "teleport.hostname" . }}
       disconnect_expired_cert: no
+      enabled: yes
       listen_addr: 0.0.0.0:3025
-      public_addr: {{ template "teleport.name" . }}-teleport:3025
+      public_addr: {{ template "teleport.hostname" . }}:3025
       session_recording: node
       authentication:
         second_factor: {{ .Values.config.twoFactor | quote }}
         type: local
+
     ssh_service:
       enabled: yes
       listen_addr: 0.0.0.0:3022
       permit_user_env: false
-      public_addr: {{ template "teleport.name" . }}:3022
+      public_addr: {{ template "teleport.hostname" . }}:3022
       commands:
         - command: ['/bin/uname', '-p']
           name: arch
@@ -46,18 +49,19 @@ data:
       pam:
         enabled: no
         service_name: teleport
+
     proxy_service:
       enabled: yes
+      listen_addr: 0.0.0.0:3023
+      public_addr: {{ template "teleport.hostname" . }}:443
+      ssh_public_addr: {{ template "teleport.hostname" . }}:3023
+      web_listen_addr: 0.0.0.0:443
       {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
       https_cert_file: /var/lib/certs/tls.key
       https_key_file: /var/lib/certs/tls.crt
       {{- end }}
-      listen_addr: 0.0.0.0:3023
-      public_addr: {{ template "teleport.hostname" . }}
-      ssh_public_addr: {{ template "teleport.hostname" . }}:3023
-      web_listen_addr: 0.0.0.0:80
       kubernetes:
         enabled: false
         kubeconfig_file: /path/to/kubeconfig
         listen_addr: 0.0.0.0:3026
-        public_addr: {{ template "teleport.name" . }}:3026
+        public_addr: {{ template "teleport.hostname" . }}:3026

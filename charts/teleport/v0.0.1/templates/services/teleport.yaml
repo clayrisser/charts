@@ -17,17 +17,17 @@ spec:
   {{- end }}
   {{- end }}
   ports:
-    - name: http
-      port: 80
+    - name: https
+      port: 443
       protocol: TCP
-      targetPort: http
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.teleport.http))) }}
-      nodePort: {{ .Values.service.nodePorts.teleport.http }}
+      targetPort: https
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.teleport.https))) }}
+      nodePort: {{ .Values.service.nodePorts.teleport.https }}
       {{- end }}
-    - name: ssh
+    - name: node
       port: 3022
       protocol: TCP
-      targetPort: ssh
+      targetPort: node
     - name: proxy
       port: 2023
       protocol: TCP
@@ -38,7 +38,7 @@ spec:
     - name: auth
       port: 3025
       protocol: TCP
-      targetPort: http
+      targetPort: auth
     - name: kubernetes
       port: 3026
       protocol: TCP
