@@ -143,7 +143,7 @@ questions:
     subquestions:
       - variable: service.nodePorts.teleport.auth
         default: ''
-        description: ''
+        description: '30000-32767'
         type: int
         min: 30000
         max: 32767
@@ -151,7 +151,7 @@ questions:
         label: 'teleport auth port'
       - variable: service.nodePorts.teleport.https
         default: ''
-        description: ''
+        description: '30000-32767'
         type: int
         min: 30000
         max: 32767
@@ -159,7 +159,7 @@ questions:
         label: 'teleport https port'
       - variable: service.nodePorts.teleport.kubernetes
         default: ''
-        description: ''
+        description: '30000-32767'
         type: int
         min: 30000
         max: 32767
@@ -167,7 +167,7 @@ questions:
         label: 'teleport kubernetes port'
       - variable: service.nodePorts.teleport.node
         default: ''
-        description: ''
+        description: '30000-32767'
         type: int
         min: 30000
         max: 32767
@@ -175,7 +175,7 @@ questions:
         label: 'teleport node port'
       - variable: service.nodePorts.teleport.proxy
         default: ''
-        description: ''
+        description: '30000-32767'
         type: int
         required: false
         min: 30000

@@ -31,9 +31,6 @@ Calculate hostname
 {{- end }}
 {{- end }}
 
-
-
-
 {{/*
 Calculate auth_addr
 */}}
@@ -42,7 +39,7 @@ Calculate auth_addr
 {{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.auth }}
 {{- else }}
 {{- printf "%s" (include "teleport.hostname" .) "3025" }}
-{{- else }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -53,7 +50,7 @@ Calculate https_addr
 {{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.https }}
 {{- else }}
 {{- printf "%s" (include "teleport.hostname" .) "443" }}
-{{- else }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -64,7 +61,7 @@ Calculate kubernetes_addr
 {{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.kubernetes }}
 {{- else }}
 {{- printf "%s" (include "teleport.hostname" .) "3026" }}
-{{- else }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -75,7 +72,7 @@ Calculate node_addr
 {{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.node }}
 {{- else }}
 {{- printf "%s" (include "teleport.hostname" .) "3022" }}
-{{- else }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -86,5 +83,5 @@ Calculate proxy_addr
 {{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.proxy }}
 {{- else }}
 {{- printf "%s" (include "teleport.hostname" .) "3023" }}
-{{- else }}
+{{- end }}
 {{- end }}
