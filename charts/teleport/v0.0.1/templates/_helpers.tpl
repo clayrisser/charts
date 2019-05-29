@@ -26,7 +26,65 @@ Calculate hostname
 {{- if .Values.ingress.enabled }}
 {{- printf (index .Values.ingress.hosts.teleport 0).name }}
 {{- else }}
-{{- printf "%s-teleport" (include "teleport.fullname" . ) }}
+{{- printf "%s-teleport" (include "teleport.fullname" .) }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+
+
+
+{{/*
+Calculate auth_addr
+*/}}
+{{- define "teleport.auth_addr" }}
+{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
+{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.auth }}
+{{- else }}
+{{- printf "%s" (include "teleport.hostname" .) "3025" }}
+{{- else }}
+{{- end }}
+
+{{/*
+Calculate https_addr
+*/}}
+{{- define "teleport.https_addr" }}
+{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
+{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.https }}
+{{- else }}
+{{- printf "%s" (include "teleport.hostname" .) "443" }}
+{{- else }}
+{{- end }}
+
+{{/*
+Calculate kubernetes_addr
+*/}}
+{{- define "teleport.kubernetes_addr" }}
+{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
+{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.kubernetes }}
+{{- else }}
+{{- printf "%s" (include "teleport.hostname" .) "3026" }}
+{{- else }}
+{{- end }}
+
+{{/*
+Calculate node_addr
+*/}}
+{{- define "teleport.node_addr" }}
+{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
+{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.node }}
+{{- else }}
+{{- printf "%s" (include "teleport.hostname" .) "3022" }}
+{{- else }}
+{{- end }}
+
+{{/*
+Calculate proxy_addr
+*/}}
+{{- define "teleport.proxy_addr" }}
+{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
+{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.proxy }}
+{{- else }}
+{{- printf "%s" (include "teleport.hostname" .) "3023" }}
+{{- else }}
 {{- end }}

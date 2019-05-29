@@ -15,7 +15,10 @@ service:
   externalTrafficPolicy: Cluster
   nodePorts:
     teleport:
+      auth: ''
       https: ''
+      kubernetes: ''
+      node: ''
       proxy: ''
 
 ingress:

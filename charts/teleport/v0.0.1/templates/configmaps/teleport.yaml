@@ -31,7 +31,7 @@ data:
       disconnect_expired_cert: no
       enabled: yes
       listen_addr: 0.0.0.0:3025
-      public_addr: {{ template "teleport.hostname" . }}:3025
+      public_addr: {{ template "teleport.auth_addr" . }}
       session_recording: node
       authentication:
         second_factor: {{ .Values.config.twoFactor | quote }}
@@ -41,7 +41,7 @@ data:
       enabled: yes
       listen_addr: 0.0.0.0:3022
       permit_user_env: false
-      public_addr: {{ template "teleport.hostname" . }}:3022
+      public_addr: {{ template "teleport.node_addr" . }}
       commands:
         - command: ['/bin/uname', '-p']
           name: arch
@@ -53,9 +53,9 @@ data:
     proxy_service:
       enabled: yes
       listen_addr: 0.0.0.0:3023
-      public_addr: {{ template "teleport.hostname" . }}:443
-      ssh_public_addr: {{ template "teleport.hostname" . }}:3023
-      web_listen_addr: 0.0.0.0:443
+      public_addr: {{ template "teleport.https_addr" . }}
+      ssh_public_addr: {{ template "teleport.proxy_addr" . }}
+      web_listen_addr: 0.0.0.0:3080
       {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
       https_cert_file: /var/lib/certs/tls.key
       https_key_file: /var/lib/certs/tls.crt
@@ -64,4 +64,4 @@ data:
         enabled: false
         kubeconfig_file: /path/to/kubeconfig
         listen_addr: 0.0.0.0:3026
-        public_addr: {{ template "teleport.hostname" . }}:3026
+        public_addr: {{ template "teleport.kubernetes_addr" . }}

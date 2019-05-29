@@ -28,7 +28,7 @@ spec:
             - name: kubernetes
               containerPort: 3026
             - name: https
-              containerPort: 443
+              containerPort: 3080
           volumeMounts:
             - name: config
               mountPath: /etc/teleport
