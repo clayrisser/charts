@@ -4,11 +4,13 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "nextcloud.fullname" $ }}-nextcloud
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   annotations:
+    {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+    {{- if (not (empty $.Values.ingress.certificate)) }}
     certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
+    {{- end }}
     kubernetes.io/tls-acme: 'true'
-  {{- end }}
+    {{- end }}
   labels:
     app: {{ template "nextcloud.name" $ }}-nextcloud
     chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
@@ -25,7 +27,7 @@ spec:
               servicePort: http
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:
-    - secretName: {{ template "nextcloud.fullname" $ }}-letsencrypt
+    - secretName: {{ template "nextcloud.certificate" $ }}
       hosts:
         - {{ .name }}
   {{- end }}

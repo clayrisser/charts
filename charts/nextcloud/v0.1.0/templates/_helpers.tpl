@@ -17,7 +17,17 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate base_url
+Calculate certificate
+*/}}
+{{- define "nextcloud.certificate" }}
+{{- if (not (empty .Values.ingress.certificate)) }}
+{{- else }}
+{{- printf "%s-letsencrypt" (include "nextcloud.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate base url
 */}}
 {{- define "nextcloud.base_url" }}
 {{- if (not (empty .Values.config.base_url)) }}
@@ -35,7 +45,7 @@ Calculate base_url
 {{- end }}
 
 {{/*
-Calculate postgres_url
+Calculate postgres url
 */}}
 {{- define "nextcloud.postgres_url" }}
 {{- $postgres := .Values.config.postgres }}

@@ -137,16 +137,6 @@ questions:
         type: boolean
         required: true
         label: 'ingress tls'
-      - variable: ingress.issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true
-        options:
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: 'ingress issuer name'
       - variable: ingress.hosts.nextcloud[0].name
         default: xip.io
         description: ''
@@ -159,6 +149,23 @@ questions:
         type: string
         required: true
         label: 'nextcloud ingress path'
+      - variable: ingress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.tls=true
+        required: false
+        label: 'ingress certificate'
+      - variable: ingress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.tls=true
+        options:
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'ingress issuer name'
   - variable: service.type
     default: NodePort
     description: ''
