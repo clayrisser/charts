@@ -54,28 +54,6 @@ Calculate https_addr
 {{- end }}
 
 {{/*
-Calculate kubernetes_addr
-*/}}
-{{- define "teleport.kubernetes_addr" }}
-{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.kubernetes }}
-{{- else }}
-{{- printf "%s" (include "teleport.hostname" .) "3026" }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate node_addr
-*/}}
-{{- define "teleport.node_addr" }}
-{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.node }}
-{{- else }}
-{{- printf "%s" (include "teleport.hostname" .) "3022" }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate proxy_addr
 */}}
 {{- define "teleport.proxy_addr" }}

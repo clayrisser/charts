@@ -17,8 +17,6 @@ service:
     teleport:
       auth: ''
       https: ''
-      kubernetes: ''
-      node: ''
       proxy: ''
 
 ingress:

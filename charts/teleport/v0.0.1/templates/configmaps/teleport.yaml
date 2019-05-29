@@ -41,7 +41,7 @@ data:
       enabled: yes
       listen_addr: 0.0.0.0:3022
       permit_user_env: false
-      public_addr: {{ template "teleport.node_addr" . }}
+      public_addr: {{ template "teleport.fullname" . }}-teleport:3022
       commands:
         - command: ['/bin/uname', '-p']
           name: arch
@@ -64,4 +64,4 @@ data:
         enabled: false
         kubeconfig_file: /path/to/kubeconfig
         listen_addr: 0.0.0.0:3026
-        public_addr: {{ template "teleport.kubernetes_addr" . }}
+        public_addr: {{ template "teleport.fullname" . }}-teleport:3026
