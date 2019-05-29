@@ -41,14 +41,12 @@ spec:
             {{- end }}
           env: []
           livenessProbe:
-            httpGet:
-              path: /
-              port: https
+            tcpSocket:
+              port: proxy
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: https
+            tcpSocket:
+              port: proxy
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: config
