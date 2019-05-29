@@ -149,23 +149,24 @@ questions:
         type: string
         required: true
         label: 'nextcloud ingress path'
-      - variable: ingress.certificate
-        default: ''
-        description: ''
-        type: string
-        show_if: ingress.tls=true
-        required: false
-        label: 'ingress certificate'
       - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
         show_if: ingress.tls=true
         options:
+          - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
         label: 'ingress issuer name'
+      - variable: ingress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.tls=true&&ingress.issuer.name=none
+        required: false
+        label: 'ingress certificate'
   - variable: service.type
     default: NodePort
     description: ''
@@ -186,5 +187,5 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false&&
+        show_if: ingress.enabled=false
         label: 'nextcloud http port'
