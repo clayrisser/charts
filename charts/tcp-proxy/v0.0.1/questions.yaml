@@ -1,0 +1,57 @@
+categories:
+  - Server
+questions:
+
+# Images
+  - variable: images.tcp-proxy.repository
+    default: hpello/tcp-proxy
+    description: ''
+    type: string
+    required: true
+    label: 'tcp-proxy repository'
+    group: Images
+  - variable: images.tcp-proxy.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'tcp-proxy tag'
+    group: Images
+
+# Config
+  - variable: config.remoteHost
+    default: ''
+    description: ''
+    type: string
+    required: true
+    label: 'remote host'
+    group: Config
+  - variable: config.remotePort
+    default: 22
+    description: ''
+    type: int
+    required: true
+    label: 'remote port'
+    group: Config
+
+# Services and Load Balancing
+  - variable: service.type
+    default: NodePort
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.nodePorts.tcp-proxy.port
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'tcp-proxy http port'

@@ -1,0 +1,18 @@
+name: tcp-proxy
+home: https://github.com/codejamninja/tcp-proxy
+icon: https://www.ccnahub.com/wp-content/uploads/2013/10/TCPIPRN-150x150.png
+version: 0.0.1
+appVersion: latest
+description: 'a simple tcp reverse proxy'
+keywords:
+  - tcp-proxy
+  - tcp
+  - proxy
+  - reverse
+  - ssh
+  - hpello
+sources:
+  - https://github.com/codejamninja/tcp-proxy
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
