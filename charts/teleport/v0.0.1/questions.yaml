@@ -165,11 +165,12 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'teleport https port'
-  - variable: service.nodePorts.teleport.proxy
-    default: ''
-    description: '30000-32767'
-    type: int
-    required: true
-    min: 30000
-    max: 32767
-    label: 'teleport proxy port'
+      - variable: service.nodePorts.teleport.proxy
+        default: ''
+        description: '30000-32767'
+        type: int
+        required: false
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'teleport proxy port'
