@@ -28,13 +28,6 @@ spec:
       port: 3022
       protocol: TCP
       targetPort: node
-    - name: proxy
-      port: 3023
-      protocol: TCP
-      targetPort: proxy
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.teleport.proxy))) }}
-      nodePort: {{ .Values.service.nodePorts.teleport.proxy }}
-      {{- end }}
     - name: auth
       port: 3025
       protocol: TCP
