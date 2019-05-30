@@ -55,7 +55,7 @@ spec:
         {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
         - name: certs
           secret:
-            secretName: letsencrypt-staging
+            secretName: {{ template "teleport.certificate" . }}
         {{- end }}
         - name: data
           {{- if .Values.persistence.enabled }}
