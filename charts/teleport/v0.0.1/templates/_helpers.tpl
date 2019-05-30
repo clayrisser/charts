@@ -45,7 +45,7 @@ Calculate hostname
 Calculate auth addr
 */}}
 {{- define "teleport.auth_addr" }}
-{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.auth }}
+{{- printf "%s:%d" (include "teleport.hostname" .) (int .Values.service.nodePorts.teleport.auth) }}
 {{- end }}
 
 {{/*
@@ -53,7 +53,7 @@ Calculate web addr
 */}}
 {{- define "teleport.web_addr" }}
 {{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.web }}
+{{- printf "%s:%d" (include "teleport.hostname" .) (int .Values.service.nodePorts.teleport.web) }}
 {{- else }}
 {{- printf "%s:%d" (include "teleport.hostname" .) 443 }}
 {{- end }}
