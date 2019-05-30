@@ -24,7 +24,7 @@ data:
 
     auth_service:
       client_idle_timeout: never
-      cluster_name: {{ template "teleport.web_hostname" . }}
+      cluster_name: {{ template "teleport.hostname" . }}
       disconnect_expired_cert: no
       enabled: yes
       listen_addr: 0.0.0.0:3025
