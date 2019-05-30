@@ -49,6 +49,13 @@ Calculate auth addr
 {{- end }}
 
 {{/*
+Calculate proxy addr
+*/}}
+{{- define "teleport.proxy_addr" }}
+{{- printf "%s:%d" (include "teleport.hostname" .) (int .Values.service.nodePorts.teleport.proxy) }}
+{{- end }}
+
+{{/*
 Calculate web addr
 */}}
 {{- define "teleport.web_addr" }}

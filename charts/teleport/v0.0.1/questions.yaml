@@ -149,15 +149,6 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.teleport.proxy
-        default: ''
-        description: '30000-32767'
-        type: int
-        required: false
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false
-        label: 'teleport proxy port'
       - variable: service.nodePorts.teleport.web
         default: ''
         description: '30000-32767'
@@ -168,10 +159,19 @@ questions:
         show_if: ingress.enabled=false
         label: 'teleport web port'
   - variable: service.nodePorts.teleport.auth
-    default: ''
+    default: 30025
     description: '30000-32767'
     type: int
     required: true
     min: 30000
     max: 32767
     label: 'teleport auth port'
+  - variable: service.nodePorts.teleport.proxy
+    default: 30023
+    description: '30000-32767'
+    type: int
+    required: true
+    min: 30000
+    max: 32767
+    show_if: ingress.enabled=false
+    label: 'teleport proxy port'

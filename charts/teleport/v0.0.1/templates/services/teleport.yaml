@@ -28,10 +28,6 @@ spec:
       port: 3022
       protocol: TCP
       targetPort: node
-    - name: proxy
-      port: 3023
-      protocol: TCP
-      targetPort: proxy
     - name: kubernetes
       port: 3026
       protocol: TCP

@@ -15,8 +15,8 @@ service:
   externalTrafficPolicy: Cluster
   nodePorts:
     teleport:
-      auth: ''
-      proxy: ''
+      auth: 30025
+      proxy: 30023
       web: ''
 
 ingress:

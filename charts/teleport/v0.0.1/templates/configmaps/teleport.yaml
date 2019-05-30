@@ -51,7 +51,7 @@ data:
       enabled: yes
       listen_addr: 0.0.0.0:3023
       public_addr: {{ template "teleport.web_addr" . }}
-      ssh_public_addr: {{ template "teleport.fullname" . }}-teleport:3023
+      ssh_public_addr: {{ template "teleport.proxy_addr" . }}
       web_listen_addr: 0.0.0.0:3080
       kubernetes:
         enabled: false
