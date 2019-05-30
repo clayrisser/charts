@@ -1,9 +1,9 @@
 {{- if .Values.ingress.enabled }}
-{{- $host := (index .Values.ingress.hosts.teleport 0) }}
+{{- $host := (index .Values.ingress.hosts.web 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "teleport.fullname" . }}-teleport
+  name: {{ template "teleport.fullname" . }}-web
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "teleport.name" . }}-teleport
+    app: {{ template "teleport.name" . }}-web
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

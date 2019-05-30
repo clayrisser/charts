@@ -24,7 +24,7 @@ data:
 
     auth_service:
       client_idle_timeout: never
-      cluster_name: {{ template "teleport.hostname" . }}
+      cluster_name: {{ template "teleport.web_hostname" . }}
       disconnect_expired_cert: no
       enabled: yes
       listen_addr: 0.0.0.0:3025
@@ -50,7 +50,7 @@ data:
     proxy_service:
       enabled: yes
       listen_addr: 0.0.0.0:3023
-      public_addr: {{ template "teleport.https_addr" . }}
+      public_addr: {{ template "teleport.web_addr" . }}
       ssh_public_addr: {{ template "teleport.fullname" . }}-teleport:3023
       web_listen_addr: 0.0.0.0:3080
       kubernetes:

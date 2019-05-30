@@ -27,7 +27,7 @@ spec:
               containerPort: 3025
             - name: kubernetes
               containerPort: 3026
-            - name: https
+            - name: web
               containerPort: 3080
           volumeMounts:
             - name: config

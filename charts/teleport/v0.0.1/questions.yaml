@@ -4,7 +4,7 @@ questions:
 
 # Images
   - variable: images.teleport.repository
-    default: codejamninja/teleport
+    default: quay.io/gravitational/teleport
     description: ''
     type: string
     required: true
@@ -19,12 +19,19 @@ questions:
     group: Images
 
 # Config
-  - variable: config.hostname
+  - variable: config.authHostname
     default: ''
     description: ''
     type: string
     required: false
-    label: hostname
+    label: 'auth hostname'
+    group: Config
+  - variable: config.webHostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'web hostname'
     group: Config
   - variable: config.twoFactor
     default: 'off'
@@ -105,18 +112,30 @@ questions:
         type: boolean
         required: true
         label: 'ingress tls'
-      - variable: ingress.hosts.teleport[0].name
+      - variable: ingress.hosts.auth[0].name
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'teleport ingress hostname'
-      - variable: ingress.hosts.teleport[0].path
+        label: 'auth ingress hostname'
+      - variable: ingress.hosts.auth[0].path
         default: /
         description: ''
         type: string
         required: true
-        label: 'teleport ingress path'
+        label: 'auth ingress path'
+      - variable: ingress.hosts.web[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'web ingress hostname'
+      - variable: ingress.hosts.web[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'web ingress path'
       - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -157,14 +176,6 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'teleport auth port'
-      - variable: service.nodePorts.teleport.https
-        default: ''
-        description: '30000-32767'
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false
-        label: 'teleport https port'
       - variable: service.nodePorts.teleport.proxy
         default: ''
         description: '30000-32767'
@@ -174,3 +185,11 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'teleport proxy port'
+      - variable: service.nodePorts.teleport.web
+        default: ''
+        description: '30000-32767'
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'teleport web port'

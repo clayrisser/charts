@@ -20,9 +20,9 @@ spec:
     - name: https
       port: 443
       protocol: TCP
-      targetPort: https
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.teleport.https))) }}
-      nodePort: {{ .Values.service.nodePorts.teleport.https }}
+      targetPort: web
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.teleport.web))) }}
+      nodePort: {{ .Values.service.nodePorts.teleport.web }}
       {{- end }}
     - name: node
       port: 3022

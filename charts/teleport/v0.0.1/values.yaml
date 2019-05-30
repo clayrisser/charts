@@ -1,14 +1,15 @@
 images:
   teleport:
-    repository: codejamninja/teleport
+    repository: quay.io/gravitational/teleport
     tag: 3.2.4
     pullPolicy: IfNotPresent
 
 config:
   auditEventsUri: 'file:///var/lib/teleport/log'
   auditSessionsUri: 'file:///var/lib/teleport/audit/sessions'
-  hostname: ''
+  authHostname: ''
   twoFactor: 'off'
+  webHostname: ''
 
 service:
   type: NodePort
@@ -16,8 +17,8 @@ service:
   nodePorts:
     teleport:
       auth: ''
-      https: ''
       proxy: ''
+      web: ''
 
 ingress:
   enabled: false
@@ -26,7 +27,10 @@ ingress:
   issuer:
     name: letsencrypt-staging
   hosts:
-    teleport:
+    auth:
+      - name: ''
+        path: /
+    web:
       - name: ''
         path: /
 

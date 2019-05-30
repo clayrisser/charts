@@ -27,14 +27,14 @@ Calculate certificate
 {{- end }}
 
 {{/*
-Calculate hostname
+Calculate web hostname
 */}}
-{{- define "teleport.hostname" }}
-{{- if (not (empty .Values.config.hostname)) }}
-{{- printf .Values.config.hostname }}
+{{- define "teleport.web_hostname" }}
+{{- if (not (empty .Values.config.webHostname)) }}
+{{- printf .Values.config.webHostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.teleport 0).name }}
+{{- printf (index .Values.ingress.hosts.web 0).name }}
 {{- else }}
 {{- printf "%s-teleport" (include "teleport.fullname" .) }}
 {{- end }}
@@ -42,23 +42,38 @@ Calculate hostname
 {{- end }}
 
 {{/*
-Calculate auth_addr
+Calculate auth hostname
 */}}
-{{- define "teleport.auth_addr" }}
-{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.auth }}
+{{- define "teleport.auth_hostname" }}
+{{- if (not (empty .Values.config.authHostname)) }}
+{{- printf .Values.config.authHostname }}
 {{- else }}
-{{- printf "%s:%d" (include "teleport.hostname" .) 3025 }}
+{{- if .Values.ingress.enabled }}
+{{- printf (index .Values.ingress.hosts.auth 0).name }}
+{{- else }}
+{{- printf "%s-teleport" (include "teleport.fullname" .) }}
+{{- end }}
 {{- end }}
 {{- end }}
 
 {{/*
-Calculate https_addr
+Calculate auth addr
 */}}
-{{- define "teleport.https_addr" }}
+{{- define "teleport.auth_addr" }}
 {{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.https }}
+{{- printf "%s:%d" (include "teleport.auth_hostname" .) .Values.service.nodePorts.teleport.auth }}
 {{- else }}
-{{- printf "%s:%d" (include "teleport.hostname" .) 443 }}
+{{- printf "%s:%d" (include "teleport.auth_hostname" .) 443 }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate web addr
+*/}}
+{{- define "teleport.web_addr" }}
+{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
+{{- printf "%s:%d" (include "teleport.web_hostname" .) .Values.service.nodePorts.teleport.web }}
+{{- else }}
+{{- printf "%s:%d" (include "teleport.web_hostname" .) 443 }}
 {{- end }}
 {{- end }}
