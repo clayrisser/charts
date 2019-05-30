@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "teleport.fullname" . }}-auth
+  labels:
+    app: {{ template "teleport.name" . }}-auth
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: NodePort
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  ports:
+    - name: auth
+      port: 3025
+      protocol: TCP
+      targetPort: auth
+      nodePort: {{ .Values.service.nodePorts.teleport.auth }}
+  selector:
+    app: {{ template "teleport.name" . }}-teleport
+    release: {{ .Release.Name }}

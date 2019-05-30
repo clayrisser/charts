@@ -27,9 +27,6 @@ ingress:
   issuer:
     name: letsencrypt-staging
   hosts:
-    auth:
-      - name: ''
-        path: /
     web:
       - name: ''
         path: /

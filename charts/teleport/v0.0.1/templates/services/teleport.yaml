@@ -32,13 +32,6 @@ spec:
       port: 3023
       protocol: TCP
       targetPort: proxy
-    - name: auth
-      port: 3025
-      protocol: TCP
-      targetPort: auth
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.teleport.auth))) }}
-      nodePort: {{ .Values.service.nodePorts.teleport.auth }}
-      {{- end }}
     - name: kubernetes
       port: 3026
       protocol: TCP

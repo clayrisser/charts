@@ -60,11 +60,7 @@ Calculate auth hostname
 Calculate auth addr
 */}}
 {{- define "teleport.auth_addr" }}
-{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
 {{- printf "%s:%d" (include "teleport.auth_hostname" .) .Values.service.nodePorts.teleport.auth }}
-{{- else }}
-{{- printf "%s:%d" (include "teleport.auth_hostname" .) 443 }}
-{{- end }}
 {{- end }}
 
 {{/*
