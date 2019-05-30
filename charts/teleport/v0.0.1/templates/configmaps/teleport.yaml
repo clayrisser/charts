@@ -57,8 +57,8 @@ data:
       ssh_public_addr: {{ template "teleport.proxy_addr" . }}
       web_listen_addr: 0.0.0.0:3080
       {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
-      https_cert_file: /var/lib/certs/tls.key
-      https_key_file: /var/lib/certs/tls.crt
+      https_cert_file: /var/lib/certs/tls.crt
+      https_key_file: /var/lib/certs/tls.key
       {{- end }}
       kubernetes:
         enabled: false
