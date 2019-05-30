@@ -1,7 +1,7 @@
 name: teleport
 home: https://gravitational.com/teleport
 icon: https://gravitational.com/gravitational/images/logos/logo-teleport.svg
-version: 0.0.1
+version: 0.1.0
 appVersion: latest
 description: 'privileged access management for elastic infrastructure'
 keywords:
