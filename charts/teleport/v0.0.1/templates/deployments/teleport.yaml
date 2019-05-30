@@ -18,7 +18,7 @@ spec:
         - name: {{ template "teleport.fullname" . }}-teleport
           image: {{ .Values.images.teleport.repository }}:{{ .Values.images.teleport.tag }}
           imagePullPolicy: {{ .Values.images.teleport.pullPolicy }}
-          command: ['tail', '-f', '/dev/null']
+          args: ['--insecure']
           ports:
             - name: node
               containerPort: 3022
