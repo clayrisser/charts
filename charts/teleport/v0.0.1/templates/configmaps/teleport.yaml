@@ -12,7 +12,7 @@ data:
     teleport:
       nodename: {{ template "teleport.fullname" . }}-teleport
       data_dir: /var/lib/teleport
-      advertise_ip: {{ template "teleport.hostname" . }}
+      advertise_ip: {{ template "teleport.fullname" . }}-teleport
       connection_limits:
         max_connections: 1000
         max_users: 250
@@ -27,7 +27,7 @@ data:
 
     auth_service:
       client_idle_timeout: never
-      cluster_name: {{ template "teleport.hostname" . }}
+      cluster_name: {{ template "teleport.fullname" . }}-teleport
       disconnect_expired_cert: no
       enabled: yes
       listen_addr: 0.0.0.0:3025
