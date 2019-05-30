@@ -18,6 +18,7 @@ spec:
         - name: {{ template "teleport.fullname" . }}-teleport
           image: {{ .Values.images.teleport.repository }}:{{ .Values.images.teleport.tag }}
           imagePullPolicy: {{ .Values.images.teleport.pullPolicy }}
+          command: ['tail', '-f', '/dev/null']
           ports:
             - name: node
               containerPort: 3022
@@ -35,7 +36,7 @@ spec:
             - name: data
               mountPath: /var/lib/teleport
               subPath: data
-            {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+            {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
             - name: certs
               mountPath: /var/lib/certs
             {{- end }}
