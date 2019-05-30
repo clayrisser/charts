@@ -3,14 +3,14 @@ categories:
 questions:
 
 # Images
-  - variable: images.tcp-proxy.repository
+  - variable: images.tcpProxy.repository
     default: hpello/tcp-proxy
     description: ''
     type: string
     required: true
     label: 'tcp-proxy repository'
     group: Images
-  - variable: images.tcp-proxy.tag
+  - variable: images.tcpProxy.tag
     default: latest
     description: ''
     type: string

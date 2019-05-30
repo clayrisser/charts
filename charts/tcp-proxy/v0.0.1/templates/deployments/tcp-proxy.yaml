@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ template "tcp-proxy.fullname" . }}-tcp-proxy
-          image: {{ .Values.images.tcp-proxy.repository }}:{{ .Values.images.tcp-proxy.tag }}
+          image: {{ .Values.images.tcpProxy.repository }}:{{ .Values.images.tcpProxy.tag }}
           imagePullPolicy: {{ .Values.images.tcp-proxy.pullPolicy }}
           args: ['{{ .Values.config.remoteHost }}', '{{ .Values.config.remotePort }}']
           ports:

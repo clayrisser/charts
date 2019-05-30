@@ -1,5 +1,5 @@
 images:
-  tcp-proxy:
+  tcpProxy:
     repository: hpello/tcp-proxy
     tag: latest
     pullPolicy: IfNotPresent
