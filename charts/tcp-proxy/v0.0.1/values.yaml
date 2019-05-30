@@ -12,7 +12,7 @@ service:
   type: NodePort
   externalTrafficPolicy: Cluster
   nodePorts:
-    tcp-proxy:
+    tcpProxy:
       port: ''
 
 probes:

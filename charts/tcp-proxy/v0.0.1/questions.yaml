@@ -48,9 +48,9 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.tcp-proxy.port
+      - variable: service.nodePorts.tcpProxy.port
         default: ''
-        description: ''
+        description: '30000-32767'
         type: int
         min: 30000
         max: 32767

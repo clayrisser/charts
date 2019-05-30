@@ -16,8 +16,8 @@ spec:
     - name: port
       port: 1234
       targetPort: container
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.tcp-proxy.port))) }}
-      nodePort: {{ .Values.service.nodePorts.tcp-proxy.port }}
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.tcpProxy.port))) }}
+      nodePort: {{ .Values.service.nodePorts.tcpProxy.port }}
       {{- end }}
   selector:
     app: {{ template "tcp-proxy.name" . }}-tcp-proxy
