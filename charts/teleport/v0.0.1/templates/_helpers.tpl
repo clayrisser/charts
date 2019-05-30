@@ -62,14 +62,3 @@ Calculate https_addr
 {{- printf "%s:%d" (include "teleport.hostname" .) 443 }}
 {{- end }}
 {{- end }}
-
-{{/*
-Calculate proxy_addr
-*/}}
-{{- define "teleport.proxy_addr" }}
-{{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.proxy }}
-{{- else }}
-{{- printf "%s:%d" (include "teleport.hostname" .) 3023 }}
-{{- end }}
-{{- end }}
