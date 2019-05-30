@@ -27,11 +27,11 @@ Calculate certificate
 {{- end }}
 
 {{/*
-Calculate web hostname
+Calculate hostname
 */}}
-{{- define "teleport.web_hostname" }}
-{{- if (not (empty .Values.config.webHostname)) }}
-{{- printf .Values.config.webHostname }}
+{{- define "teleport.hostname" }}
+{{- if (not (empty .Values.config.hostname)) }}
+{{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
 {{- printf (index .Values.ingress.hosts.web 0).name }}
@@ -42,25 +42,10 @@ Calculate web hostname
 {{- end }}
 
 {{/*
-Calculate auth hostname
-*/}}
-{{- define "teleport.auth_hostname" }}
-{{- if (not (empty .Values.config.authHostname)) }}
-{{- printf .Values.config.authHostname }}
-{{- else }}
-{{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.auth 0).name }}
-{{- else }}
-{{- printf "%s-teleport" (include "teleport.fullname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate auth addr
 */}}
 {{- define "teleport.auth_addr" }}
-{{- printf "%s:%d" (include "teleport.auth_hostname" .) .Values.service.nodePorts.teleport.auth }}
+{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.auth }}
 {{- end }}
 
 {{/*
@@ -68,8 +53,8 @@ Calculate web addr
 */}}
 {{- define "teleport.web_addr" }}
 {{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%d" (include "teleport.web_hostname" .) .Values.service.nodePorts.teleport.web }}
+{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.web }}
 {{- else }}
-{{- printf "%s:%d" (include "teleport.web_hostname" .) 443 }}
+{{- printf "%s:%d" (include "teleport.hostname" .) 443 }}
 {{- end }}
 {{- end }}

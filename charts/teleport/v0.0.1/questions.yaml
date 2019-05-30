@@ -19,19 +19,12 @@ questions:
     group: Images
 
 # Config
-  - variable: config.authHostname
+  - variable: config.hostname
     default: ''
     description: ''
     type: string
     required: false
-    label: 'auth hostname'
-    group: Config
-  - variable: config.webHostname
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'web hostname'
+    label: hostname
     group: Config
   - variable: config.twoFactor
     default: 'off'
@@ -178,7 +171,7 @@ questions:
     default: ''
     description: '30000-32767'
     type: int
-    required: true
+    required: false
     min: 30000
     max: 32767
     label: 'teleport auth port'
