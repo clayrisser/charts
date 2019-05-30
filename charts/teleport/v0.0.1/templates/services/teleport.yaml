@@ -29,7 +29,7 @@ spec:
       protocol: TCP
       targetPort: node
     - name: proxy
-      port: 2023
+      port: 3023
       protocol: TCP
       targetPort: proxy
       {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.teleport.proxy))) }}

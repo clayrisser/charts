@@ -38,11 +38,11 @@ spec:
           env: []
           livenessProbe:
             tcpSocket:
-              port: proxy
+              port: node
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             tcpSocket:
-              port: proxy
+              port: node
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: config

@@ -59,7 +59,7 @@ Calculate https_addr
 {{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
 {{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.https }}
 {{- else }}
-{{- printf "%s:%d" (include "teleport.hostname" .) 443 }}
+{{- printf "%s" (include "teleport.hostname" .) }}
 {{- end }}
 {{- end }}
 
