@@ -46,9 +46,9 @@ Calculate auth_addr
 */}}
 {{- define "teleport.auth_addr" }}
 {{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.auth }}
+{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.auth }}
 {{- else }}
-{{- printf "%s" (include "teleport.hostname" .) "3025" }}
+{{- printf "%s:%d" (include "teleport.hostname" .) 3025 }}
 {{- end }}
 {{- end }}
 
@@ -57,9 +57,9 @@ Calculate https_addr
 */}}
 {{- define "teleport.https_addr" }}
 {{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.https }}
+{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.https }}
 {{- else }}
-{{- printf "%s" (include "teleport.hostname" .) "443" }}
+{{- printf "%s:%d" (include "teleport.hostname" .) 443 }}
 {{- end }}
 {{- end }}
 
@@ -68,8 +68,8 @@ Calculate proxy_addr
 */}}
 {{- define "teleport.proxy_addr" }}
 {{- if (and (not .Values.ingress.enabled) (eq .Values.service.type "NodePort")) }}
-{{- printf "%s:%s" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.proxy }}
+{{- printf "%s:%d" (include "teleport.hostname" .) .Values.service.nodePorts.teleport.proxy }}
 {{- else }}
-{{- printf "%s" (include "teleport.hostname" .) "3023" }}
+{{- printf "%s:%d" (include "teleport.hostname" .) 3023 }}
 {{- end }}
 {{- end }}
