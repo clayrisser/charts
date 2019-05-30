@@ -34,7 +34,7 @@ Calculate hostname
 {{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.web 0).name }}
+{{- printf (index .Values.ingress.hosts.teleport 0).name }}
 {{- else }}
 {{- printf "%s-teleport" (include "teleport.fullname" .) }}
 {{- end }}

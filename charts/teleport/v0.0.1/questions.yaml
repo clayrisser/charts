@@ -105,18 +105,18 @@ questions:
         type: boolean
         required: true
         label: 'ingress tls'
-      - variable: ingress.hosts.web[0].name
+      - variable: ingress.hosts.teleport[0].name
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'web ingress hostname'
-      - variable: ingress.hosts.web[0].path
+        label: 'teleport ingress hostname'
+      - variable: ingress.hosts.teleport[0].path
         default: /
         description: ''
         type: string
         required: true
-        label: 'web ingress path'
+        label: 'teleport ingress path'
       - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -171,7 +171,7 @@ questions:
     default: ''
     description: '30000-32767'
     type: int
-    required: false
+    required: true
     min: 30000
     max: 32767
     label: 'teleport auth port'
