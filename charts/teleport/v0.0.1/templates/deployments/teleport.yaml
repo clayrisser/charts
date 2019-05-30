@@ -35,9 +35,6 @@ spec:
             - name: data
               mountPath: /var/lib/teleport
               subPath: teleport
-            - name: data
-              mountPath: /home
-              subPath: home
           env: []
           livenessProbe:
             tcpSocket:
