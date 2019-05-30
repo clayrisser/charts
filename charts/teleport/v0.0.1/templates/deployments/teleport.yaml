@@ -36,10 +36,6 @@ spec:
             - name: data
               mountPath: /var/lib/teleport
               subPath: data
-            {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
-            - name: certs
-              mountPath: /var/lib/certs
-            {{- end }}
           env: []
           livenessProbe:
             tcpSocket:
@@ -53,11 +49,6 @@ spec:
         - name: config
           configMap:
             name: {{ template "teleport.fullname" . }}-teleport
-        {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
-        - name: certs
-          secret:
-            secretName: {{ template "teleport.certificate" . }}
-        {{- end }}
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
