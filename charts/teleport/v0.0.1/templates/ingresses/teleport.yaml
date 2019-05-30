@@ -3,20 +3,20 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "teleport.fullname" $ }}-teleport
+  name: {{ template "teleport.fullname" . }}-teleport
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
-    {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
-    certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
+    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "teleport.name" $ }}-teleport
-    chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
-    release: {{ $.Release.Name }}
-    heritage: {{ $.Release.Service }}
+    app: {{ template "teleport.name" . }}-teleport
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   rules:
     - host: {{ $host.name }}
@@ -24,11 +24,11 @@ spec:
         paths:
           - path: {{ $host.path }}
             backend:
-              serviceName: {{ template "teleport.fullname" $ }}-teleport
+              serviceName: {{ template "teleport.fullname" . }}-teleport
               servicePort: https
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
   tls:
-    - secretName: letsencrypt-staging
+    - secretName: {{ template "teleport.certificate" . }}
       hosts:
         - {{ $host.name }}
   {{- end }}
