@@ -1,6 +1,6 @@
 images:
   teleport:
-    repository: quay.io/gravitational/teleport
+    repository: codejamninja/teleport
     tag: 3.2.4
     pullPolicy: IfNotPresent
 
