@@ -1,0 +1,16 @@
+name: unleash
+home: https://unleash.github.io
+icon: https://unleash.github.io/img/logo-inverted.png
+version: 0.0.1
+appVersion: latest
+description: 'enterprise ready feature toggles service'
+keywords:
+  - unleash
+  - feature
+  - flag
+  - toggle
+sources:
+  - https://github.com/unleash/unleash
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

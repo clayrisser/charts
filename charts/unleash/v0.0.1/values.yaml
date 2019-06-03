@@ -1,0 +1,58 @@
+images:
+  unleash:
+    repository: unleashorg/unleash-server
+    tag: 3.2.1
+    pullPolicy: IfNotPresent
+  postgres:
+    repository: postgres
+    tag: latest
+    pullPolicy: IfNotPresent
+
+config:
+  postgres:
+    database: unleash
+    host: ''
+    internal: true
+    password: postgres
+    port: 5432
+    url: ''
+    username: postgres
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:
+    unleash:
+      http: ''
+
+ingress:
+  enabled: false
+  tls: false
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    unleash:
+      - name: ''
+        path: /
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 10Gi
+  storageClass: ''
+  volbackBackup: false
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

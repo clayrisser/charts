@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "unleash.fullname" . }}-unleash
+  labels:
+    app: {{ template "unleash.name" . }}-unleash
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "unleash.name" . }}-unleash
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "unleash.fullname" . }}-unleash
+          image: {{ .Values.images.unleash.repository }}:{{ .Values.images.unleash.tag }}
+          imagePullPolicy: {{ .Values.images.unleash.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 4242
+          env:
+            - name: DATABASE_URL
+              value: {{ template "unleash.postgres_url" . }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

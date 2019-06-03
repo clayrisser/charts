@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "unleash.fullname" . }}
+  labels:
+    app: {{ template "unleash.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "unleash.fullname" . }}-postgres
+  {{- else }}
+  postgres_host: {{ $postgres.host | quote }}
+  {{- end }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}

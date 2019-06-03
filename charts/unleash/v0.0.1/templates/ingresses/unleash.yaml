@@ -1,0 +1,34 @@
+{{- if .Values.ingress.enabled }}
+{{- range .Values.ingress.hosts.unleash }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "unleash.fullname" $ }}-unleash
+  annotations:
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+    certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+  {{- end }}
+  labels:
+    app: {{ template "unleash.name" $ }}-unleash
+    chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+spec:
+  rules:
+    - host: {{ .name }}
+      http:
+        paths:
+          - path: {{ .path }}
+            backend:
+              serviceName: {{ template "unleash.fullname" $ }}-unleash
+              servicePort: http
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  tls:
+    - secretName: letsencrypt-staging
+      hosts:
+        - {{ .name }}
+  {{- end }}
+---
+{{- end }}
+{{- end }}
