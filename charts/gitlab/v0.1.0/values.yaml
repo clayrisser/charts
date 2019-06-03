@@ -15,6 +15,11 @@ images:
 config:
   password: ''
   baseUrl: ''
+  keycloak:
+    baseUrl: ''
+    clientId: ''
+    companyName: Keycloak
+    enabled: false
   postgres:
     database: gitlab
     host: ''

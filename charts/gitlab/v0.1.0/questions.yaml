@@ -62,6 +62,36 @@ questions:
     label: 'base url'
     group: Config
 
+# Keycloak Config
+  - variable: config.keycloak.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.baseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.company
+    default: KeyCloak
+    description: ''
+    type: string
+    required: true
+    label: company
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.clientId
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'client id'
+    group: 'KeyCloak Config'
+
 # Postgres Config
   - variable: config.postgres.internal
     default: true

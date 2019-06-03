@@ -39,4 +39,54 @@ data:
   {{- end }}
   redis_port: {{ $redis.port | quote }}
   redis_username: {{ $redis.username | quote }}
-  omnibus_config: ''
+  omnibus_config: |
+    external_url = ENV['EXTERNAL_URL'];
+    root_pass = ENV['GITLAB_ROOT_PASSWORD'];
+    gitlab_rails['initial_root_password'] = root_pass unless root_pass.to_s == '';
+    postgresql['enable'] = false;
+    gitlab_rails['db_host'] = ENV['DB_HOST'];
+    gitlab_rails['db_password'] = ENV['DB_PASSWORD'];
+    gitlab_rails['db_username'] = ENV['DB_USER'];
+    gitlab_rails['db_database'] = ENV['DB_DATABASE'];
+    redis['enable'] = false;
+    gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
+    gitlab_rails['redis_password'] = ENV['REDIS_PASSWORD'];
+    unicorn['worker_processes'] = 2;
+    manage_accounts['enable'] = true;
+    manage_storage_directories['manage_etc'] = false;
+    gitlab_shell['auth_file'] = '/gitlab-data/ssh/authorized_keys';
+    git_data_dir '/gitlab-data/git-data';
+    gitlab_rails['shared_path'] = '/gitlab-data/shared';
+    gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
+    gitlab_ci['builds_directory'] = '/gitlab-data/builds';
+    {{- if .Values.config.keycloak.enabled }}
+    gitlab_rails['omniauth_enabled'] = true
+    gitlab_rails['auto_sign_in_with_provider'] = true
+    gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
+    gitlab_rails['omniauth_block_auto_created_users'] = true
+    gitlab_rails['auto_link_ldap_user'] = false
+    gitlab_rails['auto_link_saml_user'] = true
+    gitlab_rails['external_providers'] = []
+    gitlab_rails['omniauth_providers'] = [
+      {
+         name: 'saml',
+         label: '{{ .Values.config.keycloak.company }}',
+         groups_attribute: 'roles',
+         external_groups: ['gitlab.edenmal.moe:external'],
+         args: {
+           assertion_consumer_service_url: '{{ template "gitlab.base_url" . }}/users/auth/saml/callback',
+           idp_cert_fingerprint: '{{ .Values.config.keycloak.fingerprint }}',
+           idp_sso_target_url: '{{ .Values.config.keycloak.baseUrl }}/auth/realms/master/protocol/saml/clients/{{ .Values.config.keycloak.clientId }}',
+           issuer: '{{ template "gitlab.base_url" . }}',
+           name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+           attribute_statements: {
+             first_name: ['first_name'],
+             last_name: ['last_name'],
+             name: ['name'],
+             username: ['name'],
+             email: ['email']
+           }
+         }
+      }
+    ]
+    {{- else }}

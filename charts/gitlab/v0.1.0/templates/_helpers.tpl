@@ -17,6 +17,17 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
+Calculate hostname
+*/}}
+{{- define "gitlab.hostname" }}
+{{- if .Values.ingress.enabled }}
+{{- printf (index .Values.ingress.hosts.gitlab 0).name }}
+{{- else }}
+{{- printf "%s-gitlab" (include "gitlab.fullname" . ) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate base_url
 */}}
 {{- define "gitlab.base_url" }}
@@ -24,12 +35,16 @@ Calculate base_url
 {{- printf .Values.config.base_url }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- $host := (index .Values.ingress.hosts.gitlab 0) }}
+{{- $host := ((empty (include "gitlab.hostname" . )) | (index .Values.ingress.hosts.gitlab 0) (include "gitlab.hostname" . )) }}
 {{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
 {{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
 {{- else }}
-{{- printf "http://%s-gitlab" (include "gitlab.fullname" . ) }}
+{{- if (empty (include "gitlab.hostname" . )) }}
+{{- printf "http://%s-gitlab" (include "gitlab.hostname" . ) }}
+{{- else }}
+{{- printf "http://%s" (include "gitlab.hostname" . ) }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
