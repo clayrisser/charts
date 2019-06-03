@@ -59,7 +59,7 @@ data:
     gitlab_rails['shared_path'] = '/gitlab-data/shared';
     gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
     gitlab_ci['builds_directory'] = '/gitlab-data/builds';
-    {{- if .Values.config.keycloak.enabled }}
+{{- if .Values.config.keycloak.enabled }}
     gitlab_rails['omniauth_enabled'] = true
     gitlab_rails['auto_sign_in_with_provider'] = true
     gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
@@ -89,4 +89,4 @@ data:
          }
       }
     ]
-    {{- else }}
+{{- else }}
