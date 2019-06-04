@@ -23,7 +23,7 @@ questions:
     type: string
     required: true
     label: repository
-    show_if: config.postgres.internal=false
+    show_if: config.postgres.internal=true
     group: Images
   - variable: images.postgres.tag
     default: latest
@@ -31,7 +31,7 @@ questions:
     type: string
     required: true
     label: tag
-    show_if: config.postgres.internal=false
+    show_if: config.postgres.internal=true
     group: Images
   - variable: images.redis.repository
     default: redis
@@ -39,7 +39,7 @@ questions:
     type: string
     required: true
     label: repository
-    show_if: config.redis.internal=false
+    show_if: config.redis.internal=true
     group: Images
   - variable: images.redis.tag
     default: latest
@@ -47,7 +47,7 @@ questions:
     type: string
     required: true
     label: tag
-    show_if: config.redis.internal=false
+    show_if: config.redis.internal=true
     group: Images
 
 # Config
