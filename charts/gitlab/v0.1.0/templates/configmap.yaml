@@ -48,7 +48,7 @@ data:
     gitlab_rails['db_password'] = ENV['DB_PASSWORD'];
     gitlab_rails['db_username'] = ENV['DB_USER'];
     gitlab_rails['db_database'] = ENV['DB_DATABASE'];
-    redis['enable'] = false;
+    redis['enable'] = true;
     gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
     gitlab_rails['redis_password'] = ENV['REDIS_PASSWORD'];
     unicorn['worker_processes'] = 2;
