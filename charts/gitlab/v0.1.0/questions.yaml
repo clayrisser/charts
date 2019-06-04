@@ -23,6 +23,7 @@ questions:
     type: string
     required: true
     label: repository
+    show_if: config.postgres.internal=false
     group: Images
   - variable: images.postgres.tag
     default: latest
@@ -30,6 +31,7 @@ questions:
     type: string
     required: true
     label: tag
+    show_if: config.postgres.internal=false
     group: Images
   - variable: images.redis.repository
     default: redis
@@ -37,6 +39,7 @@ questions:
     type: string
     required: true
     label: repository
+    show_if: config.redis.internal=false
     group: Images
   - variable: images.redis.tag
     default: latest
@@ -44,11 +47,12 @@ questions:
     type: string
     required: true
     label: tag
+    show_if: config.redis.internal=false
     group: Images
 
 # Config
   - variable: config.password
-    default: ''
+    default: password
     description: password
     type: password
     required: true
@@ -76,6 +80,7 @@ questions:
     type: string
     required: false
     label: 'base url'
+    show_if: config.keycloak.enabled=true
     group: 'KeyCloak Config'
   - variable: config.keycloak.company
     default: KeyCloak
@@ -83,6 +88,7 @@ questions:
     type: string
     required: true
     label: company
+    show_if: config.keycloak.enabled=true
     group: 'KeyCloak Config'
   - variable: config.keycloak.clientId
     default: ''
@@ -90,11 +96,12 @@ questions:
     type: string
     required: false
     label: 'client id'
+    show_if: config.keycloak.enabled=true
     group: 'KeyCloak Config'
 
 # Postgres Config
   - variable: config.postgres.internal
-    default: true
+    default: false
     description: ''
     type: boolean
     required: true

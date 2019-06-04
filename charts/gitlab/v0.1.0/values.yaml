@@ -13,17 +13,17 @@ images:
     pullPolicy: IfNotPresent
 
 config:
-  password: ''
+  password: password
   baseUrl: ''
   keycloak:
     baseUrl: ''
     clientId: ''
-    companyName: Keycloak
+    companyName: KeyCloak
     enabled: false
   postgres:
     database: gitlab
     host: ''
-    internal: true
+    internal: false
     password: postgres
     port: 5432
     url: ''

@@ -43,12 +43,12 @@ data:
     external_url = ENV['EXTERNAL_URL'];
     root_pass = ENV['GITLAB_ROOT_PASSWORD'];
     gitlab_rails['initial_root_password'] = root_pass unless root_pass.to_s == '';
-    postgresql['enable'] = false;
+    postgresql['enable'] = {{ .Values.config.postgres.internal }};
     gitlab_rails['db_host'] = ENV['DB_HOST'];
     gitlab_rails['db_password'] = ENV['DB_PASSWORD'];
     gitlab_rails['db_username'] = ENV['DB_USER'];
     gitlab_rails['db_database'] = ENV['DB_DATABASE'];
-    redis['enable'] = true;
+    redis['enable'] = {{ .Values.config.redis.internal }};
     gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
     gitlab_rails['redis_password'] = ENV['REDIS_PASSWORD'];
     unicorn['worker_processes'] = 2;
