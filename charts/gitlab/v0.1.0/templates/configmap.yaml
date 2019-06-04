@@ -71,7 +71,7 @@ data:
          name: 'saml',
          label: '{{ .Values.config.keycloak.company }}',
          groups_attribute: 'roles',
-         external_groups: ['gitlab.edenmal.moe:external'],
+         external_groups: ['{{ .Values.config.keycloak.clientId }}:external'],
          args: {
            assertion_consumer_service_url: '{{ template "gitlab.base_url" . }}/users/auth/saml/callback',
            idp_cert_fingerprint: '{{ .Values.config.keycloak.fingerprint }}',
