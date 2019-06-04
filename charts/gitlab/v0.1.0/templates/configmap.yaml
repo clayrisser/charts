@@ -76,7 +76,7 @@ data:
            assertion_consumer_service_url: '{{ template "gitlab.base_url" . }}/users/auth/saml/callback',
            idp_cert_fingerprint: '{{ .Values.config.keycloak.fingerprint }}',
            idp_sso_target_url: '{{ .Values.config.keycloak.baseUrl }}/auth/realms/master/protocol/saml/clients/{{ .Values.config.keycloak.clientId }}',
-           issuer: '{{ template "gitlab.base_url" . }}',
+           issuer: '{{ .Values.config.keycloak.clientId }}',
            name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
            attribute_statements: {
              first_name: ['first_name'],

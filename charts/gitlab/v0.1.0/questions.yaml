@@ -98,10 +98,18 @@ questions:
     label: 'client id'
     show_if: config.keycloak.enabled=true
     group: 'KeyCloak Config'
+  - variable: config.keycloak.fingerprint
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: fingerprint
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
 
 # Postgres Config
   - variable: config.postgres.internal
-    default: false
+    default: true
     description: ''
     type: boolean
     required: true

@@ -20,10 +20,11 @@ config:
     clientId: ''
     companyName: KeyCloak
     enabled: false
+    fingerprint: ''
   postgres:
     database: gitlab
     host: ''
-    internal: false
+    internal: true
     password: postgres
     port: 5432
     url: ''
