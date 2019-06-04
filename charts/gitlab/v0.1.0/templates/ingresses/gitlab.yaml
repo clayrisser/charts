@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled }}
-{{- $host := (index .Values.ingress.hosts.nextcloud 0) }}
+{{- $host := (index .Values.ingress.hosts.gitlab 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
