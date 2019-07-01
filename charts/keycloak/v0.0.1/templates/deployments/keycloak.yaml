@@ -27,7 +27,7 @@ spec:
             - name: DB_SCHEMA
               value: public
             - name: PROXY_ADDRESS_FORWARDING
-              value: true
+              value: 'true'
             - name: DB_ADDR
               valueFrom:
                 configMapKeyRef:
