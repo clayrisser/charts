@@ -26,6 +26,8 @@ spec:
               value: POSTGRES
             - name: DB_SCHEMA
               value: public
+            - name: PROXY_ADDRESS_FORWARDING
+              value: true
             - name: DB_ADDR
               valueFrom:
                 configMapKeyRef:
