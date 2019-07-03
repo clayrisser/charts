@@ -1,78 +1,79 @@
 images:
-  gitlab:
-    repository: store/gitlab/gitlab-ce
-    tag: 10.2.4-ce.0
-    pullPolicy: IfNotPresent
-  postgres:
-    repository: postgres
-    tag: latest
-    pullPolicy: IfNotPresent
-  redis:
-    repository: redis
-    tag: latest
-    pullPolicy: IfNotPresent
+    gitlab:
+        repository: store/gitlab/gitlab-ce
+        tag: 10.2.4-ce.0
+        pullPolicy: IfNotPresent
+    postgres:
+        repository: postgres
+        tag: latest
+        pullPolicy: IfNotPresent
+    redis:
+        repository: redis
+        tag: latest
+        pullPolicy: IfNotPresent
 
 config:
-  password: password
-  baseUrl: ''
-  keycloak:
+    password: password
     baseUrl: ''
-    clientId: ''
-    companyName: KeyCloak
-    enabled: false
-    fingerprint: ''
-  postgres:
-    database: gitlab
-    host: ''
-    internal: true
-    password: postgres
-    port: 5432
-    url: ''
-    username: postgres
-  redis:
-    host: ''
-    internal: true
-    password: ''
-    port: 6379
-    url: ''
-    username: ''
+    keycloak:
+        baseUrl: ''
+        clientId: ''
+        companyName: KeyCloak
+        enabled: false
+        fingerprint: ''
+        realmName: gatekeeper
+    postgres:
+        database: gitlab
+        host: ''
+        internal: true
+        password: postgres
+        port: 5432
+        url: ''
+        username: postgres
+    redis:
+        host: ''
+        internal: true
+        password: ''
+        port: 6379
+        url: ''
+        username: ''
 
 service:
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  nodePorts:
-    gitlab:
-      http: ''
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+        gitlab:
+            http: ''
 
 ingress:
-  enabled: false
-  tls: false
-  certificate: ''
-  issuer:
-    name: letsencrypt-staging
-  hosts:
-    gitlab:
-      - name: ''
-        path: /
+    enabled: false
+    tls: false
+    certificate: ''
+    issuer:
+        name: letsencrypt-staging
+    hosts:
+        gitlab:
+            - name: ''
+              path: /
 
 persistence:
-  accessMode: ReadWriteOnce
-  enabled: false
-  existingClaim: ''
-  size: 10Gi
-  storageClass: ''
-  volbackBackup: false
+    accessMode: ReadWriteOnce
+    enabled: false
+    existingClaim: ''
+    size: 10Gi
+    storageClass: ''
+    volbackBackup: false
 
 probes:
-  liveness:
-    initialDelaySeconds: 120
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
+    liveness:
+        initialDelaySeconds: 120
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+        successThreshold: 1
+    readiness:
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+        successThreshold: 1

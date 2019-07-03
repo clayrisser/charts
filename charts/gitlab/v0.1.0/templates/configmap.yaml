@@ -40,6 +40,11 @@ data:
   redis_port: {{ $redis.port | quote }}
   redis_username: {{ $redis.username | quote }}
   omnibus_config: |
+    nginx['proxy_set_headers'] = {
+      'X-Forwarded-Ssl': 'on'
+    };
+    nginx['listen_https'] = false;
+    prometheus_monitoring['enable'] = false;
     external_url = ENV['EXTERNAL_URL'];
     root_pass = ENV['GITLAB_ROOT_PASSWORD'];
     gitlab_rails['initial_root_password'] = root_pass unless root_pass.to_s == '';
@@ -75,7 +80,7 @@ data:
          args: {
            assertion_consumer_service_url: '{{ template "gitlab.base_url" . }}/users/auth/saml/callback',
            idp_cert_fingerprint: '{{ .Values.config.keycloak.fingerprint }}',
-           idp_sso_target_url: '{{ .Values.config.keycloak.baseUrl }}/auth/realms/master/protocol/saml/clients/{{ .Values.config.keycloak.clientId }}',
+           idp_sso_target_url: '{{ .Values.config.keycloak.baseUrl }}/auth/realms/{{ .Values.config.keycloak.realmName }}/protocol/saml/clients/{{ .Values.config.keycloak.clientId }}',
            issuer: '{{ .Values.config.keycloak.clientId }}',
            name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
            attribute_statements: {
