@@ -113,6 +113,14 @@ questions:
       label: 'realm name'
       show_if: config.keycloak.enabled=true
       group: KeyCloak Config
+    - variable: config.certificate
+      default: ''
+      description: ''
+      type: string
+      required: false
+      label: 'certificate'
+      show_if: config.keycloak.enabled=true
+      group: KeyCloak Config
 
     # Postgres Config
     - variable: config.postgres.internal
