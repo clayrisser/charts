@@ -28,6 +28,10 @@ spec:
             - name: data
               mountPath: /gitlab-data
               subPath: data
+            {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+            - name: certs
+              mountPath: /etc/gitlab/ssl
+            {{- end }}
           env:
             - name: GITLAB_OMNIBUS_CONFIG
               valueFrom:
@@ -85,6 +89,11 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
+        {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+        - name: certs
+          secret:
+            secretName: {{ template "gitlab.certificate" . }}
+        {{- end }}
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

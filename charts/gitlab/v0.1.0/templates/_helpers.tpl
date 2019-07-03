@@ -28,6 +28,16 @@ Calculate hostname
 {{- end }}
 
 {{/*
+Calculate certificate
+*/}}
+{{- define "gitlab.certificate" }}
+{{- if (not (empty .Values.ingress.certificate)) }}
+{{- else }}
+{{- printf "%s-letsencrypt" (include "gitlab.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate base_url
 */}}
 {{- define "gitlab.base_url" }}
