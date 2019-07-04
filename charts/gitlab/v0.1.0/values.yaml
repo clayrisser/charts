@@ -1,7 +1,7 @@
 images:
     gitlab:
-        repository: store/gitlab/gitlab-ce
-        tag: 10.2.4-ce.0
+        repository: gitlab/gitlab-ce
+        tag: 12.0.3-ce.0
         pullPolicy: IfNotPresent
     postgres:
         repository: postgres
@@ -22,6 +22,8 @@ config:
         enabled: false
         fingerprint: ''
         realmName: gatekeeper
+        certificate: ''
+
     postgres:
         database: gitlab
         host: ''

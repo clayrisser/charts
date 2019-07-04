@@ -39,15 +39,11 @@ data:
   {{- end }}
   redis_port: {{ $redis.port | quote }}
   redis_username: {{ $redis.username | quote }}
-  omnibus_config: |
-    nginx['proxy_set_headers'] = {
-      'X-Forwarded-Ssl': 'on'
-    };
+  omnibus_config: |-
     nginx['listen_https'] = false;
     prometheus_monitoring['enable'] = false;
     external_url = ENV['EXTERNAL_URL'];
     root_pass = ENV['GITLAB_ROOT_PASSWORD'];
-    gitlab_rails['initial_root_password'] = root_pass unless root_pass.to_s == '';
     postgresql['enable'] = false;
     gitlab_rails['db_host'] = ENV['DB_HOST'];
     gitlab_rails['db_password'] = ENV['DB_PASSWORD'];
@@ -60,14 +56,14 @@ data:
     manage_accounts['enable'] = true;
     manage_storage_directories['manage_etc'] = false;
     gitlab_shell['auth_file'] = '/gitlab-data/ssh/authorized_keys';
-    git_data_dir '/gitlab-data/git-data';
+    git_data_dirs = ['/gitlab-data/git-data'];
     gitlab_rails['shared_path'] = '/gitlab-data/shared';
     gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
     gitlab_ci['builds_directory'] = '/gitlab-data/builds';
     gitlab_rails['omniauth_enabled'] = {{ .Values.config.keycloak.enabled }}
     gitlab_rails['auto_sign_in_with_provider'] = true
     gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
-    gitlab_rails['omniauth_block_auto_created_users'] = true
+    gitlab_rails['omniauth_block_auto_created_users'] = false
     gitlab_rails['auto_link_ldap_user'] = false
     gitlab_rails['auto_link_saml_user'] = true
     gitlab_rails['external_providers'] = []
@@ -79,7 +75,9 @@ data:
          external_groups: ['{{ .Values.config.keycloak.clientId }}:external'],
          args: {
            assertion_consumer_service_url: '{{ template "gitlab.base_url" . }}/users/auth/saml/callback',
-           idp_cert_fingerprint: '{{ .Values.config.keycloak.fingerprint }}',
+           # idp_cert_fingerprint: '{{ .Values.config.keycloak.fingerprint }}',
+           idp_cert_fingerprint_algorithm: 'http://www.w3.org/2000/09/xmldsig#sha1',
+           idp_cert: '-----BEGIN CERTIFICATE-----{{ .Values.config.keycloak.certificate }}-----END CERTIFICATE-----',
            idp_sso_target_url: '{{ .Values.config.keycloak.baseUrl }}/auth/realms/{{ .Values.config.keycloak.realmName }}/protocol/saml/clients/{{ .Values.config.keycloak.clientId }}',
            issuer: '{{ .Values.config.keycloak.clientId }}',
            name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
@@ -93,3 +91,4 @@ data:
          }
       }
     ]
+    
