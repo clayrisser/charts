@@ -32,6 +32,7 @@ service:
 ingress:
   enabled: false
   tls: false
+  certificate: ""
   issuer:
     name: letsencrypt-staging
   hosts:
