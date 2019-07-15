@@ -191,6 +191,13 @@ questions:
           - letsencrypt-prod
         required: true
         label: 'ingress issuer name'
+      - variable: ingress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.tls=true&&ingress.issuer.name=none
+        required: false
+        label: 'ingress certificate'
       - variable: ingress.hosts.keycloak[0].name
         default: xip.io
         description: ''

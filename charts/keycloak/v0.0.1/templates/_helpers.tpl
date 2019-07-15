@@ -32,6 +32,17 @@ Calculate hostname
 {{- end }}
 
 {{/*
+Calculate certificate
+*/}}
+{{- define "keycloak.certificate" }}
+{{- if (not (empty .Values.ingress.certificate)) }}
+{{- printf .Values.ingress.certificate }}
+{{- else }}
+{{- printf "%s-letsencrypt" (include "keycloak.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate base_url
 */}}
 {{- define "keycloak.base_url" }}
