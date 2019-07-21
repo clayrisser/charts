@@ -118,17 +118,6 @@ questions:
     show_subquestion_if: true
     group: Backup
     subquestions:
-      - variable: config.backup.type
-        default: ''
-        description: ''
-        type: enum
-        options:
-          - gcs
-          - s3
-          - azure
-        required: false
-        label: 'backup type'
-        group: Backup
       - variable: config.backup.cron
         default: '@daily'
         description: ''
@@ -151,14 +140,6 @@ questions:
         required: true
         label: 'backup endpoint'
         show_if: config.backup.type=s3
-        group: Backup
-      - variable: config.backup.container
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'backup container'
-        show_if: config.backup.type=azure
         group: Backup
       - variable: config.backup.prefix
         default: ''
