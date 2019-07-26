@@ -117,7 +117,6 @@ questions:
     type: string
     required: true
     label: database
-    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.password
     default: root
