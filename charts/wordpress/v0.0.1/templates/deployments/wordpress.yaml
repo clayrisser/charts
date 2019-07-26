@@ -27,7 +27,27 @@ spec:
             - name: data
               mountPath: /var/www/html/wp-content
               subPath: content
-          env: []
+          env:
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "wordpress.fullname" . }}-mysql-auth
+                  key: password
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "wordpress.fullname" . }}-mysql-auth
+                  key: user
+            - name: WORDPRESS_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "wordpress.fullname" . }}
+                  key: mysql_host
+            - name: WORDPRESS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "wordpress.fullname" . }}
+                  key: mysql_database
           livenessProbe:
             httpGet:
               path: /
