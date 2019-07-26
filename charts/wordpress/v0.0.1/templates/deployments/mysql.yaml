@@ -51,7 +51,6 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- end }}
   {{- if (not (empty .Values.persistence.backup.restore)) }}
   init:
     snapshotSource:
@@ -61,6 +60,7 @@ spec:
       {{- else }}
       namespace: {{ .Values.persistence.backup.restoreNamespace }}
       {{- end }}
+  {{- end }}
   {{- end }}
   serviceTemplate:
     metadata:
