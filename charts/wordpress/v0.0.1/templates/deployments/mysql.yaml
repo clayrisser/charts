@@ -2,9 +2,9 @@
 apiVersion: kubedb.com/v1alpha1
 kind: MySQL
 metadata:
-  name: {{ template "mysql.fullname" . }}-mysql
+  name: {{ template "wordpress.fullname" . }}-mysql
   labels:
-    app: {{ template "mysql.name" . }}-mysql
+    app: {{ template "wordpress.name" . }}-mysql
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,7 @@ spec:
   version: {{ .Values.config.mysql.version | quote }}
   configSource:
     configMap:
-      name: {{ template "mysql.fullname" . }}-mysql
+      name: {{ template "wordpress.fullname" . }}-mysql
   standbyMode: {{ .Values.config.mysql.standbyMode | quote }}
   {{- if .Values.config.mysql.prometheus }}
   monitor:
@@ -39,7 +39,7 @@ spec:
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "mysql.fullname" . }}-backup
+    storageSecretName: {{ template "wordpress.fullname" . }}-backup
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
