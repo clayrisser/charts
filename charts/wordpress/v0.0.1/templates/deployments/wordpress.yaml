@@ -1,0 +1,48 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "wordpress.fullname" . }}-wordpress
+  labels:
+    app: {{ template "wordpress.name" . }}-wordpress
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "wordpress.name" . }}-wordpress
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "wordpress.fullname" . }}-wordpress
+          image: {{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          volumeMounts:
+            - name: data
+              mountPath: /var/www/html/wp-content
+              subPath: content
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "wordpress.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

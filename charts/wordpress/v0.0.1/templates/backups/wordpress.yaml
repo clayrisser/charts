@@ -1,0 +1,99 @@
+{{- if .Values.persistence.backup.enabled }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Restic
+metadata:
+  name: {{ template "wordpress.fullname" . }}-wordpress
+  labels:
+    app: {{ template "wordpress.name" . }}-wordpress
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "wordpress.name" . }}-wordpress
+  fileGroups:
+    - path: '/data'
+      retentionPolicyName: 'retention-policy'
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.config.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+    storageSecretName: {{ template "wordpress.fullname" . }}-backup
+  schedule: {{ .Values.persistence.backup.schedule | quote }}
+  volumeMounts:
+    - name: data
+      mountPath: '/data'
+      subPath: content
+  retentionPolicies:
+    - name: 'retention-policy'
+      keepLast: {{ .Values.persistence.backup.keepLast }}
+      prune: true
+{{- end }}
+
+---
+{{- if .Values.persistence.backup.restore }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  {{- if (empty .Values.persistence.backup.restoreRepository) }}
+  name: deployment.{{ template "wordpress.fullname" . }}-wordpress
+  {{- else }}
+  name: deployment.{{ .Values.persistence.backup.restoreRepository }}
+  {{- end }}
+  labels:
+    app: {{ template "wordpress.name" . }}-wordpress
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backend:
+    s3:
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+    storageSecretName: {{ template "wordpress.fullname" . }}-backup
+{{- end }}
+
+---
+{{- if .Values.persistence.backup.restore }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Recovery
+metadata:
+  name: {{ template "wordpress.fullname" . }}-wordpress
+  labels:
+    app: {{ template "wordpress.name" . }}-wordpress
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    {{- if (empty .Values.persistence.backup.restoreRepository) }}
+    name: deployment.{{ template "wordpress.fullname" . }}-wordpress
+    {{- else }}
+    name: deployment.{{ .Values.persistence.backup.restoreRepository }}
+    {{- end }}
+    {{- if (empty .Values.persistence.backup.restoreNamespace) }}
+    namespace: {{ .Release.Namespace }}
+    {{- else }}
+    namespace: {{ .Values.persistence.backup.restoreNamespace }}
+    {{- end }}
+    {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+    snapshot: {{ .Values.persistence.backup.restoreSnapshot }}
+    {{- end }}
+  paths:
+    - '/data'
+  recoveredVolumes:
+    - mountPath: '/data'
+      subPath: content
+      persistentVolumeClaim:
+        claimName: {{ .Values.persistence.existingClaim | default (include "wordpress.fullname" . ) }}
+{{- end }}

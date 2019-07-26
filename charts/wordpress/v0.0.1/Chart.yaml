@@ -1,0 +1,15 @@
+name: wordpress
+home: https://github.com/codejamninja/wordpress
+icon: https://s.w.org/style/images/wporg-logo.svg?3
+version: 0.0.1
+appVersion: latest
+description: 'open source software you can use to create a beautiful website, blog, or app'
+keywords:
+  - wordpress
+  - kubernetes
+  - docker
+sources:
+  - https://github.com/codejamninja/wordpress
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

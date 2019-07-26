@@ -1,0 +1,397 @@
+categories:
+  - Server
+questions:
+
+# Images
+  - variable: images.wordpress.repository
+    default: wordpress
+    description: ''
+    type: string
+    required: true
+    label: 'wordpress repository'
+    group: Images
+  - variable: images.wordpress.tag
+    default: 5.2.2-php7.1-apache
+    description: ''
+    type: string
+    required: true
+    label: 'wordpress tag'
+    group: Images
+  - variable: images.mysql.repository
+    default: mysql
+    description: ''
+    type: string
+    required: true
+    label: 'mysql repository'
+    group: Images
+  - variable: images.mysql.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'mysql tag'
+    group: Images
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.user
+    default: 'admin'
+    description: ''
+    type: string
+    required: true
+    label: 'user'
+    group: Config
+  - variable: config.password
+    default: 'pass'
+    description: ''
+    type: password
+    required: true
+    label: 'password'
+    group: Config
+
+# MySQL Config
+  - variable: config.mysql.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'MySQL Config'
+  - variable: config.mysql.standbyMode
+    default: hot
+    description: ''
+    type: enum
+    options:
+      - hot
+      - warm
+    required: true
+    label: 'standby mode'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.config
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: config
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.database
+    default: wordpress
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.password
+    default: root
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.port
+    default: 3306
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.username
+    default: root
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 10Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.backup.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'backup enabled'
+      - variable: persistence.backup.resticPassword
+        default: pass
+        description: ''
+        type: password
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup restic password'
+      - variable: persistence.backup.schedule
+        default: '@every 1m'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup schedule'
+      - variable: persistence.backup.keepLast
+        default: 5
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup keep last'
+      - variable: persistence.backup.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup type'
+      - variable: persistence.backup.awsAccessKey
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws access key'
+      - variable: persistence.backup.awsSecretKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws secret key'
+      - variable: persistence.backup.googleProjectId
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google project id'
+      - variable: persistence.backup.googleServiceKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google service key'
+      - variable: persistence.backup.azureAccountName
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account name'
+      - variable: persistence.backup.azureAccountKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account key'
+      - variable: persistence.backup.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'backup container'
+      - variable: persistence.backup.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup bucket'
+      - variable: persistence.backup.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'backup endpoint'
+      - variable: persistence.backup.prefix
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup prefix'
+      - variable: persistence.backup.restore
+        default: false
+        description: ''
+        type: boolean
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore'
+      - variable: persistence.backup.restoreRepository
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
+        label: 'backup restore repository'
+      - variable: persistence.backup.restoreSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
+        label: 'backup restore snapshot'
+      - variable: persistence.backup.restoreNamespace
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true=true&&persistence.backup.restore=true
+        label: 'backup restore namespace'
+
+# Services and Load Balancing
+  - variable: ingress.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'ingress tls'
+      - variable: ingress.hosts.wordpress[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'wordpress ingress hostname'
+      - variable: ingress.hosts.wordpress[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'wordpress ingress path'
+      - variable: ingress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'ingress issuer name'
+      - variable: ingress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.tls=true&&ingress.issuer.name=none
+        required: false
+        label: 'ingress certificate'
+  - variable: service.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.nodePorts.wordpress.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'wordpress http port'
