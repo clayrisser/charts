@@ -39,6 +39,7 @@ questions:
     type: enum
     options:
       - IfNotPresent
+      - Always
     required: true
     label: 'pull policy'
     group: Config
