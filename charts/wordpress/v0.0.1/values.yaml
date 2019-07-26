@@ -9,8 +9,8 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
-  user: 'admin'
-  password: 'pass'
+  user: admin
+  password: pass
   mysql:
     config: ''
     database: wordpress
@@ -22,7 +22,7 @@ config:
     standbyMode: hot
     url: ''
     username: root
-    version: 8.0-v2
+    version: 8.0
 
 service:
   type: NodePort
