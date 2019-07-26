@@ -2,9 +2,6 @@ images:
   wordpress:
     repository: wordpress
     tag: 5.2.2-php7.1-apache
-  mysql:
-    repository: mysql
-    tag: latest
 
 config:
   imagePullPolicy: IfNotPresent

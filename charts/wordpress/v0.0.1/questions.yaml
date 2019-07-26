@@ -17,20 +17,6 @@ questions:
     required: true
     label: 'wordpress tag'
     group: Images
-  - variable: images.mysql.repository
-    default: mysql
-    description: ''
-    type: string
-    required: true
-    label: 'mysql repository'
-    group: Images
-  - variable: images.mysql.tag
-    default: latest
-    description: ''
-    type: string
-    required: true
-    label: 'mysql tag'
-    group: Images
 
 # Config
   - variable: config.imagePullPolicy

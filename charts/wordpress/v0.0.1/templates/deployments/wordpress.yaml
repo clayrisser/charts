@@ -52,7 +52,7 @@ spec:
             - name: WORDPRESS_DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "wordpress.fullname" . }}:3306
+                  name: {{ template "wordpress.fullname" . }}
                   key: mysql_host
             - name: WORDPRESS_DB_NAME
               valueFrom:
