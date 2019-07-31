@@ -38,7 +38,7 @@ spec:
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "wordpress.fullname" . }}-backup
+    storageSecretName: {{ template "mysql.fullname" . }}-backup
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
