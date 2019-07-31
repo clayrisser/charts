@@ -299,6 +299,13 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
         label: 'backup restore repository'
+      - variable: persistence.backup.restoreNamespace
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
+        label: 'backup restore namespace'
       - variable: persistence.backup.restoreSnapshot
         default: ''
         description: ''
@@ -306,13 +313,13 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
         label: 'backup restore snapshot'
-      - variable: persistence.backup.restoreNamespace
+      - variable: persistence.backup.restoreMysqlSnapshot
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true=true&&persistence.backup.restore=true
-        label: 'backup restore namespace'
+        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
+        label: 'backup restore mysql snapshot'
 
 # Services and Load Balancing
   - variable: ingress.enabled

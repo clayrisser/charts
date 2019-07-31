@@ -60,6 +60,7 @@ persistence:
     prefix: ''
     resticPassword: pass
     restore: false
+    restoreMysqlSnapshot: ''
     restoreNamespace: ''
     restoreRepository: ''
     restoreSnapshot: ''

@@ -13,8 +13,8 @@ spec:
     matchLabels:
       app: {{ template "wordpress.name" . }}-wordpress
   fileGroups:
-    - path: '/data'
-      retentionPolicyName: 'retention-policy'
+    - path: /var/www/html/wp-content
+      retentionPolicyName: retention-policy
   backend:
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
@@ -31,10 +31,10 @@ spec:
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   volumeMounts:
     - name: data
-      mountPath: '/data'
+      mountPath: /var/www/html/wp-content
       subPath: content
   retentionPolicies:
-    - name: 'retention-policy'
+    - name: retention-policy
       keepLast: {{ .Values.persistence.backup.keepLast }}
       prune: true
 {{- end }}
@@ -56,9 +56,16 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   backend:
-    s3:
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
     storageSecretName: {{ template "wordpress.fullname" . }}-backup
 {{- end }}
@@ -90,9 +97,9 @@ spec:
     snapshot: {{ .Values.persistence.backup.restoreSnapshot }}
     {{- end }}
   paths:
-    - '/data'
+    - /var/www/html/wp-content
   recoveredVolumes:
-    - mountPath: '/data'
+    - mountPath: /var/www/html/wp-content
       subPath: content
       persistentVolumeClaim:
         claimName: {{ .Values.persistence.existingClaim | default (include "wordpress.fullname" . ) }}

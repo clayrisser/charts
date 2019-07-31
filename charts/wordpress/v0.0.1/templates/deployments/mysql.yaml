@@ -54,7 +54,7 @@ spec:
   {{- if (not (empty .Values.persistence.backup.restore)) }}
   init:
     snapshotSource:
-      name: {{ .Values.persistence.backup.restoreSnapshot }}
+      name: {{ .Values.persistence.backup.restoreMysqlSnapshot }}
       {{- if (empty .Values.persistence.backup.restoreNamespace) }}
       namespace: {{ .Release.Namespace }}
       {{- else }}
