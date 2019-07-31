@@ -8,23 +8,9 @@ config:
   customConfig: ''
   phpmyadmin: true
   prometheus: false
-  restoreFromSnapshot: ''
   standbyMode: ''
-  version: 8.0-v2
-  backup:
-    awsAccessKey: ''
-    awsSecretKey: ''
-    azureAccountKey: ''
-    azureAccountName: ''
-    bucket: ''
-    container: ''
-    cron: '@daily'
-    enabled: false
-    endpoint: ''
-    googleProjectId: ''
-    googleServiceKey: ''
-    prefix: ''
-    type: ''
+  updateStrategy: RollingUpdate
+  version: 8.0
 
 service:
   phpmyadmin:
@@ -55,7 +41,28 @@ issuer:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  size: 10Gi
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    restore: false
+    restoreNamespace: ''
+    restoreSnapshot: ''
+    schedule: '@every 1m'
+    type: s3
 
 probes:
   liveness:

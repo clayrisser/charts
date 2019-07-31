@@ -35,27 +35,31 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (not (empty .Values.config.backup.enabled)) }}
+  {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
-    cronExpression: {{ .Values.config.backup.cron | quote }}
-    storageSecretName: {{ template "mysql.fullname" . }}-mysql
-    {{ .Values.config.backup.type }}:
-      {{- if (or (eq "gcs" .Values.config.backup.type) (eq "s3" .Values.config.backup.type)) }}
-      bucket: {{ .Values.config.backup.bucket | quote }}
+    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
+    storageSecretName: {{ template "wordpress.fullname" . }}-backup
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
       {{- end }}
-      {{- if (eq "s3" .Values.config.backup.type) }}
-      endpoint: {{ .Values.config.backup.endpoint | quote }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
       {{- end }}
-      {{- if (eq "azure" .Values.config.backup.type) }}
-      container: {{ .Values.config.backup.container | quote }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      prefix: {{ .Values.config.backup.prefix | quote }}
-  {{- end }}
-  {{- if (not (empty .Values.config.restoreFromSnapshot)) }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+  {{- if (not (empty .Values.persistence.backup.restore)) }}
   init:
     snapshotSource:
-      name: {{ .Values.config.restoreFromSnapshot | quote }}
+      name: {{ .Values.persistence.backup.restoreMysqlSnapshot }}
+      {{- if (empty .Values.persistence.backup.restoreNamespace) }}
       namespace: {{ .Release.Namespace }}
+      {{- else }}
+      namespace: {{ .Values.persistence.backup.restoreNamespace }}
+      {{- end }}
+  {{- end }}
   {{- end }}
   serviceTemplate:
     metadata:
@@ -67,9 +71,9 @@ spec:
       externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name: http
-          port: 5432
-          targetPort: http
+        - name: mysql
+          port: 3306
+          targetPort: mysql
           {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
           nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
           {{- end }}
@@ -82,11 +86,11 @@ spec:
       externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name:  http
-          port:  5432
-          targetPort: http
+        - name:  mysql
+          port:  3306
+          targetPort: mysql
           {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
           nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
           {{- end }}
   updateStrategy:
-    type: RollingUpdate
+    type: {{ .Values.config.updateStrategy }}

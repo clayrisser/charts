@@ -21,11 +21,21 @@ questions:
 
 # Config
   - variable: config.version
-    default: 8.0-v2
+    default: 8.0
     description: ''
     type: string
     required: true
     label: version
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
     group: Config
   - variable: config.phpmyadmin
     default: true
@@ -51,13 +61,6 @@ questions:
     required: true
     label: prometheus
     group: Config
-  - variable: config.restoreFromSnapshot
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'restore from snapshot'
-    group: Config
   - variable: config.customConfig
     default: ''
     description: ''
@@ -65,89 +68,6 @@ questions:
     required: false
     label: 'custom config'
     group: Config
-  - variable: config.awsAccessKey
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'aws access key'
-    group: Config
-  - variable: config.awsSecretKey
-    default: ''
-    description: ''
-    type: password
-    required: false
-    label: 'aws secret key'
-    group: Config
-  - variable: config.googleProjectId
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'google project id'
-    group: Config
-  - variable: config.googleServiceKey
-    default: ''
-    description: ''
-    type: password
-    required: false
-    label: 'google service key'
-    group: Config
-  - variable: config.azureAccountName
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'azure account name'
-    group: Config
-  - variable: config.azureAccountKey
-    default: ''
-    description: ''
-    type: password
-    required: false
-    label: 'azure account key'
-    group: Config
-
-# Backup
-  - variable: config.backup.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: backup
-    show_subquestion_if: true
-    group: Backup
-    subquestions:
-      - variable: config.backup.cron
-        default: '@daily'
-        description: ''
-        type: string
-        required: false
-        label: 'backup cron'
-        group: Backup
-      - variable: config.backup.bucket
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'backup bucket'
-        show_if: config.backup.type=gcs||config.backup.type=s3
-        group: Backup
-      - variable: config.backup.endpoint
-        default: s3.amazonaws.com
-        description: ''
-        type: string
-        required: true
-        label: 'backup endpoint'
-        show_if: config.backup.type=s3
-        group: Backup
-      - variable: config.backup.prefix
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'backup prefix'
-        group: Backup
 
 # Persistence
   - variable: persistence.enabled
@@ -155,28 +75,157 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'persistent volume enabled'
+    label: enabled
     show_subquestion_if: true
     group: Persistence
     subquestions:
       - variable: persistence.size
-        default: 10Gi
+        default: 1Gi
         description: ''
         type: string
         required: true
-        label: 'volume size'
+        label: size
       - variable: persistence.storageClass
         default: ''
         description: ''
         type: storageclass
         required: false
-        label: 'default storageclass'
+        label: 'storage class'
       - variable: persistence.existingClaim
         default: ''
         description: ''
         type: string
         required: false
-        label: 'existing persistent volume claim'
+        label: 'existing claim'
+      - variable: persistence.backup.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'backup enabled'
+      - variable: persistence.backup.resticPassword
+        default: pass
+        description: ''
+        type: password
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup restic password'
+      - variable: persistence.backup.schedule
+        default: '@every 1m'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup schedule'
+      - variable: persistence.backup.keepLast
+        default: 5
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup keep last'
+      - variable: persistence.backup.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup type'
+      - variable: persistence.backup.awsAccessKey
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws access key'
+      - variable: persistence.backup.awsSecretKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws secret key'
+      - variable: persistence.backup.googleProjectId
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google project id'
+      - variable: persistence.backup.googleServiceKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google service key'
+      - variable: persistence.backup.azureAccountName
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account name'
+      - variable: persistence.backup.azureAccountKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account key'
+      - variable: persistence.backup.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'backup container'
+      - variable: persistence.backup.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup bucket'
+      - variable: persistence.backup.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'backup endpoint'
+      - variable: persistence.backup.prefix
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup prefix'
+      - variable: persistence.backup.restore
+        default: false
+        description: ''
+        type: boolean
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore'
+      - variable: persistence.backup.restoreNamespace
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
+        label: 'backup restore namespace'
+      - variable: persistence.backup.restoreSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
+        label: 'backup restore snapshot'
 
 # Services and Load Balancing
   - variable: ingress.enabled
