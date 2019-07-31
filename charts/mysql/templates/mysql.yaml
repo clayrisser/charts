@@ -50,10 +50,10 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore)) }}
+  {{- if .Values.persistence.backup.restore }}
   init:
     snapshotSource:
-      name: {{ .Values.persistence.backup.restoreMysqlSnapshot }}
+      name: {{ .Values.persistence.backup.restoreSnapshot }}
       {{- if (empty .Values.persistence.backup.restoreNamespace) }}
       namespace: {{ .Release.Namespace }}
       {{- else }}

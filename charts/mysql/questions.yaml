@@ -91,6 +91,16 @@ questions:
         type: storageclass
         required: false
         label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
       - variable: persistence.existingClaim
         default: ''
         description: ''
