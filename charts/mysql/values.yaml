@@ -10,7 +10,7 @@ config:
   prometheus: false
   standbyMode: hot
   updateStrategy: RollingUpdate
-  version: 8.0
+  version: 8.0.3
 
 service:
   phpmyadmin:

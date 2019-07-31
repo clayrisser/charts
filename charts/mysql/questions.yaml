@@ -21,7 +21,7 @@ questions:
 
 # Config
   - variable: config.version
-    default: 8.0
+    default: 8.0.3
     description: ''
     type: string
     required: true
