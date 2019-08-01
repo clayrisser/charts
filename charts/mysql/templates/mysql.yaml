@@ -9,6 +9,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   version: {{ .Values.config.version | quote }}
+  databaseSecret:
+    secretName: {{ template "mysql.sharedname" . }}-mysql-auth
   configSource:
     configMap:
       name: {{ template "mysql.fullname" . }}-mysql
@@ -51,8 +53,6 @@ spec:
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
-  databaseSecret:
-    secretName: {{ template "mysql.fullname" . }}-mysql-auth
   init:
     snapshotSource:
       name: {{ .Values.persistence.backup.restoreSnapshot }}
