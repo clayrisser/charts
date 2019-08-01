@@ -12,15 +12,6 @@ spec:
   configSource:
     configMap:
       name: {{ template "mysql.fullname" . }}-mysql
-  {{- if (empty .Values.config.secret) }}
-  {{- if .Values.persistence.backup.restore }}
-  databaseSecret:
-    secretName: {{ template "mysql.fullname" . }}-auth
-  {{- end }}
-  {{- else }}
-  databaseSecret:
-    secretName: {{ .Values.config.secret }}
-  {{- end }}
   standbyMode: {{ .Values.config.standbyMode | quote }}
   {{- if .Values.config.prometheus }}
   monitor:
@@ -59,7 +50,9 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if .Values.persistence.backup.restore }}
+  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+  databaseSecret:
+    secretName: {{ template "mysql.fullname" . }}-mysql-auth
   init:
     snapshotSource:
       name: {{ .Values.persistence.backup.restoreSnapshot }}
