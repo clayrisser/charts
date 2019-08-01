@@ -92,4 +92,8 @@ spec:
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}
+  {{- if .Values.persistence.enabled }}
   terminationPolicy: Pause
+  {{- else }}
+  terminationPolicy: Delete
+  {{- end }}
