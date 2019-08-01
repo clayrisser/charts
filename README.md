@@ -50,7 +50,7 @@ Submit an [issue](https://github.com/codejamninja/rancher2-kubedb/issues/new)
 
 ## Screenshots
 
-[Contribute](https://github.com/codejamninja/rancher2-kubedb/blob/master/CONTRIBUTING.md) a screenshot
+![FireShot Capture 001 - Rancher - orch siliconhills co](https://user-images.githubusercontent.com/6234038/62327676-d7bae080-b476-11e9-987d-f84461503bdd.png)
 
 
 ## Contributing
