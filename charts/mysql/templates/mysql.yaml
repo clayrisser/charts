@@ -12,6 +12,10 @@ spec:
   configSource:
     configMap:
       name: {{ template "mysql.fullname" . }}-mysql
+  {{- if (not (empty .Values.config.secret)) }}
+  databaseSecret:
+    secretName: {{ .Values.config.secret }}
+  {{- end }}
   standbyMode: {{ .Values.config.standbyMode | quote }}
   {{- if .Values.config.prometheus }}
   monitor:
