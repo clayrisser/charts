@@ -52,7 +52,11 @@ spec:
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
   databaseSecret:
+    {{- if (empty .Values.config.secret }}
     secretName: {{ template "mysql.sharedname" . }}-mysql-auth
+    {{- else }}
+    secretName: {{ .Values.config.secret }}
+    {{- end }}
   init:
     snapshotSource:
       name: {{ .Values.persistence.backup.restoreSnapshot }}
