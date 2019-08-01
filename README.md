@@ -27,6 +27,7 @@ curl -fsSL https://raw.githubusercontent.com/kubedb/cli/0.12.0/hack/deploy/kubed
 2. Add the following catalog
 
 | Name   | Catalog URL                                         | Branch |
+| ------ | --------------------------------------------------- | ------ |
 | kubedb | https://github.com/codejamninja/rancher2-kubedb.git | master |
 
 3. Launch any of the provided database apps
