@@ -56,11 +56,11 @@ persistence:
     endpoint: s3.amazonaws.com
     googleProjectId: ''
     googleServiceKey: ''
-    keepLast: 5
+    # keepLast: 5
     prefix: ''
     resticPassword: pass
     restoreSnapshot: ''
-    schedule: '@every 1m'
+    schedule: '@every 1d'
     type: s3
 
 probes:

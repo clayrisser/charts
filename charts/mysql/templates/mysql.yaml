@@ -88,8 +88,8 @@ spec:
       externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name:  mysql
-          port:  3306
+        - name: mysql
+          port: 3306
           targetPort: mysql
           {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
           nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}

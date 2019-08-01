@@ -35,27 +35,33 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (not (empty .Values.config.backup.enabled)) }}
+  {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
-    cronExpression: {{ .Values.config.backup.cron | quote }}
-    storageSecretName: {{ template "postgres.fullname" . }}-postgres
-    {{ .Values.config.backup.type }}:
-      {{- if (or (eq "gcs" .Values.config.backup.type) (eq "s3" .Values.config.backup.type)) }}
-      bucket: {{ .Values.config.backup.bucket | quote }}
+    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
+    storageSecretName: {{ template "postgres.sharedname" . }}-postgres
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
       {{- end }}
-      {{- if (eq "s3" .Values.config.backup.type) }}
-      endpoint: {{ .Values.config.backup.endpoint | quote }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
       {{- end }}
-      {{- if (eq "azure" .Values.config.backup.type) }}
-      container: {{ .Values.config.backup.container | quote }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      prefix: {{ .Values.config.backup.prefix | quote }}
-  {{- end }}
-  {{- if (not (empty .Values.config.restoreFromSnapshot)) }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+  databaseSecret:
+    {{- if (empty .Values.config.secret) }}
+    secretName: {{ template "postgres.sharedname" . }}-postgres-auth
+    {{- else }}
+    secretName: {{ .Values.config.secret }}
+    {{- end }}
   init:
     snapshotSource:
-      name: {{ .Values.config.restoreFromSnapshot | quote }}
+      name: {{ .Values.persistence.backup.restoreSnapshot }}
       namespace: {{ .Release.Namespace }}
+  {{- end }}
   {{- end }}
   serviceTemplate:
     metadata:
@@ -67,9 +73,9 @@ spec:
       externalTrafficPolicy: {{ .Values.service.postgres.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name: http
+        - name: postgres
           port: 5432
-          targetPort: http
+          targetPort: postgres
           {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres.port))) }}
           nodePort: {{ .Values.service.postgres.nodePorts.postgres.port }}
           {{- end }}
@@ -82,11 +88,16 @@ spec:
       externalTrafficPolicy: {{ .Values.service.postgres.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name:  http
-          port:  5432
-          targetPort: http
+        - name: postgres
+          port: 5432
+          targetPort: postgres
           {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres.port))) }}
           nodePort: {{ .Values.service.postgres.nodePorts.postgres.port }}
           {{- end }}
   updateStrategy:
-    type: RollingUpdate
+    type: {{ .Values.config.updateStrategy }}
+  {{- if .Values.persistence.enabled }}
+  terminationPolicy: Pause
+  {{- else }}
+  terminationPolicy: Delete
+  {{- end }}

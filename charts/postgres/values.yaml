@@ -6,28 +6,12 @@ images:
 
 config:
   customConfig: ''
+  pgadmin: true
   prometheus: false
-  restoreFromSnapshot: ''
-  standbyMode: ''
-  version: 10.2-v2
-  backup:
-    awsAccessKey: ''
-    awsSecretKey: ''
-    azureAccountKey: ''
-    azureAccountName: ''
-    bucket: ''
-    container: ''
-    cron: '@daily'
-    enabled: false
-    endpoint: ''
-    googleProjectId: ''
-    googleServiceKey: ''
-    prefix: ''
-    type: ''
-  pgadmin:
-    email: admin
-    enabled: true
-    password: pass
+  secret: ''
+  standbyMode: hot
+  updateStrategy: RollingUpdate
+  version: 11.1
 
 service:
   pgadmin:
@@ -37,7 +21,7 @@ service:
       pgadmin:
         http: ''
   postgres:
-    type: CluserIP
+    type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
       postgres:
@@ -58,7 +42,26 @@ issuer:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  size: 10Gi
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    # keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    restoreSnapshot: ''
+    schedule: '@every 1d'
+    type: s3
 
 probes:
   liveness:
