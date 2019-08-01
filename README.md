@@ -20,15 +20,15 @@ Please ★ this repo if you found it useful ★ ★ ★
 
 1. Run the following from the rancher kubectl shell
 
-```sh
-curl -fsSL https://raw.githubusercontent.com/kubedb/cli/0.12.0/hack/deploy/kubedb.sh | bash
-```
+    ```sh
+    curl -fsSL https://raw.githubusercontent.com/kubedb/cli/0.12.0/hack/deploy/kubedb.sh | bash
+    ```
 
 2. Add the following catalog
 
-| Name   | Catalog URL                                         | Branch |
-| ------ | --------------------------------------------------- | ------ |
-| kubedb | https://github.com/codejamninja/rancher2-kubedb.git | master |
+    | Name   | Catalog URL                                         | Branch |
+    | ------ | --------------------------------------------------- | ------ |
+    | kubedb | https://github.com/codejamninja/rancher2-kubedb.git | master |
 
 
 ## Dependencies
