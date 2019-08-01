@@ -94,3 +94,4 @@ spec:
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}
+  terminationPolicy: Delete
