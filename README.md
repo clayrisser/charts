@@ -30,8 +30,6 @@ curl -fsSL https://raw.githubusercontent.com/kubedb/cli/0.12.0/hack/deploy/kubed
 | ------ | --------------------------------------------------- | ------ |
 | kubedb | https://github.com/codejamninja/rancher2-kubedb.git | master |
 
-3. Launch any of the provided database apps
-
 
 ## Dependencies
 
@@ -41,7 +39,15 @@ curl -fsSL https://raw.githubusercontent.com/kubedb/cli/0.12.0/hack/deploy/kubed
 
 ## Usage
 
-[Contribute](https://github.com/codejamninja/rancher2-kubedb/blob/master/CONTRIBUTING.md) usage docs
+1. Navigate to `YOUR-PROJECT` -> `Apps` -> `Launch`
+
+2. Filter the apps by the `kubedb` catalog
+
+3. Select `View Details` on a database of your choice
+
+4. Fill in the requested information
+
+5. Select `Launch`
 
 
 ## Support
