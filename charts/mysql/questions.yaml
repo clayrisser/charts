@@ -229,13 +229,6 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup restore'
-      - variable: persistence.backup.restoreNamespace
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
-        label: 'backup restore namespace'
       - variable: persistence.backup.restoreSnapshot
         default: ''
         description: ''
@@ -327,5 +320,5 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false&&config.phpmyadmin=true
+        show_if: ingress.enabled=false
         label: 'postgres port'

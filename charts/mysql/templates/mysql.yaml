@@ -12,7 +12,12 @@ spec:
   configSource:
     configMap:
       name: {{ template "mysql.fullname" . }}-mysql
-  {{- if (not (empty .Values.config.secret)) }}
+  {{- if (empty .Values.config.secret) }}
+  {{- if .Values.persistence.backup.restore }}
+  databaseSecret:
+    secretName: {{ template "mysql.fullname" . }}-auth
+  {{- end }}
+  {{- else }}
   databaseSecret:
     secretName: {{ .Values.config.secret }}
   {{- end }}
@@ -58,11 +63,7 @@ spec:
   init:
     snapshotSource:
       name: {{ .Values.persistence.backup.restoreSnapshot }}
-      {{- if (empty .Values.persistence.backup.restoreNamespace) }}
       namespace: {{ .Release.Namespace }}
-      {{- else }}
-      namespace: {{ .Values.persistence.backup.restoreNamespace }}
-      {{- end }}
   {{- end }}
   {{- end }}
   serviceTemplate:

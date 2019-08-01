@@ -60,7 +60,6 @@ persistence:
     prefix: ''
     resticPassword: pass
     restore: false
-    restoreNamespace: ''
     restoreSnapshot: ''
     schedule: '@every 1m'
     type: s3
