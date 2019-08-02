@@ -58,11 +58,11 @@ spec:
                   name: {{ template "mongodb.sharedname" . }}-mongodb-auth
                   key: password
           livenessProbe:
-            tcpSocket:
-              port: container
+            exec:
+              command: ['sh', '-c', '"wget localhost:8081 2 > & 1 | grep \'HTTP/1.1 401 Unauthorized\'"']
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            tcpSocket:
-              port: container
+            exec:
+              command: ['sh', '-c', '"wget localhost:8081 2 > & 1 | grep \'HTTP/1.1 401 Unauthorized\'"']
 {{ toYaml .Values.probes.readiness | indent 12 }}
 {{- end }}
