@@ -253,7 +253,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.pgadmin=true
+    show_if: config.pgadmin.enabled=true
     label: 'ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -262,14 +262,14 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.pgadmin=true
+        show_if: config.pgadmin.enabled=true
         required: true
         label: tls
       - variable: issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true&&config.pgadmin=true
+        show_if: ingress.tls=true&&config.pgadmin.enabled=true
         options:
           - letsencrypt-staging
           - letsencrypt-prod
@@ -279,14 +279,14 @@ questions:
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.pgadmin=true
+        show_if: config.pgadmin.enabled=true
         required: true
         label: 'pgadmin hostname'
       - variable: ingress.hosts.pgadmin[0].path
         default: /
         description: ''
         type: string
-        show_if: config.pgadmin=true
+        show_if: config.pgadmin.enabled=true
         required: true
         label: 'pgadmin path'
       - variable: ingress.issuer.name
@@ -316,7 +316,7 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    show_if: ingress.enabled=false&&config.pgadmin=true
+    show_if: ingress.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
@@ -325,7 +325,7 @@ questions:
         default: ''
         description: ''
         type: int
-        show_if: ingress.enabled=false&&config.pgadmin=true
+        show_if: ingress.enabled=false&&config.pgadmin.enabled=true
         min: 30000
         max: 32767
         label: 'pgadmin http port'
