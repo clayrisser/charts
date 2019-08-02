@@ -320,7 +320,6 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    show_if: config.phpmyadmin=true
     label: 'postgres service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
