@@ -25,3 +25,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- $name := default .Chart.Name .Values.nameOverride }}
 {{- printf "%s-%s" .Release.Namespace $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
+
+{{/*
+Calculate certificate
+*/}}
+{{- define "mysql.certificate" }}
+{{- if (not (empty .Values.ingress.certificate)) }}
+{{- printf .Values.ingress.certificate }}
+{{- else }}
+{{- printf "%s-letsencrypt" (include "mysql.fullname" .) }}
+{{- end }}
+{{- end }}

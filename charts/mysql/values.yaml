@@ -28,8 +28,11 @@ service:
         port: ''
 
 ingress:
+  certificate: ''
   enabled: false
   tls: false
+  issuer:
+    name: letsencrypt-staging
   hosts:
     phpmyadmin:
       - name: ''
