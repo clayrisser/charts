@@ -73,7 +73,7 @@ spec:
       {{- end }}
       ports:
         - name: mongodb
-          port: 5432
+          port: 27017
           targetPort: mongodb
           {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb.port))) }}
           nodePort: {{ .Values.service.mongodb.nodePorts.mongodb.port }}
@@ -88,7 +88,7 @@ spec:
       {{- end }}
       ports:
         - name: mongodb
-          port: 5432
+          port: 27017
           targetPort: mongodb
           {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb.port))) }}
           nodePort: {{ .Values.service.mongodb.nodePorts.mongodb.port }}
