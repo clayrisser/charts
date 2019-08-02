@@ -6,12 +6,15 @@ images:
 
 config:
   customConfig: ''
-  pgadmin: true
   prometheus: false
   secret: ''
   standbyMode: hot
   updateStrategy: RollingUpdate
   version: 11.1
+  pgadmin:
+    email: admin
+    enabled: true
+    password: pass
 
 service:
   pgadmin:

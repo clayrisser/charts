@@ -37,13 +37,6 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.pgadmin
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: pgadmin
-    group: Config
   - variable: config.standbyMode
     default: hot
     description: ''
@@ -75,6 +68,31 @@ questions:
     required: false
     label: 'custom config'
     group: Config
+
+# PGAdmin
+  - variable: config.pgadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: pgadmin
+    show_subquestion_if: true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.email
+        default: 'admin'
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin email'
+        group: PGAdmin
+      - variable: config.pgadmin.password
+        default: 'admin'
+        description: ''
+        type: password
+        required: true
+        label: 'pgadmin password'
+        group: PGAdmin
 
 # Persistence
   - variable: persistence.enabled

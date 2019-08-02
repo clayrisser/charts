@@ -1,4 +1,4 @@
-{{- if (and .Values.ingress.enabled .Values.config.pgadmin) }}
+{{- if (and .Values.ingress.enabled .Values.config.pgadmin.enabled) }}
 {{- $host := (index .Values.ingress.hosts.pgadmin 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
