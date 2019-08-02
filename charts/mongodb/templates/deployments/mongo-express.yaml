@@ -59,10 +59,10 @@ spec:
                   key: password
           livenessProbe:
             exec:
-              command: ['sh', '-c', '"wget localhost:8081 2 > & 1 | grep \'HTTP/1.1 401 Unauthorized\'"']
+              command: ['sh', '-c', '"wget localhost:8081 2 > & 1 | grep \"HTTP/1.1 401 Unauthorized\""']
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             exec:
-              command: ['sh', '-c', '"wget localhost:8081 2 > & 1 | grep \'HTTP/1.1 401 Unauthorized\'"']
+              command: ['sh', '-c', '"wget localhost:8081 2 > & 1 | grep \"HTTP/1.1 401 Unauthorized\""']
 {{ toYaml .Values.probes.readiness | indent 12 }}
 {{- end }}
