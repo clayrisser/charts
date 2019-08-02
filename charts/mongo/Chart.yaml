@@ -1,17 +1,16 @@
-name: postgres
-home: https://www.postgresql.org
-icon: https://www.postgresql.org/media/img/about/press/elephant.png
+name: mongo
+home: https://www.mongodb.com
+icon: https://avatars1.githubusercontent.com/u/45120?s=200&v=4
 version: 0.0.1
 appVersion: latest
-description: 'most advanced open source relational database'
+description: 'the database for modern applications'
 keywords:
-  - postgres
+  - mongo
   - database
-  - relation
-  - relational
+  - document
   - db
 sources:
-  - https://github.com/postgres/postgres
+  - https://github.com/mongodb/mongo
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja

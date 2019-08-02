@@ -1,3 +1,3 @@
-# postgres
+# mongo
 
-> most advanced open source relational database
+> the database for modern applications
