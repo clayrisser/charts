@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "mongo.fullname" . }}
+  name: {{ template "mongodb.fullname" . }}
   labels:
-    app: {{ template "mongo.name" . }}
+    app: {{ template "mongodb.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

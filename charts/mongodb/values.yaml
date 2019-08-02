@@ -22,11 +22,11 @@ service:
     nodePorts:
       mongo_express:
         http: ''
-  mongo:
+  mongodb:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      mongo:
+      mongodb:
         port: ''
 
 ingress:

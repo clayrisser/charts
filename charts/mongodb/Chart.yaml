@@ -1,4 +1,4 @@
-name: mongo
+name: mongodb
 home: https://www.mongodb.com
 icon: https://avatars1.githubusercontent.com/u/45120?s=200&v=4
 version: 0.0.1
@@ -6,6 +6,7 @@ appVersion: latest
 description: 'the database for modern applications'
 keywords:
   - mongo
+  - mongodb
   - database
   - document
   - db
