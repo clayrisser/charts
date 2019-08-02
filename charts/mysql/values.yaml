@@ -63,7 +63,7 @@ persistence:
     prefix: ''
     resticPassword: pass
     restoreSnapshot: ''
-    schedule: @midnight
+    schedule: '@midnight'
     type: s3
 
 probes:
