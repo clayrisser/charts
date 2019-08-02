@@ -35,6 +35,16 @@ spec:
                 secretKeyRef:
                   name: {{ template "mongodb.fullname" . }}
                   key: mongo_express_password
+            - name: ME_CONFIG_MONGODB_AUTH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mongodb.sharedname" . }}-mongodb-auth
+                  key: username
+            - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mongodb.sharedname" . }}-mongodb-auth
+                  key: password
           livenessProbe:
             httpGet:
               path: /
