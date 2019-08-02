@@ -5,14 +5,14 @@ questions:
 
 # Images
   - variable: images.pgadmin.repository
-    default: pgadmin/pgadmin
+    default: dpage/pgadmin4
     description: ''
     type: string
     required: true
     label: repository
     group: Images
   - variable: images.pgadmin.tag
-    default: 4.7
+    default: 4.11
     description: ''
     type: string
     required: true
