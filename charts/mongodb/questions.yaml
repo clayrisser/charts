@@ -77,7 +77,7 @@ questions:
         label: 'mongo express username'
         group: MongoExpress
       - variable: config.mongo_express.password
-        default: admin
+        default: pass
         description: ''
         type: password
         required: true
