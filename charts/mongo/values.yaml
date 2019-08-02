@@ -1,0 +1,83 @@
+images:
+  mongo_express:
+    repository: mongo-express
+    tag: 0.49.0
+    pullPolicy: IfNotPresent
+
+config:
+  customConfig: ''
+  prometheus: false
+  secret: ''
+  updateStrategy: RollingUpdate
+  version: 11.1
+  mongo_express:
+    enabled: true
+    password: pass
+    username: admin
+
+service:
+  mongo_express:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mongo_express:
+        http: ''
+  mongo:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mongo:
+        port: ''
+
+ingress:
+  certificate: ''
+  enabled: false
+  tls: false
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    mongo_express:
+      - name: ''
+        path: /
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    # keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    restoreSnapshot: ''
+    schedule: @midnight
+    type: s3
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

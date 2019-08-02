@@ -1,0 +1,46 @@
+{{- if .Values.config.mongo_express.enabled }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "mongo.fullname" . }}-mongo-express
+  labels:
+    app: {{ template "mongo.name" . }}-mongo-express
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "mongo.name" . }}-mongo-express
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "mongo.fullname" . }}-mongo-express
+          image: {{ .Values.images.mongo_express.repository }}:{{ .Values.images.mongo_express.tag }}
+          imagePullPolicy: {{ .Values.images.mongo_express.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 8081
+          env:
+            - name: ME_CONFIG_BASICAUTH_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mongo.fullname" . }}
+                  key: mongo_express_username
+            - name: ME_CONFIG_BASICAUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mongo.fullname" . }}
+                  key: mongo_express_password
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}

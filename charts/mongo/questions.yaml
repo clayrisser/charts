@@ -4,15 +4,15 @@ categories:
 questions:
 
 # Images
-  - variable: images.pgadmin.repository
-    default: dpage/pgadmin4
+  - variable: images.mongo_express.repository
+    default: mongo-express
     description: ''
     type: string
     required: true
     label: repository
     group: Images
-  - variable: images.pgadmin.tag
-    default: 4.11
+  - variable: images.mongo_express.tag
+    default: 0.49.0
     description: ''
     type: string
     required: true
@@ -37,16 +37,6 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.standbyMode
-    default: hot
-    description: ''
-    type: enum
-    options:
-      - hot
-      - warm
-    required: true
-    label: 'standby mode'
-    group: Config
   - variable: config.prometheus
     default: false
     description: ''
@@ -69,30 +59,30 @@ questions:
     label: 'custom config'
     group: Config
 
-# PGAdmin
-  - variable: config.pgadmin.enabled
+# MongoExpress
+  - variable: config.mongo_express.enabled
     default: true
     description: ''
     type: boolean
     required: true
-    label: pgadmin
+    label: 'mongo express'
     show_subquestion_if: true
-    group: PGAdmin
+    group: MongoExpress
     subquestions:
-      - variable: config.pgadmin.email
+      - variable: config.mongo_express.username
         default: admin
         description: ''
         type: string
         required: true
-        label: 'pgadmin email'
-        group: PGAdmin
-      - variable: config.pgadmin.password
+        label: 'mongo express username'
+        group: MongoExpress
+      - variable: config.mongo_express.password
         default: admin
         description: ''
         type: password
         required: true
-        label: 'pgadmin password'
-        group: PGAdmin
+        label: 'mongo express password'
+        group: MongoExpress
 
 # Persistence
   - variable: persistence.enabled
@@ -253,7 +243,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.pgadmin.enabled=true
+    show_if: config.mongo_express.enabled=true
     label: 'ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -262,33 +252,33 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.pgadmin.enabled=true
+        show_if: config.mongo_express.enabled=true
         required: true
         label: tls
       - variable: issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true&&config.pgadmin.enabled=true
+        show_if: ingress.tls=true&&config.mongo_express.enabled=true
         options:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
         label: issuer
-      - variable: ingress.hosts.pgadmin[0].name
+      - variable: ingress.hosts.mongo_express[0].name
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.pgadmin.enabled=true
+        show_if: config.mongo_express.enabled=true
         required: true
-        label: 'pgadmin hostname'
-      - variable: ingress.hosts.pgadmin[0].path
+        label: 'mongo express hostname'
+      - variable: ingress.hosts.mongo_express[0].path
         default: /
         description: ''
         type: string
-        show_if: config.pgadmin.enabled=true
+        show_if: config.mongo_express.enabled=true
         required: true
-        label: 'pgadmin path'
+        label: 'mongo express path'
       - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -307,7 +297,7 @@ questions:
         show_if: ingress.tls=true&&ingress.issuer.name=none
         required: false
         label: 'ingress certificate'
-  - variable: service.pgadmin.type
+  - variable: service.mongo_express.type
     default: NodePort
     description: ''
     type: enum
@@ -316,19 +306,19 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    show_if: ingress.enabled=false&&config.pgadmin.enabled=true
-    label: 'pgadmin service type'
+    show_if: ingress.enabled=false&&config.mongo_express.enabled=true
+    label: 'mongo express service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.pgadmin.nodePorts.pgadmin.http
+      - variable: service.mongo_express.nodePorts.mongo_express.http
         default: ''
         description: ''
         type: int
-        show_if: ingress.enabled=false&&config.pgadmin.enabled=true
+        show_if: ingress.enabled=false&&config.mongo_express.enabled=true
         min: 30000
         max: 32767
-        label: 'pgadmin http port'
+        label: 'mongo express http port'
   - variable: service.postgres.type
     default: ClusterIP
     description: ''

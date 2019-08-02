@@ -1,0 +1,13 @@
+{{- if .Values.config.mongo_express.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mongo.fullname" . }}
+  labels:
+    app: {{ template "mongo.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  mongo_express_username: {{ .Values.config.mongo_express.username | quote }}
+{{- end }}

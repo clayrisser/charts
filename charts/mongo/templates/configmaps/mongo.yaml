@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mongo.fullname" . }}-mongo
+  labels:
+    app: {{ template "mongo.name" . }}-mongo
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  mongod.conf: {{ .Values.config.customConfig | quote }}
