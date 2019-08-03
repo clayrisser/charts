@@ -28,12 +28,12 @@ spec:
             - name: ELASCTICSEARCH_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "mongodb.sharedname" . }}-mongodb-auth
+                  name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
                   key: username
             - name: ELASTICSEARCH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mongodb.sharedname" . }}-mongodb-auth
+                  name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
                   key: password
           livenessProbe:
             httpGet:
