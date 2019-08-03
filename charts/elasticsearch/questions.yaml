@@ -65,12 +65,26 @@ questions:
     required: false
     label: secret
     group: Config
-  - variable: config.customConfig
+  - variable: config.commonConfig
     default: ''
     description: ''
     type: string
     required: false
-    label: 'custom config'
+    label: 'common config'
+    group: Config
+  - variable: config.dataConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'data config'
+    group: Config
+  - variable: config.masterConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'master config'
     group: Config
 
 # Persistence

@@ -5,8 +5,10 @@ images:
     pullPolicy: IfNotPresent
 
 config:
-  customConfig: ''
+  commonConfig: ''
+  dataConfig: ''
   kibana: true
+  masterConfig: ''
   prometheus: false
   replicas: 1
   secret: ''

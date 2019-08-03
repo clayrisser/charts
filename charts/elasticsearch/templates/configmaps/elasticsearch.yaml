@@ -8,4 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  user.conf: {{ .Values.config.customConfig | quote }}
+  common-config.yml: {{ .Values.config.commonConfig | quote }}
+  data-config.yml: {{ .Values.config.dataConfig | quote }}
+  master-config.yml: {{ .Values.config.masterConfig | quote }}
