@@ -23,16 +23,8 @@ spec:
             - name: container
               containerPort: 5601
           env:
-            - name: PGADMIN_DEFAULT_EMAIL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "postgres.fullname" . }}
-                  key: pgadmin_email
-            - name: PGADMIN_DEFAULT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "postgres.fullname" . }}
-                  key: pgadmin_password
+            - name: ELASTICSEARCH_HOSTS
+              value: http://{{ template "elasticsearch.fullname" . }}-elasticsearch:9200
           livenessProbe:
             httpGet:
               path: /

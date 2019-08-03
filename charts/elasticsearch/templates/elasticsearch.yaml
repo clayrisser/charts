@@ -76,7 +76,7 @@ spec:
       {{- end }}
       ports:
         - name: elasticsearch
-          port: 5432
+          port: 9200
           targetPort: elasticsearch
           {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch.port))) }}
           nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch.port }}
@@ -91,7 +91,7 @@ spec:
       {{- end }}
       ports:
         - name: elasticsearch
-          port: 5432
+          port: 9200
           targetPort: elasticsearch
           {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch.port))) }}
           nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch.port }}
