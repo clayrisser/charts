@@ -63,7 +63,7 @@ spec:
             storage: {{ .Values.persistence.size }}
       {{- end }}
   {{- else }}
-  {{- if (gt .Values.config.replicas 1) }}
+  {{- if (gt (.Values.config.replicas | int64) 1) }}
   replicas: {{ .Values.config.replicas }}
   replicaSet:
     name: rs0
