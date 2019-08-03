@@ -7,6 +7,7 @@ images:
 config:
   customConfig: ''
   prometheus: false
+  replicas: 1
   secret: ''
   standbyMode: hot
   updateStrategy: RollingUpdate

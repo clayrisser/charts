@@ -17,6 +17,9 @@ spec:
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
+  {{- if (gt .Values.config.replicas 1) }}
+  replicas: {{ .Values.config.replicas }}
+  {{- end }}
   {{- if .Values.persistence.enabled }}
   storageType: Durable
   storage:

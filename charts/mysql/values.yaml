@@ -8,8 +8,10 @@ config:
   customConfig: ''
   phpmyadmin: true
   prometheus: false
+  replicas: 3
   secret: ''
   standbyMode: hot
+  topologyMode: GroupReplication
   updateStrategy: RollingUpdate
   version: 8.0.3
 

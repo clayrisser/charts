@@ -7,7 +7,7 @@ images:
 config:
   customConfig: ''
   prometheus: false
-  replicas: 3
+  replicas: 1
   secret: ''
   updateStrategy: RollingUpdate
   version: 4.1.7-v1
