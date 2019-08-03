@@ -37,6 +37,13 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.kibana
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: kibana
+    group: Config
   - variable: config.prometheus
     default: false
     description: ''
@@ -65,31 +72,6 @@ questions:
     required: false
     label: 'custom config'
     group: Config
-
-# Kibana
-  - variable: config.kibana.enabled
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: kibana
-    show_subquestion_if: true
-    group: Kibana
-    subquestions:
-      - variable: config.kibana.email
-        default: admin
-        description: ''
-        type: string
-        required: true
-        label: 'kibana email'
-        group: Kibana
-      - variable: config.kibana.password
-        default: admin
-        description: ''
-        type: password
-        required: true
-        label: 'kibana password'
-        group: Kibana
 
 # Persistence
   - variable: persistence.enabled
@@ -250,7 +232,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.kibana.enabled=true
+    show_if: config.kibana=true
     label: 'ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -259,14 +241,14 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.kibana.enabled=true
+        show_if: config.kibana=true
         required: true
         label: tls
       - variable: issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true&&config.kibana.enabled=true
+        show_if: ingress.tls=true&&config.kibana=true
         options:
           - letsencrypt-staging
           - letsencrypt-prod
@@ -276,14 +258,14 @@ questions:
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.kibana.enabled=true
+        show_if: config.kibana=true
         required: true
         label: 'kibana hostname'
       - variable: ingress.hosts.kibana[0].path
         default: /
         description: ''
         type: string
-        show_if: config.kibana.enabled=true
+        show_if: config.kibana=true
         required: true
         label: 'kibana path'
       - variable: ingress.issuer.name
@@ -313,7 +295,7 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    show_if: ingress.enabled=false&&config.kibana.enabled=true
+    show_if: ingress.enabled=false&&config.kibana=true
     label: 'kibana service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
@@ -322,7 +304,7 @@ questions:
         default: ''
         description: ''
         type: int
-        show_if: ingress.enabled=false&&config.kibana.enabled=true
+        show_if: ingress.enabled=false&&config.kibana=true
         min: 30000
         max: 32767
         label: 'kibana http port'

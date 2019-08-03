@@ -1,4 +1,4 @@
-{{- if (and .Values.ingress.enabled .Values.config.kibana.enabled) }}
+{{- if (and .Values.ingress.enabled .Values.config.kibana) }}
 {{- $host := (index .Values.ingress.hosts.kibana 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress

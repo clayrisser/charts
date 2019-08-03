@@ -6,15 +6,12 @@ images:
 
 config:
   customConfig: ''
+  kibana: true
   prometheus: false
   replicas: 1
   secret: ''
   updateStrategy: RollingUpdate
   version: 11.1
-  kibana:
-    email: admin
-    enabled: true
-    password: pass
 
 service:
   kibana:
