@@ -44,6 +44,13 @@ questions:
     required: true
     label: prometheus
     group: Config
+  - variable: config.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Config
   - variable: config.secret
     default: ''
     description: ''
@@ -57,6 +64,37 @@ questions:
     type: string
     required: false
     label: 'custom config'
+    group: Config
+  - variable: config.sharding.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'sharding enabled'
+    group: Config
+  - variable: config.sharding.configServerReplicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.sharding.enabled=true
+    label: 'sharding config server replicas'
+    group: Config
+  - variable: config.sharding.mongosReplicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.sharding.enabled=true
+    label: 'sharding mongos replicas'
+    group: Config
+  - variable: config.sharding.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.sharding.enabled=true
+    label: 'sharding shards'
     group: Config
 
 # MongoExpress
