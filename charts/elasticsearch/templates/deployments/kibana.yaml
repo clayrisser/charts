@@ -1,10 +1,10 @@
-{{- if .Values.config.pgadmin.enabled }}
+{{- if .Values.config.kibana.enabled }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "postgres.fullname" . }}-pgadmin
+  name: {{ template "elasticsearch.fullname" . }}-kibana
   labels:
-    app: {{ template "postgres.name" . }}-pgadmin
+    app: {{ template "elasticsearch.name" . }}-kibana
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,13 +12,13 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "postgres.name" . }}-pgadmin
+        app: {{ template "elasticsearch.name" . }}-kibana
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "postgres.fullname" . }}-pgadmin
-          image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
-          imagePullPolicy: {{ .Values.images.pgadmin.pullPolicy }}
+        - name: {{ template "elasticsearch.fullname" . }}-kibana
+          image: {{ .Values.images.kibana.repository }}:{{ .Values.images.kibana.tag }}
+          imagePullPolicy: {{ .Values.images.kibana.pullPolicy }}
           ports:
             - name: container
               containerPort: 5601

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "postgres.fullname" . }}-postgres
+  name: {{ template "elasticsearch.fullname" . }}-elasticsearch
   labels:
-    app: {{ template "postgres.name" . }}-postgres
+    app: {{ template "elasticsearch.name" . }}-elasticsearch
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

@@ -1,10 +1,10 @@
-{{- if .Values.config.pgadmin.enabled }}
+{{- if .Values.config.kibana.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "postgres.fullname" . }}-pgadmin
+  name: {{ template "elasticsearch.fullname" . }}-kibana
   labels:
-    app: {{ template "postgres.name" . }}-pgadmin
+    app: {{ template "elasticsearch.name" . }}-kibana
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,19 +12,19 @@ spec:
   {{- if .Values.ingress.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.pgadmin.type }}
-  {{- if (or (eq .Values.service.pgadmin.type "LoadBalancer") (eq .Values.service.pgadmin.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.pgadmin.externalTrafficPolicy }}
+  type: {{ .Values.service.kibana.type }}
+  {{- if (or (eq .Values.service.kibana.type "LoadBalancer") (eq .Values.service.kibana.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.kibana.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.pgadmin.type "NodePort") (not (empty .Values.service.pgadmin.nodePorts.pgadmin.http))) }}
-      nodePort: {{ .Values.service.pgadmin.nodePorts.pgadmin.http }}
+      {{- if (and (eq .Values.service.kibana.type "NodePort") (not (empty .Values.service.kibana.nodePorts.kibana.http))) }}
+      nodePort: {{ .Values.service.kibana.nodePorts.kibana.http }}
       {{- end }}
   selector:
-    app: {{ template "postgres.name" . }}-pgadmin
+    app: {{ template "elasticsearch.name" . }}-kibana
     release: {{ .Release.Name }}
 {{- end }}
