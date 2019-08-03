@@ -9,9 +9,6 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   version: {{ .Values.config.version | quote }}
-  configSource:
-    configMap:
-      name: {{ template "mongodb.fullname" . }}-mongodb
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -25,6 +22,9 @@ spec:
   shardTopology:
     configServer:
       replicas: {{ .Values.config.sharding.configServerReplicas }}
+      configSource:
+        configMap:
+          name: {{ template "mongodb.fullname" . }}-mongodb
       {{- if .Values.persistence.enabled }}
       storage:
         {{- if .Values.persistence.storageClass }}
@@ -44,9 +44,15 @@ spec:
       replicas: {{ .Values.config.sharding.mongosReplicas }}
       strategy:
         type: {{ .Values.config.updateStrategy }}
+      configSource:
+        configMap:
+          name: {{ template "mongodb.fullname" . }}-mongodb
     shard:
       replicas: {{ .Values.config.replicas }}
       shards: {{ .Values.config.sharding.shards }}
+      configSource:
+        configMap:
+          name: {{ template "mongodb.fullname" . }}-mongodb
       {{- if .Values.persistence.enabled }}
       storage:
         {{- if .Values.persistence.storageClass }}
@@ -63,6 +69,9 @@ spec:
             storage: {{ .Values.persistence.size }}
       {{- end }}
   {{- else }}
+  configSource:
+    configMap:
+      name: {{ template "mongodb.fullname" . }}-mongodb
   {{- if (gt (.Values.config.replicas | int64) 1) }}
   replicas: {{ .Values.config.replicas }}
   replicaSet:
