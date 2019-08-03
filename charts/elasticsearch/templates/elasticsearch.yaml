@@ -1,9 +1,9 @@
 apiVersion: kubedb.com/v1alpha1
-kind: MySQL
+kind: Elasticsearch
 metadata:
-  name: {{ template "mysql.fullname" . }}-mysql
+  name: {{ template "elasticsearch.fullname" . }}-elasticsearch
   labels:
-    app: {{ template "mysql.name" . }}-mysql
+    app: {{ template "elasticsearch.name" . }}-elasticsearch
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,7 +11,7 @@ spec:
   version: {{ .Values.config.version | quote }}
   configSource:
     configMap:
-      name: {{ template "mysql.fullname" . }}-mysql
+      name: {{ template "elasticsearch.fullname" . }}-elasticsearch
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -40,7 +40,7 @@ spec:
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "mysql.sharedname" . }}-mysql
+    storageSecretName: {{ template "elasticsearch.sharedname" . }}-elasticsearch
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
@@ -55,7 +55,7 @@ spec:
   {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
   databaseSecret:
     {{- if (empty .Values.config.secret) }}
-    secretName: {{ template "mysql.sharedname" . }}-mysql-auth
+    secretName: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
     {{- else }}
     secretName: {{ .Values.config.secret }}
     {{- end }}
@@ -70,31 +70,31 @@ spec:
       annotations:
         passMe: ToService
     spec:
-      type: {{ .Values.service.mysql.type }}
-      {{- if (or (eq .Values.service.mysql.type "LoadBalancer") (eq .Values.service.mysql.type "NodePort")) }}
-      externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
+      type: {{ .Values.service.elasticsearch.type }}
+      {{- if (or (eq .Values.service.elasticsearch.type "LoadBalancer") (eq .Values.service.elasticsearch.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.elasticsearch.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name: mysql
-          port: 3306
-          targetPort: mysql
-          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
-          nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
+        - name: elasticsearch
+          port: 5432
+          targetPort: elasticsearch
+          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch.port))) }}
+          nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch.port }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
       passMe: ToReplicaService
     spec:
-      type: {{ .Values.service.mysql.type }}
-      {{- if (or (eq .Values.service.mysql.type "LoadBalancer") (eq .Values.service.mysql.type "NodePort")) }}
-      externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
+      type: {{ .Values.service.elasticsearch.type }}
+      {{- if (or (eq .Values.service.elasticsearch.type "LoadBalancer") (eq .Values.service.elasticsearch.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.elasticsearch.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name: mysql
-          port: 3306
-          targetPort: mysql
-          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
-          nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
+        - name: elasticsearch
+          port: 5432
+          targetPort: elasticsearch
+          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch.port))) }}
+          nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch.port }}
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}

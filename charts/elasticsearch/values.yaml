@@ -1,31 +1,33 @@
 images:
-  phpmyadmin:
-    repository: phpmyadmin/phpmyadmin
-    tag: 4.7
+  kibana:
+    repository: kibana
+    tag: 7.3.0
     pullPolicy: IfNotPresent
 
 config:
   customConfig: ''
-  phpmyadmin: true
   prometheus: false
-  replicas: 3
+  replicas: 1
   secret: ''
-  topologyMode: GroupReplication
   updateStrategy: RollingUpdate
-  version: 8.0.3
+  version: 11.1
+  kibana:
+    email: admin
+    enabled: true
+    password: pass
 
 service:
-  phpmyadmin:
+  kibana:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      phpmyadmin:
+      kibana:
         http: ''
-  mysql:
+  elasticsearch:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      mysql:
+      elasticsearch:
         port: ''
 
 ingress:
@@ -35,7 +37,7 @@ ingress:
   issuer:
     name: letsencrypt-staging
   hosts:
-    phpmyadmin:
+    kibana:
       - name: ''
         path: /
 

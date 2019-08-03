@@ -1,0 +1,36 @@
+{{- if (and .Values.ingress.enabled .Values.config.pgadmin.enabled) }}
+{{- $host := (index .Values.ingress.hosts.pgadmin 0) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "postgres.fullname" . }}-pgadmin
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+    {{- if (empty .Values.ingress.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "postgres.name" . }}-pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ $host.name }}
+      http:
+        paths:
+          - path: {{ $host.path }}
+            backend:
+              serviceName: {{ template "postgres.fullname" $ }}-pgadmin
+              servicePort: http
+  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+  tls:
+    - secretName: {{ template "postgres.certificate" . }}
+      hosts:
+        - {{ $host.name }}
+  {{- end }}
+{{- end }}
