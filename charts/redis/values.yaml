@@ -1,0 +1,85 @@
+images:
+  phpredisadmin:
+    repository: dpage/phpredisadmin4
+    tag: 4.11
+    pullPolicy: IfNotPresent
+
+config:
+  customConfig: ''
+  masterReplicas: 1
+  prometheus: false
+  replicas: 1
+  secret: ''
+  updateStrategy: RollingUpdate
+  version: 11.1
+  phpredisadmin:
+    enabled: true
+    password: pass
+    username: admin
+
+service:
+  phpredisadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      phpredisadmin:
+        http: ''
+  redis:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      redis:
+        port: ''
+
+ingress:
+  certificate: ''
+  enabled: false
+  tls: false
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    phpredisadmin:
+      - name: ''
+        path: /
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    # keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    restoreSnapshot: ''
+    schedule: '@midnight'
+    type: s3
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

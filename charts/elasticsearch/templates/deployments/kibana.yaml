@@ -25,7 +25,7 @@ spec:
           env:
             - name: ELASTICSEARCH_HOSTS
               value: http://{{ template "elasticsearch.fullname" . }}-elasticsearch:9200
-            - name: ELASCTICSEARCH_USERNAME
+            - name: ELASTICSEARCH_USERNAME
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
