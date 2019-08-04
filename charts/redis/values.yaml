@@ -6,10 +6,10 @@ images:
 
 config:
   customConfig: ''
-  masterReplicas: 1
   prometheus: false
   replicas: 1
   secret: ''
+  shards: 1
   updateStrategy: RollingUpdate
   version: 5.0.3-v1
   phpredisadmin:

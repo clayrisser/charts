@@ -16,10 +16,10 @@ spec:
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  {{- if (gt (.Values.config.masterReplicas | int64) 1) }}
+  {{- if (or (gt (.Values.config.shards | int64) 1) (gt (.Values.config.shards | int64) 1)) }}
   mode: Cluster
   cluster:
-    master: {{ .Values.config.masterReplicas }}
+    master: {{ .Values.config.shards }}
     replicas: {{ .Values.config.replicas }}
   {{- else }}
   mode: Standalone
