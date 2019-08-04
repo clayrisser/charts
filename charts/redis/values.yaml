@@ -11,7 +11,7 @@ config:
   replicas: 1
   secret: ''
   updateStrategy: RollingUpdate
-  version: 11.1
+  version: 5.0.3-v1
   phpredisadmin:
     enabled: true
     password: pass

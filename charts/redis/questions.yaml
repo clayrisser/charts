@@ -21,7 +21,7 @@ questions:
 
 # Config
   - variable: config.version
-    default: 11.1
+    default: 5.0.3-v1
     description: ''
     type: string
     required: true
