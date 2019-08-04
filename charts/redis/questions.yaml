@@ -91,7 +91,7 @@ questions:
         label: 'phpredisadmin username'
         group: PHPRedisAdmin
       - variable: config.phpredisadmin.password
-        default: admin
+        default: pass
         description: ''
         type: password
         required: true

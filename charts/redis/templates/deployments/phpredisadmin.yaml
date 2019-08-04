@@ -37,11 +37,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "redis.fullname" . }}
                   key: phpredisadmin_password
-            - name: REDIS_1_AUTH
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "redis.sharedname" . }}-redis-auth
-                  key: password
           livenessProbe:
             httpGet:
               path: /
