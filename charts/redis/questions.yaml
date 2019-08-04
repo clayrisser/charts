@@ -5,14 +5,14 @@ questions:
 
 # Images
   - variable: images.phpredisadmin.repository
-    default: dpage/phpredisadmin4
+    default: erikdubbelboer/phpredisadmin
     description: ''
     type: string
     required: true
     label: repository
     group: Images
   - variable: images.phpredisadmin.tag
-    default: 4.11
+    default: v1.11.4
     description: ''
     type: string
     required: true
