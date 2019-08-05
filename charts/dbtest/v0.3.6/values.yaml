@@ -50,15 +50,15 @@ config:
     url: ''
     username: ''
     version: 4.1.7-v1
-    mongo_express:
-      enabled: true
-      password: pass
-      username: admin
     sharding:
       configServerReplicas: 3
       enabled: false
       mongosReplicas: 2
       shards: 3
+  mongo_express:
+    enabled: true
+    password: pass
+    username: admin
   mysql:
     customConfig: ''
     database: dbtest
@@ -90,10 +90,10 @@ config:
     url: ''
     username: postgres
     version: 11.1
-    pgadmin:
-      email: admin
-      enabled: true
-      password: pass
+  pgadmin:
+    email: admin
+    enabled: true
+    password: pass
   redis:
     customConfig: ''
     host: ''
@@ -107,6 +107,10 @@ config:
     url: ''
     username: ''
     version: 5.0.3-v1
+  phpredisadmin:
+    enabled: true
+    password: pass
+    username: admin
 
 service:
   type: NodePort

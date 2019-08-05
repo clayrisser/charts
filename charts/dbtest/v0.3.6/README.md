@@ -1,3 +1,3 @@
 # dbtest
 
-> test adding databases
+> yeoman generator rancher 2 helm charts
