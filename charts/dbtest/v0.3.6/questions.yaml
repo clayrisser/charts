@@ -1,0 +1,929 @@
+categories:
+  - Server
+questions:
+
+# Images
+  - variable: images.nginx.repository
+    default: nginx
+    description: ''
+    type: string
+    required: true
+    label: 'nginx repository'
+    group: Images
+  - variable: images.nginx.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'nginx tag'
+    group: Images
+  - variable: images.elasticsearch.repository
+    default: kibana
+    description: ''
+    type: string
+    required: true
+    label: 'elasticsearch repository'
+    group: Images
+  - variable: images.elasticsearch.tag
+    default: 7.3.0
+    description: ''
+    type: string
+    required: true
+    label: 'elasticsearch tag'
+    group: Images
+  - variable: images.mongodb.repository
+    default: mongo-express
+    description: ''
+    type: string
+    required: true
+    label: 'mongodb repository'
+    group: Images
+  - variable: images.mongodb.tag
+    default: 0.49.0
+    description: ''
+    type: string
+    required: true
+    label: 'mongodb tag'
+    group: Images
+  - variable: images.mysql.repository
+    default: phpmyadmin/phpmyadmin
+    description: ''
+    type: string
+    required: true
+    label: 'mysql repository'
+    group: Images
+  - variable: images.mysql.tag
+    default: 4.7
+    description: ''
+    type: string
+    required: true
+    label: 'mysql tag'
+    group: Images
+  - variable: images.postgres.repository
+    default: dpage/pgadmin4
+    description: ''
+    type: string
+    required: true
+    label: 'postgres repository'
+    group: Images
+  - variable: images.postgres.tag
+    default: 4.11
+    description: ''
+    type: string
+    required: true
+    label: 'postgres tag'
+    group: Images
+  - variable: images.redis.repository
+    default: erikdubbelboer/phpredisadmin
+    description: ''
+    type: string
+    required: true
+    label: 'redis repository'
+    group: Images
+  - variable: images.redis.tag
+    default: v1.11.4
+    description: ''
+    type: string
+    required: true
+    label: 'redis tag'
+    group: Images
+
+
+# Elasticsearch Config
+  - variable: config.elasticsearch.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.version
+    default: 6.4.0
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.kibana
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: kibana
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.commonConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'common config'
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.dataConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'data config'
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.masterConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'master config'
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.elasticsearch.internal=false
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.database
+    default: dbtest
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.elasticsearch.internal=false
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.password
+    default: elastic
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.elasticsearch.internal=false
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.port
+    default: 9200
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.elasticsearch.internal=false
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.elasticsearch.internal=false
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.username
+    default: elastic
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.elasticsearch.internal=false
+    group: 'Elasticsearch Config'
+
+# MongoDB Config
+  - variable: config.mongodb.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'MongoDB Config'
+  - variable: config.mongodb.version
+    default: 4.1.7-v1
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.sharding.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'sharding enabled'
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.sharding.configServerReplicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
+    label: 'sharding config server replicas'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.sharding.mongosReplicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
+    label: 'sharding mongos replicas'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.sharding.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
+    label: 'sharding shards'
+    group: 'MongoDB Config'
+
+
+  - variable: config.mongodb.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.database
+    default: dbtest
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.password
+    default: ''
+    description: ''
+    type: password
+    required: false
+    label: password
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.port
+    default: 27017
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.username
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: username
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+
+# MySQL Config
+  - variable: config.mysql.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'MySQL Config'
+  - variable: config.mysql.version
+    default: 4.1.7-v1
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'sharding enabled'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.configServerReplicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding config server replicas'
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.mongosReplicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding mongos replicas'
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding shards'
+    group: 'MySQL Config'
+  - variable: config.mysql.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.database
+    default: dbtest
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.password
+    default: root
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.port
+    default: 3306
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.username
+    default: root
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+
+# Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Postgres Config'
+  - variable: config.postgres.version
+    default: 11.1
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.standbyMode
+    default: hot
+    description: ''
+    type: enum
+    options:
+      - hot
+      - warm
+    required: true
+    label: 'standby mode'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    default: dbtest
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    default: postgres
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: 5432
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+
+# Redis Config
+  - variable: config.redis.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Redis Config'
+  - variable: config.redis.version
+    default: 5.0.3-v1
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.shards
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: shards
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.password
+    default: ''
+    description: ''
+    type: password
+    required: false
+    label: password
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.port
+    default: 6379
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.username
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: username
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 10Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.backup.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'backup enabled'
+      - variable: persistence.backup.resticPassword
+        default: pass
+        description: ''
+        type: password
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup restic password'
+      - variable: persistence.backup.schedule
+        default: '@every 1m'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup schedule'
+      - variable: persistence.backup.keepLast
+        default: 5
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup keep last'
+      - variable: persistence.backup.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup type'
+      - variable: persistence.backup.awsAccessKey
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws access key'
+      - variable: persistence.backup.awsSecretKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws secret key'
+      - variable: persistence.backup.googleProjectId
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google project id'
+      - variable: persistence.backup.googleServiceKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google service key'
+      - variable: persistence.backup.azureAccountName
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account name'
+      - variable: persistence.backup.azureAccountKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account key'
+      - variable: persistence.backup.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'backup container'
+      - variable: persistence.backup.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup bucket'
+      - variable: persistence.backup.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'backup endpoint'
+      - variable: persistence.backup.prefix
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup prefix'
+      - variable: persistence.backup.restore
+        default: false
+        description: ''
+        type: boolean
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore'
+      - variable: persistence.backup.restoreRepository
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
+        label: 'backup restore repository'
+      - variable: persistence.backup.restoreSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
+        label: 'backup restore snapshot'
+      - variable: persistence.backup.restoreNamespace
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true=true&&persistence.backup.restore=true
+        label: 'backup restore namespace'
+
+# Services and Load Balancing
+  - variable: ingress.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'ingress tls'
+      - variable: ingress.hosts.nginx[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'nginx ingress hostname'
+      - variable: ingress.hosts.nginx[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'nginx ingress path'
+      - variable: ingress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'ingress issuer name'
+      - variable: ingress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.tls=true&&ingress.issuer.name=none
+        required: false
+        label: 'ingress certificate'
+  - variable: service.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.nodePorts.nginx.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'nginx http port'

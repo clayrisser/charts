@@ -1,0 +1,13 @@
+name: dbtest
+home: https://github.com/codejamninja/dbtest
+icon: 
+version: 0.3.6
+appVersion: latest
+description: 'test adding databases'
+keywords:
+  - dbtest
+sources:
+  - https://github.com/codejamninja/dbtest
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

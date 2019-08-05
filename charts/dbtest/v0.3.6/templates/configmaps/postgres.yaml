@@ -1,0 +1,13 @@
+{{- if .Values.config.postgres.internal }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "dbtest.fullname" . }}-postgres
+  labels:
+    app: {{ template "dbtest.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  user.conf: {{ .Values.config.postgres.customConfig | quote }}
+{{- end }}

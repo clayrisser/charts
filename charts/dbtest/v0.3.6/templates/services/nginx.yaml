@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "dbtest.fullname" . }}-nginx
+  labels:
+    app: {{ template "dbtest.name" . }}-nginx
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.type }}
+  {{- if (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.nginx.http))) }}
+      nodePort: {{ .Values.service.nodePorts.nginx.http }}
+      {{- end }}
+  selector:
+    app: {{ template "dbtest.name" . }}-nginx
+    release: {{ .Release.Name }}

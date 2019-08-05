@@ -1,0 +1,112 @@
+{{- if .Values.config.redis.internal }}
+apiVersion: kubedb.com/v1alpha1
+kind: Redis
+metadata:
+  name: {{ template "dbtest.fullname" . }}-redis
+  labels:
+    app: {{ template "dbtest.name" . }}-redis
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  version: {{ .Values.config.redis.version | quote }}
+  configSource:
+    configMap:
+      name: {{ template "dbtest.fullname" . }}-redis
+  {{- if .Values.config.redis.prometheus }}
+  monitor:
+    agent: prometheus.io/builtin
+  {{- end }}
+  {{- if (or (gt (.Values.config.redis.shards | int64) 1) (gt (.Values.config.redis.shards | int64) 1)) }}
+  mode: Cluster
+  cluster:
+    master: {{ .Values.config.redis.shards }}
+    replicas: {{ .Values.config.redis.replicas }}
+  {{- else }}
+  mode: Standalone
+  {{- end }}
+  {{- if .Values.persistence.enabled }}
+  storageType: Durable
+  storage:
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+    storageClassName: ''
+    {{- else }}
+    storageClassName: {{ .Values.persistence.storageClass }}
+    {{- end }}
+    {{- end }}
+    accessModes:
+      - {{ .Values.persistence.accessMode }}
+    resources:
+      requests:
+        storage: {{ .Values.persistence.size }}
+  {{- else }}
+  storageType: Ephemeral
+  {{- end }}
+  {{- if .Values.persistence.backup.enabled }}
+  backupSchedule:
+    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
+    storageSecretName: {{ template "dbtest.sharedname" . }}-backup
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+  databaseSecret:
+    {{- if (empty .Values.config.redis.secret) }}
+    secretName: {{ template "dbtest.sharedname" . }}-redis-auth
+    {{- else }}
+    secretName: {{ .Values.config.redis.secret }}
+    {{- end }}
+  init:
+    snapshotSource:
+      name: {{ .Values.persistence.backup.restoreSnapshot }}
+      namespace: {{ .Release.Namespace }}
+  {{- end }}
+  {{- end }}
+  serviceTemplate:
+    metadata:
+      annotations:
+        passMe: ToService
+    spec:
+      type: {{ .Values.service.redis.type }}
+      {{- if (or (eq .Values.service.redis.type "LoadBalancer") (eq .Values.service.redis.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.redis.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name: redis
+          port: 6380
+          targetPort: redis
+          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis.port))) }}
+          nodePort: {{ .Values.service.redis.nodePorts.redis.port }}
+          {{- end }}
+  replicaServiceTemplate:
+    annotations:
+      passMe: ToReplicaService
+    spec:
+      type: {{ .Values.service.redis.type }}
+      {{- if (or (eq .Values.service.redis.type "LoadBalancer") (eq .Values.service.redis.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.redis.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name: redis
+          port: 6380
+          targetPort: redis
+          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis.port))) }}
+          nodePort: {{ .Values.service.redis.nodePorts.redis.port }}
+          {{- end }}
+  updateStrategy:
+    type: {{ .Values.config.updateStrategy }}
+  {{- if .Values.persistence.enabled }}
+  terminationPolicy: Pause
+  {{- else }}
+  terminationPolicy: Delete
+  {{- end }}
+{{- end }}
