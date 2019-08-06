@@ -23,6 +23,10 @@ spec:
           ports:
             - name: container
               containerPort: 80
+          volumeMounts:
+            - name: test
+              mountPath: '/data'
+              subPath: test
           env: []
           livenessProbe:
             httpGet:
@@ -34,3 +38,11 @@ spec:
               path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: test
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "dbtest.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
