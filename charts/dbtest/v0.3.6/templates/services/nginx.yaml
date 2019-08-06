@@ -11,17 +11,17 @@ spec:
   {{- if .Values.ingress.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.type }}
-  {{- if (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  type: {{ .Values.service.nginx.type }}
+  {{- if (or (eq .Values.service.nginx.type "LoadBalancer") (eq .Values.service.nginx.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.nginx.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.nginx.http))) }}
-      nodePort: {{ .Values.service.nodePorts.nginx.http }}
+      {{- if (and (eq .Values.service.nginx.type "NodePort") (not (empty .Values.service.nginx.nodePorts.http))) }}
+      nodePort: {{ .Values.service.nginx.nodePorts.http }}
       {{- end }}
   selector:
     app: {{ template "dbtest.name" . }}-nginx
