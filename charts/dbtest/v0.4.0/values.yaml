@@ -180,7 +180,7 @@ persistence:
     endpoint: s3.amazonaws.com
     googleProjectId: ''
     googleServiceKey: ''
-    # keepLast: 5
+    keepLast: 5
     prefix: ''
     resticPassword: pass
     restore:

@@ -32,7 +32,6 @@ spec:
   volumeMounts:
     - name: test
       mountPath: '/data'
-      subPath: test
   retentionPolicies:
     - name: 'retention-policy'
       keepLast: {{ .Values.persistence.backup.keepLast }}
@@ -86,7 +85,6 @@ spec:
     - '/data'
   recoveredVolumes:
     - mountPath: '/data'
-      subPath: test
       persistentVolumeClaim:
         claimName: {{ .Values.persistence.existingClaim | default (include "dbtest.fullname" . ) }}
 {{- end }}
