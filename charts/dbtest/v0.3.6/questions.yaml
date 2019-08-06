@@ -17,22 +17,6 @@ questions:
     required: true
     label: 'nginx tag'
     group: Images
-  - variable: images.kibana.repository
-    default: kibana
-    description: ''
-    type: string
-    required: true
-    label: 'kibana repository'
-    show_if: config.elasticsearch.kibana=true
-    group: Images
-  - variable: images.kibana.tag
-    default: 7.3.0
-    description: ''
-    type: string
-    required: true
-    label: 'kibana tag'
-    show_if: config.elasticsearch.kibana=true
-    group: Images
   - variable: images.mongo_express.repository
     default: mongo-express
     description: ''
@@ -97,129 +81,6 @@ questions:
     label: 'phpredisadmin tag'
     show_if: config.phpredisadmin.enabled=true
     group: Images
-
-# Elasticsearch Config
-  - variable: config.elasticsearch.internal
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: internal
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.version
-    default: 6.4.0
-    description: ''
-    type: string
-    required: true
-    label: version
-    show_if: config.elasticsearch.internal=true
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.kibana
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: kibana
-    show_if: config.elasticsearch.internal=true
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.prometheus
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: prometheus
-    show_if: config.elasticsearch.internal=true
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.replicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: replicas
-    show_if: config.elasticsearch.internal=true
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.secret
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: secret
-    show_if: config.elasticsearch.internal=true
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.commonConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'common config'
-    show_if: config.elasticsearch.internal=true
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.dataConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'data config'
-    show_if: config.elasticsearch.internal=true
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.masterConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'master config'
-    show_if: config.elasticsearch.internal=true
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.host
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: host
-    show_if: config.elasticsearch.internal=false
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.database
-    default: dbtest
-    description: ''
-    type: string
-    required: true
-    label: database
-    show_if: config.elasticsearch.internal=false
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.password
-    default: elastic
-    description: ''
-    type: password
-    required: true
-    label: password
-    show_if: config.elasticsearch.internal=false
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.port
-    default: 9200
-    description: ''
-    type: int
-    min: 0
-    max: 50000
-    required: true
-    label: port
-    show_if: config.elasticsearch.internal=false
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.url
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: url
-    show_if: config.elasticsearch.internal=false
-    group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.username
-    default: elastic
-    description: ''
-    type: string
-    required: true
-    label: username
-    show_if: config.elasticsearch.internal=false
-    group: 'Elasticsearch Config'
 
 # MongoDB Config
   - variable: config.mongodb.internal
@@ -976,19 +837,6 @@ questions:
         type: string
         required: true
         label: 'nginx ingress path'
-      - variable: ingress.hosts.kibana[0].name
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'kibana ingress hostname'
-        show_if: config.elasticsearch.kibana=true
-      - variable: ingress.hosts.kibana[0].path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'kibana ingress path'
       - variable: ingress.hosts.mongo_express[0].name
         default: xip.io
         description: ''
@@ -1082,28 +930,6 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'nginx http port'
-  - variable: service.kibana.type
-    default: NodePort
-    description: ''
-    type: enum
-    show_if: ingress.enabled=false&&config.elasticsearch.kibana=true
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    label: 'kibana service type'
-    show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.kibana.nodePorts.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false
-        label: 'kibana port'
   - variable: service.mongo_express.type
     default: NodePort
     description: ''
@@ -1192,27 +1018,6 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'phpredisadmin port'
-  - variable: service.elasticsearch.type
-    default: ClusterIP
-    description: ''
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    label: 'elasticsearch service type'
-    show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.elasticsearch.nodePorts.elasticsearch
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.enabled=false
-        label: 'elasticsearch port'
   - variable: service.mongodb.type
     default: ClusterIP
     description: ''

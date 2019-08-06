@@ -2,9 +2,6 @@ images:
   nginx:
     repository: nginx
     tag: latest
-  kibana:
-    repository: kibana
-    tag: 7.3.0
   mongo_express:
     repository: mongo-express
     tag: 0.49.0
@@ -21,22 +18,6 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
-  elasticsearch:
-    commonConfig: ''
-    dataConfig: ''
-    database: dbtest
-    host: ''
-    internal: true
-    kibana: true
-    masterConfig: ''
-    password: elastic
-    port: 9200
-    prometheus: false
-    replicas: 1
-    secret: ''
-    url: ''
-    username: elastic
-    version: 6.4.0
   mongodb:
     customConfig: ''
     database: dbtest
@@ -118,11 +99,6 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  kibana:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http: ''
   mongo_express:
     type: NodePort
     externalTrafficPolicy: Cluster
@@ -143,11 +119,6 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  elasticsearch:
-    type: ClusterIP
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      elasticsearch: ''
   mongodb:
     type: ClusterIP
     externalTrafficPolicy: Cluster
@@ -177,9 +148,6 @@ ingress:
     name: letsencrypt-staging
   hosts:
     nginx:
-      - name: ''
-        path: /
-    kibana:
       - name: ''
         path: /
     mongo_express:

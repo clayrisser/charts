@@ -8,15 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- $elasticsearch := .Values.config.elasticsearch }}
-  {{- if $elasticsearch.internal }}
-  elasticsearch_host: {{ template "dbtest.fullname" . }}-elasticsearch
-  {{- else }}
-  elasticsearch_host: {{ $elasticsearch.host | quote }}
-  {{- end }}
-  elasticsearch_database: {{ $elasticsearch.database | quote }}
-  elasticsearch_port: {{ $elasticsearch.port | quote }}
-  elasticsearch_username: {{ $elasticsearch.username | quote }}
   {{- $mongodb := .Values.config.mongodb }}
   {{- if $mongodb.internal }}
   mongodb_host: {{ template "dbtest.fullname" . }}-mongodb
