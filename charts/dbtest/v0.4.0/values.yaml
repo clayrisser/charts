@@ -188,7 +188,6 @@ persistence:
       mongodbSnapshot: ''
       mysqlSnapshot: ''
       postgresSnapshot: ''
-      redisSnapshot: ''
     schedule: '@midnight'
     type: s3
 

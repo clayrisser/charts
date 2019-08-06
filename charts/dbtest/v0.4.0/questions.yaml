@@ -809,13 +809,6 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup restore postgres snapshot'
-      - variable: persistence.backup.restore.redisSnapshot
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup restore redis snapshot'
 
 # Services and Load Balancing
   - variable: ingress.enabled
