@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1alpha1
 kind: Restic
 metadata:
-  name: {{ template "dbtest.fullname" . }}-nginx
+  name: {{ template "dbtest.sharedname" . }}-nginx
   labels:
     app: {{ template "dbtest.name" . }}-nginx
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -33,17 +33,12 @@ spec:
       keepLast: {{ .Values.persistence.backup.keepLast }}
       prune: true
 {{- end }}
-
 ---
-{{- if .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.backup.restore.dbtestSnapshot)) }}
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
-  {{- if (empty .Values.persistence.backup.restoreRepository) }}
-  name: deployment.{{ template "dbtest.fullname" . }}-dbtest
-  {{- else }}
-  name: deployment.{{ .Values.persistence.backup.restoreRepository }}
-  {{- end }}
+  name: deployment.{{ template "dbtest.sharedname" . }}-dbtest
   labels:
     app: {{ template "dbtest.name" . }}-dbtest
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -64,9 +59,8 @@ spec:
       prefix: {{ .Values.persistence.backup.prefix | quote }}
     storageSecretName: {{ template "dbtest.fullname" . }}-backup
 {{- end }}
-
 ---
-{{- if .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.backup.restore.dbtestSnapshot)) }}
 apiVersion: stash.appscode.com/v1alpha1
 kind: Recovery
 metadata:
@@ -78,18 +72,10 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    {{- if (empty .Values.persistence.backup.restoreRepository) }}
-    name: deployment.{{ template "dbtest.fullname" . }}-dbtest
-    {{- else }}
-    name: deployment.{{ .Values.persistence.backup.restoreRepository }}
-    {{- end }}
-    {{- if (empty .Values.persistence.backup.restoreNamespace) }}
+    name: deployment.{{ template "dbtest.sharedname" . }}-dbtest
     namespace: {{ .Release.Namespace }}
-    {{- else }}
-    namespace: {{ .Values.persistence.backup.restoreNamespace }}
-    {{- end }}
-    {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
-    snapshot: {{ .Values.persistence.backup.restoreSnapshot }}
+    {{- if (not (empty .Values.persistence.backup.restore.dbtestSnapshot)) }}
+    snapshot: {{ .Values.persistence.backup.restore.dbtestSnapshot }}
     {{- end }}
   paths:
   recoveredVolumes:

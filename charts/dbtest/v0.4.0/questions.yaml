@@ -687,19 +687,19 @@ questions:
         show_if: persistence.backup.enabled=true
         label: 'backup restic password'
       - variable: persistence.backup.schedule
-        default: '@every 1m'
+        default: '@midnight'
         description: ''
         type: string
         required: true
         show_if: persistence.backup.enabled=true
         label: 'backup schedule'
-      - variable: persistence.backup.keepLast
-        default: 5
-        description: ''
-        type: int
-        required: true
-        show_if: persistence.backup.enabled=true
-        label: 'backup keep last'
+      # - variable: persistence.backup.keepLast
+      #   default: 5
+      #   description: ''
+      #   type: int
+      #   required: true
+      #   show_if: persistence.backup.enabled=true
+      #   label: 'backup keep last'
       - variable: persistence.backup.type
         default: s3
         description: ''
@@ -781,34 +781,41 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup prefix'
-      - variable: persistence.backup.restore
-        default: false
+      - variable: persistence.backup.restore.dbtestSnapshot
+        default: ''
         description: ''
-        type: boolean
+        type: string
         required: false
         show_if: persistence.backup.enabled=true
-        label: 'backup restore'
-      - variable: persistence.backup.restoreRepository
+        label: 'backup restore dbtest snapshot'
+      - variable: persistence.backup.restore.mongodbSnapshot
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
-        label: 'backup restore repository'
-      - variable: persistence.backup.restoreSnapshot
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore mongodb snapshot'
+      - variable: persistence.backup.restore.mysqlSnapshot
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.restore=true
-        label: 'backup restore snapshot'
-      - variable: persistence.backup.restoreNamespace
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore mysql snapshot'
+      - variable: persistence.backup.restore.postgresSnapshot
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true=true&&persistence.backup.restore=true
-        label: 'backup restore namespace'
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore postgres snapshot'
+      - variable: persistence.backup.restore.redisSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore redis snapshot'
 
 # Services and Load Balancing
   - variable: ingress.enabled

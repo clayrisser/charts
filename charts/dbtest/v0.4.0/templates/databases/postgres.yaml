@@ -1,29 +1,25 @@
-{{- if .Values.config.redis.internal }}
+{{- if .Values.config.postgres.internal }}
 apiVersion: kubedb.com/v1alpha1
-kind: Redis
+kind: Postgres
 metadata:
-  name: {{ template "dbtest.fullname" . }}-redis
+  name: {{ template "dbtest.fullname" . }}-postgres
   labels:
-    app: {{ template "dbtest.name" . }}-redis
+    app: {{ template "dbtest.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  version: {{ .Values.config.redis.version | quote }}
+  version: {{ .Values.config.postgres.version | quote }}
   configSource:
     configMap:
-      name: {{ template "dbtest.fullname" . }}-redis
-  {{- if .Values.config.redis.prometheus }}
+      name: {{ template "dbtest.fullname" . }}-postgres
+  standbyMode: {{ .Values.config.postgres.standbyMode | quote }}
+  {{- if .Values.config.postgres.prometheus }}
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  {{- if (or (gt (.Values.config.redis.shards | int64) 1) (gt (.Values.config.redis.shards | int64) 1)) }}
-  mode: Cluster
-  cluster:
-    master: {{ .Values.config.redis.shards }}
-    replicas: {{ .Values.config.redis.replicas }}
-  {{- else }}
-  mode: Standalone
+  {{- if (gt (.Values.config.postgres.replicas | int64) 1) }}
+  replicas: {{ .Values.config.postgres.replicas }}
   {{- end }}
   {{- if .Values.persistence.enabled }}
   storageType: Durable
@@ -58,16 +54,16 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+  {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
   databaseSecret:
-    {{- if (empty .Values.config.redis.secret) }}
-    secretName: {{ template "dbtest.sharedname" . }}-redis-auth
+    {{- if (empty .Values.config.postgres.secret) }}
+    secretName: {{ template "dbtest.sharedname" . }}-postgres-auth
     {{- else }}
-    secretName: {{ .Values.config.redis.secret }}
+    secretName: {{ .Values.config.postgres.secret }}
     {{- end }}
   init:
     snapshotSource:
-      name: {{ .Values.persistence.backup.restoreSnapshot }}
+      name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
       namespace: {{ .Release.Namespace }}
   {{- end }}
   {{- end }}
@@ -76,31 +72,31 @@ spec:
       annotations:
         passMe: ToService
     spec:
-      type: {{ .Values.service.redis.type }}
-      {{- if (or (eq .Values.service.redis.type "LoadBalancer") (eq .Values.service.redis.type "NodePort")) }}
-      externalTrafficPolicy: {{ .Values.service.redis.externalTrafficPolicy }}
+      type: {{ .Values.service.postgres.type }}
+      {{- if (or (eq .Values.service.postgres.type "LoadBalancer") (eq .Values.service.postgres.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.postgres.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name: redis
-          port: 6380
-          targetPort: redis
-          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis))) }}
-          nodePort: {{ .Values.service.redis.nodePorts.redis }}
+        - name: postgres
+          port: 5432
+          targetPort: postgres
+          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
+          nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
       passMe: ToReplicaService
     spec:
-      type: {{ .Values.service.redis.type }}
-      {{- if (or (eq .Values.service.redis.type "LoadBalancer") (eq .Values.service.redis.type "NodePort")) }}
-      externalTrafficPolicy: {{ .Values.service.redis.externalTrafficPolicy }}
+      type: {{ .Values.service.postgres.type }}
+      {{- if (or (eq .Values.service.postgres.type "LoadBalancer") (eq .Values.service.postgres.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.postgres.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name: redis
-          port: 6380
-          targetPort: redis
-          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis))) }}
-          nodePort: {{ .Values.service.redis.nodePorts.redis }}
+        - name: postgres
+          port: 5432
+          targetPort: postgres
+          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
+          nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}
