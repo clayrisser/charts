@@ -17,77 +17,86 @@ questions:
     required: true
     label: 'nginx tag'
     group: Images
-  - variable: images.elasticsearch.repository
+  - variable: images.kibana.repository
     default: kibana
     description: ''
     type: string
     required: true
-    label: 'elasticsearch repository'
+    label: 'kibana repository'
+    show_if: config.elasticsearch.kibana=true
     group: Images
-  - variable: images.elasticsearch.tag
+  - variable: images.kibana.tag
     default: 7.3.0
     description: ''
     type: string
     required: true
-    label: 'elasticsearch tag'
+    label: 'kibana tag'
+    show_if: config.elasticsearch.kibana=true
     group: Images
-  - variable: images.mongodb.repository
+  - variable: images.mongo_express.repository
     default: mongo-express
     description: ''
     type: string
     required: true
-    label: 'mongodb repository'
+    label: 'mongo-express repository'
+    show_if: config.mongo_express.enabled=true
     group: Images
-  - variable: images.mongodb.tag
+  - variable: images.mongo_express.tag
     default: 0.49.0
     description: ''
     type: string
     required: true
-    label: 'mongodb tag'
+    label: 'mongo-express tag'
+    show_if: config.mongo_express.enabled=true
     group: Images
-  - variable: images.mysql.repository
+  - variable: images.phpmyadmin.repository
     default: phpmyadmin/phpmyadmin
     description: ''
     type: string
     required: true
-    label: 'mysql repository'
+    label: 'phpmyadmin repository'
+    show_if: config.mysql.phpmyadmin=true
     group: Images
-  - variable: images.mysql.tag
+  - variable: images.phpmyadmin.tag
     default: 4.7
     description: ''
     type: string
     required: true
-    label: 'mysql tag'
+    label: 'phpmyadmin tag'
+    show_if: config.mysql.phpmyadmin=true
     group: Images
-  - variable: images.postgres.repository
+  - variable: images.pgadmin.repository
     default: dpage/pgadmin4
     description: ''
     type: string
     required: true
-    label: 'postgres repository'
+    label: 'pgadmin repository'
+    show_if: config.pgadmin.enabled=true
     group: Images
-  - variable: images.postgres.tag
+  - variable: images.pgadmin.tag
     default: 4.11
     description: ''
     type: string
     required: true
-    label: 'postgres tag'
+    label: 'pgadmin tag'
+    show_if: config.pgadmin.enabled=true
     group: Images
-  - variable: images.redis.repository
+  - variable: images.phpredisadmin.repository
     default: erikdubbelboer/phpredisadmin
     description: ''
     type: string
     required: true
-    label: 'redis repository'
+    label: 'phpredisadmin repository'
+    show_if: config.phpredisadmin.enabled=true
     group: Images
-  - variable: images.redis.tag
+  - variable: images.phpredisadmin.tag
     default: v1.11.4
     description: ''
     type: string
     required: true
-    label: 'redis tag'
+    label: 'phpredisadmin tag'
+    show_if: config.phpredisadmin.enabled=true
     group: Images
-
 
 # Elasticsearch Config
   - variable: config.elasticsearch.internal
@@ -292,8 +301,6 @@ questions:
     show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
     label: 'sharding shards'
     group: 'MongoDB Config'
-
-
   - variable: config.mongodb.host
     default: ''
     description: ''
@@ -778,7 +785,7 @@ questions:
     group: Persistence
     subquestions:
       - variable: persistence.size
-        default: 10Gi
+        default: 1Gi
         description: ''
         type: string
         required: true
@@ -969,6 +976,72 @@ questions:
         type: string
         required: true
         label: 'nginx ingress path'
+      - variable: ingress.hosts.kibana[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'kibana ingress hostname'
+        show_if: config.elasticsearch.kibana=true
+      - variable: ingress.hosts.kibana[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'kibana ingress path'
+      - variable: ingress.hosts.mongo_express[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'mongo-express ingress hostname'
+        show_if: config.mongo_express.enabled=true
+      - variable: ingress.hosts.mongo_express[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'mongo-express ingress path'
+      - variable: ingress.hosts.phpmyadmin[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'phpmyadmin ingress hostname'
+        show_if: config.mysql.phpmyadmin=true
+      - variable: ingress.hosts.phpmyadmin[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'phpmyadmin ingress path'
+      - variable: ingress.hosts.pgadmin[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'pgadmin ingress hostname'
+        show_if: config.pgadmin.enabled=true
+      - variable: ingress.hosts.pgadmin[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin ingress path'
+      - variable: ingress.hosts.phpredisadmin[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'phpredisadmin ingress hostname'
+        show_if: config.phpredisadmin.enabled=true
+      - variable: ingress.hosts.phpredisadmin[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'phpredisadmin ingress path'
+        show_if: config.phpredisadmin.enabled=true
       - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -987,7 +1060,7 @@ questions:
         show_if: ingress.tls=true&&ingress.issuer.name=none
         required: false
         label: 'ingress certificate'
-  - variable: service.type
+  - variable: service.nginx.type
     default: NodePort
     description: ''
     type: enum
@@ -1001,7 +1074,7 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nodePorts.nginx.http
+      - variable: service.nginx.nodePorts.http
         default: ''
         description: ''
         type: int
@@ -1009,3 +1082,218 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'nginx http port'
+  - variable: service.kibana.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false&&config.elasticsearch.kibana=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'kibana service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.kibana.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'kibana port'
+  - variable: service.mongo_express.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false&&config.mongo_express.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mongo-express service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mongo_express.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'mongo-express port'
+  - variable: service.phpmyadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false&&config.mysql.phpmyadmin=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'phpmyadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.phpmyadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'phpmyadmin port'
+  - variable: service.pgadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false&&config.pgadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'pgadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.pgadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'pgadmin port'
+  - variable: service.phpredisadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false&&config.phpredisadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'phpredisadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.phpredisadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'phpredisadmin port'
+  - variable: service.elasticsearch.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'elasticsearch service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.elasticsearch.nodePorts.elasticsearch
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'elasticsearch port'
+  - variable: service.mongodb.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mongodb service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mongodb.nodePorts.mongodb
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'mongodb port'
+  - variable: service.mysql.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mysql service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mysql.nodePorts.mysql
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'mysql port'
+  - variable: service.postgres.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'postgres service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.postgres.nodePorts.postgres
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'postgres port'
+  - variable: service.redis.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'redis service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.redis.nodePorts.redis
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'redis port'

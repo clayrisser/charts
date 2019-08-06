@@ -2,19 +2,19 @@ images:
   nginx:
     repository: nginx
     tag: latest
-  elasticsearch:
+  kibana:
     repository: kibana
     tag: 7.3.0
-  mongodb:
+  mongo_express:
     repository: mongo-express
     tag: 0.49.0
-  mysql:
+  phpmyadmin:
     repository: phpmyadmin/phpmyadmin
     tag: 4.7
-  postgres:
+  pgadmin:
     repository: dpage/pgadmin4
     tag: 4.11
-  redis:
+  phpredisadmin:
     repository: erikdubbelboer/phpredisadmin
     tag: v1.11.4
 
@@ -113,11 +113,61 @@ config:
     username: admin
 
 service:
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  nodePorts:
-    nginx:
+  nginx:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
       http: ''
+  kibana:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  mongo_express:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  phpmyadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  phpredisadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  elasticsearch:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      elasticsearch: ''
+  mongodb:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mongodb: ''
+  mysql:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql: ''
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres: ''
+  redis:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      redis: ''
 
 ingress:
   enabled: false
@@ -129,12 +179,27 @@ ingress:
     nginx:
       - name: ''
         path: /
+    kibana:
+      - name: ''
+        path: /
+    mongo_express:
+      - name: ''
+        path: /
+    phpmyadmin:
+      - name: ''
+        path: /
+    pgadmin:
+      - name: ''
+        path: /
+    phpredisadmin:
+      - name: ''
+        path: /
 
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
   existingClaim: ''
-  size: 10Gi
+  size: 1Gi
   storageClass: ''
   backup:
     awsAccessKey: ''
