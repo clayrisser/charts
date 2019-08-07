@@ -19,9 +19,9 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{/*
 Calculate base_url
 */}}
-{{- define "sonarqube.base_url" }}
-{{- if (not (empty .Values.config.base_url)) }}
-{{- printf .Values.config.base_url }}
+{{- define "sonarqube.baseUrl" }}
+{{- if (not (empty .Values.config.baseUrl)) }}
+{{- printf .Values.config.baseUrl }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
 {{- $host := (index .Values.ingress.hosts.sonarqube 0) }}

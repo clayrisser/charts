@@ -40,6 +40,11 @@ spec:
               mountPath: /opt/sonarqube/extensions
               subPath: extensions
           env:
+            - name: sonar.core.serverBaseURL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: base_url
             - name: sonar.jdbc.username
               valueFrom:
                 configMapKeyRef:

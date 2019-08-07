@@ -33,6 +33,13 @@ questions:
     group: Images
 
 # Postgres Config
+  - variable: config.baseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: Config
   - variable: config.postgres.internal
     default: true
     description: ''
