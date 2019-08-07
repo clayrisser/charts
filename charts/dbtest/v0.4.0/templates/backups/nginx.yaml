@@ -50,7 +50,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: deployment.{{ template "dbtest.sharedname" . }}-dbtest
+    name: deployment.{{ template "dbtest.sharedname" . }}-nginx
     namespace: {{ .Release.Namespace }}
     {{- if (and (not (empty .Values.persistence.backup.restore.dbtestSnapshot)) (not (eq .Values.persistence.backup.restore.dbtestSnapshot "latest"))) }}
     snapshot: {{ .Values.persistence.backup.restore.dbtestSnapshot }}
