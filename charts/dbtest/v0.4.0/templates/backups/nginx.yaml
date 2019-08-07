@@ -42,7 +42,7 @@ spec:
 apiVersion: stash.appscode.com/v1alpha1
 kind: Recovery
 metadata:
-  name: {{ template "dbtest.fullname" . }}-dbtest
+  name: {{ template "dbtest.sharedname" . }}-dbtest
   labels:
     app: {{ template "dbtest.name" . }}-dbtest
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
