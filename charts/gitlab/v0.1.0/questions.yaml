@@ -77,7 +77,7 @@ questions:
     default: ''
     description: ''
     type: string
-    required: false
+    required: true
     label: 'base url'
     show_if: config.keycloak.enabled=true
     group: 'KeyCloak Config'
@@ -95,14 +95,6 @@ questions:
     type: string
     required: false
     label: 'client id'
-    show_if: config.keycloak.enabled=true
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.fingerprint
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: fingerprint
     show_if: config.keycloak.enabled=true
     group: 'KeyCloak Config'
   - variable: config.keycloak.realmName
