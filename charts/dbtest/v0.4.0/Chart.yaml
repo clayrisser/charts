@@ -1,7 +1,7 @@
 name: dbtest
 home: https://github.com/codejamninja/dbtest
 icon: 
-version: 0.4.1
+version: 0.4.0
 appVersion: latest
 description: 'yeoman generator rancher 2 helm charts'
 keywords:
