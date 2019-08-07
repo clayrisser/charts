@@ -82,6 +82,28 @@ questions:
     show_if: config.phpredisadmin.enabled=true
     group: Images
 
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+
 # MongoDB Config
   - variable: config.mongodb.internal
     default: true
