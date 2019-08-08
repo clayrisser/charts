@@ -22,6 +22,4 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  data.sql: |
-    DROP DATABASE IF EXISTS {{ .Values.config.postgres.database }};
-    CREATE DATABASE {{ .Values.config.postgres.database }};
+  data.sql: ''
