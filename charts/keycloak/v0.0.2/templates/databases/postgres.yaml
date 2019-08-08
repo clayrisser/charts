@@ -54,7 +54,11 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
+  {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
+  scriptSource:
+    configMap:
+      name: {{ template "keycloak.fullname" . }}-postgres-init
+  {{- else }}
   databaseSecret:
     {{- if (empty .Values.config.postgres.secret) }}
     secretName: {{ template "keycloak.sharedname" . }}-postgres-auth

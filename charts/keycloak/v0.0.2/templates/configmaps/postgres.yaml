@@ -10,4 +10,17 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   user.conf: {{ .Values.config.postgres.customConfig | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "keycloak.fullname" . }}-postgres-init
+  labels:
+    app: {{ template "keycloak.name" . }}-postgres-init
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  data.sql: |
+    CREATE DATABASE {{ .Values.config.postgres.database }}
 {{- end }}
