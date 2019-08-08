@@ -555,60 +555,33 @@ questions:
         label: 'backup restore postgres snapshot'
 
 # Services and Load Balancing
-  - variable: ingress.enabled
+  - variable: ingress.gitlab.enabled
     default: true
     description: ''
     type: boolean
-    label: 'ingress enabled'
+    label: 'gitlab ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.tls
+      - variable: ingress.gitlab.tls
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'ingress tls'
-      - variable: ingress.hosts.gitlab[0].name
+        label: 'gitlab ingress tls'
+      - variable: ingress.gitlab.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
         label: 'gitlab ingress hostname'
-      - variable: ingress.hosts.gitlab[0].path
+      - variable: ingress.gitlab.path
         default: /
         description: ''
         type: string
         required: true
         label: 'gitlab ingress path'
-      - variable: ingress.hosts.pgadmin[0].name
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'pgadmin ingress hostname'
-        show_if: config.pgadmin.enabled=true
-      - variable: ingress.hosts.pgadmin[0].path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'pgadmin ingress path'
-      - variable: ingress.hosts.phpredisadmin[0].name
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'phpredisadmin ingress hostname'
-        show_if: config.phpredisadmin.enabled=true
-      - variable: ingress.hosts.phpredisadmin[0].path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'phpredisadmin ingress path'
-        show_if: config.phpredisadmin.enabled=true
-      - variable: ingress.issuer.name
+      - variable: ingress.gitlab.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
@@ -618,19 +591,107 @@ questions:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'ingress issuer name'
-      - variable: ingress.certificate
+        label: 'gitlab ingress issuer name'
+      - variable: ingress.gitlab.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.tls=true&&ingress.issuer.name=none
+        show_if: ingress.gitlab.tls=true&&ingress.gitlab.issuer.name=none
         required: false
-        label: 'ingress certificate'
+        label: 'gitlab ingress certificate'
+  - variable: ingress.pgadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'pgadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.pgadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'pgadmin ingress tls'
+      - variable: ingress.pgadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'pgadmin ingress hostname'
+      - variable: ingress.pgadmin.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin ingress path'
+      - variable: ingress.pgadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'pgadmin ingress issuer name'
+      - variable: ingress.pgadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
+        required: false
+        label: 'pgadmin ingress certificate'
+  - variable: ingress.phpredisadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'phpredisadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpredisadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'phpredisadmin ingress tls'
+      - variable: ingress.phpredisadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'phpredisadmin ingress hostname'
+      - variable: ingress.phpredisadmin.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'phpredisadmin ingress path'
+      - variable: ingress.phpredisadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpredisadmin ingress issuer name'
+      - variable: ingress.phpredisadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.phpredisadmin.tls=true&&ingress.phpredisadmin.issuer.name=none
+        required: false
+        label: 'phpredisadmin ingress certificate'
   - variable: service.gitlab.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.enabled=false
+    show_if: ingress.gitlab.enabled=false
     options:
       - ClusterIP
       - NodePort
@@ -646,13 +707,13 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
+        show_if: ingress.gitlab.enabled=false
         label: 'gitlab http port'
   - variable: service.pgadmin.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.enabled=false&&config.pgadmin.enabled=true
+    show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
@@ -668,13 +729,13 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
+        show_if: ingress.pgadmin.enabled=false
         label: 'pgadmin port'
   - variable: service.phpredisadmin.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.enabled=false&&config.phpredisadmin.enabled=true
+    show_if: ingress.phpredisadmin.enabled=false&&config.phpredisadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
@@ -690,7 +751,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
+        show_if: ingress.phpredisadmin.enabled=false
         label: 'phpredisadmin port'
   - variable: service.postgres.type
     default: ClusterIP
@@ -711,7 +772,6 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
         label: 'postgres port'
   - variable: service.redis.type
     default: ClusterIP
@@ -732,5 +792,4 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
         label: 'redis port'

@@ -85,21 +85,30 @@ service:
       redis: ''
 
 ingress:
-  enabled: false
-  tls: false
-  certificate: ''
-  issuer:
-    name: letsencrypt-staging
-  hosts:
-    gitlab:
-      - name: ''
-        path: /
-    pgadmin:
-      - name: ''
-        path: /
-    phpredisadmin:
-      - name: ''
-        path: /
+  gitlab:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  phpredisadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
 
 persistence:
   accessMode: ReadWriteOnce
