@@ -55,16 +55,16 @@ spec:
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
-  init:
-    snapshotSource:
-      name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
-      namespace: {{ .Release.Namespace }}
   databaseSecret:
     {{- if (empty .Values.config.postgres.secret) }}
     secretName: {{ template "keycloak.sharedname" . }}-postgres-auth
     {{- else }}
     secretName: {{ .Values.config.postgres.secret }}
     {{- end }}
+  init:
+    snapshotSource:
+      name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
+      namespace: {{ .Release.Namespace }}
   {{- end }}
   {{- end }}
   {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
