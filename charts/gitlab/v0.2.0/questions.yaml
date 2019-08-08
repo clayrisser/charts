@@ -559,6 +559,7 @@ questions:
     default: true
     description: ''
     type: boolean
+    show_if: config.gitlab.enabled=true
     label: 'gitlab ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -567,25 +568,28 @@ questions:
         default: false
         description: ''
         type: boolean
+        show_if: config.gitlab.enabled=true
         required: true
         label: 'gitlab ingress tls'
       - variable: ingress.gitlab.hostname
         default: xip.io
         description: ''
         type: hostname
+        show_if: config.gitlab.enabled=true
         required: true
         label: 'gitlab ingress hostname'
       - variable: ingress.gitlab.path
         default: /
         description: ''
         type: string
+        show_if: config.gitlab.enabled=true
         required: true
         label: 'gitlab ingress path'
       - variable: ingress.gitlab.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true
+        show_if: config.gitlab.enabled=true&&ingress.tls=true
         options:
           - none
           - letsencrypt-staging
@@ -596,97 +600,9 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: ingress.gitlab.tls=true&&ingress.gitlab.issuer.name=none
+        show_if: config.gitlab.enabled=true&&ingress.gitlab.tls=true&&ingress.gitlab.issuer.name=none
         required: false
         label: 'gitlab ingress certificate'
-  - variable: ingress.pgadmin.enabled
-    default: true
-    description: ''
-    type: boolean
-    label: 'pgadmin ingress enabled'
-    show_subquestion_if: true
-    group: 'Services and Load Balancing'
-    subquestions:
-      - variable: ingress.pgadmin.tls
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'pgadmin ingress tls'
-      - variable: ingress.pgadmin.hostname
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'pgadmin ingress hostname'
-      - variable: ingress.pgadmin.path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'pgadmin ingress path'
-      - variable: ingress.pgadmin.issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true
-        options:
-          - none
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: 'pgadmin ingress issuer name'
-      - variable: ingress.pgadmin.certificate
-        default: ''
-        description: ''
-        type: string
-        show_if: ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
-        required: false
-        label: 'pgadmin ingress certificate'
-  - variable: ingress.phpredisadmin.enabled
-    default: true
-    description: ''
-    type: boolean
-    label: 'phpredisadmin ingress enabled'
-    show_subquestion_if: true
-    group: 'Services and Load Balancing'
-    subquestions:
-      - variable: ingress.phpredisadmin.tls
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'phpredisadmin ingress tls'
-      - variable: ingress.phpredisadmin.hostname
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'phpredisadmin ingress hostname'
-      - variable: ingress.phpredisadmin.path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'phpredisadmin ingress path'
-      - variable: ingress.phpredisadmin.issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true
-        options:
-          - none
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: 'phpredisadmin ingress issuer name'
-      - variable: ingress.phpredisadmin.certificate
-        default: ''
-        description: ''
-        type: string
-        show_if: ingress.phpredisadmin.tls=true&&ingress.phpredisadmin.issuer.name=none
-        required: false
-        label: 'phpredisadmin ingress certificate'
   - variable: service.gitlab.type
     default: NodePort
     description: ''
@@ -697,7 +613,7 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    label: 'service type'
+    label: 'gitlab service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
@@ -709,6 +625,54 @@ questions:
         max: 32767
         show_if: ingress.gitlab.enabled=false
         label: 'gitlab http port'
+  - variable: ingress.pgadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.pgadmin.enabled=true
+    label: 'pgadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.pgadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress tls'
+      - variable: ingress.pgadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress hostname'
+      - variable: ingress.pgadmin.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress path'
+      - variable: ingress.pgadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.pgadmin.enabled=true&&ingress.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'pgadmin ingress issuer name'
+      - variable: ingress.pgadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
+        required: false
+        label: 'pgadmin ingress certificate'
   - variable: service.pgadmin.type
     default: NodePort
     description: ''
@@ -731,6 +695,54 @@ questions:
         max: 32767
         show_if: ingress.pgadmin.enabled=false
         label: 'pgadmin port'
+  - variable: ingress.phpredisadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.phpredisadmin.enabled=true
+    label: 'phpredisadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpredisadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.phpredisadmin.enabled=true
+        required: true
+        label: 'phpredisadmin ingress tls'
+      - variable: ingress.phpredisadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.phpredisadmin.enabled=true
+        required: true
+        label: 'phpredisadmin ingress hostname'
+      - variable: ingress.phpredisadmin.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.phpredisadmin.enabled=true
+        required: true
+        label: 'phpredisadmin ingress path'
+      - variable: ingress.phpredisadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.phpredisadmin.enabled=true&&ingress.phpredisadmin.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpredisadmin ingress issuer name'
+      - variable: ingress.phpredisadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.phpredisadmin.enabled=true&&ingress.phpredisadmin.tls=true&&ingress.phpredisadmin.issuer.name=none
+        required: false
+        label: 'phpredisadmin ingress certificate'
   - variable: service.phpredisadmin.type
     default: NodePort
     description: ''
