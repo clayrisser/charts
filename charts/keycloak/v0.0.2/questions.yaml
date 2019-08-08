@@ -373,13 +373,6 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup prefix'
-      - variable: persistence.backup.restore.keycloakSnapshot
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup restore keycloak snapshot'
       - variable: persistence.backup.restore.postgresSnapshot
         default: ''
         description: ''

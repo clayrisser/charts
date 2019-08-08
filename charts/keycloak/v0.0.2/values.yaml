@@ -86,7 +86,6 @@ persistence:
     schedule: '@midnight'
     type: s3
     restore:
-      keycloaksnapshot: ''
       postgresSnapshot: ''
 
 probes:

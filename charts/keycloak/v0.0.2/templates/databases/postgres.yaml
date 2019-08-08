@@ -55,11 +55,7 @@ spec:
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   init:
-  {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
-    scriptSource:
-      configMap:
-        name: {{ template "keycloak.fullname" . }}-postgres-init
-  {{- else }}
+  {{- if .Values.persistence.backup.restore.postgresSnapshot }}
     snapshotSource:
       name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
       namespace: {{ .Release.Namespace }}
@@ -69,6 +65,10 @@ spec:
     {{- else }}
     secretName: {{ .Values.config.postgres.secret }}
     {{- end }}
+  {{- else }}
+    scriptSource:
+      configMap:
+        name: {{ template "keycloak.fullname" . }}-postgres-init
   {{- end }}
   {{- end }}
   serviceTemplate:
