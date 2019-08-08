@@ -66,7 +66,7 @@ data:
          groups_attribute: 'roles',
          external_groups: ['{{ .Values.config.keycloak.clientId }}:external'],
          args: {
-           assertion_consumer_service_url: '{{ template "gitlab.base_url" . }}/users/auth/saml/callback',
+           assertion_consumer_service_url: '{{ template "gitlab.gitlab_base_url" . }}/users/auth/saml/callback',
            idp_cert_fingerprint_algorithm: 'http://www.w3.org/2000/09/xmldsig#sha1',
            idp_cert: '-----BEGIN CERTIFICATE-----{{ .Values.config.keycloak.certificate }}-----END CERTIFICATE-----',
            idp_sso_target_url: '{{ .Values.config.keycloak.baseUrl }}/auth/realms/{{ .Values.config.keycloak.realmName }}/protocol/saml/clients/{{ .Values.config.keycloak.clientId }}',
