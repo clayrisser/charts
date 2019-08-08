@@ -78,12 +78,12 @@ questions:
     required: true
     label: 'password'
     group: Config
-  - variable: config.baseUrl
+  - variable: config.gitlab.baseUrl
     default: ''
     description: ''
     type: string
     required: false
-    label: 'base url'
+    label: 'gitlab base url'
     group: Config
 
   # Keycloak Config

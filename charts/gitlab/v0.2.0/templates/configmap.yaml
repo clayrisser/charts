@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  base_url: {{ template "gitlab.base_url" . }}
+  base_url: {{ template "gitlab.gitlab_base_url" . }}
   {{- $postgres := .Values.config.postgres }}
   {{- if $postgres.internal }}
   postgres_host: {{ template "gitlab.fullname" . }}-postgres

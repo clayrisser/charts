@@ -38,14 +38,14 @@ Calculate certificate
 {{- end }}
 
 {{/*
-Calculate hostname
+Calculate gitlab hostname
 */}}
-{{- define "gitlab.hostname" }}
-{{- if (and .Values.config.hostname (not (empty .Values.config.hostname))) }}
-{{- printf .Values.config.hostname }}
+{{- define "gitlab.gitlab_hostname" }}
+{{- if (and .Values.config.gitlab.hostname (not (empty .Values.config.gitlab.hostname))) }}
+{{- printf .Values.config.gitlab.hostname }}
 {{- else }}
-{{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.gitlab 0).name }}
+{{- if .Values.ingress.gitlab.enabled }}
+{{- printf .Values.ingress.gitlab.hostname }}
 {{- else }}
 {{- printf "%s-gitlab" (include "gitlab.fullname" .) }}
 {{- end }}
@@ -53,22 +53,22 @@ Calculate hostname
 {{- end }}
 
 {{/*
-Calculate base_url
+Calculate gitlab base_url
 */}}
-{{- define "gitlab.base_url" }}
-{{- if (and .Values.config.baseUrl (not (empty .Values.config.baseUrl))) }}
-{{- printf .Values.config.baseUrl }}
+{{- define "gitlab.gitlab_base_url" }}
+{{- if (and .Values.config.gitlab.baseUrl (not (empty .Values.config.gitlab.baseUrl))) }}
+{{- printf .Values.config.gitlab.baseUrl }}
 {{- else }}
-{{- if .Values.ingress.enabled }}
-{{- $host := ((empty (include "gitlab.hostname" .)) | (index .Values.ingress.hosts.gitlab 0) (include "gitlab.hostname" . )) }}
-{{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
-{{- $path := (eq $host.path "/" | ternary "" $host.path) }}
-{{- printf "%s://%s%s" $protocol $host.name $path }}
+{{- if .Values.ingress.gitlab.enabled }}
+{{- $hostname := ((empty (include "gitlab.gitlab_hostname" .)) | .Values.ingress.gitlab.hostname (include "gitlab.gitlab_hostname" .)) }}
+{{- $path := (eq .Values.ingress.gitlab.path "/" | ternary "" .Values.ingress.gitlab.path) }}
+{{- $protocol := (.Values.ingress.gitlab.tls | ternary "https" "http") }}
+{{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
-{{- if (empty (include "gitlab.hostname" . )) }}
-{{- printf "http://%s-gitlab" (include "gitlab.hostname" .) }}
+{{- if (empty (include "gitlab.gitlab_hostname" .)) }}
+{{- printf "http://%s-gitlab" (include "gitlab.gitlab_hostname" .) }}
 {{- else }}
-{{- printf "http://%s" (include "gitlab.hostname" .) }}
+{{- printf "http://%s" (include "gitlab.gitlab_hostname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -90,6 +90,7 @@ Calculate postgres_url
 {{- end }}
 {{- end }}
 {{- end }}
+
 {{/*
 Calculate redis_url
 */}}
