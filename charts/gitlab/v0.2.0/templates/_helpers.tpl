@@ -27,13 +27,35 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate certificate
+Calculate gitlab certificate
 */}}
-{{- define "gitlab.certificate" }}
-{{- if (not (empty .Values.ingress.certificate)) }}
-{{- printf .Values.ingress.certificate }}
+{{- define "gitlab.gitlab_certificate" }}
+{{- if (not (empty .Values.ingress.gitlab.certificate)) }}
+{{- printf .Values.ingress.gitlab.certificate }}
 {{- else }}
-{{- printf "%s-letsencrypt" (include "gitlab.fullname" .) }}
+{{- printf "%s-gitlab-letsencrypt" (include "gitlab.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate pgadmin certificate
+*/}}
+{{- define "gitlab.pgadmin_certificate" }}
+{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
+{{- printf .Values.ingress.pgadmin.certificate }}
+{{- else }}
+{{- printf "%s-pgadmin-letsencrypt" (include "gitlab.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate phpredisadmin certificate
+*/}}
+{{- define "gitlab.phpredisadmin_certificate" }}
+{{- if (not (empty .Values.ingress.phpredisadmin.certificate)) }}
+{{- printf .Values.ingress.phpredisadmin.certificate }}
+{{- else }}
+{{- printf "%s-phpredisadmin-letsencrypt" (include "gitlab.fullname" .) }}
 {{- end }}
 {{- end }}
 

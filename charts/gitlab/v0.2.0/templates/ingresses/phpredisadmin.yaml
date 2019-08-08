@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.phpredisadmin.tls }}
   tls:
-    - secretName: {{ template "gitlab.certificate" . }}
+    - secretName: {{ template "gitlab.phpredisadmin_certificate" . }}
       hosts:
         - {{ .Values.ingress.phpredisadmin.hostname }}
   {{- end }}

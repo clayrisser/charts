@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.pgadmin.tls }}
   tls:
-    - secretName: {{ template "gitlab.certificate" . }}
+    - secretName: {{ template "gitlab.pgadmin_certificate" . }}
       hosts:
         - {{ .Values.ingress.pgadmin.hostname }}
   {{- end }}
