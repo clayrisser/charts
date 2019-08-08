@@ -1,21 +1,37 @@
 images:
-  keycloak:
-    repository: jboss/keycloak
-    tag: 6.0.1
+  gitlab:
+    repository: gitlab/gitlab-ce
+    tag: 12.0.3-ce.0
   pgadmin:
     repository: dpage/pgadmin4
     tag: 4.11
+  phpredisadmin:
+    repository: erikdubbelboer/phpredisadmin
+    tag: v1.11.4
 
 config:
-  hostname: ''
   imagePullPolicy: IfNotPresent
-  loglevel: INFO
-  password: pass
   updateStrategy: RollingUpdate
-  username: admin
+  password: 'pass'
+  baseUrl: ''
+  keycloak:
+    baseUrl: ''
+    clientId: ''
+    companyName: KeyCloak
+    enabled: false
+    realmName: gatekeeper
+    certificate: ''
+  pgadmin:
+    email: admin
+    enabled: false
+    password: pass
+  phpredisadmin:
+    enabled: false
+    password: pass
+    username: admin
   postgres:
     customConfig: ''
-    database: keycloak
+    database: gitlab
     host: ''
     internal: true
     password: postgres
@@ -27,18 +43,32 @@ config:
     url: ''
     username: postgres
     version: 11.1
-  pgadmin:
-    email: admin
-    enabled: false
-    password: pass
+  redis:
+    customConfig: ''
+    host: ''
+    internal: true
+    password: ''
+    port: 6379
+    prometheus: false
+    replicas: 1
+    secret: ''
+    shards: 1
+    url: ''
+    username: ''
+    version: 5.0.3-v1
 
 service:
-  keycloak:
+  gitlab:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
   pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  phpredisadmin:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -48,6 +78,11 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       postgres: ''
+  redis:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      redis: ''
 
 ingress:
   enabled: false
@@ -56,10 +91,13 @@ ingress:
   issuer:
     name: letsencrypt-staging
   hosts:
-    keycloak:
+    gitlab:
       - name: ''
         path: /
     pgadmin:
+      - name: ''
+        path: /
+    phpredisadmin:
       - name: ''
         path: /
 
@@ -83,10 +121,11 @@ persistence:
     keepLast: 5
     prefix: ''
     resticPassword: pass
+    restore:
+      gitlabSnapshot: ''
+      postgresSnapshot: ''
     schedule: '@midnight'
     type: s3
-    restore:
-      postgresSnapshot: ''
 
 probes:
   liveness:

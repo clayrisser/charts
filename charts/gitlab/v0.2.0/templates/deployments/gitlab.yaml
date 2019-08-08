@@ -1,0 +1,107 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gitlab.fullname" . }}-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "gitlab.name" . }}-gitlab
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gitlab.fullname" . }}-gitlab
+          image: {{ .Values.images.gitlab.repository }}:{{ .Values.images.gitlab.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          volumeMounts:
+            - name: data
+              mountPath: /gitlab-data
+              subPath: data
+            - name: data
+              mountPath: /etc/gitlab
+              subPath: etc
+          env:
+            - name: GITLAB_OMNIBUS_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: omnibus_config
+            - name: EXTERNAL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: base_url
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_host
+            {{- if .Values.config.postgres.internal }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_database
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: redis_host
+            - name: GITLAB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: password
+            {{- if .Values.config.postgres.internal }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

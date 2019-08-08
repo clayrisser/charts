@@ -1,0 +1,76 @@
+{{- if .Values.persistence.backup.enabled }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Restic
+metadata:
+  name: {{ template "gitlab.sharedname" . }}-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "gitlab.name" . }}-gitlab
+  fileGroups:
+    - path: /gitlab-data
+      retentionPolicyName: retention-policy
+    - path: /etc/gitlab
+      retentionPolicyName: retention-policy
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+    storageSecretName: {{ template "gitlab.fullname" . }}-backup
+  schedule: {{ .Values.persistence.backup.schedule | quote }}
+  volumeMounts:
+    - name: data
+      mountPath: /gitlab-data
+      subPath: data
+    - name: data
+      mountPath: /etc/gitlab
+      subPath: etc
+  retentionPolicies:
+    - name: retention-policy
+      keepLast: {{ .Values.persistence.backup.keepLast }}
+      prune: true
+{{- end }}
+---
+{{- if (not (empty .Values.persistence.backup.restore.gitlabSnapshot)) }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Recovery
+metadata:
+  name: {{ template "gitlab.fullname" . }}-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    name: deployment.{{ template "gitlab.sharedname" . }}-gitlab
+    namespace: {{ .Release.Namespace }}
+    {{- if (and (not (empty .Values.persistence.backup.restore.gitlabSnapshot)) (not (eq .Values.persistence.backup.restore.gitlabSnapshot "latest"))) }}
+    snapshot: {{ .Values.persistence.backup.restore.gitlabSnapshot }}
+    {{- end }}
+  paths:
+    - /gitlab-data
+    - /etc/gitlab
+  recoveredVolumes:
+    - mountPath: /gitlab-data
+      subPath: data
+      persistentVolumeClaim:
+        claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+    - mountPath: /etc/gitlab
+      subPath: etc
+      persistentVolumeClaim:
+        claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+{{- end }}

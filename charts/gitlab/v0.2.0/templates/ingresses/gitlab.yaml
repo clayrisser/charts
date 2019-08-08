@@ -1,0 +1,36 @@
+{{- if .Values.ingress.enabled }}
+{{- $host := (index .Values.ingress.hosts.gitlab 0) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "gitlab.fullname" . }}-gitlab
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+    {{- if (empty .Values.ingress.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ $host.name }}
+      http:
+        paths:
+          - path: {{ $host.path }}
+            backend:
+              serviceName: {{ template "gitlab.fullname" . }}-gitlab
+              servicePort: http
+  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+  tls:
+    - secretName: {{ template "gitlab.certificate" . }}
+      hosts:
+        - {{ $host.name }}
+  {{- end }}
+{{- end }}

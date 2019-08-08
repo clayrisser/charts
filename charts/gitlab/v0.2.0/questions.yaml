@@ -3,19 +3,19 @@ categories:
 questions:
 
 # Images
-  - variable: images.keycloak.repository
-    default: jboss/keycloak
+  - variable: images.gitlab.repository
+    default: gitlab/gitlab-ce
     description: ''
     type: string
     required: true
-    label: 'keycloak repository'
+    label: 'gitlab repository'
     group: Images
-  - variable: images.keycloak.tag
-    default: 6.0.1
+  - variable: images.gitlab.tag
+    default: 12.0.3-ce.0
     description: ''
     type: string
     required: true
-    label: 'keycloak tag'
+    label: 'gitlab tag'
     group: Images
   - variable: images.pgadmin.repository
     default: dpage/pgadmin4
@@ -32,6 +32,22 @@ questions:
     required: true
     label: 'pgadmin tag'
     show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.phpredisadmin.repository
+    default: erikdubbelboer/phpredisadmin
+    description: ''
+    type: string
+    required: true
+    label: 'phpredisadmin repository'
+    show_if: config.phpredisadmin.enabled=true
+    group: Images
+  - variable: images.phpredisadmin.tag
+    default: v1.11.4
+    description: ''
+    type: string
+    required: true
+    label: 'phpredisadmin tag'
+    show_if: config.phpredisadmin.enabled=true
     group: Images
 
 # Config
@@ -55,43 +71,69 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.hostname
+  - variable: config.password
+    default: 'pass'
+    description: ''
+    type: password
+    required: true
+    label: 'password'
+    group: Config
+  - variable: config.baseUrl
     default: ''
     description: ''
     type: string
     required: false
-    label: 'hostname'
+    label: 'base url'
     group: Config
-  - variable: config.loglevel
-    default: INFO
+
+  # Keycloak Config
+  - variable: config.keycloak.enabled
+    default: false
     description: ''
-    type: enum
-    options:
-      - ALL
-      - DEBUG
-      - ERROR
-      - FATAL
-      - INFO
-      - OFF
-      - TRACE
-      - WARN
+    type: boolean
     required: true
-    label: loglevel
-    group: Config
-  - variable: config.username
-    default: admin
+    label: enabled
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.baseUrl
+    default: ''
     description: ''
     type: string
-    required: true
-    label: username
-    group: Config
-  - variable: config.password
-    default: pass
+    required: false
+    label: 'base url'
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.company
+    default: KeyCloak
     description: ''
-    type: password
-    required: true
-    label: password
-    group: Config
+    type: string
+    required: false
+    label: company
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.clientId
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'client id'
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.realmName
+    default: gatekeeper
+    description: ''
+    type: string
+    required: false
+    label: 'realm name'
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.certificate
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: certificate
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
 
 # Postgres Config
   - variable: config.postgres.internal
@@ -161,7 +203,7 @@ questions:
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.database
-    default: keycloak
+    default: gitlab
     description: ''
     type: string
     required: true
@@ -226,6 +268,130 @@ questions:
         required: true
         label: 'pgadmin password'
         group: PGAdmin
+
+# Redis Config
+  - variable: config.redis.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Redis Config'
+  - variable: config.redis.version
+    default: 5.0.3-v1
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.shards
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: shards
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.password
+    default: ''
+    description: ''
+    type: password
+    required: false
+    label: password
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.port
+    default: 6379
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.username
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: username
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+
+# PHPRedisAdmin
+  - variable: config.phpredisadmin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: phpredisadmin
+    show_subquestion_if: true
+    group: PHPRedisAdmin
+    subquestions:
+      - variable: config.phpredisadmin.username
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'phpredisadmin username'
+        group: PHPRedisAdmin
+      - variable: config.phpredisadmin.password
+        default: pass
+        description: ''
+        type: password
+        required: true
+        label: 'phpredisadmin password'
+        group: PHPRedisAdmin
 
 # Persistence
   - variable: persistence.enabled
@@ -373,6 +539,13 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup prefix'
+      - variable: persistence.backup.restore.gitlabSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore gitlab snapshot'
       - variable: persistence.backup.restore.postgresSnapshot
         default: ''
         description: ''
@@ -396,18 +569,18 @@ questions:
         type: boolean
         required: true
         label: 'ingress tls'
-      - variable: ingress.hosts.keycloak[0].name
+      - variable: ingress.hosts.gitlab[0].name
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'keycloak ingress hostname'
-      - variable: ingress.hosts.keycloak[0].path
+        label: 'gitlab ingress hostname'
+      - variable: ingress.hosts.gitlab[0].path
         default: /
         description: ''
         type: string
         required: true
-        label: 'keycloak ingress path'
+        label: 'gitlab ingress path'
       - variable: ingress.hosts.pgadmin[0].name
         default: xip.io
         description: ''
@@ -421,7 +594,20 @@ questions:
         type: string
         required: true
         label: 'pgadmin ingress path'
-        show_if: config.pgadmin.enabled=true
+      - variable: ingress.hosts.phpredisadmin[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'phpredisadmin ingress hostname'
+        show_if: config.phpredisadmin.enabled=true
+      - variable: ingress.hosts.phpredisadmin[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'phpredisadmin ingress path'
+        show_if: config.phpredisadmin.enabled=true
       - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -440,7 +626,7 @@ questions:
         show_if: ingress.tls=true&&ingress.issuer.name=none
         required: false
         label: 'ingress certificate'
-  - variable: service.keycloak.type
+  - variable: service.gitlab.type
     default: NodePort
     description: ''
     type: enum
@@ -454,14 +640,14 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.keycloak.nodePorts.http
+      - variable: service.gitlab.nodePorts.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false
-        label: 'keycloak http port'
+        label: 'gitlab http port'
   - variable: service.pgadmin.type
     default: NodePort
     description: ''
@@ -484,6 +670,28 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'pgadmin port'
+  - variable: service.phpredisadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.enabled=false&&config.phpredisadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'phpredisadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.phpredisadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'phpredisadmin port'
   - variable: service.postgres.type
     default: ClusterIP
     description: ''
@@ -505,3 +713,24 @@ questions:
         max: 32767
         show_if: ingress.enabled=false
         label: 'postgres port'
+  - variable: service.redis.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'redis service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.redis.nodePorts.redis
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: 'redis port'

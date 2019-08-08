@@ -1,0 +1,19 @@
+name: gitlab
+home: https://about.gitlab.com
+icon: https://about.gitlab.com/images/default-blog-image.png
+version: 0.2.0
+appVersion: latest
+description: 'a full devops toolchain'
+keywords:
+  - gitlab
+  - git
+  - vc
+  - project
+  - management
+  - version
+  - control
+sources:
+  - https://gitlab.com/gitlab-org/gitlab-ce
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
