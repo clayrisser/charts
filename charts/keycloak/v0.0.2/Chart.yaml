@@ -1,0 +1,27 @@
+name: keycloak
+home: https://github.com/codejamninja/charts
+icon: https://www.keycloak.org/resources/images/keycloak_logo_480x108.png
+version: 0.0.2
+appVersion: latest
+description: 'an open source identity and access management solution'
+keywords:
+  - keycloak
+  - keycloak
+  - key
+  - identity
+  - provider
+  - ldap
+  - oauth
+  - saml
+  - access
+  - sso
+  - single
+  - sign
+  - on
+  - federation
+  - management
+sources:
+  - https://github.com/codejamninja/charts
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

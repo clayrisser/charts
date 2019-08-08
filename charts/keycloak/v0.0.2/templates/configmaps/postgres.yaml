@@ -1,0 +1,13 @@
+{{- if .Values.config.postgres.internal }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "keycloak.fullname" . }}-postgres
+  labels:
+    app: {{ template "keycloak.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  user.conf: {{ .Values.config.postgres.customConfig | quote }}
+{{- end }}

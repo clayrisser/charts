@@ -1,0 +1,104 @@
+images:
+  keycloak:
+    repository: jboss/keycloak
+    tag: 6.0.1
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
+
+config:
+  hostname: ''
+  imagePullPolicy: IfNotPresent
+  loglevel: INFO
+  password: pass
+  updateStrategy: RollingUpdate
+  username: admin
+  postgres:
+    customConfig: ''
+    database: keycloak
+    host: ''
+    internal: true
+    password: postgres
+    port: 5432
+    prometheus: false
+    replicas: 1
+    secret: ''
+    standbyMode: hot
+    url: ''
+    username: postgres
+    version: 11.1
+  pgadmin:
+    email: admin
+    enabled: true
+    password: pass
+
+service:
+  keycloak:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres: ''
+
+ingress:
+  enabled: false
+  tls: false
+  certificate: ''
+  issuer:
+    name: letsencrypt-staging
+  hosts:
+    keycloak:
+      - name: ''
+        path: /
+    pgadmin:
+      - name: ''
+        path: /
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    schedule: '@midnight'
+    type: s3
+    restore:
+      keycloaksnapshot: ''
+      postgresSnapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
