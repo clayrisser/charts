@@ -559,7 +559,6 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.gitlab.enabled=true
     label: 'gitlab ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -568,28 +567,25 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.gitlab.enabled=true
         required: true
         label: 'gitlab ingress tls'
       - variable: ingress.gitlab.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.gitlab.enabled=true
         required: true
         label: 'gitlab ingress hostname'
       - variable: ingress.gitlab.path
         default: /
         description: ''
         type: string
-        show_if: config.gitlab.enabled=true
         required: true
         label: 'gitlab ingress path'
       - variable: ingress.gitlab.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.gitlab.enabled=true&&ingress.tls=true
+        show_if: ingress.gitlab.tls=true
         options:
           - none
           - letsencrypt-staging
@@ -600,7 +596,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: config.gitlab.enabled=true&&ingress.gitlab.tls=true&&ingress.gitlab.issuer.name=none
+        show_if: ingress.gitlab.tls=true&&ingress.gitlab.issuer.name=none
         required: false
         label: 'gitlab ingress certificate'
   - variable: service.gitlab.type
@@ -659,7 +655,7 @@ questions:
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.pgadmin.enabled=true&&ingress.tls=true
+        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true
         options:
           - none
           - letsencrypt-staging
