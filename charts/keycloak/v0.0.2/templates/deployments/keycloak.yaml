@@ -45,7 +45,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "keycloak.sharedname" . }}-postgres-auth
-                  key: username
+                  key: POSTGRES_USER
             {{- else }}
             - name: DB_USER
               valueFrom:
@@ -78,7 +78,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "keycloak.sharedname" . }}-postgres-auth
-                  key: password
+                  key: POSTGRES_PASSWORD
             {{- else }}
             - name: DB_PASSWORD
               valueFrom:

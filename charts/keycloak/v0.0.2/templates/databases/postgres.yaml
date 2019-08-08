@@ -39,11 +39,6 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
-  scriptSource:
-    configMap:
-      name: {{ template "keycloak.fullname" . }}-postgres-init
-  {{- end }}
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
@@ -59,17 +54,21 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
+  init:
+  {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
+    scriptSource:
+      configMap:
+        name: {{ template "keycloak.fullname" . }}-postgres-init
+  {{- else }}
+    snapshotSource:
+      name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
+      namespace: {{ .Release.Namespace }}
   databaseSecret:
     {{- if (empty .Values.config.postgres.secret) }}
     secretName: {{ template "keycloak.sharedname" . }}-postgres-auth
     {{- else }}
     secretName: {{ .Values.config.postgres.secret }}
     {{- end }}
-  init:
-    snapshotSource:
-      name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
-      namespace: {{ .Release.Namespace }}
   {{- end }}
   {{- end }}
   serviceTemplate:
