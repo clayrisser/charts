@@ -12,7 +12,7 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
-  password: pass
+  password: password
   gitlab:
     baseUrl: ''
   keycloak:

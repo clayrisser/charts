@@ -72,7 +72,7 @@ questions:
     label: 'update strategy'
     group: Config
   - variable: config.password
-    default: 'pass'
+    default: password
     description: ''
     type: password
     required: true
