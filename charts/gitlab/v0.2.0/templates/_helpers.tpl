@@ -87,11 +87,7 @@ Calculate gitlab base_url
 {{- $protocol := (.Values.ingress.gitlab.tls | ternary "https" "http") }}
 {{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
-{{- if (empty (include "gitlab.gitlab_hostname" .)) }}
-{{- printf "http://%s-gitlab" (include "gitlab.gitlab_hostname" .) }}
-{{- else }}
 {{- printf "http://%s" (include "gitlab.gitlab_hostname" .) }}
-{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
