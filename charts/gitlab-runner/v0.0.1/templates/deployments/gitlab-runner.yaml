@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gitlab-runner.fullname" . }}-gitlab-runner
+  labels:
+    app: {{ template "gitlab-runner.name" . }}-gitlab-runner
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "gitlab-runner.name" . }}-gitlab-runner
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "gitlab-runner.fullname" . }}-gitlab-runner
+          image: {{ .Values.images.gitlab-runner.repository }}:{{ .Values.images.gitlab-runner.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 9100
+          env: []
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

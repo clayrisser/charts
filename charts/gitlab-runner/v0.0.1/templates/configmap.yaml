@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitlab-runner.fullname" . }}
+  labels:
+    app: {{ template "gitlab-runner.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  gitlab_base_url: {{ .Values.config.gitlab.baseUrl | quote }}
