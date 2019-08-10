@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitlab-runner.fullname" . }}-scripts
+  labels:
+    app: {{ template "gitlab-runner.name" . }}-scripts
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  run.sh: |
+    #!/bin/bash
+    unregister() {
+        kill %1
+        echo "Unregistering runner ${RUNNER_NAME} ..."
+        /usr/bin/gitlab-ci-multi-runner unregister -t "$(/usr/bin/gitlab-ci-multi-runner list 2>&1 | tail -n1 | awk '{print $4}' | cut -d'=' -f2)" -n ${RUNNER_NAME}
+        exit $?
+    }
+    trap 'unregister' EXIT HUP INT QUIT PIPE TERM
+    echo "Registering runner ${RUNNER_NAME} ..."
+    /usr/bin/gitlab-ci-multi-runner register -r ${GITLAB_CI_TOKEN}
+    sed -i 's/^concurrent.*/concurrent = '"${RUNNER_REQUEST_CONCURRENCY}"'/' /home/gitlab-runner/.gitlab-runner/config.toml
+    echo "Starting runner ${RUNNER_NAME} ..."
+    /usr/bin/gitlab-ci-multi-runner run -n ${RUNNER_NAME} &
+    wait

@@ -3,19 +3,19 @@ categories:
 questions:
 
 # Images
-  - variable: images.gitlab-runner.repository
+  - variable: images.gitlabRunner.repository
     default: gitlab/gitlab-runner
     description: ''
     type: string
     required: true
-    label: 'gitlab-runner repository'
+    label: 'gitlab runner repository'
     group: Images
-  - variable: images.gitlab-runner.tag
+  - variable: images.gitlabRunner.tag
     default: v12.1.0
     description: ''
     type: string
     required: true
-    label: 'gitlab-runner tag'
+    label: 'gitlab runner tag'
     group: Images
 
 # Config
