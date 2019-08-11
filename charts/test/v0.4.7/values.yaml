@@ -2,7 +2,7 @@ images:
   nginx:
     repository: nginx
     tag: latest
-  mongo_express:
+  mongoExpress:
     repository: mongo-express
     tag: 0.49.0
   phpmyadmin:
@@ -101,7 +101,7 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  mongo_express:
+  mongoExpress:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -151,7 +151,7 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
-  mongo_express
+  mongoExpress
     certificate: ''
     enabled: false
     hostname: ''
