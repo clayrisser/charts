@@ -3,22 +3,6 @@ categories:
   - Database
 questions:
 
-# Images
-  - variable: images.mongo_express.repository
-    default: mongo-express
-    description: ''
-    type: string
-    required: true
-    label: repository
-    group: Images
-  - variable: images.mongo_express.tag
-    default: 0.49.0
-    description: ''
-    type: string
-    required: true
-    label: tag
-    group: Images
-
 # Config
   - variable: config.version
     default: 4.1.7-v1
@@ -367,3 +351,19 @@ questions:
         min: 30000
         max: 32767
         label: 'mongodb port'
+
+# Images
+  - variable: images.mongo_express.repository
+    default: mongo-express
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.mongo_express.tag
+    default: 0.49.0
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images

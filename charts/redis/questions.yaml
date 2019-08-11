@@ -3,22 +3,6 @@ categories:
   - Database
 questions:
 
-# Images
-  - variable: images.phpredisadmin.repository
-    default: erikdubbelboer/phpredisadmin
-    description: ''
-    type: string
-    required: true
-    label: repository
-    group: Images
-  - variable: images.phpredisadmin.tag
-    default: v1.11.4
-    description: ''
-    type: string
-    required: true
-    label: tag
-    group: Images
-
 # Config
   - variable: config.version
     default: 5.0.3-v1
@@ -343,3 +327,19 @@ questions:
         min: 30000
         max: 32767
         label: 'redis port'
+
+# Images
+  - variable: images.phpredisadmin.repository
+    default: erikdubbelboer/phpredisadmin
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.phpredisadmin.tag
+    default: v1.11.4
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images

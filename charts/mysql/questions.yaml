@@ -3,22 +3,6 @@ categories:
   - Database
 questions:
 
-# Images
-  - variable: images.phpmyadmin.repository
-    default: phpmyadmin/phpmyadmin
-    description: ''
-    type: string
-    required: true
-    label: repository
-    group: Images
-  - variable: images.phpmyadmin.tag
-    default: 4.7
-    description: ''
-    type: string
-    required: true
-    label: tag
-    group: Images
-
 # Config
   - variable: config.version
     default: 8.0.3
@@ -318,3 +302,19 @@ questions:
         min: 30000
         max: 32767
         label: 'mysql port'
+
+# Images
+  - variable: images.phpmyadmin.repository
+    default: phpmyadmin/phpmyadmin
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.phpmyadmin.tag
+    default: 4.7
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images

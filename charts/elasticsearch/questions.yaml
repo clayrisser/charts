@@ -3,22 +3,6 @@ categories:
   - Database
 questions:
 
-# Images
-  - variable: images.kibana.repository
-    default: kibana
-    description: ''
-    type: string
-    required: true
-    label: repository
-    group: Images
-  - variable: images.kibana.tag
-    default: 7.3.0
-    description: ''
-    type: string
-    required: true
-    label: tag
-    group: Images
-
 # Config
   - variable: config.version
     default: 6.4.0
@@ -332,3 +316,19 @@ questions:
         min: 30000
         max: 32767
         label: 'elasticsearch port'
+
+# Images
+  - variable: images.kibana.repository
+    default: kibana
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.kibana.tag
+    default: 7.3.0
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images

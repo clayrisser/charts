@@ -3,22 +3,6 @@ categories:
   - Database
 questions:
 
-# Images
-  - variable: images.pgadmin.repository
-    default: dpage/pgadmin4
-    description: ''
-    type: string
-    required: true
-    label: repository
-    group: Images
-  - variable: images.pgadmin.tag
-    default: 4.11
-    description: ''
-    type: string
-    required: true
-    label: tag
-    group: Images
-
 # Config
   - variable: config.version
     default: 11.1
@@ -346,3 +330,19 @@ questions:
         min: 30000
         max: 32767
         label: 'postgres port'
+
+# Images
+  - variable: images.pgadmin.repository
+    default: dpage/pgadmin4
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.pgadmin.tag
+    default: 4.11
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images
