@@ -151,7 +151,7 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
-  mongoExpress
+  mongoExpress:
     certificate: ''
     enabled: false
     hostname: ''
@@ -160,7 +160,7 @@ ingress:
     issuer:
       name: letsencrypt-staging
   
-  phpmyadmin
+  phpmyadmin:
     certificate: ''
     enabled: false
     hostname: ''
@@ -169,7 +169,7 @@ ingress:
     issuer:
       name: letsencrypt-staging
   
-  pgadmin
+  pgadmin:
     certificate: ''
     enabled: false
     hostname: ''
@@ -178,7 +178,7 @@ ingress:
     issuer:
       name: letsencrypt-staging
   
-  phpredisadmin
+  phpredisadmin:
     certificate: ''
     enabled: false
     hostname: ''
