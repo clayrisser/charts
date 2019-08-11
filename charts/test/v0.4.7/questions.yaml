@@ -833,7 +833,6 @@ questions:
         label: 'backup restore postgres snapshot'
 
 # Services and Load Balancing
-ingress:
   - variable: ingress.nginx.enabled
     default: true
     description: ''
