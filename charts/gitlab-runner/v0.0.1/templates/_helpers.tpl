@@ -27,13 +27,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate gitlab-runner hostname
+Calculate gitlab runner hostname
 */}}
 {{- define "gitlab-runner.gitlab-runner-hostname" }}
-{{- if (and .Values.config.gitlab-runner.hostname (not (empty .Values.config.gitlab-runner.hostname))) }}
-{{- printf .Values.config.gitlab-runner.hostname }}
+{{- if (and .Values.config.gitlabRunner.hostname (not (empty .Values.config.gitlabRunner.hostname))) }}
+{{- printf .Values.config.gitlabRunner.hostname }}
 {{- else }}
 {{- printf "%s-gitlab-runner" (include "gitlab-runner.fullname" .) }}
 {{- end }}
 {{- end }}
-
