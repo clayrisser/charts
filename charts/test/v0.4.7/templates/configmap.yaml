@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "test.fullname" . }}
+  labels:
+    app: {{ template "test.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- $mongodb := .Values.config.mongodb }}
+  {{- if $mongodb.internal }}
+  mongodb_host: {{ template "test.fullname" . }}-mongodb
+  {{- else }}
+  mongodb_host: {{ $mongodb.host | quote }}
+  {{- end }}
+  mongodb_database: {{ $mongodb.database | quote }}
+  mongodb_port: {{ $mongodb.port | quote }}
+  mongodb_username: {{ $mongodb.username | quote }}
+  {{- if .Values.config.mongoExpress.enabled }}
+  mongo_express_username: {{ .Values.config.mongoExpress.username | quote }}
+  {{- end }}
+  {{- $mysql := .Values.config.mysql }}
+  {{- if $mysql.internal }}
+  mysql_host: {{ template "test.fullname" . }}-mysql
+  {{- else }}
+  mysql_host: {{ $mysql.host | quote }}
+  {{- end }}
+  mysql_database: {{ $mysql.database | quote }}
+  mysql_port: {{ $mysql.port | quote }}
+  mysql_username: {{ $mysql.username | quote }}
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "test.fullname" . }}-postgres
+  {{- else }}
+  postgres_host: {{ $postgres.host | quote }}
+  {{- end }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}
+  {{- $redis := .Values.config.redis }}
+  {{- if $redis.internal }}
+  redis_host: {{ template "test.fullname" . }}-redis
+  {{- else }}
+  redis_host: {{ $redis.host | quote }}
+  {{- end }}
+  redis_port: {{ $redis.port | quote }}
+  redis_username: {{ $redis.username | quote }}
+  {{- if .Values.config.phpredisadmin.enabled }}
+  phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}
+  {{- end }}

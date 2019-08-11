@@ -1,0 +1,25 @@
+{{- if .Values.config.mongodb.internal }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "test.fullname" . }}-mongodb
+  labels:
+    app: {{ template "test.name" . }}-mongodb
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  mongodbd.conf: {{ .Values.config.mongodb.customConfig | quote }}
+{{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "test.fullname" . }}-mongodb-init
+  labels:
+    app: {{ template "test.name" . }}-mongodb-init
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  data.js: ''

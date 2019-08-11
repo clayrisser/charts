@@ -1,0 +1,13 @@
+name: test
+home: https://github.com/codejamninja/test
+icon: 
+version: 0.4.7
+appVersion: latest
+description: 'yeoman generator rancher 2 helm charts'
+keywords:
+  - test
+sources:
+  - https://github.com/codejamninja/test
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
