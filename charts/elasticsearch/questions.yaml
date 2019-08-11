@@ -242,86 +242,76 @@ questions:
         label: 'backup restore snapshot'
 
 # Services and Load Balancing
-  - variable: ingress.enabled
+  - variable: ingress.kibana.enabled
     default: true
     description: ''
     type: boolean
     show_if: config.kibana=true
-    label: 'ingress enabled'
+    label: 'kibana ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.tls
+      - variable: ingress.kibana.tls
         default: false
         description: ''
         type: boolean
         show_if: config.kibana=true
         required: true
-        label: tls
-      - variable: issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true&&config.kibana=true
-        options:
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: issuer
-      - variable: ingress.hosts.kibana[0].name
+        label: 'kibana ingress tls'
+      - variable: ingress.kibana.hostname
         default: xip.io
         description: ''
         type: hostname
         show_if: config.kibana=true
         required: true
-        label: 'kibana hostname'
-      - variable: ingress.hosts.kibana[0].path
+        label: 'kibana ingress hostname'
+      - variable: ingress.kibana.path
         default: /
         description: ''
         type: string
         show_if: config.kibana=true
         required: true
-        label: 'kibana path'
-      - variable: ingress.issuer.name
+        label: 'kibana ingress path'
+      - variable: ingress.kibana.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true
+        show_if: config.kibana=true&&ingress.kibana.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'ingress issuer name'
-      - variable: ingress.certificate
+        label: 'kibana ingress issuer name'
+      - variable: ingress.kibana.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.tls=true&&ingress.issuer.name=none
+        show_if: config.kibana=true&&ingress.kibana.tls=true&&ingress.kibana.issuer.name=none
         required: false
-        label: 'ingress certificate'
+        label: 'kibana ingress certificate'
   - variable: service.kibana.type
     default: NodePort
     description: ''
     type: enum
+    show_if: ingress.kibana.enabled=false&&config.kibana=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    show_if: ingress.enabled=false&&config.kibana=true
     label: 'kibana service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.kibana.nodePorts.kibana.http
+      - variable: service.kibana.nodePorts.http
         default: ''
         description: ''
         type: int
-        show_if: ingress.enabled=false&&config.kibana=true
         min: 30000
         max: 32767
-        label: 'kibana http port'
+        show_if: ingress.kibana.enabled=false
+        label: 'kibana port'
   - variable: service.elasticsearch.type
     default: ClusterIP
     description: ''
@@ -335,11 +325,10 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.elasticsearch.nodePorts.elasticsearch.port
+      - variable: service.elasticsearch.nodePorts.elasticsearch
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
         label: 'elasticsearch port'

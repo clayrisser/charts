@@ -253,86 +253,76 @@ questions:
         label: 'backup restore snapshot'
 
 # Services and Load Balancing
-  - variable: ingress.enabled
+  - variable: ingress.phpredisadmin.enabled
     default: true
     description: ''
     type: boolean
     show_if: config.phpredisadmin.enabled=true
-    label: 'ingress enabled'
+    label: 'phpredisadmin ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.tls
+      - variable: ingress.phpredisadmin.tls
         default: false
         description: ''
         type: boolean
         show_if: config.phpredisadmin.enabled=true
         required: true
-        label: tls
-      - variable: issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true&&config.phpredisadmin.enabled=true
-        options:
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: issuer
-      - variable: ingress.hosts.phpredisadmin[0].name
+        label: 'phpredisadmin ingress tls'
+      - variable: ingress.phpredisadmin.hostname
         default: xip.io
         description: ''
         type: hostname
         show_if: config.phpredisadmin.enabled=true
         required: true
-        label: 'phpredisadmin hostname'
-      - variable: ingress.hosts.phpredisadmin[0].path
+        label: 'phpredisadmin ingress hostname'
+      - variable: ingress.phpredisadmin.path
         default: /
         description: ''
         type: string
         show_if: config.phpredisadmin.enabled=true
         required: true
-        label: 'phpredisadmin path'
-      - variable: ingress.issuer.name
+        label: 'phpredisadmin ingress path'
+      - variable: ingress.phpredisadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true
+        show_if: config.phpredisadmin.enabled=true&&ingress.phpredisadmin.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'ingress issuer name'
-      - variable: ingress.certificate
+        label: 'phpredisadmin ingress issuer name'
+      - variable: ingress.phpredisadmin.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.tls=true&&ingress.issuer.name=none
+        show_if: config.phpredisadmin.enabled=true&&ingress.phpredisadmin.tls=true&&ingress.phpredisadmin.issuer.name=none
         required: false
-        label: 'ingress certificate'
+        label: 'phpredisadmin ingress certificate'
   - variable: service.phpredisadmin.type
     default: NodePort
     description: ''
     type: enum
+    show_if: ingress.phpredisadmin.enabled=false&&config.phpredisadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    show_if: ingress.enabled=false&&config.phpredisadmin.enabled=true
     label: 'phpredisadmin service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.phpredisadmin.nodePorts.phpredisadmin.http
+      - variable: service.phpredisadmin.nodePorts.http
         default: ''
         description: ''
         type: int
-        show_if: ingress.enabled=false&&config.phpredisadmin.enabled=true
         min: 30000
         max: 32767
-        label: 'phpredisadmin http port'
+        show_if: ingress.phpredisadmin.enabled=false
+        label: 'phpredisadmin port'
   - variable: service.redis.type
     default: ClusterIP
     description: ''
@@ -346,11 +336,10 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.redis.nodePorts.redis.port
+      - variable: service.redis.nodePorts.redis
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
         label: 'redis port'

@@ -228,86 +228,76 @@ questions:
         label: 'backup restore snapshot'
 
 # Services and Load Balancing
-  - variable: ingress.enabled
+  - variable: ingress.phpmyadmin.enabled
     default: true
     description: ''
     type: boolean
     show_if: config.phpmyadmin=true
-    label: 'ingress enabled'
+    label: 'phpmyadmin ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.tls
+      - variable: ingress.phpmyadmin.tls
         default: false
         description: ''
         type: boolean
         show_if: config.phpmyadmin=true
         required: true
-        label: tls
-      - variable: issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true&&config.phpmyadmin=true
-        options:
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: issuer
-      - variable: ingress.hosts.phpmyadmin[0].name
+        label: 'phpmyadmin ingress tls'
+      - variable: ingress.phpmyadmin.hostname
         default: xip.io
         description: ''
         type: hostname
         show_if: config.phpmyadmin=true
         required: true
-        label: 'phpmyadmin hostname'
-      - variable: ingress.hosts.phpmyadmin[0].path
+        label: 'phpmyadmin ingress hostname'
+      - variable: ingress.phpmyadmin.path
         default: /
         description: ''
         type: string
         show_if: config.phpmyadmin=true
         required: true
-        label: 'phpmyadmin path'
-      - variable: ingress.issuer.name
+        label: 'phpmyadmin ingress path'
+      - variable: ingress.phpmyadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true
+        show_if: config.phpmyadmin=true&&ingress.phpmyadmin.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'ingress issuer name'
-      - variable: ingress.certificate
+        label: 'phpmyadmin ingress issuer name'
+      - variable: ingress.phpmyadmin.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.tls=true&&ingress.issuer.name=none
+        show_if: config.phpmyadmin=true&&ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none
         required: false
-        label: 'ingress certificate'
+        label: 'phpmyadmin ingress certificate'
   - variable: service.phpmyadmin.type
     default: NodePort
     description: ''
     type: enum
+    show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    show_if: ingress.enabled=false&&config.phpmyadmin=true
     label: 'phpmyadmin service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.phpmyadmin.nodePorts.phpmyadmin.http
+      - variable: service.phpmyadmin.nodePorts.http
         default: ''
         description: ''
         type: int
-        show_if: ingress.enabled=false&&config.phpmyadmin=true
         min: 30000
         max: 32767
-        label: 'phpmyadmin http port'
+        show_if: ingress.phpmyadmin.enabled=false
+        label: 'phpmyadmin port'
   - variable: service.mysql.type
     default: ClusterIP
     description: ''
@@ -317,15 +307,14 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    label: 'postgres service type'
+    label: 'mysql service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.mysql.nodePorts.mysql.port
+      - variable: service.mysql.nodePorts.mysql
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
-        label: 'postgres port'
+        label: 'mysql port'

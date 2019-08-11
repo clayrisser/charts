@@ -32,15 +32,14 @@ service:
         port: ''
 
 ingress:
-  certificate: ''
-  enabled: false
-  tls: false
-  issuer:
-    name: letsencrypt-staging
-  hosts:
-    pgadmin:
-      - name: ''
-        path: /
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
 
 issuer:
   name: letsencrypt-staging

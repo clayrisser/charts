@@ -1,4 +1,4 @@
-{{- if .Values.config.mongo_express.enabled }}
+{{- if .Values.config.mongoExpress.enabled }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: {{ template "mongodb.fullname" . }}-mongo-express
-          image: {{ .Values.images.mongo_express.repository }}:{{ .Values.images.mongo_express.tag }}
-          imagePullPolicy: {{ .Values.images.mongo_express.pullPolicy }}
+          image: {{ .Values.images.mongoExpress.repository }}:{{ .Values.images.mongoExpress.tag }}
+          imagePullPolicy: {{ .Values.images.mongoExpress.pullPolicy }}
           ports:
             - name: container
               containerPort: 8081

@@ -27,12 +27,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate certificate
+Calculate mongo express certificate
 */}}
-{{- define "mongodb.certificate" }}
-{{- if (not (empty .Values.ingress.certificate)) }}
-{{- printf .Values.ingress.certificate }}
+{{- define "mongodb.mongo_express_certificate" }}
+{{- if (not (empty .Values.ingress.mongoExpress.certificate)) }}
+{{- printf .Values.ingress.mongoExpress.certificate }}
 {{- else }}
-{{- printf "%s-letsencrypt" (include "mongodb.fullname" .) }}
+{{- printf "%s-mongo-express-letsencrypt" (include "mongodb.fullname" .) }}
 {{- end }}
 {{- end }}

@@ -1,4 +1,4 @@
-{{- if .Values.config.mongo_express.enabled }}
+{{- if .Values.config.mongoExpress.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,20 +9,20 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if .Values.ingress.enabled }}
+  {{- if .Values.ingress.mongoExpress.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.mongo_express.type }}
-  {{- if (or (eq .Values.service.mongo_express.type "LoadBalancer") (eq .Values.service.mongo_express.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.mongo_express.externalTrafficPolicy }}
+  type: {{ .Values.service.mongoExpress.type }}
+  {{- if (or (eq .Values.service.mongoExpress.type "LoadBalancer") (eq .Values.service.mongoExpress.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.mongoExpress.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.mongo_express.type "NodePort") (not (empty .Values.service.mongo_express.nodePorts.mongo_express.http))) }}
-      nodePort: {{ .Values.service.mongo_express.nodePorts.mongo_express.http }}
+      {{- if (and (eq .Values.service.mongoExpress.type "NodePort") (not (empty .Values.service.mongoExpress.nodePorts.mongo_express.http))) }}
+      nodePort: {{ .Values.service.mongoExpress.nodePorts.mongo_express.http }}
       {{- end }}
   selector:
     app: {{ template "mongodb.name" . }}-mongo-express

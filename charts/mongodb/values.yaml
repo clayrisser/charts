@@ -1,5 +1,5 @@
 images:
-  mongo_express:
+  mongoExpress:
     repository: mongo-express
     tag: 0.49.0
     pullPolicy: IfNotPresent
@@ -11,7 +11,7 @@ config:
   secret: ''
   updateStrategy: RollingUpdate
   version: 4.1.7-v1
-  mongo_express:
+  mongoExpress:
     enabled: true
     password: pass
     username: admin
@@ -22,7 +22,7 @@ config:
     shards: 3
 
 service:
-  mongo_express:
+  mongoExpress:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -36,15 +36,14 @@ service:
         port: ''
 
 ingress:
-  certificate: ''
-  enabled: false
-  tls: false
-  issuer:
-    name: letsencrypt-staging
-  hosts:
-    mongo_express:
-      - name: ''
-        path: /
+  mongoExpress:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
 
 issuer:
   name: letsencrypt-staging

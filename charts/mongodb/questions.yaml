@@ -98,7 +98,7 @@ questions:
     group: Config
 
 # MongoExpress
-  - variable: config.mongo_express.enabled
+  - variable: config.mongoExpress.enabled
     default: true
     description: ''
     type: boolean
@@ -107,14 +107,14 @@ questions:
     show_subquestion_if: true
     group: MongoExpress
     subquestions:
-      - variable: config.mongo_express.username
+      - variable: config.mongoExpress.username
         default: admin
         description: ''
         type: string
         required: true
         label: 'mongo express username'
         group: MongoExpress
-      - variable: config.mongo_express.password
+      - variable: config.mongoExpress.password
         default: pass
         description: ''
         type: password
@@ -277,87 +277,77 @@ questions:
         label: 'backup restore snapshot'
 
 # Services and Load Balancing
-  - variable: ingress.enabled
+  - variable: ingress.mongoExpress.enabled
     default: true
     description: ''
     type: boolean
-    show_if: config.mongo_express.enabled=true
-    label: 'ingress enabled'
+    show_if: config.mongoExpress.enabled=true
+    label: 'mongo express ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.tls
+      - variable: ingress.mongoExpress.tls
         default: false
         description: ''
         type: boolean
-        show_if: config.mongo_express.enabled=true
+        show_if: config.mongoExpress.enabled=true
         required: true
-        label: tls
-      - variable: issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true&&config.mongo_express.enabled=true
-        options:
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: issuer
-      - variable: ingress.hosts.mongo_express[0].name
+        label: 'mongo express ingress tls'
+      - variable: ingress.mongoExpress.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.mongo_express.enabled=true
+        show_if: config.mongoExpress.enabled=true
         required: true
-        label: 'mongo express hostname'
-      - variable: ingress.hosts.mongo_express[0].path
+        label: 'mongo express ingress hostname'
+      - variable: ingress.mongoExpress.path
         default: /
         description: ''
         type: string
-        show_if: config.mongo_express.enabled=true
+        show_if: config.mongoExpress.enabled=true
         required: true
-        label: 'mongo express path'
-      - variable: ingress.issuer.name
+        label: 'mongo express ingress path'
+      - variable: ingress.mongoExpress.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true
+        show_if: config.mongoExpress.enabled=true&&ingress.mongoExpress.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'ingress issuer name'
-      - variable: ingress.certificate
+        label: 'mongo express ingress issuer name'
+      - variable: ingress.mongoExpress.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.tls=true&&ingress.issuer.name=none
+        show_if: config.mongoExpress.enabled=true&&ingress.mongoExpress.tls=true&&ingress.mongoExpress.issuer.name=none
         required: false
-        label: 'ingress certificate'
-  - variable: service.mongo_express.type
+        label: 'mongo express ingress certificate'
+  - variable: service.mongoExpress.type
     default: NodePort
     description: ''
     type: enum
+    show_if: ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    show_if: ingress.enabled=false&&config.mongo_express.enabled=true
     label: 'mongo express service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.mongo_express.nodePorts.mongo_express.http
+      - variable: service.mongoExpress.nodePorts.http
         default: ''
         description: ''
         type: int
-        show_if: ingress.enabled=false&&config.mongo_express.enabled=true
         min: 30000
         max: 32767
-        label: 'mongo express http port'
-  - variable: service.postgres.type
+        show_if: ingress.mongoExpress.enabled=false
+        label: 'mongo express port'
+  - variable: service.mongodb.type
     default: ClusterIP
     description: ''
     type: enum
@@ -366,15 +356,14 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    label: 'postgres service type'
+    label: 'mongodb service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.postgres.nodePorts.postgres.port
+      - variable: service.mongodb.nodePorts.mongodb
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
-        label: 'postgres port'
+        label: 'mongodb port'

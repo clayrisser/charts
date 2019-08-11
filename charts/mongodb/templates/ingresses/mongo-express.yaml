@@ -1,14 +1,13 @@
-{{- if (and .Values.ingress.enabled .Values.config.mongo_express.enabled) }}
-{{- $host := (index .Values.ingress.hosts.mongo_express 0) }}
+{{- if (and .Values.ingress.mongoExpress.enabled .Values.config.mongoExpress.enabled) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "mongodb.fullname" . }}-mongo-express
   annotations:
     kubernetes.io/ingress.class: nginx
-    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
-    {{- if (empty .Values.ingress.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
+    {{- if .Values.ingress.mongoExpress.tls }}
+    {{- if (empty .Values.ingress.mongoExpress.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.mongoExpress.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
@@ -20,17 +19,17 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ $host.name }}
+    - host: {{ .Values.ingress.mongoExpress.hostname }}
       http:
         paths:
-          - path: {{ $host.path }}
+          - path: {{ .Values.ingress.mongoExpress.path }}
             backend:
-              serviceName: {{ template "mongodb.fullname" $ }}-mongo-express
+              serviceName: {{ template "mongodb.fullname" . }}-mongo-express
               servicePort: http
-  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+  {{- if .Values.ingress.mongoExpress.tls }}
   tls:
-    - secretName: {{ template "mongodb.certificate" . }}
+    - secretName: {{ template "mongodb.mongo_express_certificate" . }}
       hosts:
-        - {{ $host.name }}
+        - {{ .Values.ingress.mongoExpress.hostname }}
   {{- end }}
 {{- end }}

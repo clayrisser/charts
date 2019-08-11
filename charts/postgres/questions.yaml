@@ -256,86 +256,76 @@ questions:
         label: 'backup restore snapshot'
 
 # Services and Load Balancing
-  - variable: ingress.enabled
+  - variable: ingress.pgadmin.enabled
     default: true
     description: ''
     type: boolean
     show_if: config.pgadmin.enabled=true
-    label: 'ingress enabled'
+    label: 'pgadmin ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.tls
+      - variable: ingress.pgadmin.tls
         default: false
         description: ''
         type: boolean
         show_if: config.pgadmin.enabled=true
         required: true
-        label: tls
-      - variable: issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true&&config.pgadmin.enabled=true
-        options:
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: issuer
-      - variable: ingress.hosts.pgadmin[0].name
+        label: 'pgadmin ingress tls'
+      - variable: ingress.pgadmin.hostname
         default: xip.io
         description: ''
         type: hostname
         show_if: config.pgadmin.enabled=true
         required: true
-        label: 'pgadmin hostname'
-      - variable: ingress.hosts.pgadmin[0].path
+        label: 'pgadmin ingress hostname'
+      - variable: ingress.pgadmin.path
         default: /
         description: ''
         type: string
         show_if: config.pgadmin.enabled=true
         required: true
-        label: 'pgadmin path'
-      - variable: ingress.issuer.name
+        label: 'pgadmin ingress path'
+      - variable: ingress.pgadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true
+        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'ingress issuer name'
-      - variable: ingress.certificate
+        label: 'pgadmin ingress issuer name'
+      - variable: ingress.pgadmin.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.tls=true&&ingress.issuer.name=none
+        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
         required: false
-        label: 'ingress certificate'
+        label: 'pgadmin ingress certificate'
   - variable: service.pgadmin.type
     default: NodePort
     description: ''
     type: enum
+    show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    show_if: ingress.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.pgadmin.nodePorts.pgadmin.http
+      - variable: service.pgadmin.nodePorts.http
         default: ''
         description: ''
         type: int
-        show_if: ingress.enabled=false&&config.pgadmin.enabled=true
         min: 30000
         max: 32767
-        label: 'pgadmin http port'
+        show_if: ingress.pgadmin.enabled=false
+        label: 'pgadmin port'
   - variable: service.postgres.type
     default: ClusterIP
     description: ''
@@ -349,11 +339,10 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.postgres.nodePorts.postgres.port
+      - variable: service.postgres.nodePorts.postgres
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
         label: 'postgres port'
