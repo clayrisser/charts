@@ -9,7 +9,6 @@ config:
   phpmyadmin: true
   prometheus: false
   replicas: 3
-  secret: ''
   topologyMode: GroupReplication
   updateStrategy: RollingUpdate
   version: 8.0.3
@@ -59,12 +58,14 @@ persistence:
     endpoint: s3.amazonaws.com
     googleProjectId: ''
     googleServiceKey: ''
-    # keepLast: 5
+    keepLast: 5
     prefix: ''
     resticPassword: pass
-    restoreSnapshot: ''
     schedule: '@midnight'
     type: s3
+    restore:
+      fullname: ''
+      snapshot: ''
 
 probes:
   liveness:

@@ -42,13 +42,6 @@ questions:
     required: true
     label: shards
     group: Config
-  - variable: config.secret
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: secret
-    group: Config
   - variable: config.customConfig
     default: ''
     description: ''

@@ -11,7 +11,6 @@ config:
   masterConfig: ''
   prometheus: false
   replicas: 1
-  secret: ''
   updateStrategy: RollingUpdate
   version: 6.4.0
 
@@ -60,12 +59,14 @@ persistence:
     endpoint: s3.amazonaws.com
     googleProjectId: ''
     googleServiceKey: ''
-    # keepLast: 5
+    keepLast: 5
     prefix: ''
     resticPassword: pass
-    restoreSnapshot: ''
     schedule: '@midnight'
     type: s3
+    restore:
+      fullname: ''
+      snapshot: ''
 
 probes:
   liveness:

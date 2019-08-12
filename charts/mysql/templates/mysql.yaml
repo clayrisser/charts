@@ -37,34 +37,6 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if .Values.persistence.backup.enabled }}
-  backupSchedule:
-    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "mysql.sharedname" . }}-mysql
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
-  databaseSecret:
-    {{- if (empty .Values.config.secret) }}
-    secretName: {{ template "mysql.sharedname" . }}-mysql-auth
-    {{- else }}
-    secretName: {{ .Values.config.secret }}
-    {{- end }}
-  init:
-    snapshotSource:
-      name: {{ .Values.persistence.backup.restoreSnapshot }}
-      namespace: {{ .Release.Namespace }}
-  {{- end }}
-  {{- end }}
   serviceTemplate:
     metadata:
       annotations:
@@ -103,3 +75,82 @@ spec:
   {{- else }}
   terminationPolicy: Delete
   {{- end }}
+{{- if .Values.persistence.backup.enabled }}
+---
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: {{ template "mysql.fullname" . }}-mysql
+  labels:
+    app: {{ template "mysql.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "mysql.fullname" . }}-kubedb
+spec:
+  clientConfig:
+    service:
+      name: {{ template "mysql.fullname" . }}-mysql
+      path: /
+      port: 3306
+      query: sslmode=disable
+      scheme: mysql
+  secret:
+    name: {{ template "mysql.sharedname" . }}-mysql-auth
+  type: kubedb.com/mysql
+  version: {{ .Values.config.mysql.version | quote }}
+{{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "mysql.fullname" . }}-restore-mysql
+  labels:
+    app: {{ template "mysql.name" . }}-restore-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      {{- $fullname := (empty $restore.fullname | ternary (include "mysql.fullname" .) $restore.fullname) }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mysql/{{ $fullname }}-mysql'
+    storageSecretName: {{ template "mysql.fullname" . }}-backup
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "mysql.fullname" . }}-mysql
+  labels:
+    app: {{ template "mysql.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    kubedb.com/kind: Mysql
+spec:
+  driver: Restic
+  task:
+    name: mysql-restore-${TARGET_APP_VERSION}
+  repository:
+    name: {{ template "mysql.fullname" . }}-restore-mysql
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: {{ template "mysql.fullname" . }}-mysql
+  rules:
+    - snapshots:
+      - {{ $restore.snapshot }}
+{{- end }}
+{{- end }}
