@@ -39,34 +39,6 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if .Values.persistence.backup.enabled }}
-  backupSchedule:
-    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "gitlab.sharedname" . }}-backup
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
-  databaseSecret:
-    {{- if (empty .Values.config.postgres.secret) }}
-    secretName: {{ template "gitlab.sharedname" . }}-postgres-auth
-    {{- else }}
-    secretName: {{ .Values.config.postgres.secret }}
-    {{- end }}
-  init:
-    snapshotSource:
-      name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
-      namespace: {{ .Release.Namespace }}
-  {{- end }}
-  {{- end }}
   {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
   init:
     scriptSource:
@@ -111,4 +83,66 @@ spec:
   {{- else }}
   terminationPolicy: Delete
   {{- end }}
+---
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: {{ template "gitlab.fullname" . }}-postgres
+  labels:
+    app: {{ template "gitlab.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-postgres
+  {{- end }}
+spec:
+  clientConfig:
+    service:
+      name: {{ template "gitlab.fullname" . }}-postgres
+      path: /
+      port: 5432
+      query: sslmode=disable
+      scheme: postgresql
+  secret:
+    {{- if (empty .Values.config.postgres.secret) }}
+    name: {{ template "gitlab.sharedname" . }}-postgres-auth
+    {{- else }}
+    name: {{ .Values.config.postgres.secret }}
+    {{- end }}
+  secretTransforms:
+    - renameKey:
+        from: POSTGRES_USER
+        to: username
+    - renameKey:
+        from: POSTGRES_PASSWORD
+        to: password
+  type: kubedb.com/postgres
+  version: {{ .Values.config.postgres.version | quote }}
+---
+{{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "gitlab.fullname" . }}-postgres
+  labels:
+    app: {{ template "gitlab.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    kubedb.com/kind: Postgres
+spec:
+  task:
+    name: postgres-restore-${TARGET_APP_VERSION}
+  repository:
+    name: appbinding-{{ template "gitlab.fullname" . }}-postgres
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: {{ template "gitlab.fullname" . }}-postgres
+  rules:
+    - snapshots:
+      - {{ .Values.persistence.backup.restore.gitlabSnapshot }}
 {{- end }}

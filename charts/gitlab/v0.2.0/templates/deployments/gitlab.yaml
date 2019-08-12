@@ -130,10 +130,8 @@ spec:
     - paths:
         - /gitlab-data
         - /etc/gitlab
-      {{- if (and (not (empty .Values.persistence.backup.restore.gitlabSnapshot)) (not (eq .Values.persistence.backup.restore.gitlabSnapshot "latest"))) }}
       snapshots:
         - {{ .Values.persistence.backup.restore.gitlabSnapshot }}
-      {{- end }}
   target:
     ref:
       apiVersion: apps/v1beta1
