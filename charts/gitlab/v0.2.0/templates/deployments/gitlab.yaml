@@ -111,3 +111,37 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+---
+{{- if (not (empty .Values.persistence.backup.restore.gitlabSnapshot)) }}
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "gitlab.fullname" . }}-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: deployment-{{ template "gitlab.fullname" . }}-gitlab
+  rules:
+    - paths:
+        - /gitlab-data
+        - /etc/gitlab
+      {{- if (and (not (empty .Values.persistence.backup.restore.gitlabSnapshot)) (not (eq .Values.persistence.backup.restore.gitlabSnapshot "latest"))) }}
+      snapshots:
+        - {{ .Values.persistence.backup.restore.gitlabSnapshot }}
+      {{- end }}
+  target:
+    ref:
+      apiVersion: apps/v1beta1
+      kind: Deployment
+      name: {{ template "gitlab.fullname" . }}-gitlab
+    volumeMounts:
+      - name: data
+        mountPath: /gitlab-data
+      - name: data
+        mountPath: /etc/gitlab
+{{- end }}
