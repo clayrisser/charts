@@ -178,14 +178,6 @@ questions:
     label: replicas
     show_if: config.postgres.internal=true
     group: 'Postgres Config'
-  - variable: config.postgres.secret
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: secret
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
   - variable: config.postgres.customConfig
     default: ''
     description: ''
@@ -307,14 +299,6 @@ questions:
     type: int
     required: true
     label: shards
-    show_if: config.redis.internal=true
-    group: 'Redis Config'
-  - variable: config.redis.secret
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: secret
     show_if: config.redis.internal=true
     group: 'Redis Config'
   - variable: config.redis.customConfig
@@ -539,6 +523,13 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup prefix'
+      - variable: persistence.backup.restore.fullname
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore fullname'
       - variable: persistence.backup.restore.gitlabSnapshot
         default: ''
         description: ''

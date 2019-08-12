@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
   {{- if .Values.persistence.backup.enabled }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-gitlab
+    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}
     stash.appscode.com/target-paths: '/gitlab-data,/etc/gitlab'
     stash.appscode.com/volume-mounts: 'data:/gitlab-data,data:/etc/gitlab'
   {{- end }}
@@ -111,8 +111,34 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.gitlabSnapshot))) }}
+{{- $restore := .Values.persistence.backup.restore }}
 ---
-{{- if (not (empty .Values.persistence.backup.restore.gitlabSnapshot)) }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "gitlab.fullname" . }}-restore-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-restore-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      {{- $fullname := (empty $restore.fullname | ternary (include "gitlab.fullname" .) $restore.fullname) }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/deployment/{{ $fullname }}-gitlab'
+    storageSecretName: {{ template "gitlab.fullname" . }}-backup
+---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
@@ -125,13 +151,13 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: deployment-{{ template "gitlab.fullname" . }}-gitlab
+    name: {{ template "gitlab.fullname" . }}-restore-gitlab
   rules:
     - paths:
         - /gitlab-data
         - /etc/gitlab
       snapshots:
-        - {{ .Values.persistence.backup.restore.gitlabSnapshot }}
+        - {{ $restore.gitlabSnapshot }}
   target:
     ref:
       apiVersion: apps/v1beta1

@@ -1,10 +1,10 @@
-{{- if .Values.persistence.backup.enabled }}
+{{- if (and .Values.persistence.backup.enabled) }}
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "gitlab.fullname" . }}-postgres
+  name: {{ template "gitlab.fullname" . }}
   labels:
-    app: {{ template "gitlab.name" . }}-postgres
+    app: {{ template "gitlab.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -20,10 +20,8 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      prefix: {{ .Values.persistence.backup.prefix | quote }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/deployment/${TARGET_NAME}'
     storageSecretName: {{ template "gitlab.fullname" . }}-backup
-  task:
-    name: postgres-backup-${TARGET_APP_VERSION}
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   retentionPolicy:
     name: retention-policy
