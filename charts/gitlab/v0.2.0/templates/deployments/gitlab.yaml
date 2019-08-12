@@ -7,6 +7,12 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-gitlab
+    stash.appscode.com/target-paths: '/gitlab-data,/etc/gitlab'
+    stash.appscode.com/volume-mounts: 'data:/gitlab-data,data:/etc/gitlab'
+  {{- end }}
 spec:
   strategy:
     type: {{ .Values.config.updateStrategy }}
