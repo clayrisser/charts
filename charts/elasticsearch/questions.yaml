@@ -210,7 +210,14 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup prefix'
-      - variable: persistence.backup.restoreSnapshot
+      - variable: persistence.backup.restore.fullname
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore fullname'
+      - variable: persistence.backup.restore.snapshot
         default: ''
         description: ''
         type: string
