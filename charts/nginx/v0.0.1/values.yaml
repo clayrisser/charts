@@ -1,0 +1,106 @@
+images:
+  nginx:
+    repository: nginx
+    tag: latest
+  phpmyadmin:
+    repository: phpmyadmin/phpmyadmin
+    tag: 4.7
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  nginx:
+    base_url: ''
+    hostname: ''
+  mysql:
+    customConfig: ''
+    database: nginx
+    host: ''
+    internal: true
+    password: root
+    phpmyadmin: false
+    port: 3306
+    prometheus: false
+    replicas: 3
+    secret: ''
+    standbyMode: hot
+    topologyMode: GroupReplication
+    url: ''
+    username: root
+    version: 8.0.3
+
+service:
+  nginx:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  phpmyadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  mysql:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql: ''
+
+ingress:
+  nginx:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  phpmyadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    restore:
+      nginxSnapshot: ''
+      mysqlSnapshot: ''
+    schedule: '@midnight'
+    type: s3
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

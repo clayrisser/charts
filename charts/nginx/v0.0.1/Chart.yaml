@@ -1,0 +1,13 @@
+name: nginx
+home: https://github.com/jam/nginx
+icon: 
+version: 0.0.1
+appVersion: latest
+description: 'A project for charts'
+keywords:
+  - nginx
+sources:
+  - https://github.com/jam/nginx
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

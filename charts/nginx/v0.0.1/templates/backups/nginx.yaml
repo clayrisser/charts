@@ -1,0 +1,64 @@
+{{- if .Values.persistence.backup.enabled }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Restic
+metadata:
+  name: {{ template "nginx.sharedname" . }}-nginx
+  labels:
+    app: {{ template "nginx.name" . }}-nginx
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "nginx.name" . }}-nginx
+  fileGroups:
+    - path: '/data'
+      retentionPolicyName: 'retention-policy'
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+    storageSecretName: {{ template "nginx.fullname" . }}-backup
+  schedule: {{ .Values.persistence.backup.schedule | quote }}
+  volumeMounts:
+    - name: data
+      mountPath: '/data'
+  retentionPolicies:
+    - name: 'retention-policy'
+      keepLast: {{ .Values.persistence.backup.keepLast }}
+      prune: true
+{{- end }}
+---
+{{- if (not (empty .Values.persistence.backup.restore.nginxSnapshot)) }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Recovery
+metadata:
+  name: {{ template "nginx.fullname" . }}-nginx
+  labels:
+    app: {{ template "nginx.name" . }}-nginx
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    name: deployment.{{ template "nginx.sharedname" . }}-nginx
+    namespace: {{ .Release.Namespace }}
+    {{- if (and (not (empty .Values.persistence.backup.restore.nginxSnapshot)) (not (eq .Values.persistence.backup.restore.nginxSnapshot "latest"))) }}
+    snapshot: {{ .Values.persistence.backup.restore.nginxSnapshot }}
+    {{- end }}
+  paths:
+    - '/data'
+  recoveredVolumes:
+    - mountPath: '/data'
+      persistentVolumeClaim:
+        claimName: {{ .Values.persistence.existingClaim | default (include "nginx.fullname" . ) }}
+{{- end }}

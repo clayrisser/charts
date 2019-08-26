@@ -1,0 +1,26 @@
+{{- if .Values.config.mysql.internal }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "nginx.fullname" . }}-mysql
+  labels:
+    app: {{ template "nginx.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  my-config.cnf: {{ .Values.config.mysql.customConfig | quote }}
+{{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "nginx.fullname" . }}-mysql-init
+  labels:
+    app: {{ template "nginx.name" . }}-mysql-init
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS {{ .Values.config.mysql.database }};

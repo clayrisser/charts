@@ -1,0 +1,514 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+
+# MySQL Config
+  - variable: config.mysql.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'MySQL Config'
+  - variable: config.mysql.version
+    default: 8.0.3
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.phpmyadmin
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: phpmyadmin
+    group: 'MySQL Config'
+  - variable: config.mysql.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'sharding enabled'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.configServerReplicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding config server replicas'
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.mongosReplicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding mongos replicas'
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding shards'
+    group: 'MySQL Config'
+  - variable: config.mysql.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.database
+    default: nginx
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.password
+    default: root
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.port
+    default: 3306
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.username
+    default: root
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.backup.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'backup enabled'
+      - variable: persistence.backup.resticPassword
+        default: pass
+        description: ''
+        type: password
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup restic password'
+      - variable: persistence.backup.schedule
+        default: '@midnight'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup schedule'
+      - variable: persistence.backup.keepLast
+        default: 5
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup keep last'
+      - variable: persistence.backup.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup type'
+      - variable: persistence.backup.awsAccessKey
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws access key'
+      - variable: persistence.backup.awsSecretKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws secret key'
+      - variable: persistence.backup.googleProjectId
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google project id'
+      - variable: persistence.backup.googleServiceKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google service key'
+      - variable: persistence.backup.azureAccountName
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account name'
+      - variable: persistence.backup.azureAccountKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account key'
+      - variable: persistence.backup.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'backup container'
+      - variable: persistence.backup.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup bucket'
+      - variable: persistence.backup.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'backup endpoint'
+      - variable: persistence.backup.prefix
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup prefix'
+      - variable: persistence.backup.restore.nginxSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore nginx snapshot'
+      - variable: persistence.backup.restore.mysqlSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore mysql snapshot'
+
+# Services and Load Balancing
+  - variable: ingress.nginx.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'nginx ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.nginx.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'nginx ingress tls'
+      - variable: ingress.nginx.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'nginx ingress hostname'
+      - variable: ingress.nginx.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'nginx ingress path'
+      - variable: ingress.nginx.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.nginx.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'nginx ingress issuer name'
+      - variable: ingress.nginx.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.nginx.tls=true&&ingress.nginx.issuer.name=none
+        required: false
+        label: 'nginx ingress certificate'
+  - variable: service.nginx.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.nginx.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'nginx service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.nginx.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.nginx.enabled=false
+        label: 'nginx http port'
+  - variable: ingress.phpmyadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.phpmyadmin.enabled=true
+    label: 'phpmyadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpmyadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.phpmyadmin.enabled=true
+        required: true
+        label: 'phpmyadmin ingress tls'
+      - variable: ingress.phpmyadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.phpmyadmin.enabled=true
+        required: true
+        label: 'phpmyadmin ingress hostname'
+      - variable: ingress.phpmyadmin.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.phpmyadmin.enabled=true
+        required: true
+        label: 'phpmyadmin ingress path'
+      - variable: ingress.phpmyadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.phpmyadmin.enabled=true&&ingress.phpmyadmin.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpmyadmin ingress issuer name'
+      - variable: ingress.phpmyadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.phpmyadmin.enabled=true&&ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none
+        required: false
+        label: 'phpmyadmin ingress certificate'
+  - variable: service.phpmyadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'phpmyadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.phpmyadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.phpmyadmin.enabled=false
+        label: 'phpmyadmin port'
+  - variable: service.mysql.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mysql service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mysql.nodePorts.mysql
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mysql port'
+
+# Images
+  - variable: images.nginx.repository
+    default: nginx
+    description: ''
+    type: string
+    required: true
+    label: 'nginx repository'
+    group: Images
+  - variable: images.nginx.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'nginx tag'
+    group: Images
+  - variable: images.phpmyadmin.repository
+    default: phpmyadmin/phpmyadmin
+    description: ''
+    type: string
+    required: true
+    label: 'phpmyadmin repository'
+    show_if: config.mysql.phpmyadmin=true
+    group: Images
+  - variable: images.phpmyadmin.tag
+    default: 4.7
+    description: ''
+    type: string
+    required: true
+    label: 'phpmyadmin tag'
+    show_if: config.mysql.phpmyadmin=true
+    group: Images

@@ -1,0 +1,35 @@
+{{- if .Values.ingress.nginx.enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "nginx.fullname" . }}-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.nginx.tls }}
+    {{- if (empty .Values.ingress.nginx.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.nginx.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "nginx.name" . }}-nginx
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.nginx.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.nginx.path }}
+            backend:
+              serviceName: {{ template "nginx.fullname" . }}-nginx
+              servicePort: http
+  {{- if .Values.ingress.nginx.tls }}
+  tls:
+    - secretName: {{ template "nginx.nginx_certificate" . }}
+      hosts:
+        - {{ .Values.ingress.nginx.hostname }}
+  {{- end }}
+{{- end }}
