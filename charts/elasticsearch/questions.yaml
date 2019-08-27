@@ -294,7 +294,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.kibana.enabled=false
+        show_if: ingress.kibana.enabled=false&&config.kibana=true
         label: 'kibana port'
   - variable: service.elasticsearch.type
     default: ClusterIP

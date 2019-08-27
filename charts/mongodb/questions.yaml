@@ -329,7 +329,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.mongoExpress.enabled=false
+        show_if: ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
         label: 'mongo express port'
   - variable: service.mongodb.type
     default: ClusterIP

@@ -280,7 +280,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.phpmyadmin.enabled=false
+        show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin=true
         label: 'phpmyadmin port'
   - variable: service.mysql.type
     default: ClusterIP

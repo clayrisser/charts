@@ -308,7 +308,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.pgadmin.enabled=false
+        show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
         label: 'pgadmin port'
   - variable: service.postgres.type
     default: ClusterIP

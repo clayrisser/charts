@@ -298,7 +298,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.phpredisadmin.enabled=false
+        show_if: ingress.phpredisadmin.enabled=false&&config.phpredisadmin.enabled=true
         label: 'phpredisadmin port'
   - variable: service.redis.type
     default: ClusterIP
