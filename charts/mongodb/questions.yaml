@@ -359,6 +359,7 @@ questions:
     type: string
     required: true
     label: repository
+    show_if: ingress.mongoExpress.enabled=true
     group: Images
   - variable: images.mongo_express.tag
     default: 0.49.0
@@ -366,4 +367,5 @@ questions:
     type: string
     required: true
     label: tag
+    show_if: ingress.mongoExpress.enabled=true
     group: Images

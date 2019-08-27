@@ -310,6 +310,7 @@ questions:
     type: string
     required: true
     label: repository
+    show_if: ingress.phpmyadmin.enabled=true
     group: Images
   - variable: images.phpmyadmin.tag
     default: 4.7
@@ -317,4 +318,5 @@ questions:
     type: string
     required: true
     label: tag
+    show_if: ingress.phpmyadmin.enabled=true
     group: Images

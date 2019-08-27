@@ -324,6 +324,7 @@ questions:
     type: string
     required: true
     label: repository
+    show_if: ingress.kibana.enabled=true
     group: Images
   - variable: images.kibana.tag
     default: 7.3.0
@@ -331,4 +332,5 @@ questions:
     type: string
     required: true
     label: tag
+    show_if: ingress.kibana.enabled=true
     group: Images
