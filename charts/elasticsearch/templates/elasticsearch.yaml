@@ -50,8 +50,8 @@ spec:
         - name: elasticsearch
           port: 9200
           targetPort: elasticsearch
-          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch.port))) }}
-          nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch.port }}
+          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch))) }}
+          nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
@@ -65,8 +65,8 @@ spec:
         - name: elasticsearch
           port: 9200
           targetPort: elasticsearch
-          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch.port))) }}
-          nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch.port }}
+          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch))) }}
+          nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch }}
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}

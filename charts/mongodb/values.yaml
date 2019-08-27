@@ -25,14 +25,12 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      mongo_express:
-        http: ''
+      http: ''
   mongodb:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      mongodb:
-        port: ''
+      mongodb: ''
 
 ingress:
   mongoExpress:

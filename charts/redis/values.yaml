@@ -21,14 +21,12 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      phpredisadmin:
-        http: ''
+      http: ''
   redis:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      redis:
-        port: ''
+      redis: ''
 
 ingress:
   phpredisadmin:

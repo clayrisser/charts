@@ -18,14 +18,12 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      phpmyadmin:
-        http: ''
+      http: ''
   mysql:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      mysql:
-        port: ''
+      mysql: ''
 
 ingress:
   phpmyadmin:

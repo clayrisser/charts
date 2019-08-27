@@ -21,14 +21,12 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      pgadmin:
-        http: ''
+      http: ''
   postgres:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      postgres:
-        port: ''
+      postgres: ''
 
 ingress:
   pgadmin:

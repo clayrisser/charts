@@ -19,14 +19,12 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      kibana:
-        http: ''
+      http: ''
   elasticsearch:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      elasticsearch:
-        port: ''
+      elasticsearch: ''
 
 ingress:
   kibana:
