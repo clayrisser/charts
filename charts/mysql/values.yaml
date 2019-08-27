@@ -11,7 +11,7 @@ config:
   replicas: 3
   topologyMode: GroupReplication
   updateStrategy: RollingUpdate
-  version: 8.0.3
+  version: 8.0.14
 
 service:
   phpmyadmin:

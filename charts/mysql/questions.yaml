@@ -5,7 +5,7 @@ questions:
 
 # Config
   - variable: config.version
-    default: 8.0.3
+    default: 8.0.14
     description: ''
     type: string
     required: true

@@ -1,0 +1,4 @@
+dependencies:
+  - name: stash-mysql-8.0.14
+    version: 8.0.14
+    repository: https://github.com/stashed/mysql/chart
