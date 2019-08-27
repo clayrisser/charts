@@ -155,7 +155,6 @@ spec:
   secret:
     name: {{ template "mongodb.sharedname" . }}-mongodb-auth
   type: kubedb.com/mongodb
-  version: {{ .Values.config.mongodb.version | quote }}
 {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---

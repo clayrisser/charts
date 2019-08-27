@@ -99,7 +99,6 @@ spec:
   secret:
     name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
   type: kubedb.com/elasticsearch
-  version: {{ .Values.config.version | quote }}
 {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---
