@@ -10,7 +10,7 @@ config:
   replicas: 1
   standbyMode: hot
   updateStrategy: RollingUpdate
-  version: 11.1
+  version: 11.2
   pgadmin:
     email: admin
     enabled: true

@@ -5,7 +5,7 @@ questions:
 
 # Config
   - variable: config.version
-    default: 11.1
+    default: 11.2
     description: ''
     type: string
     required: true
