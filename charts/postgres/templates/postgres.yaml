@@ -98,7 +98,7 @@ spec:
       query: sslmode=disable
       scheme: postgresql
   secret:
-    name: {{ template "postgres.sharedname" . }}-postgres-auth
+    name: {{ template "postgres.sharedname" . }}-postgres-auth-test
   secretTransforms:
     - renameKey:
         from: POSTGRES_USER
