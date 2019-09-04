@@ -48,20 +48,6 @@ persistence:
   existingClaim: ''
   size: 1Gi
   storageClass: ''
-  backup:
-    awsAccessKey: ''
-    awsSecretKey: ''
-    azureAccountKey: ''
-    azureAccountName: ''
-    bucket: ''
-    container: ''
-    enabled: false
-    endpoint: s3.amazonaws.com
-    googleProjectId: ''
-    googleServiceKey: ''
-    prefix: ''
-    resticPassword: pass
-    type: s3
 
 probes:
   liveness:
