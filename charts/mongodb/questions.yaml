@@ -5,7 +5,7 @@ questions:
 
 # Config
   - variable: config.version
-    default: 3.6
+    default: 4.1.7-v1
     description: ''
     type: string
     required: true

@@ -9,7 +9,7 @@ config:
   prometheus: false
   replicas: 1
   updateStrategy: RollingUpdate
-  version: 3.6
+  version: 4.1.7-v1
   mongoExpress:
     enabled: true
     password: pass
