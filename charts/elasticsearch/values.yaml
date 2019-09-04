@@ -60,7 +60,7 @@ persistence:
     keepLast: 5
     prefix: ''
     resticPassword: pass
-    schedule: '@midnight'
+    schedule: '0 0 * * *'
     type: s3
     restore:
       fullname: ''
