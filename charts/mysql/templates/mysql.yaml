@@ -126,7 +126,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       {{- $fullname := (empty $restore.fullname | ternary (include "mysql.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mysql/{{ $fullname }}-mysql'
+      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/mysql/{{ $fullname }}-mysql'
     storageSecretName: {{ template "mysql.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
@@ -142,7 +142,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: mysql-restore-${TARGET_APP_VERSION}
+    name: mysql-restore-{{ .Values.config.version }}
   repository:
     name: {{ template "mysql.fullname" . }}-restore-mysql
   target:

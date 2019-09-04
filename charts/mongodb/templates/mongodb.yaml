@@ -182,7 +182,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       {{- $fullname := (empty $restore.fullname | ternary (include "mongodb.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mongodb/{{ $fullname }}-mongodb'
+      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/mongodb/{{ $fullname }}-mongodb'
     storageSecretName: {{ template "mongodb.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
@@ -198,7 +198,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: mongodb-restore-${TARGET_APP_VERSION}
+    name: mongodb-restore-{{ .Values.config.version }}
   repository:
     name: {{ template "mongodb.fullname" . }}-restore-mongodb
   target:

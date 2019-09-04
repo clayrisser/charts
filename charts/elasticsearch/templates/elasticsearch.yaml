@@ -126,7 +126,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       {{- $fullname := (empty $restore.fullname | ternary (include "elasticsearch.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/elasticsearch/{{ $fullname }}-elasticsearch'
+      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/elasticsearch/{{ $fullname }}-elasticsearch'
     storageSecretName: {{ template "elasticsearch.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
@@ -142,7 +142,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: elasticsearch-restore-${TARGET_APP_VERSION}
+    name: elasticsearch-restore-{{ .Values.config.version }}
   repository:
     name: {{ template "elasticsearch.fullname" . }}-restore-elasticsearch
   target:
