@@ -12,6 +12,10 @@ spec:
   configSource:
     configMap:
       name: {{ template "mysql.fullname" . }}-mysql
+  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  databaseSecret:
+    secretName: {{ template "mysql.sharedname" . }}-mysql-auth
+  {{- end }}
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -96,8 +100,6 @@ spec:
       port: 3306
       query: sslmode=disable
       scheme: mysql
-  secret:
-    name: {{ template "mysql.sharedname" . }}-mysql-auth
   type: kubedb.com/mysql
 {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}

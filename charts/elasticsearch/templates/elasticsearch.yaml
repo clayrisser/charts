@@ -12,6 +12,10 @@ spec:
   configSource:
     configMap:
       name: {{ template "elasticsearch.fullname" . }}-elasticsearch
+  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  databaseSecret:
+    secretName: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
+  {{- end }}
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -96,8 +100,6 @@ spec:
       port: 9200
       query: sslmode=disable
       scheme: elasticsearch
-  secret:
-    name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
   type: kubedb.com/elasticsearch
 {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}

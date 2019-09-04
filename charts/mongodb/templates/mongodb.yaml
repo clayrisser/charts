@@ -9,6 +9,10 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   version: {{ .Values.config.version | quote }}
+  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  databaseSecret:
+    secretName: {{ template "mongodb.sharedname" . }}-mongodb-auth
+  {{- end }}
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -152,8 +156,6 @@ spec:
       port: 27017
       query: sslmode=disable
       scheme: mongodb
-  secret:
-    name: {{ template "mongodb.sharedname" . }}-mongodb-auth
   type: kubedb.com/mongodb
 {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
