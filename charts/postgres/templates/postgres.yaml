@@ -132,7 +132,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       {{- $fullname := (empty $restore.fullname | ternary (include "postgres.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres/{{ $fullname }}-postgres'
+      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/postgres/{{ $fullname }}-postgres'
     storageSecretName: {{ template "postgres.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
