@@ -13,6 +13,10 @@ spec:
     configMap:
       name: {{ template "postgres.fullname" . }}-postgres
   standbyMode: {{ .Values.config.standbyMode | quote }}
+  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  databaseSecret:
+    secretName: {{ template "postgres.sharedname" . }}-postgres-auth
+  {{- end }}
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -97,8 +101,6 @@ spec:
       port: 5432
       query: sslmode=disable
       scheme: postgresql
-  secret:
-    name: {{ template "postgres.sharedname" . }}-postgres-auth-test
   secretTransforms:
     - renameKey:
         from: POSTGRES_USER
