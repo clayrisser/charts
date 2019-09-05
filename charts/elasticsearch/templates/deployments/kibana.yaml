@@ -27,7 +27,7 @@ spec:
               value: http://{{ template "elasticsearch.fullname" . }}-elasticsearch:9200
             - name: ELASTICSEARCH_USERNAME
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
                   key: username
             - name: ELASTICSEARCH_PASSWORD
