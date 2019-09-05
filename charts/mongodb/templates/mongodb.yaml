@@ -97,6 +97,12 @@ spec:
         storage: {{ .Values.persistence.size }}
   {{- end }}
   {{- end }}
+  {{- if (empty .Values.persistence.backup.restore.snapshot) }}
+  init:
+    scriptSource:
+      configMap:
+        name: {{ template "mongodb.fullname" . }}-mongodb-init
+  {{- end }}
   serviceTemplate:
     metadata:
       annotations:

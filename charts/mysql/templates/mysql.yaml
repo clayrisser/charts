@@ -41,6 +41,12 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
+  {{- if (empty .Values.persistence.backup.restore.snapshot) }}
+  init:
+    scriptSource:
+      configMap:
+        name: {{ template "mysql.fullname" . }}-mysql-init
+  {{- end }}
   serviceTemplate:
     metadata:
       annotations:

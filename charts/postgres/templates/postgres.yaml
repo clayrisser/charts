@@ -42,6 +42,12 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
+  {{- if (empty .Values.persistence.backup.restore.snapshot) }}
+  init:
+    scriptSource:
+      configMap:
+        name: {{ template "postgres.fullname" . }}-postgres-init
+  {{- end }}
   serviceTemplate:
     metadata:
       annotations:

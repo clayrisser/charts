@@ -9,3 +9,15 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   user.conf: {{ .Values.config.customConfig | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "postgres.fullname" . }}-postgres-init
+  labels:
+    app: {{ template "postgres.name" . }}-postgres-init
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  data.sql: ''
