@@ -2,9 +2,6 @@ images:
   nginx:
     repository: nginx
     tag: latest
-  pgadmin:
-    repository: dpage/pgadmin4
-    tag: 4.11
 
 config:
   imagePullPolicy: IfNotPresent
@@ -12,23 +9,6 @@ config:
   nginx:
     base_url: ''
     hostname: ''
-  postgres:
-    customConfig: ''
-    database: nginx
-    host: ''
-    internal: true
-    password: postgres
-    port: 5432
-    prometheus: false
-    replicas: 1
-    standbyMode: hot
-    url: ''
-    username: postgres
-    version: 11.2
-  pgadmin:
-    email: admin
-    enabled: false
-    password: pass
 
 service:
   nginx:
@@ -36,16 +16,6 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  pgadmin:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http: ''
-  postgres:
-    type: ClusterIP
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      postgres: ''
 
 ingress:
   nginx:
@@ -56,15 +26,6 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
-  pgadmin:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    path: /
-    tls: false
-    issuer:
-      name: letsencrypt-staging
-  
 
 persistence:
   accessMode: ReadWriteOnce
@@ -90,7 +51,6 @@ persistence:
     type: s3
     restore:
       nginxsnapshot: ''
-      postgressnapshot: ''
 
 probes:
   liveness:
