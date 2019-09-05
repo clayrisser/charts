@@ -75,8 +75,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      {{- $fullname := (empty $restore.fullname | ternary (include "nginx.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/deployment/{{ $fullname }}-nginx'
+      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/deployment'
     storageSecretName: {{ template "nginx.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
