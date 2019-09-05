@@ -92,9 +92,7 @@ spec:
   repository:
     name: {{ template "nginx.fullname" . }}-restore-nginx
   rules:
-    - paths:
-        - '/data'
-      snapshots:
+    - snapshots:
         - {{ $restore.nginxSnapshot }}
   target:
     ref:
