@@ -2,9 +2,9 @@ images:
   nginx:
     repository: nginx
     tag: latest
-  phpmyadmin:
-    repository: phpmyadmin/phpmyadmin
-    tag: 4.7
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
 
 config:
   imagePullPolicy: IfNotPresent
@@ -12,22 +12,23 @@ config:
   nginx:
     base_url: ''
     hostname: ''
-  mysql:
+  postgres:
     customConfig: ''
     database: nginx
     host: ''
     internal: true
-    password: root
-    phpmyadmin: false
-    port: 3306
+    password: postgres
+    port: 5432
     prometheus: false
-    replicas: 3
-    secret: ''
+    replicas: 1
     standbyMode: hot
-    topologyMode: GroupReplication
     url: ''
-    username: root
-    version: 8.0.3
+    username: postgres
+    version: 11.2
+  pgadmin:
+    email: admin
+    enabled: false
+    password: pass
 
 service:
   nginx:
@@ -35,16 +36,16 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  phpmyadmin:
+  pgadmin:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  mysql:
+  postgres:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      mysql: ''
+      postgres: ''
 
 ingress:
   nginx:
@@ -55,7 +56,7 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
-  phpmyadmin:
+  pgadmin:
     certificate: ''
     enabled: false
     hostname: ''
@@ -85,11 +86,11 @@ persistence:
     keepLast: 5
     prefix: ''
     resticPassword: pass
-    restore:
-      nginxSnapshot: ''
-      mysqlSnapshot: ''
-    schedule: '@midnight'
+    schedule: '0 0 * * *'
     type: s3
+    restore:
+      nginxsnapshot: ''
+      postgressnapshot: ''
 
 probes:
   liveness:

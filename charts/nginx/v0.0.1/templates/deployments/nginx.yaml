@@ -7,6 +7,12 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "nginx.fullname" . }}
+    stash.appscode.com/target-paths: '/data'
+    stash.appscode.com/volume-mounts: 'test:/data'
+  {{- end }}
 spec:
   strategy:
     type: {{ .Values.config.updateStrategy }}
@@ -24,8 +30,9 @@ spec:
             - name: container
               containerPort: 80
           volumeMounts:
-            - name: data
+            - name: test
               mountPath: '/data'
+              subPath: hello
           env: []
           livenessProbe:
             httpGet:
@@ -38,10 +45,65 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
-        - name: data
+        - name: test
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "nginx.fullname" . ) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.nginxSnapshot))) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "nginx.fullname" . }}-restore-nginx
+  labels:
+    app: {{ template "nginx.name" . }}-restore-nginx
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      {{- $fullname := (empty $restore.fullname | ternary (include "nginx.fullname" .) $restore.fullname) }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/deployment/{{ $fullname }}-nginx'
+    storageSecretName: {{ template "nginx.fullname" . }}-backup
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "nginx.fullname" . }}-nginx
+  labels:
+    app: {{ template "nginx.name" . }}-nginx
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "nginx.fullname" . }}-restore-nginx
+  rules:
+    - paths:
+        - '/data'
+      snapshots:
+        - {{ $restore.nginxSnapshot }}
+  target:
+    ref:
+      apiVersion: apps/v1beta1
+      kind: Deployment
+      name: {{ template "nginx.fullname" . }}-nginx
+    volumeMounts:
+      - name: test
+        mountPath: '/data'
+{{- end }}

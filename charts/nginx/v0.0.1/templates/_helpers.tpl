@@ -38,13 +38,13 @@ Calculate nginx certificate
 {{- end }}
 
 {{/*
-Calculate phpmyadmin certificate
+Calculate pgadmin certificate
 */}}
-{{- define "nginx.phpmyadmin-certificate" }}
-{{- if (not (empty .Values.ingress.phpmyadmin.certificate)) }}
-{{- printf .Values.ingress.phpmyadmin.certificate }}
+{{- define "nginx.pgadmin-certificate" }}
+{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
+{{- printf .Values.ingress.pgadmin.certificate }}
 {{- else }}
-{{- printf "%s-phpmyadmin-letsencrypt" (include "nginx.fullname" .) }}
+{{- printf "%s-pgadmin-letsencrypt" (include "nginx.fullname" .) }}
 {{- end }}
 {{- end }}
 
@@ -83,18 +83,18 @@ Calculate nginx base url
 
 
 {{/*
-Calculate mysql url
+Calculate postgres url
 */}}
-{{- define "nginx.mysql_url" }}
-{{- $mysql := .Values.config.mysql }}
-{{- if $mysql.internal }}
-{{- $credentials := (printf "%s:%s" $mysql.username $mysql.password) }}
-{{- printf "jdbc:mysql://%s@%s-mysql:3306/%s" $credentials (include "nginx.fullname" .) $mysql.database }}
+{{- define "nginx.postgres_url" }}
+{{- $postgres := .Values.config.postgres }}
+{{- if $postgres.internal }}
+{{- $credentials := (printf "%s:%s" $postgres.username $postgres.password) }}
+{{- printf "postgresql://%s@%s-postgres:5432/%s" $credentials (include "nginx.fullname" .) $postgres.database }}
 {{- else }}
-{{- if $mysql.url }}
-{{- printf $mysql.url }}
+{{- if $postgres.url }}
+{{- printf $postgres.url }}
 {{- else }}
-{{- printf "jdbc:mysql://%s@%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
+{{- printf "postgresql://%s@%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
 {{- end }}
 {{- end }}
 {{- end }}

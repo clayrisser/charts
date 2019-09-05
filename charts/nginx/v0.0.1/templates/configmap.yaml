@@ -8,12 +8,15 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- $mysql := .Values.config.mysql }}
-  {{- if $mysql.internal }}
-  mysql_host: {{ template "nginx.fullname" . }}-mysql
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "nginx.fullname" . }}-postgres
   {{- else }}
-  mysql_host: {{ $mysql.host | quote }}
+  postgres_host: {{ $postgres.host | quote }}
   {{- end }}
-  mysql_database: {{ $mysql.database | quote }}
-  mysql_port: {{ $mysql.port | quote }}
-  mysql_username: {{ $mysql.username | quote }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}
