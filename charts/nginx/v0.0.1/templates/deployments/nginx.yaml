@@ -32,7 +32,6 @@ spec:
           volumeMounts:
             - name: test
               mountPath: '/data'
-              subPath: hello
           env: []
           livenessProbe:
             httpGet:
