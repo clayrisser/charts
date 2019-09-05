@@ -99,7 +99,4 @@ spec:
       apiVersion: apps/v1beta1
       kind: Deployment
       name: {{ template "nginx.fullname" . }}-nginx
-    volumeMounts:
-      - name: test
-        mountPath: '/data'
 {{- end }}
