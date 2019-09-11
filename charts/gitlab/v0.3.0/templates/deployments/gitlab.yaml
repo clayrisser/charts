@@ -11,7 +11,7 @@ metadata:
   annotations:
     stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}
     stash.appscode.com/target-paths: '/gitlab-data,/etc/gitlab'
-    stash.appscode.com/volume-mounts: 'data:/gitlab-data,data:/etc/gitlab'
+    stash.appscode.com/volume-mounts: 'data:/gitlab-data,etc:/etc/gitlab'
   {{- end }}
 spec:
   strategy:
@@ -36,10 +36,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /gitlab-data
-              subPath: data
-            - name: data
+            - name: etc
               mountPath: /etc/gitlab
-              subPath: etc
           env:
             - name: GITLAB_OMNIBUS_CONFIG
               valueFrom:
@@ -109,6 +107,13 @@ spec:
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: etc
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
