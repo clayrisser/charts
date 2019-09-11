@@ -95,12 +95,12 @@ spec:
             {{- end }}
           livenessProbe:
             httpGet:
-              path: /-/health
+              path: /health
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /-/readiness
+              path: /readiness
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
