@@ -171,6 +171,6 @@ spec:
     volumeMounts:
       - name: data
         mountPath: /gitlab-data
-      - name: data
+      - name: etc
         mountPath: /etc/gitlab
 {{- end }}
