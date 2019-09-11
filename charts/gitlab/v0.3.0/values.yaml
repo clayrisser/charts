@@ -16,6 +16,13 @@ config:
     baseUrl: ''
     hostname: ''
     password: password
+  keycloak:
+    baseUrl: ''
+    clientId: ''
+    companyName: KeyCloak
+    enabled: false
+    realmName: gatekeeper
+    certificate: ''
   postgres:
     customConfig: ''
     database: gitlab

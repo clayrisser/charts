@@ -38,6 +38,55 @@ questions:
     label: 'gitlab base url'
     group: Config
 
+  # Keycloak Config
+  - variable: config.keycloak.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.baseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.company
+    default: KeyCloak
+    description: ''
+    type: string
+    required: false
+    label: company
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.clientId
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'client id'
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.realmName
+    default: gatekeeper
+    description: ''
+    type: string
+    required: false
+    label: 'realm name'
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+  - variable: config.keycloak.certificate
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: certificate
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
+
 # Postgres Config
   - variable: config.postgres.internal
     default: true
