@@ -26,6 +26,10 @@ spec:
         - name: {{ template "gitlab.fullname" . }}-gitlab
           image: {{ .Values.images.gitlab.repository }}:{{ .Values.images.gitlab.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: 1400m
+              memory: 1.4Gi
           ports:
             - name: container
               containerPort: 80
