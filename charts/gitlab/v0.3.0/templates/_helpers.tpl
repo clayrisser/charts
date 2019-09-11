@@ -67,7 +67,7 @@ Calculate gitlab hostname
 {{- printf .Values.config.gitlab.hostname }}
 {{- else }}
 {{- if .Values.ingress.gitlab.enabled }}
-{{- printf .Values.ingress.gitlab.hostsname }}
+{{- printf .Values.ingress.gitlab.hostname }}
 {{- else }}
 {{- printf "%s-gitlab" (include "gitlab.fullname" .) }}
 {{- end }}
