@@ -1,0 +1,146 @@
+images:
+  gitlab:
+    repository: gitlab/gitlab-ce
+    tag: 12.2.5-ce.0
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
+  phpredisadmin:
+    repository: erikdubbelboer/phpredisadmin
+    tag: v1.11.4
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  gitlab:
+    baseUrl: ''
+    hostname: ''
+    password: password
+  postgres:
+    customConfig: ''
+    database: gitlab
+    host: ''
+    internal: true
+    password: postgres
+    port: 5432
+    prometheus: false
+    replicas: 1
+    standbyMode: hot
+    url: ''
+    username: postgres
+    version: 11.2
+  pgadmin:
+    email: admin
+    enabled: false
+    password: pass
+  redis:
+    customConfig: ''
+    host: ''
+    internal: true
+    password: ''
+    port: 6379
+    prometheus: false
+    replicas: 1
+    shards: 1
+    url: ''
+    username: ''
+    version: 5.0.3-v1
+  phpredisadmin:
+    enabled: false
+    password: pass
+    username: admin
+
+service:
+  gitlab:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  phpredisadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres: ''
+  redis:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      redis: ''
+
+ingress:
+  gitlab:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+  phpredisadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    schedule: '0 0 * * *'
+    type: s3
+    restore:
+      gitlabsnapshot: ''
+      postgressnapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

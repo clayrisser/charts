@@ -1,0 +1,27 @@
+{{- if .Values.config.postgres.internal }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitlab.fullname" . }}-postgres
+  labels:
+    app: {{ template "gitlab.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  user.conf: {{ .Values.config.postgres.customConfig | quote }}
+{{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitlab.fullname" . }}-postgres-init
+  labels:
+    app: {{ template "gitlab.name" . }}-postgres-init
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  data.sql: |
+    DROP DATABASE IF EXISTS {{ .Values.config.postgres.database }};
+    CREATE DATABASE {{ .Values.config.postgres.database }};
