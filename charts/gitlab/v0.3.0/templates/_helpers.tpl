@@ -92,7 +92,6 @@ Calculate gitlab base url
 {{- end }}
 {{- end }}
 
-
 {{/*
 Calculate postgres url
 */}}
