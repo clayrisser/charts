@@ -1,47 +1,47 @@
 {{- if (and .Values.persistence.enabled (eq .Values.persistence.existingClaim "")) }}
-kind: persistentvolumeclaim
-apiversion: v1
+kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
   name: {{ template "gitlab.fullname" . }}-data
   labels:
     app: {{ template "gitlab.name" . }}-data
-    chart: {{ .chart.name }}-{{ .chart.version }}
-    release: {{ .release.name }}
-    heritage: {{ .release.service }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
-  accessmodes:
-    - {{ .values.persistence.accessmode }}
+  accessModes:
+    - {{ .Values.persistence.accessMode }}
   resources:
     requests:
-      storage: {{ .values.persistence.size }}
-{{- if .values.persistence.storageclass }}
-{{- if (eq "-" .values.persistence.storageclass) }}
-  storageclassname: ''
+      storage: {{ .Values.persistence.size }}
+{{- if .Values.persistence.storageClass }}
+{{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ''
 {{- else }}
-  storageclassname: {{ .values.persistence.storageclass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
 {{- end }}
 {{- end }}
 ---
-kind: persistentvolumeclaim
-apiversion: v1
+kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
   name: {{ template "gitlab.fullname" . }}-etc
   labels:
     app: {{ template "gitlab.name" . }}-etc
-    chart: {{ .chart.name }}-{{ .chart.version }}
-    release: {{ .release.name }}
-    heritage: {{ .release.service }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
-  accessmodes:
-    - {{ .values.persistence.accessmode }}
+  accessModes:
+    - {{ .Values.persistence.accessMode }}
   resources:
     requests:
-      storage: {{ .values.persistence.size }}
-{{- if .values.persistence.storageclass }}
-{{- if (eq "-" .values.persistence.storageclass) }}
-  storageclassname: ''
+      storage: {{ .Values.persistence.size }}
+{{- if .Values.persistence.storageClass }}
+{{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ''
 {{- else }}
-  storageclassname: {{ .values.persistence.storageclass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
 {{- end }}
 {{- end }}
 {{- end }}
