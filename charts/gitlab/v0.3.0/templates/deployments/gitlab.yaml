@@ -109,14 +109,14 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-data" (include "gitlab.fullname" . )) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
         - name: etc
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-etc" (include "gitlab.fullname" . )) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
