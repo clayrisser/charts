@@ -8,6 +8,12 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}
+    stash.appscode.com/target-paths: '/etc/gitlab'
+    stash.appscode.com/mountpath: '/etc/gitlab'
+  {{- end }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode }}
