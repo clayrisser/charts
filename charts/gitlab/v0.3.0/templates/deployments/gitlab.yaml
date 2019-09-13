@@ -10,8 +10,8 @@ metadata:
   {{- if .Values.persistence.backup.enabled }}
   annotations:
     stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}
-    stash.appscode.com/target-paths: '/gitlab-data,/etc/gitlab,/var/opt/gitlab/git-data'
-    stash.appscode.com/volume-mounts: 'data:/gitlab-data,etc:/etc/gitlab,repos:/var/opt/gitlab/git-data'
+    stash.appscode.com/target-paths: '/'
+    stash.appscode.com/volume-mounts: 'data:/gitlab-data,data:/etc/gitlab,data:/var/opt/gitlab/git-data'
   {{- end }}
 spec:
   strategy:
@@ -36,10 +36,13 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /gitlab-data
-            - name: etc
+              subPath: data
+            - name: data
               mountPath: /etc/gitlab
-            - name: repos
+              subPath: etc
+            - name: data
               mountPath: /var/opt/gitlab/git-data
+              subPath: git
           env:
             - name: GITLAB_OMNIBUS_CONFIG
               valueFrom:
@@ -111,21 +114,7 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-data" (include "gitlab.fullname" . )) }}
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
-        - name: etc
-          {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-etc" (include "gitlab.fullname" . )) }}
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
-        - name: repos
-          {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-repos" (include "gitlab.fullname" . )) }}
+            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
@@ -180,8 +169,8 @@ spec:
     volumeMounts:
       - name: data
         mountPath: /gitlab-data
-      - name: etc
+      - name: data
         mountPath: /etc/gitlab
-      - name: repos
+      - name: data
         mountPath: /var/opt/gitlab/git-data
 {{- end }}
