@@ -10,8 +10,8 @@ metadata:
   {{- if .Values.persistence.backup.enabled }}
   annotations:
     stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}
-    stash.appscode.com/target-paths: '/var/opt/gitlab/git-data'
-    stash.appscode.com/volume-mounts: 'data:/var/opt/gitlab/git-data'
+    stash.appscode.com/target-paths: /_data
+    stash.appscode.com/volume-mounts: 'data:/_data'
   {{- end }}
 spec:
   strategy:
@@ -34,12 +34,14 @@ spec:
             - name: container
               containerPort: 80
           volumeMounts:
-            # - name: data
-            #   mountPath: /gitlab-data
-            #   subPath: data
-            # - name: data
-            #   mountPath: /etc/gitlab
-            #   subPath: etc
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /gitlab-data
+              subPath: data
+            - name: data
+              mountPath: /etc/gitlab
+              subPath: etc
             - name: data
               mountPath: /var/opt/gitlab/git-data
               subPath: git
@@ -167,10 +169,6 @@ spec:
       kind: Deployment
       name: {{ template "gitlab.fullname" . }}-gitlab
     volumeMounts:
-      # - name: data
-      #   mountPath: /gitlab-data
-      # - name: data
-      #   mountPath: /etc/gitlab
       - name: data
-        mountPath: /var/opt/gitlab/git-data
+        mountPath: /_data
 {{- end }}
