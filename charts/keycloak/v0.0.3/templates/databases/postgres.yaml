@@ -47,12 +47,10 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
   init:
     scriptSource:
       configMap:
         name: {{ template "keycloak.fullname" . }}-postgres-init
-  {{- end }}
   serviceTemplate:
     metadata:
       annotations:
