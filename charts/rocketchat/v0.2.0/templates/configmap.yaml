@@ -8,7 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  base_url: {{ template "rocketchat.base-url" . }}
   jitsi_chrome_extension: {{ .Values.config.jitsi.chromeExtension }}
   jitsi_domain: {{ .Values.config.jitsi.domain }}
   jitsi_enable_channels: {{ .Values.config.jitsi.enableChannels | quote }}
@@ -19,6 +18,7 @@ data:
   mail_smtp_host: {{ .Values.config.mail.smtp.host }}
   mail_smtp_port: {{ .Values.config.mail.smtp.port | quote }}
   mail_smtp_username: {{ .Values.config.mail.smtp.username }}
+  rocketchat_base_url: {{ template "rocketchat.rocketchat-base-url" . }}
   webrtc_enable_channel: {{ .Values.config.webrtc.enableChannel | quote }}
   webrtc_enable_direct: {{ .Values.config.webrtc.enableDirect | quote }}
   webrtc_enable_private: {{ .Values.config.webrtc.enablePrivate | quote }}
