@@ -123,30 +123,6 @@ spec:
 {{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.gitlabSnapshot))) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: {{ template "gitlab.fullname" . }}-restore-gitlab
-  labels:
-    app: {{ template "gitlab.name" . }}-restore-gitlab
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  backend:
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/deployment'
-    storageSecretName: {{ template "gitlab.fullname" . }}-backup
----
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
@@ -159,7 +135,7 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ template "gitlab.fullname" . }}-restore-gitlab
+    name: {{ template "gitlab.fullname" . }}
   rules:
     - snapshots:
         - {{ $restore.gitlabSnapshot }}
