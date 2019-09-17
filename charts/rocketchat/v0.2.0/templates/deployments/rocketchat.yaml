@@ -35,6 +35,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: rocketchat_base_url
+            - name: Site_Url
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: rocketchat_base_url
             - name: From_Email
               valueFrom:
                 configMapKeyRef:
