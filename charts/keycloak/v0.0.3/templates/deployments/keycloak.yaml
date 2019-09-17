@@ -22,8 +22,8 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           resources:
             requests:
-              cpu: 300m
-              memory: 1Gi
+              cpu: 200m
+              memory: 512Mi
           ports:
             - name: container
               containerPort: 8080

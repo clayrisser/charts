@@ -1,0 +1,120 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "rocketchat.fullname" . }}-jitsi
+  labels:
+    app: {{ template "rocketchat.name" . }}-jitsi
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "rocketchat.name" . }}-jitsi
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "rocketchat.fullname" . }}-jitsi
+          image: {{ .Values.images.jitsi.repository }}:{{ .Values.images.jitsi.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: 300m
+              memory: 1Gi
+          ports:
+            - name: container
+              containerPort: 3000
+          env:
+            - name: Jitsi_SSL
+              value: {{ .Values.ingress.rocketchat.tls | quote }}
+            - name: ROOT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: base_url
+            - name: From_Email
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_from
+            - name: Jitsi_Enabled
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_enabled
+            - name: Jitsi_URL_Room_Prefix
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_url_room_prefix
+            - name: Jitsi_Open_New_Window
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_open_new_window
+            - name: Jitsi_Enable_Channels
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_enable_channels
+            - name: Jitsi_Chrome_Extension
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: jitsi_chrome_extension
+            - name: SMTP_Host
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_host
+            - name: SMTP_Port
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_port
+            - name: SMTP_Username
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_username
+            - name: SMTP_Password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_password
+            - name: WebRTC_Enable_Channel
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: webrtc_enable_channel
+            - name: WebRTC_Enable_Private
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: webrtc_enable_private
+            - name: WebRTC_Enable_Direct
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: webrtc_enable_direct
+            - name: MONGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mongo_url
+            - name: MAIL_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_url
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

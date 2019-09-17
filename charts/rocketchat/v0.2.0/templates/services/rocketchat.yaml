@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "rocketchat.fullname" . }}-rocketchat
+  labels:
+    app: {{ template "rocketchat.name" . }}-rocketchat
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.rocketchat.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.rocketchat.type }}
+  {{- if (or (eq .Values.service.rocketchat.type "LoadBalancer") (eq .Values.service.rocketchat.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.rocketchat.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.rocketchat.type "NodePort") (not (empty .Values.service.rocketchat.nodePorts.http))) }}
+      nodePort: {{ .Values.service.rocketchat.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "rocketchat.name" . }}-rocketchat
+    release: {{ .Release.Name }}
