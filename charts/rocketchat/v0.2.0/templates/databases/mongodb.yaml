@@ -81,11 +81,9 @@ spec:
   configSource:
     configMap:
       name: {{ template "rocketchat.fullname" . }}-mongodb
-  {{- if (gt (.Values.config.mongodb.replicas | int64) 1) }}
   replicas: {{ .Values.config.mongodb.replicas }}
   replicaSet:
     name: rs0
-  {{- end }}
   {{- if .Values.persistence.enabled }}
   storage:
     {{- if .Values.persistence.storageClass }}

@@ -105,6 +105,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: mongodb_url
+            - name: MONGO_OPLOG_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mongodb_oplog_url
             - name: MAIL_URL
               valueFrom:
                 secretKeyRef:

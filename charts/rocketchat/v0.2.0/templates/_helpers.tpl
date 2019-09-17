@@ -88,13 +88,31 @@ Calculate mongodb url
 {{- $mongodb := .Values.config.mongodb }}
 {{- if $mongodb.internal }}
 {{- $credentials := (empty $mongodb.username | ternary "" (printf "root:%s@" $mongodb.password)) }}
-{{- printf "mongodb://%s%s-mongodb:27017/%s?authSource=admin" $credentials (include "rocketchat.fullname" .) $mongodb.database }}
+{{- printf "mongodb://%s%s-mongodb:27017/%s?authSource=admin&replSet=rs0" $credentials (include "rocketchat.fullname" .) $mongodb.database }}
 {{- else }}
 {{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s@" $mongodb.username $mongodb.password)) }}
 {{- if $mongodb.url }}
 {{- printf $mongodb.url }}
 {{- else }}
-{{- printf "mongodb://%s%s:%s/%s" $credentials $mongodb.host $mongodb.port $mongodb.database }}
+{{- printf "mongodb://%s%s:%s/%s?authSource=admin" $credentials $mongodb.host $mongodb.port $mongodb.database }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate mongodb oplog url
+*/}}
+{{- define "rocketchat.mongodb-oplog-url" }}
+{{- $mongodb := .Values.config.mongodb }}
+{{- if $mongodb.internal }}
+{{- $credentials := (empty $mongodb.username | ternary "" (printf "root:%s@" $mongodb.password)) }}
+{{- printf "mongodb://%s%s-mongodb:27017/local?authSource=admin&replSet=rs0" $credentials (include "rocketchat.fullname" .) }}
+{{- else }}
+{{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s@" $mongodb.username $mongodb.password)) }}
+{{- if $mongodb.url }}
+{{- printf $mongodb.url }}
+{{- else }}
+{{- printf "mongodb://%s%s:%s/local?authSource=admin&replSet=rs0" $credentials $mongodb.host $mongodb.port }}
 {{- end }}
 {{- end }}
 {{- end }}
