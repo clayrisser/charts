@@ -437,6 +437,13 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup restore rocketchat snapshot'
+      - variable: persistence.backup.restore.rocketchatSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore rocketchat snapshot'
       - variable: persistence.backup.restore.mongodbSnapshot
         default: ''
         description: ''

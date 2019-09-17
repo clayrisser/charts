@@ -111,8 +111,8 @@ persistence:
     schedule: '0 0 * * *'
     type: s3
     restore:
-      rocketchatsnapshot: ''
-      mongodbsnapshot: ''
+      rocketchatSnapshot: ''
+      mongodbSnapshot: ''
 
 probes:
   liveness:
