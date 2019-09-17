@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "rocketchat.fullname" . }}-jitsi
+  name: {{ template "rocketchat.fullname" . }}-rocketchat
   labels:
-    app: {{ template "rocketchat.name" . }}-jitsi
+    app: {{ template "rocketchat.name" . }}-rocketchat
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,12 +13,12 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "rocketchat.name" . }}-jitsi
+        app: {{ template "rocketchat.name" . }}-rocketchat
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "rocketchat.fullname" . }}-jitsi
-          image: {{ .Values.images.jitsi.repository }}:{{ .Values.images.jitsi.tag }}
+        - name: {{ template "rocketchat.fullname" . }}-rocketchat
+          image: {{ .Values.images.rocketchat.repository }}:{{ .Values.images.rocketchat.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           resources:
             requests:
