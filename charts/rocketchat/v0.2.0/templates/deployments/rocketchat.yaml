@@ -104,7 +104,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
-                  key: mongo_url
+                  key: mongodb_url
             - name: MAIL_URL
               valueFrom:
                 secretKeyRef:

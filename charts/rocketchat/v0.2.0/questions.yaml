@@ -256,6 +256,7 @@ questions:
     type: string
     required: false
     label: username
+    show_if: config.mongodb.internal=false
     group: 'MongoDB Config'
 
 # MongoExpress
