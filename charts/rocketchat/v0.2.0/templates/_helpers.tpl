@@ -88,7 +88,7 @@ Calculate mongodb url
 {{- $mongodb := .Values.config.mongodb }}
 {{- if $mongodb.internal }}
 {{- $credentials := (empty $mongodb.username | ternary "" (printf "root:%s@" $mongodb.password)) }}
-{{- printf "mongodb://%s%s-mongodb:27017/%s" $credentials (include "rocketchat.fullname" .) $mongodb.database }}
+{{- printf "mongodb://%s%s-mongodb:27017/%s?authSource=admin" $credentials (include "rocketchat.fullname" .) $mongodb.database }}
 {{- else }}
 {{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s@" $mongodb.username $mongodb.password)) }}
 {{- if $mongodb.url }}
