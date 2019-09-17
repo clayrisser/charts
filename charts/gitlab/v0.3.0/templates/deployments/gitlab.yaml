@@ -135,7 +135,7 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ template "gitlab.fullname" . }}
+    name: {{ template "gitlab.fullname" . }}-data
   rules:
     - snapshots:
         - {{ $restore.gitlabSnapshot }}
