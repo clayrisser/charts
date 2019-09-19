@@ -147,4 +147,9 @@ spec:
     volumeMounts:
       - name: data
         mountPath: /_data
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
 {{- end }}
