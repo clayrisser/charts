@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "gitlab.sharedname" . }}-data
+  name: {{ template "gitlab.fullname" . }}-data
   labels:
     app: {{ template "gitlab.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -21,7 +21,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/data'
-    storageSecretName: {{ template "gitlab.sharedname" . }}-backup
+    storageSecretName: {{ template "gitlab.fullname" . }}-backup
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   retentionPolicy:
     name: retention-policy

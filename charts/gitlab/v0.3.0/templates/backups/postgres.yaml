@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "gitlab.sharedname" . }}-postgres
+  name: {{ template "gitlab.fullname" . }}-postgres
   labels:
     app: {{ template "gitlab.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -21,7 +21,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres'
-    storageSecretName: {{ template "gitlab.sharedname" . }}-backup
+    storageSecretName: {{ template "gitlab.fullname" . }}-backup
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
   schedule: {{ .Values.persistence.backup.schedule | quote }}
