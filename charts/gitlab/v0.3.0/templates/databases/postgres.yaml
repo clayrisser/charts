@@ -100,7 +100,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-postgres
+    stash.appscode.com/backup-blueprint: {{ template "gitlab.sharedname" . }}-postgres
 spec:
   clientConfig:
     service:
@@ -135,7 +135,7 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.postgres.version }}
   repository:
-    name: postgres-{{ template "gitlab.fullname" . }}-postgres
+    name: {{ template "gitlab.sharedname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
