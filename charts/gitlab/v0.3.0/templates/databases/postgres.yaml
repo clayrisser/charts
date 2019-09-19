@@ -8,10 +8,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.backup.enabled }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-kubedb
-  {{- end }}
 spec:
   version: {{ .Values.config.postgres.version | quote }}
   configSource:
@@ -104,7 +100,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-kubedb
+    stash.appscode.com/backup-blueprint: {{ template "gitlab.sharedname" . }}-postgres
 spec:
   clientConfig:
     service:
@@ -124,30 +120,6 @@ spec:
 {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: {{ template "gitlab.fullname" . }}-restore-postgres
-  labels:
-    app: {{ template "gitlab.name" . }}-restore-postgres
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  backend:
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres'
-    storageSecretName: {{ template "gitlab.fullname" . }}-backup
----
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
@@ -163,7 +135,7 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.postgres.version }}
   repository:
-    name: {{ template "gitlab.fullname" . }}-restore-postgres
+    name: {{ template "gitlab.sharedname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1

@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "gitlab.fullname" . }}-data
+  name: {{ template "gitlab.sharedname" . }}-data
   labels:
     app: {{ template "gitlab.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
