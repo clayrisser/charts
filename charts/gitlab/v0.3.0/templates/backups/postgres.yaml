@@ -21,7 +21,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres'
-    storageSecretName: {{ template "gitlab.fullname" . }}-backup
+    storageSecretName: {{ template "gitlab.sharedname" . }}-backup
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
   schedule: {{ .Values.persistence.backup.schedule | quote }}

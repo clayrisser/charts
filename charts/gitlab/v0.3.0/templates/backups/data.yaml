@@ -21,7 +21,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/data'
-    storageSecretName: {{ template "gitlab.fullname" . }}-backup
+    storageSecretName: {{ template "gitlab.sharedname" . }}-backup
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   retentionPolicy:
     name: retention-policy
