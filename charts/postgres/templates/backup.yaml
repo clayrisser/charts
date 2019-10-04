@@ -2,9 +2,9 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "postgres.fullname" . }}-kubedb
+  name: {{ template "postgres.fullname" . }}-postgres
   labels:
-    app: {{ template "postgres.name" . }}-kubedb
+    app: {{ template "postgres.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

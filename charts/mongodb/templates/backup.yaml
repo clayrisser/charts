@@ -2,9 +2,9 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "mongodb.fullname" . }}-kubedb
+  name: {{ template "mongodb.fullname" . }}-mongodb
   labels:
-    app: {{ template "mongodb.name" . }}-kubedb
+    app: {{ template "mongodb.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
