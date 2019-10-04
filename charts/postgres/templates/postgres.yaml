@@ -98,7 +98,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "postgres.fullname" . }}-kubedb
+    stash.appscode.com/backup-blueprint: {{ template "postgres.fullname" . }}-postgres
 spec:
   clientConfig:
     service:
