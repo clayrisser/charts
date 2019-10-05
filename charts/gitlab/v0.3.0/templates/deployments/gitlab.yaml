@@ -140,8 +140,10 @@ spec:
     - snapshots:
         - {{ $restore.gitlabSnapshot }}
   target:
+    paths:
+      /_data
     ref:
-      apiVersion: apps/v1beta1
+      apiVersion: apps/v1
       kind: Deployment
       name: {{ template "gitlab.fullname" . }}-gitlab
     volumeMounts:
