@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "mongodb.fullname" . }}-mongodb
+  name: {{ template "mongodb.sharedname" . }}-mongodb
   labels:
     app: {{ template "mongodb.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -21,7 +21,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/${TARGET_APP_RESOURCE}'
-    storageSecretName: {{ template "mongodb.fullname" . }}-backup
+    storageSecretName: {{ template "mongodb.sharedname" . }}-backup
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
   schedule: {{ .Values.persistence.backup.schedule | quote }}

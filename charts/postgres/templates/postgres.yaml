@@ -133,7 +133,7 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.version }}
   repository:
-    name: {{ template "postgres.fullname" . }}-postgres
+    name: {{ template "postgres.sharedname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
