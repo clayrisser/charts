@@ -179,7 +179,7 @@ spec:
   task:
     name: mongodb-restore-{{ .Values.config.version }}
   repository:
-    name: {{ template "mongodb.sharedname" . }}-mongodb
+    name: {{ template "mongodb.sharedname" . }}-mongodb-mongodb
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
