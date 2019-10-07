@@ -96,7 +96,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "gitlab.sharedname" . }}-postgres
+    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-postgres
 spec:
   clientConfig:
     service:
