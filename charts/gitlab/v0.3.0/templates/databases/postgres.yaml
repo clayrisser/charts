@@ -131,7 +131,7 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.postgres.version }}
   repository:
-    name: postgres-{{ template "gitlab.sharedname" . }}-postgres
+    name: postgres-{{ template "gitlab.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
