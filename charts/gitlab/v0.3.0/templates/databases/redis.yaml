@@ -80,9 +80,5 @@ spec:
           {{- end }}
   updateStrategy:
     type: RollingUpdate
-  {{- if .Values.persistence.enabled }}
-  terminationPolicy: Pause
-  {{- else }}
   terminationPolicy: Delete
-  {{- end }}
 {{- end }}
