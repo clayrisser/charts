@@ -111,7 +111,6 @@ ingress:
     issuer:
       name: letsencrypt-staging
 
-
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
