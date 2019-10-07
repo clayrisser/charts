@@ -139,6 +139,6 @@ spec:
       name: {{ template "gitlab.fullname" . }}-postgres
   rules:
     - snapshots:
-      - {{ $restore.postgresSnapshot }}
+      - {{ $restore.postgresSnapshot | quote }}
 {{- end }}
 {{- end }}
