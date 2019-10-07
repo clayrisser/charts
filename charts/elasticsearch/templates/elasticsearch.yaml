@@ -74,11 +74,7 @@ spec:
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}
-  {{- if .Values.persistence.enabled }}
-  terminationPolicy: Pause
-  {{- else }}
   terminationPolicy: Delete
-  {{- end }}
 {{- if .Values.persistence.backup.enabled }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
@@ -91,42 +87,23 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "elasticsearch.fullname" . }}-kubedb
+    stash.appscode.com/backup-blueprint: {{ template "elasticsearch.sharedname" . }}-elasticsearch
 spec:
   clientConfig:
     service:
       name: {{ template "elasticsearch.fullname" . }}-elasticsearch
-      path: /
       port: 9200
-      query: sslmode=disable
-      scheme: elasticsearch
+      scheme: http
+  secretTransforms:
+    - renameKey:
+        from: ADMIN_USERNAME
+        to: username
+    - renameKey:
+        from: ADMIN_PASSWORD
+        to: password
   type: kubedb.com/elasticsearch
 {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
----
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: {{ template "elasticsearch.fullname" . }}-restore-elasticsearch
-  labels:
-    app: {{ template "elasticsearch.name" . }}-restore-elasticsearch
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  backend:
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/elasticsearch'
-    storageSecretName: {{ template "elasticsearch.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -143,7 +120,7 @@ spec:
   task:
     name: elasticsearch-restore-{{ .Values.config.version }}
   repository:
-    name: {{ template "elasticsearch.fullname" . }}-restore-elasticsearch
+    name: {{ template "elasticsearch.sharedname" . }}-elasticsearch
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
