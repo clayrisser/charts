@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "elasticsearch.sharedname" . }}-elasticsearch
+  name: {{ template "elasticsearch.fullname" . }}-elasticsearch
   labels:
     app: {{ template "elasticsearch.name" . }}-elasticsearch
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

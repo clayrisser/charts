@@ -93,7 +93,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "mysql.sharedname" . }}-kubedb
+    stash.appscode.com/backup-blueprint: {{ template "mysql.fullname" . }}-mysql
 spec:
   clientConfig:
     service:
@@ -121,7 +121,7 @@ spec:
   task:
     name: mysql-restore-{{ .Values.config.version }}
   repository:
-    name: {{ template "mysql.sharedname" . }}-mysql
+    name: mysql-{{ template "mysql.fullname" . }}-mysql
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -129,6 +129,6 @@ spec:
       name: {{ template "mysql.fullname" . }}-mysql
   rules:
     - snapshots:
-      - {{ $restore.snapshot }}
+      - {{ $restore.snapshot | quote }}
 {{- end }}
 {{- end }}

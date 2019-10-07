@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "mysql.sharedname" . }}-mysql
+  name: {{ template "mysql.fullname" . }}-mysql
   labels:
     app: {{ template "mysql.name" . }}-mysql
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

@@ -149,7 +149,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "mongodb.sharedname" . }}-mongodb
+    stash.appscode.com/backup-blueprint: {{ template "mongodb.fullname" . }}-mongodb
 spec:
   clientConfig:
     service:
@@ -175,7 +175,7 @@ spec:
   task:
     name: mongodb-restore-{{ .Values.config.version }}
   repository:
-    name: {{ template "mongodb.sharedname" . }}-mongodb-mongodb
+    name: mongodb-{{ template "mongodb.fullname" . }}-mongodb
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -183,6 +183,6 @@ spec:
       name: {{ template "mongodb.fullname" . }}-mongodb
   rules:
     - snapshots:
-      - {{ $restore.snapshot }}
+      - {{ $restore.snapshot | quote }}
 {{- end }}
 {{- end }}

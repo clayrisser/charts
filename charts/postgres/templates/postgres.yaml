@@ -94,7 +94,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "postgres.sharedname" . }}-postgres
+    stash.appscode.com/backup-blueprint: {{ template "postgres.fullname" . }}-postgres
 spec:
   clientConfig:
     service:
@@ -129,7 +129,7 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.version }}
   repository:
-    name: {{ template "postgres.sharedname" . }}-postgres
+    name: postgres-{{ template "postgres.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -137,6 +137,6 @@ spec:
       name: {{ template "postgres.fullname" . }}-postgres
   rules:
     - snapshots:
-      - {{ $restore.snapshot }}
+      - {{ $restore.snapshot | quote }}
 {{- end }}
 {{- end }}

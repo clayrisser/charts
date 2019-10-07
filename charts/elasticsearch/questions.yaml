@@ -17,6 +17,7 @@ questions:
     type: enum
     options:
       - RollingUpdate
+      - OnDelete
       - Recreate
     required: true
     label: 'update strategy'
