@@ -39,14 +39,14 @@ spec:
             requests:
               cpu: 200m
               memory: 512Mi
-          command:
-            - sh
-            - '-c'
-            - |
-              {{- if (not (empty .Values.config.keycloak.theme)) }}
-              cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
-              {{- end }}
-              exec /opt/jboss/tools/docker-entrypoint.sh
+          # command:
+          #   - sh
+          #   - '-c'
+          #   - |
+          #     {{- if (not (empty .Values.config.keycloak.theme)) }}
+          #     cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
+          #     {{- end }}
+          #     exec /opt/jboss/tools/docker-entrypoint.sh
           ports:
             - name: container
               containerPort: 8080
