@@ -19,13 +19,15 @@ spec:
       initContainers:
         - name: {{ template "keycloak.fullname" . }}-keycloak-init
           image: busybox
-          command: ["sh", "/scripts/init.sh"]
+          command:
+            - sh
+            - '-c'
+            - |
+              echo Howdy, texas!
           volumeMounts:
             - name: data
-              mountPath: /opt/jboss/keycloak/injected-themes
+              mountPath: /themes
               subPath: themes
-            - name: scripts
-              mountPath: /scripts
       containers:
         - name: {{ template "keycloak.fullname" . }}-keycloak
           image: {{ .Values.images.keycloak.repository }}:{{ .Values.images.keycloak.tag }}
@@ -34,7 +36,12 @@ spec:
             requests:
               cpu: 200m
               memory: 512Mi
-          command: ["sh", "-c", "cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes && exec /opt/jboss/tools/docker-entrypoint.sh"]
+          command:
+            - sh
+            - '-c'
+            - |
+              cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true && \
+              exec /opt/jboss/tools/docker-entrypoint.sh
           ports:
             - name: container
               containerPort: 8080
@@ -118,6 +125,3 @@ spec:
       volumes:
         - name: data
           emptyDir: {}
-        - name: scripts
-          configMap:
-            name: {{ template "keycloak.fullname" . }}-keycloak-scripts
