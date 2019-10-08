@@ -24,6 +24,7 @@ spec:
             - sh
             - '-c'
             - |
+              cd /themes
               wget -qO- {{ .Values.config.keycloak.theme }} | unzip -
           volumeMounts:
             - name: data
@@ -43,7 +44,7 @@ spec:
             - '-c'
             - |
               {{- if (not (empty .Values.config.keycloak.theme)) }}
-              cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true && \
+              cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
               {{- end }}
               exec /opt/jboss/tools/docker-entrypoint.sh
           ports:
