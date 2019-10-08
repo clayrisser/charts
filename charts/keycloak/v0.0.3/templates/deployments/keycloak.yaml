@@ -16,6 +16,7 @@ spec:
         app: {{ template "keycloak.name" . }}-keycloak
         release: {{ .Release.Name }}
     spec:
+      {{- if (not (empty .Values.config.keycloak.theme)) }}
       initContainers:
         - name: {{ template "keycloak.fullname" . }}-keycloak-init
           image: busybox
@@ -23,11 +24,12 @@ spec:
             - sh
             - '-c'
             - |
-              echo Howdy, texas!
+              wget -qO- {{ .Values.config.keycloak.theme }} | unzip -
           volumeMounts:
             - name: data
               mountPath: /themes
               subPath: themes
+      {{- end }}
       containers:
         - name: {{ template "keycloak.fullname" . }}-keycloak
           image: {{ .Values.images.keycloak.repository }}:{{ .Values.images.keycloak.tag }}
@@ -40,15 +42,19 @@ spec:
             - sh
             - '-c'
             - |
+              {{- if (not (empty .Values.config.keycloak.theme)) }}
               cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true && \
               exec /opt/jboss/tools/docker-entrypoint.sh
+              {{- end }}
           ports:
             - name: container
               containerPort: 8080
+          {{- if (not (empty .Values.config.keycloak.theme)) }}
           volumeMounts:
             - name: data
               mountPath: /opt/jboss/keycloak/injected-themes
               subPath: themes
+          {{- end }}
           env:
             - name: DB_VENDOR
               value: POSTGRES
