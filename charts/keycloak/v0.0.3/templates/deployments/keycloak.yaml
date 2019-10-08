@@ -22,7 +22,7 @@ spec:
           command: ["sh", "/scripts/init.sh"]
           volumeMounts:
             - name: data
-              mountPath: /opt/jboss/keycloak/themes
+              mountPath: /opt/jboss/keycloak/injected-themes
               subPath: themes
             - name: scripts
               mountPath: /scripts
@@ -34,12 +34,13 @@ spec:
             requests:
               cpu: 200m
               memory: 512Mi
+          command: ["sh", "-c", "cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes && exec /opt/jboss/tools/docker-entrypoint.sh"]
           ports:
             - name: container
               containerPort: 8080
           volumeMounts:
             - name: data
-              mountPath: /opt/jboss/keycloak/themes
+              mountPath: /opt/jboss/keycloak/injected-themes
               subPath: themes
           env:
             - name: DB_VENDOR
