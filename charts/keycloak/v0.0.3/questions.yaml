@@ -60,6 +60,13 @@ questions:
     required: true
     label: 'keycloak password'
     group: Config
+  - variable: config.keycloak.theme
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'keycloak theme'
+    group: Config
 
 # Postgres Config
   - variable: config.postgres.internal

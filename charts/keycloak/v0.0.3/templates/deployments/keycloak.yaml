@@ -16,6 +16,16 @@ spec:
         app: {{ template "keycloak.name" . }}-keycloak
         release: {{ .Release.Name }}
     spec:
+      initContainers:
+        - name: {{ template "sonarqube.fullname" . }}-keycloak-init
+          image: busybox
+          command: ["sh", "/scripts/init.sh"]
+          volumeMounts:
+            - name: data
+              mountPath: /opt/jboss/keycloak/themes
+              subPath: themes
+            - name: scripts
+              mountPath: /scripts
       containers:
         - name: {{ template "keycloak.fullname" . }}-keycloak
           image: {{ .Values.images.keycloak.repository }}:{{ .Values.images.keycloak.tag }}
@@ -27,6 +37,10 @@ spec:
           ports:
             - name: container
               containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /opt/jboss/keycloak/themes
+              subPath: themes
           env:
             - name: DB_VENDOR
               value: POSTGRES
@@ -100,3 +114,9 @@ spec:
               path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: scripts
+          configMap:
+            name: {{ template "keycloak.fullname" . }}-keycloak-scripts
