@@ -44,8 +44,8 @@ spec:
             - |
               {{- if (not (empty .Values.config.keycloak.theme)) }}
               cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true && \
-              exec /opt/jboss/tools/docker-entrypoint.sh
               {{- end }}
+              exec /opt/jboss/tools/docker-entrypoint.sh
           ports:
             - name: container
               containerPort: 8080
