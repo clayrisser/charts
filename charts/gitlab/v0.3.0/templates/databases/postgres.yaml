@@ -83,8 +83,6 @@ spec:
   updateStrategy:
     type: RollingUpdate
   terminationPolicy: Delete
-{{- end }}
-{{- if .Values.persistence.backup.enabled }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
@@ -113,7 +111,7 @@ spec:
         from: POSTGRES_PASSWORD
         to: password
   type: kubedb.com/postgres
-{{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.postgresSnapshot))) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---
 apiVersion: stash.appscode.com/v1beta1
