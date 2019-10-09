@@ -23,6 +23,7 @@ config:
     enabled: false
     realmName: gatekeeper
     certificate: ''
+    autoSignIn: false
   postgres:
     customConfig: ''
     database: gitlab

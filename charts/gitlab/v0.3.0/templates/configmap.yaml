@@ -50,6 +50,9 @@ data:
     gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
     gitlab_rails['shared_path'] = '/gitlab-data/shared';
     gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
+    {{- if .Values.config.keycloak.autoSignIn }}
+    gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'saml'
+    {{- end }}
     gitlab_shell['auth_file'] = '/gitlab-data/ssh/authorized_keys';
     manage_accounts['enable'] = true;
     manage_storage_directories['manage_etc'] = false;

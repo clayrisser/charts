@@ -87,6 +87,14 @@ questions:
     label: certificate
     show_if: config.keycloak.enabled=true
     group: 'KeyCloak Config'
+  - variable: config.keycloak.autoSignIn
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'auto sign in'
+    show_if: config.keycloak.enabled=true
+    group: 'KeyCloak Config'
 
 # Postgres Config
   - variable: config.postgres.internal
