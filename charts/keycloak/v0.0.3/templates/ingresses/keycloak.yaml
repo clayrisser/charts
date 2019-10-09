@@ -22,7 +22,7 @@ spec:
     - host: {{ .Values.ingress.keycloak.hostname }}
       http:
         paths:
-          - path: /auth/.*
+          - path: {{ .Values.ingress.keycloak.path }}
             backend:
               serviceName: {{ template "keycloak.fullname" . }}-keycloak
               servicePort: http
