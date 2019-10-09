@@ -25,7 +25,7 @@ spec:
             - '-c'
             - |
               cd /themes
-              wget -qO- {{ .Values.config.keycloak.theme }} | unzip -
+              wget -qO- {{ .Values.config.keycloak.themeZip }} | unzip -
           volumeMounts:
             - name: data
               mountPath: /themes
@@ -96,6 +96,16 @@ spec:
                 configMapKeyRef:
                   name: {{ template "keycloak.fullname" . }}
                   key: keycloak_loglevel
+            - name: KEYCLOAK_WELCOME_THEME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: keycloak_welcome_theme
+            - name: KEYCLOAK_WELCOME_THEME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: keycloak_default_theme
             - name: KEYCLOAK_USER
               valueFrom:
                 configMapKeyRef:

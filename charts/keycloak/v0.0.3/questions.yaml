@@ -19,6 +19,7 @@ questions:
     type: enum
     options:
       - RollingUpdate
+      - OnDelete
       - Recreate
     required: true
     label: 'update strategy'
@@ -60,12 +61,26 @@ questions:
     required: true
     label: 'keycloak password'
     group: Config
-  - variable: config.keycloak.theme
+  - variable: config.keycloak.themeZip
     default: ''
     description: ''
     type: string
     required: false
     label: 'keycloak theme'
+    group: Config
+  - variable: config.keycloak.defaultTheme
+    default: keycloak
+    description: ''
+    type: string
+    required: false
+    label: 'keycloak default theme'
+    group: Config
+  - variable: config.keycloak.welcomeTheme
+    default: keycloak
+    description: ''
+    type: string
+    required: false
+    label: 'keycloak welcome theme'
     group: Config
 
 # Postgres Config

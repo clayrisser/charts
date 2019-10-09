@@ -11,11 +11,13 @@ config:
   updateStrategy: RollingUpdate
   keycloak:
     baseUrl: ''
+    defaultTheme: keycloak
     hostname: ''
     loglevel: INFO
     password: pass
-    theme: ''
+    themeZip: keycloak
     username: admin
+    welcomeTheme: ''
   postgres:
     customConfig: ''
     database: keycloak
