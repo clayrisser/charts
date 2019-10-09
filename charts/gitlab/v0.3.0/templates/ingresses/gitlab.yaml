@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.gitlab.tls }}
   tls:
-    - secretName: {{ template "gitlab.gitlab_certificate" . }}
+    - secretName: {{ template "gitlab.gitlab-certificate" . }}
       hosts:
         - {{ .Values.ingress.gitlab.hostname }}
   {{- end }}
