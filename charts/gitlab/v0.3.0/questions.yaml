@@ -374,7 +374,7 @@ questions:
       - variable: persistence.existingClaim
         default: ''
         description: ''
-        type: string
+        type: pvc
         required: false
         label: 'existing claim'
       - variable: persistence.backup.enabled
