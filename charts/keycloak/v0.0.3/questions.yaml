@@ -66,7 +66,7 @@ questions:
     description: ''
     type: string
     required: false
-    label: 'keycloak theme'
+    label: 'keycloak theme zip'
     group: Config
   - variable: config.keycloak.defaultTheme
     default: keycloak
