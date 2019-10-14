@@ -50,6 +50,7 @@ data:
     gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
     gitlab_rails['shared_path'] = '/gitlab-data/shared';
     gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
+    gitlab_rails['gitlab_default_theme'] = {{ .Values.config.gitlab.themeId }}
     {{- if .Values.config.keycloak.autoSignIn }}
     gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'saml'
     {{- end }}
