@@ -25,7 +25,7 @@ spec:
       {{- end }}
     - name: ssh
       port: 22
-      targetPort: ssh
+      targetPort: 22
   selector:
     app: {{ template "gitlab.name" . }}-gitlab
     release: {{ .Release.Name }}
