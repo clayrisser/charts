@@ -24,7 +24,7 @@ spec:
       nodePort: {{ .Values.service.gitlab.nodePorts.http }}
       {{- end }}
     - name: ssh
-      port: 2222
+      port: 22
       targetPort: ssh
   selector:
     app: {{ template "gitlab.name" . }}-gitlab
