@@ -36,23 +36,23 @@ data:
     external_url = ENV['EXTERNAL_URL'];
     git_data_dirs = ['/gitlab-data/git-data'];
     gitlab_ci['builds_directory'] = '/gitlab-data/builds';
-    gitlab_rails['auto_link_ldap_user'] = false
-    gitlab_rails['auto_link_saml_user'] = true
-    gitlab_rails['auto_sign_in_with_provider'] = true
+    gitlab_rails['auto_link_ldap_user'] = false;
+    gitlab_rails['auto_link_saml_user'] = true;
+    gitlab_rails['auto_sign_in_with_provider'] = true;
     gitlab_rails['db_database'] = ENV['DB_DATABASE'];
     gitlab_rails['db_host'] = ENV['DB_HOST'];
     gitlab_rails['db_password'] = ENV['DB_PASSWORD'];
     gitlab_rails['db_username'] = ENV['DB_USER'];
-    gitlab_rails['external_providers'] = []
-    gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
-    gitlab_rails['omniauth_block_auto_created_users'] = false
-    gitlab_rails['omniauth_enabled'] = {{ .Values.config.keycloak.enabled }}
+    gitlab_rails['external_providers'] = [];
+    gitlab_rails['omniauth_allow_single_sign_on'] = ['saml'];
+    gitlab_rails['omniauth_block_auto_created_users'] = false;
+    gitlab_rails['omniauth_enabled'] = {{ .Values.config.keycloak.enabled }};
     gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
     gitlab_rails['shared_path'] = '/gitlab-data/shared';
     gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
-    gitlab_rails['gitlab_default_theme'] = {{ .Values.config.gitlab.themeId }}
+    gitlab_rails['gitlab_default_theme'] = {{ .Values.config.gitlab.themeId }};
     {{- if .Values.config.keycloak.autoSignIn }}
-    gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'saml'
+    gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'saml';
     {{- end }}
     gitlab_shell['auth_file'] = '/gitlab-data/ssh/authorized_keys';
     manage_accounts['enable'] = true;
@@ -85,4 +85,4 @@ data:
            }
          }
       }
-    ]
+    ];
