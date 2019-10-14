@@ -16,7 +16,7 @@ spec:
         app: {{ template "keycloak.name" . }}-keycloak
         release: {{ .Release.Name }}
     spec:
-      {{- if (not (empty .Values.config.keycloak.theme)) }}
+      {{- if (not (empty .Values.config.keycloak.themeZip)) }}
       initContainers:
         - name: {{ template "keycloak.fullname" . }}-keycloak-init
           image: busybox
@@ -43,14 +43,14 @@ spec:
             - sh
             - '-c'
             - |
-              {{- if (not (empty .Values.config.keycloak.theme)) }}
+              {{- if (not (empty .Values.config.keycloak.themeZip)) }}
               cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
               {{- end }}
               exec /opt/jboss/tools/docker-entrypoint.sh
           ports:
             - name: container
               containerPort: 8080
-          {{- if (not (empty .Values.config.keycloak.theme)) }}
+          {{- if (not (empty .Values.config.keycloak.themeZip)) }}
           volumeMounts:
             - name: data
               mountPath: /opt/jboss/keycloak/injected-themes
