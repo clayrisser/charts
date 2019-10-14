@@ -23,6 +23,9 @@ spec:
       {{- if (and (eq .Values.service.gitlab.type "NodePort") (not (empty .Values.service.gitlab.nodePorts.http))) }}
       nodePort: {{ .Values.service.gitlab.nodePorts.http }}
       {{- end }}
+    - name: ssh
+      port: 22
+      targetPort: ssh
   selector:
     app: {{ template "gitlab.name" . }}-gitlab
     release: {{ .Release.Name }}
