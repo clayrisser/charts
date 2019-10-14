@@ -48,6 +48,7 @@ data:
     gitlab_rails['omniauth_block_auto_created_users'] = false;
     gitlab_rails['omniauth_enabled'] = {{ .Values.config.keycloak.enabled }};
     gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
+    gitlab_rails['gitlab_shell_ssh_port'] = 2222;
     gitlab_rails['shared_path'] = '/gitlab-data/shared';
     gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
     gitlab_rails['gitlab_default_theme'] = {{ .Values.config.gitlab.themeId }};
