@@ -1,0 +1,23 @@
+name: sks
+home: https://bitbucket.org/skskeyserver/sks-keyserver
+icon: http://seowebworld.com/wp-content/uploads/2016/11/pgp-privacy-300x300.png
+version: 0.2.0
+appVersion: latest
+description: 'an openpgp keyserver'
+keywords:
+  - sks
+  - pgp
+  - gpg
+  - sks
+  - gnupg
+  - openpgp
+  - key
+  - private
+  - public
+  - server
+  - keyserver
+sources:
+  - https://bitbucket.org/skskeyserver/sks-keyserver
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
