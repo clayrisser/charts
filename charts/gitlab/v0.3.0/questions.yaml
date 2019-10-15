@@ -38,6 +38,13 @@ questions:
     required: false
     label: 'gitlab base url'
     group: Config
+  - variable: config.gitlab.themeId
+    default: 2
+    description: ''
+    type: int
+    required: true
+    label: 'gitlab theme id'
+    group: Config
 
   # Keycloak Config
   - variable: config.keycloak.enabled

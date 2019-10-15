@@ -16,6 +16,7 @@ config:
     baseUrl: ''
     hostname: ''
     password: password
+    themeId: 2
   keycloak:
     baseUrl: ''
     clientId: ''
