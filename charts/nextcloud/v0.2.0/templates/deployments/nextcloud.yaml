@@ -68,7 +68,7 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  name: {{ template "nextcloud.sharedname" . }}-postgres-auth
                   key: POSTGRES_USER
             {{- else }}
             - name: POSTGRES_USER
@@ -81,7 +81,7 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  name: {{ template "nextcloud.sharedname" . }}-postgres-auth
                   key: POSTGRES_PASSWORD
             {{- else }}
             - name: POSTGRES_PASSWORD
