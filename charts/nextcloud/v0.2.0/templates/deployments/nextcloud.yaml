@@ -49,16 +49,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
                   key: postgres_host
-            - name: POSTGRES_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_username
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "nextcloud.fullname" . }}
-                  key: postgres_password
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
@@ -74,6 +64,32 @@ spec:
                 secretKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
                   key: nextcloud_password
+            {{- if .Values.config.postgres.internal }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            {{- if .Values.config.postgres.internal }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: postgres_password
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /
