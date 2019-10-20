@@ -33,7 +33,7 @@ data:
   phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}
   {{- end }}
   omnibus_config: |
-    external_url = {{ template "gitlab.gitlab-base-url" . }};
+    external_url = '{{ template "gitlab.gitlab-base-url" . }}';
     nginx['listen_port'] = 80;
     nginx['listen_https'] = false;
     nginx['proxy_set_headers'] = {
@@ -63,7 +63,6 @@ data:
     gitlab_shell['auth_file'] = '/gitlab-data/ssh/authorized_keys';
     manage_accounts['enable'] = true;
     manage_storage_directories['manage_etc'] = false;
-    nginx['listen_https'] = false;
     postgresql['enable'] = false;
     prometheus_monitoring['enable'] = false;
     redis['enable'] = false;

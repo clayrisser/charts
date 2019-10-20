@@ -65,11 +65,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "gitlab.fullname" . }}
                   key: omnibus_config
-            - name: EXTERNAL_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: base_url
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
@@ -118,12 +113,12 @@ spec:
             {{- end }}
           livenessProbe:
             httpGet:
-              path: /health
+              path: /-/health
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /readiness
+              path: /-/readiness
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
