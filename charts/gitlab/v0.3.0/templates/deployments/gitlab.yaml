@@ -44,7 +44,7 @@ spec:
               memory: 1.2Gi
           ports:
             - name: container
-              containerPort: 80
+              containerPort: 443
             - name: ssh
               containerPort: 22
           volumeMounts:
