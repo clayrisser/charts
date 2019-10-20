@@ -39,37 +39,37 @@ spec:
             - name: HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "flectra.fullname" . }}
                   key: postgres_host
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "flectra.fullname" . }}
                   key: postgres_port
             {{- if .Values.config.postgres.internal }}
             - name: USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  name: {{ template "flectra.sharedname" . }}-postgres-auth
                   key: POSTGRES_USER
             {{- else }}
             - name: USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "flectra.fullname" . }}
                   key: postgres_username
             {{- end }}
             {{- if .Values.config.postgres.internal }}
             - name: PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  name: {{ template "flectra.sharedname" . }}-postgres-auth
                   key: POSTGRES_PASSWORD
             {{- else }}
             - name: PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "flectra.fullname" . }}
                   key: postgres_password
             {{- end }}
           livenessProbe:
