@@ -1,0 +1,15 @@
+name: flectra
+home: https://flectrahq.com
+icon: https://flectrahq.com/flectra_website/static/src/img/logo.png
+version: 0.0.1
+appVersion: latest
+description: 'open source erp and crm application suite'
+keywords:
+  - flectra
+  - erp
+  - crm
+sources:
+  - https://gitlab.com/flectra-hq/flectra
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

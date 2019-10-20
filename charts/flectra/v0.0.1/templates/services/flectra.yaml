@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "flectra.fullname" . }}-flectra
+  labels:
+    app: {{ template "flectra.name" . }}-flectra
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.flectra.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.flectra.type }}
+  {{- if (or (eq .Values.service.flectra.type "LoadBalancer") (eq .Values.service.flectra.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.flectra.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.flectra.type "NodePort") (not (empty .Values.service.flectra.nodePorts.http))) }}
+      nodePort: {{ .Values.service.flectra.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "flectra.name" . }}-flectra
+    release: {{ .Release.Name }}

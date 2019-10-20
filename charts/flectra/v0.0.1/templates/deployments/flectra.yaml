@@ -1,0 +1,122 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "flectra.fullname" . }}-flectra
+  labels:
+    app: {{ template "flectra.name" . }}-flectra
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "flectra.sharedname" . }}-data
+    stash.appscode.com/target-paths: /_data
+    stash.appscode.com/volume-mounts: 'data:/_data'
+  {{- end }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "flectra.name" . }}-flectra
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "flectra.fullname" . }}-flectra
+          image: {{ .Values.images.flectra.repository }}:{{ .Values.images.flectra.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 7073
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: '/mnt/extra-addons'
+              subPath: addons
+          env:
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_host
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_port
+            {{- if .Values.config.postgres.internal }}
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            {{- if .Values.config.postgres.internal }}
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "flectra.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.flectraSnapshot))) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "flectra.fullname" . }}-flectra
+  labels:
+    app: {{ template "flectra.name" . }}-flectra
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "flectra.sharedname" . }}-flectra
+  rules:
+    - snapshots:
+        - {{ $restore.flectraSnapshot }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "flectra.fullname" . }}-flectra
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}
