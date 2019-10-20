@@ -33,7 +33,13 @@ data:
   phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}
   {{- end }}
   omnibus_config: |
-    external_url = ENV['EXTERNAL_URL'];
+    external_url = {{ template "gitlab.gitlab-base-url" . }};
+    nginx['listen_port'] = 80;
+    nginx['listen_https'] = false;
+    nginx['proxy_set_headers'] = {
+      'X-Forwarded-Proto' => 'https',
+      'X-Forwarded-Ssl' => 'on'
+    };
     git_data_dirs = ['/gitlab-data/git-data'];
     gitlab_ci['builds_directory'] = '/gitlab-data/builds';
     gitlab_rails['auto_link_ldap_user'] = false;
