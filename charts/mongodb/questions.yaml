@@ -29,11 +29,19 @@ questions:
     required: true
     label: prometheus
     group: Config
+  - variable: config.replicaSet
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'replica set'
+    group: Config
   - variable: config.replicas
-    default: 1
+    default: 3
     description: ''
     type: int
     required: true
+    show_if: config.replicaSet=true||config.sharding.enabled=true
     label: replicas
     group: Config
   - variable: config.customConfig

@@ -76,7 +76,7 @@ spec:
   configSource:
     configMap:
       name: {{ template "mongodb.fullname" . }}-mongodb
-  {{- if (gt (.Values.config.replicas | int64) 1) }}
+  {{- if .Values.config.replicaSet }}
   replicas: {{ .Values.config.replicas }}
   replicaSet:
     name: rs0
