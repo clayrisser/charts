@@ -112,14 +112,12 @@ spec:
                   key: postgres_password
             {{- end }}
           livenessProbe:
-            httpGet:
-              path: /-/health
-              port: container
+            exec:
+              command: ['curl',  'localhost/-/health']
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /-/readiness
-              port: container
+            exec:
+              command: ['curl',  'localhost/-/readiness']
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: data
