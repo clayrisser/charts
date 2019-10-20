@@ -40,7 +40,7 @@ spec:
               subPath: addons
           env:
             - name: UNSAFE_CHECK_POSTGRES_USER
-              value: false
+              value: 'false'
             - name: HOST
               valueFrom:
                 configMapKeyRef:
