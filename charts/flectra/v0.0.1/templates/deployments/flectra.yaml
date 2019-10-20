@@ -33,9 +33,14 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
+              mountPath: '/var/lib/flectra'
+              subPath: data
+            - name: data
               mountPath: '/mnt/extra-addons'
               subPath: addons
           env:
+            - name: UNSAFE_CHECK_POSTGRES_USER
+              value: false
             - name: HOST
               valueFrom:
                 configMapKeyRef:

@@ -472,14 +472,14 @@ questions:
 
 # Images
   - variable: images.flectra.repository
-    default: flectrahq/flectra
+    default: codejamninja/flectra
     description: ''
     type: string
     required: true
     label: 'flectra repository'
     group: Images
   - variable: images.flectra.tag
-    default: 1.6
+    default: 0.0.1
     description: ''
     type: string
     required: true

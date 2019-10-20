@@ -1,7 +1,7 @@
 images:
   flectra:
-    repository: flectrahq/flectra
-    tag: 1.6
+    repository: codejamninja/flectra
+    tag: 0.0.1
   pgadmin:
     repository: dpage/pgadmin4
     tag: 4.11
