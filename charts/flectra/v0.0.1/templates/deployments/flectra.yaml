@@ -26,6 +26,13 @@ spec:
         - name: {{ template "flectra.fullname" . }}-flectra
           image: {{ .Values.images.flectra.repository }}:{{ .Values.images.flectra.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: 300m
+              memory: 1.2Gi
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           ports:
             - name: container
               containerPort: 7073
