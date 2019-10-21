@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "onlyoffice.fullname" . }}-onlyoffice
+  labels:
+    app: {{ template "onlyoffice.name" . }}-onlyoffice
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.onlyoffice.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.onlyoffice.type }}
+  {{- if (or (eq .Values.service.onlyoffice.type "LoadBalancer") (eq .Values.service.onlyoffice.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.onlyoffice.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.onlyoffice.type "NodePort") (not (empty .Values.service.onlyoffice.nodePorts.http))) }}
+      nodePort: {{ .Values.service.onlyoffice.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "onlyoffice.name" . }}-onlyoffice
+    release: {{ .Release.Name }}
