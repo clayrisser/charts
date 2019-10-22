@@ -43,7 +43,7 @@ spec:
               subPath: themes
           env:
             - name: NEXTCLOUD_TRUSTED_DOMAINS
-              value: {{ template "nextcloud.fullname" . }}-nextcloud
+              value: '{{ (include "nextcloud.nextcloud-hostname" .) }},{{ template "nextcloud.fullname" . }}-nextcloud'
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
