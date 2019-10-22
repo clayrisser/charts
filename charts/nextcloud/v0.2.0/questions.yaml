@@ -493,7 +493,7 @@ questions:
     label: 'nextcloud repository'
     group: Images
   - variable: images.nextcloud.tag
-    default: 17.0.0-apache
+    default: 16.0.5-apache
     description: ''
     type: string
     required: true
