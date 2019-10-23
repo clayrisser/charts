@@ -33,14 +33,8 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: '/var/www/html/data'
+              mountPath: /var/www/html
               subPath: data
-            - name: data
-              mountPath: '/var/www/html/apps'
-              subPath: apps
-            - name: data
-              mountPath: '/var/www/html/themes'
-              subPath: themes
           env:
             - name: NEXTCLOUD_TRUSTED_DOMAINS
               value: '{{ (include "nextcloud.nextcloud-hostname" .) }} {{ template "nextcloud.fullname" . }}-nextcloud'
