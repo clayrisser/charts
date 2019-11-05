@@ -41,21 +41,21 @@ questions:
     default: ''
     description: ''
     type: string
-    required: true
+    required: false
     label: 'nextcloud objectstore bucket'
     group: Config
   - variable: config.nextcloud.objectstore.key
     default: ''
     description: ''
     type: string
-    required: true
+    required: false
     label: 'nextcloud objectstore key'
     group: Config
   - variable: config.nextcloud.objectstore.secret
     default: ''
     description: ''
     type: password
-    required: true
+    required: false
     label: 'nextcloud objectstore secret'
     group: Config
 
