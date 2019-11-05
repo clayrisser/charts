@@ -486,14 +486,14 @@ questions:
 
 # Images
   - variable: images.nextcloud.repository
-    default: nextcloud
+    default: codejamninja/nextcloud
     description: ''
     type: string
     required: true
     label: 'nextcloud repository'
     group: Images
   - variable: images.nextcloud.tag
-    default: 17.0.0-apache
+    default: 17.0
     description: ''
     type: string
     required: true
