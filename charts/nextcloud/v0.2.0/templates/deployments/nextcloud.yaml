@@ -84,6 +84,27 @@ spec:
                   name: {{ template "nextcloud.fullname" . }}
                   key: postgres_password
             {{- end }}
+            {{- if (not (empty .Values.config.nextcloud.objectstore.bucket)) }}
+            - name: OBJECTSTORE_CLASS
+              value: s3
+            - name: OBJECTSTORE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: objectstore_key
+            - name: OBJECTSTORE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: objectstore_secret
+            - name: OBJECTSTORE_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: objectstore_bucket
+            - name: OBJECTSTORE_USE_SSL
+              value: true
+            {{- end }}
           livenessProbe:
             tcpSocket:
               port: container
