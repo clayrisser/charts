@@ -92,6 +92,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
                   key: objectstore_key
+            - name: OBJECTSTORE_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "nextcloud.fullname" . }}
+                  key: objectstore_region
             - name: OBJECTSTORE_SECRET
               valueFrom:
                 secretKeyRef:

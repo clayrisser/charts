@@ -17,6 +17,7 @@ config:
     objectstore:
       bucket: ''
       key: ''
+      region: us-west-2
       secret: ''
   postgres:
     customConfig: ''

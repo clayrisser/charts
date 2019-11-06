@@ -23,3 +23,4 @@ data:
   {{- end }}
   objectstore_bucket: {{ .Values.config.nextcloud.objectstore.bucket | quote }}
   objectstore_key: {{ .Values.config.nextcloud.objectstore.key | quote }}
+  objectstore_region: {{ .Values.config.nextcloud.objectstore.region | quote }}

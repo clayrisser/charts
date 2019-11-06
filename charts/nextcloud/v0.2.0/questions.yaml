@@ -44,6 +44,13 @@ questions:
     required: false
     label: 'nextcloud objectstore bucket'
     group: Config
+  - variable: config.nextcloud.objectstore.region
+    default: us-west-2
+    description: ''
+    type: string
+    required: false
+    label: 'nextcloud objectstore region'
+    group: Config
   - variable: config.nextcloud.objectstore.key
     default: ''
     description: ''
