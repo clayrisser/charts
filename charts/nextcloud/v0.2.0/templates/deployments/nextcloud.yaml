@@ -103,7 +103,7 @@ spec:
                   name: {{ template "nextcloud.fullname" . }}
                   key: objectstore_bucket
             - name: OBJECTSTORE_USE_SSL
-              value: true
+              value: 'true'
             {{- end }}
           livenessProbe:
             tcpSocket:
