@@ -514,7 +514,7 @@ questions:
     label: 'nextcloud repository'
     group: Images
   - variable: images.nextcloud.tag
-    default: 17.0
+    default: 17.0.0
     description: ''
     type: string
     required: true

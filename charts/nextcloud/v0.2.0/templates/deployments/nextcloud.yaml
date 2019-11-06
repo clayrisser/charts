@@ -86,7 +86,7 @@ spec:
             {{- end }}
             {{- if (not (empty .Values.config.nextcloud.objectstore.bucket)) }}
             - name: OBJECTSTORE_CLASS
-              value: s3
+              value: S3
             - name: OBJECTSTORE_KEY
               valueFrom:
                 configMapKeyRef:
