@@ -87,6 +87,10 @@ spec:
             {{- if (not (empty .Values.config.nextcloud.objectstore.bucket)) }}
             - name: OBJECTSTORE_CLASS
               value: S3
+            - name: OBJECTSTORE_USE_PATH_STYLE
+              value: 'false'
+            - name: OBJECTSTORE_USE_SSL
+              value: 'true'
             - name: OBJECTSTORE_KEY
               valueFrom:
                 configMapKeyRef:
@@ -107,8 +111,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "nextcloud.fullname" . }}
                   key: objectstore_bucket
-            - name: OBJECTSTORE_USE_SSL
-              value: 'true'
             {{- end }}
           livenessProbe:
             tcpSocket:
