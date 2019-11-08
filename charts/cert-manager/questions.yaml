@@ -1,0 +1,11 @@
+questions:
+  - variable: ingressShim.defaultIssuerName
+    default: letsencrypt-staging
+    required: true
+    type: enum
+    description: "Let's Encrypt ACME clients, use staging environment to avoid hitting rate limits"
+    label: "Let's Encrypt Cluster Issuer clients"
+    group: Settings
+    options:
+      - letsencrypt-staging
+      - letsencrypt-prod
