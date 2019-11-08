@@ -1,0 +1,26 @@
+.DS_Store
+
+# vcs
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+
+# backup files
+*.bak
+*.swp
+*.tmp
+
+# editors
+*.tmproj
+*~
+.\#*
+.idea/
+.project
+\#*\#
+
+# kubernetes
+OWNERS

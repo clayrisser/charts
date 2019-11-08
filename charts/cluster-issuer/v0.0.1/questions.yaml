@@ -1,3 +1,5 @@
+categories:
+  - Certificates
 questions:
   - variable: clusterissuerEnabled
     default: true

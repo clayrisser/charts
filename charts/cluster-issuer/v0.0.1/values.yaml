@@ -1,0 +1,9 @@
+clusterissuerEnabled: true
+
+ingressShim:
+  defaultIssuerName: letsencrypt-staging
+  defaultIssuerKind: ClusterIssuer
+  defaultACMEChallengeType: http01
+
+letsencrypt:
+  email: ''

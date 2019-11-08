@@ -4,8 +4,8 @@ kind: ClusterIssuer
 metadata:
   name: {{ .Values.ingressShim.defaultIssuerName }}
   labels:
-    app: {{ template "cert-manager.name" . }}
-    chart: {{ template "cert-manager.chart" . }}
+    app: {{ template "cluster-issuer.name" . }}
+    chart: {{ template "cluster-issuer.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
