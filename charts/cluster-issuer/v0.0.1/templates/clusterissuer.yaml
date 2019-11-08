@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.ingressShim.defaultIssuerName }}
   labels:
     app: {{ template "cluster-issuer.name" . }}
-    chart: {{ template "cluster-issuer.chart" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
