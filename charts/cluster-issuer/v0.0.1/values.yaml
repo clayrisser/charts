@@ -1,5 +1,3 @@
-clusterissuerEnabled: true
-
 ingressShim:
   defaultIssuerName: letsencrypt-staging
   defaultIssuerKind: ClusterIssuer
