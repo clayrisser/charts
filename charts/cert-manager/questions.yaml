@@ -1,11 +1,26 @@
 questions:
-  - variable: ingressShim.defaultIssuerName
-    default: letsencrypt-staging
-    required: true
-    type: enum
-    description: "Let's Encrypt ACME clients, use staging environment to avoid hitting rate limits"
-    label: "Let's Encrypt Cluster Issuer clients"
+  - variable: clusterissuerEnabled
+    default: true
+    description: 'Create Default Cluster Issuer'
+    label: Create Default Cluster Issuer
+    type: boolean
     group: Settings
-    options:
-      - letsencrypt-staging
-      - letsencrypt-prod
+    show_subquestion_if: true
+    subquestions:
+      - variable: ingressShim.defaultIssuerName
+        default: letsencrypt-staging
+        required: true
+        type: enum
+        description: "Let's Encrypt ACME clients, use staging environment to avoid hitting rate limits"
+        label: "Let's Encrypt Cluster Issuer clients"
+        group: Settings
+        options:
+          - letsencrypt-staging
+          - letsencrypt-prod
+      - variable: letsencrypt.email
+        default: ''
+        required: true
+        type: string
+        description: "Let's Encrypt register email, for https://letsencrypt.org/docs/staging-environment"
+        label: "Let's Encrypt Client Register Email"
+        group: Settings
