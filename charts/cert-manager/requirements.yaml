@@ -2,5 +2,5 @@
 dependencies:
 - name: cainjector
   version: "v0.1.0"
-  repository: "file://cainjector"
+  repository: "https://charts.jetstack.io"
   condition: cainjector.enabled
