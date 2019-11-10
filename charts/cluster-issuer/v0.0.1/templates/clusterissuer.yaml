@@ -20,7 +20,8 @@ spec:
     privateKeySecretRef:
       name: {{ .Values.ingressShim.defaultIssuerName }}-account-key
     solvers:
-    - http01:
-        serviceType: ClusterIP
-        ingress:
-          class: nginx
+      - selector: {}
+        http01:
+          serviceType: ClusterIP
+          ingress:
+            class: nginx
