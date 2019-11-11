@@ -70,6 +70,7 @@ data:
     unicorn['worker_processes'] = 2;
     {{- if .Values.config.gitlab.s3.enabled }}
     gitlab_rails['uploads_object_store_enabled'] = true;
+    gitlab_rails['uploads_object_store_remote_directory'] = 'uploads';
     gitlab_rails['uploads_object_store_connection'] = {
       'provider' => 'AWS',
       'region' => '{{ .Values.config.gitlab.s3.awsRegion }}',
