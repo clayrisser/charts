@@ -1,7 +1,7 @@
 name: gitlab
 home: https://about.gitlab.com
 icon: https://about.gitlab.com/images/default-blog-image.png
-version: 0.3.1
+version: 0.3.2
 appVersion: latest
 description: 'a full devops toolchain'
 keywords:

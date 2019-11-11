@@ -17,6 +17,11 @@ config:
     hostname: ''
     password: password
     themeId: 2
+    s3:
+      awsAccessKey: ''
+      awsRegion: ''
+      awsSecretKey: ''
+      enabled: false
   keycloak:
     baseUrl: ''
     clientId: ''

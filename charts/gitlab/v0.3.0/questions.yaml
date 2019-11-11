@@ -45,6 +45,37 @@ questions:
     required: true
     label: 'gitlab theme id'
     group: Config
+  - variable: config.gitlab.s3.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'gitlab s3 enabled'
+    group: Config
+  - variable: config.gitlab.s3.awsRegion
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'gitlab s3 aws region'
+    show_if: config.gitlab.s3.enabled=true
+    group: Config
+  - variable: config.gitlab.s3.awsAccessKey
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'gitlab s3 aws access key'
+    show_if: config.gitlab.s3.enabled=true
+    group: Config
+  - variable: config.gitlab.s3.awsSecretKey
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'gitlab s3 aws secret key'
+    show_if: config.gitlab.s3.enabled=true
+    group: Config
 
   # Keycloak Config
   - variable: config.keycloak.enabled
