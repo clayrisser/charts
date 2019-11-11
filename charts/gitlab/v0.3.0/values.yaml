@@ -19,7 +19,7 @@ config:
     themeId: 2
     s3:
       awsAccessKey: ''
-      awsRegion: ''
+      awsRegion: us-west-2
       awsSecretKey: ''
       enabled: false
   keycloak:
