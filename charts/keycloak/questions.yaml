@@ -531,7 +531,7 @@ questions:
     label: 'keycloak repository'
     group: Images
   - variable: images.keycloak.tag
-    default: 7.0.0
+    default: 8.0.0
     description: ''
     type: string
     required: true
