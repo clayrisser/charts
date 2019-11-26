@@ -39,7 +39,7 @@ questions:
     required: false
     show_if: config.gatekeeper.enabled=true
     label: 'base url'
-    group: Config
+    group: Gatekeeper
   - variable: config.gatekeeper.keycloak.baseUrl
     default: ''
     description: ''
