@@ -1,0 +1,42 @@
+{{- if .Values.config.gatekeeper.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "n8n.fullname" . }}-gatekeeper
+  labels:
+    app: {{ template "n8n.name" . }}-gatekeeper
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  config.yaml: |
+    discovery-url: {{ .Values.config.gatekeeper.keycloak.baseUrl }}/auth/realms/master
+    client-id: {{ .Values.config.gatekeeper.keycloak.clientId | quote }}
+    client-secret: {{ .Values.config.gatekeeper.keycloak.clientSecret | quote }}
+    listen: 0.0.0.0:3000
+    enable-refresh-tokens: true
+    enable-logging: true
+    enable-json-logging: true
+    enable-encrypted-token: false
+    no-redirects: false
+    tls-cert:
+    tls-private-key:
+    tls-ca-certificate:
+    redirection-url: {{ template "n8n.gatekeeper-base-url" . }}
+    encryption-key: 1234567890123456
+    enable-session-cookies: true
+    secure-cookie: false
+    upstream-url: http://{{ template "n8n.fullname" . }}-gatekeeper
+    upstream-keepalives: true
+    skip-upstream-tls-verify: true
+    scopes: []
+    enable-security-filter: true
+    headers: {}
+    resources: []
+    cors-origins: []
+    cors-headers: []
+    cors-exposed-headers: []
+    cors-methods: []
+    cors-credentials: false
+    cors-max-age: 1h
+{{- end }}

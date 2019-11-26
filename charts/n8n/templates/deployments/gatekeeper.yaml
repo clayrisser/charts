@@ -1,0 +1,48 @@
+{{- if .Values.config.gatekeeper.enabled }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "n8n.fullname" . }}-gatekeeper
+  labels:
+    app: {{ template "n8n.name" . }}-gatekeeper
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "n8n.name" . }}-gatekeeper
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "n8n.fullname" . }}-gatekeeper
+          image: {{ .Values.images.gatekeeper.repository }}:{{ .Values.images.gatekeeper.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          args:
+            - --config
+            - /config/config.yaml
+          ports:
+            - name: container
+              containerPort: 3000
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "n8n.fullname" . }}-gatekeeper
+{{- end }}

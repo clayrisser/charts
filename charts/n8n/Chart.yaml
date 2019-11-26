@@ -1,0 +1,18 @@
+name: n8n
+home: https://n8n.io
+icon: https://n8n.io/n8n-logo.png
+version: 0.0.1
+appVersion: latest
+description: 'open source alternative for zapier'
+keywords:
+  - n8n
+  - n8n
+  - ifttt
+  - zapier
+  - tray.io
+  - node
+sources:
+  - https://github.com/n8n-io/n8n
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

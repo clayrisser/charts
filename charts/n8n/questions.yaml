@@ -1,0 +1,386 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+
+# Gatekeeper
+  - variable: config.gatekeeper.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: Gatekeeper
+  - variable: config.gatekeeper.baseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    show_if: config.gatekeeper.enabled=true
+    label: 'base url'
+    group: Config
+  - variable: config.gatekeeper.keycloak.baseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    show_if: config.gatekeeper.enabled=true
+    label: 'keycloak base url'
+    group: Gatekeeper
+  - variable: config.gatekeeper.keycloak.clientId
+    default: ''
+    description: ''
+    type: string
+    required: false
+    show_if: config.gatekeeper.enabled=true
+    label: 'keycloak client id'
+    group: Gatekeeper
+  - variable: config.gatekeeper.keycloak.clientSecret
+    default: ''
+    description: ''
+    type: password
+    required: false
+    show_if: config.gatekeeper.enabled=true
+    label: 'keycloak client secret'
+    group: Gatekeeper
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: pvc
+        required: false
+        label: 'existing claim'
+      - variable: persistence.backup.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'backup enabled'
+      - variable: persistence.backup.resticPassword
+        default: pass
+        description: ''
+        type: password
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup restic password'
+      - variable: persistence.backup.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup schedule'
+      - variable: persistence.backup.keepLast
+        default: 5
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup keep last'
+      - variable: persistence.backup.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup type'
+      - variable: persistence.backup.awsAccessKey
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws access key'
+      - variable: persistence.backup.awsSecretKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws secret key'
+      - variable: persistence.backup.googleProjectId
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google project id'
+      - variable: persistence.backup.googleServiceKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google service key'
+      - variable: persistence.backup.azureAccountName
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account name'
+      - variable: persistence.backup.azureAccountKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account key'
+      - variable: persistence.backup.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'backup container'
+      - variable: persistence.backup.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup bucket'
+      - variable: persistence.backup.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'backup endpoint'
+      - variable: persistence.backup.prefix
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup prefix'
+      - variable: persistence.backup.restore.n8nSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore n8n snapshot'
+
+# Services and Load Balancing
+  - variable: ingress.n8n.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'n8n ingress enabled'
+    show_if: config.gatekeeper.enabled=false
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.n8n.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'n8n ingress tls'
+      - variable: ingress.n8n.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'n8n ingress hostname'
+      - variable: ingress.n8n.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'n8n ingress path'
+      - variable: ingress.n8n.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.n8n.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'n8n ingress issuer name'
+      - variable: ingress.n8n.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.n8n.tls=true&&ingress.n8n.issuer.name=none
+        required: false
+        label: 'n8n ingress certificate'
+  - variable: service.n8n.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.n8n.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'n8n service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.n8n.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.n8n.enabled=false
+        label: 'n8n http port'
+  - variable: ingress.gatekeeper.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'gatekeeper ingress enabled'
+    show_if: config.gatekeeper.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.gatekeeper.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'gatekeeper ingress tls'
+      - variable: ingress.gatekeeper.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'gatekeeper ingress hostname'
+      - variable: ingress.gatekeeper.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'gatekeeper ingress path'
+      - variable: ingress.gatekeeper.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.gatekeeper.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'gatekeeper ingress issuer name'
+      - variable: ingress.gatekeeper.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.gatekeeper.tls=true&&ingress.gatekeeper.issuer.name=none
+        required: false
+        label: 'gatekeeper ingress certificate'
+  - variable: service.gatekeeper.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.gatekeeper.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'gatekeeper service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.gatekeeper.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.gatekeeper.enabled=false
+        label: 'gatekeeper http port'
+
+# Images
+  - variable: images.n8n.repository
+    default: n8nio/n8n
+    description: ''
+    type: string
+    required: true
+    label: 'n8n repository'
+    group: Images
+  - variable: images.n8n.tag
+    default: 0.36.1
+    description: ''
+    type: string
+    required: true
+    label: 'n8n tag'
+    group: Images
+  - variable: images.gatekeeper.repository
+    default: quay.io/keycloak/keycloak-gatekeeper
+    description: ''
+    type: string
+    required: true
+    label: 'gatekeeper repository'
+    group: Images
+  - variable: images.gatekeeper.tag
+    default: 8.0.0
+    description: ''
+    type: string
+    required: true
+    label: 'gatekeeper tag'
+    group: Images
