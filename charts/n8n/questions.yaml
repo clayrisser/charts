@@ -234,24 +234,27 @@ questions:
         description: ''
         type: boolean
         required: true
+        show_if: config.gatekeeper.enabled=false
         label: 'n8n ingress tls'
       - variable: ingress.n8n.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
+        show_if: config.gatekeeper.enabled=false
         label: 'n8n ingress hostname'
       - variable: ingress.n8n.path
         default: /
         description: ''
         type: string
         required: true
+        show_if: config.gatekeeper.enabled=false
         label: 'n8n ingress path'
       - variable: ingress.n8n.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.n8n.tls=true
+        show_if: ingress.n8n.tls=true&&config.gatekeeper.enabled=false
         options:
           - none
           - letsencrypt-staging
@@ -262,7 +265,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: ingress.n8n.tls=true&&ingress.n8n.issuer.name=none
+        show_if: ingress.n8n.tls=true&&ingress.n8n.issuer.name=none&&config.gatekeeper.enabled=false
         required: false
         label: 'n8n ingress certificate'
   - variable: service.n8n.type
@@ -301,24 +304,27 @@ questions:
         description: ''
         type: boolean
         required: true
+        show_if: config.gatekeeper.enabled=true
         label: 'gatekeeper ingress tls'
       - variable: ingress.gatekeeper.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
+        show_if: config.gatekeeper.enabled=true
         label: 'gatekeeper ingress hostname'
       - variable: ingress.gatekeeper.path
         default: /
         description: ''
         type: string
         required: true
+        show_if: config.gatekeeper.enabled=true
         label: 'gatekeeper ingress path'
       - variable: ingress.gatekeeper.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.gatekeeper.tls=true
+        show_if: ingress.gatekeeper.tls=true&&config.gatekeeper.enabled=true
         options:
           - none
           - letsencrypt-staging
@@ -329,14 +335,14 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: ingress.gatekeeper.tls=true&&ingress.gatekeeper.issuer.name=none
+        show_if: ingress.gatekeeper.tls=true&&ingress.gatekeeper.issuer.name=none&&config.gatekeeper.enabled=true
         required: false
         label: 'gatekeeper ingress certificate'
   - variable: service.gatekeeper.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.gatekeeper.enabled=false
+    show_if: ingress.gatekeeper.enabled=false&&config.gatekeeper.enabled=true
     options:
       - ClusterIP
       - NodePort
@@ -352,7 +358,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.gatekeeper.enabled=false
+        show_if: ingress.gatekeeper.enabled=false&&config.gatekeeper.enabled=true
         label: 'gatekeeper http port'
 
 # Images
