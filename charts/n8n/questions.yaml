@@ -381,6 +381,7 @@ questions:
     description: ''
     type: string
     required: true
+    show_if: config.gatekeeper.enabled=true
     label: 'gatekeeper repository'
     group: Images
   - variable: images.gatekeeper.tag
@@ -388,5 +389,6 @@ questions:
     description: ''
     type: string
     required: true
+    show_if: config.gatekeeper.enabled=true
     label: 'gatekeeper tag'
     group: Images
