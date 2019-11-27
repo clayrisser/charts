@@ -66,6 +66,7 @@ Calculate n8n hostname
 {{/*
 Calculate n8n base url
 */}}
+{{- define "n8n.n8n-base-url" }}
 {{- if (and (not .Values.config.gatekeeper.enabled) (and .Values.config.baseUrl (not (empty .Values.config.baseUrl)))) }}
 {{- printf .Values.config.baseUrl }}
 {{- else if (and .Values.config.n8n.baseUrl (not (empty .Values.config.n8n.baseUrl))) }}
