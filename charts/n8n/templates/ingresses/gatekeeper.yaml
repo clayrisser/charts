@@ -26,6 +26,10 @@ spec:
             backend:
               serviceName: {{ template "n8n.fullname" . }}-n8n
               servicePort: http
+          - path: {{ .Values.ingress.gatekeeper.path }}webhook
+            backend:
+              serviceName: {{ template "n8n.fullname" . }}-n8n
+              servicePort: http
           - path: {{ .Values.ingress.gatekeeper.path }}
             backend:
               serviceName: {{ template "n8n.fullname" . }}-gatekeeper
