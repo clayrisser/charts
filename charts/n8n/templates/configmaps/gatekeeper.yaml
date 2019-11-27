@@ -10,33 +10,36 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   config.yaml: |
-    discovery-url: {{ .Values.config.gatekeeper.keycloak.baseUrl }}/auth/realms/master
     client-id: {{ .Values.config.gatekeeper.keycloak.clientId | quote }}
     client-secret: {{ .Values.config.gatekeeper.keycloak.clientSecret | quote }}
-    listen: 0.0.0.0:3000
-    enable-refresh-tokens: true
-    enable-logging: true
-    enable-json-logging: true
+    cors-credentials: false
+    cors-exposed-headers: []
+    cors-headers: []
+    cors-max-age: 1h
+    cors-methods: []
+    cors-origins: []
+    discovery-url: {{ .Values.config.gatekeeper.keycloak.baseUrl }}/auth/realms/master
+    enable-default-deny: true
     enable-encrypted-token: false
+    enable-json-logging: true
+    enable-logging: true
+    enable-refresh-tokens: false
+    enable-security-filter: true
+    enable-session-cookies: true
+    encryption-key: 1234567890123456
+    headers: {}
+    listen: 0.0.0.0:3000
     no-redirects: false
+    preserve-host=true
+    redirection-url: {{ template "n8n.gatekeeper-base-url" . }}
+    resources:
+      - uri: /*
+    scopes: []
+    secure-cookie: false
+    skip-upstream-tls-verify: true
+    tls-ca-certificate:
     tls-cert:
     tls-private-key:
-    tls-ca-certificate:
-    redirection-url: {{ template "n8n.gatekeeper-base-url" . }}
-    encryption-key: 1234567890123456
-    enable-session-cookies: true
-    secure-cookie: false
-    upstream-url: http://{{ template "n8n.fullname" . }}-gatekeeper
     upstream-keepalives: true
-    skip-upstream-tls-verify: true
-    scopes: []
-    enable-security-filter: true
-    headers: {}
-    resources: []
-    cors-origins: []
-    cors-headers: []
-    cors-exposed-headers: []
-    cors-methods: []
-    cors-credentials: false
-    cors-max-age: 1h
+    upstream-url: http://{{ template "n8n.fullname" . }}-n8n
 {{- end }}
