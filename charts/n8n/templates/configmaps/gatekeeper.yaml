@@ -35,7 +35,7 @@ data:
     resources:
       - uri: /*
       - uri: /rest/*
-        white-list: true
+        white-listed: true
     scopes: []
     secure-cookie: false
     skip-upstream-tls-verify: true
