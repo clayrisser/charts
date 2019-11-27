@@ -66,8 +66,9 @@ Calculate n8n hostname
 {{/*
 Calculate n8n base url
 */}}
-{{- define "n8n.n8n-base-url" }}
-{{- if (and .Values.config.n8n.baseUrl (not (empty .Values.config.n8n.baseUrl))) }}
+{{- if (and (not .Values.config.gatekeeper.enabled) (and .Values.config.baseUrl (not (empty .Values.config.baseUrl)))) }}
+{{- printf .Values.config.baseUrl }}
+{{- else if (and .Values.config.n8n.baseUrl (not (empty .Values.config.n8n.baseUrl))) }}
 {{- printf .Values.config.n8n.baseUrl }}
 {{- else }}
 {{- if .Values.ingress.n8n.enabled }}
@@ -100,7 +101,9 @@ Calculate gatekeeper hostname
 Calculate gatekeeper base url
 */}}
 {{- define "n8n.gatekeeper-base-url" }}
-{{- if (and .Values.config.gatekeeper.baseUrl (not (empty .Values.config.gatekeeper.baseUrl))) }}
+{{- if (and .Values.config.gatekeeper.enabled (and .Values.config.baseUrl (not (empty .Values.config.baseUrl)))) }}
+{{- printf .Values.config.baseUrl }}
+{{- else if (and .Values.config.gatekeeper.baseUrl (not (empty .Values.config.gatekeeper.baseUrl))) }}
 {{- printf .Values.config.gatekeeper.baseUrl }}
 {{- else }}
 {{- if .Values.ingress.gatekeeper.enabled }}

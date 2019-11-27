@@ -9,6 +9,7 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
+  baseUrl: ''
   n8n:
     baseUrl: ''
     hostname: ''

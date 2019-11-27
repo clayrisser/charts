@@ -23,6 +23,14 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.baseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    show_if: config.gatekeeper.enabled=true
+    label: 'base url'
+    group: Config
 
 # Gatekeeper
   - variable: config.gatekeeper.enabled
@@ -31,14 +39,6 @@ questions:
     type: boolean
     required: true
     label: enabled
-    group: Gatekeeper
-  - variable: config.gatekeeper.baseUrl
-    default: ''
-    description: ''
-    type: string
-    required: false
-    show_if: config.gatekeeper.enabled=true
-    label: 'base url'
     group: Gatekeeper
   - variable: config.gatekeeper.keycloak.baseUrl
     default: ''

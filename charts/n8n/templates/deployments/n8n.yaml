@@ -37,7 +37,11 @@ spec:
               subPath: data
           env:
            - name: WEBHOOK_TUNNEL_URL
+             {{- if .Values.config.gatekeeper.enabled }}
+             value: {{ template "n8n.gatekeeper-base-url" . }}
+             {{- else }}
              value: {{ template "n8n.n8n-base-url" . }}
+             {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz
