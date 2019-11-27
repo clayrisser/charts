@@ -35,7 +35,9 @@ spec:
             - name: data
               mountPath: '/root/.n8n'
               subPath: data
-          env: []
+          env:
+           - name: WEBHOOK_TUNNEL_URL
+             value: {{ template "n8n.n8n-base-url" . }}
           livenessProbe:
             httpGet:
               path: /healthz
