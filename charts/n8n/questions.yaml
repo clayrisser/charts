@@ -363,7 +363,7 @@ questions:
 
 # Images
   - variable: images.n8n.repository
-    default: codejamninja/n8n
+    default: n8nio/n8n
     description: ''
     type: string
     required: true
