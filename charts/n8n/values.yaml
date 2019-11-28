@@ -1,6 +1,6 @@
 images:
   n8n:
-    repository: n8nio/n8n
+    repository: codejamninja/n8n
     tag: 0.36.1
   gatekeeper:
     repository: quay.io/keycloak/keycloak-gatekeeper
