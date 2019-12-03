@@ -1,0 +1,90 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "sourcegraph.fullname" . }}-sourcegraph
+  labels:
+    app: {{ template "sourcegraph.name" . }}-sourcegraph
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "sourcegraph.sharedname" . }}-data
+    stash.appscode.com/target-paths: /_data
+    stash.appscode.com/volume-mounts: 'data:/_data'
+  {{- end }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "sourcegraph.name" . }}-sourcegraph
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "sourcegraph.fullname" . }}-sourcegraph
+          image: {{ .Values.images.sourcegraph.repository }}:{{ .Values.images.sourcegraph.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 7080
+            - name: grafana
+              containerPort: 3370
+            - name: admin
+              containerPort: 2633
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: '/var/opt/sourcegraph'
+              subPath: data
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "sourcegraph.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.sourcegraphSnapshot))) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "sourcegraph.fullname" . }}-sourcegraph
+  labels:
+    app: {{ template "sourcegraph.name" . }}-sourcegraph
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "sourcegraph.sharedname" . }}-sourcegraph
+  rules:
+    - snapshots:
+        - {{ $restore.sourcegraphSnapshot }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "sourcegraph.fullname" . }}-sourcegraph
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}
