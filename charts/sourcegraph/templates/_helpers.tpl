@@ -38,6 +38,17 @@ Calculate sourcegraph certificate
 {{- end }}
 
 {{/*
+Calculate pgadmin certificate
+*/}}
+{{- define "sourcegraph.pgadmin-certificate" }}
+{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
+{{- printf .Values.ingress.pgadmin.certificate }}
+{{- else }}
+{{- printf "%s-pgadmin-letsencrypt" (include "sourcegraph.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate sourcegraph hostname
 */}}
 {{- define "sourcegraph.sourcegraph-hostname" }}
@@ -66,6 +77,23 @@ Calculate sourcegraph base url
 {{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
 {{- printf "http://%s" (include "sourcegraph.sourcegraph-hostname" .) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate postgres url
+*/}}
+{{- define "sourcegraph.postgres-url" }}
+{{- $postgres := .Values.config.postgres }}
+{{- if $postgres.internal }}
+{{- $credentials := (printf "%s:%s" $postgres.username $postgres.password) }}
+{{- printf "postgresql://%s@%s-postgres:5432/%s" $credentials (include "sourcegraph.fullname" .) $postgres.database }}
+{{- else }}
+{{- if $postgres.url }}
+{{- printf $postgres.url }}
+{{- else }}
+{{- printf "postgresql://%s@%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
 {{- end }}
 {{- end }}
 {{- end }}

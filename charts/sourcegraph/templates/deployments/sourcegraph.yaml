@@ -39,7 +39,45 @@ spec:
             - name: data
               mountPath: '/var/opt/sourcegraph'
               subPath: data
-          env: []
+          env:
+            - name: PGSSLMODE
+              value: require
+            - name: PGHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_host
+            {{- if .Values.config.postgres.internal }}
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: PGUSER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: PGDATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_database
+            {{- if .Values.config.postgres.internal }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_password
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz

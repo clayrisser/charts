@@ -6,7 +6,6 @@ appVersion: latest
 description: 'code search and navigation for teams'
 keywords:
   - sourcegraph
-  - sourcegraph
   - code
   - search
   - navigation

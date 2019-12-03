@@ -26,10 +26,6 @@ spec:
             backend:
               serviceName: {{ template "sourcegraph.fullname" . }}-sourcegraph
               servicePort: http
-          - path: {{ .Values.ingress.sourcegraph.path }}/admin
-            backend:
-              serviceName: {{ template "sourcegraph.fullname" . }}-sourcegraph
-              servicePort: admin
   {{- if .Values.ingress.sourcegraph.tls }}
   tls:
     - secretName: {{ template "sourcegraph.sourcegraph-certificate" . }}
