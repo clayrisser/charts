@@ -370,7 +370,7 @@ questions:
     label: 'n8n repository'
     group: Images
   - variable: images.n8n.tag
-    default: 0.36.1
+    default: 0.37.0
     description: ''
     type: string
     required: true
