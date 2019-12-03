@@ -1,7 +1,7 @@
 images:
   sourcegraph:
-    repository: 
-    tag: sourcegraph/server
+    repository: sourcegraph/server
+    tag: 3.10.1
   pgadmin:
     repository: dpage/pgadmin4
     tag: 4.11
@@ -64,7 +64,7 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
-  
+
 
 persistence:
   accessMode: ReadWriteOnce

@@ -472,14 +472,14 @@ questions:
 
 # Images
   - variable: images.sourcegraph.repository
-    default: 
+    default: sourcegraph/server
     description: ''
     type: string
     required: true
     label: 'sourcegraph repository'
     group: Images
   - variable: images.sourcegraph.tag
-    default: sourcegraph/server
+    default: 3.10.1
     description: ''
     type: string
     required: true
