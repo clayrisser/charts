@@ -42,6 +42,8 @@ spec:
           env:
             - name: PGSSLMODE
               value: disable
+            - name: UNSAFE_NO_HTTPS
+              value: 'true'
             - name: PGHOST
               valueFrom:
                 configMapKeyRef:
