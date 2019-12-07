@@ -795,7 +795,7 @@ questions:
     label: 'gitlab repository'
     group: Images
   - variable: images.gitlab.tag
-    default: 12.2.5-ce.0
+    default: 12.5.3-ce.0
     description: ''
     type: string
     required: true

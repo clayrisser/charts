@@ -1,7 +1,7 @@
 images:
   gitlab:
     repository: gitlab/gitlab-ce
-    tag: 12.3.4-ce.0
+    tag: 12.5.3-ce.0
   pgadmin:
     repository: dpage/pgadmin4
     tag: 4.11
