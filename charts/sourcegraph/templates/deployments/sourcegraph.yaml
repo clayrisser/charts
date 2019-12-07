@@ -41,7 +41,7 @@ spec:
               subPath: data
           env:
             - name: PGSSLMODE
-              value: require
+              value: disable
             - name: PGHOST
               valueFrom:
                 configMapKeyRef:
