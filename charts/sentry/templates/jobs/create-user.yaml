@@ -35,12 +35,6 @@ spec:
             - --superuser
             - --password
             - {{ .Values.config.sentry.password | quote }}
-          volumeMounts:
-            - name: data
-              mountPath: /_data
-            - name: data
-              mountPath: /var/lib/sentry/files
-              subPath: data
           env:
             - name: SENTRY_SECRET_KEY
               valueFrom:
@@ -88,11 +82,3 @@ spec:
                   name: {{ template "sentry.fullname" . }}
                   key: postgres_password
             {{- end }}
-      volumes:
-        - name: data
-          {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "sentry.fullname" . ) }}
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
