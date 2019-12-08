@@ -37,6 +37,8 @@ spec:
               mountPath: /var/lib/sentry/files
               subPath: data
           env:
+            - name: C_FORCE_ROOT
+              value: 'true'
             - name: SENTRY_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -83,14 +85,6 @@ spec:
                   name: {{ template "sentry.fullname" . }}
                   key: postgres_password
             {{- end }}
-          livenessProbe:
-            tcpSocket:
-              port: container
-{{ toYaml .Values.probes.liveness | indent 12 }}
-          readinessProbe:
-            tcpSocket:
-              port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
