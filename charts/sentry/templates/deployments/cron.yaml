@@ -79,13 +79,11 @@ spec:
                   key: postgres_password
             {{- end }}
           livenessProbe:
-            httpGet:
-              path: /_health
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /_health
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
