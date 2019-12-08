@@ -140,6 +140,130 @@ spec:
                   name: {{ template "sentry.fullname" . }}
                   key: postgres_password
             {{- end }}
+        - name: {{ template "sentry.fullname" . }}-worker
+          image: {{ .Values.images.sentry.repository }}:{{ .Values.images.sentry.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command: ['sentry', 'run', 'worker']
+          ports:
+            - name: container
+              containerPort: 9000
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /var/lib/sentry/files
+              subPath: data
+          env:
+            - name: C_FORCE_ROOT
+              value: 'true'
+            - name: SENTRY_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: sentry_secret
+            - name: SENTRY_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_database
+            {{- if .Values.config.postgres.internal }}
+            - name: SENTRY_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: SENTRY_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: SENTRY_POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_host
+            - name: SENTRY_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: redis_host
+            {{- if .Values.config.postgres.internal }}
+            - name: SENTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: SENTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+        - name: {{ template "sentry.fullname" . }}-cron
+          image: {{ .Values.images.sentry.repository }}:{{ .Values.images.sentry.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command: ['sentry', 'run', 'cron']
+          ports:
+            - name: container
+              containerPort: 9000
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /var/lib/sentry/files
+              subPath: data
+          env:
+            - name: C_FORCE_ROOT
+              value: 'true'
+            - name: SENTRY_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: sentry_secret
+            - name: SENTRY_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_database
+            {{- if .Values.config.postgres.internal }}
+            - name: SENTRY_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: SENTRY_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: SENTRY_POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_host
+            - name: SENTRY_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: redis_host
+            {{- if .Values.config.postgres.internal }}
+            - name: SENTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: SENTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_password
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /_health
