@@ -19,6 +19,10 @@ spec:
         release: {{ .Release.Name }}
     spec:
       restartPolicy: Never
+      initContainers:
+        - name: {{ template "sentry.fullname" . }}-wait
+          image: busybox
+          command: ['sleep', '60']
       containers:
         - name: {{ template "sentry.fullname" . }}-create-user
           image: {{ .Values.images.sentry.repository }}:{{ .Values.images.sentry.tag }}
@@ -26,7 +30,6 @@ spec:
           command:
             - sentry
             - createuser
-            - --noinput
             - --email
             - {{ .Values.config.sentry.email | quote }}
             - --superuser
