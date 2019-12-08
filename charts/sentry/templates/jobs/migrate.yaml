@@ -1,0 +1,87 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "sentry.fullname" . }}-migrate
+  labels:
+    app: {{ template "sentry.name" . }}-migrate
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: 'post-install,post-upgrade'
+    helm.sh/hook-weight: '5'
+    helm.sh/hook-delete-policy: 'hook-succeeded,before-hook-creation'
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "sentry.name" . }}-migrate
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: {{ template "sentry.fullname" . }}-migrate
+          image: {{ .Values.images.sentry.repository }}:{{ .Values.images.sentry.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command: ['sentry', 'upgrade', '--noinput']
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /var/lib/sentry/files
+              subPath: data
+          env:
+            - name: SENTRY_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: sentry_secret
+            - name: SENTRY_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_database
+            {{- if .Values.config.postgres.internal }}
+            - name: SENTRY_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: SENTRY_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: SENTRY_POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_host
+            - name: SENTRY_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: redis_host
+            {{- if .Values.config.postgres.internal }}
+            - name: SENTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: SENTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "sentry.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

@@ -14,7 +14,9 @@ config:
   updateStrategy: RollingUpdate
   sentry:
     baseUrl: ''
+    email: ''
     hostname: ''
+    password: ''
     secret: ''
   postgres:
     customConfig: ''

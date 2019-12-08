@@ -28,6 +28,20 @@ questions:
     description: ''
     type: password
     required: true
+    label: 'sentry secret'
+    group: Config
+  - variable: config.sentry.email
+    default: email@example.com
+    description: ''
+    type: string
+    required: true
+    label: 'sentry email'
+    group: Config
+  - variable: config.sentry.password
+    default: pass
+    description: ''
+    type: password
+    required: true
     label: 'sentry password'
     group: Config
 
