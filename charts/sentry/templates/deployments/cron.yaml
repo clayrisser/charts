@@ -1,0 +1,128 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "sentry.fullname" . }}-cron
+  labels:
+    app: {{ template "sentry.name" . }}-cron
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "sentry.sharedname" . }}-data
+    stash.appscode.com/target-paths: /_data
+    stash.appscode.com/volume-mounts: 'data:/_data'
+  {{- end }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "sentry.name" . }}-cron
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "sentry.fullname" . }}-cron
+          image: {{ .Values.images.sentry.repository }}:{{ .Values.images.sentry.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command: ['sentry', 'run', 'cron']
+          ports:
+            - name: container
+              containerPort: 9000
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /var/lib/sentry/files
+              subPath: data
+          env:
+            - name: SENTRY_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: sentry_secret
+            {{- if .Values.config.postgres.internal }}
+            - name: SENTRY_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: SENTRY_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: SENTRY_POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_host
+            - name: SENTRY_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: redis_host
+            {{- if .Values.config.postgres.internal }}
+            - name: SENTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: SENTRY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sentry.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "sentry.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.sentrySnapshot))) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "sentry.fullname" . }}-cron
+  labels:
+    app: {{ template "sentry.name" . }}-cron
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "sentry.sharedname" . }}-cron
+  rules:
+    - snapshots:
+        - {{ $restore.sentrySnapshot }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "sentry.fullname" . }}-cron
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}
