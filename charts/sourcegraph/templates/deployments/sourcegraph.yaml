@@ -26,6 +26,10 @@ spec:
         - name: {{ template "sourcegraph.fullname" . }}-sourcegraph
           image: {{ .Values.images.sourcegraph.repository }}:{{ .Values.images.sourcegraph.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1.2Gi
           ports:
             - name: container
               containerPort: 7080

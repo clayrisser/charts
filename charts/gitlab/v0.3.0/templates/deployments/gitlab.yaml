@@ -41,7 +41,7 @@ spec:
           resources:
             requests:
               cpu: 300m
-              memory: 1.2Gi
+              memory: 2Gi
           ports:
             - name: container
               containerPort: 80
