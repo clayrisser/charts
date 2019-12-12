@@ -23,6 +23,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.flectra.baseUrl
+    default: ''
+    description: ''
+    type: string
+    label: 'flectra base url'
+    group: Config
 
 # Postgres Config
   - variable: config.postgres.internal
