@@ -33,6 +33,10 @@ spec:
           securityContext:
             runAsUser: 0
             runAsGroup: 0
+          command:
+            - sh
+            - -c
+            - 'pip3 install pyocclient && /entrypoint.sh flectra'
           ports:
             - name: container
               containerPort: 7073
