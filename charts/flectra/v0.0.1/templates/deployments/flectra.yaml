@@ -36,7 +36,7 @@ spec:
           command:
             - sh
             - -c
-            - 'pip3 install pyocclient && /entrypoint.sh flectra'
+            - 'pip3 install pyocclient oauthlib && /entrypoint.sh flectra'
           ports:
             - name: container
               containerPort: 7073
