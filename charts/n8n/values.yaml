@@ -1,7 +1,7 @@
 images:
   n8n:
     repository: n8nio/n8n
-    tag: 0.37.0
+    tag: 0.38.0
   gatekeeper:
     repository: quay.io/keycloak/keycloak-gatekeeper
     tag: 8.0.0

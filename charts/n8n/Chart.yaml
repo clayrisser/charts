@@ -1,7 +1,7 @@
 name: n8n
 home: https://n8n.io
 icon: https://n8n.io/n8n-logo.png
-version: 0.0.1
+version: 0.0.2
 appVersion: latest
 description: 'open source alternative for zapier'
 keywords:
