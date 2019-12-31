@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "bitwarden-rs.fullname" . }}-bitwardenrs
+  name: {{ template "bitwarden.fullname" . }}-bitwardenrs
   labels:
-    app: {{ template "bitwarden-rs.name" . }}-bitwardenrs
+    app: {{ template "bitwarden.name" . }}-bitwardenrs
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,11 +13,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "bitwarden-rs.name" . }}-bitwardenrs
+        app: {{ template "bitwarden.name" . }}-bitwardenrs
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "bitwarden-rs.fullname" . }}-bitwardenrs
+        - name: {{ template "bitwarden.fullname" . }}-bitwardenrs
           image: {{ .Values.images.bitwardenrs.repository }}:{{ .Values.images.bitwardenrs.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:

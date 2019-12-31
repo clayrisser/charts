@@ -50,7 +50,7 @@ persistence:
     schedule: '0 0 * * *'
     type: s3
     restore:
-      bitwardenRsSnapshot: ''
+      bitwardenSnapshot: ''
 
 probes:
   liveness:

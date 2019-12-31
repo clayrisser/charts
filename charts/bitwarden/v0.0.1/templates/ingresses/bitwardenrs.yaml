@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "bitwarden-rs.fullname" . }}-bitwardenrs
+  name: {{ template "bitwarden.fullname" . }}-bitwardenrs
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.bitwardenrs.tls }}
@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "bitwarden-rs.name" . }}-bitwardenrs
+    app: {{ template "bitwarden.name" . }}-bitwardenrs
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -24,11 +24,11 @@ spec:
         paths:
           - path: {{ .Values.ingress.bitwardenrs.path }}
             backend:
-              serviceName: {{ template "bitwarden-rs.fullname" . }}-bitwardenrs
+              serviceName: {{ template "bitwarden.fullname" . }}-bitwardenrs
               servicePort: http
   {{- if .Values.ingress.bitwardenrs.tls }}
   tls:
-    - secretName: {{ template "bitwarden-rs.bitwardenrs-certificate" . }}
+    - secretName: {{ template "bitwarden.bitwardenrs-certificate" . }}
       hosts:
         - {{ .Values.ingress.bitwardenrs.hostname }}
   {{- end }}
