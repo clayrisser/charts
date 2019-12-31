@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "bitwarden-rs.fullname" . }}-bitwardenrs
+  labels:
+    app: {{ template "bitwarden-rs.name" . }}-bitwardenrs
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "bitwarden-rs.name" . }}-bitwardenrs
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "bitwarden-rs.fullname" . }}-bitwardenrs
+          image: {{ .Values.images.bitwardenrs.repository }}:{{ .Values.images.bitwardenrs.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 8080
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

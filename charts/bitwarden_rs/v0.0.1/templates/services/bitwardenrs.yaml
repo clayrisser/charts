@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "bitwarden-rs.fullname" . }}-bitwardenrs
+  labels:
+    app: {{ template "bitwarden-rs.name" . }}-bitwardenrs
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.bitwardenrs.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.bitwardenrs.type }}
+  {{- if (or (eq .Values.service.bitwardenrs.type "LoadBalancer") (eq .Values.service.bitwardenrs.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.bitwardenrs.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.bitwardenrs.type "NodePort") (not (empty .Values.service.bitwardenrs.nodePorts.http))) }}
+      nodePort: {{ .Values.service.bitwardenrs.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "bitwarden-rs.name" . }}-bitwardenrs
+    release: {{ .Release.Name }}

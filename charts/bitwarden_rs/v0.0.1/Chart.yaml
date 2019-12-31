@@ -1,0 +1,13 @@
+name: bitwarden_rs
+home: https://github.com/dani-garcia/bitwarden_rs.git
+icon: https://steemitimages.com/DQmfAGEd6kMtWFV3E4gN5BrwtzPUeKz4MKEofxx7tpiiZeW/image.png
+version: 0.0.1
+appVersion: latest
+description: 'This is a Bitwarden server API implementation written in Rust compatible with upstream Bitwarden clients*, perfect for self-hosted deployment where running the official resource-heavy service might not be ideal.'
+keywords:
+  - bitwarden_rs
+sources:
+  - https://github.com/dani-garcia/bitwarden_rs.git
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejamninja
