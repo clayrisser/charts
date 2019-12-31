@@ -2,9 +2,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "bitwarden.fullname" . }}
+  name: {{ template "isso.fullname" . }}
   labels:
-    app: {{ template "bitwarden.name" . }}
+    app: {{ template "isso.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

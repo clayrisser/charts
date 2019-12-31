@@ -170,13 +170,13 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup prefix'
-      - variable: persistence.backup.restore.bitwardenSnapshot
+      - variable: persistence.backup.restore.bitwardenrsSnapshot
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.backup.enabled=true
-        label: 'backup restore bitwarden snapshot'
+        label: 'backup restore bitwardenrs snapshot'
 
 # Services and Load Balancing
   - variable: ingress.bitwardenrs.enabled

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "bitwarden.fullname" . }}-bitwardenrs
+  name: {{ template "bitwardenrs.fullname" . }}-bitwardenrs
   labels:
-    app: {{ template "bitwarden.name" . }}-bitwardenrs
+    app: {{ template "bitwardenrs.name" . }}-bitwardenrs
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -24,5 +24,5 @@ spec:
       nodePort: {{ .Values.service.bitwardenrs.nodePorts.http }}
       {{- end }}
   selector:
-    app: {{ template "bitwarden.name" . }}-bitwardenrs
+    app: {{ template "bitwardenrs.name" . }}-bitwardenrs
     release: {{ .Release.Name }}
