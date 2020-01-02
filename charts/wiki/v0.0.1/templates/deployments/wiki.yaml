@@ -1,0 +1,78 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "wiki.fullname" . }}-wiki
+  labels:
+    app: {{ template "wiki.name" . }}-wiki
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "wiki.name" . }}-wiki
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "wiki.fullname" . }}-wiki
+          image: {{ .Values.images.wiki.repository }}:{{ .Values.images.wiki.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80:3000
+          env: 
+           - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "wiki.fullname" . }}
+                  key: postgres_port
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "wiki.fullname" . }}
+                  key: postgres_host
+            {{- if .Values.config.postgres.internal }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "wiki.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "wiki.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "wiki.fullname" . }}
+                  key: postgres_database
+            {{- if .Values.config.postgres.internal }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "wiki.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "wiki.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

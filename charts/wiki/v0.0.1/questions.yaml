@@ -1,0 +1,545 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.dbType
+    default: 
+    description: ''
+    type: string
+    required: true
+    label: DB_TYPE
+    group: Config
+  - variable: config.dbHost
+    default: 
+    description: ''
+    type: string
+    required: true
+    label: DB_HOST
+    group: Config
+  - variable: config.dbPort
+    default: 
+    description: ''
+    type: int
+    required: true
+    label: DB_PORT
+    group: Config
+  - variable: config.dbUser
+    default: 
+    description: ''
+    type: string
+    required: true
+    label: DB_USER
+    group: Config
+  - variable: config.dbPass
+    default: 
+    description: ''
+    type: password
+    required: true
+    label: DB_PASS
+    group: Config
+  - variable: config.dbName
+    default: 
+    description: ''
+    type: string
+    required: true
+    label: DB_NAME
+    group: Config
+
+# Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Postgres Config'
+  - variable: config.postgres.version
+    default: 11.2
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.standbyMode
+    default: hot
+    description: ''
+    type: enum
+    options:
+      - hot
+      - warm
+    required: true
+    label: 'standby mode'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    default: wiki
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    default: postgres
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: 5432
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+
+# PGAdmin
+  - variable: config.pgadmin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: pgadmin
+    show_subquestion_if: true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.email
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin email'
+        group: PGAdmin
+      - variable: config.pgadmin.password
+        default: admin
+        description: ''
+        type: password
+        required: true
+        label: 'pgadmin password'
+        group: PGAdmin
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: pvc
+        required: false
+        label: 'existing claim'
+      - variable: persistence.backup.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'backup enabled'
+      - variable: persistence.backup.resticPassword
+        default: pass
+        description: ''
+        type: password
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup restic password'
+      - variable: persistence.backup.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup schedule'
+      - variable: persistence.backup.keepLast
+        default: 5
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.backup.enabled=true
+        label: 'backup keep last'
+      - variable: persistence.backup.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup type'
+      - variable: persistence.backup.awsAccessKey
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws access key'
+      - variable: persistence.backup.awsSecretKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'aws secret key'
+      - variable: persistence.backup.googleProjectId
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google project id'
+      - variable: persistence.backup.googleServiceKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google service key'
+      - variable: persistence.backup.azureAccountName
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account name'
+      - variable: persistence.backup.azureAccountKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account key'
+      - variable: persistence.backup.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'backup container'
+      - variable: persistence.backup.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup bucket'
+      - variable: persistence.backup.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
+        label: 'backup endpoint'
+      - variable: persistence.backup.prefix
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup prefix'
+      - variable: persistence.backup.restore.wikiSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore wiki snapshot'
+      - variable: persistence.backup.restore.postgresSnapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup restore postgres snapshot'
+
+# Services and Load Balancing
+  - variable: ingress.wiki.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'wiki ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.wiki.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'wiki ingress tls'
+      - variable: ingress.wiki.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'wiki ingress hostname'
+      - variable: ingress.wiki.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'wiki ingress path'
+      - variable: ingress.wiki.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.wiki.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'wiki ingress issuer name'
+      - variable: ingress.wiki.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.wiki.tls=true&&ingress.wiki.issuer.name=none
+        required: false
+        label: 'wiki ingress certificate'
+  - variable: service.wiki.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.wiki.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'wiki service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.wiki.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.wiki.enabled=false
+        label: 'wiki http port'
+  - variable: ingress.pgadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.pgadmin.enabled=true
+    label: 'pgadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.pgadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress tls'
+      - variable: ingress.pgadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress hostname'
+      - variable: ingress.pgadmin.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress path'
+      - variable: ingress.pgadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'pgadmin ingress issuer name'
+      - variable: ingress.pgadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
+        required: false
+        label: 'pgadmin ingress certificate'
+  - variable: service.pgadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'pgadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.pgadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.pgadmin.enabled=false
+        label: 'pgadmin port'
+  - variable: service.postgres.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'postgres service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.postgres.nodePorts.postgres
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'postgres port'
+
+# Images
+  - variable: images.wiki.repository
+    default: requarks/wiki
+    description: ''
+    type: string
+    required: true
+    label: 'wiki repository'
+    group: Images
+  - variable: images.wiki.tag
+    default: 2
+    description: ''
+    type: string
+    required: true
+    label: 'wiki tag'
+    group: Images
+  - variable: images.pgadmin.repository
+    default: dpage/pgadmin4
+    description: ''
+    type: string
+    required: true
+    label: 'pgadmin repository'
+    show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.pgadmin.tag
+    default: 4.11
+    description: ''
+    type: string
+    required: true
+    label: 'pgadmin tag'
+    show_if: config.pgadmin.enabled=true
+    group: Images
