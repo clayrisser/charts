@@ -1,0 +1,35 @@
+{{- if .Values.ingress.wiki.enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "wiki.fullname" . }}-wiki
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.wiki.tls }}
+    {{- if (empty .Values.ingress.wiki.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.wiki.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "wiki.name" . }}-wiki
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.wiki.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.wiki.path }}
+            backend:
+              serviceName: {{ template "wiki.fullname" . }}-wiki
+              servicePort: http
+  {{- if .Values.ingress.wiki.tls }}
+  tls:
+    - secretName: {{ template "wiki.wiki-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.wiki.hostname }}
+  {{- end }}
+{{- end }}

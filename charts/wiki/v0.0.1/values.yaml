@@ -1,0 +1,113 @@
+images:
+  wiki:
+    repository: requarks/wiki
+    tag: 2
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  wiki:
+    baseUrl: ''
+    hostname: ''
+  dbType: ''
+  dbHost: ''
+  dbPort: ''
+  dbUser: ''
+  dbPass: ''
+  dbName: ''
+  postgres:
+    customConfig: ''
+    database: wiki
+    host: ''
+    internal: true
+    password: postgres
+    port: 5432
+    prometheus: false
+    replicas: 1
+    standbyMode: hot
+    url: ''
+    username: postgres
+    version: 11.2
+  pgadmin:
+    email: admin
+    enabled: false
+    password: pass
+
+service:
+  wiki:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres: ''
+
+ingress:
+  wiki:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    schedule: '0 0 * * *'
+    type: s3
+    restore:
+      wikiSnapshot: ''
+      postgresSnapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

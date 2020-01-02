@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "wiki.fullname" . }}
+  labels:
+    app: {{ template "wiki.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  db_type: {{ .Values.config.dbType | quote }}
+  db_host: {{ .Values.config.dbHost | quote }}
+  db_port: {{ .Values.config.dbPort | quote }}
+  db_user: {{ .Values.config.dbUser | quote }}
+  db_name: {{ .Values.config.dbName | quote }}
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "wiki.fullname" . }}-postgres
+  {{- else }}
+  postgres_host: {{ $postgres.host | quote }}
+  {{- end }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}
