@@ -13,6 +13,9 @@ data:
   db_port: {{ .Values.config.dbPort | quote }}
   db_user: {{ .Values.config.dbUser | quote }}
   db_name: {{ .Values.config.dbName | quote }}
+  db_ssl: {{ .Values.config.dbSsl | quote }}
+  db_pass_file: {{ .Values.config.dbPassFile | quote }}
+  db_filepath: {{ .Values.config.dbFilepath | quote }}
   {{- $postgres := .Values.config.postgres }}
   {{- if $postgres.internal }}
   postgres_host: {{ template "wiki.fullname" . }}-postgres
