@@ -18,6 +18,9 @@ config:
   dbUser: ''
   dbPass: ''
   dbName: ''
+  dbSsl: ''
+  dbPassFile: ''
+  dbFilepath: ''
   postgres:
     customConfig: ''
     database: wiki

@@ -22,18 +22,23 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
             - name: container
-              containerPort: 80:3000
+              containerPort: 8080:3000
           env: 
-           - name: DB_PORT
+            - name: DB_TYPE
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "wiki.fullname" . }}
-                  key: postgres_port
+                  key: db_type
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "wiki.fullname" . }}
                   key: postgres_host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "wiki.fullname" . }}
+                  key: postgres_port
             {{- if .Values.config.postgres.internal }}
             - name: DB_USER
               valueFrom:
@@ -47,25 +52,24 @@ spec:
                   name: {{ template "wiki.fullname" . }}
                   key: postgres_username
             {{- end }}
-            - name: DB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "wiki.fullname" . }}
-                  key: postgres_database
             {{- if .Values.config.postgres.internal }}
-            - name: DB_PASSWORD
+            - name: DB_PASS
               valueFrom:
                 secretKeyRef:
                   name: {{ template "wiki.sharedname" . }}-postgres-auth
                   key: POSTGRES_PASSWORD
             {{- else }}
-            - name: DB_PASSWORD
+            - name: DB_PASS
               valueFrom:
                 secretKeyRef:
                   name: {{ template "wiki.fullname" . }}
                   key: postgres_password
             {{- end }}
-
+           - name: DB_NAME
+                 valueFrom:
+                   configMapKeyRef:
+                     name: {{ template "wiki.fullname" . }}
+                     key: postgres_database
           livenessProbe:
             httpGet:
               path: /

@@ -65,6 +65,27 @@ questions:
     required: true
     label: DB_NAME
     group: Config
+  - variable: config.dbSsl
+    default: 
+    description: ''
+    type: boolean
+    required: false
+    label: DB_SSL
+    group: Config
+  - variable: config.dbPassFile
+    default: 
+    description: ''
+    type: string
+    required: false
+    label: DB_PASS_FILE
+    group: Config
+  - variable: config.dbFilepath
+    default: 
+    description: ''
+    type: string
+    required: false
+    label: DB_FILEPATH
+    group: Config
 
 # Postgres Config
   - variable: config.postgres.internal
