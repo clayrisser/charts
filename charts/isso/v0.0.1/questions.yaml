@@ -23,6 +23,20 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.gid
+    default: 991
+    description: ''
+    type: int
+    required: true
+    label: GID
+    group: Config
+  - variable: config.uid
+    default: 991
+    description: ''
+    type: int
+    required: true
+    label: UID
+    group: Config
 
 # Persistence
   - variable: persistence.enabled
@@ -248,14 +262,14 @@ questions:
 
 # Images
   - variable: images.isso.repository
-    default: 
+    default: wonderfall/isso
     description: ''
     type: string
     required: true
     label: 'isso repository'
     group: Images
   - variable: images.isso.tag
-    default: wonderfall/isso
+    default: latest
     description: ''
     type: string
     required: true

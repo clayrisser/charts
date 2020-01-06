@@ -1,7 +1,7 @@
 images:
   isso:
-    repository: 
-    tag: wonderfall/isso
+    repository: wonderfall/isso
+    tag: latest
 
 config:
   imagePullPolicy: IfNotPresent
@@ -9,6 +9,8 @@ config:
   isso:
     baseUrl: ''
     hostname: ''
+  gid: '991'
+  uid: '991'
 
 service:
   isso:
