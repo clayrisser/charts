@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "wiki.fullname" . }}-wiki
+  labels:
+    app: {{ template "wiki.name" . }}-wiki
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.wiki.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.wiki.type }}
+  {{- if (or (eq .Values.service.wiki.type "LoadBalancer") (eq .Values.service.wiki.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.wiki.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.wiki.type "NodePort") (not (empty .Values.service.wiki.nodePorts.http))) }}
+      nodePort: {{ .Values.service.wiki.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "wiki.name" . }}-wiki
+    release: {{ .Release.Name }}
