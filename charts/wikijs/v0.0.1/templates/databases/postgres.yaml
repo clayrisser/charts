@@ -2,9 +2,9 @@
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
-  name: {{ template "wiki.fullname" . }}-postgres
+  name: {{ template "wikijs.fullname" . }}-postgres
   labels:
-    app: {{ template "wiki.name" . }}-postgres
+    app: {{ template "wikijs.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,11 +12,11 @@ spec:
   version: {{ .Values.config.postgres.version | quote }}
   configSource:
     configMap:
-      name: {{ template "wiki.fullname" . }}-postgres
+      name: {{ template "wikijs.fullname" . }}-postgres
   standbyMode: {{ .Values.config.postgres.standbyMode | quote }}
   {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
   databaseSecret:
-    secretName: {{ template "wiki.sharedname" . }}-postgres-auth
+    secretName: {{ template "wikijs.sharedname" . }}-postgres-auth
   {{- end }}
   {{- if .Values.config.postgres.prometheus }}
   monitor:
@@ -47,7 +47,7 @@ spec:
   init:
     scriptSource:
       configMap:
-        name: {{ template "wiki.fullname" . }}-postgres-init
+        name: {{ template "wikijs.fullname" . }}-postgres-init
   {{- end }}
   serviceTemplate:
     metadata:
@@ -89,18 +89,18 @@ spec:
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
 metadata:
-  name: {{ template "wiki.fullname" . }}-postgres
+  name: {{ template "wikijs.fullname" . }}-postgres
   labels:
-    app: {{ template "wiki.name" . }}-postgres
+    app: {{ template "wikijs.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "wiki.fullname" . }}-postgres
+    stash.appscode.com/backup-blueprint: {{ template "wikijs.fullname" . }}-postgres
 spec:
   clientConfig:
     service:
-      name: {{ template "wiki.fullname" . }}-postgres
+      name: {{ template "wikijs.fullname" . }}-postgres
       path: /
       port: 5432
       query: sslmode=disable
@@ -119,9 +119,9 @@ spec:
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: {{ template "wiki.fullname" . }}-postgres
+  name: {{ template "wikijs.fullname" . }}-postgres
   labels:
-    app: {{ template "wiki.name" . }}-postgres
+    app: {{ template "wikijs.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -131,12 +131,12 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.postgres.version }}
   repository:
-    name: postgres-{{ template "wiki.fullname" . }}-postgres
+    name: postgres-{{ template "wikijs.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: {{ template "wiki.fullname" . }}-postgres
+      name: {{ template "wikijs.fullname" . }}-postgres
   rules:
     - snapshots:
       - {{ $restore.postgresSnapshot | quote }}

@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "wiki.fullname" . }}-postgres
+  name: {{ template "wikijs.fullname" . }}-postgres
   labels:
-    app: {{ template "wiki.name" . }}-postgres
+    app: {{ template "wikijs.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -14,9 +14,9 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "wiki.fullname" . }}-postgres-init
+  name: {{ template "wikijs.fullname" . }}-postgres-init
   labels:
-    app: {{ template "wiki.name" . }}-postgres-init
+    app: {{ template "wikijs.name" . }}-postgres-init
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

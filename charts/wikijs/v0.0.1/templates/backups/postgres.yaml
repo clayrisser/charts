@@ -2,9 +2,9 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "wiki.fullname" . }}-postgres
+  name: {{ template "wikijs.fullname" . }}-postgres
   labels:
-    app: {{ template "wiki.name" . }}-postgres
+    app: {{ template "wikijs.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -21,7 +21,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres'
-    storageSecretName: {{ template "wiki.sharedname" . }}-backup
+    storageSecretName: {{ template "wikijs.sharedname" . }}-backup
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
   schedule: {{ .Values.persistence.backup.schedule | quote }}

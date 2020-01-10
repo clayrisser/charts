@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "wiki.fullname" . }}-wiki
+  name: {{ template "wikijs.fullname" . }}-wiki
   labels:
-    app: {{ template "wiki.name" . }}-wiki
+    app: {{ template "wikijs.name" . }}-wiki
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -24,5 +24,5 @@ spec:
       nodePort: {{ .Values.service.wiki.nodePorts.http }}
       {{- end }}
   selector:
-    app: {{ template "wiki.name" . }}-wiki
+    app: {{ template "wikijs.name" . }}-wiki
     release: {{ .Release.Name }}

@@ -2,9 +2,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "wiki.fullname" . }}-pgadmin
+  name: {{ template "wikijs.fullname" . }}-pgadmin
   labels:
-    app: {{ template "wiki.name" . }}-pgadmin
+    app: {{ template "wikijs.name" . }}-pgadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "wiki.name" . }}-pgadmin
+        app: {{ template "wikijs.name" . }}-pgadmin
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "wiki.fullname" . }}-pgadmin
+        - name: {{ template "wikijs.fullname" . }}-pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
           imagePullPolicy: {{ .Values.images.pgadmin.pullPolicy }}
           ports:
@@ -26,12 +26,12 @@ spec:
             - name: PGADMIN_DEFAULT_EMAIL
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "wiki.fullname" . }}
+                  name: {{ template "wikijs.fullname" . }}
                   key: pgadmin_email
             - name: PGADMIN_DEFAULT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "wiki.fullname" . }}
+                  name: {{ template "wikijs.fullname" . }}
                   key: pgadmin_password
           livenessProbe:
             httpGet:

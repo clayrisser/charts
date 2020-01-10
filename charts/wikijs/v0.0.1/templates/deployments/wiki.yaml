@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "wiki.fullname" . }}-wiki
+  name: {{ template "wikijs.fullname" . }}-wiki
   labels:
-    app: {{ template "wiki.name" . }}-wiki
+    app: {{ template "wikijs.name" . }}-wiki
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,63 +13,63 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "wiki.name" . }}-wiki
+        app: {{ template "wikijs.name" . }}-wiki
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "wiki.fullname" . }}-wiki
+        - name: {{ template "wikijs.fullname" . }}-wiki
           image: {{ .Values.images.wiki.repository }}:{{ .Values.images.wiki.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
             - name: container
-              containerPort: 8080:3000
+              containerPort: 80
           env: 
             - name: DB_TYPE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "wiki.fullname" . }}
+                  name: {{ .Values.config.dbType }}
                   key: db_type
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "wiki.fullname" . }}
+                  name: {{ template "wikijs.fullname" . }}
                   key: postgres_host
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "wiki.fullname" . }}
+                  name: {{ template "wikijs.fullname" . }}
                   key: postgres_port
             {{- if .Values.config.postgres.internal }}
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "wiki.sharedname" . }}-postgres-auth
+                  name: {{ template "wikijs.sharedname" . }}-postgres-auth
                   key: POSTGRES_USER
             {{- else }}
             - name: DB_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "wiki.fullname" . }}
+                  name: {{ template "wikijs.fullname" . }}
                   key: postgres_username
             {{- end }}
             {{- if .Values.config.postgres.internal }}
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "wiki.sharedname" . }}-postgres-auth
+                  name: {{ template "wikijs.sharedname" . }}-postgres-auth
                   key: POSTGRES_PASSWORD
             {{- else }}
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "wiki.fullname" . }}
+                  name: {{ template "wikijs.fullname" . }}
                   key: postgres_password
             {{- end }}
-           - name: DB_NAME
-                 valueFrom:
-                   configMapKeyRef:
-                     name: {{ template "wiki.fullname" . }}
-                     key: postgres_database
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "wikijs.fullname" . }}
+                  key: postgres_database
           livenessProbe:
             httpGet:
               path: /
