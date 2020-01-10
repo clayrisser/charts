@@ -12,7 +12,7 @@ config:
   wiki:
     baseUrl: ''
     hostname: ''
-  dbType: ''
+  dbType: 'postgres'
   dbHost: ''
   dbPort: ''
   dbUser: ''
@@ -25,14 +25,14 @@ config:
     customConfig: ''
     database: wiki
     host: ''
-    internal: true
-    password: postgres
+    internal: false
+    password: wikijsrocks
     port: 5432
     prometheus: false
     replicas: 1
     standbyMode: hot
     url: ''
-    username: postgres
+    username: wikijs
     version: 11.2
   pgadmin:
     email: admin
@@ -98,7 +98,7 @@ persistence:
     schedule: '0 0 * * *'
     type: s3
     restore:
-      wikiSnapshot: ''
+      wikijsSnapshot: ''
       postgresSnapshot: ''
 
 probes:

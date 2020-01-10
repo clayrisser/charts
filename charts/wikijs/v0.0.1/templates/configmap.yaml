@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "wiki.fullname" . }}
+  name: {{ template "wikijs.fullname" . }}
   labels:
-    app: {{ template "wiki.name" . }}
+    app: {{ template "wikijs.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -18,7 +18,7 @@ data:
   db_filepath: {{ .Values.config.dbFilepath | quote }}
   {{- $postgres := .Values.config.postgres }}
   {{- if $postgres.internal }}
-  postgres_host: {{ template "wiki.fullname" . }}-postgres
+  postgres_host: {{ template "wikijs.fullname" . }}-postgres
   {{- else }}
   postgres_host: {{ $postgres.host | quote }}
   {{- end }}

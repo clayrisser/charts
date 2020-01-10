@@ -24,9 +24,11 @@ questions:
     label: 'update strategy'
     group: Config
   - variable: config.dbType
-    default: 
+    default: postgres
     description: ''
-    type: string
+    type: enum
+    options:
+      - postgres
     required: true
     label: DB_TYPE
     group: Config
@@ -147,7 +149,7 @@ questions:
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.database
-    default: wiki
+    default: wikijs
     description: ''
     type: string
     required: true
@@ -360,13 +362,13 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup prefix'
-      - variable: persistence.backup.restore.wikiSnapshot
+      - variable: persistence.backup.restore.wikijsSnapshot
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.backup.enabled=true
-        label: 'backup restore wiki snapshot'
+        label: 'backup restore wikijs snapshot'
       - variable: persistence.backup.restore.postgresSnapshot
         default: ''
         description: ''

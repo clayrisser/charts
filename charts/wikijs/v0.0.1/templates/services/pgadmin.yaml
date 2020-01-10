@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "wiki.fullname" . }}-pgadmin
+  name: {{ template "wikijs.fullname" . }}-pgadmin
   labels:
-    app: {{ template "wiki.name" . }}-pgadmin
+    app: {{ template "wikijs.name" . }}-pgadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -25,6 +25,6 @@ spec:
       nodePort: {{ .Values.service.pgadmin.nodePorts.http }}
       {{- end }}
   selector:
-    app: {{ template "wiki.name" . }}-pgadmin
+    app: {{ template "wikijs.name" . }}-pgadmin
     release: {{ .Release.Name }}
 {{- end }}

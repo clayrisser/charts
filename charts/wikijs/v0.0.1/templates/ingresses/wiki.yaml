@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "wiki.fullname" . }}-wiki
+  name: {{ template "wikijs.fullname" . }}-wiki
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.wiki.tls }}
@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "wiki.name" . }}-wiki
+    app: {{ template "wikijs.name" . }}-wiki
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -24,11 +24,11 @@ spec:
         paths:
           - path: {{ .Values.ingress.wiki.path }}
             backend:
-              serviceName: {{ template "wiki.fullname" . }}-wiki
+              serviceName: {{ template "wikijs.fullname" . }}-wiki
               servicePort: http
   {{- if .Values.ingress.wiki.tls }}
   tls:
-    - secretName: {{ template "wiki.wiki-certificate" . }}
+    - secretName: {{ template "wikijs.wiki-certificate" . }}
       hosts:
         - {{ .Values.ingress.wiki.hostname }}
   {{- end }}
