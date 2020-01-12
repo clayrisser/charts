@@ -2,6 +2,9 @@ images:
   bitwardenrs:
     repository: bitwardenrs/server
     tag: latest
+  phpmyadmin:
+    repository: phpmyadmin/phpmyadmin
+    tag: 4.7
 
 config:
   imagePullPolicy: IfNotPresent
@@ -9,6 +12,29 @@ config:
   bitwardenrs:
     baseUrl: ''
     hostname: ''
+  signupsAllowed: true
+  smtp:
+    from: email@example.com
+    host: ''
+    password: ''
+    port: 587
+    ssl: true
+    username: ''
+  mysql:
+    customConfig: ''
+    database: bitwardenrs
+    host: ''
+    internal: true
+    password: root
+    phpmyadmin: false
+    port: 3306
+    prometheus: false
+    replicas: 3
+    standbyMode: hot
+    topologyMode: GroupReplication
+    url: ''
+    username: root
+    version: 8.0.14
 
 service:
   bitwardenrs:
@@ -16,9 +42,27 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
+  phpmyadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  mysql:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql: ''
 
 ingress:
   bitwardenrs:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  phpmyadmin:
     certificate: ''
     enabled: false
     hostname: ''
@@ -51,6 +95,7 @@ persistence:
     type: s3
     restore:
       bitwardenrsSnapshot: ''
+      mysqlSnapshot: ''
 
 probes:
   liveness:

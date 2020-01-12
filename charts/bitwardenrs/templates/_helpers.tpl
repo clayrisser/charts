@@ -38,6 +38,17 @@ Calculate bitwardenrs certificate
 {{- end }}
 
 {{/*
+Calculate phpmyadmin certificate
+*/}}
+{{- define "bitwardenrs.phpmyadmin-certificate" }}
+{{- if (not (empty .Values.ingress.phpmyadmin.certificate)) }}
+{{- printf .Values.ingress.phpmyadmin.certificate }}
+{{- else }}
+{{- printf "%s-phpmyadmin-letsencrypt" (include "bitwardenrs.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate bitwardenrs hostname
 */}}
 {{- define "bitwardenrs.bitwardenrs-hostname" }}
@@ -66,6 +77,23 @@ Calculate bitwardenrs base url
 {{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
 {{- printf "http://%s" (include "bitwardenrs.bitwardenrs-hostname" .) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate mysql url
+*/}}
+{{- define "bitwardenrs.mysql-url" }}
+{{- $mysql := .Values.config.mysql }}
+{{- if $mysql.internal }}
+{{- $credentials := (printf "%s:%s" $mysql.username $mysql.password) }}
+{{- printf "jdbc:mysql://%s@%s-mysql:3306/%s" $credentials (include "bitwardenrs.fullname" .) $mysql.database }}
+{{- else }}
+{{- if $mysql.url }}
+{{- printf $mysql.url }}
+{{- else }}
+{{- printf "jdbc:mysql://%s@%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
 {{- end }}
 {{- end }}
 {{- end }}

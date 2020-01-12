@@ -1,0 +1,17 @@
+name: bitwardenrs
+home: https://github.com/codejamninja/charts
+icon: https://steemitimages.com/DQmfAGEd6kMtWFV3E4gN5BrwtzPUeKz4MKEofxx7tpiiZeW/image.png
+version: 0.0.1
+appVersion: latest
+description: 'bitwarden compatible server written in rust'
+keywords:
+  - bitwardenrs
+  - password
+  - bitwarden
+  - key
+  - secret
+sources:
+  - https://github.com/codejamninja/charts
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

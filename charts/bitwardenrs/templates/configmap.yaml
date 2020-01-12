@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "bitwardenrs.fullname" . }}
+  labels:
+    app: {{ template "bitwardenrs.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  signups_allowed: {{ .Values.config.signupsAllowed | quote }}
+  smtp_from: {{ .Values.config.smtp.from | quote }}
+  smtp_host: {{ .Values.config.smtp.host | quote }}
+  smtp_port: {{ .Values.config.smtp.port | quote }}
+  smtp_ssl: {{ .Values.config.smtp.ssl | quote }}
+  smtp_username: {{ .Values.config.smtp.username | quote }}
+  {{- $mysql := .Values.config.mysql }}
+  {{- if $mysql.internal }}
+  mysql_host: {{ template "bitwardenrs.fullname" . }}-mysql
+  {{- else }}
+  mysql_host: {{ $mysql.host | quote }}
+  {{- end }}
+  mysql_database: {{ $mysql.database | quote }}
+  mysql_port: {{ $mysql.port | quote }}
+  mysql_username: {{ $mysql.username | quote }}
