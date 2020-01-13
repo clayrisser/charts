@@ -29,7 +29,14 @@ spec:
       initContainers:
         - name: {{ template "sonarqube.fullname" . }}-sonarqube-init
           image: busybox
-          command: ["sh", "-c", "chown -R 999:999 /opt/sonarqube"]
+          securityContext:
+            privileged: true
+          command:
+            - sh
+            - -c
+            - |
+              chown -R 999:999 /opt/sonarqube
+              sysctl -w vm.max_map_count=262144
           volumeMounts:
             - name: data
               mountPath: /_data
