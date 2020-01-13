@@ -83,37 +83,37 @@ spec:
             - name: config
               mountPath: /config
           env:
-            - name: sonar.core.serverBaseURL
+            - name: SONARQUBE_JDBC_SERVER_BASE_URL
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "sonarqube.fullname" . }}
                   key: base_url
-            - name: sonar.jdbc.url
+            - name: SONARQUBE_JDBC_URL
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "sonarqube.fullname" . }}
                   key: postgres_jdbc_url
             {{- if .Values.config.postgres.internal }}
-            - name: sonar.jdbc.username
+            - name: SONARQUBE_JDBC_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: {{ template "sonarqube.sharedname" . }}-postgres-auth
                   key: POSTGRES_USER
             {{- else }}
-            - name: sonar.jdbc.username
+            - name: SONARQUBE_JDBC_USERNAME
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "sonarqube.fullname" . }}
                   key: postgres_username
             {{- end }}
             {{- if .Values.config.postgres.internal }}
-            - name: sonar.jdbc.password
+            - name: SONARQUBE_JDBC_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "sonarqube.sharedname" . }}-postgres-auth
                   key: POSTGRES_PASSWORD
             {{- else }}
-            - name: sonar.jdbc.password
+            - name: SONARQUBE_JDBC_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "sonarqube.fullname" . }}
