@@ -45,6 +45,7 @@ spec:
                 secretKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: admin_token
+            {{- if (not (empty .Values.config.smtp.host)) }}
             - name: SMTP_FROM
               valueFrom:
                 configMapKeyRef:
@@ -75,6 +76,7 @@ spec:
                 secretKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: smtp_password
+            {{- end }}
             - name: ADMIN_TOKEN
               valueFrom:
                 secretKeyRef:
