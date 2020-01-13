@@ -8,12 +8,14 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  base_url: {{ .Values.config.sonarqube.baseUrl | quote }}
   {{- $postgres := .Values.config.postgres }}
   {{- if $postgres.internal }}
-  postgres_jdbc_url: 'jdbc:postgresql://{{ template "sonarqube.fullname" . }}-postgres/{{ $postgres.database }}'
+  postgres_jdbc_url: 'jdbc:postgresql://{{ template "sonarqube.fullname" . }}-postgres:{{ $postgres.port }}/{{ $postgres.database }}'
   {{- else }}
-  postgres_jdbc_url: 'jdbc:postgresql://{{ $postgres.host | quote }}/{{ $postgres.database }}'
+  postgres_jdbc_url: 'jdbc:postgresql://{{ $postgres.host }}:{{ $postgres.port }}/{{ $postgres.database }}'
   {{- end }}
-  postgres_database: {{ $postgres.database | quote }}
   postgres_username: {{ $postgres.username | quote }}
-  base_url: {{ template "sonarqube.base_url" . }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}

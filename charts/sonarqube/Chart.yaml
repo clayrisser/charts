@@ -1,18 +1,16 @@
 name: sonarqube
-home: https://www.sonarqube.org
+home: https://github.com/codejamninja/charts
 icon: https://www.sonarqube.org/assets/logo-31ad3115b1b4b120f3d1efd63e6b13ac9f1f89437f0cf6881cc4d8b5603a52b4.svg
-version: 0.1.0
+version: 0.0.1
 appVersion: latest
 description: 'the leading product for continuous code quality'
 keywords:
   - sonarqube
-  - qc
-  - quality
-  - control
-  - continuous
   - code
+  - quality
+  - qa
 sources:
-  - https://github.com/SonarSource/sonarqube.git
+  - https://github.com/codejamninja/charts
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja

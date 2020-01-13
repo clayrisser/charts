@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "sonarqube.fullname" . }}-sonarqube
+  labels:
+    app: {{ template "sonarqube.name" . }}-sonarqube
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "sonarqube.sharedname" . }}-data
+    stash.appscode.com/target-paths: /_data
+    stash.appscode.com/volume-mounts: data:/_data
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "sonarqube.name" . }}-sonarqube
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "sonarqube.name" . }}-sonarqube
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+        - name: {{ template "sonarqube.fullname" . }}-sonarqube-init
+          image: busybox
+          command: ["sh", "-c", "chown -R 999:999 /opt/sonarqube"]
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /opt/sonarqube/conf
+              subPath: conf
+            - name: data
+              mountPath: /opt/sonarqube/extensions
+              subPath: extensions
+      containers:
+        - name: {{ template "sonarqube.fullname" . }}-sonarqube
+          image: {{ .Values.images.sonarqube.repository }}:{{ .Values.images.sonarqube.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 9000
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /opt/sonarqube/conf
+              subPath: conf
+            - name: data
+              mountPath: /opt/sonarqube/extensions
+              subPath: extensions
+          env:
+            - name: sonar.core.serverBaseURL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: base_url
+            - name: sonar.jdbc.url
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_jdbc_url
+            {{- if .Values.config.postgres.internal }}
+            - name: sonar.jdbc.username
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: sonar.jdbc.username
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            {{- if .Values.config.postgres.internal }}
+            - name: sonar.jdbc.password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: sonar.jdbc.password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /api/system/health
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /api/system/health
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "sonarqube.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.sonarqubeSnapshot))) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "sonarqube.fullname" . }}-sonarqube
+  labels:
+    app: {{ template "sonarqube.name" . }}-sonarqube
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "sonarqube.sharedname" . }}-sonarqube
+  rules:
+    - snapshots:
+        - {{ $restore.sonarqubeSnapshot }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "sonarqube.fullname" . }}-sonarqube
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}
