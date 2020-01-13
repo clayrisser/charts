@@ -45,11 +45,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: admin_token
-            - name: ADMIN_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "bitwardenrs.fullname" . }}
-                  key: admin_token
             {{- if .Values.config.postgres.internal }}
             - name: POSTGRES_USERNAME
               valueFrom:
