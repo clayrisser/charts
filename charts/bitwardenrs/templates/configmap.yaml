@@ -8,7 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  admin_token: {{ .Values.config.adminToken | quote }}
   signups_allowed: {{ .Values.config.signupsAllowed | quote }}
   smpt_host: {{ .Values.config.smpt.host | quote }}
   smtp_from: {{ .Values.config.smtp.from | quote }}

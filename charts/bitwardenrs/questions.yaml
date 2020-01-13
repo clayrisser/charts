@@ -33,7 +33,7 @@ questions:
   - variable: config.adminToken
     default: pass
     description: ''
-    type: string
+    type: secret
     required: true
     label: 'admin token'
     group: Config
