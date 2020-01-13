@@ -1,18 +1,19 @@
 images:
   bitwardenrs:
-    repository: bitwardenrs/server
-    tag: latest
-  phpmyadmin:
-    repository: phpmyadmin/phpmyadmin
-    tag: 4.7
+    repository: codejamninja/bitwardenrs
+    tag: 1.13.1
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
 
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
+  signupsAllowed: 'true'
+  adminToken: pass
   bitwardenrs:
     baseUrl: ''
     hostname: ''
-  signupsAllowed: true
   smtp:
     from: email@example.com
     host: ''
@@ -20,21 +21,23 @@ config:
     port: 587
     ssl: true
     username: ''
-  mysql:
+  postgres:
     customConfig: ''
     database: bitwardenrs
     host: ''
     internal: true
-    password: root
-    phpmyadmin: false
-    port: 3306
+    password: postgres
+    port: 5432
     prometheus: false
-    replicas: 3
+    replicas: 1
     standbyMode: hot
-    topologyMode: GroupReplication
     url: ''
-    username: root
-    version: 8.0.14
+    username: postgres
+    version: 11.2
+  pgadmin:
+    email: admin
+    enabled: false
+    password: pass
 
 service:
   bitwardenrs:
@@ -42,16 +45,16 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  phpmyadmin:
+  pgadmin:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  mysql:
+  postgres:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      mysql: ''
+      postgres: ''
 
 ingress:
   bitwardenrs:
@@ -62,7 +65,7 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
-  phpmyadmin:
+  pgadmin:
     certificate: ''
     enabled: false
     hostname: ''
@@ -70,6 +73,7 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
+
 
 persistence:
   accessMode: ReadWriteOnce
@@ -95,7 +99,7 @@ persistence:
     type: s3
     restore:
       bitwardenrsSnapshot: ''
-      mysqlSnapshot: ''
+      postgresSnapshot: ''
 
 probes:
   liveness:

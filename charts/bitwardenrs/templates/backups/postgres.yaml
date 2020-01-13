@@ -2,9 +2,9 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "bitwardenrs.fullname" . }}-mysql
+  name: {{ template "bitwardenrs.fullname" . }}-postgres
   labels:
-    app: {{ template "bitwardenrs.name" . }}-mysql
+    app: {{ template "bitwardenrs.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -20,7 +20,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mysql'
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres'
     storageSecretName: {{ template "bitwardenrs.sharedname" . }}-backup
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}

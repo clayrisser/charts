@@ -37,7 +37,7 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: '/data'
+              mountPath: /data
               subPath: data
           env:
             - name: INVITATIONS_ALLOWED
@@ -47,6 +47,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: signups_allowed
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "bitwardenrs.fullname" . }}
+                  key: admin_token
             - name: SMTP_FROM
               valueFrom:
                 configMapKeyRef:
@@ -82,49 +87,52 @@ spec:
                 secretKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: admin_token
-            {{- if .Values.config.mysql.internal }}
-            - name: MYSQL_USERNAME
+            {{- if .Values.config.postgres.internal }}
+            - name: POSTGRES_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "bitwardenrs.sharedname" . }}-mysql-auth
-                  key: MYSQL_USER
+                  name: {{ template "bitwardenrs.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
             {{- else }}
-            - name: MYSQL_USERNAME
+            - name: POSTGRES_USERNAME
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
-                  key: mysql_username
+                  key: postgres_username
             {{- end }}
-            - name: MYSQL_DATABASE
+            - name: POSTGRES_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
-                  key: mysql_database
-            - name: MYSQL_PORT
+                  key: postgres_database
+            - name: POSTGRES_PORT
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
-                  key: mysql_port
-            - name: MYSQL_HOST
+                  key: postgres_port
+            - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
-                  key: mysql_host
-            {{- if .Values.config.mysql.internal }}
-            - name: MYSQL_PASSWORD
+                  key: postgres_host
+            {{- if .Values.config.postgres.internal }}
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "bitwardenrs.sharedname" . }}-mysql-auth
-                  key: MYSQL_PASSWORDt
+                  name: {{ template "bitwardenrs.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
             {{- else }}
-            - name: MYSQL_PASSWORD
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
-                  key: mysql_password
+                  key: postgres_password
             {{- end }}
-
-
+            - name: POSTGRES_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "bitwardenrs.fullname" . }}
+                  key: postgres_url
           livenessProbe:
             httpGet:
               path: /alive

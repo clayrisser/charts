@@ -30,180 +30,184 @@ questions:
     required: true
     label: 'signups allowed'
     group: Config
-  - variable: config.smtp.host
+  - variable: config.adminToken
+    default: pass
+    description: ''
+    type: string
+    required: true
+    label: 'admin token'
+    group: Config
+
+# SMTP
+  - variable: config.smpt.host
     default:
     description: ''
     type: string
     required: false
     label: 'smtp host'
-    group: Config
-
-# SMTP
+    group: SMTP
   - variable: config.smtp.from
     default: email@example.com
     description: ''
     type: string
     required: false
-    label: from
+    label: 'smtp from'
+    group: SMTP
+  - variable: config.smtp.password
+    default:
+    description: ''
+    type: password
+    required: false
+    label: 'smtp password'
     group: SMTP
   - variable: config.smtp.port
     default: 587
     description: ''
     type: int
     required: true
-    label: port
+    label: 'smtp port'
     group: SMTP
   - variable: config.smtp.ssl
     default: true
     description: ''
     type: boolean
     required: true
-    label: ssl
+    label: 'smtp ssl'
     group: SMTP
   - variable: config.smtp.username
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: username
-    group: SMTP
-  - variable: config.smtp.password
     default:
     description: ''
     type: string
     required: false
-    label: password
+    label: 'smtp username'
     group: SMTP
 
-# MySQL Config
-  - variable: config.mysql.internal
+# Postgres Config
+  - variable: config.postgres.internal
     default: true
     description: ''
     type: boolean
     required: true
     label: internal
-    group: 'MySQL Config'
-  - variable: config.mysql.version
-    default: 8.0.14
+    group: 'Postgres Config'
+  - variable: config.postgres.version
+    default: 11.2
     description: ''
     type: string
     required: true
     label: version
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.phpmyadmin
-    default: false
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.standbyMode
+    default: hot
     description: ''
-    type: boolean
+    type: enum
+    options:
+      - hot
+      - warm
     required: true
-    label: phpmyadmin
-    group: 'MySQL Config'
-  - variable: config.mysql.prometheus
+    label: 'standby mode'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.prometheus
     default: false
     description: ''
     type: boolean
     required: true
     label: prometheus
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.replicas
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.replicas
     default: 1
     description: ''
     type: int
     required: true
     label: replicas
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.customConfig
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.customConfig
     default: ''
     description: ''
     type: string
     required: false
     label: 'custom config'
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.sharding.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: 'sharding enabled'
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.sharding.configServerReplicas
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
-    label: 'sharding config server replicas'
-    group: 'MySQL Config'
-  - variable: config.mysql.sharding.mongosReplicas
-    default: 2
-    description: ''
-    type: int
-    required: true
-    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
-    label: 'sharding mongos replicas'
-    group: 'MySQL Config'
-  - variable: config.mysql.sharding.shards
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
-    label: 'sharding shards'
-    group: 'MySQL Config'
-  - variable: config.mysql.host
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.host
     default: ''
     description: ''
     type: string
     required: false
     label: host
-    show_if: config.mysql.internal=false
-    group: 'MySQL Config'
-  - variable: config.mysql.database
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.database
     default: bitwardenrs
     description: ''
     type: string
     required: true
     label: database
-    show_if: config.mysql.internal=false
-    group: 'MySQL Config'
-  - variable: config.mysql.password
-    default: root
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    default: postgres
     description: ''
     type: password
     required: true
     label: password
-    show_if: config.mysql.internal=false
-    group: 'MySQL Config'
-  - variable: config.mysql.port
-    default: 3306
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: 5432
     description: ''
     type: int
     min: 0
     max: 50000
     required: true
     label: port
-    show_if: config.mysql.internal=false
-    group: 'MySQL Config'
-  - variable: config.mysql.url
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.url
     default: ''
     description: ''
     type: string
     required: false
     label: url
-    show_if: config.mysql.internal=false
-    group: 'MySQL Config'
-  - variable: config.mysql.username
-    default: root
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: postgres
     description: ''
     type: string
     required: true
     label: username
-    show_if: config.mysql.internal=false
-    group: 'MySQL Config'
+    show_if: config.postgres.internal=false
+    group: 'Postgres Config'
+
+# PGAdmin
+  - variable: config.pgadmin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: pgadmin
+    show_subquestion_if: true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.email
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin email'
+        group: PGAdmin
+      - variable: config.pgadmin.password
+        default: admin
+        description: ''
+        type: password
+        required: true
+        label: 'pgadmin password'
+        group: PGAdmin
 
 # Persistence
   - variable: persistence.enabled
@@ -358,13 +362,13 @@ questions:
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup restore bitwardenrs snapshot'
-      - variable: persistence.backup.restore.mysqlSnapshot
+      - variable: persistence.backup.restore.postgresSnapshot
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.backup.enabled=true
-        label: 'backup restore mysql snapshot'
+        label: 'backup restore postgres snapshot'
 
 # Services and Load Balancing
   - variable: ingress.bitwardenrs.enabled
@@ -433,77 +437,77 @@ questions:
         max: 32767
         show_if: ingress.bitwardenrs.enabled=false
         label: 'bitwardenrs http port'
-  - variable: ingress.phpmyadmin.enabled
+  - variable: ingress.pgadmin.enabled
     default: true
     description: ''
     type: boolean
-    show_if: config.phpmyadmin.enabled=true
-    label: 'phpmyadmin ingress enabled'
+    show_if: config.pgadmin.enabled=true
+    label: 'pgadmin ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.phpmyadmin.tls
+      - variable: ingress.pgadmin.tls
         default: false
         description: ''
         type: boolean
-        show_if: config.phpmyadmin.enabled=true
+        show_if: config.pgadmin.enabled=true
         required: true
-        label: 'phpmyadmin ingress tls'
-      - variable: ingress.phpmyadmin.hostname
+        label: 'pgadmin ingress tls'
+      - variable: ingress.pgadmin.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.phpmyadmin.enabled=true
+        show_if: config.pgadmin.enabled=true
         required: true
-        label: 'phpmyadmin ingress hostname'
-      - variable: ingress.phpmyadmin.path
+        label: 'pgadmin ingress hostname'
+      - variable: ingress.pgadmin.path
         default: /
         description: ''
         type: string
-        show_if: config.phpmyadmin.enabled=true
+        show_if: config.pgadmin.enabled=true
         required: true
-        label: 'phpmyadmin ingress path'
-      - variable: ingress.phpmyadmin.issuer.name
+        label: 'pgadmin ingress path'
+      - variable: ingress.pgadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.phpmyadmin.enabled=true&&ingress.phpmyadmin.tls=true
+        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'phpmyadmin ingress issuer name'
-      - variable: ingress.phpmyadmin.certificate
+        label: 'pgadmin ingress issuer name'
+      - variable: ingress.pgadmin.certificate
         default: ''
         description: ''
         type: string
-        show_if: config.phpmyadmin.enabled=true&&ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none
+        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
         required: false
-        label: 'phpmyadmin ingress certificate'
-  - variable: service.phpmyadmin.type
+        label: 'pgadmin ingress certificate'
+  - variable: service.pgadmin.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    label: 'phpmyadmin service type'
+    label: 'pgadmin service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.phpmyadmin.nodePorts.http
+      - variable: service.pgadmin.nodePorts.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.phpmyadmin.enabled=false
-        label: 'phpmyadmin port'
-  - variable: service.mysql.type
+        show_if: ingress.pgadmin.enabled=false
+        label: 'pgadmin port'
+  - variable: service.postgres.type
     default: ClusterIP
     description: ''
     type: enum
@@ -512,46 +516,46 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    label: 'mysql service type'
+    label: 'postgres service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.mysql.nodePorts.mysql
+      - variable: service.postgres.nodePorts.postgres
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        label: 'mysql port'
+        label: 'postgres port'
 
 # Images
   - variable: images.bitwardenrs.repository
-    default: bitwardenrs/server
+    default: codejamninja/bitwardenrs
     description: ''
     type: string
     required: true
     label: 'bitwardenrs repository'
     group: Images
   - variable: images.bitwardenrs.tag
-    default: latest
+    default: 1.13.1
     description: ''
     type: string
     required: true
     label: 'bitwardenrs tag'
     group: Images
-  - variable: images.phpmyadmin.repository
-    default: phpmyadmin/phpmyadmin
+  - variable: images.pgadmin.repository
+    default: dpage/pgadmin4
     description: ''
     type: string
     required: true
-    label: 'phpmyadmin repository'
-    show_if: config.mysql.phpmyadmin=true
+    label: 'pgadmin repository'
+    show_if: config.pgadmin.enabled=true
     group: Images
-  - variable: images.phpmyadmin.tag
-    default: 4.7
+  - variable: images.pgadmin.tag
+    default: 4.11
     description: ''
     type: string
     required: true
-    label: 'phpmyadmin tag'
-    show_if: config.mysql.phpmyadmin=true
+    label: 'pgadmin tag'
+    show_if: config.pgadmin.enabled=true
     group: Images

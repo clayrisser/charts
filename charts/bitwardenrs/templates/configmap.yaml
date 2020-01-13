@@ -8,18 +8,22 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  admin_token: {{ .Values.config.adminToken | quote }}
   signups_allowed: {{ .Values.config.signupsAllowed | quote }}
+  smpt_host: {{ .Values.config.smpt.host | quote }}
   smtp_from: {{ .Values.config.smtp.from | quote }}
-  smtp_host: {{ .Values.config.smtp.host | quote }}
   smtp_port: {{ .Values.config.smtp.port | quote }}
   smtp_ssl: {{ .Values.config.smtp.ssl | quote }}
   smtp_username: {{ .Values.config.smtp.username | quote }}
-  {{- $mysql := .Values.config.mysql }}
-  {{- if $mysql.internal }}
-  mysql_host: {{ template "bitwardenrs.fullname" . }}-mysql
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "bitwardenrs.fullname" . }}-postgres
   {{- else }}
-  mysql_host: {{ $mysql.host | quote }}
+  postgres_host: {{ $postgres.host | quote }}
   {{- end }}
-  mysql_database: {{ $mysql.database | quote }}
-  mysql_port: {{ $mysql.port | quote }}
-  mysql_username: {{ $mysql.username | quote }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}

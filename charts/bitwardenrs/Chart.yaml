@@ -6,12 +6,11 @@ appVersion: latest
 description: 'bitwarden compatible server written in rust'
 keywords:
   - bitwardenrs
-  - password
   - bitwarden
-  - key
+  - password
   - secret
 sources:
-  - https://github.com/codejamninja/charts
+  - https://github.com/codejamninja
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
