@@ -31,50 +31,6 @@ questions:
     label: 'admin token'
     group: Config
 
-# SMTP
-  - variable: config.smtp.host
-    default:
-    description: ''
-    type: string
-    required: false
-    label: 'smtp host'
-    group: SMTP
-  - variable: config.smtp.from
-    default: email@example.com
-    description: ''
-    type: string
-    required: false
-    label: 'smtp from'
-    group: SMTP
-  - variable: config.smtp.password
-    default:
-    description: ''
-    type: password
-    required: false
-    label: 'smtp password'
-    group: SMTP
-  - variable: config.smtp.port
-    default: 587
-    description: ''
-    type: int
-    required: true
-    label: 'smtp port'
-    group: SMTP
-  - variable: config.smtp.ssl
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'smtp ssl'
-    group: SMTP
-  - variable: config.smtp.username
-    default:
-    description: ''
-    type: string
-    required: false
-    label: 'smtp username'
-    group: SMTP
-
 # Postgres Config
   - variable: config.postgres.internal
     default: true

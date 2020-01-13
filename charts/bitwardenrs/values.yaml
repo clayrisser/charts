@@ -13,13 +13,6 @@ config:
   bitwardenrs:
     baseUrl: ''
     hostname: ''
-  smtp:
-    from: email@example.com
-    host: ''
-    password: ''
-    port: 587
-    ssl: true
-    username: ''
   postgres:
     customConfig: ''
     database: bitwardenrs

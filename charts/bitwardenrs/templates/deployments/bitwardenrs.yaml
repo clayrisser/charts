@@ -45,38 +45,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: admin_token
-            {{- if (not (empty .Values.config.smtp.host)) }}
-            - name: SMTP_FROM
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "bitwardenrs.fullname" . }}
-                  key: smtp_from
-            - name: SMTP_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "bitwardenrs.fullname" . }}
-                  key: smtp_host
-            - name: SMTP_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "bitwardenrs.fullname" . }}
-                  key: smtp_username
-            - name: SMTP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "bitwardenrs.fullname" . }}
-                  key: smtp_port
-            - name: SMTP_SSL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "bitwardenrs.fullname" . }}
-                  key: smtp_ssl
-            - name: SMTP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "bitwardenrs.fullname" . }}
-                  key: smtp_password
-            {{- end }}
             - name: ADMIN_TOKEN
               valueFrom:
                 secretKeyRef:
