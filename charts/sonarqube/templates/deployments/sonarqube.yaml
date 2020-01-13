@@ -42,8 +42,7 @@ spec:
               mkdir -p /opt/sonarqube/extensions/plugins/tmp
               rm -f /opt/sonarqube/extensions/plugins/tmp/*
               cp /config/install_plugins.sh /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh
-              chmod 0775 /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh
-              /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh && pwd && ls -lah
+              bash /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh && pwd && ls -lah
               {{- end }}
           volumeMounts:
             - name: data
