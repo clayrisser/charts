@@ -39,7 +39,7 @@ questions:
     group: Config
 
 # SMTP
-  - variable: config.smpt.host
+  - variable: config.smtp.host
     default:
     description: ''
     type: string
