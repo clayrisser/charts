@@ -31,7 +31,7 @@ questions:
     label: 'signups allowed'
     group: Config
   - variable: config.adminToken
-    default: pass
+    default: ''
     description: ''
     type: secret
     required: true
