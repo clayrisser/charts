@@ -30,6 +30,13 @@ questions:
     required: false
     label: 'base url'
     group: Config
+  - variable: config.sonarqube.plugins
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: Config
 
 # Postgres Config
   - variable: config.postgres.internal

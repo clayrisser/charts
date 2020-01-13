@@ -12,6 +12,7 @@ config:
   sonarqube:
     baseUrl: ''
     hostname: ''
+    plugins: ''
   postgres:
     customConfig: ''
     database: sonarqube
@@ -64,7 +65,7 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
-  
+
 
 persistence:
   accessMode: ReadWriteOnce

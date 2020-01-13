@@ -29,11 +29,22 @@ spec:
       initContainers:
         - name: {{ template "sonarqube.fullname" . }}-sonarqube-init
           image: busybox
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          securityContext:
+            privileged: true
           command:
             - sh
             - -c
             - |
               chown -R 999:999 /opt/sonarqube
+              sysctl -w vm.max_map_count=262144
+              {{- if (not (empty .Values.config.plugins)) }}
+              mkdir -p /opt/sonarqube/extensions/plugins/tmp
+              rm -f /opt/sonarqube/extensions/plugins/tmp/*
+              cp /config/install_plugins.sh /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh
+              chmod 0775 /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh
+              /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh && pwd && ls -lah
+              {{- end }}
           volumeMounts:
             - name: data
               mountPath: /_data
@@ -43,14 +54,20 @@ spec:
             - name: data
               mountPath: /opt/sonarqube/extensions
               subPath: extensions
+            - name: config
+              mountPath: /config
       containers:
         - name: {{ template "sonarqube.fullname" . }}-sonarqube
           image: {{ .Values.images.sonarqube.repository }}:{{ .Values.images.sonarqube.tag }}
-          securityContext:
-            sysctls:
-              - name: vm.max_map_count
-                value: 262144
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              {{- if (not (empty .Values.config.plugins)) }}
+              /config/copy_plugins.sh
+              {{- end }}
+              exec /opt/sonarqube/bin/run.sh
           ports:
             - name: container
               containerPort: 9000
@@ -63,6 +80,8 @@ spec:
             - name: data
               mountPath: /opt/sonarqube/extensions
               subPath: extensions
+            - name: config
+              mountPath: /config
           env:
             - name: sonar.core.serverBaseURL
               valueFrom:
@@ -111,6 +130,9 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
+        - name: config
+          configMap:
+            name: {{ template "sonarqube.fullname" . }}-sonarqube
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
