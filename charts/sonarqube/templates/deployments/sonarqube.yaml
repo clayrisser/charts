@@ -83,7 +83,7 @@ spec:
             - name: config
               mountPath: /config
           env:
-            - name: SONARQUBE_JDBC_SERVER_BASE_URL
+            - name: sonar.core.serverBaseURL
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "sonarqube.fullname" . }}
