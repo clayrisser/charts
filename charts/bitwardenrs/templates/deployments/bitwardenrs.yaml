@@ -40,13 +40,6 @@ spec:
               mountPath: /data
               subPath: data
           env:
-            - name: INVITATIONS_ALLOWED
-              value: 'false'
-            - name: SIGNUPS_ALLOWED
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "bitwardenrs.fullname" . }}
-                  key: signups_allowed
             - name: ADMIN_TOKEN
               valueFrom:
                 secretKeyRef:

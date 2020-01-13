@@ -9,7 +9,6 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
-  signupsAllowed: 'true'
   adminToken: pass
   bitwardenrs:
     baseUrl: ''

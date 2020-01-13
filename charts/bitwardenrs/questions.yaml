@@ -23,13 +23,6 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.signupsAllowed
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'signups allowed'
-    group: Config
   - variable: config.adminToken
     default: ''
     description: ''
