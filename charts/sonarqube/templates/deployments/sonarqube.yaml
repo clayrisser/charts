@@ -70,26 +70,26 @@ spec:
             - name: sonar.jdbc.username
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  name: {{ template "sonarqube.sharedname" . }}-postgres-auth
                   key: POSTGRES_USER
             {{- else }}
             - name: sonar.jdbc.username
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "sonarqube.fullname" . }}
                   key: postgres_username
             {{- end }}
             {{- if .Values.config.postgres.internal }}
             - name: sonar.jdbc.password
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  name: {{ template "sonarqube.sharedname" . }}-postgres-auth
                   key: POSTGRES_PASSWORD
             {{- else }}
             - name: sonar.jdbc.password
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "sonarqube.fullname" . }}
                   key: postgres_password
             {{- end }}
           livenessProbe:
