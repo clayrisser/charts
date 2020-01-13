@@ -38,7 +38,7 @@ spec:
             - |
               chown -R 999:999 /opt/sonarqube
               sysctl -w vm.max_map_count=262144
-              {{- if (not (empty .Values.config.plugins)) }}
+              {{- if (not (empty .Values.config.sonarqube.plugins)) }}
               mkdir -p /opt/sonarqube/extensions/plugins/tmp
               rm -f /opt/sonarqube/extensions/plugins/tmp/*
               cp /config/install_plugins.sh /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh
@@ -64,7 +64,7 @@ spec:
             - sh
             - -c
             - |
-              {{- if (not (empty .Values.config.plugins)) }}
+              {{- if (not (empty .Values.config.sonarqube.plugins)) }}
               /config/copy_plugins.sh
               {{- end }}
               exec /opt/sonarqube/bin/run.sh

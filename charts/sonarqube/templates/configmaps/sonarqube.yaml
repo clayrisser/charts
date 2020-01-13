@@ -11,8 +11,8 @@ data:
   install_plugins.sh: |
     #!/bin/bash
     cd /opt/sonarqube/extensions/plugins/tmp
-    {{- if (not (empty .Values.config.plugins)) }}
-    {{- range $index, $val := (regexSplit "," .Values.config.plugins -1) }}
+    {{- if (not (empty .Values.config.sonarqube.plugins)) }}
+    {{- range $index, $val := (regexSplit "," .Values.config.sonarqube.plugins -1) }}
     wget {{ $val }} --no-check-certificate
     {{- end }}
     {{- end }}
