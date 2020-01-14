@@ -10,7 +10,7 @@ metadata:
 data:
   install_plugins.sh: |
     #!/bin/sh
-    cd /opt/sonarqube/extensions/plugins/tmp
+    cd /opt/sq/extensions/plugins/tmp
     {{- if (not (empty .Values.config.sonarqube.plugins)) }}
     {{- range $index, $val := (regexSplit "," .Values.config.sonarqube.plugins -1) }}
     wget {{ $val }} --no-check-certificate
@@ -18,10 +18,10 @@ data:
     {{- end }}
   copy_plugins.sh: |
     #!/bin/bash
-    for f in /opt/sonarqube/extensions/plugins/tmp/*.jar
+    for f in /opt/sq/extensions/plugins/tmp/*.jar
     do
       file=${f##*/} && file=${file%-[0-9]*}
-      for original in /opt/sonarqube/extensions/plugins/*.jar
+      for original in /opt/sq/extensions/plugins/*.jar
       do
         originalfile=${original##*/} && originalfile=${originalfile%-[0-9]*}
         if [ "$originalfile" = "$file" ]; then
@@ -29,4 +29,4 @@ data:
         fi
       done
     done
-    cp /opt/sonarqube/extensions/plugins/tmp/*.jar /opt/sonarqube/extensions/plugins/
+    cp /opt/sq/extensions/plugins/tmp/*.jar /opt/sq/extensions/plugins/

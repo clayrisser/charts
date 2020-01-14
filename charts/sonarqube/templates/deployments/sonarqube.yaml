@@ -36,22 +36,22 @@ spec:
             - sh
             - -c
             - |
-              chown -R 999:999 /opt/sonarqube
+              chown -R 999:999 /opt/sq
               sysctl -w vm.max_map_count=262144
               {{- if (not (empty .Values.config.sonarqube.plugins)) }}
-              mkdir -p /opt/sonarqube/extensions/plugins/tmp
-              rm -f /opt/sonarqube/extensions/plugins/tmp/*
-              cp /config/install_plugins.sh /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh
-              sh /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh && pwd && ls -lah
+              mkdir -p /opt/sq/extensions/plugins/tmp
+              rm -f /opt/sq/extensions/plugins/tmp/*
+              cp /config/install_plugins.sh /opt/sq/extensions/plugins/tmp/install_plugins.sh
+              sh /opt/sq/extensions/plugins/tmp/install_plugins.sh && pwd && ls -lah
               {{- end }}
           volumeMounts:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: /opt/sonarqube/conf
+              mountPath: /opt/sq/conf
               subPath: conf
             - name: data
-              mountPath: /opt/sonarqube/extensions
+              mountPath: /opt/sq/extensions
               subPath: extensions
             - name: config
               mountPath: /config
@@ -74,10 +74,10 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: /opt/sonarqube/conf
+              mountPath: /opt/sq/conf
               subPath: conf
             - name: data
-              mountPath: /opt/sonarqube/extensions
+              mountPath: /opt/sq/extensions
               subPath: extensions
             - name: config
               mountPath: /config
