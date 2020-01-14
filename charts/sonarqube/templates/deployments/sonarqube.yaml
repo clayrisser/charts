@@ -64,7 +64,7 @@ spec:
             - -c
             - |
               {{- if (not (empty .Values.config.sonarqube.plugins)) }}
-              /config/copy_plugins.sh
+              bash /config/copy_plugins.sh
               {{- end }}
               exec bash /opt/sonarqube/bin/run.sh
           ports:
