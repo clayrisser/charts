@@ -493,7 +493,7 @@ questions:
     label: 'sonarqube repository'
     group: Images
   - variable: images.sonarqube.tag
-    default: 7.9.2-community
+    default: 8.1-community-beta
     description: ''
     type: string
     required: true
