@@ -17,7 +17,7 @@ data:
     {{- end }}
     {{- end }}
   copy_plugins.sh: |
-    #!/bin/sh
+    #!/bin/bash
     for f in /opt/sonarqube/extensions/plugins/tmp/*.jar
     do
       file=${f##*/} && file=${file%-[0-9]*}
