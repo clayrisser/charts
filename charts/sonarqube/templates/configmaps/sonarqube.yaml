@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   install_plugins.sh: |
-    #!/bin/bash
+    #!/bin/sh
     cd /opt/sonarqube/extensions/plugins/tmp
     {{- if (not (empty .Values.config.sonarqube.plugins)) }}
     {{- range $index, $val := (regexSplit "," .Values.config.sonarqube.plugins -1) }}
@@ -17,7 +17,7 @@ data:
     {{- end }}
     {{- end }}
   copy_plugins.sh: |
-    #!/bin/bash
+    #!/bin/sh
     for f in /opt/sonarqube/extensions/plugins/tmp/*.jar
     do
       file=${f##*/} && file=${file%-[0-9]*}

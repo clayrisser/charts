@@ -42,7 +42,7 @@ spec:
               mkdir -p /opt/sonarqube/extensions/plugins/tmp
               rm -f /opt/sonarqube/extensions/plugins/tmp/*
               cp /config/install_plugins.sh /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh
-              bash /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh && pwd && ls -lah
+              sh /opt/sonarqube/extensions/plugins/tmp/install_plugins.sh && pwd && ls -lah
               {{- end }}
           volumeMounts:
             - name: data
@@ -66,7 +66,7 @@ spec:
               {{- if (not (empty .Values.config.sonarqube.plugins)) }}
               /config/copy_plugins.sh
               {{- end }}
-              exec /opt/sonarqube/bin/run.sh
+              exec sh /opt/sonarqube/bin/run.sh
           ports:
             - name: container
               containerPort: 9000
