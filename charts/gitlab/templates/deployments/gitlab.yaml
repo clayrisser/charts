@@ -23,7 +23,7 @@ spec:
         release: {{ .Release.Name }}
       {{- if .Values.persistence.backup.enabled }}
       annotations:
-        backup.velero.io/backup-volumes: /_data
+        backup.velero.io/backup-volumes: data
       {{- end }}
     spec:
       initContainers:
