@@ -7,6 +7,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    backup.velero.io/backup-volumes: data
+  {{- end }}
 spec:
   version: {{ .Values.config.version | quote }}
   configSource:
