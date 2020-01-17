@@ -9,7 +9,6 @@ metadata:
     heritage: {{ .Release.Service }}
   {{- if .Values.persistence.backup.enabled }}
   annotations:
-    backup.velero.io/backup-volumes: /_data
     stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-data
     stash.appscode.com/target-paths: /_data
     stash.appscode.com/volume-mounts: 'data:/_data'
@@ -22,6 +21,10 @@ spec:
       labels:
         app: {{ template "gitlab.name" . }}-gitlab
         release: {{ .Release.Name }}
+      {{- if .Values.persistence.backup.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: /_data
+      {{- end }}
     spec:
       initContainers:
         - name: {{ template "gitlab.fullname" . }}-gitlab-init
