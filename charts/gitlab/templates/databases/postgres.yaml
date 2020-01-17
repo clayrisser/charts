@@ -49,6 +49,11 @@ spec:
       configMap:
         name: {{ template "gitlab.fullname" . }}-postgres-init
   {{- end }}
+  {{- if .Values.persistence.backup.enabled }}
+  podTemplate:
+    annotations:
+      backup.velero.io/backup-volumes: data
+  {{- end }}
   serviceTemplate:
     metadata:
       annotations:
