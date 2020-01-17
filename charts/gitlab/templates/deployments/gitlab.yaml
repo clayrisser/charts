@@ -9,6 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
   {{- if .Values.persistence.backup.enabled }}
   annotations:
+    backup.velero.io/backup-volumes: /_data
     stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-data
     stash.appscode.com/target-paths: /_data
     stash.appscode.com/volume-mounts: 'data:/_data'
