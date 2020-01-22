@@ -6,8 +6,8 @@ images:
 
 config:
   customConfig: ''
-  delete: false
   password: password
+  pause: true
   prometheus: false
   replicas: 1
   standbyMode: hot

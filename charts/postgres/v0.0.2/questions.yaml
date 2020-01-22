@@ -57,12 +57,13 @@ questions:
     required: true
     label: 'termination policy'
     group: Config
-  - variable: config.delete
+  - variable: config.pause
     default: false
     description: ''
     type: boolean
     required: true
-    label: delete
+    show_if: config.terminationPolicy=Pause
+    label: pause
     group: Config
   - variable: config.password
     default: password
