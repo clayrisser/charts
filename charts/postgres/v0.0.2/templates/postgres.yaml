@@ -1,4 +1,4 @@
-{{- if (not (and (eq .Values.config.terminationPolicy "Pause") .Values.config.pause))) }}
+{{- if (not (and (eq .Values.config.terminationPolicy "Pause") .Values.config.pause)) }}
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
