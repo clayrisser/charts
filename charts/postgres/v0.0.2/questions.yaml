@@ -57,6 +57,13 @@ questions:
     required: true
     label: 'termination policy'
     group: Config
+  - variable: config.delete
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: delete
+    group: Config
   - variable: config.password
     default: password
     description: ''

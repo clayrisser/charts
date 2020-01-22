@@ -6,6 +6,7 @@ images:
 
 config:
   customConfig: ''
+  delete: false
   password: password
   prometheus: false
   replicas: 1
