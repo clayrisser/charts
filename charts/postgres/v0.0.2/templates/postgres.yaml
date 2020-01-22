@@ -84,7 +84,7 @@ spec:
           nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
   updateStrategy:
-    type: {{ .Values.config.updateStrategy }}
+    type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
   terminationPolicy: {{ .Values.config.terminationPolicy }}
 {{- if .Values.persistence.backup.enabled }}
 ---
