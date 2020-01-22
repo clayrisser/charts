@@ -1,4 +1,4 @@
-{{- if .Values.config.delete }}
+{{- if (not .Values.config.delete) }}
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
