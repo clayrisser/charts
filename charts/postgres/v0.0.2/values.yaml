@@ -1,0 +1,85 @@
+images:
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
+    pullPolicy: IfNotPresent
+
+config:
+  customConfig: ''
+  password: password
+  prometheus: false
+  replicas: 1
+  standbyMode: hot
+  terminationPolicy: Delete
+  updateStrategy: RollingUpdate
+  version: 11.2-v1
+  pgadmin:
+    email: admin
+    enabled: true
+    password: pass
+
+service:
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres: ''
+
+ingress:
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
+    keepLast: 5
+    prefix: ''
+    resticPassword: pass
+    schedule: '0 0 * * *'
+    type: s3
+    velero: false
+    restore:
+      snapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
