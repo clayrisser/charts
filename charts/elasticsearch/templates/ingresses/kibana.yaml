@@ -1,0 +1,35 @@
+{{- if (and .Values.ingress.kibana.enabled .Values.config.kibana) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "elasticsearch.fullname" . }}-kibana
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.kibana.tls }}
+    {{- if (empty .Values.ingress.kibana.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.kibana.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "elasticsearch.name" . }}-kibana
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.kibana.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.kibana.path }}
+            backend:
+              serviceName: {{ template "elasticsearch.fullname" . }}-kibana
+              servicePort: http
+  {{- if .Values.ingress.kibana.tls }}
+  tls:
+    - secretName: {{ template "elasticsearch.kibana_certificate" . }}
+      hosts:
+        - {{ .Values.ingress.kibana.hostname }}
+  {{- end }}
+{{- end }}

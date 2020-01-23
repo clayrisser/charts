@@ -1,0 +1,17 @@
+name: postgres
+home: https://www.postgresql.org
+icon: https://www.postgresql.org/media/img/about/press/elephant.png
+version: 0.0.1
+appVersion: latest
+description: 'most advanced open source relational database'
+keywords:
+  - postgres
+  - database
+  - relation
+  - relational
+  - db
+sources:
+  - https://github.com/postgres/postgres
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
