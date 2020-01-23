@@ -1,4 +1,3 @@
-{{- if .Values.persistence.backup.enabled }}
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
@@ -10,23 +9,22 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   backend:
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
+    {{ .Values.config.type }}:
+      {{- if (or (eq "gcs" .Values.config.type) (eq "s3" .Values.config.type)) }}
+      bucket: {{ .Values.config.bucket | quote }}
       {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- if (eq "s3" .Values.config.type) }}
+      endpoint: {{ .Values.config.endpoint | quote }}
       {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
+      {{- if (eq "azure" .Values.config.type) }}
+      container: {{ .Values.config.container | quote }}
       {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mongodb'
+      prefix: '{{ .Values.config.prefix }}/${TARGET_NAMESPACE}/mongodb'
     storageSecretName: {{ template "stash.fullname" . }}-backup
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
-  schedule: {{ .Values.persistence.backup.schedule | quote }}
+  schedule: {{ .Values.config.schedule | quote }}
   retentionPolicy:
     name: retention-policy
-    keepLast: {{ .Values.persistence.backup.keepLast }}
+    keepLast: {{ .Values.config.keepLast }}
     prune: true
-{{- end }}
