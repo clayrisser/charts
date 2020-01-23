@@ -47,7 +47,7 @@ spec:
       configMap:
         name: {{ template "postgres.fullname" . }}-postgres-init
   {{- end }}
-  {{- if (and .Values.persistence.backup.enabled .Values.persistence.backup.velero) }}
+  {{- if (and .Values.persistence.backup.stash .Values.persistence.backup.velero) }}
   podTemplate:
     metadata:
       annotations:
@@ -87,7 +87,7 @@ spec:
   updateStrategy:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
   terminationPolicy: {{ .Values.config.terminationPolicy }}
-{{- if .Values.persistence.backup.enabled }}
+{{- if .Values.persistence.backup.stash }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
