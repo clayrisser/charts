@@ -1,0 +1,16 @@
+config:
+  awsAccessKey: ''
+  awsSecretKey: ''
+  azureAccountKey: ''
+  azureAccountName: ''
+  bucket: ''
+  container: ''
+  enabled: false
+  endpoint: s3.amazonaws.com
+  googleProjectId: ''
+  googleServiceKey: ''
+  keepLast: 30
+  prefix: ''
+  resticPassword: pass
+  schedule: '0 0 * * *'
+  type: s3

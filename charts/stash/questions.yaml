@@ -1,0 +1,101 @@
+categories:
+  - Server
+questions:
+
+# Persistence
+  - variable: config.resticPassword
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: 'backup restic password'
+  - variable: config.schedule
+    default: '0 0 * * *'
+    description: ''
+    type: string
+    required: true
+    label: 'backup schedule'
+  - variable: config.keepLast
+    default: 5
+    description: ''
+    type: int
+    required: true
+    label: 'backup keep last'
+  - variable: config.type
+    default: s3
+    description: ''
+    type: enum
+    options:
+      - gcs
+      - s3
+      - azure
+    required: false
+    label: 'backup type'
+  - variable: config.awsAccessKey
+    default: ''
+    description: ''
+    type: string
+    required: false
+    show_if: config.type=s3
+    label: 'aws access key'
+  - variable: config.awsSecretKey
+    default: ''
+    description: ''
+    type: password
+    required: false
+    show_if: config.type=s3
+    label: 'aws secret key'
+  - variable: config.googleProjectId
+    default: ''
+    description: ''
+    type: string
+    required: false
+    show_if: config.type=gcs
+    label: 'google project id'
+  - variable: config.googleServiceKey
+    default: ''
+    description: ''
+    type: password
+    required: false
+    show_if: config.type=gcs
+    label: 'google service key'
+  - variable: config.azureAccountName
+    default: ''
+    description: ''
+    type: string
+    required: false
+    show_if: config.type=azure
+    label: 'azure account name'
+  - variable: config.azureAccountKey
+    default: ''
+    description: ''
+    type: password
+    required: false
+    show_if: config.type=azure
+    label: 'azure account key'
+  - variable: config.container
+    default: ''
+    description: ''
+    type: string
+    required: false
+    show_if: config.type=azure
+    label: 'backup container'
+  - variable: config.bucket
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'backup bucket'
+  - variable: config.endpoint
+    default: s3.amazonaws.com
+    description: ''
+    type: string
+    required: true
+    show_if: config.type=s3
+    label: 'backup endpoint'
+  - variable: config.prefix
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'backup prefix'
