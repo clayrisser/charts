@@ -172,7 +172,7 @@ questions:
         description: ''
         type: boolean
         required: true
-        label: 'backup enabled'
+        label: 'backup stash'
       - variable: persistence.backup.velero
         default: false
         description: ''
