@@ -41,13 +41,13 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values.persistence.backup.restore.snapshot) }}
+  {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
     scriptSource:
       configMap:
         name: {{ template "postgres.fullname" . }}-postgres-init
   {{- end }}
-  {{- if (and .Values.persistence.backup.stash .Values.persistence.backup.velero) }}
+  {{- if .Values.persistence.velero.enabled }}
   podTemplate:
     metadata:
       annotations:
@@ -87,7 +87,7 @@ spec:
   updateStrategy:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
   terminationPolicy: {{ .Values.config.terminationPolicy }}
-{{- if .Values.persistence.backup.stash }}
+{{- if .Values.persistence.stash.enabled }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
@@ -98,8 +98,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "postgres.fullname" . }}-postgres
 spec:
   clientConfig:
     service:
@@ -116,8 +114,7 @@ spec:
         from: POSTGRES_PASSWORD
         to: password
   type: kubedb.com/postgres
-{{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
-{{- $restore := .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -142,7 +139,7 @@ spec:
       name: {{ template "postgres.fullname" . }}-postgres
   rules:
     - snapshots:
-      - {{ $restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot | quote }}
 {{- end }}
 {{- end }}
 {{- end }}

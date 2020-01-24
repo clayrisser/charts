@@ -51,23 +51,12 @@ persistence:
   existingClaim: ''
   size: 1Gi
   storageClass: ''
-  backup:
-    awsAccessKey: ''
-    awsSecretKey: ''
-    azureAccountKey: ''
-    azureAccountName: ''
-    bucket: ''
-    container: ''
+  velero: false
+  stash:
     enabled: false
-    endpoint: s3.amazonaws.com
-    googleProjectId: ''
-    googleServiceKey: ''
-    keepLast: 5
-    prefix: ''
-    resticPassword: pass
+    keepLast: 30
+    repository: stash-stash
     schedule: '0 0 * * *'
-    type: s3
-    velero: false
     restore:
       snapshot: ''
 
