@@ -39,6 +39,11 @@ rules:
       - patch
   - apiGroups: ['']
     resources:
+      - repositories
+    verbs:
+      - get
+  - apiGroups: ['']
+    resources:
       - configmaps
     verbs:
       - create
