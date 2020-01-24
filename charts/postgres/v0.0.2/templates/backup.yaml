@@ -1,10 +1,47 @@
 {{- if .Values.persistence.stash.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "postgres.fullname" . }}-backup-init
+  labels:
+    app: {{ template "postgres.name" . }}-backup-init
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-weight: '3'
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "postgres.name" . }}-backup-init
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "postgres.name" . }}-backup-init
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: kubectl
+          image: k8s.gcr.io/hyperkube:v1.12.1
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - >
+              kubectl --help
+---
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBatch
 metadata:
-  name: {{ template "postgres.fullname" . }}-postgres
+  name: {{ template "postgres.fullname" . }}
   labels:
-    app: {{ template "postgres.name" . }}-postgres
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
