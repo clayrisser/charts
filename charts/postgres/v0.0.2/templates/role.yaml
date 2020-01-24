@@ -43,6 +43,7 @@ rules:
       - statefulsets
     verbs:
       - get
+      - create
   - apiGroups: ['']
     resources:
       - pods
@@ -53,8 +54,10 @@ rules:
       - stash.appscode.com
     resources:
       - repositories.stash.appscode.com
+      - repositories
     verbs:
       - get
+      - create
   - apiGroups: ['']
     resources:
       - configmaps
