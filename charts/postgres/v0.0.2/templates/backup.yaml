@@ -12,6 +12,10 @@ spec:
   repository:
     name: {{ .Values.persistence.stash.stashRepository }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
+  retentionPolicy:
+    name: retention-policy
+    keepLast: {{ .Values.persistence.stash.keepLast }}
+    prune: true
   members:
     - target:
         ref:
@@ -19,9 +23,5 @@ spec:
           kind: AppBinding
           name: {{ template "postgres.fullname" . }}-postgres
       task:
-        name: postgres-backup-11.1
-    retentionPolicy:
-      name: retention-policy
-      keepLast: {{ .Values.persistence.stash.keepLast }}
-      prune: true
+        name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
 {{- end }}
