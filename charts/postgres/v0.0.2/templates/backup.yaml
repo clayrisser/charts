@@ -54,5 +54,5 @@ spec:
           kind: AppBinding
           name: {{ template "postgres.fullname" . }}-postgres
       task:
-        name: postgres-backup-11.1
+        name: postgres-backup-{{ .Values.config.version }}
 {{- end }}
