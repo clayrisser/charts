@@ -9,18 +9,6 @@ questions:
     type: password
     required: true
     label: 'backup restic password'
-  - variable: config.schedule
-    default: '0 0 * * *'
-    description: ''
-    type: string
-    required: true
-    label: 'backup schedule'
-  - variable: config.keepLast
-    default: 5
-    description: ''
-    type: int
-    required: true
-    label: 'backup keep last'
   - variable: config.type
     default: s3
     description: ''
