@@ -16,7 +16,6 @@ data:
           "Group": "Servers",
           "Port": 5432,
           "Username": "postgres",
-          "Password": "{{ .Values.config.password }}",
           "Host": "{{ template "postgres.fullname" . }}-postgres",
           "SSLMode": "prefer",
           "MaintenanceDB": "postgres"
