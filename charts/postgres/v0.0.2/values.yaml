@@ -56,6 +56,7 @@ persistence:
   stash:
     enabled: false
     keepLast: 30
+    paused: false
     repository: stash-stash
     schedule: '0 0 * * *'
     restore:

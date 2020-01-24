@@ -11,6 +11,7 @@ metadata:
 spec:
   repository:
     name: {{ .Values.persistence.stash.repository }}
+  paused: {{ .Values.persistence.stash.paused }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
   retentionPolicy:
     name: retention-policy
