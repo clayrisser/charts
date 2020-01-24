@@ -27,7 +27,10 @@ spec:
           image: codejamninja/stash-cli:0.0.1
           imagePullPolicy: IfNotPresent
           command:
-            - kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
+            - /bin/sh
+            - -c
+            - |
+              kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBatch
