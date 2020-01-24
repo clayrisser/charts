@@ -15,7 +15,7 @@ spec:
       name: {{ template "postgres.fullname" . }}-postgres
   standbyMode: {{ .Values.config.standbyMode | quote }}
   databaseSecret:
-    secretName: {{ template "postgres.sharedname" . }}-postgres
+    secretName: {{ template "postgres.fullname" . }}-postgres
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
