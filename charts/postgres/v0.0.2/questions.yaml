@@ -178,27 +178,27 @@ questions:
         description: ''
         type: boolean
         required: true
-        label: 'stash stash'
+        label: 'stash enabled'
       - variable: persistence.stash.schedule
         default: '0 0 * * *'
         description: ''
         type: string
         required: true
-        show_if: persistence.stash.stash=true
+        show_if: persistence.stash.enabled=true
         label: 'stash schedule'
       - variable: persistence.stash.keepLast
         default: 5
         description: ''
         type: int
         required: true
-        show_if: persistence.stash.stash=true
+        show_if: persistence.stash.enabled=true
         label: 'stash keep last'
       - variable: persistence.stash.restore.snapshot
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.stash.stash=true
+        show_if: persistence.stash.enabled=true
         label: 'stash restore snapshot'
 
 # Services and Load Balancing

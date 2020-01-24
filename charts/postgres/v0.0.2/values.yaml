@@ -51,7 +51,8 @@ persistence:
   existingClaim: ''
   size: 1Gi
   storageClass: ''
-  velero: false
+  velero:
+    enabled: false
   stash:
     enabled: false
     keepLast: 30
