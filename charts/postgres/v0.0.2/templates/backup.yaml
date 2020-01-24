@@ -13,10 +13,6 @@ metadata:
     helm.sh/hook-weight: '3'
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
-  selector:
-    matchLabels:
-      app: {{ template "postgres.name" . }}-backup-init
-      release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
