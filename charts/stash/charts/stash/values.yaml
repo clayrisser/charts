@@ -1,0 +1,53 @@
+additionalPodSecurityPolicies: []
+affinity: {}
+annotations: {}
+apiserver:
+  bypassValidatingWebhookXray: false
+  ca: not-ca-cert
+  enableMutatingWebhook: true
+  enableValidatingWebhook: true
+  groupPriorityMinimum: 10000
+  healthcheck:
+    enabled: false
+  servingCerts:
+    caCrt: ""
+    generate: true
+    serverCrt: ""
+    serverKey: ""
+  useKubeapiserverFqdnForAks: true
+  versionPriority: 15
+cleaner:
+  registry: appscode
+  repository: kubectl
+  tag: v1.12
+criticalAddon: false
+enableAnalytics: true
+imagePullPolicy: IfNotPresent
+imagePullSecrets: []
+logLevel: 3
+monitoring:
+  agent: none
+  backup: false
+  operator: false
+  prometheus:
+    namespace: ""
+  serviceMonitor:
+    labels: {}
+nodeSelector:
+  beta.kubernetes.io/arch: amd64
+  beta.kubernetes.io/os: linux
+operator:
+  registry: appscode
+  repository: stash
+  tag: v0.9.0-rc.4
+platform:
+  openshift: false
+pushgateway:
+  registry: prom
+  repository: pushgateway
+  tag: v0.5.2
+replicaCount: 1
+serviceAccount:
+  create: true
+  name: null
+tolerations: {}

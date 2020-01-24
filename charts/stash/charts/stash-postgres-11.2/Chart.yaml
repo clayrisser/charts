@@ -1,0 +1,13 @@
+apiVersion: v1
+appVersion: "11.2"
+description: stash-postgres - PostgreSQL database backup and restore plugin for Stash
+  by AppsCode
+home: https://github.com/stashed/postgres
+icon: https://cdn.appscode.com/images/icon/stash.png
+maintainers:
+- email: support@appscode.com
+  name: appscode
+name: stash-postgres
+sources:
+- https://github.com/stashed/postgres
+version: "11.2"
