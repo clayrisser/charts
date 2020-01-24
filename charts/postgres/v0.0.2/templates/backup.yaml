@@ -19,7 +19,7 @@ spec:
           kind: AppBinding
           name: {{ template "postgres.fullname" . }}-postgres
       task:
-        name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
+        name: postgres-backup-11.1
     retentionPolicy:
       name: retention-policy
       keepLast: {{ .Values.persistence.stash.keepLast }}
