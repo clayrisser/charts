@@ -30,8 +30,10 @@ spec:
               containerPort: 80
           volumeMounts:
             - name: config
-              mountPath: /pgadmin4
+              mountPath: /config
           env:
+            - name: PGADMIN_SERVER_JSON_FILE
+              value: /config/servers.json
             - name: PGADMIN_DEFAULT_EMAIL
               valueFrom:
                 configMapKeyRef:
