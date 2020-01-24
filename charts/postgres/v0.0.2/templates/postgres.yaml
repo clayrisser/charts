@@ -131,7 +131,7 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.version }}
   repository:
-    name: postgres-{{ template "postgres.fullname" . }}-postgres
+    name: {{ .Values.persistence.stash.repository | quote }}
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
