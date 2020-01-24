@@ -10,7 +10,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: {{ .Values.persistence.stash.stashRepository }}
+    name: {{ .Values.persistence.stash.repository }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
   retentionPolicy:
     name: retention-policy
