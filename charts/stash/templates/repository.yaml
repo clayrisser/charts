@@ -19,5 +19,5 @@ spec:
       {{- if (eq "azure" .Values.config.type) }}
       container: {{ .Values.config.container | quote }}
       {{- end }}
-      prefix: '{{ .Values.config.prefix }}/${TARGET_NAMESPACE}'
+      prefix: {{ .Values.config.prefix | quote }}
     storageSecretName: {{ template "stash.fullname" . }}-backup
