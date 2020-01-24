@@ -39,6 +39,7 @@ metadata:
 rules:
   - apiGroups: ['']
     resources:
+      - secrets
       - statefulsets
     verbs:
       - get
@@ -48,12 +49,12 @@ rules:
     verbs:
       - list
       - patch
-  - apiGroups: ['']
+  - apiGroups:
+      - stash.appscode.com
     resources:
       - repositories.stash.appscode.com
     verbs:
       - get
-      - create
   - apiGroups: ['']
     resources:
       - configmaps
