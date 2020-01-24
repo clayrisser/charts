@@ -10,7 +10,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ .Values.persistence.stash.repository }}.kube-system.repository.cluster.local
   paused: {{ .Values.persistence.stash.paused }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
   retentionPolicy:
