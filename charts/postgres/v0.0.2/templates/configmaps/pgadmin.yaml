@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "postgres.fullname" . }}-pgadmin
+  labels:
+    app: {{ template "postgres.name" . }}-pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "{{ template "postgres.name" . }}-postgres",
+          "Group": "server",
+          "Port": 5432,
+          "Username": "postgres",
+          "Password": "{{ .Values.config.password }}",
+          "Host": "{{ template "postgres.name" . }}-postgres",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres"
+        }
+      }
+    }

@@ -28,6 +28,9 @@ spec:
           ports:
             - name: container
               containerPort: 80
+          volumeMounts:
+            - name: config
+              mountPath: /pgadmin4
           env:
             - name: PGADMIN_DEFAULT_EMAIL
               valueFrom:
@@ -50,3 +53,7 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
 {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "postgres.fullname" . }}-postgres

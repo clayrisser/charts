@@ -309,7 +309,7 @@ questions:
     show_if: config.pgadmin.enabled=true
     group: Images
   - variable: images.pgadmin.tag
-    default: 4.11
+    default: 4.17
     description: ''
     type: string
     required: true
