@@ -24,13 +24,13 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: kubectl
-          image: k8s.gcr.io/hyperkube:v1.12.1
+          image: codejamninja/stash-cli:0.0.1
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
             - -c
             - >
-              kubectl --help
+              kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBatch
