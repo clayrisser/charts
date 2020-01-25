@@ -83,21 +83,6 @@ questions:
     required: true
     label: 'replica set'
     group: Config
-  - variable: config.replicas
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.replicaSet=true||config.shardTopology.enabled=true
-    label: replicas
-    group: Config
-  - variable: config.customConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'custom config'
-    group: Config
   - variable: config.shardTopology.enabled
     default: false
     description: ''
@@ -128,6 +113,21 @@ questions:
     required: true
     show_if: config.shardTopology.enabled=true
     label: 'shard topology shards'
+    group: Config
+  - variable: config.replicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.replicaSet=true&&config.shardTopology.enabled=false
+    label: replicas
+    group: Config
+  - variable: config.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
     group: Config
 
 # MongoExpress
