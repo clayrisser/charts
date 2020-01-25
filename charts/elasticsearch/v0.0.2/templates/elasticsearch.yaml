@@ -168,7 +168,7 @@ spec:
   updateStrategy:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
   terminationPolicy: {{ .Values.config.terminationPolicy }}
-{{- if .Values.persistence.backup.enabled }}
+{{- if .Values.persistence.stash.enabled }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
@@ -179,8 +179,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "elasticsearch.fullname" . }}-elasticsearch
 spec:
   clientConfig:
     service:
@@ -195,8 +193,7 @@ spec:
         from: ADMIN_PASSWORD
         to: password
   type: kubedb.com/elasticsearch
-{{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
-{{- $restore := .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -221,7 +218,7 @@ spec:
       name: {{ template "elasticsearch.fullname" . }}-elasticsearch
   rules:
     - snapshots:
-      - {{ $restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot | quote }}
 {{- end }}
 {{- end }}
 {{- end }}

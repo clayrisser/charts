@@ -14,6 +14,11 @@ spec:
     configMap:
       name: {{ template "postgres.fullname" . }}-postgres
   standbyMode: {{ .Values.config.standbyMode | quote }}
+  streamingMode: asynchronous
+  leaderElection:
+    leaseDurationSeconds: 15
+    renewDeadlineSeconds: 10
+    retryPeriodSeconds: 2
   databaseSecret:
     secretName: {{ template "postgres.fullname" . }}-postgres
   {{- if .Values.config.prometheus }}
