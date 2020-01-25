@@ -1,0 +1,35 @@
+{{- if (and .Values.ingress.mongoExpress.enabled .Values.config.mongoExpress.enabled) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "mongodb.fullname" . }}-mongo-express
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.mongoExpress.tls }}
+    {{- if (empty .Values.ingress.mongoExpress.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.mongoExpress.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "mongodb.name" . }}-mongo-express
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.mongoExpress.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.mongoExpress.path }}
+            backend:
+              serviceName: {{ template "mongodb.fullname" . }}-mongo-express
+              servicePort: http
+  {{- if .Values.ingress.mongoExpress.tls }}
+  tls:
+    - secretName: {{ template "mongodb.mongo_express_certificate" . }}
+      hosts:
+        - {{ .Values.ingress.mongoExpress.hostname }}
+  {{- end }}
+{{- end }}

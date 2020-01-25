@@ -29,8 +29,8 @@ spec:
   {{- if .Values.config.topology.enabled }}
   topology:
     master:
-      {{- if (gt (.Values.config.topology.master.replicas | int64) 1) }}
-      replicas: {{ .Values.config.topology.master.replicas }}
+      {{- if (gt (.Values.config.topology.masterReplicas | int64) 1) }}
+      replicas: {{ .Values.config.topology.masterReplicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -57,8 +57,8 @@ spec:
           memory: "128Mi"
           cpu: "500m"
     data:
-      {{- if (gt (.Values.config.topology.data.replicas | int64) 1) }}
-      replicas: {{ .Values.config.topology.data.replicas }}
+      {{- if (gt (.Values.config.topology.dataReplicas | int64) 1) }}
+      replicas: {{ .Values.config.topology.dataReplicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -85,8 +85,8 @@ spec:
           memory: "1Gi"
           cpu: "500m"
     client:
-      {{- if (gt (.Values.config.topology.client.replicas | int64) 1) }}
-      replicas: {{ .Values.config.topology.client.replicas }}
+      {{- if (gt (.Values.config.topology.clientReplicas | int64) 1) }}
+      replicas: {{ .Values.config.topology.clientReplicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -138,6 +138,7 @@ spec:
     metadata:
       annotations:
         backup.velero.io/backup-volumes: data
+    {{- if (not .Values.config.topology.enabled) }}
     spec:
       resources:
         requests:
@@ -146,6 +147,7 @@ spec:
         limits:
           memory: "1Gi"
           cpu: "500m"
+    {{- end }}
   {{- end }}
   serviceTemplate:
     metadata:

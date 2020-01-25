@@ -5,18 +5,29 @@ questions:
 
 # Config
   - variable: config.version
-    default: 6.4.0
+    default: 4.1.13
     description: ''
     type: enum
     options:
-      - 5.6-v1
-      - 5.6.4-v1
-      - 6.2-v1
-      - 6.2.4-v1
-      - 6.3-v1
-      - 6.3.0-v1
-      - 6.4
-      - 6.4.0
+      - 3.4-v3
+      - 3.4.14
+      - 3.4.22
+      - 3.4-v4
+      - 3.6-v3
+      - 3.6.8
+      - 3.6.13
+      - 3.6-v4
+      - 4.0.5-v1
+      - 4.0-v1
+      - 4.0.3
+      - 4.0.5-v2
+      - 4.0.11
+      - 4.0-v2
+      - 4.1.7-v1
+      - 4.1.4
+      - 4.1.7-v2
+      - 4.1.13
+      - 4.1
     required: true
     label: version
     group: Config
@@ -58,13 +69,6 @@ questions:
     required: true
     label: password
     group: Config
-  - variable: config.kibana
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: kibana
-    group: Config
   - variable: config.prometheus
     default: false
     description: ''
@@ -72,66 +76,84 @@ questions:
     required: true
     label: prometheus
     group: Config
-  - variable: config.topology.enabled
+  - variable: config.replicaSet
     default: false
     description: ''
     type: boolean
     required: true
-    label: 'topology enabled'
-    group: Config
-  - variable: config.topology.clientReplicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    show_if: config.topology.enabled=true
-    label: 'client replicas'
-    group: Config
-  - variable: config.topology.dataReplicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    show_if: config.topology.enabled=true
-    label: 'data replicas'
-    group: Config
-  - variable: config.topology.masterReplicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    show_if: config.topology.enabled=true
-    label: 'master replicas'
+    label: 'replica set'
     group: Config
   - variable: config.replicas
-    default: 1
+    default: 3
     description: ''
     type: int
     required: true
-    show_if: config.topology.enabled=false
+    show_if: config.replicaSet=true||config.shardTopology.enabled=true
     label: replicas
     group: Config
-  - variable: config.commonConfig
+  - variable: config.customConfig
     default: ''
     description: ''
     type: string
     required: false
-    label: 'common config'
+    label: 'custom config'
     group: Config
-  - variable: config.dataConfig
-    default: ''
+  - variable: config.shardTopology.enabled
+    default: false
     description: ''
-    type: string
-    required: false
-    label: 'data config'
+    type: boolean
+    required: true
+    label: 'shard topology enabled'
     group: Config
-  - variable: config.masterConfig
-    default: ''
+  - variable: config.shardTopology.configServerReplicas
+    default: 3
     description: ''
-    type: string
-    required: false
-    label: 'master config'
+    type: int
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology config server replicas'
     group: Config
+  - variable: config.shardTopology.mongosReplicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos replicas'
+    group: Config
+  - variable: config.shardTopology.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shards'
+    group: Config
+
+# MongoExpress
+  - variable: config.mongoExpress.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'mongo express'
+    show_subquestion_if: true
+    group: MongoExpress
+    subquestions:
+      - variable: config.mongoExpress.username
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'mongo express username'
+        group: MongoExpress
+      - variable: config.mongoExpress.password
+        default: pass
+        description: ''
+        type: password
+        required: true
+        label: 'mongo express password'
+        group: MongoExpress
 
 # Persistence
   - variable: persistence.enabled
@@ -212,77 +234,77 @@ questions:
         label: 'stash restore snapshot'
 
 # Services and Load Balancing
-  - variable: ingress.kibana.enabled
+  - variable: ingress.mongoExpress.enabled
     default: true
     description: ''
     type: boolean
-    show_if: config.kibana=true
-    label: 'kibana ingress enabled'
+    show_if: config.mongoExpress.enabled=true
+    label: 'mongo express ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.kibana.tls
+      - variable: ingress.mongoExpress.tls
         default: false
         description: ''
         type: boolean
-        show_if: config.kibana=true
+        show_if: config.mongoExpress.enabled=true
         required: true
-        label: 'kibana ingress tls'
-      - variable: ingress.kibana.hostname
+        label: 'mongo express ingress tls'
+      - variable: ingress.mongoExpress.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.kibana=true
+        show_if: config.mongoExpress.enabled=true
         required: true
-        label: 'kibana ingress hostname'
-      - variable: ingress.kibana.path
+        label: 'mongo express ingress hostname'
+      - variable: ingress.mongoExpress.path
         default: /
         description: ''
         type: string
-        show_if: config.kibana=true
+        show_if: config.mongoExpress.enabled=true
         required: true
-        label: 'kibana ingress path'
-      - variable: ingress.kibana.issuer.name
+        label: 'mongo express ingress path'
+      - variable: ingress.mongoExpress.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.kibana=true&&ingress.kibana.tls=true
+        show_if: config.mongoExpress.enabled=true&&ingress.mongoExpress.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'kibana ingress issuer name'
-      - variable: ingress.kibana.certificate
+        label: 'mongo express ingress issuer name'
+      - variable: ingress.mongoExpress.certificate
         default: ''
         description: ''
         type: string
-        show_if: config.kibana=true&&ingress.kibana.tls=true&&ingress.kibana.issuer.name=none
+        show_if: config.mongoExpress.enabled=true&&ingress.mongoExpress.tls=true&&ingress.mongoExpress.issuer.name=none
         required: false
-        label: 'kibana ingress certificate'
-  - variable: service.kibana.type
+        label: 'mongo express ingress certificate'
+  - variable: service.mongoExpress.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.kibana.enabled=false&&config.kibana=true
+    show_if: ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    label: 'kibana service type'
+    label: 'mongo express service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.kibana.nodePorts.http
+      - variable: service.mongoExpress.nodePorts.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.kibana.enabled=false&&config.kibana=true
-        label: 'kibana port'
-  - variable: service.elasticsearch.type
+        show_if: ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
+        label: 'mongo express port'
+  - variable: service.mongodb.type
     default: ClusterIP
     description: ''
     type: enum
@@ -291,32 +313,32 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
-    label: 'elasticsearch service type'
+    label: 'mongodb service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.elasticsearch.nodePorts.elasticsearch
+      - variable: service.mongodb.nodePorts.mongodb
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        label: 'elasticsearch port'
+        label: 'mongodb port'
 
 # Images
-  - variable: images.kibana.repository
-    default: kibana
+  - variable: images.mongo_express.repository
+    default: mongo-express
     description: ''
     type: string
     required: true
     label: repository
-    show_if: config.kibana=true
+    show_if: config.mongoExpress.enabled=true
     group: Images
-  - variable: images.kibana.tag
-    default: 7.5.2
+  - variable: images.mongo_express.tag
+    default: 0.49.0
     description: ''
     type: string
     required: true
     label: tag
-    show_if: config.kibana=true
+    show_if: config.mongoExpress.enabled=true
     group: Images

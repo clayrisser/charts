@@ -1,41 +1,44 @@
 images:
-  kibana:
-    repository: kibana
-    tag: 7.5.2
+  mongoExpress:
+    repository: mongo-express
+    tag: 0.49.0
     pullPolicy: IfNotPresent
 
 config:
-  commonConfig: ''
-  dataConfig: ''
-  kibana: true
-  masterConfig: ''
+  customConfig: ''
   password: password
   pause: true
   prometheus: false
-  replicas: 1
   terminationPolicy: Delete
   updateStrategy: RollingUpdate
-  version: 6.4.0
-  topology:
-    clientReplicas: 1
-    dataReplicas: 1
+  version: 4.1.13
+  mongoExpress:
+    enabled: true
+    password: pass
+    username: admin
+  replicaSet:
     enabled: false
-    masterReplicas: 1
+    replicas: 3
+  shardTopology:
+    configServerReplicas: 3
+    enabled: false
+    mongosReplicas: 2
+    shards: 3
 
 service:
-  kibana:
+  mongoExpress:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  elasticsearch:
+  mongodb:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      elasticsearch: ''
+      mongodb: ''
 
 ingress:
-  kibana:
+  mongoExpress:
     certificate: ''
     enabled: false
     hostname: ''
