@@ -76,19 +76,20 @@ questions:
     required: true
     label: prometheus
     group: Config
-  - variable: config.replicaSet
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: 'replica set'
-    group: Config
   - variable: config.shardTopology.enabled
     default: false
     description: ''
     type: boolean
     required: true
     label: 'shard topology enabled'
+    group: Config
+  - variable: config.replicaSet
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'replica set'
     group: Config
   - variable: config.shardTopology.configServerReplicas
     default: 3
