@@ -184,6 +184,7 @@ questions:
         description: ''
         type: boolean
         required: true
+        show_if: persistence.stash.enabled=true
         label: 'stash paused'
       - variable: persistence.stash.schedule
         default: '0 0 * * *'
