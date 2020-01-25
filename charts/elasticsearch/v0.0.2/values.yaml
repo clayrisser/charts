@@ -1,0 +1,83 @@
+images:
+  kibana:
+    repository: kibana
+    tag: 7.5.2
+    pullPolicy: IfNotPresent
+
+config:
+  commonConfig: ''
+  dataConfig: ''
+  kibana: true
+  masterConfig: ''
+  password: password
+  pause: true
+  prometheus: false
+  replicas: 1
+  terminationPolicy: Delete
+  updateStrategy: RollingUpdate
+  version: 6.4.0
+  topology:
+    enabled: false
+    client:
+      replicas: 1
+    data:
+      replicas: 1
+    master:
+      replicas: 1
+
+service:
+  kibana:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  elasticsearch:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      elasticsearch: ''
+
+ingress:
+  kibana:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    enabled: false
+    keepLast: 30
+    paused: false
+    repository: stash-stash
+    schedule: '0 0 * * *'
+    restore:
+      snapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
