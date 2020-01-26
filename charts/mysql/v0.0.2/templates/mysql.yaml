@@ -14,7 +14,7 @@ spec:
     configMap:
       name: {{ template "mysql.fullname" . }}-mysql
   databaseSecret:
-    secretName: {{ template "mysql.sharedname" . }}-mysql-auth
+    secretName: {{ template "mysql.sharedname" . }}-mysql
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
