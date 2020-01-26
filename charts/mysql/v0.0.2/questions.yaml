@@ -1,0 +1,269 @@
+categories:
+  - Backup
+  - Database
+questions:
+
+# Config
+  - variable: config.version
+    default: 8.0.14
+    description: ''
+    type: enum
+    options:
+      - 5.7-v1
+      - 5.7-v2
+      - 5.7.25
+      - 8.0-v1
+      - 8.0-v2
+      - 8.0.3
+      - 8.0.14
+    required: true
+    label: version
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.terminationPolicy
+    default: Delete
+    description: ''
+    type: enum
+    options:
+      - Delete
+      - Pause
+      - WipeOut
+      - DoNotTerminate
+    required: true
+    label: 'termination policy'
+    group: Config
+  - variable: config.pause
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.terminationPolicy=Pause
+    label: pause
+    group: Config
+  - variable: config.password
+    default: password
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Config
+  - variable: config.phpmyadmin
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: phpmyadmin
+    group: Config
+  - variable: config.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    group: Config
+  - variable: config.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    group: Config
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot'
+
+# Services and Load Balancing
+  - variable: ingress.phpmyadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.phpmyadmin=true
+    label: 'phpmyadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpmyadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.phpmyadmin=true
+        required: true
+        label: 'phpmyadmin ingress tls'
+      - variable: ingress.phpmyadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.phpmyadmin=true
+        required: true
+        label: 'phpmyadmin ingress hostname'
+      - variable: ingress.phpmyadmin.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.phpmyadmin=true
+        required: true
+        label: 'phpmyadmin ingress path'
+      - variable: ingress.phpmyadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.phpmyadmin=true&&ingress.phpmyadmin.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpmyadmin ingress issuer name'
+      - variable: ingress.phpmyadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.phpmyadmin=true&&ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none
+        required: false
+        label: 'phpmyadmin ingress certificate'
+  - variable: service.phpmyadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'phpmyadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.phpmyadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin=true
+        label: 'phpmyadmin port'
+  - variable: service.mysql.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mysql service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mysql.nodePorts.mysql
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mysql port'
+
+# Images
+  - variable: images.phpmyadmin.repository
+    default: phpmyadmin/phpmyadmin
+    description: ''
+    type: string
+    required: true
+    label: repository
+    show_if: config.phpmyadmin=true
+    group: Images
+  - variable: images.phpmyadmin.tag
+    default: 4.7
+    description: ''
+    type: string
+    required: true
+    label: tag
+    show_if: config.phpmyadmin=true
+    group: Images

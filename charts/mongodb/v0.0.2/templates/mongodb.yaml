@@ -149,21 +149,6 @@ spec:
           {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb))) }}
           nodePort: {{ .Values.service.mongodb.nodePorts.mongodb }}
           {{- end }}
-  replicaServiceTemplate:
-    annotations:
-      passMe: ToReplicaService
-    spec:
-      type: {{ .Values.service.mongodb.type }}
-      {{- if (or (eq .Values.service.mongodb.type "LoadBalancer") (eq .Values.service.mongodb.type "NodePort")) }}
-      externalTrafficPolicy: {{ .Values.service.mongodb.externalTrafficPolicy }}
-      {{- end }}
-      ports:
-        - name: mongodb
-          port: 27017
-          targetPort: mongodb
-          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb))) }}
-          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb }}
-          {{- end }}
   updateStrategy:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
   terminationPolicy: {{ .Values.config.terminationPolicy }}

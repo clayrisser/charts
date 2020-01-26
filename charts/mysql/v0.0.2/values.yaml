@@ -1,0 +1,73 @@
+images:
+  phpmyadmin:
+    repository: phpmyadmin/phpmyadmin
+    tag: 4.7
+    pullPolicy: IfNotPresent
+
+config:
+  customConfig: ''
+  password: password
+  pause: true
+  phpmyadmin: true
+  prometheus: false
+  terminationPolicy: Delete
+  topologyMode: GroupReplication
+  updateStrategy: RollingUpdate
+  version: 8.0.14
+
+service:
+  phpmyadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  mysql:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql: ''
+
+ingress:
+  phpmyadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    enabled: false
+    keepLast: 30
+    paused: false
+    repository: stash-stash
+    schedule: '0 0 * * *'
+    restore:
+      snapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
