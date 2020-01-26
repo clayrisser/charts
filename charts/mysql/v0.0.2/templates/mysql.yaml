@@ -107,7 +107,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: mysql-restore-{{ .Values.config.version }}
+    name: mysql-restore-{{ index .Values.config.versionMap .Values.config.version }}
   repository:
     name: mysql-{{ template "mysql.fullname" . }}-mysql
   target:

@@ -1,0 +1,15 @@
+# Default values for stash-mysql.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# we are declaring these values as global so that parent chart can overwrite them
+docker:
+  registry: stashed
+  image: stash-mysql
+  tag: 8.0.14
+
+# optional argument to send mysqldump or mysql command
+backup:
+  myArgs: "--all-databases"
+restore:
+  myArgs: ""

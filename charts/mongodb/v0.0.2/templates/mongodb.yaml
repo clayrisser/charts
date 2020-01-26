@@ -185,7 +185,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: mongodb-restore-{{ .Values.config.version }}
+    name: mongodb-restore-{{ index .Values.config.versionMap .Values.config.version }}
   repository:
     name: mongodb-{{ template "mongodb.fullname" . }}-mongodb
   target:

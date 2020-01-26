@@ -1,0 +1,32 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: Function
+metadata:
+  name: elasticsearch-restore-{{- .Chart.Version }}
+  labels:
+    {{- include "stash-elasticsearch.labels" . | nindent 4 }}
+spec:
+  image: {{ .Values.docker.registry }}/{{ .Values.docker.image }}:{{ .Values.docker.tag }}
+  args:
+  - restore-es
+  # setup information
+  - --provider=${REPOSITORY_PROVIDER:=}
+  - --bucket=${REPOSITORY_BUCKET:=}
+  - --endpoint=${REPOSITORY_ENDPOINT:=}
+  - --path=${REPOSITORY_PREFIX:=}
+  - --secret-dir=/etc/repository/secret
+  - --scratch-dir=/tmp
+  - --enable-cache=${ENABLE_CACHE:=true}
+  - --max-connections=${MAX_CONNECTIONS:=0} # 0 indicates use default connection limit
+  - --hostname=${HOSTNAME:=}
+  - --source-hostname=${SOURCE_HOSTNAME:=}
+  - --interim-data-dir=${INTERIM_DATA_DIR}
+  # target information
+  - --namespace=${NAMESPACE:=default}
+  - --appbinding=${TARGET_NAME:=}
+  - --snapshot=${RESTORE_SNAPSHOTS:=}
+  - --es-args=${esArgs:={{ .Values.restore.esArgs }}}
+  # output & metric information
+  - --output-dir=${outputDir:=}
+  volumeMounts:
+  - name: ${secretVolume}
+    mountPath: /etc/repository/secret

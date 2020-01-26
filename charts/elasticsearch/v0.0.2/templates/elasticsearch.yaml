@@ -208,7 +208,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: elasticsearch-restore-{{ .Values.config.version }}
+    name: elasticsearch-restore-{{ index .Values.config.versionMap .Values.config.version }}
   repository:
     name: elasticsearch-{{ template "elasticsearch.fullname" . }}-elasticsearch
   target:

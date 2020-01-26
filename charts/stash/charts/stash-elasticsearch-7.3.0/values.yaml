@@ -1,0 +1,14 @@
+# Default values for stash-elasticsearch.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+docker:
+  registry: stashed
+  image: stash-elasticsearch
+  tag: 7.3.2
+
+# optional argument to send multielasticdump
+backup:
+  esArgs: ""
+restore:
+  esArgs: ""

@@ -134,7 +134,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: postgres-restore-{{ .Values.config.version }}
+    name: postgres-restore-{{ index .Values.config.versionMap .Values.config.version }}
   repository:
     name: {{ .Values.persistence.stash.repository | quote }}
   target:
