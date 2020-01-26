@@ -19,8 +19,8 @@ spec:
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  topology:
-    mode: GroupReplication
+  # topology:
+  #   mode: GroupReplication
   {{- if .Values.persistence.enabled }}
   storageType: Durable
   storage:
