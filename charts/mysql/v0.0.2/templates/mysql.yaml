@@ -39,7 +39,7 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values..persistence.stash.restore.snapshot) }}
+  {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
     scriptSource:
       configMap:
