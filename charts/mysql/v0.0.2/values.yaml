@@ -18,9 +18,9 @@ config:
     requests:
       cpu: 100m
       memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 256Mi
+    # limits:
+    #   cpu: 500m
+    #   memory: 256Mi
   versionMap:
     5.7-v1: 5.7.25
     5.7-v2: 5.7.25
