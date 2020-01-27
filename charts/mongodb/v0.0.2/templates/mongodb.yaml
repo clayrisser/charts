@@ -56,7 +56,7 @@ spec:
       prefix: mongos
       replicas: {{ .Values.config.sharedTopology.mongosReplicas }}
       strategy:
-        type: {{ .Values.config.updateStrategy }}
+        type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
       configSource:
         configMap:
           name: {{ template "mongodb.fullname" . }}-mongodb
