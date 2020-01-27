@@ -20,7 +20,7 @@ spec:
     renewDeadlineSeconds: 10
     retryPeriodSeconds: 2
   databaseSecret:
-    secretName: {{ template "postgres.fullname" . }}-postgres
+    secretName: {{ template "postgres.fullname" . }}-postgres-auth
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin

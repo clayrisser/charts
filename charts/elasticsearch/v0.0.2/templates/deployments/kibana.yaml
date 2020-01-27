@@ -28,12 +28,12 @@ spec:
             - name: ELASTICSEARCH_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "elasticsearch.sharedname" . }}-elasticsearch
+                  name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
                   key: ADMIN_USERNAME
             - name: ELASTICSEARCH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "elasticsearch.sharedname" . }}-elasticsearch
+                  name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
                   key: ADMIN_PASSWORD
           livenessProbe:
             httpGet:

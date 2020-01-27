@@ -10,10 +10,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   version: {{ .Values.config.version | quote }}
-  {{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
   databaseSecret:
-    secretName: {{ template "mongodb.sharedname" . }}-mongodb
-  {{- end }}
+    secretName: {{ template "mongodb.sharedname" . }}-mongodb-auth
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
