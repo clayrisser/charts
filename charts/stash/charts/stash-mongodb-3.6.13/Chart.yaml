@@ -7,7 +7,7 @@ icon: https://cdn.appscode.com/images/icon/stash.png
 maintainers:
 - email: support@appscode.com
   name: appscode
-name: stash-mongodb
+name: stash-mongodb-3-6-13
 sources:
 - https://github.com/stashed/mongodb
 version: 3.6.13

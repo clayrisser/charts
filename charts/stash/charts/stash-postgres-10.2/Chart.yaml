@@ -7,7 +7,7 @@ icon: https://cdn.appscode.com/images/icon/stash.png
 maintainers:
 - email: support@appscode.com
   name: appscode
-name: stash-postgres
+name: stash-postgres-10-2
 sources:
 - https://github.com/stashed/postgres
 version: "10.2"
