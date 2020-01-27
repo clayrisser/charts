@@ -25,7 +25,6 @@ config:
     6.3.0-v1: 6.3.0
     6.4: 6.4
     6.4.0: 6.4.0
-
   topology:
     clientReplicas: 1
     dataReplicas: 1

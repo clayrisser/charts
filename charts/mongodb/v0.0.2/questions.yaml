@@ -131,7 +131,7 @@ questions:
     label: 'custom config'
     group: Config
 
-# MongoExpress
+# Mongo Express
   - variable: config.mongoExpress.enabled
     default: true
     description: ''
@@ -139,7 +139,7 @@ questions:
     required: true
     label: 'mongo express'
     show_subquestion_if: true
-    group: MongoExpress
+    group: 'Mongo Express'
     subquestions:
       - variable: config.mongoExpress.username
         default: admin
@@ -147,14 +147,14 @@ questions:
         type: string
         required: true
         label: 'mongo express username'
-        group: MongoExpress
+        group: 'Mongo Express'
       - variable: config.mongoExpress.password
         default: pass
         description: ''
         type: password
         required: true
         label: 'mongo express password'
-        group: MongoExpress
+        group: 'Mongo Express'
 
 # Persistence
   - variable: persistence.enabled

@@ -12,7 +12,6 @@ config:
   phpmyadmin: true
   prometheus: false
   terminationPolicy: Delete
-  topologyMode: GroupReplication
   updateStrategy: RollingUpdate
   version: 8.0.14
   versionMap:
