@@ -197,7 +197,7 @@ spec:
   task:
     name: mongodb-restore-{{ index .Values.config.versionMap .Values.config.version }}
   repository:
-    name: mongodb-{{ template "mongodb.fullname" . }}-mongodb
+    name: {{ .Values.persistence.stash.repository | quote }}
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1

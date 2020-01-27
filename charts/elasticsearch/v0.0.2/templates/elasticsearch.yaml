@@ -192,7 +192,7 @@ spec:
   task:
     name: elasticsearch-restore-{{ index .Values.config.versionMap .Values.config.version }}
   repository:
-    name: elasticsearch-{{ template "elasticsearch.fullname" . }}-elasticsearch
+    name: {{ .Values.persistence.stash.repository | quote }}
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
