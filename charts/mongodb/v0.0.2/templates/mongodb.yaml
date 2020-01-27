@@ -27,16 +27,18 @@ spec:
   shardTopology:
     configServer:
       prefix: configServer
-      replicas: {{ .Values.config.sharedTopology.configServerReplicas }}
+      replicas: {{ .Values.config.shardTopology.configServer.replicas }}
       configSource:
         configMap:
           name: {{ template "mongodb.fullname" . }}-mongodb
-      {{- if .Values.persistence.velero.enabled }}
       podTemplate:
+        {{- if .Values.persistence.velero.enabled }}
         metadata:
           annotations:
             backup.velero.io/backup-volumes: data
-      {{- end }}
+        {{- end }}
+        spec:
+          {{ toYaml .Values.config.shardTopology.configServer.resources | indent 10 }}
       {{- if .Values.persistence.enabled }}
       storage:
         {{- if .Values.persistence.storageClass }}
@@ -54,31 +56,35 @@ spec:
       {{- end }}
     mongos:
       prefix: mongos
-      replicas: {{ .Values.config.sharedTopology.mongosReplicas }}
+      replicas: {{ .Values.config.shardTopology.mongos.replicas }}
       strategy:
         type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
       configSource:
         configMap:
           name: {{ template "mongodb.fullname" . }}-mongodb
-      {{- if .Values.persistence.velero.enabled }}
       podTemplate:
+        {{- if .Values.persistence.velero.enabled }}
         metadata:
           annotations:
             backup.velero.io/backup-volumes: data
-      {{- end }}
+        {{- end }}
+        spec:
+          {{ toYaml .Values.config.shardTopology.mongos.resources | indent 10 }}
     shard:
       prefix: shard
       replicas: {{ .Values.config.replicas }}
-      shards: {{ .Values.config.sharedTopology.shards }}
+      shards: {{ .Values.config.shardTopology.shard.shards }}
       configSource:
         configMap:
           name: {{ template "mongodb.fullname" . }}-mongodb
-      {{- if .Values.persistence.velero.enabled }}
       podTemplate:
+        {{- if .Values.persistence.velero.enabled }}
         metadata:
           annotations:
             backup.velero.io/backup-volumes: data
-      {{- end }}
+        {{- end }}
+        spec:
+          {{ toYaml .Values.config.shardTopology.shard.resources | indent 10 }}
       {{- if .Values.persistence.enabled }}
       storage:
         {{- if .Values.persistence.storageClass }}
@@ -118,12 +124,14 @@ spec:
       requests:
         storage: {{ .Values.persistence.size }}
   {{- end }}
-  {{- if .Values.persistence.velero.enabled }}
   podTemplate:
+    {{- if .Values.persistence.velero.enabled }}
     metadata:
       annotations:
         backup.velero.io/backup-volumes: data
-  {{- end }}
+    {{- end }}
+    spec:
+      {{ toYaml .Values.config.resources | indent 6 }}
   {{- end }}
   {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:

@@ -12,6 +12,13 @@ config:
   terminationPolicy: Delete
   updateStrategy: RollingUpdate
   version: 4.1.13
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
   versionMap:
     3.4-v3: 3.4
     3.4.14: 3.4.17
@@ -40,10 +47,34 @@ config:
     enabled: false
     replicas: 3
   shardTopology:
-    configServerReplicas: 3
     enabled: false
-    mongosReplicas: 2
-    shards: 3
+    configServer:
+      replicas: 3
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+    mongos:
+      replicas: 2
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+    shard:
+      shards: 3
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
 
 service:
   mongoExpress:

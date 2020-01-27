@@ -91,7 +91,7 @@ questions:
     show_if: config.shardTopology.enabled=false
     label: 'replica set'
     group: Config
-  - variable: config.shardTopology.configServerReplicas
+  - variable: config.shardTopology.configServer.replicas
     default: 3
     description: ''
     type: int
@@ -99,7 +99,7 @@ questions:
     show_if: config.shardTopology.enabled=true
     label: 'shard topology config server replicas'
     group: Config
-  - variable: config.shardTopology.mongosReplicas
+  - variable: config.shardTopology.mongos.replicas
     default: 2
     description: ''
     type: int
@@ -107,13 +107,13 @@ questions:
     show_if: config.shardTopology.enabled=true
     label: 'shard topology mongos replicas'
     group: Config
-  - variable: config.shardTopology.shards
+  - variable: config.shardTopology.shard.shards
     default: 3
     description: ''
     type: int
     required: true
     show_if: config.shardTopology.enabled=true
-    label: 'shard topology shards'
+    label: 'shard topology shard shards'
     group: Config
   - variable: config.replicas
     default: 3

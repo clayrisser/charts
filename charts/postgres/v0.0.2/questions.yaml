@@ -29,6 +29,34 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.limit.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'resources limit cpu'
+    group: Config
+  - variable: config.resources.limit.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources limit memory'
+    group: Config
   - variable: config.terminationPolicy
     default: Delete
     description: ''

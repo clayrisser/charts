@@ -29,8 +29,8 @@ spec:
   {{- if .Values.config.topology.enabled }}
   topology:
     master:
-      {{- if (gt (.Values.config.topology.masterReplicas | int64) 1) }}
-      replicas: {{ .Values.config.topology.masterReplicas }}
+      {{- if (gt (.Values.config.topology.master.replicas | int64) 1) }}
+      replicas: {{ .Values.config.topology.master.replicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -49,16 +49,10 @@ spec:
       {{- end }}
       prefix: master
       maxUnavailable: 0
-      resources:
-        requests:
-          memory: "64Mi"
-          cpu: "250m"
-        limits:
-          memory: "128Mi"
-          cpu: "500m"
+      {{ toYaml .Values.config.topology.master.resources | indent 6 }}
     data:
-      {{- if (gt (.Values.config.topology.dataReplicas | int64) 1) }}
-      replicas: {{ .Values.config.topology.dataReplicas }}
+      {{- if (gt (.Values.config.topology.data.replicas | int64) 1) }}
+      replicas: {{ .Values.config.topology.data.replicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -77,16 +71,10 @@ spec:
       {{- end }}
       prefix: data
       maxUnavailable: 0
-      resources:
-        requests:
-          memory: "512Mi"
-          cpu: "250m"
-        limits:
-          memory: "1Gi"
-          cpu: "500m"
+      {{ toYaml .Values.config.topology.data.resources | indent 6 }}
     client:
-      {{- if (gt (.Values.config.topology.clientReplicas | int64) 1) }}
-      replicas: {{ .Values.config.topology.clientReplicas }}
+      {{- if (gt (.Values.config.topology.client.replicas | int64) 1) }}
+      replicas: {{ .Values.config.topology.client.replicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -105,13 +93,7 @@ spec:
       {{- end }}
       prefix: client
       maxUnavailable: 0
-      resources:
-        requests:
-          memory: "64Mi"
-          cpu: "250m"
-        limits:
-          memory: "128Mi"
-          cpu: "500m"
+      {{ toYaml .Values.config.topology.client.resources | indent 6 }}
   {{- else }}
   {{- if (gt (.Values.config.replicas | int64) 1) }}
   replicas: {{ .Values.config.replicas }}
@@ -133,20 +115,16 @@ spec:
   {{- end }}
   maxUnavailable: 0
   {{- end }}
-  {{- if .Values.persistence.velero.enabled }}
+  {{- if (or .Values.persistence.velero.enabled (not .Values.config.topology.enabled)) }}
   podTemplate:
+    {{- if .Values.persistence.velero.enabled }}
     metadata:
       annotations:
         backup.velero.io/backup-volumes: data
+    {{- end }}
     {{- if (not .Values.config.topology.enabled) }}
     spec:
-      resources:
-        requests:
-          memory: "512Mi"
-          cpu: "250m"
-        limits:
-          memory: "1Gi"
-          cpu: "500m"
+      {{ toYaml .Values.config.resources | indent 6 }}
     {{- end }}
   {{- end }}
   serviceTemplate:

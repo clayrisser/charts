@@ -79,7 +79,7 @@ questions:
     required: true
     label: 'topology enabled'
     group: Config
-  - variable: config.topology.clientReplicas
+  - variable: config.topology.client.replicas
     default: 1
     description: ''
     type: int
@@ -87,7 +87,7 @@ questions:
     show_if: config.topology.enabled=true
     label: 'client replicas'
     group: Config
-  - variable: config.topology.dataReplicas
+  - variable: config.topology.data.replicas
     default: 1
     description: ''
     type: int
@@ -95,7 +95,7 @@ questions:
     show_if: config.topology.enabled=true
     label: 'data replicas'
     group: Config
-  - variable: config.topology.masterReplicas
+  - variable: config.topology.master.replicas
     default: 1
     description: ''
     type: int
