@@ -1,0 +1,26 @@
+categories:
+  - Server
+questions:
+
+# IngressShim
+  - variable: ingressShim.defaultACMEChallengeType
+    default: http01
+    description: ''
+    type: string
+    required: false
+    label: 'default acme challenge type'
+    group: IngressShim
+  - variable: ingressShim.defaultIssuerKind
+    default: ClusterIssuer
+    description: ''
+    type: string
+    required: false
+    label: 'default issuer kind'
+    group: IngressShim
+  - variable: ingressShim.defaultIssuerName
+    default: letsencrypt-prod
+    description: ''
+    type: string
+    required: false
+    label: 'default issuer name'
+    group: IngressShim
