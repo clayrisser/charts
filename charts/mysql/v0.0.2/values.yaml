@@ -5,6 +5,7 @@ images:
     pullPolicy: IfNotPresent
 
 config:
+  authenticationPlugin: mysql_native_password
   customConfig: ''
   password: password
   pause: true

@@ -57,6 +57,16 @@ questions:
     required: true
     label: password
     group: Config
+  - variable: config.authenticationPlugin
+    default: mysql_native_password
+    description: ''
+    type: enum
+    options:
+      - mysql_native_password
+      - caching_sha2_password
+    required: true
+    label: 'authentication plugin'
+    group: Config
   - variable: config.phpmyadmin
     default: true
     description: ''
