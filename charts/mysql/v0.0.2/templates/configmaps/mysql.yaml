@@ -8,7 +8,11 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  {{- if (eq (substr 0 1 .Values.config.version) "8") }}
+  my-config.cnf: {{ (ternary (empty .Values.config.customConfig) | "default_authentication_plugin = mysql_native_password" .Values.config.customConfig) | quote }}
+  {{- else }}
   my-config.cnf: {{ .Values.config.customConfig | quote }}
+  {{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
