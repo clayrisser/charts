@@ -5,7 +5,7 @@ questions:
 
 # Config
   - variable: config.version
-    default: 11.2-v1
+    default: 11.2
     description: ''
     type: enum
     options:
