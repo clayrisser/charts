@@ -66,6 +66,7 @@ questions:
       - caching_sha2_password
     required: true
     label: 'authentication plugin'
+    show_if: config.version=8.0-v1||config.version=8.0-v2||config.version=8.0.3||config.version=8.0.14
     group: Config
   - variable: config.phpmyadmin
     default: true
