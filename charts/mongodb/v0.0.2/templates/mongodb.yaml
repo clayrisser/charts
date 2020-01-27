@@ -19,7 +19,7 @@ spec:
     agent: prometheus.io/builtin
   {{- end }}
   sslMode: disabled
-  clusterAuthMode: x509
+  # clusterAuthMode: x509
   {{- if .Values.persistence.enabled }}
   storageType: Durable
   {{- else }}
