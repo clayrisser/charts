@@ -11,6 +11,7 @@ config:
   pause: true
   phpmyadmin: true
   prometheus: false
+  replicas: 1
   terminationPolicy: Delete
   updateStrategy: RollingUpdate
   version: 8.0.14

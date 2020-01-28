@@ -110,6 +110,13 @@ questions:
     required: true
     label: prometheus
     group: Config
+  - variable: config.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Config
   - variable: config.customConfig
     default: ''
     description: ''

@@ -19,6 +19,9 @@ spec:
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
+  {{- if (gt (.Values.config.replicas | int64) 1) }}
+  replicas: {{ .Values.config.replicas }}
+  {{- end }}
   # topology:
   #   mode: GroupReplication
   {{- if .Values.persistence.enabled }}
