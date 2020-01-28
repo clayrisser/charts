@@ -184,7 +184,7 @@ spec:
   {{- if .Values.config.replicaSet.enabled }}
   parameters:
     replicaSets:
-      host-0: rs0/{{ template "mongodb.fullname" . }}-mongodb-0.{{ template "mongodb.fullname" . }}-gvr.{{ .Release.Namespace }}.svc,{{ template "mongodb.fullname" . }}-mongodb-1.{{ template "mongodb.fullname" . }}-gvr.{{ .Release.Namespace }}.svc,{{ template "mongodb.fullname" . }}-mongodb-2.{{ template "mongodb.fullname" . }}-gvr.{{ .Release.Namespace }}.svc
+      host-0: rs0/{{ template "mongodb.mongodb-server" . }}
   {{- end }}
 {{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
