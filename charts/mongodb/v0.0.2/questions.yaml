@@ -91,6 +91,8 @@ questions:
     show_if: config.shardTopology.enabled=false
     label: 'replica set'
     group: Config
+
+
   - variable: config.shardTopology.configServer.replicas
     default: 3
     description: ''
@@ -98,6 +100,38 @@ questions:
     required: true
     show_if: config.shardTopology.enabled=true
     label: 'shard topology config server replicas'
+    group: Config
+  - variable: config.shardTopology.configServer.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology config server resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.configServer.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    show_if: config.shardTopology.enabled=true
+    required: true
+    label: 'shard topology config server resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.configServer.resources.limit.cpu
+    default: 500m
+    description: ''
+    type: string
+    show_if: config.shardTopology.enabled=true
+    required: true
+    label: 'shard topology config server resources limit cpu'
+    group: Config
+  - variable: config.shardTopology.configServer.resources.limit.memory
+    default: 256Mi
+    description: ''
+    type: string
+    show_if: config.shardTopology.enabled=true
+    required: true
+    label: 'shard topology config server resources limit memory'
     group: Config
   - variable: config.shardTopology.mongos.replicas
     default: 2
@@ -107,6 +141,38 @@ questions:
     show_if: config.shardTopology.enabled=true
     label: 'shard topology mongos replicas'
     group: Config
+  - variable: config.shardTopology.mongos.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.mongos.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.mongos.resources.limit.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos resources limit cpu'
+    group: Config
+  - variable: config.shardTopology.mongos.resources.limit.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos resources limit memory'
+    group: Config
   - variable: config.shardTopology.shard.shards
     default: 3
     description: ''
@@ -114,6 +180,70 @@ questions:
     required: true
     show_if: config.shardTopology.enabled=true
     label: 'shard topology shard shards'
+    group: Config
+  - variable: config.shardTopology.shard.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.shard.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.shard.resources.limit.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard resources limit cpu'
+    group: Config
+  - variable: config.shardTopology.shard.resources.limit.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard resources limit memory'
+    group: Config
+  - variable: config.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.limit.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'resources limit cpu'
+    group: Config
+  - variable: config.resources.limit.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'resources limit memory'
     group: Config
   - variable: config.replicas
     default: 3
