@@ -181,13 +181,13 @@ spec:
       name: {{ template "mongodb.fullname" . }}-mongodb
       port: 27017
       scheme: mongodb
-  {{- if .Values.config.replicaSet.enabled }}
   parameters:
     kind: MongoDB
     apiVersion: kubedb.com/v1alpha1
+    {{- if .Values.config.replicaSet.enabled }}
     replicaSets:
       host-0: rs0/{{ template "mongodb.mongodb-server" . }}
-  {{- end }}
+    {{- end }}
 {{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
