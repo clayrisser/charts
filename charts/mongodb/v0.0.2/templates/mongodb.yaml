@@ -183,6 +183,7 @@ spec:
       scheme: mongodb
   {{- if .Values.config.replicaSet.enabled }}
   parameters:
+    king: MongoDB
     replicaSets:
       host-0: rs0/{{ template "mongodb.mongodb-server" . }}
   {{- end }}
