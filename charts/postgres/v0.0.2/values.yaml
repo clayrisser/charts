@@ -6,7 +6,7 @@ images:
 
 config:
   customConfig: ''
-  password: password
+  password: p@ssw0rd
   pause: true
   prometheus: false
   replicas: 1

@@ -52,7 +52,7 @@ questions:
     label: pause
     group: Config
   - variable: config.password
-    default: password
+    default: changeme
     description: ''
     type: password
     required: true

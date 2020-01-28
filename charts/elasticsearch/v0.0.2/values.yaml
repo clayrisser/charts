@@ -9,7 +9,7 @@ config:
   dataConfig: ''
   kibana: true
   masterConfig: ''
-  password: password
+  password: changeme
   pause: true
   prometheus: false
   replicas: 1
