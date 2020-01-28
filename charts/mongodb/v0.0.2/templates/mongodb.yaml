@@ -163,23 +163,23 @@ spec:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
   terminationPolicy: {{ .Values.config.terminationPolicy }}
 {{- if .Values.persistence.stash.enabled }}
----
-apiVersion: appcatalog.appscode.com/v1alpha1
-kind: AppBinding
-metadata:
-  name: {{ template "mongodb.fullname" . }}-mongodb
-  labels:
-    app: {{ template "mongodb.name" . }}-mongodb
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  clientConfig:
-    service:
-      name: {{ template "mongodb.fullname" . }}-mongodb
-      port: 27017
-      scheme: mongodb
-  type: kubedb.com/mongodb
+# ---
+# apiVersion: appcatalog.appscode.com/v1alpha1
+# kind: AppBinding
+# metadata:
+#   name: {{ template "mongodb.fullname" . }}-mongodb
+#   labels:
+#     app: {{ template "mongodb.name" . }}-mongodb
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+# spec:
+#   clientConfig:
+#     service:
+#       name: {{ template "mongodb.fullname" . }}-mongodb
+#       port: 27017
+#       scheme: mongodb
+#   type: kubedb.com/mongodb
 {{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
