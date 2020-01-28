@@ -85,12 +85,12 @@ questions:
     label: password
     group: Config
   - variable: config.standbyMode
-    default: hot
+    default: Hot
     description: ''
     type: enum
     options:
-      - hot
-      - warm
+      - Hot
+      - Warm
     required: true
     label: 'standby mode'
     group: Config
