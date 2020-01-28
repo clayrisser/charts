@@ -85,7 +85,7 @@ questions:
     type: int
     required: true
     show_if: config.topology.enabled=true
-    label: 'client replicas'
+    label: 'topology client replicas'
     group: Config
   - variable: config.topology.client.requests.cpu
     default: 100m
@@ -93,7 +93,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'client resources requests cpu'
+    label: 'topology client resources requests cpu'
     group: Config
   - variable: config.topology.client.requests.memory
     default: 128Mi
@@ -101,7 +101,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'client resources requests cpu'
+    label: 'topology client resources requests cpu'
     group: Config
   - variable: config.topology.client.limits.cpu
     default: 500m
@@ -109,7 +109,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'client resources limits cpu'
+    label: 'topology client resources limits cpu'
     group: Config
   - variable: config.topology.client.limits.memory
     default: 256Mi
@@ -117,7 +117,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'client resources limits memory'
+    label: 'topology client resources limits memory'
     group: Config
   - variable: config.topology.data.replicas
     default: 1
@@ -125,7 +125,7 @@ questions:
     type: int
     required: true
     show_if: config.topology.enabled=true
-    label: 'data replicas'
+    label: 'topology data replicas'
     group: Config
   - variable: config.topology.data.requests.cpu
     default: 100m
@@ -133,7 +133,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'data resources requests cpu'
+    label: 'topology data resources requests cpu'
     group: Config
   - variable: config.topology.data.requests.memory
     default: 128Mi
@@ -141,7 +141,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'data resources requests cpu'
+    label: 'topology data resources requests cpu'
     group: Config
   - variable: config.topology.data.limits.cpu
     default: 500m
@@ -149,7 +149,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'data resources limits cpu'
+    label: 'topology data resources limits cpu'
     group: Config
   - variable: config.topology.data.limits.memory
     default: 256Mi
@@ -157,7 +157,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'data resources limits memory'
+    label: 'topology data resources limits memory'
     group: Config
   - variable: config.topology.master.replicas
     default: 1
@@ -165,7 +165,7 @@ questions:
     type: int
     required: true
     show_if: config.topology.enabled=true
-    label: 'master replicas'
+    label: 'topology master replicas'
     group: Config
   - variable: config.topology.master.requests.cpu
     default: 100m
@@ -173,7 +173,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'master resources requests cpu'
+    label: 'topology master resources requests cpu'
     group: Config
   - variable: config.topology.master.requests.memory
     default: 128Mi
@@ -181,7 +181,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'master resources requests cpu'
+    label: 'topology master resources requests cpu'
     group: Config
   - variable: config.topology.master.limits.cpu
     default: 500m
@@ -189,7 +189,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'master resources limits cpu'
+    label: 'topology master resources limits cpu'
     group: Config
   - variable: config.topology.master.limits.memory
     default: 256Mi
@@ -197,7 +197,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'master resources limits memory'
+    label: 'topology master resources limits memory'
     group: Config
   - variable: config.resources.requests.cpu
     default: 100m
