@@ -10,5 +10,5 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   mongo_express_username: {{ .Values.config.mongoExpress.username | quote }}
-  mongodb_server: {{ template "mongodb.mongodb-server" }}
+  mongodb_server: {{ template "mongodb.mongodb-server" . }}
 {{- end }}
