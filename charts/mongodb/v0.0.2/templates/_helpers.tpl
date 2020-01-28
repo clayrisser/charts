@@ -31,7 +31,7 @@ Calculate mongodb server
 */}}
 {{- define "mongodb.mongodb-server" }}
 {{- if .Values.config.replicaSet.enabled }}
-{{- printf "%s-mongodb-0.%s-gvr.%s.svc,%s-mongodb-1.%s-gvr.%s.svc,%s-mongodb-2.%s-gvr.%s.svc" (include "mongodb.fullname" .) (include "mongodb.fullname" .) .Release.Namespace (include "mongodb.fullname" .) (include "mongodb.fullname" .) .Release.Namespace (include "mongodb.fullname" .) (include "mongodb.fullname" .) .Release.Namespace }}
+{{- printf "%s-mongodb-0,%s-mongodb-1,%s-mongodb-2" (include "mongodb.fullname" .) (include "mongodb.fullname" .) (include "mongodb.fullname" .) }}
 {{- else }}
 {{- printf (include "mongodb.fullname" .) }}
 {{- end }}
