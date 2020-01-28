@@ -87,6 +87,38 @@ questions:
     show_if: config.topology.enabled=true
     label: 'client replicas'
     group: Config
+  - variable: config.topology.client.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'client resources requests cpu'
+    group: Config
+  - variable: config.topology.client.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'client resources requests cpu'
+    group: Config
+  - variable: config.topology.client.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'client resources limits cpu'
+    group: Config
+  - variable: config.topology.client.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'client resources limits memory'
+    group: Config
   - variable: config.topology.data.replicas
     default: 1
     description: ''
@@ -94,6 +126,38 @@ questions:
     required: true
     show_if: config.topology.enabled=true
     label: 'data replicas'
+    group: Config
+  - variable: config.topology.data.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'data resources requests cpu'
+    group: Config
+  - variable: config.topology.data.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'data resources requests cpu'
+    group: Config
+  - variable: config.topology.data.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'data resources limits cpu'
+    group: Config
+  - variable: config.topology.data.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'data resources limits memory'
     group: Config
   - variable: config.topology.master.replicas
     default: 1
@@ -103,6 +167,71 @@ questions:
     show_if: config.topology.enabled=true
     label: 'master replicas'
     group: Config
+  - variable: config.topology.master.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'master resources requests cpu'
+    group: Config
+  - variable: config.topology.master.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'master resources requests cpu'
+    group: Config
+  - variable: config.topology.master.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'master resources limits cpu'
+    group: Config
+  - variable: config.topology.master.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=true
+    label: 'master resources limits memory'
+    group: Config
+  - variable: config.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=false
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=false
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=false
+    label: 'resources limits cpu'
+    group: Config
+  - variable: config.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.topology.enabled=false
+    label: 'resources limits memory'
+    group: Config
+
   - variable: config.replicas
     default: 1
     description: ''
