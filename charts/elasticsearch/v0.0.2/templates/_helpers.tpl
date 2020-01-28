@@ -29,7 +29,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{/*
 Calculate kibana certificate
 */}}
-{{- define "elasticsearch.kibana_certificate" }}
+{{- define "elasticsearch.kibana-certificate" }}
 {{- if (not (empty .Values.ingress.kibana.certificate)) }}
 {{- printf .Values.ingress.kibana.certificate }}
 {{- else }}

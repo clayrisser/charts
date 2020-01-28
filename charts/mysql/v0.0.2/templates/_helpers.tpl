@@ -29,7 +29,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{/*
 Calculate phpmyadmin certificate
 */}}
-{{- define "mysql.phpmyadmin_certificate" }}
+{{- define "mysql.phpmyadmin-certificate" }}
 {{- if (not (empty .Values.ingress.phpmyadmin.certificate)) }}
 {{- printf .Values.ingress.phpmyadmin.certificate }}
 {{- else }}

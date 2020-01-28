@@ -29,7 +29,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{/*
 Calculate phpredisadmin certificate
 */}}
-{{- define "redis.phpredisadmin_certificate" }}
+{{- define "redis.phpredisadmin-certificate" }}
 {{- if (not (empty .Values.ingress.phpredisadmin.certificate)) }}
 {{- printf .Values.ingress.phpredisadmin.certificate }}
 {{- else }}

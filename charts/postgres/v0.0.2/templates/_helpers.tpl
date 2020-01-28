@@ -19,7 +19,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{/*
 Calculate pgadmin certificate
 */}}
-{{- define "postgres.pgadmin_certificate" }}
+{{- define "postgres.pgadmin-certificate" }}
 {{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
 {{- printf .Values.ingress.pgadmin.certificate }}
 {{- else }}

@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.phpmyadmin.tls }}
   tls:
-    - secretName: {{ template "mysql.phpmyadmin_certificate" . }}
+    - secretName: {{ template "mysql.phpmyadmin-certificate" . }}
       hosts:
         - {{ .Values.ingress.phpmyadmin.hostname }}
   {{- end }}

@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.pgadmin.tls }}
   tls:
-    - secretName: {{ template "postgres.pgadmin_certificate" . }}
+    - secretName: {{ template "postgres.pgadmin-certificate" . }}
       hosts:
         - {{ .Values.ingress.pgadmin.hostname }}
   {{- end }}

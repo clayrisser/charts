@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.kibana.tls }}
   tls:
-    - secretName: {{ template "elasticsearch.kibana_certificate" . }}
+    - secretName: {{ template "elasticsearch.kibana-certificate" . }}
       hosts:
         - {{ .Values.ingress.kibana.hostname }}
   {{- end }}

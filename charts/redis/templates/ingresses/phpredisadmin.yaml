@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.phpredisadmin.tls }}
   tls:
-    - secretName: {{ template "redis.phpredisadmin_certificate" . }}
+    - secretName: {{ template "redis.phpredisadmin-certificate" . }}
       hosts:
         - {{ .Values.ingress.phpredisadmin.hostname }}
   {{- end }}
