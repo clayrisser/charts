@@ -84,9 +84,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "mysql.fullname" . }}-mysql
 spec:
+  type: kubedb.com/mysql
+  version: {{ .Values.config.version | quote }}
   clientConfig:
     service:
       name: {{ template "mysql.fullname" . }}-mysql
@@ -94,7 +94,6 @@ spec:
       port: 3306
       scheme: mysql
     url: tcp({{ template "mysql.fullname" . }}-mysql:3306)/
-  type: kubedb.com/mysql
 {{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
