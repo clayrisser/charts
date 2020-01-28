@@ -27,9 +27,20 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
+Calculate mongodb server
+*/}}
+{{- define "mongodb.mongodb-server" }}
+{{- if .Values.config.replicaSet.enabled }}
+{{- printf "%s-mongodb-0.%s-gvr.%s.svc,%s-mongodb-1.%s-gvr.%s.svc,%s-mongodb-2.%s-gvr.%s.svc" (include "mongodb.fullname" .) (include "mongodb.fullname" .) .Release.Namespace (include "mongodb.fullname" .) (include "mongodb.fullname" .) .Release.Namespace (include "mongodb.fullname" .) (include "mongodb.fullname" .) .Release.Namespace }}
+{{- else }}
+{{- printf (include "mongodb.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate mongo express certificate
 */}}
-{{- define "mongodb.mongo_express_certificate" }}
+{{- define "mongodb.mongo-express-certificate" }}
 {{- if (not (empty .Values.ingress.mongoExpress.certificate)) }}
 {{- printf .Values.ingress.mongoExpress.certificate }}
 {{- else }}

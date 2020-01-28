@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.mongoExpress.tls }}
   tls:
-    - secretName: {{ template "mongodb.mongo_express_certificate" . }}
+    - secretName: {{ template "mongodb.mongo-express-certificate" . }}
       hosts:
         - {{ .Values.ingress.mongoExpress.hostname }}
   {{- end }}
