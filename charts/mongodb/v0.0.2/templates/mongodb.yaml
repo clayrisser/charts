@@ -174,12 +174,13 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  type: kubedb.com/mongodb
+  version: {{ .Values.config.version | quote }}
   clientConfig:
     service:
       name: {{ template "mongodb.fullname" . }}-mongodb
       port: 27017
       scheme: mongodb
-  type: kubedb.com/mongodb
   {{- if .Values.config.replicaSet.enabled }}
   parameters:
     replicaSets:
