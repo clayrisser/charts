@@ -68,6 +68,7 @@ config:
           memory: 128Mi
     shard:
       shards: 3
+      replicas: 2
       resources:
         requests:
           cpu: 100m

@@ -74,7 +74,7 @@ spec:
 {{ toYaml .Values.config.shardTopology.mongos.resources | indent 12 }}
     shard:
       prefix: shard
-      replicas: {{ .Values.config.replicas }}
+      replicas: {{ .Values.config.shardTopology.shard.replicas }}
       shards: {{ .Values.config.shardTopology.shard.shards }}
       configSource:
         configMap:
@@ -107,8 +107,8 @@ spec:
   configSource:
     configMap:
       name: {{ template "mongodb.fullname" . }}-mongodb
-  {{- if .Values.config.replicaSet }}
-  replicas: {{ .Values.config.replicas }}
+  {{- if .Values.config.replicaSet.enabled }}
+  replicas: {{ .Values.config.replicaSet.replicas }}
   replicaSet:
     name: rs0
   {{- end }}

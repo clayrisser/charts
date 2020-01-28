@@ -83,16 +83,22 @@ questions:
     required: true
     label: 'shard topology enabled'
     group: Config
-  - variable: config.replicaSet
+  - variable: config.replicaSet.enabled
     default: false
     description: ''
     type: boolean
     required: true
     show_if: config.shardTopology.enabled=false
-    label: 'replica set'
+    label: 'replica set enabled'
     group: Config
-
-
+  - variable: config.replicaSet.replicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.replicaSet.enabled=true&&config.shardTopology.enabled=false
+    label: 'replica set replicas'
+    group: Config
   - variable: config.shardTopology.configServer.replicas
     default: 3
     description: ''
@@ -181,6 +187,14 @@ questions:
     show_if: config.shardTopology.enabled=true
     label: 'shard topology shard shards'
     group: Config
+  - variable: config.shardTopology.shard.replicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard replicas'
+    group: Config
   - variable: config.shardTopology.shard.resources.requests.cpu
     default: 100m
     description: ''
@@ -244,14 +258,6 @@ questions:
     required: true
     show_if: config.shardTopology.enabled=false
     label: 'resources limit memory'
-    group: Config
-  - variable: config.replicas
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.replicaSet=true&&config.shardTopology.enabled=false
-    label: replicas
     group: Config
   - variable: config.customConfig
     default: ''
