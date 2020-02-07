@@ -122,7 +122,7 @@ Calculate mongodb server
 {{- if .Values.config.replicaSet.enabled }}
 {{- printf "%s-mongodb-0.%s-mongodb-gvr.%s.svc,%s-mongodb-1.%s-mongodb-gvr.%s.svc,%s-mongodb-2.%s-mongodb-gvr.%s.svc" (include "dbtest.fullname" .) (include "dbtest.fullname" .) .Release.Namespace (include "dbtest.fullname" .) (include "dbtest.fullname" .) .Release.Namespace (include "dbtest.fullname" .) (include "dbtest.fullname" .) .Release.Namespace }}
 {{- else }}
-{{- printf "%s-mongodb" (include dbtest.fullname" .) }}
+{{- printf "%s-mongodb" (include "dbtest.fullname" .) }}
 {{- end }}
 {{- end }}
 
