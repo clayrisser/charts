@@ -116,17 +116,6 @@ Calculate dbtest base url
 {{- end }}
 
 {{/*
-Calculate kibana certificate
-*/}}
-{{- define "dbtest.kibana-certificate" }}
-{{- if (not (empty .Values.ingress.kibana.certificate)) }}
-{{- printf .Values.ingress.kibana.certificate }}
-{{- else }}
-{{- printf "%s-kibana-letsencrypt" (include "dbtest.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate mongodb server
 */}}
 {{- define dbtest.mongodb-server" }}
@@ -155,17 +144,6 @@ Calculate mongodb url
 {{- end }}
 
 {{/*
-Calculate mongo express certificate
-*/}}
-{{- define "dbtest.mongo-express-certificate" }}
-{{- if (not (empty .Values.ingress.mongoExpress.certificate)) }}
-{{- printf .Values.ingress.mongoExpress.certificate }}
-{{- else }}
-{{- printf "%s-mongo-express-letsencrypt" (include "dbtest.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate mysql url
 */}}
 {{- define "dbtest.mysql-url" }}
@@ -179,17 +157,6 @@ Calculate mysql url
 {{- else }}
 {{- printf "jdbc:mysql://%s@%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
 {{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate phpmyadmin certificate
-*/}}
-{{- define "dbtest.phpmyadmin-certificate" }}
-{{- if (not (empty .Values.ingress.phpmyadmin.certificate)) }}
-{{- printf .Values.ingress.phpmyadmin.certificate }}
-{{- else }}
-{{- printf "%s-phpmyadmin-letsencrypt" (include "dbtest.fullname" .) }}
 {{- end }}
 {{- end }}
 
@@ -211,17 +178,6 @@ Calculate postgres url
 {{- end }}
 
 {{/*
-Calculate pgadmin certificate
-*/}}
-{{- define "dbtest.pgadmin-certificate" }}
-{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
-{{- printf .Values.ingress.pgadmin.certificate }}
-{{- else }}
-{{- printf "%s-pgadmin-letsencrypt" (include "dbtest.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate redis url
 */}}
 {{- define "dbtest.redis-url" }}
@@ -236,16 +192,5 @@ Calculate redis url
 {{- $credentials := (empty $redis.username | ternary "" (printf "%s:%s" $redis.username $redis.password)) }}
 {{- printf "redis://%s@%s:%s" $credentials $redis.host $redis.port }}
 {{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate phpredisadmin certificate
-*/}}
-{{- define "dbtest.phpredisadmin-certificate" }}
-{{- if (not (empty .Values.ingress.phpredisadmin.certificate)) }}
-{{- printf .Values.ingress.phpredisadmin.certificate }}
-{{- else }}
-{{- printf "%s-phpredisadmin-letsencrypt" (include "dbtest.fullname" .) }}
 {{- end }}
 {{- end }}
