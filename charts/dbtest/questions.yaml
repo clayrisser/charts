@@ -1287,7 +1287,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.kibana.enabled=true
+    show_if: config.kibana.enabled=true&&config.elasticsearch.internal=true
     label: 'kibana ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -1296,28 +1296,28 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.kibana.enabled=true
+        show_if: config.kibana.enabled=true&&config.elasticsearch.internal=true
         required: true
         label: 'kibana ingress tls'
       - variable: ingress.kibana.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.kibana.enabled=true
+        show_if: config.kibana.enabled=true&&config.elasticsearch.internal=true
         required: true
         label: 'kibana ingress hostname'
       - variable: ingress.kibana.path
         default: /
         description: ''
         type: string
-        show_if: config.kibana.enabled=true
+        show_if: config.kibana.enabled=true&&config.elasticsearch.internal=true
         required: true
         label: 'kibana ingress path'
       - variable: ingress.kibana.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.kibana.enabled=true&&ingress.kibana.tls=true
+        show_if: config.kibana.enabled=true&&config.elasticsearch.internal=true&&ingress.kibana.tls=true
         options:
           - none
           - letsencrypt-staging
@@ -1328,7 +1328,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: config.kibana.enabled=true&&ingress.kibana.tls=true&&ingress.kibana.issuer.name=none
+        show_if: config.kibana.enabled=true&&config.elasticsearch.internal=true&&ingress.kibana.tls=true&&ingress.kibana.issuer.name=none
         required: false
         label: 'kibana ingress certificate'
   - variable: service.kibana.type
@@ -1357,7 +1357,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.mongoExpress.enabled=true
+    show_if: config.mongoExpress.enabled=true&&config.mongodb.internal=true
     label: 'mongo express ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -1366,28 +1366,28 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.mongoExpress.enabled=true
+        show_if: config.mongoExpress.enabled=true&&config.mongodb.internal=true
         required: true
         label: 'mongo express ingress tls'
       - variable: ingress.mongoExpress.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.mongoExpress.enabled=true
+        show_if: config.mongoExpress.enabled=true&&config.mongodb.internal=true
         required: true
         label: 'mongo express ingress hostname'
       - variable: ingress.mongoExpress.path
         default: /
         description: ''
         type: string
-        show_if: config.mongoExpress.enabled=true
+        show_if: config.mongoExpress.enabled=true&&config.mongodb.internal=true
         required: true
         label: 'mongo express ingress path'
       - variable: ingress.mongoExpress.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.mongoExpress.enabled=true&&ingress.mongoExpress.tls=true
+        show_if: config.mongoExpress.enabled=true&&config.mongodb.internal=true&&ingress.mongoExpress.tls=true
         options:
           - none
           - letsencrypt-staging
@@ -1398,7 +1398,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: config.mongoExpress.enabled=true&&ingress.mongoExpress.tls=true&&ingress.mongoExpress.issuer.name=none
+        show_if: config.mongoExpress.enabled=true&&config.mongodb.internal=true&&ingress.mongoExpress.tls=true&&ingress.mongoExpress.issuer.name=none
         required: false
         label: 'mongo express ingress certificate'
   - variable: service.mongoExpress.type
@@ -1427,7 +1427,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.phpmyadmin.enabled=true
+    show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
     label: 'phpmyadmin ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -1436,28 +1436,28 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.phpmyadmin.enabled=true
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
         required: true
         label: 'phpmyadmin ingress tls'
       - variable: ingress.phpmyadmin.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.phpmyadmin.enabled=true
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
         required: true
         label: 'phpmyadmin ingress hostname'
       - variable: ingress.phpmyadmin.path
         default: /
         description: ''
         type: string
-        show_if: config.phpmyadmin.enabled=true
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
         required: true
         label: 'phpmyadmin ingress path'
       - variable: ingress.phpmyadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.phpmyadmin.enabled=true&&ingress.phpmyadmin.tls=true
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true&&ingress.phpmyadmin.tls=true
         options:
           - none
           - letsencrypt-staging
@@ -1468,7 +1468,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: config.phpmyadmin.enabled=true&&ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true&&ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none
         required: false
         label: 'phpmyadmin ingress certificate'
   - variable: service.phpmyadmin.type
@@ -1497,7 +1497,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.pgadmin.enabled=true
+    show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
     label: 'pgadmin ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -1506,28 +1506,28 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.pgadmin.enabled=true
+        show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
         required: true
         label: 'pgadmin ingress tls'
       - variable: ingress.pgadmin.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.pgadmin.enabled=true
+        show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
         required: true
         label: 'pgadmin ingress hostname'
       - variable: ingress.pgadmin.path
         default: /
         description: ''
         type: string
-        show_if: config.pgadmin.enabled=true
+        show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
         required: true
         label: 'pgadmin ingress path'
       - variable: ingress.pgadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true
+        show_if: config.pgadmin.enabled=true&&config.postgres.internal=true&&ingress.pgadmin.tls=true
         options:
           - none
           - letsencrypt-staging
@@ -1538,7 +1538,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
+        show_if: config.pgadmin.enabled=true&&config.postgres.internal=true&&ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
         required: false
         label: 'pgadmin ingress certificate'
   - variable: service.pgadmin.type
@@ -1567,7 +1567,7 @@ questions:
     default: true
     description: ''
     type: boolean
-    show_if: config.phpredisadmin.enabled=true
+    show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
     label: 'phpredisadmin ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -1576,28 +1576,28 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.phpredisadmin.enabled=true
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
         required: true
         label: 'phpredisadmin ingress tls'
       - variable: ingress.phpredisadmin.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.phpredisadmin.enabled=true
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
         required: true
         label: 'phpredisadmin ingress hostname'
       - variable: ingress.phpredisadmin.path
         default: /
         description: ''
         type: string
-        show_if: config.phpredisadmin.enabled=true
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
         required: true
         label: 'phpredisadmin ingress path'
       - variable: ingress.phpredisadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.phpredisadmin.enabled=true&&ingress.phpredisadmin.tls=true
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true&&ingress.phpredisadmin.tls=true
         options:
           - none
           - letsencrypt-staging
@@ -1608,7 +1608,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: config.phpredisadmin.enabled=true&&ingress.phpredisadmin.tls=true&&ingress.phpredisadmin.issuer.name=none
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true&&ingress.phpredisadmin.tls=true&&ingress.phpredisadmin.issuer.name=none
         required: false
         label: 'phpredisadmin ingress certificate'
   - variable: service.phpredisadmin.type
@@ -1760,7 +1760,7 @@ questions:
     type: string
     required: true
     label: 'kibana repository'
-    show_if: config.kibana.enabled=true
+    show_if: config.kibana.enabled=true&&config.elasticsearch.internal=true
     group: Images
   - variable: images.kibana.tag
     default: 7.3.0
@@ -1768,7 +1768,7 @@ questions:
     type: string
     required: true
     label: 'kibana tag'
-    show_if: config.kibana.enabled=true
+    show_if: config.kibana.enabled=true&&config.elasticsearch.internal=true
     group: Images
   - variable: images.mongoExpress.repository
     default: mongo-express
@@ -1776,7 +1776,7 @@ questions:
     type: string
     required: true
     label: 'mongo express repository'
-    show_if: config.mongoExpress.enabled=true
+    show_if: config.mongoExpress.enabled=true&&config.mongodb.internal=true
     group: Images
   - variable: images.mongoExpress.tag
     default: 0.49.0
@@ -1784,7 +1784,7 @@ questions:
     type: string
     required: true
     label: 'mongo express tag'
-    show_if: config.mongoExpress.enabled=true
+    show_if: config.mongoExpress.enabled=true&&config.mongodb.internal=true
     group: Images
   - variable: images.phpmyadmin.repository
     default: phpmyadmin/phpmyadmin
@@ -1792,7 +1792,7 @@ questions:
     type: string
     required: true
     label: 'phpmyadmin repository'
-    show_if: config.phpmyadmin.enabled=true
+    show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
     group: Images
   - variable: images.phpmyadmin.tag
     default: 4.7
@@ -1800,7 +1800,7 @@ questions:
     type: string
     required: true
     label: 'phpmyadmin tag'
-    show_if: config.phpmyadmin.enabled=true
+    show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
     group: Images
   - variable: images.pgadmin.repository
     default: dpage/pgadmin4
@@ -1808,7 +1808,7 @@ questions:
     type: string
     required: true
     label: 'pgadmin repository'
-    show_if: config.pgadmin.enabled=true
+    show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
     group: Images
   - variable: images.pgadmin.tag
     default: 4.11
@@ -1816,7 +1816,7 @@ questions:
     type: string
     required: true
     label: 'pgadmin tag'
-    show_if: config.pgadmin.enabled=true
+    show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
     group: Images
   - variable: images.phpredisadmin.repository
     default: erikdubbelboer/phpredisadmin
@@ -1824,7 +1824,7 @@ questions:
     type: string
     required: true
     label: 'phpredisadmin repository'
-    show_if: config.phpredisadmin.enabled=true
+    show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
     group: Images
   - variable: images.phpredisadmin.tag
     default: v1.11.4
@@ -1832,5 +1832,5 @@ questions:
     type: string
     required: true
     label: 'phpredisadmin tag'
-    show_if: config.phpredisadmin.enabled=true
+    show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
     group: Images

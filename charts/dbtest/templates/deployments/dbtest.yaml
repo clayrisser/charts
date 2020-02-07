@@ -7,10 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.velero.enabled }}
-  annotations:
-    backup.velero.io/backup-volumes: data
-  {{- end }}
 spec:
   selector:
     matchLabels:
@@ -31,12 +27,6 @@ spec:
           ports:
             - name: container
               containerPort: 3000
-          volumeMounts:
-            - name: data
-              mountPath: /_data
-            - name: data
-              mountPath: '/data'
-              subPath: data
           env: []
           livenessProbe:
             tcpSocket:
@@ -46,40 +36,3 @@ spec:
             tcpSocket:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
-      volumes:
-        - name: data
-          {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "dbtest.fullname" . ) }}
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "dbtest.fullname" . }}-dbtest
-  labels:
-    app: {{ template "dbtest.name" . }}-dbtest
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "dbtest.fullname" . }}-dbtest
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}
