@@ -1760,7 +1760,7 @@ questions:
     type: string
     required: true
     label: 'kibana repository'
-    show_if: config.elasticsearch.kibana=true
+    show_if: config.kibana.enabled=true
     group: Images
   - variable: images.kibana.tag
     default: 7.3.0
@@ -1768,7 +1768,7 @@ questions:
     type: string
     required: true
     label: 'kibana tag'
-    show_if: config.elasticsearch.kibana=true
+    show_if: config.kibana.enabled=true
     group: Images
   - variable: images.mongoExpress.repository
     default: mongo-express
@@ -1792,7 +1792,7 @@ questions:
     type: string
     required: true
     label: 'phpmyadmin repository'
-    show_if: config.mysql.phpmyadmin=true
+    show_if: config.phpmyadmin.enabled=true
     group: Images
   - variable: images.phpmyadmin.tag
     default: 4.7
@@ -1800,7 +1800,7 @@ questions:
     type: string
     required: true
     label: 'phpmyadmin tag'
-    show_if: config.mysql.phpmyadmin=true
+    show_if: config.phpmyadmin.enabled=true
     group: Images
   - variable: images.pgadmin.repository
     default: dpage/pgadmin4
