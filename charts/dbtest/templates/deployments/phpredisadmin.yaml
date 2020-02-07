@@ -1,0 +1,52 @@
+{{- if (and .Values.config.redis.internal .Values.config.phpredisadmin.enabled) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "dbtest.fullname" . }}-phpredisadmin
+  labels:
+    app: {{ template "dbtest.name" . }}-phpredisadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "dbtest.name" . }}-phpredisadmin
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "dbtest.name" . }}-phpredisadmin
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "dbtest.fullname" . }}-phpredisadmin
+          image: {{ .Values.images.phpredisadmin.repository }}:{{ .Values.images.phpredisadmin.tag }}
+          imagePullPolicy: {{ .Values.images.phpredisadmin.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          env:
+            - name: REDIS_1_HOST
+              value: {{ template "dbtest.fullname" . }}-redis
+            - name: REDIS_1_NAME
+              value: {{ template "dbtest.fullname" . }}-redis
+            - name: ADMIN_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "dbtest.fullname" . }}
+                  key: phpredisadmin_username
+            - name: ADMIN_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "dbtest.fullname" . }}
+                  key: phpredisadmin_password
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}
