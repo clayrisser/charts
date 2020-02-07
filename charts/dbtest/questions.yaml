@@ -70,7 +70,7 @@ questions:
     show_if: config.elasticsearch.internal=true&&config.elasticsearch.terminationPolicy=Pause
     label: pause
     group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.kibana
+  - variable: config.kibana.enabled
     default: false
     description: ''
     type: boolean
@@ -751,7 +751,7 @@ questions:
     label: 'authentication plugin'
     show_if: config.mysql.version=8.0-v1||config.mysql.version=8.0-v2||config.mysql.version=8.0.3||config.mysql.version=8.0.14
     group: 'MySQL Config'
-  - variable: config.mysql.phpmyadmin
+  - variable: config.phpmyadmin.enabled
     default: false
     description: ''
     type: boolean
@@ -1217,72 +1217,72 @@ questions:
 
 
 # Services and Load Balancing
-  - variable: ingress.nginx.enabled
+  - variable: ingress.dbtest.enabled
     default: true
     description: ''
     type: boolean
-    label: 'nginx ingress enabled'
+    label: 'dbtest ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.nginx.tls
+      - variable: ingress.dbtest.tls
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'nginx ingress tls'
-      - variable: ingress.nginx.hostname
+        label: 'dbtest ingress tls'
+      - variable: ingress.dbtest.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'nginx ingress hostname'
-      - variable: ingress.nginx.path
+        label: 'dbtest ingress hostname'
+      - variable: ingress.dbtest.path
         default: /
         description: ''
         type: string
         required: true
-        label: 'nginx ingress path'
-      - variable: ingress.nginx.issuer.name
+        label: 'dbtest ingress path'
+      - variable: ingress.dbtest.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.nginx.tls=true
+        show_if: ingress.dbtest.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'nginx ingress issuer name'
-      - variable: ingress.nginx.certificate
+        label: 'dbtest ingress issuer name'
+      - variable: ingress.dbtest.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.nginx.tls=true&&ingress.nginx.issuer.name=none
+        show_if: ingress.dbtest.tls=true&&ingress.dbtest.issuer.name=none
         required: false
-        label: 'nginx ingress certificate'
-  - variable: service.nginx.type
+        label: 'dbtest ingress certificate'
+  - variable: service.dbtest.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.nginx.enabled=false
+    show_if: ingress.dbtest.enabled=false
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    label: 'nginx service type'
+    label: 'dbtest service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.nginx.nodePorts.http
+      - variable: service.dbtest.nodePorts.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.nginx.enabled=false
-        label: 'nginx http port'
+        show_if: ingress.dbtest.enabled=false
+        label: 'dbtest http port'
   - variable: ingress.kibana.enabled
     default: true
     description: ''
@@ -1643,6 +1643,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'elasticsearch service type'
+    show_if: config.elasticsearch.internal=true
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
@@ -1663,6 +1664,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'mongodb service type'
+    show_if: config.mongodb.internal=true
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
@@ -1683,6 +1685,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'mysql service type'
+    show_if: config.mysql.internal=true
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
@@ -1703,6 +1706,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'postgres service type'
+    show_if: config.postgres.internal=true
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
@@ -1723,6 +1727,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'redis service type'
+    show_if: config.redis.internal=true
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
@@ -1735,19 +1740,19 @@ questions:
         label: 'redis port'
 
 # Images
-  - variable: images.nginx.repository
-    default: nginx
+  - variable: images.dbtest.repository
+    default: dbtest
     description: ''
     type: string
     required: true
-    label: 'nginx repository'
+    label: 'dbtest repository'
     group: Images
-  - variable: images.nginx.tag
+  - variable: images.dbtest.tag
     default: latest
     description: ''
     type: string
     required: true
-    label: 'nginx tag'
+    label: 'dbtest tag'
     group: Images
   - variable: images.kibana.repository
     default: kibana

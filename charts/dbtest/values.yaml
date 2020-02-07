@@ -1,6 +1,6 @@
 images:
-  nginx:
-    repository: nginx
+  dbtest:
+    repository: dbtest
     tag: latest
   kibana:
     repository: kibana
@@ -21,7 +21,7 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
-  nginx:
+  dbtest:
     baseUrl: ''
     hostname: ''
   elasticsearch:
@@ -30,7 +30,6 @@ config:
     database: dbtest
     host: ''
     internal: true
-    kibana: false
     masterConfig: ''
     password: changeme
     pause: true
@@ -86,6 +85,8 @@ config:
           limits:
             cpu: 500m
             memory: 128Mi
+  kibana:
+    enabled: false
   mongodb:
     customConfig: ''
     database: dbtest
@@ -171,7 +172,6 @@ config:
     internal: true
     password: p@ssw0rd
     pause: true
-    phpmyadmin: false
     port: 3306
     prometheus: false
     replicas: 1
@@ -194,6 +194,8 @@ config:
       8.0-v2: 8.0.14
       8.0.14: 8.0.14
       8.0.3: 8.0.3
+  phpmyadmin:
+    enabled: false
   postgres:
     customConfig: ''
     database: dbtest
@@ -245,7 +247,7 @@ config:
     username: admin
 
 service:
-  nginx:
+  dbtest:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -302,7 +304,7 @@ service:
       redis: ''
 
 ingress:
-  nginx:
+  dbtest:
     certificate: ''
     enabled: false
     hostname: ''

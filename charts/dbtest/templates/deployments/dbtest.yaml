@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "dbtest.fullname" . }}-nginx
+  name: {{ template "dbtest.fullname" . }}-dbtest
   labels:
-    app: {{ template "dbtest.name" . }}-nginx
+    app: {{ template "dbtest.name" . }}-dbtest
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -14,19 +14,19 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "dbtest.name" . }}-nginx
+      app: {{ template "dbtest.name" . }}-dbtest
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
-        app: {{ template "dbtest.name" . }}-nginx
+        app: {{ template "dbtest.name" . }}-dbtest
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "dbtest.fullname" . }}-nginx
-          image: {{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}
+        - name: {{ template "dbtest.fullname" . }}-dbtest
+          image: {{ .Values.images.dbtest.repository }}:{{ .Values.images.dbtest.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
             - name: container
@@ -35,7 +35,7 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: /data
+              mountPath: '/data'
               subPath: data
           env: []
           livenessProbe:
@@ -59,9 +59,9 @@ spec:
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: {{ template "dbtest.fullname" . }}-nginx
+  name: {{ template "dbtest.fullname" . }}-dbtest
   labels:
-    app: {{ template "dbtest.name" . }}-nginx
+    app: {{ template "dbtest.name" . }}-dbtest
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -78,7 +78,7 @@ spec:
     ref:
       apiVersion: apps/v1
       kind: Deployment
-      name: {{ template "dbtest.fullname" . }}-nginx
+      name: {{ template "dbtest.fullname" . }}-dbtest
     volumeMounts:
       - name: data
         mountPath: /_data

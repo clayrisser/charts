@@ -17,13 +17,13 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate nginx certificate
+Calculate dbtest certificate
 */}}
-{{- define "dbtest.nginx-certificate" }}
-{{- if (not (empty .Values.ingress.nginx.certificate)) }}
-{{- printf .Values.ingress.nginx.certificate }}
+{{- define "dbtest.dbtest-certificate" }}
+{{- if (not (empty .Values.ingress.dbtest.certificate)) }}
+{{- printf .Values.ingress.dbtest.certificate }}
 {{- else }}
-{{- printf "%s-nginx-letsencrypt" (include "dbtest.fullname" .) }}
+{{- printf "%s-dbtest-letsencrypt" (include "dbtest.fullname" .) }}
 {{- end }}
 {{- end }}
 
@@ -83,34 +83,34 @@ Calculate phpredisadmin certificate
 {{- end }}
 
 {{/*
-Calculate nginx hostname
+Calculate dbtest hostname
 */}}
-{{- define "dbtest.nginx-hostname" }}
-{{- if (and .Values.config.nginx.hostname (not (empty .Values.config.nginx.hostname))) }}
-{{- printf .Values.config.nginx.hostname }}
+{{- define "dbtest.dbtest-hostname" }}
+{{- if (and .Values.config.dbtest.hostname (not (empty .Values.config.dbtest.hostname))) }}
+{{- printf .Values.config.dbtest.hostname }}
 {{- else }}
-{{- if .Values.ingress.nginx.enabled }}
-{{- printf .Values.ingress.nginx.hostname }}
+{{- if .Values.ingress.dbtest.enabled }}
+{{- printf .Values.ingress.dbtest.hostname }}
 {{- else }}
-{{- printf "%s-nginx" (include "dbtest.fullname" .) }}
+{{- printf "%s-dbtest" (include "dbtest.fullname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
 
 {{/*
-Calculate nginx base url
+Calculate dbtest base url
 */}}
-{{- define "dbtest.nginx-base-url" }}
-{{- if (and .Values.config.nginx.baseUrl (not (empty .Values.config.nginx.baseUrl))) }}
-{{- printf .Values.config.nginx.baseUrl }}
+{{- define "dbtest.dbtest-base-url" }}
+{{- if (and .Values.config.dbtest.baseUrl (not (empty .Values.config.dbtest.baseUrl))) }}
+{{- printf .Values.config.dbtest.baseUrl }}
 {{- else }}
-{{- if .Values.ingress.nginx.enabled }}
-{{- $hostname := ((empty (include "dbtest.nginx-hostname" .)) | ternary .Values.ingress.nginx.hostname (include "dbtest.nginx-hostname" .)) }}
-{{- $path := (eq .Values.ingress.nginx.path "/" | ternary "" .Values.ingress.nginx.path) }}
-{{- $protocol := (.Values.ingress.nginx.tls | ternary "https" "http") }}
+{{- if .Values.ingress.dbtest.enabled }}
+{{- $hostname := ((empty (include "dbtest.dbtest-hostname" .)) | ternary .Values.ingress.dbtest.hostname (include "dbtest.dbtest-hostname" .)) }}
+{{- $path := (eq .Values.ingress.dbtest.path "/" | ternary "" .Values.ingress.dbtest.path) }}
+{{- $protocol := (.Values.ingress.dbtest.tls | ternary "https" "http") }}
 {{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
-{{- printf "http://%s" (include "dbtest.nginx-hostname" .) }}
+{{- printf "http://%s" (include "dbtest.dbtest-hostname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
