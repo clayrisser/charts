@@ -132,13 +132,13 @@ Calculate mongodb url
 {{- define "dbtest.mongodb-url" }}
 {{- $mongodb := .Values.config.mongodb }}
 {{- if $mongodb.internal }}
-{{- printf dbtest://%s-mongodb:27017/%s" (include "dbtest.fullname" .) $mongodb.database }}
+{{- printf "mongodb://%s-mongodb:27017/%s" (include "dbtest.fullname" .) $mongodb.database }}
 {{- else }}
 {{- if $mongodb.url }}
 {{- printf $mongodb.url }}
 {{- else }}
 {{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s" $mongodb.username $mongodb.password)) }}
-{{- printf dbtest://%s@%s:%s/%s" $credentials $mongodb.host $mongodb.port $mongodb.database }}
+{{- printf "mongodb://%s@%s:%s/%s" $credentials $mongodb.host $mongodb.port $mongodb.database }}
 {{- end }}
 {{- end }}
 {{- end }}
