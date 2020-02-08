@@ -69,7 +69,7 @@ spec:
             - name: DIRECTUS_DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "directus.sharedname" . }}-mysql-auth
+                  name: {{ template "directus.fullname" . }}-mysql-auth
                   key: MYSQL_USER
             {{- else }}
             - name: DIRECTUS_DATABASE_USERNAME
@@ -82,7 +82,7 @@ spec:
             - name: DIRECTUS_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "directus.sharedname" . }}-mysql-auth
+                  name: {{ template "directus.fullname" . }}-mysql-auth
                   key: MYSQL_PASSWORD
             {{- else }}
             - name: DIRECTUS_DATABASE_PASSWORD
