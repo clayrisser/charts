@@ -54,8 +54,8 @@ spec:
               path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
-{{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ template "postgres.fullname" . }}-pgadmin
+{{- end }}
