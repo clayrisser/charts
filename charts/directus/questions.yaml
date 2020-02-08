@@ -23,6 +23,20 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.directus.email
+    default: email@example.com
+    description: ''
+    type: string
+    required: true
+    label: 'directus email'
+    group: Config
+  - variable: config.directus.password
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: 'directus password'
+    group: Config
   - variable: config.authPublicKey
     default: public
     description: ''

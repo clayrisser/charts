@@ -11,7 +11,9 @@ config:
   updateStrategy: RollingUpdate
   directus:
     baseUrl: ''
+    email: email@example.com
     hostname: ''
+    password: pass
   authPublicKey: 'authSecretKey'
   authSecretKey: ''
   mysql:
