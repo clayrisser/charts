@@ -29,7 +29,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              install --email {{ .Values.config.directus.email }} --password "{{ .Values.config.directus.password }}"
+              directus-entrypoint install --email {{ .Values.config.directus.email }} --password "{{ .Values.config.directus.password }}"
           env:
             - name: DIRECTUS_APP_ENV
               value: production
