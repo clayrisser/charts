@@ -1,0 +1,114 @@
+images:
+  directus:
+    repository: directus/directus
+    tag: v8-apache
+  phpmyadmin:
+    repository: phpmyadmin/phpmyadmin
+    tag: 4.7
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  directus:
+    baseUrl: ''
+    hostname: ''
+  authPublicKey: 'authSecretKey'
+  authSecretKey: ''
+  mysql:
+    authenticationPlugin: mysql_native_password
+    customConfig: ''
+    database: directus
+    host: ''
+    internal: true
+    password: p@ssw0rd
+    pause: true
+    port: 3306
+    prometheus: false
+    replicas: 1
+    terminationPolicy: Delete
+    url: ''
+    username: root
+    version: 8.0.14
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    versionMap:
+      5.7-v1: 5.7.25
+      5.7-v2: 5.7.25
+      5.7.25: 5.7.25
+      8.0-v1: 8.0.3
+      8.0-v2: 8.0.14
+      8.0.14: 8.0.14
+      8.0.3: 8.0.3
+  phpmyadmin:
+    enabled: false
+
+service:
+  directus:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  phpmyadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  mysql:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql: ''
+
+ingress:
+  directus:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  phpmyadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    enabled: false
+    keepLast: 30
+    paused: false
+    repository: stash-stash
+    schedule: '0 0 * * *'
+    restore:
+      snapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

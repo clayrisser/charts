@@ -1,0 +1,479 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.authPublicKey
+    default: public
+    description: ''
+    type: string
+    required: true
+    label: 'auth public key'
+    group: Config
+  - variable: config.authSecretKey
+    default: secret
+    description: ''
+    type: password
+    required: true
+    label: 'auth secret key'
+    group: Config
+
+# MySQL Config
+  - variable: config.mysql.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'MySQL Config'
+  - variable: config.mysql.version
+    default: 8.0.14
+    description: ''
+    type: enum
+    options:
+      - 5.7-v1
+      - 5.7-v2
+      - 5.7.25
+      - 8.0-v1
+      - 8.0-v2
+      - 8.0.3
+      - 8.0.14
+    required: true
+    label: version
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'resources limits cpu'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources limits memory'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.terminationPolicy
+    default: Delete
+    description: ''
+    type: enum
+    options:
+      - Delete
+      - Pause
+      - WipeOut
+      - DoNotTerminate
+    required: true
+    label: 'termination policy'
+    group: 'MySQL Config'
+  - variable: config.mysql.pause
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.mysql.terminationPolicy=Pause
+    label: pause
+    group: 'MySQL Config'
+  - variable: config.mysql.authenticationPlugin
+    default: mysql_native_password
+    description: ''
+    type: enum
+    options:
+      - mysql_native_password
+      - caching_sha2_password
+    required: true
+    label: 'authentication plugin'
+    show_if: config.mysql.version=8.0-v1||config.mysql.version=8.0-v2||config.mysql.version=8.0.3||config.mysql.version=8.0.14
+    group: 'MySQL Config'
+  - variable: config.phpmyadmin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: phpmyadmin
+    group: 'MySQL Config'
+  - variable: config.mysql.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.database
+    default: directus
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.password
+    default: p@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.port
+    default: 3306
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+  - variable: config.mysql.username
+    default: root
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.mysql.internal=false
+    group: 'MySQL Config'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot'
+
+
+# Services and Load Balancing
+  - variable: ingress.directus.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'directus ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.directus.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'directus ingress tls'
+      - variable: ingress.directus.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'directus ingress hostname'
+      - variable: ingress.directus.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'directus ingress path'
+      - variable: ingress.directus.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.directus.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'directus ingress issuer name'
+      - variable: ingress.directus.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.directus.tls=true&&ingress.directus.issuer.name=none
+        required: false
+        label: 'directus ingress certificate'
+  - variable: service.directus.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.directus.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'directus service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.directus.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.directus.enabled=false
+        label: 'directus http port'
+  - variable: ingress.phpmyadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
+    label: 'phpmyadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpmyadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
+        required: true
+        label: 'phpmyadmin ingress tls'
+      - variable: ingress.phpmyadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
+        required: true
+        label: 'phpmyadmin ingress hostname'
+      - variable: ingress.phpmyadmin.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
+        required: true
+        label: 'phpmyadmin ingress path'
+      - variable: ingress.phpmyadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true&&ingress.phpmyadmin.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpmyadmin ingress issuer name'
+      - variable: ingress.phpmyadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true&&ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none
+        required: false
+        label: 'phpmyadmin ingress certificate'
+  - variable: service.phpmyadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'phpmyadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.phpmyadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.phpmyadmin.enabled=false
+        label: 'phpmyadmin port'
+  - variable: service.mysql.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mysql service type'
+    show_if: config.mysql.internal=true
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mysql.nodePorts.mysql
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mysql port'
+
+# Images
+  - variable: images.directus.repository
+    default: directus/directus
+    description: ''
+    type: string
+    required: true
+    label: 'directus repository'
+    group: Images
+  - variable: images.directus.tag
+    default: v8-apache
+    description: ''
+    type: string
+    required: true
+    label: 'directus tag'
+    group: Images
+  - variable: images.phpmyadmin.repository
+    default: phpmyadmin/phpmyadmin
+    description: ''
+    type: string
+    required: true
+    label: 'phpmyadmin repository'
+    show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
+    group: Images
+  - variable: images.phpmyadmin.tag
+    default: 4.7
+    description: ''
+    type: string
+    required: true
+    label: 'phpmyadmin tag'
+    show_if: config.phpmyadmin.enabled=true&&config.mysql.internal=true
+    group: Images

@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "directus.fullname" . }}-directus
+  labels:
+    app: {{ template "directus.name" . }}-directus
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.velero.enabled }}
+  annotations:
+    backup.velero.io/backup-volumes: data
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "directus.name" . }}-directus
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "directus.name" . }}-directus
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "directus.fullname" . }}-directus
+          image: {{ .Values.images.directus.repository }}:{{ .Values.images.directus.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /var/directus/public/uploads
+              subPath: uploads
+          env:
+            - name: DIRECTUS_APP_ENV
+              value: production
+            - name: DIRECTUS_AUTH_PUBLICKEY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: auth_public_key
+            - name: DIRECTUS_AUTH_SECRETKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: auth_secret_key
+            - name: DIRECTUS_DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_host
+            - name: DIRECTUS_DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_port
+            - name: DIRECTUS_DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_database
+            {{- if .Values.config.mysql.internal }}
+            - name: DIRECTUS_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "directus.sharedname" . }}-mysql-auth
+                  key: MYSQL_USER
+            {{- else }}
+            - name: DIRECTUS_DATABASE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_username
+            {{- end }}
+            {{- if .Values.config.mysql.internal }}
+            - name: DIRECTUS_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "directus.sharedname" . }}-mysql-auth
+                  key: MYSQL_PASSWORD
+            {{- else }}
+            - name: DIRECTUS_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_password
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /server/ping
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /server/ping
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "directus.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "directus.fullname" . }}-directus
+  labels:
+    app: {{ template "directus.name" . }}-directus
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ .Values.persistence.stash.repository | quote }}
+  rules:
+    - snapshots:
+        - {{ .Values.persistence.stash.restore.snapshot | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "directus.fullname" . }}-directus
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}
