@@ -70,7 +70,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "directus.fullname" . }}-mysql-auth
-                  key: MYSQL_USER
+                  key: username
             {{- else }}
             - name: DIRECTUS_DATABASE_USERNAME
               valueFrom:
@@ -83,7 +83,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "directus.fullname" . }}-mysql-auth
-                  key: MYSQL_PASSWORD
+                  key: password
             {{- else }}
             - name: DIRECTUS_DATABASE_PASSWORD
               valueFrom:
