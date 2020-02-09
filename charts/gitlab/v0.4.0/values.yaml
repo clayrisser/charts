@@ -1,0 +1,165 @@
+images:
+  gitlab:
+    repository: gitlab/gitlab-ce
+    tag: 12.5.3-ce.0
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
+  phpredisadmin:
+    repository: erikdubbelboer/phpredisadmin
+    tag: v1.11.4
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  gitlab:
+    baseUrl: ''
+    hostname: ''
+    password: password
+    themeId: 2
+    s3:
+      awsAccessKey: ''
+      awsRegion: us-west-2
+      awsSecretKey: ''
+      enabled: false
+  keycloak:
+    baseUrl: ''
+    clientId: ''
+    companyName: KeyCloak
+    enabled: false
+    realmName: gatekeeper
+    certificate: ''
+    autoSignIn: false
+  postgres:
+    customConfig: ''
+    database: gitlab
+    host: ''
+    internal: true
+    password: p@ssw0rd
+    pause: true
+    port: 5432
+    prometheus: false
+    replicas: 1
+    standbyMode: Hot
+    terminationPolicy: Delete
+    url: ''
+    username: postgres
+    version: 11.2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    versionMap:
+      9.6-v2: 9.6
+      9.6.7-v2: 9.6
+      10.2-v2: 10.2
+      10.6: 10.6
+      11.1: 11.1
+      11.2: 11.2
+  pgadmin:
+    email: admin
+    enabled: false
+    password: pass
+  redis:
+    customConfig: ''
+    host: ''
+    internal: true
+    password: ''
+    port: 6379
+    prometheus: false
+    replicas: 1
+    shards: 1
+    url: ''
+    username: ''
+    version: 5.0.3-v1
+  phpredisadmin:
+    enabled: false
+    password: pass
+    username: admin
+
+service:
+  gitlab:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  phpredisadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres: ''
+  redis:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      redis: ''
+
+ingress:
+  gitlab:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  phpredisadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    enabled: false
+    keepLast: 30
+    paused: false
+    repository: stash-stash
+    schedule: '0 0 * * *'
+    restore:
+      snapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

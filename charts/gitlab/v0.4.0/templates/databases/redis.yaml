@@ -1,0 +1,63 @@
+{{- if .Values.config.redis.internal }}
+apiVersion: kubedb.com/v1alpha1
+kind: Redis
+metadata:
+  name: {{ template "gitlab.fullname" . }}-redis
+  labels:
+    app: {{ template "gitlab.name" . }}-redis
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  version: {{ .Values.config.redis.version | quote }}
+  configSource:
+    configMap:
+      name: {{ template "gitlab.fullname" . }}-redis
+  {{- if .Values.config.redis.prometheus }}
+  monitor:
+    agent: prometheus.io/builtin
+  {{- end }}
+  {{- if (or (gt (.Values.config.redis.shards | int64) 1) (gt (.Values.config.redis.shards | int64) 1)) }}
+  mode: Cluster
+  cluster:
+    master: {{ .Values.config.redis.shards }}
+    replicas: {{ .Values.config.redis.replicas }}
+  {{- else }}
+  mode: Standalone
+  {{- end }}
+  storageType: Ephemeral
+  serviceTemplate:
+    metadata:
+      annotations:
+        passMe: ToService
+    spec:
+      type: {{ .Values.service.redis.type }}
+      {{- if (or (eq .Values.service.redis.type "LoadBalancer") (eq .Values.service.redis.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.redis.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name: redis
+          port: 6380
+          targetPort: redis
+          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis))) }}
+          nodePort: {{ .Values.service.redis.nodePorts.redis }}
+          {{- end }}
+  replicaServiceTemplate:
+    annotations:
+      passMe: ToReplicaService
+    spec:
+      type: {{ .Values.service.redis.type }}
+      {{- if (or (eq .Values.service.redis.type "LoadBalancer") (eq .Values.service.redis.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.redis.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name: redis
+          port: 6380
+          targetPort: redis
+          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis))) }}
+          nodePort: {{ .Values.service.redis.nodePorts.redis }}
+          {{- end }}
+  updateStrategy:
+    type: RollingUpdate
+  terminationPolicy: Delete
+{{- end }}

@@ -1,0 +1,35 @@
+{{- if (and .Values.config.postgres.internal (and .Values.config.pgadmin.enabled .Values.ingress.pgadmin.enabled)) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "gitlab.fullname" . }}-pgadmin
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.pgadmin.tls }}
+    {{- if (empty .Values.ingress.pgadmin.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.pgadmin.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "gitlab.name" . }}-pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.pgadmin.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.pgadmin.path }}
+            backend:
+              serviceName: {{ template "gitlab.fullname" . }}-pgadmin
+              servicePort: http
+  {{- if .Values.ingress.pgadmin.tls }}
+  tls:
+    - secretName: {{ template "gitlab.pgadmin-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.pgadmin.hostname }}
+  {{- end }}
+{{- end }}

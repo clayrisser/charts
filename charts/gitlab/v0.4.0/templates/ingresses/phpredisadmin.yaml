@@ -1,0 +1,35 @@
+{{- if (and .Values.config.redis.internal (and .Values.config.phpredisadmin.enabled .Values.ingress.phpredisadmin.enabled)) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "gitlab.fullname" . }}-phpredisadmin
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.phpredisadmin.tls }}
+    {{- if (empty .Values.ingress.phpredisadmin.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.phpredisadmin.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "gitlab.name" . }}-phpredisadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.phpredisadmin.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.phpredisadmin.path }}
+            backend:
+              serviceName: {{ template "gitlab.fullname" . }}-phpredisadmin
+              servicePort: http
+  {{- if .Values.ingress.phpredisadmin.tls }}
+  tls:
+    - secretName: {{ template "gitlab.phpredisadmin-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.phpredisadmin.hostname }}
+  {{- end }}
+{{- end }}
