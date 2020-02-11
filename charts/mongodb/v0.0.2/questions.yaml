@@ -121,7 +121,7 @@ questions:
     type: string
     show_if: config.shardTopology.enabled=true
     required: true
-    label: 'shard topology config server resources requests cpu'
+    label: 'shard topology config server resources requests memory'
     group: Config
   - variable: config.shardTopology.configServer.resources.limits.cpu
     default: 500m

@@ -41,7 +41,7 @@ questions:
     description: ''
     type: string
     required: true
-    label: 'resources requests cpu'
+    label: 'resources requests memory'
     group: Config
   - variable: config.resources.limits.cpu
     default: 500m

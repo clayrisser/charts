@@ -101,7 +101,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'topology client resources requests cpu'
+    label: 'topology client resources requests memory'
     group: Config
   - variable: config.topology.client.limits.cpu
     default: 500m
