@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "mailserver.fullname" . }}-mailserver
+  labels:
+    app: {{ template "mailserver.name" . }}-mailserver
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.velero.enabled }}
+  annotations:
+    backup.velero.io/backup-volumes: data
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "mailserver.name" . }}-mailserver
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "mailserver.name" . }}-mailserver
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "mailserver.fullname" . }}-mailserver
+          image: {{ .Values.images.mailserver.repository }}:{{ .Values.images.mailserver.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: smtp
+              containerPort: 25
+              protocol: TCP
+            - name: smtp-secure
+              containerPort: 465
+              protocol: TCP
+            - name: smtp-auth
+              containerPort: 587
+            - name: imap
+              containerPort: 143
+              protocol: TCP
+            - name: imap-secure
+              containerPort: 993
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /var/mail
+              subPath: data
+            - name: data
+              mountPath: /var/mail-state
+              subPath: state
+            - name: data
+              mountPath: /var/log/mail
+              subPath: log
+          env:
+
+
+            - name: OVERRIDE_HOSTNAME
+              value: example.com
+            - name: ENABLE_FETCHMAIL
+              value: '0'
+            - name: FETCHMAIL_POLL
+              value: '120'
+            - name: ENABLE_SPAMASSASSIN
+              value: '0'
+            - name: ENABLE_CLAMAV
+              value: '0'
+            - name: ENABLE_FAIL2BAN
+              value: '0'
+            - name: ENABLE_POSTGREY
+              value: '0'
+            - name: ONE_DIR
+              value: '1'
+            - name: DMS_DEBUG
+              value: '0'
+
+
+
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "mailserver.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "mailserver.fullname" . }}-mailserver
+  labels:
+    app: {{ template "mailserver.name" . }}-mailserver
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ .Values.persistence.stash.repository | quote }}
+  rules:
+    - snapshots:
+        - {{ .Values.persistence.stash.restore.snapshot | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "mailserver.fullname" . }}-mailserver
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}

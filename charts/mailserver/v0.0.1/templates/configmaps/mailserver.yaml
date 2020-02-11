@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mailserver.fullname" . }}-mailserver
+  labels:
+    app: {{ template "mailserver.name" . }}-mailserver
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  postfix-accounts.cf: |
+    user1@example.com|{SHA512-CRYPT}$6$2YpW1nYtPBs2yLYS$z.5PGH1OEzsHHNhl3gJrc3D.YMZkvKw/vp.r5WIiwya6z7P/CQ9GDEJDr2G2V0cAfjDFeAQPUoopsuWPXLk3u1
+
+  postfix-virtual.cf: |
+    alias1@example.com user1@dexample.com
+
+  dovecot.cf: |
+    service stats {
+      unix_listener stats-reader {
+        group = docker
+        mode = 0666
+      }
+      unix_listener stats-writer {
+        group = docker
+        mode = 0666
+      }
+    }
+
+  SigningTable: |
+    *@example.com mail._domainkey.example.com
+
+  KeyTable: |
+    mail._domainkey.example.com example.com:mail:/etc/opendkim/keys/example.com-mail.key
+
+  TrustedHosts: |
+    127.0.0.1
+    localhost
+
+  user-patches.sh: |
+    #!/bin/bash
+
+  fetchmail.cf: |

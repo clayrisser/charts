@@ -1,0 +1,20 @@
+name: mailserver
+home: https://github.com/tomav/docker-mailserver
+icon: https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/black/svg/envelope.svg
+version: 0.0.1
+appVersion: latest
+description: 'fullstack but simple mailserver'
+keywords:
+  - mailserver
+  - mail
+  - server
+  - email
+  - smtp
+  - pop
+  - pop3
+  - imap
+sources:
+  - https://github.com/tomav/docker-mailserver
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
