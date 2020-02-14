@@ -10,7 +10,7 @@ config:
     baseUrl: ''
     hostname: ''
   organization: 'Example Inc.'
-  domain: 'example.org'
+  domain: example.org
 
 service:
   openldap:

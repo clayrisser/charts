@@ -9,31 +9,31 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   01-default-users.ldif: |
-    dn: dc=example,dc=com
+    dn: dc={{ index (regexSplit "\." .Values.config.domain -1) 0 }},dc={{ index (regexSplit "\." .Values.config.domain -1) 1 }}
     objectClass: top
     objectClass: dcObject
     objectClass: organization
-    o: Example
-    dc: example
-    description: some example
+    o: {{ .Values.config.organization }}
+    dc: {{ index (regexSplit "\." .Values.config.domain -1) 0 }}
+    description: {{ .Values.config.organization }} directory
 
-    dn: ou=accounts,dc=wibble,dc=net
+    dn: ou=accounts,dc={{ index (regexSplit "\." .Values.config.domain -1) 0 }},dc={{ index (regexSplit "\." .Values.config.domain -1) 1 }}
     objectClass: top
     objectClass: organizationalUnit
     ou: accounts
 
-    dn: ou=realm-roles,dc=example,dc=com
+    dn: ou=realm-roles,dc={{ index (regexSplit "\." .Values.config.domain -1) 0 }},dc={{ index (regexSplit "\." .Values.config.domain -1) 1 }}
     objectclass: top
     objectclass: organizationalUnit
     ou: realm-roles
 
-    dn: cn=dovecot,ou=accounts,dc=example,dc=com
+    dn: cn=dovecot,ou=accounts,dc={{ index (regexSplit "\." .Values.config.domain -1) 0 }},dc={{ index (regexSplit "\." .Values.config.domain -1) 1 }}
     objectClass: top
     objectclass: person
     cn: dovecot
     sn: dovecot
 
-    dn: uid=codejamninja,ou=accounts,dc=example,dc=com
+    dn: uid=codejamninja,ou=accounts,dc={{ index (regexSplit "\." .Values.config.domain -1) 0 }},dc={{ index (regexSplit "\." .Values.config.domain -1) 1 }}
     objectClass: top
     objectclass: person
     objectclass: organizationalPerson
@@ -49,8 +49,8 @@ data:
     gidNumber: 100
     homeDirectory: /home/codejamninja
 
-    dn: cn=admin,ou=realm-roles,dc=example,dc=com
+    dn: cn=admin,ou=realm-roles,dc={{ index (regexSplit "\." .Values.config.domain -1) 0 }},dc={{ index (regexSplit "\." .Values.config.domain -1) 1 }}
     objectclass: top
     objectclass: groupOfNames
     cn: admin
-    member: uid=codejamninja,ou=accounts,dc=example,dc=com
+    member: uid=codejamninja,ou=accounts,dc={{ index (regexSplit "\." .Values.config.domain -1) 0 }},dc={{ index (regexSplit "\." .Values.config.domain -1) 1 }}
