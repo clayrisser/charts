@@ -97,7 +97,7 @@ spec:
       volumes:
         - name: ldif
           configMap:
-            name: {{ template "openldap.fullname" . }}-ldif
+            name: {{ template "openldap.fullname" . }}-openldap
         - name: ldifworkdir
           emptyDir: {}
         - name: data

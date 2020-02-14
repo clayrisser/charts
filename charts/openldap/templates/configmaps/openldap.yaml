@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "openldap.fullname" . }}-openldap
+  labels:
+    app: {{ template "openldap.name" . }}-openldap
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  01-default-users.ldif: |
+    dn: dc=example,dc=com
+    objectClass: top
+    objectClass: dcObject
+    objectClass: organization
+    o: Example
+    dc: example
+    description: some example
+
+    dn: ou=accounts,dc=wibble,dc=net
+    objectClass: top
+    objectClass: organizationalUnit
+    ou: accounts
+
+    dn: ou=realm-roles,dc=example,dc=com
+    objectclass: top
+    objectclass: organizationalUnit
+    ou: realm-roles
+
+    dn: cn=dovecot,ou=accounts,dc=example,dc=com
+    objectClass: top
+    objectclass: person
+    cn: dovecot
+    sn: dovecot
+
+    dn: uid=codejamninja,ou=accounts,dc=example,dc=com
+    objectClass: top
+    objectclass: person
+    objectclass: organizationalPerson
+    objectclass: inetOrgPerson
+    objectClass: posixAccount
+    uid: codejamninja
+    cn: Jam Risser
+    sn: Risser
+    mail: jam@codejam.ninja
+    postalCode: 78721
+    userPassword: password
+    uidNumber: 1002
+    gidNumber: 100
+    homeDirectory: /home/codejamninja
+
+    dn: cn=admin,ou=realm-roles,dc=example,dc=com
+    objectclass: top
+    objectclass: groupOfNames
+    cn: admin
+    member: uid=codejamninja,ou=accounts,dc=example,dc=com
