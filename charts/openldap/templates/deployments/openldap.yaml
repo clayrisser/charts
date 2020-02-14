@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "openldap.fullname" . }}-openldap
+  labels:
+    app: {{ template "openldap.name" . }}-openldap
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.velero.enabled }}
+  annotations:
+    backup.velero.io/backup-volumes: data
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "openldap.name" . }}-openldap
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "openldap.name" . }}-openldap
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+        - name: {{ template "openldap.fullname" . }}-openldap-init
+          image: busybox
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              cp -r /ldif/* /ldifworkdir
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: ldif
+              mountPath: /ldif
+            - name: ldifworkdir
+              mountPath: /ldifworkdir
+      containers:
+        - name: {{ template "openldap.fullname" . }}-openldap
+          image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: container
+              containerPort: 389
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /var/lib/ldap
+              subPath: data
+            - name: data
+              mountPath: /etc/ldap/slapd.d
+              subPath: config
+            - name: ldifworkdir
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
+          env:
+            - name: LDAP_TLS
+              value: 'false'
+            - name: LDAP_TLS_ENFORCE
+              value: 'false'
+            - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
+              value: 'true'
+            - name: LDAP_BACKEND
+              value: mdb
+            - name: LDAP_ORGANISATION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: organization
+            - name: LDAP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: domain
+            - name: LDAP_CONFIG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: config_password
+            - name: LDAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: admin_password
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: ldif
+          configMap:
+            name: {{ template "openldap.fullname" . }}-ldif
+        - name: ldifworkdir
+          emptyDir: {}
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "openldap.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "openldap.fullname" . }}-openldap
+  labels:
+    app: {{ template "openldap.name" . }}-openldap
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ .Values.persistence.stash.repository | quote }}
+  rules:
+    - snapshots:
+        - {{ .Values.persistence.stash.restore.snapshot | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "openldap.fullname" . }}-openldap
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}

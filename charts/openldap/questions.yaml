@@ -1,0 +1,217 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.organization
+    default: 'Example Inc.'
+    description: ''
+    type: string
+    required: true
+    label: organization
+    group: Config
+  - variable: config.domain
+    default: example.org
+    description: ''
+    type: string
+    required: true
+    label: domain
+    group: Config
+  - variable: config.adminPassword
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: 'admin password'
+    group: Config
+  - variable: config.configPassword
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: 'config password'
+    group: Config
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot'
+
+
+# Services and Load Balancing
+  - variable: ingress.openldap.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'openldap ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.openldap.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'openldap ingress tls'
+      - variable: ingress.openldap.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'openldap ingress hostname'
+      - variable: ingress.openldap.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'openldap ingress path'
+      - variable: ingress.openldap.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.openldap.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'openldap ingress issuer name'
+      - variable: ingress.openldap.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.openldap.tls=true&&ingress.openldap.issuer.name=none
+        required: false
+        label: 'openldap ingress certificate'
+  - variable: service.openldap.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.openldap.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'openldap service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.openldap.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.openldap.enabled=false
+        label: 'openldap http port'
+
+# Images
+  - variable: images.openldap.repository
+    default: osixia/openldap
+    description: ''
+    type: string
+    required: true
+    label: 'openldap repository'
+    group: Images
+  - variable: images.openldap.tag
+    default: 1.2.4
+    description: ''
+    type: string
+    required: true
+    label: 'openldap tag'
+    group: Images
