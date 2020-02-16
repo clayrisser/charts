@@ -89,7 +89,7 @@ questions:
     description: ''
     type: string
     required: true
-    label: 'resources requests cpu'
+    label: 'resources requests memory'
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
   - variable: config.mysql.resources.limits.cpu

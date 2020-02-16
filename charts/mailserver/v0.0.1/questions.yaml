@@ -23,6 +23,48 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.mailserver.hostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'mailserver hostname'
+    group: Config
+  - variable: config.clamav.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'clamav enabled'
+    group: Config
+  - variable: config.fail2ban.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'fail2ban enabled'
+    group: Config
+  - variable: config.fetchmail.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'fetchmail enabled'
+    group: Config
+  - variable: config.postgrey.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'postgrey enabled'
+    group: Config
+  - variable: config.spamassassin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'spamassassin enabled'
+    group: Config
 
 # Persistence
   - variable: persistence.enabled

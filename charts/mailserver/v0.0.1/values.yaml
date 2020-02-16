@@ -6,6 +6,16 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
+  clamav:
+    enabled: false
+  fail2ban:
+    enabled: false
+  fetchmail:
+    enabled: false
+  postgrey:
+    enabled: false
+  spamassassin:
+    enabled: false
   mailserver:
     baseUrl: ''
     hostname: ''

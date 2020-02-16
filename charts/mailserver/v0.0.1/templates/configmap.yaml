@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mailserver.fullname" . }}
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  clamav_enabled: {{ .Values.config.clamav.enabled | ternary "1" "0" | quote }}
+  fail2ban_enabled: {{ .Values.config.fail2ban.enabled | ternary "1" "0" | quote }}
+  fetchmail_enabled: {{ .Values.config.fetchmail.enabled | ternary "1" "0" | quote }}
+  hostname: {{- define "mailserver.mailserver-hostname" }}
+  postgrey_enabled: {{ .Values.config.postgrey.enabled | ternary "1" "0" | quote }}
+  spamassassin_enabled: {{ .Values.config.spamassassin.enabled | ternary "1" "0" | quote }}

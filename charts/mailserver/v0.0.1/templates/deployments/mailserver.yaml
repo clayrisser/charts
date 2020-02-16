@@ -56,29 +56,42 @@ spec:
               mountPath: /var/log/mail
               subPath: log
           env:
-
-
-            - name: OVERRIDE_HOSTNAME
-              value: example.com
-            - name: ENABLE_FETCHMAIL
-              value: '0'
             - name: FETCHMAIL_POLL
               value: '120'
-            - name: ENABLE_SPAMASSASSIN
-              value: '0'
-            - name: ENABLE_CLAMAV
-              value: '0'
-            - name: ENABLE_FAIL2BAN
-              value: '0'
-            - name: ENABLE_POSTGREY
-              value: '0'
             - name: ONE_DIR
               value: '1'
             - name: DMS_DEBUG
               value: '0'
-
-
-
+            - name: OVERRIDE_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: hostname
+            - name: ENABLE_FETCHMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: fetchmail_enabled
+            - name: ENABLE_SPAMASSASSIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_enabled
+            - name: ENABLE_CLAMAV
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: clamav_enabled
+            - name: ENABLE_FAIL2BAN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: fail2ban_enabled
+            - name: ENABLE_POSTGREY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postgrey_enabled
           livenessProbe:
             tcpSocket:
               port: container
