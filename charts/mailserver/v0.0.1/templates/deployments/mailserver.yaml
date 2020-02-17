@@ -28,6 +28,10 @@ spec:
         - name: {{ template "mailserver.fullname" . }}-mailserver
           image: {{ .Values.images.mailserver.repository }}:{{ .Values.images.mailserver.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
           ports:
             - name: smtp
               containerPort: 25
@@ -44,6 +48,8 @@ spec:
               containerPort: 993
               protocol: TCP
           volumeMounts:
+            - name: certs
+              mountPath: /certs
             - name: data
               mountPath: /_data
             - name: data
@@ -62,6 +68,18 @@ spec:
               value: '1'
             - name: DMS_DEBUG
               value: '0'
+
+            {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
+            - name: SSL_TYPE
+              value: manual
+            - name: SSL_CERT_PATH
+              value: /certs/tls.crt
+            - name: SSL_KEY_PATH
+              value: /certs/tls.key
+            {{- end }}
+
+
+
             - name: OVERRIDE_HOSTNAME
               valueFrom:
                 configMapKeyRef:
@@ -92,6 +110,61 @@ spec:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: postgrey_enabled
+            - name: SPOOF_PROTECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spoof_protection
+            - name: ENABLE_SRS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: enable_srs
+            - name: VIRUSMAILS_DELETE_DELAY
+            - name: POSTFIX_MAILBOX_SIZE_LIMIT
+            - name: POSTFIX_MESSAGE_SIZE_LIMIT
+            - name: ENABLE_MANAGESIEVE
+            - name: POSTMASTER_ADDRESS
+            - name: SA_TAG
+            - name: SA_TAG2
+            - name: SA_KILL
+            - name: SA_SPAM_SUBJECT
+            - name: SA_SHORTCIRCUIT_BAYES_SPAM
+            - name: SA_SHORTCIRCUIT_BAYES_HAM
+            - name: FETCHMAIL_POLL
+            - name: LDAP_START_TLS
+            - name: LDAP_SERVER_HOST
+            - name: LDAP_SEARCH_BASE
+            - name: LDAP_BIND_DN
+            - name: LDAP_BIND_PW
+            - name: LDAP_QUERY_FILTER_USER
+            - name: LDAP_QUERY_FILTER_GROUP
+            - name: LDAP_QUERY_FILTER_ALIAS
+            - name: LDAP_QUERY_FILTER_DOMAIN
+            - name: DOVECOT_TLS
+            - name: DOVECOT_USER_FILTER
+            - name: DOVECOT_USER_ATTRS
+            - name: DOVECOT_PASS_FILTER
+            - name: DOVECOT_PASS_ATTRS
+            - name: POSTGREY_DELAY
+            - name: POSTGREY_MAX_AGE
+            - name: POSTGREY_AUTO_WHITELIST_CLIENTS
+            - name: POSTGREY_TEXT
+            - name: ENABLE_SASLAUTHD
+            - name: SASLAUTHD_MECHANISMS
+            - name: SASLAUTHD_MECH_OPTIONS
+            - name: SASLAUTHD_LDAP_SERVER
+            - name: SASLAUTHD_LDAP_SSL
+            - name: SASLAUTHD_LDAP_BIND_DN
+            - name: SASLAUTHD_LDAP_PASSWORD
+            - name: SASLAUTHD_LDAP_SEARCH_BASE
+            - name: SASLAUTHD_LDAP_FILTER
+            - name: SASL_PASSWD
+            - name: SRS_SENDER_CLASSES
+            - name: SRS_EXCLUDE_DOMAINS
+            - name: SRS_SECRET
+            - name: SRS_DOMAINNAME
+            - name: DEFAULT_RELAY_HOST
           livenessProbe:
             tcpSocket:
               port: container
@@ -101,6 +174,11 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
+        {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
+        - name: certs
+          secret:
+            secretName: {{ template "mailserver.fullname" . }}-letsencrypt
+        {{- end }}
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

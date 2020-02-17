@@ -6,6 +6,8 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
+  spoofProtection: true
+  enableSrs: true
   clamav:
     enabled: false
   fail2ban:
