@@ -52,6 +52,31 @@ questions:
     label: 'config password'
     group: Config
 
+# PHPLdapAdmin
+  - variable: config.phpldapadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: PHPLdapAdmin
+    subquestions:
+      - variable: config.phpldapadmin.ldapHosts
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'ldap hosts'
+        group: PHPLdapAdmin
+      - variable: config.phpldapadmin.serverAdmin
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'server admin'
+        group: PHPLdapAdmin
+
 # Persistence
   - variable: persistence.enabled
     default: false

@@ -15,8 +15,9 @@ config:
     baseUrl: ''
     hostname: ''
   phpldapadmin:
-    baseUrl: ''
-    hostname: ''
+    enabled: true
+    ldapHosts: ''
+    serverAdmin: ''
 
 service:
   openldap:

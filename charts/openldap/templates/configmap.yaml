@@ -8,5 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  organization: {{ .Values.config.organization | quote }}
   domain: {{ .Values.config.domain | quote }}
+  organization: {{ .Values.config.organization | quote }}
+  phpldapadmin_ldap_hosts: {{ .Values.config.phpldapadmin.ldapHosts | quote }}
+  phpldapadmin_server_admin: {{ .Values.config.phpldapadmin.serverAdmin | quote }}
