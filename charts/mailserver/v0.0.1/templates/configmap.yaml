@@ -9,10 +9,56 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   clamav_enabled: {{ .Values.config.clamav.enabled | ternary "1" "0" | quote }}
-  enable_srs: {{ .Values.config.enableSrs | ternary "1" "0" | quote }}
+  default_relay_host: {{ .Values.config.defaultRelayHost | quote }}
+  dovecot_pass_attrs: {{ .Values.config.dovecot.passAttrs | quote }}
+  dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
+  dovecot_tls: {{ .Values.config.dovecot.tls | quote }}
+  dovecot_user_attrs: {{ .Values.config.dovecot.userAttrs | quote }}
+  dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
+  enable_managesieve: {{ .Values.config.enableManagesieve | quote }}
   fail2ban_enabled: {{ .Values.config.fail2ban.enabled | ternary "1" "0" | quote }}
   fetchmail_enabled: {{ .Values.config.fetchmail.enabled | ternary "1" "0" | quote }}
-  hostname: {{- define "mailserver.mailserver-hostname" }}
+  fetchmail_poll: {{ .Values.config.fetchmail.poll | quote }}
+  hostname: {{ template "mailserver.mailserver-hostname" . }}
+  ldap_bind_dn: {{ .Values.config.ldapBindDn | quote }}
+  ldap_bind_pw: {{ .Values.config.ldapBindPw | quote }}
+  ldap_enabled: {{ .Values.config.ldap.enabled | ternary "1" "0" | quote }}
+  ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
+  ldap_query_filter_domain: {{ .Values.config.ldap.queryFilterDomain | quote }}
+  ldap_query_filter_group: {{ .Values.config.ldap.queryFilterGroup | quote }}
+  ldap_query_filter_user: {{ .Values.config.ldap.queryFilterUser | quote }}
+  ldap_search_base: {{ .Values.config.ldap.searchBase | quote }}
+  ldap_server_host: {{ .Values.config.ldap.serverHost | quote }}
+  ldap_start_tls: {{ .Values.config.ldap.startTls | quote }}
+  postfix_mailbox_size_limit: {{ .Values.config.postfixMailboxSizeLimit | quote }}
+  postfix_message_size_limit: {{ .Values.config.postfixMessageSizeLimit | quote }}
+  postgrey_auto_whitelist_clients: {{ .Values.config.postgrey.autoWhitelistClients | quote }}
+  postgrey_delay: {{ .Values.config.postgrey.delay | quote }}
   postgrey_enabled: {{ .Values.config.postgrey.enabled | ternary "1" "0" | quote }}
+  postgrey_max_age: {{ .Values.config.postgrey.maxAge | quote }}
+  postgrey_text: {{ .Values.config.postgrey.text | quote }}
+  postmaster_address: {{ .Values.config.postmasterAddress | quote }}
+  sasl_passwd: {{ .Values.config.saslPasswd | quote }}
+  saslauthd_enabled: {{ .Values.config.saslauthd.enabled | quote }}
+  saslauthd_ldap_bind_dn: {{ .Values.config.saslauthd.ldapBindDn | quote }}
+  saslauthd_ldap_filter: {{ .Values.config.saslauthd.ldapFilter | quote }}
+  saslauthd_ldap_password: {{ .Values.config.saslauthd.ldapPassword | quote }}
+  saslauthd_ldap_search_base: {{ .Values.config.saslauthd.ldapSearchBase | quote }}
+  saslauthd_ldap_server: {{ .Values.config.saslauthd.ldapServer | quote }}
+  saslauthd_ldap_ssl: {{ .Values.config.saslauthd.ldapSsl | quote }}
+  saslauthd_mech_options: {{ .Values.config.saslauthd.mechOptions | quote }}
+  saslauthd_mechanisms: {{ .Values.config.saslauthd.mechanisms | quote }}
   spamassassin_enabled: {{ .Values.config.spamassassin.enabled | ternary "1" "0" | quote }}
+  spamassassin_kill: {{ .Values.config.spamassassin.kill | quote }}
+  spamassassin_shortcircuit_bayes_ham: {{ .Values.config.spamassassin.shortcircuitBayesHam | quote }}
+  spamassassin_shortcircuit_bayes_spam: {{ .Values.config.spamassassin.shortcircuitBayesSpam | quote }}
+  spamassassin_spam_subject: {{ .Values.config.spamassassin.spamSubject | quote }}
+  spamassassin_tag2: {{ .Values.config.spamassassin.tag2 | quote }}
+  spamassassin_tag: {{ .Values.config.spamassassin.tag | quote }}
   spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" | quote }}
+  srs_domainname: {{ .Values.config.srs.domainname | quote }}
+  srs_enabled: {{ .Values.config.srs.enabled | ternary "1" "0" | quote }}
+  srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
+  srs_secret: {{ .Values.config.srs.secret | quote }}
+  srs_sender_classes: {{ .Values.config.srs.senderClasses | quote }}
+  virusmails_delete_delay: {{ .Values.config.virusmailsDeleteDelay | quote }}
