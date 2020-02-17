@@ -2,15 +2,21 @@ images:
   openldap:
     repository: osixia/openldap
     tag: 1.2.4
+  phpldapadmin:
+    repository: osixia/phpldapadmin
+    tag: 0.9.0
 
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
+  organization: 'Example Inc.'
+  domain: example.org
   openldap:
     baseUrl: ''
     hostname: ''
-  organization: 'Example Inc.'
-  domain: example.org
+  phpldapadmin:
+    baseUrl: ''
+    hostname: ''
 
 service:
   openldap:
@@ -18,9 +24,22 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
+  phpldapadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
 
 ingress:
   openldap:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  phpldapadmin:
     certificate: ''
     enabled: false
     hostname: ''

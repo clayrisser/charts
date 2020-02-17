@@ -1,0 +1,30 @@
+{{- if .Values.config.phpldapadmin }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "openldap.fullname" . }}-phpldapadmin
+  labels:
+    app: {{ template "openldap.name" . }}-phpldapadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.phpldapadmin.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.phpldapadmin.type }}
+  {{- if (or (eq .Values.service.phpldapadmin.type "LoadBalancer") (eq .Values.service.phpldapadmin.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.phpldapadmin.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.phpldapadmin.type "NodePort") (not (empty .Values.service.phpldapadmin.nodePorts.http))) }}
+      nodePort: {{ .Values.service.phpldapadmin.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "openldap.name" . }}-phpldapadmin
+    release: {{ .Release.Name }}
+{{- end }}

@@ -1,0 +1,35 @@
+{{- if (and .Values.ingress.phpldapadmin.enabled .Values.config.phpldapadmin) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "openldap.fullname" . }}-phpldapadmin
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.phpldapadmin.tls }}
+    {{- if (empty .Values.ingress.phpldapadmin.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "openldap.name" . }}-phpldapadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.phpldapadmin.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.phpldapadmin.path }}
+            backend:
+              serviceName: {{ template "openldap.fullname" . }}-phpldapadmin
+              servicePort: http
+  {{- if .Values.ingress.phpldapadmin.tls }}
+  tls:
+    - secretName: {{ template "openldap.phpldapadmin-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.phpldapadmin.hostname }}
+  {{- end }}
+{{- end }}

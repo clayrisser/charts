@@ -1,0 +1,48 @@
+{{- if .Values.config.phpldapadmin }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "openldap.fullname" . }}-phpldapadmin
+  labels:
+    app: {{ template "openldap.name" . }}-phpldapadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "openldap.name" . }}-phpldapadmin
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "openldap.fullname" . }}-phpldapadmin
+          image: {{ .Values.images.phpldapadmin.repository }}:{{ .Values.images.phpldapadmin.tag }}
+          imagePullPolicy: {{ .Values.images.phpldapadmin.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          env:
+            - name: PHPLDAPADMIN_HTTPS
+              value: 'false'
+            - name: PHPLDAPADMIN_SERVER_ADMIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "openldap.fullname" . }}
+                  key: phpldapadmin_server_admin
+            - name: PHPLDAPADMIN_LDAP_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "openldap.fullname" . }}
+                  key: phpldapadmin_ldap_hosts
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}
