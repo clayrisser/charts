@@ -11,14 +11,6 @@ config:
   defaultRelayHost: ''
   clamav:
     enabled: false
-  fail2ban:
-    enabled: false
-  fetchmail:
-    enabled: false
-  postgrey:
-    enabled: false
-  spamassassin:
-    enabled: false
   mailserver:
     baseUrl: ''
     hostname: ''
@@ -103,7 +95,6 @@ config:
     tag2: ''
   spamassassin: 
     tag: ''
-  spoofProtection: false
   srs: 
     domainname: ''
   srs: 
