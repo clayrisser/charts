@@ -29,13 +29,6 @@ questions:
     required: false
     label: 'mailserver hostname'
     group: Config
-  - variable: config.enableSrs
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'enable srs'
-    group: Config
   - variable: config.clamav.enabled
     default: false
     description: ''
@@ -380,14 +373,14 @@ questions:
         label: 'spamassassin tag'
         group: Config
   - variable: config.spoofProtection
-    default: false
+    default: true
     description: ''
     type: boolean
     required: true
     label: 'spoof Protection'
     group: Config
   - variable: config.srs.enabled
-    default: false
+    default: true
     description: ''
     type: boolean
     required: true
