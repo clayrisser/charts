@@ -106,7 +106,7 @@ questions:
     required: true
     label: 'fetchmail enabled'
     group: Config
-    show_subquestions_if: true
+    show_subquestion_if: true
     subquestions:
       - variable: config.fetchmail.poll
         default: '300'
@@ -136,7 +136,7 @@ questions:
     required: true
     label: 'ldap enabled'
     group: Config
-    show_subquestions_if: true
+    show_subquestion_if: true
     subquestions:
       - variable: config.ldap.queryFilterAlias
         default: ''
@@ -208,7 +208,7 @@ questions:
     required: true
     label: 'postgrey enabled'
     group: Config
-    show_subquestions_if: true
+    show_subquestion_if: true
     subquestions:
       - variable: config.postgrey.autoWhitelistClients
         default: '5'
@@ -263,7 +263,7 @@ questions:
     required: true
     label: 'saslauthd enabled'
     group: Config
-    show_subquestions_if: true
+    show_subquestion_if: true
     subquestions:
       - variable: config.saslauthd.ldapBindDn
         default: ''
