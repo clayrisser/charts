@@ -8,19 +8,70 @@ config:
   updateStrategy: RollingUpdate
   spoofProtection: true
   enableSrs: true
+  defaultRelayHost: ''
   clamav:
-    enabled: false
-  fail2ban:
-    enabled: false
-  fetchmail:
-    enabled: false
-  postgrey:
-    enabled: false
-  spamassassin:
     enabled: false
   mailserver:
     baseUrl: ''
     hostname: ''
+  dovecot:
+    passAttrs: ''
+    passFilter: ''
+    tls: ''
+    userAttrs: ''
+    userFilter: ''
+  enableManagesieve: ''
+  fail2ban:
+    enabled: false
+  fetchmail:
+    enabled: false
+    poll: ''
+  ldapBindDn: ''
+  ldapBindPw: ''
+  ldap:
+    enabled: false
+    queryFilterAlias: ''
+    queryFilterDomain: ''
+    queryFilterGroup: ''
+    queryFilterUser: ''
+    searchBase: ''
+    serverHost: ''
+    startTls: ''
+  postfixMailboxSizeLimit: ''
+  postfixMessageSizeLimit: ''
+  postgrey:
+    autoWhitelistClients: ''
+    delay: ''
+    enabled: false
+    maxAge: ''
+    text: ''
+  postmasterAddress: ''
+  saslPasswd: ''
+  saslauthd:
+    enabled: false
+    ldapBindDn: ''
+    ldapFilter: ''
+    ldapPassword: ''
+    ldapSearchBase: ''
+    ldapServer: ''
+    ldapSsl: false
+    mechOptions: ''
+    mechanisms: ''
+  spamassassin:
+    enabled: false
+    kill: ''
+    shortcircuitBayesHam: ''
+    shortcircuitBayesSpam: ''
+    spamSubject: ''
+    tag2: ''
+    tag: ''
+  srs:
+    domainname: ''
+    enabled: false
+    excludeDomains: ''
+    secret: ''
+    senderClasses: ''
+  virusmailsDeleteDelay: ''
 
 service:
   mailserver:
