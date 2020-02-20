@@ -55,14 +55,14 @@ questions:
     description: ''
     type: string
     required: false
-    label: 'dovecot passAttrs'
+    label: 'dovecot pass attrs'
     group: Config
   - variable: config.dovecot.passFilter
     default: ''
     description: ''
     type: string
     required: false
-    label: 'dovecot passFilter'
+    label: 'dovecot pass filter'
     group: Config
   - variable: config.dovecot.tls
     default: ''
@@ -76,21 +76,21 @@ questions:
     description: ''
     type: string
     required: false
-    label: 'dovecot userAttrs'
+    label: 'dovecot user attrs'
     group: Config
   - variable: config.dovecot.userFilter
     default: ''
     description: ''
     type: string
     required: false
-    label: 'dovecot userFilter'
+    label: 'dovecot user filter'
     group: Config
   - variable: config.enableManagesieve
     default: ''
     description: ''
     type: string
     required: false
-    label: 'enable Managesieve'
+    label: 'enable managesieve'
     group: Config
   - variable: config.fail2ban.enabled
     default: false
@@ -120,14 +120,14 @@ questions:
     description: ''
     type: string
     required: false
-    label: 'ldapBindDn'
+    label: 'ldap bind dn'
     group: Config
   - variable: config.ldapBindPw
     default: ''
     description: ''
     type: string
     required: false
-    label: 'ldapBindPw'
+    label: 'ldap bind pw'
     group: Config
   - variable: config.ldap.enabled
     default: false
@@ -143,63 +143,63 @@ questions:
         description: ''
         type: string
         required: false
-        label: 'ldap queryFilterAlias'
+        label: 'ldap query filter alias'
         group: Config
       - variable: config.ldap.queryFilterDomain
         default: ''
         description: ''
         type: string
         required: false
-        label: 'ldap queryFilterDomain'
+        label: 'ldap query filter domain'
         group: Config
       - variable: config.ldap.queryFilterGroup
         default: ''
         description: ''
         type: string
         required: false
-        label: 'ldap queryFilterGroup'
+        label: 'ldap query filter group'
         group: Config
       - variable: config.ldap.queryFilterUser
         default: ''
         description: ''
         type: string
         required: false
-        label: 'ldap queryFilterUser'
+        label: 'ldap query filter user'
         group: Config
       - variable: config.ldap.searchBase
         default: ''
         description: ''
         type: string
         required: false
-        label: 'ldap searchBase'
+        label: 'ldap search base'
         group: Config
       - variable: config.ldap.serverHost
         default: ''
         description: ''
         type: string
         required: false
-        label: 'ldap serverHost'
+        label: 'ldap server host'
         group: Config
       - variable: config.ldap.startTls
         default: ''
         description: ''
         type: string
         required: false
-        label: 'ldap startTls'
+        label: 'ldap start tls'
         group: Config
   - variable: config.postfixMailboxSizeLimit
     default: ''
     description: ''
     type: string
     required: false
-    label: 'postfix Mailbox Size Limit'
+    label: 'postfix mailbox size limit'
     group: Config
   - variable: config.postfixMessageSizeLimit
     default: ''
     description: ''
     type: string
     required: false
-    label: 'postfix Message Size Limit'
+    label: 'postfix message size limit'
     group: Config
   - variable: config.postgrey.enabled
     default: false
@@ -215,7 +215,7 @@ questions:
         description: ''
         type: string
         required: false
-        label: 'postgrey auto Whitelist Clients'
+        label: 'postgrey auto whitelist clients'
         show_if: config.postgrey.enabled=true
         group: Config
       - variable: config.postgrey.delay
@@ -231,7 +231,7 @@ questions:
         description: ''
         type: string
         required: false
-        label: 'postgrey maxAge'
+        label: 'postgrey max age'
         show_if: config.postgrey.enabled=true
         group: Config
       - variable: config.postgrey.text
@@ -247,14 +247,14 @@ questions:
     description: ''
     type: string
     required: false
-    label: 'postmaster Address'
+    label: 'postmaster address'
     group: Config
   - variable: config.saslPasswd
     default: ''
     description: ''
     type: string
     required: false
-    label: 'sasl Passwd'
+    label: 'sasl password'
     group: Config
   - variable: config.saslauthd.enabled
     default: false
@@ -270,49 +270,49 @@ questions:
         description: ''
         type: string
         required: false
-        label: 'saslauthd ldap Bind Dn'
+        label: 'saslauthd ldap bind dn'
         group: Config
       - variable: config.saslauthd.ldapFilter
         default: ''
         description: ''
         type: string
         required: false
-        label: 'saslauthd ldap Filter'
+        label: 'saslauthd ldap filter'
         group: Config
       - variable: config.saslauthd.ldapPassword
         default: ''
         description: ''
         type: string
         required: false
-        label: 'saslauthd ldap Password'
+        label: 'saslauthd ldap password'
         group: Config
       - variable: config.saslauthd.ldapSearchBase
         default: ''
         description: ''
         type: string
         required: false
-        label: 'saslauthd ldap Search Base'
+        label: 'saslauthd ldap search base'
         group: Config
       - variable: config.saslauthd.ldapServer
         default: ''
         description: ''
         type: string
         required: false
-        label: 'saslauthd ldap Server'
+        label: 'saslauthd ldap server'
         group: Config
       - variable: config.saslauthd.ldapSsl
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'saslauthd ldap Ssl'
+        label: 'saslauthd ldap ssl'
         group: Config
       - variable: config.saslauthd.mechOptions
         default: ''
         description: ''
         type: string
         required: false
-        label: 'saslauthd mech Options'
+        label: 'saslauthd mech options'
         group: Config
       - variable: config.saslauthd.mechanisms
         default: ''
@@ -342,21 +342,21 @@ questions:
         description: ''
         type: string
         required: false
-        label: 'spamassassin shortcircuit Bayes Ham'
+        label: 'spamassassin shortcircuit bayes ham'
         group: Config
       - variable: config.spamassassin.shortcircuitBayesSpam
         default: '1'
         description: ''
         type: string
         required: false
-        label: 'spamassassin shortcircuit Bayes Spam'
+        label: 'spamassassin shortcircuit bayes spam'
         group: Config
       - variable: config.spamassassin.spamSubject
         default: '***SPAM***'
         description: ''
         type: string
         required: false
-        label: 'spamassassin spam Subject'
+        label: 'spamassassin spam subject'
         group: Config
       - variable: config.spamassassin.tag2
         default: '2.0'
@@ -377,7 +377,7 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'spoof Protection'
+    label: 'spoof protection'
     group: Config
   - variable: config.srs.enabled
     default: true
@@ -400,7 +400,7 @@ questions:
         description: ''
         type: string
         required: false
-        label: 'srs exclude Domains'
+        label: 'srs exclude domains'
         group: Config
       - variable: config.srs.secret
         default: ''
@@ -414,14 +414,14 @@ questions:
         description: ''
         type: string
         required: false
-        label: 'srs sender Classes'
+        label: 'srs sender classes'
         group: Config
   - variable: config.virusmailsDeleteDelay
     default: ''
     description: ''
     type: string
     required: false
-    label: 'virusmails Delete Delay'
+    label: 'virusmails delete delay'
     group: Config
 
   # Persistence
