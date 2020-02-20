@@ -24,8 +24,6 @@ spec:
         app: {{ template "mailserver.name" . }}-mailserver
         release: {{ .Release.Name }}
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: local.k8s
       containers:
         - name: {{ template "mailserver.fullname" . }}-mailserver
           image: {{ .Values.images.mailserver.repository }}:{{ .Values.images.mailserver.tag }}
