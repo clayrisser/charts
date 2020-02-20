@@ -7,7 +7,6 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   spoofProtection: true
-  enableSrs: true
   defaultRelayHost: ''
   clamav:
     enabled: false
@@ -67,7 +66,7 @@ config:
     tag: ''
   srs:
     domainname: ''
-    enabled: false
+    enabled: true
     excludeDomains: ''
     secret: ''
     senderClasses: ''
