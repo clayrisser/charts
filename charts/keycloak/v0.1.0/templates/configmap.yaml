@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "keycloak.fullname" . }}
+  labels:
+    app: {{ template "keycloak.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "keycloak.fullname" . }}-postgres
+  {{- else }}
+  postgres_host: {{ $postgres.host | quote }}
+  {{- end }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}
+  keycloak_welcome_theme: {{ .Values.config.keycloak.welcomeTheme | quote }}
+  keycloak_hostname: {{ template "keycloak.keycloak-hostname" . }}
+  keycloak_loglevel: {{ .Values.config.keycloak.loglevel | quote }}
+  keycloak_username: {{ .Values.config.keycloak.username | quote }}
+  keycloak_default_theme: {{ .Values.config.keycloak.defaultTheme | quote }}
