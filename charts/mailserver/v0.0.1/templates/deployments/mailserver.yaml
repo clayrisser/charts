@@ -48,6 +48,47 @@ spec:
               containerPort: 993
               protocol: TCP
           volumeMounts:
+            - name: config
+              subPath: postfix-accounts.cf
+              mountPath: /tmp/docker-mailserver/postfix-accounts.cf
+              readOnly: true
+            #- name: config
+            #  subPath: postfix-main.cf
+            #  mountPath: /tmp/docker-mailserver/postfix-main.cf
+            #  readOnly: true
+            - name: config
+              subPath: postfix-virtual.cf
+              mountPath: /tmp/docker-mailserver/postfix-virtual.cf
+              readOnly: true
+            - name: config
+              subPath: fetchmail.cf
+              mountPath: /tmp/docker-mailserver/fetchmail.cf
+              readOnly: true
+            - name: config
+              subPath: dovecot.cf
+              mountPath: /tmp/docker-mailserver/dovecot.cf
+              readOnly: true
+            #- name: config
+            #  subPath: user1.{{ template "mailserver.fullname" . }}.dovecot.sieve
+            #  mountPath: /tmp/docker-mailserver/user1@{{ template "mailserver.fullname" . }}.dovecot.sieve
+            #  readOnly: true
+            #- name: tmp-files
+            #  subPath: user-patches.sh
+            #  mountPath: /tmp/docker-mailserver/user-patches.sh
+            - name: config
+              subPath: SigningTable
+              mountPath: /tmp/docker-mailserver/opendkim/SigningTable
+              readOnly: true
+            - name: config
+              subPath: KeyTable
+              mountPath: /tmp/docker-mailserver/opendkim/KeyTable
+              readOnly: true
+            - name: config
+              subPath: TrustedHosts
+              mountPath: /tmp/docker-mailserver/opendkim/TrustedHosts
+              readOnly: true
+            - name: secret
+              mountPath: /tmp/docker-mailserver/opendkim/keys
             - name: certs
               mountPath: /certs
             - name: data
@@ -360,6 +401,12 @@ spec:
           secret:
             secretName: {{ template "mailserver.fullname" . }}-letsencrypt
         {{- end }}
+        - name: config
+          configMap:
+            name: {{ template "mailserver.fullname" . }}-mailserver
+        - name: secret
+          secret:
+            secretName: {{ template "mailserver.fullname" . }}-mailserver
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

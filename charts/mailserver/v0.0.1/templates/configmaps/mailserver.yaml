@@ -9,10 +9,10 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   postfix-accounts.cf: |
-    user1@example.com|{SHA512-CRYPT}$6$2YpW1nYtPBs2yLYS$z.5PGH1OEzsHHNhl3gJrc3D.YMZkvKw/vp.r5WIiwya6z7P/CQ9GDEJDr2G2V0cAfjDFeAQPUoopsuWPXLk3u1
+    user1@{{ template "mailserver.fullname" . }}|{SHA512-CRYPT}$6$2YpW1nYtPBs2yLYS$z.5PGH1OEzsHHNhl3gJrc3D.YMZkvKw/vp.r5WIiwya6z7P/CQ9GDEJDr2G2V0cAfjDFeAQPUoopsuWPXLk3u1
 
   postfix-virtual.cf: |
-    alias1@example.com user1@dexample.com
+    alias1@{{ template "mailserver.fullname" . }} user1@{{ template "mailserver.fullname" . }}
 
   dovecot.cf: |
     service stats {
@@ -27,10 +27,10 @@ data:
     }
 
   SigningTable: |
-    *@example.com mail._domainkey.example.com
+    *@{{ template "mailserver.fullname" . }} mail._domainkey.{{ template "mailserver.fullname" . }}
 
   KeyTable: |
-    mail._domainkey.example.com example.com:mail:/etc/opendkim/keys/example.com-mail.key
+    mail._domainkey.{{ template "mailserver.fullname" . }} {{ template "mailserver.fullname" . }}:mail:/etc/opendkim/keys/{{ template "mailserver.fullname" . }}-mail.key
 
   TrustedHosts: |
     127.0.0.1
