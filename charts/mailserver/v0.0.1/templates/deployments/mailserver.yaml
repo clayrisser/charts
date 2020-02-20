@@ -49,40 +49,7 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: config
-              subPath: postfix-accounts.cf
-              mountPath: /tmp/docker-mailserver/postfix-accounts.cf
-              readOnly: true
-            - name: config
-              subPath: postfix-main.cf
-              mountPath: /tmp/docker-mailserver/postfix-main.cf
-              readOnly: true
-            - name: config
-              subPath: postfix-virtual.cf
-              mountPath: /tmp/docker-mailserver/postfix-virtual.cf
-              readOnly: true
-            - name: config
-              subPath: fetchmail.cf
-              mountPath: /tmp/docker-mailserver/fetchmail.cf
-              readOnly: true
-            - name: config
-              subPath: dovecot.cf
-              mountPath: /tmp/docker-mailserver/dovecot.cf
-              readOnly: true
-            - name: config
-              subPath: user-patches.sh
-              mountPath: /tmp/docker-mailserver/user-patches.sh
-              readOnly: true
-            - name: config
-              subPath: SigningTable
-              mountPath: /tmp/docker-mailserver/opendkim/SigningTable
-              readOnly: true
-            - name: config
-              subPath: KeyTable
-              mountPath: /tmp/docker-mailserver/opendkim/KeyTable
-              readOnly: true
-            - name: config
-              subPath: TrustedHosts
-              mountPath: /tmp/docker-mailserver/opendkim/TrustedHosts
+              mountPath: /tmp/docker-mailserver
               readOnly: true
             - name: secret
               mountPath: /tmp/docker-mailserver/opendkim/keys
