@@ -150,14 +150,14 @@ questions:
         description: ''
         type: string
         required: false
-        label: 'ldap queryFilterDomain'
+        label: 'ldap query filter domain'
         group: Config
       - variable: config.ldap.queryFilterGroup
         default: ''
         description: ''
         type: string
         required: false
-        label: 'ldap queryFilterGroup'
+        label: 'ldap query filter group'
         group: Config
       - variable: config.ldap.queryFilterUser
         default: ''
