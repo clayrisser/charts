@@ -396,7 +396,7 @@ spec:
         {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
         - name: certs
           secret:
-            secretName: {{ template "mailserver.fullname" . }}-letsencrypt
+            secretName: {{ template "mailserver.mailserver-certificate" . }}
         {{- end }}
         - name: config
           configMap:
