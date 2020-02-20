@@ -14,6 +14,9 @@ data:
   postfix-virtual.cf: |
     alias1@{{ template "mailserver.fullname" . }} user1@{{ template "mailserver.fullname" . }}
 
+  postfix-main.cf: |
+    smtpd_upstream_proxy_protocol = haproxy
+
   dovecot.cf: |
     service stats {
       unix_listener stats-reader {
@@ -23,6 +26,11 @@ data:
       unix_listener stats-writer {
         group = docker
         mode = 0666
+      }
+    }
+    service imap-login {
+      inet_listener imaps {
+        haproxy = yes
       }
     }
 

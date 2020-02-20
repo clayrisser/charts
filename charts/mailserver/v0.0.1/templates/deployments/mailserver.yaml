@@ -24,6 +24,8 @@ spec:
         app: {{ template "mailserver.name" . }}-mailserver
         release: {{ .Release.Name }}
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: local.k8s
       containers:
         - name: {{ template "mailserver.fullname" . }}-mailserver
           image: {{ .Values.images.mailserver.repository }}:{{ .Values.images.mailserver.tag }}
@@ -52,10 +54,10 @@ spec:
               subPath: postfix-accounts.cf
               mountPath: /tmp/docker-mailserver/postfix-accounts.cf
               readOnly: true
-            #- name: config
-            #  subPath: postfix-main.cf
-            #  mountPath: /tmp/docker-mailserver/postfix-main.cf
-            #  readOnly: true
+            - name: config
+              subPath: postfix-main.cf
+              mountPath: /tmp/docker-mailserver/postfix-main.cf
+              readOnly: true
             - name: config
               subPath: postfix-virtual.cf
               mountPath: /tmp/docker-mailserver/postfix-virtual.cf
@@ -68,13 +70,10 @@ spec:
               subPath: dovecot.cf
               mountPath: /tmp/docker-mailserver/dovecot.cf
               readOnly: true
-            #- name: config
-            #  subPath: user1.{{ template "mailserver.fullname" . }}.dovecot.sieve
-            #  mountPath: /tmp/docker-mailserver/user1@{{ template "mailserver.fullname" . }}.dovecot.sieve
-            #  readOnly: true
-            #- name: tmp-files
-            #  subPath: user-patches.sh
-            #  mountPath: /tmp/docker-mailserver/user-patches.sh
+            - name: config
+              subPath: user-patches.sh
+              mountPath: /tmp/docker-mailserver/user-patches.sh
+              readOnly: true
             - name: config
               subPath: SigningTable
               mountPath: /tmp/docker-mailserver/opendkim/SigningTable
