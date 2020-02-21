@@ -36,7 +36,15 @@ spec:
             - /bin/sh
             - -c
             - |
-              cp -r /tmp/config/* /tmp/docker-mailserver
+              cat /tmp/config/KeyTable > /tmp/docker-mailserver/KeyTable
+              cat /tmp/config/SigningTable > /tmp/docker-mailserver/SigningTable
+              cat /tmp/config/TrustedHosts > /tmp/docker-mailserver/TrustedHosts
+              cat /tmp/config/dovecot.cf > /tmp/docker-mailserver/dovecot.cf
+              cat /tmp/config/fetchmail.cf > /tmp/docker-mailserver/fetchmail.cf
+              cat /tmp/config/postfix-accounts.cf > /tmp/docker-mailserver/postfix-accounts.cf
+              cat /tmp/config/postfix-main.cf > /tmp/docker-mailserver/postfix-main.cf
+              cat /tmp/config/postfix-virtual.cf > /tmp/docker-mailserver/postfix-virtual.cf
+              cat /tmp/config/user-patches.sh > /tmp/docker-mailserver/user-patches.sh
               exec supervisord -c /etc/supervisor/supervisord.conf
           ports:
             - name: smtp
