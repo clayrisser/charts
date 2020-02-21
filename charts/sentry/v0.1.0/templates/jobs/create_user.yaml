@@ -22,7 +22,7 @@ spec:
       initContainers:
         - name: {{ template "sentry.fullname" . }}-wait
           image: busybox
-          command: ['sleep', '60']
+          command: ['sleep', '300']
       containers:
         - name: {{ template "sentry.fullname" . }}-create-user
           image: {{ .Values.images.sentry.repository }}:{{ .Values.images.sentry.tag }}
