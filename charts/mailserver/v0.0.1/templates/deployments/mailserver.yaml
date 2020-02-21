@@ -50,7 +50,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /tmp/docker-mailserver
-              readOnly: true
             - name: secret
               mountPath: /tmp/docker-mailserver/opendkim/keys
             - name: certs
