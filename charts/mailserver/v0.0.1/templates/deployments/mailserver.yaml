@@ -108,6 +108,8 @@ spec:
               value: '1'
             - name: DMS_DEBUG
               value: '0'
+            - name: PERMIT_DOCKER
+              value: host
             {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
             - name: SSL_TYPE
               value: manual
