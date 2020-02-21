@@ -353,11 +353,11 @@ spec:
                   key: default_relay_host
           livenessProbe:
             tcpSocket:
-              port: container
+              port: smtp
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             tcpSocket:
-              port: container
+              port: smtp
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
