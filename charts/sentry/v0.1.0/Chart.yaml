@@ -1,0 +1,15 @@
+name: sentry
+home: https://sentry.io
+icon: https://sentry-brand.storage.googleapis.com/sentry-logo-black.svg
+version: 0.1.0
+appVersion: latest
+description: 'a cross-platform crash reporting and aggregation platform'
+keywords:
+  - sentry
+  - crash
+  - report
+sources:
+  - https://github.com/getsentry/sentry
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

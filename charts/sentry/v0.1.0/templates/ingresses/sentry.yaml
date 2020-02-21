@@ -1,0 +1,35 @@
+{{- if .Values.ingress.sentry.enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "sentry.fullname" . }}-sentry
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.sentry.tls }}
+    {{- if (empty .Values.ingress.sentry.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.sentry.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "sentry.name" . }}-sentry
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.sentry.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.sentry.path }}
+            backend:
+              serviceName: {{ template "sentry.fullname" . }}-sentry
+              servicePort: http
+  {{- if .Values.ingress.sentry.tls }}
+  tls:
+    - secretName: {{ template "sentry.sentry-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.sentry.hostname }}
+  {{- end }}
+{{- end }}
