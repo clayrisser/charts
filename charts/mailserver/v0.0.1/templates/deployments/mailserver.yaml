@@ -36,7 +36,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              # cp -r /tmp/config/* /tmp/docker-mailserver
+              cp -r /tmp/config/* /tmp/docker-mailserver
               exec supervisord -c /etc/supervisor/supervisord.conf
           ports:
             - name: smtp
