@@ -32,6 +32,12 @@ spec:
             capabilities:
               add:
                 - NET_ADMIN
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp -r /tmp/config/* /tmp/docker-mailserver
+              exec supervisord -c /etc/supervisor/supervisord.conf
           ports:
             - name: smtp
               containerPort: 25
@@ -49,7 +55,8 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: config
-              mountPath: /tmp/docker-mailserver
+              mountPath: /tmp/config
+              readOnly: true
             - name: secret
               mountPath: /tmp/docker-mailserver/opendkim/keys
             - name: certs
