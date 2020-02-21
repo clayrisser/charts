@@ -32,20 +32,6 @@ spec:
             capabilities:
               add:
                 - NET_ADMIN
-          command:
-            - /bin/sh
-            - -c
-            - |
-              cat /tmp/config/KeyTable > /tmp/docker-mailserver/KeyTable
-              cat /tmp/config/SigningTable > /tmp/docker-mailserver/SigningTable
-              cat /tmp/config/TrustedHosts > /tmp/docker-mailserver/TrustedHosts
-              cat /tmp/config/dovecot.cf > /tmp/docker-mailserver/dovecot.cf
-              cat /tmp/config/fetchmail.cf > /tmp/docker-mailserver/fetchmail.cf
-              cat /tmp/config/postfix-accounts.cf > /tmp/docker-mailserver/postfix-accounts.cf
-              cat /tmp/config/postfix-main.cf > /tmp/docker-mailserver/postfix-main.cf
-              cat /tmp/config/postfix-virtual.cf > /tmp/docker-mailserver/postfix-virtual.cf
-              cat /tmp/config/user-patches.sh > /tmp/docker-mailserver/user-patches.sh
-              exec supervisord -c /etc/supervisor/supervisord.conf
           ports:
             - name: smtp
               containerPort: 25
@@ -63,7 +49,43 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: config
-              mountPath: /tmp/config
+              subPath: postfix-accounts.cf
+              mountPath: /tmp/docker-mailserver/postfix-accounts.cf
+              readOnly: true
+            - name: config
+              subPath: postfix-main.cf
+              mountPath: /tmp/docker-mailserver/postfix-main.cf
+              readOnly: true
+            - name: config
+              subPath: postfix-virtual.cf
+              mountPath: /tmp/docker-mailserver/postfix-virtual.cf
+              readOnly: true
+            - name: config
+              subPath: fetchmail.cf
+              mountPath: /tmp/docker-mailserver/fetchmail.cf
+              readOnly: true
+            - name: config
+              subPath: dovecot.cf
+              mountPath: /tmp/docker-mailserver/dovecot.cf
+              readOnly: true
+            - name: config
+              subPath: user-patches.sh
+              mountPath: /tmp/docker-mailserver/user-patches.sh
+              readOnly: true
+            - name: config
+              subPath: SigningTable
+              mountPath: /tmp/docker-mailserver/opendkim/SigningTable
+              readOnly: true
+            - name: config
+              subPath: KeyTable
+              mountPath: /tmp/docker-mailserver/opendkim/KeyTable
+              readOnly: true
+            - name: config
+              subPath: TrustedHosts
+              mountPath: /tmp/docker-mailserver/opendkim/TrustedHosts
+              readOnly: true
+            - name: tz
+              mountPath: /etc/localtime
             - name: secret
               mountPath: /tmp/docker-mailserver/opendkim/keys
             - name: certs
@@ -384,6 +406,9 @@ spec:
         - name: secret
           secret:
             secretName: {{ template "mailserver.fullname" . }}-mailserver
+        - name: tz
+          hostPath:
+            path: /etc/localtime
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
