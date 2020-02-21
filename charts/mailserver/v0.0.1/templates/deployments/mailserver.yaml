@@ -84,8 +84,8 @@ spec:
               subPath: TrustedHosts
               mountPath: /tmp/docker-mailserver/opendkim/TrustedHosts
               readOnly: true
-            - name: tz
-              mountPath: /etc/localtime
+            # - name: tz
+            #   mountPath: /etc/localtime
             - name: secret
               mountPath: /tmp/docker-mailserver/opendkim/keys
             - name: certs
@@ -406,9 +406,9 @@ spec:
         - name: secret
           secret:
             secretName: {{ template "mailserver.fullname" . }}-mailserver
-        - name: tz
-          hostPath:
-            path: /etc/localtime
+        # - name: tz
+        #   hostPath:
+        #     path: /etc/localtime
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
