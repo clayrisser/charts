@@ -36,7 +36,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              cp -r /tmp/config/* /tmp/docker-mailserver
+              # cp -r /tmp/config/* /tmp/docker-mailserver
               exec supervisord -c /etc/supervisor/supervisord.conf
           ports:
             - name: smtp
@@ -56,7 +56,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /tmp/config
-              readOnly: true
             - name: secret
               mountPath: /tmp/docker-mailserver/opendkim/keys
             - name: certs
