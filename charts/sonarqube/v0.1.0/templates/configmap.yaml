@@ -20,3 +20,4 @@ data:
   {{- if .Values.config.pgadmin.enabled }}
   pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
   {{- end }}
+  base_url: {{ .Values.config.sonarqube.baseUrl | quote }}
