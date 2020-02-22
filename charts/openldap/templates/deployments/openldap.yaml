@@ -33,7 +33,7 @@ spec:
             - -c
             - |
               cp -r /ldif/* /ldifworkdir
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           volumeMounts:
             - name: ldif
               mountPath: /ldif
