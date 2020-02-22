@@ -102,11 +102,11 @@ spec:
                   key: admin_password
           livenessProbe:
             tcpSocket:
-              port: container
+              port: ldap
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             tcpSocket:
-              port: container
+              port: ldap
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
