@@ -53,34 +53,19 @@ spec:
             - name: config
               mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-organization.ldif
               subPath: 01-organization.ldif
-            {{- if (and .Values.ingress.openldap.enabled .Values.config.openldap.tls) }}
-            - name: certs
-              mountPath: /container/service/slapd/assets/certs
-            {{- end }}
           env:
             {{- if .Values.config.debug }}
             - name: LDAP_LOG_LEVEL
               value: '-1'
             {{- end }}
-            - name: LDAP_TLS_ENFORCE
-              value: 'false'
             - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
               value: 'true'
             - name: LDAP_BACKEND
               value: mdb
-            {{- if (and .Values.ingress.openldap.enabled .Values.config.openldap.tls) }}
             - name: LDAP_TLS
-              value: 'true'
-            - name: LDAP_TLS_CRT_FILENAME
-              value: tls.crt
-            - name: LDAP_TLS_KEY_FILENAME
-              value: tls.key
-            - name: LDAP_TLS_CA_CRT_FILENAME
-              value: ca.crt
-            {{- else }}
-            - name: LDAP_TLS
-              value: 'false'
-            {{- end }}
+              value: {{ .Values.config.openldap.tls | quote }}
+            - name: LDAP_TLS_ENFORCE
+              value: {{ .Values.config.openldap.tls | quote }}
             - name: LDAP_ORGANISATION
               valueFrom:
                 configMapKeyRef:
@@ -110,11 +95,6 @@ spec:
               port: ldap
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
-        {{- if (and .Values.ingress.openldap.enabled .Values.config.openldap.tls) }}
-        - name: certs
-          secret:
-            secretName: {{ template "openldap.fullname" . }}-letsencrypt
-        {{- end }}
         - name: config
           configMap:
             name: {{ template "openldap.fullname" . }}-openldap
