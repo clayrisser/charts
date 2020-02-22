@@ -20,7 +20,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate openldap dc
 */}}
 {{- define "openldap.openldap-dc" }}
-{{- printf "dc=%s,dc=%s" (index (regexSplit "\." .Values.config.domain -1) 0) (index (regexSplit "\." .Values.config.domain -1) 1) }}
+{{- printf "dc=%s,dc=%s" (index (regexSplit "." .Values.config.domain -1) 0) (index (regexSplit "." .Values.config.domain -1) 1) }}
 {{- end }}
 
 {{/*
