@@ -43,6 +43,7 @@ spec:
         - name: {{ template "openldap.fullname" . }}-openldap
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          args: ['--loglevel', 'debug']
           ports:
             - name: container
               containerPort: 389
