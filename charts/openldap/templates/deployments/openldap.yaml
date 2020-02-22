@@ -24,21 +24,6 @@ spec:
         app: {{ template "openldap.name" . }}-openldap
         release: {{ .Release.Name }}
     spec:
-      initContainers:
-        - name: {{ template "openldap.fullname" . }}-openldap-init
-          image: busybox
-          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-          command:
-            - sh
-            - -c
-            - |
-              cp -r /ldif/* /ldifworkdir
-          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-          volumeMounts:
-            - name: ldif
-              mountPath: /ldif
-            - name: ldifworkdir
-              mountPath: /ldifworkdir
       containers:
         - name: {{ template "openldap.fullname" . }}-openldap
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
@@ -60,8 +45,9 @@ spec:
             - name: data
               mountPath: /etc/ldap/slapd.d
               subPath: config
-            - name: ldifworkdir
-              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
+            - name: config
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-default-users.ldif
+              subPath: 01-default-users.ldif
             {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
             - name: certs
               mountPath: /container/service/slapd/assets/certs
@@ -124,11 +110,9 @@ spec:
           secret:
             secretName: {{ template "openldap.fullname" . }}-letsencrypt
         {{- end }}
-        - name: ldif
+        - name: config
           configMap:
             name: {{ template "openldap.fullname" . }}-openldap
-        - name: ldifworkdir
-          emptyDir: {}
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
