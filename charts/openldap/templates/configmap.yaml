@@ -10,5 +10,10 @@ metadata:
 data:
   domain: {{ .Values.config.domain | quote }}
   organization: {{ .Values.config.organization | quote }}
-  phpldapadmin_ldap_hosts: {{ .Values.config.phpldapadmin.ldapHosts | quote }}
   phpldapadmin_server_admin: {{ .Values.config.phpldapadmin.serverAdmin | quote }}
+  phpldapadmin_ldap_hosts: |
+    - {{ template "openldap.openldap-hostname" . }}:
+        - server:
+            - tls: false
+        - login:
+            - bind_id: cn=admin,{{ template "openldap.openldap-dc" . }}

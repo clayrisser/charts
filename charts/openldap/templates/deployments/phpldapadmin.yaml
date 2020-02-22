@@ -25,6 +25,8 @@ spec:
           env:
             - name: PHPLDAPADMIN_HTTPS
               value: 'false'
+            - name: PHPLDAPADMIN_LDAP_CLIENT_TLS
+              value: 'false'
             - name: PHPLDAPADMIN_SERVER_ADMIN
               valueFrom:
                 configMapKeyRef:
