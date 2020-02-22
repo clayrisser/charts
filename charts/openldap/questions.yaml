@@ -234,6 +234,26 @@ questions:
         max: 32767
         show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
         label: 'phpldapadmin http port'
+  - variable: service.openldap.type
+    default: NodePort
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'openldap service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.openldap.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'openldap http port'
 
 # Images
   - variable: images.openldap.repository
