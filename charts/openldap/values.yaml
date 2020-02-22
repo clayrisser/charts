@@ -17,7 +17,7 @@ config:
     hostname: ''
   phpldapadmin:
     enabled: true
-    serverAdmin: ''
+    serverAdmin: email@example.com
 
 service:
   openldap:

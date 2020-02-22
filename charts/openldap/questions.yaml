@@ -70,7 +70,7 @@ questions:
     group: PHPLdapAdmin
     subquestions:
       - variable: config.phpldapadmin.serverAdmin
-        default: ''
+        default: email@example.com
         description: ''
         type: string
         required: false
