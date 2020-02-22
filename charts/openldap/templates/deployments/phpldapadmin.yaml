@@ -35,6 +35,8 @@ spec:
                 configMapKeyRef:
                   name: {{ template "openldap.fullname" . }}
                   key: phpldapadmin_ldap_hosts
+            - name: PHPLDAPADMIN_TRUST_PROXY_SSL
+              value: 'true'
           livenessProbe:
             httpGet:
               path: /

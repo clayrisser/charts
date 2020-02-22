@@ -59,11 +59,9 @@ spec:
               mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
             {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
             - name: certs
-              mountPath: /certs
+              mountPath: /container/service/slapd/assets/certs
             {{- end }}
           env:
-            - name: LDAP_TLS
-              value: 'false'
             - name: LDAP_TLS_ENFORCE
               value: 'false'
             - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
@@ -71,12 +69,14 @@ spec:
             - name: LDAP_BACKEND
               value: mdb
             {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
+            - name: LDAP_TLS
+              value: 'true'
             - name: LDAP_TLS_CRT_FILENAME
-              value: /certs/tls.crt
+              value: tls.crt
             - name: LDAP_TLS_KEY_FILENAME
-              value: /certs/tls.key
+              value: tls.key
             - name: LDAP_TLS_CA_CRT_FILENAME
-              value: /certs/ca.crt
+              value: ca.crt
             {{- else }}
             - name: LDAP_TLS
               value: 'false'
@@ -84,22 +84,22 @@ spec:
             - name: LDAP_ORGANISATION
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "openldap.fullname" . }}
                   key: organization
             - name: LDAP_DOMAIN
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "openldap.fullname" . }}
                   key: domain
             - name: LDAP_CONFIG_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "openldap.fullname" . }}
                   key: config_password
             - name: LDAP_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
+                  name: {{ template "openldap.fullname" . }}
                   key: admin_password
           livenessProbe:
             tcpSocket:
