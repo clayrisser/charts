@@ -34,8 +34,12 @@ spec:
           args: ['--copy-service']
           {{- end }}
           ports:
-            - name: container
+            - name: ldap
               containerPort: 389
+            {{- if .Values.ingress.openldap.tls }}
+            - name: ldaps
+              containerPort: 636
+            {{- end }}
           volumeMounts:
             - name: data
               mountPath: /_data
