@@ -58,6 +58,12 @@ questions:
     required: true
     label: 'config password'
     group: Config
+  - variable: config.openldap.tls
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'openldap tls'
 
 # PHPLdapAdmin
   - variable: config.phpldapadmin.enabled
@@ -156,74 +162,70 @@ questions:
         show_if: persistence.stash.enabled=true
         label: 'stash restore snapshot'
 
-
 # Services and Load Balancing
-  - variable: ingress.openldap.enabled
+  - variable: ingress.phpldapadmin.enabled
     default: true
     description: ''
     type: boolean
-    label: 'openldap ingress enabled'
+    label: 'phpldapadmin ingress enabled'
+    show_if: config.phpldapadmin.enabled
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.openldap.tls
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'openldap ingress tls'
-      - variable: ingress.openldap.hostname
+      - variable: ingress.phpldapadmin.hostname
         default: xip.io
         description: ''
         type: hostname
+        show_if: config.phpldapadmin.enabled
         required: true
-        label: 'openldap ingress hostname'
-      - variable: ingress.openldap.path
+        label: 'phpldapadmin ingress hostname'
+      - variable: ingress.phpldapadmin.path
         default: /
         description: ''
         type: string
+        show_if: config.phpldapadmin.enabled
         required: true
-        label: 'openldap ingress path'
-      - variable: ingress.openldap.issuer.name
+        label: 'phpldapadmin ingress path'
+      - variable: ingress.phpldapadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.openldap.tls=true
+        show_if: ingress.phpldapadmin.tls=true&&config.phpldapadmin.enabled
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'openldap ingress issuer name'
-      - variable: ingress.openldap.certificate
+        label: 'phpldapadmin ingress issuer name'
+      - variable: ingress.phpldapadmin.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.openldap.tls=true&&ingress.openldap.issuer.name=none
+        show_if: ingress.phpldapadmin.tls=true&&ingress.phpldapadmin.issuer.name=none&&config.phpldapadmin.enabled
         required: false
-        label: 'openldap ingress certificate'
-  - variable: service.openldap.type
+        label: 'phpldapadmin ingress certificate'
+  - variable: service.phpldapadmin.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.openldap.enabled=false
+    show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    label: 'openldap service type'
+    label: 'phpldapadmin service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.openldap.nodePorts.http
+      - variable: service.phpldapadmin.nodePorts.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.openldap.enabled=false
-        label: 'openldap http port'
+        show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled
+        label: 'phpldapadmin http port'
 
 # Images
   - variable: images.openldap.repository
@@ -239,4 +241,20 @@ questions:
     type: string
     required: true
     label: 'openldap tag'
+    group: Images
+  - variable: images.phpldapadmin.repository
+    default: osixia/phpldapadmin
+    description: ''
+    type: string
+    required: true
+    show_if: config.phpldapadmin.enabled
+    label: 'phpldapadmin repository'
+    group: Images
+  - variable: images.phpldapadmin.tag
+    default: 1.2.4
+    description: ''
+    type: string
+    required: true
+    show_if: config.phpldapadmin.enabled
+    label: 'phpldapadmin tag'
     group: Images

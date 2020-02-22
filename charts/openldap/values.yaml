@@ -15,6 +15,7 @@ config:
   openldap:
     baseUrl: ''
     hostname: ''
+    tls: false
   phpldapadmin:
     enabled: true
     serverAdmin: email@example.com
@@ -32,14 +33,6 @@ service:
       http: ''
 
 ingress:
-  openldap:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    path: /
-    tls: false
-    issuer:
-      name: letsencrypt-staging
   phpldapadmin:
     certificate: ''
     enabled: false

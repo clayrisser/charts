@@ -50,8 +50,8 @@ spec:
               mountPath: /etc/ldap/slapd.d
               subPath: config
             - name: config
-              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-default-users.ldif
-              subPath: 01-default-users.ldif
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-organization.ldif
+              subPath: 01-organization.ldif
             {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
             - name: certs
               mountPath: /container/service/slapd/assets/certs
