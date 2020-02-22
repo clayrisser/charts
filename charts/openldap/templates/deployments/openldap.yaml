@@ -62,6 +62,8 @@ spec:
               mountPath: /container/service/slapd/assets/certs
             {{- end }}
           env:
+            - name: LDAP_LOG_LEVEL
+              value: '-1'
             - name: LDAP_TLS_ENFORCE
               value: 'false'
             - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
