@@ -7,10 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.velero.enabled }}
-  annotations:
-    backup.velero.io/backup-volumes: data
-  {{- end }}
 spec:
   selector:
     matchLabels:
@@ -23,6 +19,10 @@ spec:
       labels:
         app: {{ template "gitlab.name" . }}-gitlab
         release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
     spec:
       initContainers:
         - name: {{ template "gitlab.fullname" . }}-gitlab-init
