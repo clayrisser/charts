@@ -36,7 +36,7 @@ spec:
           ports:
             - name: ldap
               containerPort: 389
-            {{- if .Values.ingress.openldap.tls }}
+            {{- if .Values.config.openldap.tls }}
             - name: ldaps
               containerPort: 636
             {{- end }}
@@ -52,7 +52,7 @@ spec:
             - name: config
               mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-organization.ldif
               subPath: 01-organization.ldif
-            {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
+            {{- if (and .Values.ingress.openldap.enabled .Values.config.openldap.tls) }}
             - name: certs
               mountPath: /container/service/slapd/assets/certs
             {{- end }}
@@ -67,7 +67,7 @@ spec:
               value: 'true'
             - name: LDAP_BACKEND
               value: mdb
-            {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
+            {{- if (and .Values.ingress.openldap.enabled .Values.config.openldap.tls) }}
             - name: LDAP_TLS
               value: 'true'
             - name: LDAP_TLS_CRT_FILENAME
@@ -109,7 +109,7 @@ spec:
               port: ldap
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
-        {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
+        {{- if (and .Values.ingress.openldap.enabled .Values.config.openldap.tls) }}
         - name: certs
           secret:
             secretName: {{ template "openldap.fullname" . }}-letsencrypt
