@@ -9,48 +9,11 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   01-default-users.ldif: |
+    version: 1
+
     dn: {{ template "openldap.openldap-dc" . }}
     objectClass: top
     objectClass: dcObject
     objectClass: organization
     o: {{ .Values.config.organization }}
     dc: {{ index (regexSplit "\\." .Values.config.domain -1) 0 }}
-    description: {{ .Values.config.organization }} directory
-
-    dn: ou=accounts,{{ template "openldap.openldap-dc" . }}
-    objectClass: top
-    objectClass: organizationalUnit
-    ou: accounts
-
-    dn: ou=realm-roles,{{ template "openldap.openldap-dc" . }}
-    objectclass: top
-    objectclass: organizationalUnit
-    ou: realm-roles
-
-    dn: cn=dovecot,ou=accounts,{{ template "openldap.openldap-dc" . }}
-    objectClass: top
-    objectclass: person
-    cn: dovecot
-    sn: dovecot
-
-    dn: uid=codejamninja,ou=accounts,{{ template "openldap.openldap-dc" . }}
-    objectClass: top
-    objectclass: person
-    objectclass: organizationalPerson
-    objectclass: inetOrgPerson
-    objectClass: posixAccount
-    uid: codejamninja
-    cn: Jam Risser
-    sn: Risser
-    mail: jam@codejam.ninja
-    postalCode: 78721
-    userPassword: password
-    uidNumber: 1002
-    gidNumber: 100
-    homeDirectory: /home/codejamninja
-
-    dn: cn=admin,ou=realm-roles,{{ template "openldap.openldap-dc" . }}
-    objectclass: top
-    objectclass: groupOfNames
-    cn: admin
-    member: uid=codejamninja,ou=accounts,{{ template "openldap.openldap-dc" . }}
