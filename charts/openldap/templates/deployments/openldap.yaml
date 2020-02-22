@@ -57,7 +57,7 @@ spec:
               subPath: config
             - name: ldifworkdir
               mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
-            {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
+            {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
             - name: certs
               mountPath: /container/service/slapd/assets/certs
             {{- end }}
@@ -68,7 +68,7 @@ spec:
               value: 'true'
             - name: LDAP_BACKEND
               value: mdb
-            {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
+            {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
             - name: LDAP_TLS
               value: 'true'
             - name: LDAP_TLS_CRT_FILENAME
@@ -110,10 +110,10 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
-        {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
+        {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
         - name: certs
           secret:
-            secretName: {{ template "mailserver.fullname" . }}-letsencrypt
+            secretName: {{ template "openldap.fullname" . }}-letsencrypt
         {{- end }}
         - name: ldif
           configMap:
