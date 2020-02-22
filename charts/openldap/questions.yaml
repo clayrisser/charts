@@ -176,7 +176,7 @@ questions:
     description: ''
     type: boolean
     label: 'phpldapadmin ingress enabled'
-    show_if: config.phpldapadmin.enabled
+    show_if: config.phpldapadmin.enabled=true
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
@@ -184,21 +184,21 @@ questions:
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.phpldapadmin.enabled
+        show_if: config.phpldapadmin.enabled=true
         required: true
         label: 'phpldapadmin ingress hostname'
       - variable: ingress.phpldapadmin.path
         default: /
         description: ''
         type: string
-        show_if: config.phpldapadmin.enabled
+        show_if: config.phpldapadmin.enabled=true
         required: true
         label: 'phpldapadmin ingress path'
       - variable: ingress.phpldapadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.phpldapadmin.tls=true&&config.phpldapadmin.enabled
+        show_if: ingress.phpldapadmin.tls=true&&config.phpldapadmin.enabled=true
         options:
           - none
           - letsencrypt-staging
@@ -209,14 +209,14 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: ingress.phpldapadmin.tls=true&&ingress.phpldapadmin.issuer.name=none&&config.phpldapadmin.enabled
+        show_if: ingress.phpldapadmin.tls=true&&ingress.phpldapadmin.issuer.name=none&&config.phpldapadmin.enabled=true
         required: false
         label: 'phpldapadmin ingress certificate'
   - variable: service.phpldapadmin.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled
+    show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
@@ -232,7 +232,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled
+        show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
         label: 'phpldapadmin http port'
 
 # Images
@@ -255,7 +255,7 @@ questions:
     description: ''
     type: string
     required: true
-    show_if: config.phpldapadmin.enabled
+    show_if: config.phpldapadmin.enabled=true
     label: 'phpldapadmin repository'
     group: Images
   - variable: images.phpldapadmin.tag
@@ -263,6 +263,6 @@ questions:
     description: ''
     type: string
     required: true
-    show_if: config.phpldapadmin.enabled
+    show_if: config.phpldapadmin.enabled=true
     label: 'phpldapadmin tag'
     group: Images
