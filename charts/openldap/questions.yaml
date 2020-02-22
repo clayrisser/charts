@@ -64,12 +64,14 @@ questions:
     type: boolean
     required: true
     label: 'openldap tls'
+    group: Config
   - variable: config.openldap.hostname
     default: false
     description: ''
     type: string
     required: false
     label: 'openldap hostname'
+    group: Config
 
 # PHPLdapAdmin
   - variable: config.phpldapadmin.enabled
