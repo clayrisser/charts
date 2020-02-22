@@ -60,8 +60,8 @@ spec:
             - name: data
               mountPath: /etc/ldap/slapd.d
               subPath: config
-            - name: ldifworkdir
-              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
+            # - name: ldifworkdir
+            #   mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
             {{- if (and .Values.ingress.openldap.enabled .Values.ingress.openldap.tls) }}
             - name: certs
               mountPath: /container/service/slapd/assets/certs
@@ -100,16 +100,16 @@ spec:
                 configMapKeyRef:
                   name: {{ template "openldap.fullname" . }}
                   key: domain
-            - name: LDAP_CONFIG_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "openldap.fullname" . }}
-                  key: config_password
-            - name: LDAP_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "openldap.fullname" . }}
-                  key: admin_password
+            # - name: LDAP_CONFIG_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: {{ template "openldap.fullname" . }}
+            #       key: config_password
+            # - name: LDAP_ADMIN_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: {{ template "openldap.fullname" . }}
+            #       key: admin_password
           livenessProbe:
             tcpSocket:
               port: container
