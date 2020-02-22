@@ -11,7 +11,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "openldap.name" . }}-openldap
+      app: {{ template "openldap.name" . }}-phpldapadmin
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
