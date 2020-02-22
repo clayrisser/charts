@@ -19,7 +19,7 @@ spec:
       {{- if (and (eq .Values.service.openldap.type "NodePort")) }}
       nodePort: {{ .Values.service.openldap.nodePorts.http }}
       {{- end }}
-    {{- if .Values.ingress.openldap.tls }}
+    {{- if .Values.config.openldap.tls }}
     - name: ldaps
       port: 636
       targetPort: ldaps
