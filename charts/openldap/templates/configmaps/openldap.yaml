@@ -14,7 +14,7 @@ data:
     objectClass: dcObject
     objectClass: organization
     o: {{ .Values.config.organization }}
-    dc: {{ index (regexSplit "." .Values.config.domain -1) 0 }}
+    dc: {{ index (regexSplit "\\." .Values.config.domain -1) 0 }}
     description: {{ .Values.config.organization }} directory
 
     dn: ou=accounts,{{ template "openldap.openldap-dc" . }}
