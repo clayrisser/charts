@@ -43,7 +43,11 @@ spec:
         - name: {{ template "openldap.fullname" . }}-openldap
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          {{- if .Values.config.debug }}
           args: ['--copy-service', '--loglevel', 'debug']
+          {{- else }}
+          args: ['--copy-service']
+          {{- end }}
           ports:
             - name: container
               containerPort: 389
@@ -63,8 +67,10 @@ spec:
               mountPath: /container/service/slapd/assets/certs
             {{- end }}
           env:
+            {{- if .Values.config.debug }}
             - name: LDAP_LOG_LEVEL
               value: '-1'
+            {{- end }}
             - name: LDAP_TLS_ENFORCE
               value: 'false'
             - name: LDAP_REMOVE_CONFIG_AFTER_SETUP

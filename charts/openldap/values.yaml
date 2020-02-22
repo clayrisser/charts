@@ -11,6 +11,7 @@ config:
   updateStrategy: RollingUpdate
   organization: 'Example Inc.'
   domain: example.org
+  debug: false
   openldap:
     baseUrl: ''
     hostname: ''
