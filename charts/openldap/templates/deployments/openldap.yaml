@@ -24,7 +24,8 @@ spec:
         app: {{ template "openldap.name" . }}-openldap
         release: {{ .Release.Name }}
     spec:
-      containers:
+      hostname:
+      containers: {{ template "openldap.openldap-hostname" . }}
         - name: {{ template "openldap.fullname" . }}-openldap
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
