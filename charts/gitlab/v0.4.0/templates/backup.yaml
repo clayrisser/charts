@@ -65,9 +65,9 @@ spec:
           apiVersion: apps/v1
           kind: Deployment
           name: {{ template "gitlab.fullname" . }}-gitlab
-      volumeMounts:
-        - name: data
-          mountPath: /data
-      paths:
-        - /data
+        volumeMounts:
+          - name: data
+            mountPath: /data
+        paths:
+          - /data
 {{- end }}
