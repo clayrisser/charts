@@ -55,21 +55,14 @@ spec:
         ref:
           apiVersion: apps/v1
           kind: AppBinding
-          name: {{ template "gitlab.fullname" . }}-
+          name: {{ template "gitlab.fullname" . }}-postgres
       task:
-        name: -backup-{{ .Values.config.version }}
+        name: postgres-backup-{{ .Values.config.version }}
     - target:
         ref:
           apiVersion: apps/v1
-          kind: AppBinding
-          name: {{ template "gitlab.fullname" . }}-
-      task:
-        name: -backup-{{ .Values.config.version }}
-    - target:
-        ref:
-          apiVersion: apps/v1
-          kind: AppBinding
-          name: {{ template "gitlab.fullname" . }}-
+          kind: Deployment
+          name: {{ template "gitlab.fullname" . }}-gitlab
       volumeMounts:
         - name: data
           mountPath: /data
