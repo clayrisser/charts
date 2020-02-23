@@ -67,7 +67,7 @@ spec:
           name: {{ template "gitlab.fullname" . }}-gitlab
         volumeMounts:
           - name: data
-            mountPath: /data
+            mountPath: /_data
         paths:
-          - /data
+          - /_data
 {{- end }}

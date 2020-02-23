@@ -52,9 +52,13 @@ spec:
     prune: true
   members:
     - target:
+        ref:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: {{ template "openldap.fullname" . }}-openldap
         volumeMounts:
           - name: data
-            mountPath: /data
-      paths:
-        - /data
+            mountPath: /_data
+        paths:
+          - /_data
 {{- end }}
