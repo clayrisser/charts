@@ -19,7 +19,7 @@ spec:
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  authPlugin: SearchGuard
+  authPlugin: {{ .Values.config.authPlugin }}
   enableSSL: false
   {{- if .Values.persistence.enabled }}
   storageType: Durable

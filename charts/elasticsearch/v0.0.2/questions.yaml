@@ -51,9 +51,20 @@ questions:
     show_if: config.terminationPolicy=Pause
     label: pause
     group: Config
+  - variable: config.authPlugin
+    default: None
+    description: ''
+    type: enum
+    options:
+      - None
+      - SearchGuard
+    required: true
+    label: 'auth plugin'
+    group: Config
   - variable: config.password
     default: changeme
     description: ''
+    show_if: config.authPlugin=SearchGuard
     type: password
     required: true
     label: password
