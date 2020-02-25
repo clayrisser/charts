@@ -464,6 +464,7 @@ questions:
       - NodePort
       - LoadBalancer
     required: true
+    show_if: ingress.elasticsearch.enabled=false
     label: 'elasticsearch service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
@@ -472,6 +473,7 @@ questions:
         default: ''
         description: ''
         type: int
+        show_if: ingress.elasticsearch.enabled=false
         min: 30000
         max: 32767
         label: 'elasticsearch port'
