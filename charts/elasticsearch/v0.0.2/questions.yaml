@@ -411,6 +411,54 @@ questions:
         max: 32767
         show_if: ingress.kibana.enabled=false&&config.kibana=true
         label: 'kibana port'
+  - variable: ingress.elasticsearch.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.elasticsearch=true
+    label: 'elasticsearch ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.elasticsearch.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.elasticsearch=true
+        required: true
+        label: 'elasticsearch ingress tls'
+      - variable: ingress.elasticsearch.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.elasticsearch=true
+        required: true
+        label: 'elasticsearch ingress hostname'
+      - variable: ingress.elasticsearch.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.elasticsearch=true
+        required: true
+        label: 'elasticsearch ingress path'
+      - variable: ingress.elasticsearch.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.elasticsearch=true&&ingress.elasticsearch.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'elasticsearch ingress issuer name'
+      - variable: ingress.elasticsearch.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.elasticsearch=true&&ingress.elasticsearch.tls=true&&ingress.elasticsearch.issuer.name=none
+        required: false
+        label: 'elasticsearch ingress certificate'
   - variable: service.elasticsearch.type
     default: ClusterIP
     description: ''

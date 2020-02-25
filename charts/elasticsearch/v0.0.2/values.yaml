@@ -83,6 +83,14 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
+  elasticsearch:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
 
 issuer:
   name: letsencrypt-staging

@@ -141,9 +141,9 @@ spec:
       externalTrafficPolicy: {{ .Values.service.elasticsearch.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name: elasticsearch
+        - name: http
           port: 9200
-          targetPort: elasticsearch
+          targetPort: http
           {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch))) }}
           nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch }}
           {{- end }}

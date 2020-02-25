@@ -36,3 +36,14 @@ Calculate kibana certificate
 {{- printf "%s-kibana-letsencrypt" (include "elasticsearch.fullname" .) }}
 {{- end }}
 {{- end }}
+
+{{/*
+Calculate elasticsearch certificate
+*/}}
+{{- define "elasticsearch.elasticsearch-certificate" }}
+{{- if (not (empty .Values.ingress.elasticsearch.certificate)) }}
+{{- printf .Values.ingress.elasticsearch.certificate }}
+{{- else }}
+{{- printf "%s-elasticsearch-letsencrypt" (include "elasticsearch.fullname" .) }}
+{{- end }}
+{{- end }}
