@@ -12,7 +12,9 @@ data:
   common-config.yml: |
     path:
       logs: /data/elasticsearch/common-logdir
+{{- if .Values.config.commonConfig }}
 {{ toYaml .Values.config.commonConfig | indent 4 }}
+{{- end }}
   data-config.yml: |
     node:
       name:  es-node-data
@@ -20,10 +22,14 @@ data:
       data: ["/data/elasticsearch/data-datadir"]
     http:
       compression: false
+{{- if .Values.config.dataConfig }}
 {{ toYaml .Values.config.dataConfig | indent 4 }}
+{{- end }}
   master-config.yml: |
     node:
       name:  es-node-master
     path:
       data: ["/data/elasticsearch/master-datadir"]
+{{- if .Values.config.masterConfig }}
 {{ toYaml .Values.config.masterConfig | indent 4 }}
+{{- end }}
