@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.nginx.tls }}
   tls:
-    - secretName: {{ template "nginx.nginx_certificate" . }}
+    - secretName: {{ template "nginx.nginx-certificate" . }}
       hosts:
         - {{ .Values.ingress.nginx.hostname }}
   {{- end }}
