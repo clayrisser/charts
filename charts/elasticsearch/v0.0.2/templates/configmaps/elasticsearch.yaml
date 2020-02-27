@@ -8,6 +8,22 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  common-config.yml: {{ .Values.config.commonConfig | quote }}
-  data-config.yml: {{ .Values.config.dataConfig | quote }}
-  master-config.yml: {{ .Values.config.masterConfig | quote }}
+  client-config.yml: |
+  common-config.yml: |
+    path:
+      logs: /data/elasticsearch/common-logdir
+{{ toYaml .Values.config.commonConfig | indent 4 }}
+  data-config.yml: |
+    node:
+      name:  es-node-data
+    path:
+      data: ["/data/elasticsearch/data-datadir"]
+    http:
+      compression: false
+{{ toYaml .Values.config.dataConfig | indent 4 }}
+  master-config.yml: |
+    node:
+      name:  es-node-master
+    path:
+      data: ["/data/elasticsearch/master-datadir"]
+{{ toYaml .Values.config.masterConfig | indent 4 }}
