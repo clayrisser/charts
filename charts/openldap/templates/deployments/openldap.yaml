@@ -53,6 +53,9 @@ spec:
             - name: config
               mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-organization.ldif
               subPath: 01-organization.ldif
+            - name: config
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/02-ppolicy.ldif
+              subPath: 02-ppolicy.ldif
           env:
             {{- if .Values.config.debug }}
             - name: LDAP_LOG_LEVEL

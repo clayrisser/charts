@@ -476,7 +476,7 @@ questions:
     label: 'sonarqube repository'
     group: Images
   - variable: images.sonarqube.tag
-    default: 8.1-community-beta
+    default: 8.2-community
     description: ''
     type: string
     required: true
