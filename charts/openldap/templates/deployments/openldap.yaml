@@ -29,12 +29,6 @@ spec:
         - name: {{ template "openldap.fullname" . }}-openldap
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-          command:
-            - sh
-            - -c
-            - |
-              sh -c 'sleep 30 && ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /config/ppolicy.ldif' &
-              exec /container/tool/run
           {{- if .Values.config.debug }}
           args: ['--copy-service', '--loglevel', 'debug']
           {{- else }}
@@ -59,9 +53,6 @@ spec:
             - name: config
               mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-organization.ldif
               subPath: 01-organization.ldif
-            - name: config
-              mountPath: /config/ppolicy.ldif
-              subPath: ppolicy.ldif
           env:
             {{- if .Values.config.debug }}
             - name: LDAP_LOG_LEVEL

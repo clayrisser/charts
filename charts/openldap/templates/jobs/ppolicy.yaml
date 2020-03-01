@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "openldap.fullname" . }}-ppolicy
+  labels:
+    app: {{ template "openldap.name" . }}-ppolicy
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: '5'
+    helm.sh/hook-delete-policy: 'hook-succeeded,before-hook-creation'
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "openldap.name" . }}-ppolicy
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: {{ template "openldap.fullname" . }}-wait
+          image: busybox
+          command: ['sleep', '60']
+      containers:
+        - name: {{ template "openldap.fullname" . }}-ppolicy
+          image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              ldapadd -Q -Y EXTERNAL \
+                -D "cn=admin,{{ template "openldap.openldap-dc" . }}" -w "$LDAP_ADMIN_PASSWORD" \
+                -H ldapi:///{{ template "openldap.fullname" . }}-openldap -f /config/ppolicy.ldif
+          volumeMounts:
+            - name: config
+              mountPath: /config/ppolicy.ldif
+              subPath: ppolicy.ldif
+          env:
+            {{- if .Values.config.debug }}
+            - name: LDAP_LOG_LEVEL
+              value: '-1'
+            {{- end }}
+            - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
+              value: 'true'
+            - name: LDAP_BACKEND
+              value: mdb
+            - name: LDAP_TLS
+              value: {{ .Values.config.openldap.tls | quote }}
+            - name: LDAP_TLS_ENFORCE
+              value: {{ .Values.config.openldap.tls | quote }}
+            - name: LDAP_ORGANISATION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "openldap.fullname" . }}
+                  key: organization
+            - name: LDAP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "openldap.fullname" . }}
+                  key: domain
+            - name: LDAP_CONFIG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "openldap.fullname" . }}
+                  key: config_password
+            - name: LDAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "openldap.fullname" . }}
+                  key: admin_password
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "openldap.fullname" . }}-openldap
