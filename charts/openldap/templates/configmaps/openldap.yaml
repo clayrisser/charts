@@ -32,6 +32,6 @@ data:
     #!/bin/sh
     sleep 60
     if [ ! -f /etc/ldap/slapd.d/_loaded_ppolicy ]; then
-      ldapadd -Y EXTERNAL -H ldap:/// -f /config/ppolicy.ldif
+      ldapadd -Y EXTERNAL -H ldapi:/// -f /config/ppolicy.ldif
       touch /etc/ldap/slapd.d/_loaded_ppolicy
     fi
