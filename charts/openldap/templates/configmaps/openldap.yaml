@@ -19,7 +19,7 @@ data:
     dc: {{ index (regexSplit "\\." .Values.config.domain -1) 0 }}
   ppolicy.ldif: |
     dn: cn=module{0},cn=config
-    changetype: add
+    changetype: modify
     add: olcModuleLoad
     olcModuleLoad: ppolicy
 
