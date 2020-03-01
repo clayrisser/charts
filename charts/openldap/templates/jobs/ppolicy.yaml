@@ -31,7 +31,8 @@ spec:
             - sh
             - -c
             - |
-              ldapadd -x -D "cn=admin,{{ template "openldap.openldap-dc" . }}" -w "$LDAP_ADMIN_PASSWORD" \
+              # ldapadd -x -D "cn=admin,{{ template "openldap.openldap-dc" . }}" -w "$LDAP_ADMIN_PASSWORD" \
+              ldapadd -Y EXTERNAL \
                 -H ldap://{{ template "openldap.fullname" . }}-openldap -f /config/ppolicy.ldif
           volumeMounts:
             - name: config
