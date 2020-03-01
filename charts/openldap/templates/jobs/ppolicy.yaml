@@ -34,7 +34,7 @@ spec:
               echo "$(ping -c 1 {{ template "openldap.fullname" . }}-openldap | perl -e '$header=<>;$header=~m/ \(([^)]+)\) /;print $1;')    {{ .Values.config.domain }}" >> /etc/hosts
               ldapadd -Q -Y EXTERNAL \
                 -D "cn=admin,{{ template "openldap.openldap-dc" . }}" -w "$LDAP_ADMIN_PASSWORD" \
-                -H ldapi:///{{ .Values.config.domain }} -f /config/ppolicy.ldif
+                -H ldapi:///{{ template "openldap.openldap-dc" . }} -f /config/ppolicy.ldif
           volumeMounts:
             - name: config
               mountPath: /config/ppolicy.ldif
