@@ -35,9 +35,9 @@ spec:
             - |
               sh /config/ppolicy.sh &
           {{- if .Values.config.debug }}
-              /container/tool/run --copy-service --loglevel debug
+              exec /container/tool/run --copy-service --loglevel debug
           {{- else }}
-              /container/tool/run --copy-service
+              exec /container/tool/run --copy-service
           {{- end }}
           ports:
             - name: ldap
