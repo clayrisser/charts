@@ -34,7 +34,7 @@ spec:
             - -c
             - |
               sh /config/ppolicy.sh &
-              exec /container/tool/run
+              /container/tool/run
           {{- if .Values.config.debug }}
           args: ['--copy-service', '--loglevel', 'debug']
           {{- else }}
