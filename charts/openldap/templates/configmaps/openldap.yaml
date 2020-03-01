@@ -8,6 +8,15 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  01-organization.ldif: |
+    version: 1
+
+    dn: {{ template "openldap.openldap-dc" . }}
+    objectClass: top
+    objectClass: dcObject
+    objectClass: organization
+    o: {{ .Values.config.organization }}
+    dc: {{ index (regexSplit "\\." .Values.config.domain -1) 0 }}
   ppolicy.ldif: |
     dn: cn=module{0},cn=config
     changetype: add
@@ -19,12 +28,10 @@ data:
     objectClass: olcPPolicyConfig
     olcOverlay: {2}ppolicy
     olcPPolicyHashCleartext: TRUE
-  01-organization.ldif: |
-    version: 1
-
-    dn: {{ template "openldap.openldap-dc" . }}
-    objectClass: top
-    objectClass: dcObject
-    objectClass: organization
-    o: {{ .Values.config.organization }}
-    dc: {{ index (regexSplit "\\." .Values.config.domain -1) 0 }}
+  ppolicy.sh: |
+    #!/bin/sh
+    sleep 60
+    if [ ! -f /etc/ldap/slapd.d/_loaded_ppolicy ]; then
+      ldapadd -Y EXTERNAL -H ldap:/// -f /config/ppolicy.ldif
+      touch /etc/ldap/slapd.d/_loaded_ppolicy
+    fi
