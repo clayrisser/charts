@@ -53,16 +53,19 @@ gitlab-runner:
       # KUBERNETES_NODE_TOLERATIONS: role=worker:NoSchedule
       KUBERNETES_VOLUMES: /certs/client
     cache: {}
-
-
-# [[runners]]
-#   executor = "kubernetes"
-#   # ...
-#   cache_dir = "/tmp/gitlab/cache"
-
-#   [runners.kubernetes]
-#     # ...
-#     [[runners.kubernetes.volumes.host_path]]
-#       name = "gitlab-cache"
-#       mount_path = "/tmp/gitlab/cache"
-#       host_path = "/home/core/data/gitlab-runner/cache"
+  persistence:
+    accessMode: ReadWriteOnce
+    enabled: false
+    existingClaim: ''
+    size: 1Gi
+    storageClass: ''
+    velero:
+      enabled: false
+    stash:
+      enabled: false
+      keepLast: 30
+      paused: false
+      repository: stash-stash
+      schedule: '0 0 * * *'
+      restore:
+        snapshot: ''
