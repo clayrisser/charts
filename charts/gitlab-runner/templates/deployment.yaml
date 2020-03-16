@@ -118,7 +118,7 @@ spec:
       {{- if .Values.persistence.enabled }}
       - name: data
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+          claimName: {{ .Values.persistence.existingClaim | default (include "gitlab-runner.fullname" . ) }}
       {{- end }}
       - name: runner-secrets
         emptyDir:
