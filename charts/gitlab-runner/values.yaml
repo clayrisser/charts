@@ -1,4 +1,4 @@
-gitlab-runner:
+gitlabRunner:
   affinity: {}
   checkInterval: 30
   concurrent: 10

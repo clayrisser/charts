@@ -3,7 +3,7 @@ categories:
 questions:
 
 # Config
-  - variable: gitlab-runner.imagePullPolicy
+  - variable: gitlabRunner.imagePullPolicy
     default: IfNotPresent
     description: ''
     type: enum
@@ -13,7 +13,7 @@ questions:
     required: true
     label: 'pull policy'
     group: Config
-  - variable: gitlab-runner.logLevel
+  - variable: gitlabRunner.logLevel
     default: info
     description: ''
     type: enum
@@ -27,21 +27,21 @@ questions:
     required: true
     label: 'log level'
     group: Config
-  - variable: gitlab-runner.gitlabUrl
+  - variable: gitlabRunner.gitlabUrl
     default: ''
     description: ''
     type: string
     required: true
     label: 'gitlab url'
     group: Config
-  - variable: gitlab-runner.runnerRegistrationToken
+  - variable: gitlabRunner.runnerRegistrationToken
     default: ''
     description: ''
     type: password
     required: true
     label: 'registration token'
     group: Config
-  # - variable: gitlab-runner.metrics.enabled
+  # - variable: gitlabRunner.metrics.enabled
   #   default: false
   #   description: ''
   #   type: boolean
@@ -50,14 +50,14 @@ questions:
   #   group: Config
 
 # Runners
-  - variable: gitlab-runner.runners.image
+  - variable: gitlabRunner.runners.image
     default: docker:19.03.1
     description: ''
     type: string
     required: true
     label: image
     group: Runners
-  - variable: gitlab-runner.runners.requestConcurrency
+  - variable: gitlabRunner.runners.requestConcurrency
     default: 1
     description: ''
     type: int
@@ -66,7 +66,7 @@ questions:
     group: Runners
 
 # Persistence
-  - variable: gitlab-runner.persistence.enabled
+  - variable: gitlabRunner.persistence.enabled
     default: false
     description: ''
     type: boolean
@@ -75,19 +75,19 @@ questions:
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: gitlab-runner.persistence.size
+      - variable: gitlabRunner.persistence.size
         default: 1Gi
         description: ''
         type: string
         required: true
         label: size
-      - variable: gitlab-runner.persistence.storageClass
+      - variable: gitlabRunner.persistence.storageClass
         default: ''
         description: ''
         type: storageclass
         required: false
         label: 'storage class'
-      - variable: gitlab-runner.persistence.accessMode
+      - variable: gitlabRunner.persistence.accessMode
         default: ReadWriteOnce
         description: ''
         type: enum
@@ -97,49 +97,49 @@ questions:
           - ReadOnlyMany
         required: false
         label: 'access mode'
-      - variable: gitlab-runner.persistence.existingClaim
+      - variable: gitlabRunner.persistence.existingClaim
         default: ''
         description: ''
         type: string
         required: false
         label: 'existing claim'
-      - variable: gitlab-runner.persistence.velero.enabled
+      - variable: gitlabRunner.persistence.velero.enabled
         default: false
         description: ''
         type: boolean
         required: true
         label: 'velero enabled'
-      - variable: gitlab-runner.persistence.stash.enabled
+      - variable: gitlabRunner.persistence.stash.enabled
         default: false
         description: ''
         type: boolean
         required: true
         label: 'stash enabled'
-      - variable: gitlab-runner.persistence.stash.paused
+      - variable: gitlabRunner.persistence.stash.paused
         default: false
         description: ''
         type: boolean
         required: true
-        show_if: gitlab-runner.persistence.stash.enabled=true
+        show_if: gitlabRunner.persistence.stash.enabled=true
         label: 'stash paused'
-      - variable: gitlab-runner.persistence.stash.schedule
+      - variable: gitlabRunner.persistence.stash.schedule
         default: '0 0 * * *'
         description: ''
         type: string
         required: true
-        show_if: gitlab-runner.persistence.stash.enabled=true
+        show_if: gitlabRunner.persistence.stash.enabled=true
         label: 'stash schedule'
-      - variable: gitlab-runner.persistence.stash.keepLast
+      - variable: gitlabRunner.persistence.stash.keepLast
         default: 30
         description: ''
         type: int
         required: true
-        show_if: gitlab-runner.persistence.stash.enabled=true
+        show_if: gitlabRunner.persistence.stash.enabled=true
         label: 'stash keep last'
-      - variable: gitlab-runner.persistence.stash.restore.snapshot
+      - variable: gitlabRunner.persistence.stash.restore.snapshot
         default: ''
         description: ''
         type: string
         required: false
-        show_if: gitlab-runner.persistence.stash.enabled=true
+        show_if: gitlabRunner.persistence.stash.enabled=true
         label: 'stash restore snapshot'
