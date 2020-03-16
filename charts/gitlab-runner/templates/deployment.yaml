@@ -12,6 +12,8 @@ spec:
   selector:
     matchLabels:
       app: {{ include "gitlab-runner.fullname" . }}
+  strategy:
+    type: {{ .Values.updateStrategy }}
   template:
     metadata:
       labels:

@@ -13,6 +13,16 @@ questions:
     required: true
     label: 'pull policy'
     group: Config
+  - variable: updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
   - variable: logLevel
     default: info
     description: ''

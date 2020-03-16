@@ -15,6 +15,7 @@ runnerRegistrationToken: ''
 terminationGracePeriodSeconds: 3600
 tolerations: []
 unregisterRunners: true
+updateStrategy: RollingUpdate
 rbac:
   clusterWideAccess: true
   create: true
