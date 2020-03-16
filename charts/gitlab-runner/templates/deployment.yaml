@@ -121,7 +121,7 @@ spec:
         projected:
           sources:
             {{- if and .Values.runners.cache .Values.runners.cache.cacheType }}
-            {{-   if and (template "gitlab-runner.cache.secret" .) (eq .Values.runners.cache.cacheType "s3") }}
+            {{-   if and (include "gitlab-runner.cache.secret" .) (eq .Values.runners.cache.cacheType "s3") }}
             - secret:
                 name: {{ template "gitlab-runner.cache.secret" . }}
             {{-   end }}
