@@ -41,13 +41,13 @@ questions:
     required: true
     label: 'registration token'
     group: Config
-  # - variable: metrics.enabled
-  #   default: false
-  #   description: ''
-  #   type: boolean
-  #   required: true
-  #   label: 'metrics enabled'
-  #   group: Config
+  - variable: metrics.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'metrics enabled'
+    group: Config
 
 # Runners
   - variable: runners.image

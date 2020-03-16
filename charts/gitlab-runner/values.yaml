@@ -20,8 +20,8 @@ rbac:
   create: false
   serviceAccountAnnotations: {}
   serviceAccountName: default
-# metrics:
-#   enabled: false
+metrics:
+  enabled: false
 securityContext:
   fsGroup: 65533
   runAsUser: 100
