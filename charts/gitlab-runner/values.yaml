@@ -1,0 +1,68 @@
+gitlab-runner:
+  affinity: {}
+  checkInterval: 30
+  concurrent: 10
+  gitlabUrl: ''
+  hostAliases: []
+  hpa: {}
+  imagePullPolicy: IfNotPresent
+  logFormat: runner
+  logLevel: info
+  nodeSelector: {}
+  podAnnotations: {}
+  podLabels: {}
+  resources: {}
+  runnerRegistrationToken: ''
+  terminationGracePeriodSeconds: 3600
+  tolerations: []
+  unregisterRunners: true
+  rbac:
+    clusterWideAccess: false
+    create: false
+    serviceAccountAnnotations: {}
+    serviceAccountName: default
+  metrics:
+    enabled: false
+  securityContext:
+    fsGroup: 65533
+    runAsUser: 100
+  envVars:
+    - name: RUNNER_EXECUTOR
+      value: kubernetes
+  runners:
+    # imagePullPolicy: if-not-present
+    # secret: gitlab-runner
+    builds: {}
+    helpers: {}
+    image: docker:19.03.1
+    imagePullSecrets: []
+    locked: true
+    outputLimit: 4096
+    podAnnotations: {}
+    podLabels: {}
+    pollTimeout: 180
+    privileged: true
+    protected: false
+    requestConcurrency: 1
+    runUntagged: true
+    services: {}
+    tags: ''
+    nodeSelector:
+      runner: true
+    env:
+      # KUBERNETES_NODE_TOLERATIONS: role=worker:NoSchedule
+      KUBERNETES_VOLUMES: /certs/client
+    cache: {}
+
+
+# [[runners]]
+#   executor = "kubernetes"
+#   # ...
+#   cache_dir = "/tmp/gitlab/cache"
+
+#   [runners.kubernetes]
+#     # ...
+#     [[runners.kubernetes.volumes.host_path]]
+#       name = "gitlab-cache"
+#       mount_path = "/tmp/gitlab/cache"
+#       host_path = "/home/core/data/gitlab-runner/cache"

@@ -1,0 +1,66 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.gitlab-runner.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.gitlab-runner.logLevel
+    default: info
+    description: ''
+    type: enum
+    options:
+      - debug
+      - info
+      - warn
+      - error
+      - fatal
+      - panic
+    required: true
+    label: 'log level'
+    group: Config
+  - variable: config.gitlab-runner.gitlabUrl
+    default: ''
+    description: ''
+    type: string
+    required: true
+    label: 'gitlab url'
+    group: Config
+  - variable: config.gitlab-runner.runnerRegistrationToken
+    default: ''
+    description: ''
+    type: password
+    required: true
+    label: 'registration token'
+    group: Config
+  - variable: config.gitlab-runner.metrics
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: metrics
+    group: Config
+
+# Runners
+  - variable: config.gitlab-runner.runners.image
+    default: docker:19.03.1
+    description: ''
+    type: string
+    required: true
+    label: image
+    group: Runners
+  - variable: config.gitlab-runner.runners.requestConcurrency
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: 'request concurrency'
+    group: Runners
