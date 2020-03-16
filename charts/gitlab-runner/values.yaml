@@ -47,12 +47,10 @@ gitlab-runner:
     runUntagged: true
     services: {}
     tags: ''
+    env: {}
+    cache: {}
     nodeSelector:
       runner: true
-    env:
-      # KUBERNETES_NODE_TOLERATIONS: role=worker:NoSchedule
-      KUBERNETES_VOLUMES: /certs/client
-    cache: {}
   persistence:
     accessMode: ReadWriteOnce
     enabled: false

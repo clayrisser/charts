@@ -58,9 +58,12 @@ data:
     {{- if .Values.metrics.enabled }}
     listen_address = '[::]:9252'
     {{- end }}
-      [[runners.kubernetes.volumes.pvc]]
-        name = {{ template "gitlab-runner.fullname" . | quote }}
-        mount_path = "/tmp/gitlab/cache"
+    [[runners]]
+      cache_dir = "/tmp/gitlab/cache"
+      [runners.kubernetes]
+        [[runners.kubernetes.volumes.pvc]]
+          name = {{ template "gitlab-runner.fullname" . | quote }}
+          mount_path = "/tmp/gitlab/cache"
   configure: |
     set -e
     cp /init-secrets/* /secrets
