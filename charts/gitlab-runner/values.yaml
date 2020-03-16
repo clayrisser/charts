@@ -16,8 +16,8 @@ terminationGracePeriodSeconds: 3600
 tolerations: []
 unregisterRunners: true
 rbac:
-  clusterWideAccess: false
-  create: false
+  clusterWideAccess: true
+  create: true
   serviceAccountAnnotations: {}
   serviceAccountName: default
 metrics:
