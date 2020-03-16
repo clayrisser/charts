@@ -55,9 +55,9 @@ data:
     {{- if .Values.logFormat }}
     log_format = {{ .Values.logFormat | quote }}
     {{- end }}
-    # {{- if .Values.metrics.enabled }}
+    # /{/{- if .Values.metrics.enabled }}
     # listen_address = '[::]:9252'
-    # {{- end }}
+    # /{/{- end }}
     [[runners]]
       cache_dir = "/tmp/gitlab/cache"
       [runners.kubernetes]
