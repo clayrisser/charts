@@ -129,7 +129,7 @@ spec:
             - secret:
                 # Outdated default secret "s3access" kept for compatibilty with older installs using it.
                 # Will be removed in next major release: https://gitlab.com/gitlab-org/charts/gitlab-runner/merge_requests/177
-                name: {{ default "s3access" (template "gitlab-runner.cache.secret" .) }}
+                name: {{ default "s3access" (include "gitlab-runner.cache.secret" .) }}
             {{-   end }}
             {{- end }}
             - secret:
