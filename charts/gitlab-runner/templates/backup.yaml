@@ -55,7 +55,7 @@ spec:
         ref:
           apiVersion: apps/v1
           kind: Deployment
-          name: {{ include "gitlab-runner.fullname" . }}-gitlab-runner
+          name: {{ include "gitlab-runner.fullname" . }}
         volumeMounts:
           - name: data
             mountPath: /_data

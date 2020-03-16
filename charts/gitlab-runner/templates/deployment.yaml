@@ -97,6 +97,10 @@ spec:
         - name: metrics
           containerPort: 9252
         volumeMounts:
+        {{- if .Values.persistence.enabled }}
+        - name: data
+          mountPath: /_data
+        {{- end }}
         - name: runner-secrets
           mountPath: /secrets
         - name: etc-gitlab-runner
@@ -111,6 +115,11 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
+      {{- if .Values.persistence.enabled }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+      {{- end }}
       - name: runner-secrets
         emptyDir:
           medium: "Memory"
