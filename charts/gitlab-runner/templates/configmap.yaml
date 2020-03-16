@@ -62,7 +62,7 @@ data:
       cache_dir = "/tmp/gitlab/cache"
       [runners.kubernetes]
         [[runners.kubernetes.volumes.pvc]]
-          name = {{ template "gitlab-runner.fullname" . | quote }}
+          name = {{ include "gitlab-runner.fullname" . }}
           mount_path = "/tmp/gitlab/cache"
 
   configure: |

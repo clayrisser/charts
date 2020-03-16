@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "gitlab-runner.fullname" . }}-backup-init
+  name: {{ include "gitlab-runner.fullname" . }}-backup-init
   labels:
-    app: {{ template "gitlab-runner.name" . }}-backup-init
+    app: {{ include "gitlab-runner.name" . }}-backup-init
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "gitlab-runner.name" . }}-backup-init
+        app: {{ include "gitlab-runner.name" . }}-backup-init
         release: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure
@@ -35,9 +35,9 @@ spec:
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBatch
 metadata:
-  name: {{ template "gitlab-runner.fullname" . }}
+  name: {{ include "gitlab-runner.fullname" . }}
   labels:
-    app: {{ template "gitlab-runner.name" . }}
+    app: {{ include "gitlab-runner.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -55,7 +55,7 @@ spec:
         ref:
           apiVersion: apps/v1
           kind: Deployment
-          name: {{ template "gitlab-runner.fullname" . }}-gitlab-runner
+          name: {{ include "gitlab-runner.fullname" . }}-gitlab-runner
         volumeMounts:
           - name: data
             mountPath: /_data
