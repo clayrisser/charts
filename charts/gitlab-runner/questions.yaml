@@ -41,12 +41,12 @@ questions:
     required: true
     label: 'registration token'
     group: Config
-  - variable: gitlab-runner.metrics
+  - variable: gitlab-runner.metrics.enabled
     default: false
     description: ''
     type: boolean
     required: true
-    label: metrics
+    label: 'metrics enabled'
     group: Config
 
 # Runners
