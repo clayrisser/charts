@@ -50,7 +50,7 @@ runners:
   env: {}
   cache: {}
   nodeSelector:
-    runner: true
+    group: spot
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
