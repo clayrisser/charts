@@ -9,11 +9,11 @@ images:
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
+  debug: false
   keycloak:
     baseUrl: ''
     defaultTheme: keycloak
     hostname: ''
-    loglevel: INFO
     password: pass
     themeZip: keycloak
     username: admin

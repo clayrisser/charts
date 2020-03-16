@@ -67,6 +67,12 @@ spec:
               value: public
             - name: PROXY_ADDRESS_FORWARDING
               value: 'true'
+            {{- if .Values.config.debug }}
+            - name: KEYCLOAK_LOGLEVEL
+              value: ALL
+            - name: ROOT_LOGLEVEL
+              value: ALL
+            {{- end }}
             - name: DB_ADDR
               valueFrom:
                 configMapKeyRef:
@@ -95,11 +101,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "keycloak.fullname" . }}
                   key: keycloak_hostname
-            - name: KEYCLOAK_LOGLEVEL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "keycloak.fullname" . }}
-                  key: keycloak_loglevel
             - name: KEYCLOAK_WELCOME_THEME
               valueFrom:
                 configMapKeyRef:

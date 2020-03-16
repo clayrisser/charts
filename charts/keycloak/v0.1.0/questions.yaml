@@ -23,28 +23,19 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.debug
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
   - variable: config.keycloak.hostname
     default: ''
     description: ''
     type: string
     required: false
     label: 'keycloak hostname'
-    group: Config
-  - variable: config.loglevel
-    default: INFO
-    description: ''
-    type: enum
-    options:
-      - ALL
-      - DEBUG
-      - ERROR
-      - FATAL
-      - INFO
-      - OFF
-      - TRACE
-      - WARN
-    required: true
-    label: 'keycloak loglevel'
     group: Config
   - variable: config.keycloak.username
     default: admin
