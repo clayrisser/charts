@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "gitlab-runner.fullname" . }}
+  name: {{ include "gitlab-runner.fullname" . }}
   labels:
-    app: {{ template "gitlab-runner.fullname" . }}
-    chart: {{ template "gitlab-runner.chart" . }}
+    app: {{ include "gitlab-runner.fullname" . }}
+    chart: {{ include "gitlab-runner.chart" . }}
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 data:
@@ -55,15 +55,16 @@ data:
     {{- if .Values.logFormat }}
     log_format = {{ .Values.logFormat | quote }}
     {{- end }}
-    # /{/{- if .Values.metrics.enabled }}
-    # listen_address = '[::]:9252'
-    # /{/{- end }}
+    {{- if .Values.metrics.enabled }}
+    listen_address = '[::]:9252'
+    {{- end }}
     [[runners]]
       cache_dir = "/tmp/gitlab/cache"
       [runners.kubernetes]
         [[runners.kubernetes.volumes.pvc]]
           name = {{ template "gitlab-runner.fullname" . | quote }}
           mount_path = "/tmp/gitlab/cache"
+
   configure: |
     set -e
     cp /init-secrets/* /secrets

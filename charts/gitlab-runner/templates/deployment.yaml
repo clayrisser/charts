@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "gitlab-runner.fullname" . }}
+  name: {{ include "gitlab-runner.fullname" . }}
   labels:
-    app: {{ template "gitlab-runner.fullname" . }}
-    chart: {{ template "gitlab-runner.chart" . }}
+    app: {{ include "gitlab-runner.fullname" . }}
+    chart: {{ include "gitlab-runner.chart" . }}
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "gitlab-runner.fullname" . }}
+      app: {{ include "gitlab-runner.fullname" . }}
   template:
     metadata:
       labels:
-        app: {{ template "gitlab-runner.fullname" . }}
-        chart: {{ template "gitlab-runner.chart" . }}
+        app: {{ include "gitlab-runner.fullname" . }}
+        chart: {{ include "gitlab-runner.chart" . }}
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
         {{- range $key, $value := .Values.podLabels }}
@@ -42,10 +42,10 @@ spec:
       initContainers:
       - name: configure
         command: ['sh', '/config/configure']
-        image: {{ template "gitlab-runner.image" . }}
+        image: {{ include "gitlab-runner.image" . }}
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         env:
-        {{ template "gitlab-runner.runner-env-vars" . | indent 8 }}
+        {{ include "gitlab-runner.runner-env-vars" . | indent 8 }}
         volumeMounts:
         - name: runner-secrets
           mountPath: /secrets
@@ -63,10 +63,10 @@ spec:
         {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
-      serviceAccountName: {{ if .Values.rbac.create }}{{ template "gitlab-runner.fullname" . }}{{ else }}"{{ .Values.rbac.serviceAccountName }}"{{ end }}
+      serviceAccountName: {{ if .Values.rbac.create }}{{ include "gitlab-runner.fullname" . }}{{ else }}"{{ .Values.rbac.serviceAccountName }}"{{ end }}
       containers:
-      - name: {{ template "gitlab-runner.fullname" . }}
-        image: {{ template "gitlab-runner.image" . }}
+      - name: {{ include "gitlab-runner.fullname" . }}
+        image: {{ include "gitlab-runner.image" . }}
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         {{- if and .Values.unregisterRunners .Values.runnerRegistrationToken }}
         lifecycle:
@@ -76,7 +76,7 @@ spec:
         {{- end }}
         command: ["/bin/bash", "/scripts/entrypoint"]
         env:
-        {{ template "gitlab-runner.runner-env-vars" . | indent 8 }}
+        {{ include "gitlab-runner.runner-env-vars" . | indent 8 }}
         livenessProbe:
           exec:
             command: ["/bin/bash", "/scripts/check-live"]
@@ -123,7 +123,7 @@ spec:
             {{- if and .Values.runners.cache .Values.runners.cache.cacheType }}
             {{-   if and (include "gitlab-runner.cache.secret" .) (eq .Values.runners.cache.cacheType "s3") }}
             - secret:
-                name: {{ template "gitlab-runner.cache.secret" . }}
+                name: {{ include "gitlab-runner.cache.secret" . }}
             {{-   end }}
             {{-   if eq .Values.runners.cache.cacheType "gcs"}}
             - secret:
@@ -133,7 +133,7 @@ spec:
             {{-   end }}
             {{- end }}
             - secret:
-                name: {{ template "gitlab-runner.secret" . }}
+                name: {{ include "gitlab-runner.secret" . }}
                 items:
                   - key: runner-registration-token
                     path: runner-registration-token
@@ -146,7 +146,7 @@ spec:
       {{- end }}
       - name: scripts
         configMap:
-          name: {{ template "gitlab-runner.fullname" . }}
+          name: {{ include "gitlab-runner.fullname" . }}
     {{- if .Values.affinity }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
