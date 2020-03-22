@@ -54,7 +54,7 @@ questions:
   - variable: config.cors.origin
     default: '*'
     description: ''
-    type: boolean
+    type: string
     required: true
     label: 'cors origin'
     group: Config
