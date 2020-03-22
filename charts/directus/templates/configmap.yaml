@@ -9,6 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   auth_public_key: {{ .Values.config.authPublicKey | quote }}
+  cors_origin: {{ .Values.config.cors.origin | quote }}
   {{- $mysql := .Values.config.mysql }}
   {{- if $mysql.internal }}
   mysql_host: {{ template "directus.fullname" . }}-mysql

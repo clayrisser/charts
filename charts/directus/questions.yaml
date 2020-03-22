@@ -51,6 +51,13 @@ questions:
     required: true
     label: 'auth secret key'
     group: Config
+  - variable: config.cors.origin
+    default: '*'
+    description: ''
+    type: boolean
+    required: true
+    label: 'cors origin'
+    group: Config
 
 # MySQL Config
   - variable: config.mysql.internal

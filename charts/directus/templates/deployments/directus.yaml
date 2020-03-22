@@ -23,6 +23,10 @@ spec:
       labels:
         app: {{ template "directus.name" . }}-directus
         release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
     spec:
       containers:
         - name: {{ template "directus.fullname" . }}-directus
@@ -40,6 +44,11 @@ spec:
           env:
             - name: DIRECTUS_APP_ENV
               value: production
+            - name: DIRECTUS_CORS_ORIGIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: cors_origin
             - name: DIRECTUS_AUTH_PUBLICKEY
               valueFrom:
                 configMapKeyRef:

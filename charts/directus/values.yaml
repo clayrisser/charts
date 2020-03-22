@@ -11,6 +11,8 @@ config:
   updateStrategy: RollingUpdate
   directus:
     baseUrl: ''
+    cors:
+      origin: '*'
     email: email@example.com
     hostname: ''
     password: pass
