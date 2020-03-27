@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.nginx.tls }}
     {{- if (empty .Values.ingress.nginx.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.nginx.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.nginx.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
