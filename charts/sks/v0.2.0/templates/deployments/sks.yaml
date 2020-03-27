@@ -14,6 +14,10 @@ metadata:
     stash.appscode.com/volume-mounts: 'data:/_data'
   {{- end }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "sks.name" . }}-sks
+      release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
