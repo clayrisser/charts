@@ -19,4 +19,9 @@ spec:
     email: {{ .Values.letsencrypt.email }}
     privateKeySecretRef:
       name: {{ .Values.ingressShim.defaultIssuerName }}-account-key
-    http01: {}
+    solvers:
+      - selector: {}
+        http01:
+          serviceType: ClusterIP
+          ingress:
+            class: nginx
