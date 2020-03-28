@@ -10,7 +10,7 @@ metadata:
 spec:
   acme:
     server: "https://acme-staging-v02.api.letsencrypt.org/directory"
-    email: {{ .Values.letsencrypt.email }}
+    email: {{ .Values.config.email }}
     privateKeySecretRef:
       name: letsencrypt-staging-account-key
     solvers:
@@ -18,4 +18,8 @@ spec:
         http01:
           serviceType: ClusterIP
           ingress:
+            {{- if (eq .Values.config.clusterProvider "aks") }}
+            class: addon-http-application-routing
+            {{- else }}
             class: nginx
+            {{- end }}
