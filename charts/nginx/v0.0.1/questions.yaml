@@ -35,13 +35,6 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.hello
-    default: world
-    description: ''
-    type: string
-    required: false
-    label: hello
-    group: Config
   - variable: config.secret
     default: pass
     description: ''
