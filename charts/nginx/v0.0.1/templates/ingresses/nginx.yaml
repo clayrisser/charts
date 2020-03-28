@@ -4,7 +4,6 @@ kind: Ingress
 metadata:
   name: {{ template "nginx.fullname" . }}-nginx
   annotations:
-    kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.nginx.tls }}
     {{- if (empty .Values.ingress.nginx.certificate) }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.nginx.issuer.name }}
