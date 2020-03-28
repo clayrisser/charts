@@ -1,5 +1,2 @@
-ingressShim:
-  defaultIssuerName: letsencrypt-staging
-
 letsencrypt:
   email: ''
