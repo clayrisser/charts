@@ -35,13 +35,9 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: '/data'
+              mountPath: /data
               subPath: data
-          env:
-            - name: HELLO
-              value: {{ .Values.config.hello }}
-            - name: SECRET
-              value: {{ .Values.config.secret }}
+          env: {}
           livenessProbe:
             httpGet:
               path: /

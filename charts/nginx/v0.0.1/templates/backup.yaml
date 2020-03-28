@@ -51,15 +51,6 @@ spec:
     keepLast: {{ .Values.persistence.stash.keepLast }}
     prune: true
   members:
-    {{- if (and .Values.config.postgres.internal (not (and (eq .Values.config.postgres.terminationPolicy "Pause") .Values.config.postgres.pause))) }}
-    - target:
-        ref:
-          apiVersion: apps/v1
-          kind: AppBinding
-          name: {{ template "nginx.fullname" . }}-postgres
-      task:
-        name: postgres-backup-{{ .Values.config.postgres.version }}
-    {{- end }}
     - target:
         ref:
           apiVersion: apps/v1

@@ -28,17 +28,6 @@ Calculate nginx certificate
 {{- end }}
 
 {{/*
-Calculate pgadmin certificate
-*/}}
-{{- define "nginx.pgadmin-certificate" }}
-{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
-{{- printf .Values.ingress.pgadmin.certificate }}
-{{- else }}
-{{- printf "%s-pgadmin-letsencrypt" (include "nginx.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate nginx hostname
 */}}
 {{- define "nginx.nginx-hostname" }}
@@ -67,23 +56,6 @@ Calculate nginx base url
 {{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
 {{- printf "http://%s" (include "nginx.nginx-hostname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate postgres url
-*/}}
-{{- define "nginx.postgres-url" }}
-{{- $postgres := .Values.config.postgres }}
-{{- if $postgres.internal }}
-{{- $credentials := (printf "%s:%s" $postgres.username $postgres.password) }}
-{{- printf "postgresql://%s@%s-postgres:5432/%s" $credentials (include "nginx.fullname" .) $postgres.database }}
-{{- else }}
-{{- if $postgres.url }}
-{{- printf $postgres.url }}
-{{- else }}
-{{- printf "postgresql://%s@%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
 {{- end }}
 {{- end }}
 {{- end }}
