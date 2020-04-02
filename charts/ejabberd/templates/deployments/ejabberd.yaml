@@ -43,13 +43,11 @@ spec:
               readOnly: true
           env: []
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
