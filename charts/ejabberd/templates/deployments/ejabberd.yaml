@@ -37,10 +37,10 @@ spec:
             - name: data
               mountPath: /home/ejabberd/database
               subPath: data
-            # - name: config
-            #   subPath: ejabberd.yml
-            #   mountPath: /home/ejabberd/conf/ejabberd.yml
-            #   readOnly: true
+            - name: config
+              subPath: ejabberd.yml
+              mountPath: /home/ejabberd/conf/ejabberd.yml
+              readOnly: true
           env: []
           livenessProbe:
             httpGet:
