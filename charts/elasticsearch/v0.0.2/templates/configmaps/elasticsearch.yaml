@@ -8,10 +8,13 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  client-config.yml: |
   common-config.yml: |
     path:
       logs: /data/elasticsearch/common-logdir
+      {{ eq .Values.config.authPlugin "SearchGuard" }}
+      searchguard.restapi.roles_enabled: ["sg_all_access","sg_kibana_user"]
+      xpack.security.enabled: false
+      {{- end }}
 {{- if .Values.config.commonConfig }}
 {{ toYaml .Values.config.commonConfig | indent 4 }}
 {{- end }}
@@ -33,3 +36,4 @@ data:
 {{- if .Values.config.masterConfig }}
 {{ toYaml .Values.config.masterConfig | indent 4 }}
 {{- end }}
+  client-config.yml: ''

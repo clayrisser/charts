@@ -4,6 +4,18 @@ categories:
 questions:
 
 # Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
   - variable: config.version
     default: 6.4.0
     description: ''
@@ -43,6 +55,13 @@ questions:
     required: true
     label: 'termination policy'
     group: Config
+  - variable: config.baseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: Config
   - variable: config.pause
     default: false
     description: ''
@@ -71,7 +90,7 @@ questions:
     group: Config
   - variable: config.kibana
     default: true
-    description: ''
+    description: 'requires auto plugin SearchGuard'
     type: boolean
     required: true
     label: kibana

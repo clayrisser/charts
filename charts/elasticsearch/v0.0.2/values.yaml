@@ -5,11 +5,14 @@ images:
     pullPolicy: IfNotPresent
 
 config:
+  authPlugin: None
+  baseUrl: ''
+  clusterProvider: infrastructure
   commonConfig: ''
   dataConfig: ''
+  hostname: ''
   kibana: true
   masterConfig: ''
-  authPlugin: None
   password: changeme
   pause: true
   prometheus: false

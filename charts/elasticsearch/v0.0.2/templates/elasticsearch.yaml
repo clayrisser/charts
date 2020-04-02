@@ -13,8 +13,8 @@ spec:
   configSource:
     configMap:
       name: {{ template "elasticsearch.fullname" . }}-elasticsearch
-  # databaseSecret:
-  #   secretName: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
+  databaseSecret:
+    secretName: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
