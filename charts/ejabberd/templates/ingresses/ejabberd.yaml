@@ -14,6 +14,7 @@ metadata:
     certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.ejabberd.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
+    nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
