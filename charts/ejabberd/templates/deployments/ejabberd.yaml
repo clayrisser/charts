@@ -28,6 +28,22 @@ spec:
         - name: {{ template "ejabberd.fullname" . }}-ejabberd
           image: {{ .Values.images.ejabberd.repository }}:{{ .Values.images.ejabberd.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
+          command:
+            - sh
+            - -c
+            - |
+              cat /home/ejabberd/conf/certs/tls.crt | base64 -d | tr '\n' '~' | \
+                sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
+                awk '{split($0,array,"~~~")} END{print array[1]}' | tr '~' '\n' > /home/ejabberd/conf/certs/cert.pem
+              echo "-----END CERTIFICATE-----" >> /home/ejabberd/conf/certs/cert.pem
+              echo >> /home/ejabberd/conf/certs/cert.pem
+              echo "-----BEGIN CERTIFICATE-----" > /home/ejabberd/conf/certs/fullchain.pem
+              cat tls.crt | base64 -d | tr '\n' '~' | \
+                sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
+                awk '{split($0,array,"~~~")} END{print array[2]}' | tr '~' '\n' >> /home/ejabberd/conf/certs/fullchain.pem
+              /home/ejabberd/bin/ejabberdctl foreground
+          {{- end }}
           ports:
             - name: container
               containerPort: 5280
@@ -41,6 +57,16 @@ spec:
               subPath: ejabberd.yml
               mountPath: /home/ejabberd/conf/ejabberd.yml
               readOnly: true
+            {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
+            - name: certs
+              subPath: tls.crt
+              mountPath: /home/ejabberd/conf/certs/tls.crt
+              readOnly: true
+            - name: certs
+              subPath: tls.key
+              mountPath: /home/ejabberd/conf/certs/tls.key
+              readOnly: true
+            {{- end }}
           env: []
           livenessProbe:
             tcpSocket:
@@ -51,6 +77,11 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
+        {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
+        - name: certs
+          secret:
+            secretName: {{ template "ejabberd.ejabberd-certificate" . }}
+        {{- end }}
         - name: config
           configMap:
             name: {{ template "ejabberd.fullname" . }}-ejabberd

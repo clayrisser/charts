@@ -16,9 +16,16 @@ data:
     log_rotate_date: ''
     log_rotate_count: 1
     log_rate_limit: 100
+    {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
+    certfiles:
+      - /home/ejabberd/conf/certs/fullchain.pem
+      - /home/ejabberd/conf/certs/tls.key
+    ca_file: /home/ejabberd/conf/certs/fullchain.pem
+    {{- else }}
     certfiles:
       - /home/ejabberd/conf/server.pem
-    ca_file: '/home/ejabberd/conf/cacert.pem'
+    ca_file: /home/ejabberd/conf/cacert.pem
+    {{- end }}
     listen:
       - port: 5222
         ip: '::'
