@@ -11,7 +11,7 @@ data:
   common-config.yml: |
     path:
       logs: /data/elasticsearch/common-logdir
-      {{ eq .Values.config.authPlugin "SearchGuard" }}
+      {{- if (eq .Values.config.authPlugin "SearchGuard") }}
       searchguard.restapi.roles_enabled: ["sg_all_access","sg_kibana_user"]
       xpack.security.enabled: false
       {{- end }}
