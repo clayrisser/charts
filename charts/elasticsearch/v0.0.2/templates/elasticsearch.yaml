@@ -129,14 +129,12 @@ spec:
     spec:
       resources:
       livenessProbe:
-        httpGet:
-          path: /
-          port: container
+        exec:
+          command: ['curl',  'localhost:9200']
 {{ toYaml .Values.probes.liveness | indent 8 }}
       readinessProbe:
-        httpGet:
-          path: /
-          port: container
+        exec:
+          command: ['curl',  'localhost:9200']
 {{ toYaml .Values.probes.readiness | indent 8 }}
 {{ toYaml .Values.config.resources | indent 8 }}
     {{- end }}
