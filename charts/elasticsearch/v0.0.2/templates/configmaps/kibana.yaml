@@ -11,7 +11,8 @@ metadata:
 data:
   kibana.yml: |
     elasticsearch.password: kibana@secret
-    elasticsearch.url: '{{ template "elasticsearch.elasticsearch-base-url" . }}'
+    elasticsearch.url: {{ template "elasticsearch.elasticsearch-base-url" . }}
+    elasticsearch.url
     elasticsearch.username: kibanauser
     searchguard.auth.type: basicauth
     searchguard.cookie.secure: false
