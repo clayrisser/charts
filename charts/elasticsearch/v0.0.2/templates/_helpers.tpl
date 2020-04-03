@@ -17,16 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Create a name shared accross all apps in namespace.
-We truncate at 63 chars because some Kubernetes name fields are limited to this
-(by the DNS naming spec).
-*/}}
-{{- define "elasticsearch.sharedname" }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- printf "%s-%s" .Release.Namespace $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Calculate elasticsearch certificate
 */}}
 {{- define "elasticsearch.elasticsearch-certificate" }}
