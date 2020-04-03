@@ -10,12 +10,11 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   kibana.yml: |
+    elasticsearch.password: kibana@secret
+    elasticsearch.url: {{ template "elasticsearch.elasticsearch-base-url" . }}
+    elasticsearch.username: kibanauser
     searchguard.auth.type: basicauth
     searchguard.cookie.secure: false
     server.host: 0.0.0.0
     xpack.security.enabled: false
-    elasticsearch:
-      password: kibana@secret
-      url: {{ template "elasticsearch.elasticsearch-base-url" . }}
-      username: kibanauser
 {{- end }}
