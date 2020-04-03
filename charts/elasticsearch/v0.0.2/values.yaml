@@ -119,13 +119,13 @@ persistence:
 
 probes:
   liveness:
-    initialDelaySeconds: 120
+    initialDelaySeconds: 180
     periodSeconds: 10
     timeoutSeconds: 5
     failureThreshold: 6
     successThreshold: 1
   readiness:
-    initialDelaySeconds: 30
+    initialDelaySeconds: 180
     periodSeconds: 10
     timeoutSeconds: 5
     failureThreshold: 24
