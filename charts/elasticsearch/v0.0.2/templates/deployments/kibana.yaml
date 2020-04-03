@@ -39,14 +39,12 @@ spec:
                   name: {{ template "elasticsearch.sharedname" . }}-elasticsearch-auth
                   key: ADMIN_PASSWORD
           livenessProbe:
-            httpGet:
-              path: /
-              port: container
+            exec:
+              command: ['curl',  'localhost:5601']
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: container
+            exec:
+              command: ['curl',  'localhost:5601']
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: config

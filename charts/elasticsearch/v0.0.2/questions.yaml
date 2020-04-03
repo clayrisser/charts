@@ -518,7 +518,7 @@ questions:
     show_if: config.kibana=true
     group: Images
   - variable: images.kibana.tag
-    default: 7.3.2
+    default: 6.3.0
     description: ''
     type: string
     required: true
