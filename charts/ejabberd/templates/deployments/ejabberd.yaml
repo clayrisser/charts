@@ -28,6 +28,9 @@ spec:
         - name: {{ template "ejabberd.fullname" . }}-ejabberd
           image: {{ .Values.images.ejabberd.repository }}:{{ .Values.images.ejabberd.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
           command:
             - sh
