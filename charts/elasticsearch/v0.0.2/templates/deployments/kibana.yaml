@@ -22,6 +22,9 @@ spec:
           ports:
             - name: container
               containerPort: 5601
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/kibana/config
           env:
             - name: ELASTICSEARCH_HOSTS
               value: http://{{ template "elasticsearch.fullname" . }}-elasticsearch:9200
@@ -45,4 +48,8 @@ spec:
               path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "elasticsearch.fullname" . }}-kibana
 {{- end }}
