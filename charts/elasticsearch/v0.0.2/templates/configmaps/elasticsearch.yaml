@@ -36,4 +36,4 @@ data:
 {{- if .Values.config.masterConfig }}
 {{ toYaml .Values.config.masterConfig | indent 4 }}
 {{- end }}
-  client-config.yml: ''
+  client-config.yml: '{}'
