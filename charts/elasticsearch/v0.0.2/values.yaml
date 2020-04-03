@@ -1,7 +1,7 @@
 images:
   kibana:
-    repository: kibana
-    tag: 7.5.2
+    repository: kubedb/kibana
+    tag: 7.3.2
     pullPolicy: IfNotPresent
 
 config:
