@@ -17,6 +17,8 @@ data:
       url: {{ template "elasticsearch.elasticsearch-base-url" . }}
       username: kibanauser
     searchguard
-      auth.type: basicauth
-      cookie.secure: false
+      auth:
+        type: basicauth
+      cookie:
+        secure: false
 {{- end }}
