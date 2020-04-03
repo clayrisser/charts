@@ -28,14 +28,15 @@ spec:
         - name: {{ template "ejabberd.fullname" . }}-ejabberd
           image: {{ .Values.images.ejabberd.repository }}:{{ .Values.images.ejabberd.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
+          # securityContext:
+          #   runAsUser: 0
+          #   runAsGroup: 0
           {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
           command:
             - sh
             - -c
             - |
+              echo $UID
               ls /home/ejabberd/conf/certs
               cat /home/ejabberd/conf/certs/tls.crt | base64 -d | tr '\n' '~' | \
                 sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
