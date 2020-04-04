@@ -30,8 +30,9 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           securityContext:
             fsGroup: 9000
+            fsUser: 9000
             runAsGroup: 9000
-            runAsUser: 0
+            runAsUser: 9000
           command:
             - sh
             - -c
