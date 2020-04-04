@@ -54,9 +54,9 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /_data
-            # - name: data
-            #   mountPath: /home/ejabberd/database
-            #   subPath: data
+            - name: data
+              mountPath: /home/ejabberd/database
+              subPath: data
             - name: config
               subPath: ejabberd.yml
               mountPath: /home/ejabberd/conf/ejabberd.yml
