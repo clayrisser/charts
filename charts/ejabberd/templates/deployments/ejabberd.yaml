@@ -72,11 +72,11 @@ spec:
           env: []
           livenessProbe:
             tcpSocket:
-              port: container
+              port: http
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             tcpSocket:
-              port: container
+              port: http
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}

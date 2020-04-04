@@ -24,7 +24,7 @@ spec:
       nodePort: {{ .Values.service.ejabberd.nodePorts.http }}
       {{- end }}
     - name: https
-      port: 5443
+      port: 443
       targetPort: https
       {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.http))) }}
       nodePort: {{ .Values.service.ejabberd.nodePorts.http }}
