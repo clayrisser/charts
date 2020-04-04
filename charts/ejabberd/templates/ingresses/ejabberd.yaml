@@ -30,8 +30,10 @@ spec:
           - path: {{ .Values.ingress.ejabberd.path }}
             backend:
               serviceName: {{ template "ejabberd.fullname" . }}-ejabberd
+  {{- if (not .Values.ingress.ejabberd.tls) }}
               servicePort: http
-  {{- if .Values.ingress.ejabberd.tls }}
+  {{- else }}
+              servicePort: https
   tls:
     - secretName: {{ template "ejabberd.ejabberd-certificate" . }}
       hosts:

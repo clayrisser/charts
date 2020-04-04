@@ -41,8 +41,10 @@ spec:
               exec /home/ejabberd/bin/ejabberdctl foreground
           {{- end }}
           ports:
-            - name: container
+            - name: http
               containerPort: 5280
+            - name: https
+              containerPort: 5443
           volumeMounts:
             - name: data
               mountPath: /_data
