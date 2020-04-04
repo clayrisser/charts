@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           securityContext:
             fsGroup: 9000
-            runAsGroup: 0
+            runAsGroup: 9000
             runAsUser: 0
           {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
           command:
