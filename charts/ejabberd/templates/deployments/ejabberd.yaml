@@ -38,7 +38,7 @@ spec:
             - -c
             - |
               sh /scripts/setup.sh
-              /home/ejabberd/bin/ejabberdctl foreground
+              exec /home/ejabberd/bin/ejabberdctl foreground
           {{- end }}
           ports:
             - name: container

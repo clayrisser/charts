@@ -203,12 +203,7 @@ data:
         show_os: false
 
   setup.sh: |
-    ls -la /home/ejabberd/conf/certs
-    cat /home/ejabberd/conf/certs/tls.crt
     if cat /home/ejabberd/conf/certs/tls.crt | base64 -d | tr '\n' '~' | grep -E "END CERTIFICATE.+BEGIN CERTIFICATE"; then
-
-      echo me found
-
       cat /home/ejabberd/conf/certs/tls.crt | base64 -d | tr '\n' '~' | \
         sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
         awk '{split($0,array,"~~~")} END{print array[1]}' | tr '~' '\n' > /home/ejabberd/conf/certs/cert.pem
@@ -218,16 +213,6 @@ data:
       cat tls.crt | base64 -d | tr '\n' '~' | \
         sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
         awk '{split($0,array,"~~~")} END{print array[2]}' | tr '~' '\n' >> /home/ejabberd/conf/certs/fullchain.pem
-
-        ls -la /home/ejabberd/conf/certs
-        cat /home/ejabberd/conf/certs/cert.pem
-
     else
-
       cp /home/ejabberd/conf/certs/tls.crt /home/ejabberd/conf/certs/fullchain.pem
-      ls -la /home/ejabberd/conf/certs
-
     fi
-
-    cat /home/ejabberd/conf/certs/fullchain.pem
-    echo STARTING UP
