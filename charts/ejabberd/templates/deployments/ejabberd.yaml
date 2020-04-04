@@ -45,7 +45,7 @@ spec:
               containerPort: 5280
             - name: https
               containerPort: 5443
-            - name: c2s
+            - name: xmpp
               containerPort: 5222
             - name: s2s
               containerPort: 5269

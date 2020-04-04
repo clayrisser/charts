@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   {{- if .Values.ingress.ejabberd.enabled }}
-  type: ClusterIP
+  type: NodePort
   {{- else }}
   type: {{ .Values.service.ejabberd.type }}
   {{- if (or (eq .Values.service.ejabberd.type "LoadBalancer") (eq .Values.service.ejabberd.type "NodePort")) }}
@@ -23,21 +23,24 @@ spec:
       {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.http))) }}
       nodePort: {{ .Values.service.ejabberd.nodePorts.http }}
       {{- end }}
-    - name: https
-      port: 443
-      targetPort: https
-      {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.http))) }}
-      nodePort: {{ .Values.service.ejabberd.nodePorts.http }}
-      {{- end }}
-    - name: c2s
+    # - name: https
+    #   port: 443
+    #   targetPort: https
+    #   {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.http))) }}
+    #   nodePort: {{ .Values.service.ejabberd.nodePorts.http }}
+    #   {{- end }}
+    - name: xmpp
       port: 5222
-      targetPort: c2s
-    - name: s2s
-      port: 5269
-      targetPort: s2s
-    - name: mqtt
-      port: 1883
-      targetPort: mqtt
+      targetPort: xmpp
+      {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.xmpp))) }}
+      nodePort: {{ .Values.service.ejabberd.nodePorts.xmpp }}
+      {{- end }}
+    # - name: s2s
+    #   port: 5269
+    #   targetPort: s2s
+    # - name: mqtt
+    #   port: 1883
+    #   targetPort: mqtt
   selector:
     app: {{ template "ejabberd.name" . }}-ejabberd
     release: {{ .Release.Name }}

@@ -18,6 +18,7 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
+      xmpp: ''
 
 ingress:
   ejabberd:

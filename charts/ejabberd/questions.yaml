@@ -190,6 +190,14 @@ questions:
         max: 32767
         show_if: ingress.ejabberd.enabled=false
         label: 'ejabberd http port'
+  - variable: service.ejabberd.nodePorts.xmpp
+    default: ''
+    description: ''
+    type: int
+    show_if: ingress.ejabberd.enabled=true||service.ejabberd.type=NodePort
+    min: 30000
+    max: 32767
+    label: 'ejabberd xmpp port'
 
 # Images
   - variable: images.ejabberd.repository
