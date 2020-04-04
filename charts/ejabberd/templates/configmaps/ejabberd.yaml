@@ -18,9 +18,9 @@ data:
     log_rate_limit: 100
     {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
     certfiles:
-      - /home/ejabberd/conf/certs/fullchain.pem
+      - /home/ejabberd/conf/certs/cert.pem
       - /home/ejabberd/conf/certs/tls.key
-    ca_file: /home/ejabberd/conf/certs/fullchain.pem
+    ca_file: /home/ejabberd/conf/certs/cert.pem
     {{- else }}
     certfiles:
       - /home/ejabberd/conf/server.pem
@@ -214,5 +214,5 @@ data:
         sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
         awk '{split($0,array,"~~~")} END{print array[2]}' | tr '~' '\n' >> /home/ejabberd/conf/certs/fullchain.pem
     else
-      cp /home/ejabberd/conf/certs/tls.crt /home/ejabberd/conf/certs/fullchain.pem
+      cp /home/ejabberd/conf/certs/tls.crt /home/ejabberd/conf/certs/cert.pem
     fi
