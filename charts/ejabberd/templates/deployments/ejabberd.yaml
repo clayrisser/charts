@@ -30,9 +30,8 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           securityContext:
             fsGroup: 9000
-            fsUser: 9000
-            runAsGroup: 9000
-            runAsUser: 9000
+            runAsGroup: 0
+            runAsUser: 0
           command:
             - sh
             - -c
@@ -43,6 +42,7 @@ spec:
               ls -la /home/ejabberd
               echo ----
               ls -la /home/ejabberd/database
+              chown -R ejabberd:ejabberd /home/ejabberd/database
               touch /home/ejabberd/database/hi
               exec /home/ejabberd/bin/ejabberdctl foreground
           ports:
