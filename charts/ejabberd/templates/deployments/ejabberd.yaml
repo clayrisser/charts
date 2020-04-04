@@ -45,6 +45,12 @@ spec:
               containerPort: 5280
             - name: https
               containerPort: 5443
+            - name: c2s
+              containerPort: 5222
+            - name: s2s
+              containerPort: 5269
+            - name: mqtt
+              containerPort: 1883
           volumeMounts:
             - name: data
               mountPath: /_data

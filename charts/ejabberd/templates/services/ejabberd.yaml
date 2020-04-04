@@ -29,6 +29,15 @@ spec:
       {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.http))) }}
       nodePort: {{ .Values.service.ejabberd.nodePorts.http }}
       {{- end }}
+    - name: c2s
+      port: 5222
+      targetPort: c2s
+    - name: s2s
+      port: 5269
+      targetPort: s2s
+    - name: mqtt
+      port: 1883
+      targetPort: mqtt
   selector:
     app: {{ template "ejabberd.name" . }}-ejabberd
     release: {{ .Release.Name }}
