@@ -201,3 +201,20 @@ data:
       mod_vcard_xupdate: {}
       mod_version:
         show_os: false
+
+  setup.sh: |
+    ls -la /home/ejabberd/conf/certs
+    cat /home/ejabberd/conf/certs/tls.crt
+    cat /home/ejabberd/conf/certs/tls.crt | base64 -d | tr '\n' '~' | \
+      sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
+      awk '{split($0,array,"~~~")} END{print array[1]}' | tr '~' '\n' > /home/ejabberd/conf/certs/cert.pem
+    echo "-----END CERTIFICATE-----" >> /home/ejabberd/conf/certs/cert.pem
+    echo >> /home/ejabberd/conf/certs/cert.pem
+    echo "-----BEGIN CERTIFICATE-----" > /home/ejabberd/conf/certs/fullchain.pem
+    cat tls.crt | base64 -d | tr '\n' '~' | \
+      sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
+      awk '{split($0,array,"~~~")} END{print array[2]}' | tr '~' '\n' >> /home/ejabberd/conf/certs/fullchain.pem
+    ls -la /home/ejabberd/conf/certs
+    cat /home/ejabberd/conf/certs/cert.pem
+    cat /home/ejabberd/conf/certs/fullchain.pem
+    echo STARTING UP

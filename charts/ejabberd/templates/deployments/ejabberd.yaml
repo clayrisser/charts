@@ -37,21 +37,7 @@ spec:
             - sh
             - -c
             - |
-              ls -la /home/ejabberd/conf/certs
-              cat /home/ejabberd/conf/certs/tls.crt
-              cat /home/ejabberd/conf/certs/tls.crt | base64 -d | tr '\n' '~' | \
-                sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
-                awk '{split($0,array,"~~~")} END{print array[1]}' | tr '~' '\n' > /home/ejabberd/conf/certs/cert.pem
-              echo "-----END CERTIFICATE-----" >> /home/ejabberd/conf/certs/cert.pem
-              echo >> /home/ejabberd/conf/certs/cert.pem
-              echo "-----BEGIN CERTIFICATE-----" > /home/ejabberd/conf/certs/fullchain.pem
-              cat tls.crt | base64 -d | tr '\n' '~' | \
-                sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
-                awk '{split($0,array,"~~~")} END{print array[2]}' | tr '~' '\n' >> /home/ejabberd/conf/certs/fullchain.pem
-              ls -la /home/ejabberd/conf/certs
-              cat /home/ejabberd/conf/certs/cert.pem
-              cat /home/ejabberd/conf/certs/fullchain.pem
-              echo STARTING UP
+              sh /scripts/setup.sh
               /home/ejabberd/bin/ejabberdctl foreground
           {{- end }}
           ports:
@@ -60,12 +46,16 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /_data
-            - name: data
-              mountPath: /home/ejabberd/database
-              subPath: data
+            # - name: data
+            #   mountPath: /home/ejabberd/database
+            #   subPath: data
             - name: config
               subPath: ejabberd.yml
               mountPath: /home/ejabberd/conf/ejabberd.yml
+              readOnly: true
+            - name: config
+              subPath: setup.sh
+              mountPath: /scripts/setup.sh
               readOnly: true
             {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
             - name: certs
