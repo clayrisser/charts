@@ -198,6 +198,7 @@ questions:
     min: 30000
     max: 32767
     label: 'ejabberd xmpp port'
+    group: 'Services and Load Balancing'
 
 # Images
   - variable: images.ejabberd.repository
