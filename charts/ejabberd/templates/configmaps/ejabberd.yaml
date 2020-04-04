@@ -222,7 +222,3 @@ data:
     else
       cp /home/ejabberd/conf/certs/tls.crt /home/ejabberd/conf/certs/cert.pem
     fi
-    ls -la /home/ejabberd
-    echo ----
-    ls -la /home/ejabberd/database
-    touch /home/ejabberd/database/hi
