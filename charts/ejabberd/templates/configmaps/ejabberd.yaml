@@ -47,14 +47,20 @@ data:
           /api: mod_http_api
           /bosh: mod_bosh
           /captcha: ejabberd_captcha
+          /oauth: ejabberd_oauth
           /upload: mod_http_upload
           /ws: ejabberd_http_ws
-          /oauth: ejabberd_oauth
       - port: 5280
         ip: '::'
         module: ejabberd_http
         request_handlers:
-          '/admin': ejabberd_web_admin
+          /admin: ejabberd_web_admin
+          /api: mod_http_api
+          /bosh: mod_bosh
+          /captcha: ejabberd_captcha
+          /oauth: ejabberd_oauth
+          /upload: mod_http_upload
+          /ws: ejabberd_http_ws
       - port: 1883
         ip: '::'
         module: mod_mqtt
