@@ -36,14 +36,7 @@ spec:
             - sh
             - -c
             - |
-              {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
               sh /scripts/setup.sh
-              {{- end }}
-              ls -la /home/ejabberd
-              echo ----
-              ls -la /home/ejabberd/database
-              chown -R ejabberd:ejabberd /home/ejabberd/database
-              touch /home/ejabberd/database/hi
               exec /home/ejabberd/bin/ejabberdctl foreground
           ports:
             - name: http

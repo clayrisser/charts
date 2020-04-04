@@ -209,6 +209,7 @@ data:
         show_os: false
 
   setup.sh: |
+    {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
     if cat /home/ejabberd/conf/certs/tls.crt | tr '\n' '~' | grep -q -E "END CERTIFICATE.+BEGIN CERTIFICATE"; then
       cat /home/ejabberd/conf/certs/tls.crt | tr '\n' '~' | \
         sed 's/-\+END CERTIFICATE-\+~-\+BEGIN CERTIFICATE-\+/~/g' | \
@@ -222,3 +223,5 @@ data:
     else
       cp /home/ejabberd/conf/certs/tls.crt /home/ejabberd/conf/certs/cert.pem
     fi
+    {{- end }}
+    chown -R ejabberd:ejabberd /home/ejabberd/database
