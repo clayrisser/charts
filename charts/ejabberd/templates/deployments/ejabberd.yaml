@@ -29,7 +29,7 @@ spec:
           image: {{ .Values.images.ejabberd.repository }}:{{ .Values.images.ejabberd.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           securityContext:
-            fsGroup: 0
+            fsGroup: 9000
             runAsGroup: 0
             runAsUser: 0
           {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
