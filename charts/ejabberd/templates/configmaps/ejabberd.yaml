@@ -54,7 +54,7 @@ data:
         ip: '::'
         module: ejabberd_http
         request_handlers:
-          'admin/': ejabberd_web_admin
+          '/admin': ejabberd_web_admin
       - port: 1883
         ip: '::'
         module: mod_mqtt
