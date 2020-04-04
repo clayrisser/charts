@@ -5,6 +5,7 @@ images:
 
 config:
   clusterProvider: infrastructure
+  debug: false
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   ejabberd:

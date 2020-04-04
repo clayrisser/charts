@@ -15,6 +15,13 @@ questions:
     required: true
     label: 'cluster type'
     group: Config
+  - variable: config.debug
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
   - variable: config.imagePullPolicy
     default: IfNotPresent
     description: ''
