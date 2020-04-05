@@ -36,7 +36,7 @@ spec:
   {{- if (not .Values.ingress.ejabberd.tls) }}
               servicePort: http
   {{- else }}
-              servicePort: http
+              servicePort: https
   tls:
     - secretName: {{ template "ejabberd.ejabberd-certificate" . }}
       hosts:

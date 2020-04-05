@@ -38,16 +38,16 @@ data:
         ip: '::'
         module: ejabberd_s2s_in
         max_stanza_size: 524288
-      # - port: 5443
-      #   ip: '::'
-      #   module: ejabberd_http
-      #   tls: true
-      #   request_handlers:
-      #     /api: mod_http_api
-      #     /bosh: mod_bosh
-      #     /oauth: ejabberd_oauth
-      #     /upload: mod_http_upload
-      #     /ws: ejabberd_http_ws
+      - port: 5443
+        ip: '::'
+        module: ejabberd_http
+        tls: true
+        request_handlers:
+          /api: mod_http_api
+          /bosh: mod_bosh
+          /oauth: ejabberd_oauth
+          /upload: mod_http_upload
+          /ws: ejabberd_http_ws
       - port: 5280
         ip: '::'
         module: ejabberd_http
