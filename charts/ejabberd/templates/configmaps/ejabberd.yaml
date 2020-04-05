@@ -10,7 +10,7 @@ metadata:
 data:
   ejabberd.yml: |
     hosts:
-      - localhost
+      - {{ template "ejabberd.ejabberd-hostname" . }}
     loglevel: {{ .Values.config.debug | ternary 5 4 }}
     log_rotate_size: 10485760
     log_rotate_date: ''
@@ -76,7 +76,7 @@ data:
           - ::FFFF:127.0.0.1/128
       admin:
         user:
-          - 'admin@localhost'
+          - admin@{{ template "ejabberd.ejabberd-hostname" . }}
     access_rules:
       local:
         allow: local
