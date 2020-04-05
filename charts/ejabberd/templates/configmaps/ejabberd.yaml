@@ -18,9 +18,9 @@ data:
     log_rate_limit: 100
     {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
     certfiles:
-      - /home/ejabberd/conf/certs/cert.pem
+      - /home/ejabberd/conf/certs/tls.crt
       - /home/ejabberd/conf/certs/tls.key
-    ca_file: /home/ejabberd/conf/certs/cert.pem
+    ca_file: /home/ejabberd/conf/certs/tls.crt
     {{- else }}
     certfiles:
       - /home/ejabberd/conf/server.pem
@@ -38,26 +38,22 @@ data:
         ip: '::'
         module: ejabberd_s2s_in
         max_stanza_size: 524288
-      - port: 5443
-        ip: '::'
-        module: ejabberd_http
-        tls: true
-        request_handlers:
-          /admin: ejabberd_web_admin
-          /api: mod_http_api
-          /bosh: mod_bosh
-          /captcha: ejabberd_captcha
-          /oauth: ejabberd_oauth
-          /upload: mod_http_upload
-          /ws: ejabberd_http_ws
+      # - port: 5443
+      #   ip: '::'
+      #   module: ejabberd_http
+      #   tls: true
+      #   request_handlers:
+      #     /api: mod_http_api
+      #     /bosh: mod_bosh
+      #     /oauth: ejabberd_oauth
+      #     /upload: mod_http_upload
+      #     /ws: ejabberd_http_ws
       - port: 5280
         ip: '::'
         module: ejabberd_http
         request_handlers:
-          /admin: ejabberd_web_admin
           /api: mod_http_api
           /bosh: mod_bosh
-          /captcha: ejabberd_captcha
           /oauth: ejabberd_oauth
           /upload: mod_http_upload
           /ws: ejabberd_http_ws
@@ -134,9 +130,6 @@ data:
         normal: all
       s2s_shaper: fast
     max_fsm_queue: 10000
-    acme:
-       contact: 'mailto:example-admin@example.com'
-       ca_url: 'https://acme-v01.api.letsencrypt.org'
     modules:
       mod_adhoc: {}
       mod_admin_extra: {}
@@ -153,12 +146,9 @@ data:
       mod_fail2ban: {}
       mod_http_api: {}
       mod_http_upload:
-        put_url: https://@HOST@:5443/upload
+        put_url: {{ template "ejabberd.ejabberd-base-url" . }}/upload
       mod_last: {}
       mod_mam:
-        ## Mnesia is limited to 2GB, better to use an SQL backend
-        ## For small servers SQLite is a good fit and is very easy
-        ## to configure. Uncomment this when you have SQL configured:
         ## db_type: sql
         assume_mam_usage: true
         default: never
