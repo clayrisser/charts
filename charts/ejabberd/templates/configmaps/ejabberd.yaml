@@ -43,8 +43,10 @@ data:
         module: ejabberd_http
         tls: true
         request_handlers:
+          /admin: ejabberd_web_admin
           /api: mod_http_api
           /bosh: mod_bosh
+          /captcha: ejabberd_captcha
           /oauth: ejabberd_oauth
           /upload: mod_http_upload
           /ws: ejabberd_http_ws
@@ -52,8 +54,10 @@ data:
         ip: '::'
         module: ejabberd_http
         request_handlers:
+          /admin: ejabberd_web_admin
           /api: mod_http_api
           /bosh: mod_bosh
+          /captcha: ejabberd_captcha
           /oauth: ejabberd_oauth
           /upload: mod_http_upload
           /ws: ejabberd_http_ws
