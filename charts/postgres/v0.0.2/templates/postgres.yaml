@@ -77,17 +77,17 @@ spec:
           {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
           nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
-  podTemplate:
-    spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - preference:
-                matchExpressions:
-                  - key: lifecycle
-                    operator: In
-                    values:
-                      - dedicated
+  # podTemplate:
+  #   spec:
+  #     affinity:
+  #       nodeAffinity:
+  #         preferredDuringSchedulingIgnoredDuringExecution:
+  #           - preference:
+  #               matchExpressions:
+  #                 - key: lifecycle
+  #                   operator: In
+  #                   values:
+  #                     - dedicated
   replicaServiceTemplate:
     annotations:
       passMe: ToReplicaService
