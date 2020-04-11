@@ -9,6 +9,6 @@ config:
   endpoint: s3.amazonaws.com
   googleProjectId: ''
   googleServiceKey: ''
-  prefix: ''
+  prefix: stash
   resticPassword: pass
   type: s3

@@ -82,7 +82,7 @@ questions:
     show_if: config.type=s3
     label: 'backup endpoint'
   - variable: config.prefix
-    default: ''
+    default: stash
     description: ''
     type: string
     required: false
