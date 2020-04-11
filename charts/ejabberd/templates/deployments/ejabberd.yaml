@@ -24,6 +24,15 @@ spec:
         backup.velero.io/backup-volumes: data
       {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - dedicated
       containers:
         - name: {{ template "ejabberd.fullname" . }}-ejabberd
           image: {{ .Values.images.ejabberd.repository }}:{{ .Values.images.ejabberd.tag }}
