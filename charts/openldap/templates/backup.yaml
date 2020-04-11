@@ -1,79 +1,41 @@
 {{- if .Values.persistence.stash.enabled }}
-apiVersion: batch/v1
-kind: Job
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
 metadata:
-  name: {{ template "openldap.fullname" . }}-backup-init
+  name: {{ template "openldap.fullname" . }}-data
   labels:
-    app: {{ template "openldap.name" . }}-backup-init
+    app: {{ template "openldap.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '3'
-    helm.sh/hook-delete-policy: before-hook-creation
 spec:
-  strategy:
-    type: {{ .Values.config.updateStrategy }}
-  template:
-    metadata:
-      labels:
-        app: {{ template "openldap.name" . }}-backup-init
-        release: {{ .Release.Name }}
-    spec:
-      restartPolicy: OnFailure
-      containers:
-        - name: kubectl
-          image: codejamninja/stash-cli:0.0.1
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-            - |
-              kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
-# ---
-# apiVersion: stash.appscode.com/v1beta1
-# kind: BackupBatch
-# metadata:
-#   name: {{ template "openldap.fullname" . }}
-#   labels:
-#     app: {{ template "openldap.name" . }}
-#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-#     release: {{ .Release.Name }}
-#     heritage: {{ .Release.Service }}
-# spec:
-#   repository:
-#     name: {{ .Values.persistence.stash.repository | quote }}
-#   paused: {{ .Values.persistence.stash.paused }}
-#   schedule: {{ .Values.persistence.stash.schedule | quote }}
-#   retentionPolicy:
-#     name: retention-policy
-#     keepLast: {{ .Values.persistence.stash.keepLast }}
-#     prune: true
-#   members:
-#     - target:
-#         ref:
-#           apiVersion: apps/v1
-#           kind: Deployment
-#           name: {{ template "openldap.fullname" . }}-openldap
-#         volumeMounts:
-#           - name: data
-#             mountPath: /_data
-#         paths:
-#           - /_data
+  wipeOut: false
+  backend:
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/data'
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
-  name: {{ template "openldap.fullname" . }}
+  name: {{ template "openldap.fullname" . }}-data
   labels:
-    app: {{ template "openldap.name" . }}
+    app: {{ template "openldap.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "openldap.fullname" . }}-data
   paused: {{ .Values.persistence.stash.paused }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
   retentionPolicy:
