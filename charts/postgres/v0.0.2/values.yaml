@@ -29,7 +29,6 @@ config:
     10.6: 10.6
     11.1: 11.1
     11.2: 11.2
-
   pgadmin:
     email: admin
     enabled: true
@@ -70,11 +69,16 @@ persistence:
   velero:
     enabled: false
   stash:
+    type: s3
+    bucket: ''
+    endpoint: s3.amazonaws.com
+    container: ''
+    prefix: stash
     enabled: false
     keepLast: 30
     paused: false
-    repository: stash-repository-stash-repository
     schedule: '0 0 * * *'
+    secret: stash-config-stash-config
     restore:
       snapshot: ''
 

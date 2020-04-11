@@ -1,66 +1,6 @@
 {{- if .Values.persistence.stash.enabled }}
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: {{ template "postgres.fullname" . }}-backup-init
-  labels:
-    app: {{ template "postgres.name" . }}-backup-init
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '3'
-    helm.sh/hook-delete-policy: before-hook-creation
-spec:
-  strategy:
-    type: {{ .Values.config.updateStrategy }}
-  template:
-    metadata:
-      labels:
-        app: {{ template "postgres.name" . }}-backup-init
-        release: {{ .Release.Name }}
-    spec:
-      restartPolicy: OnFailure
-      containers:
-        - name: kubectl
-          image: codejamninja/stash-cli:0.0.1
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-            - |
-              kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
-# ---
-# apiVersion: stash.appscode.com/v1beta1
-# kind: BackupBatch
-# metadata:
-#   name: {{ template "postgres.fullname" . }}
-#   labels:
-#     app: {{ template "postgres.name" . }}
-#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-#     release: {{ .Release.Name }}
-#     heritage: {{ .Release.Service }}
-# spec:
-#   repository:
-#     name: {{ .Values.persistence.stash.repository | quote }}
-#   paused: {{ .Values.persistence.stash.paused }}
-#   schedule: {{ .Values.persistence.stash.schedule | quote }}
-#   retentionPolicy:
-#     name: retention-policy
-#     keepLast: {{ .Values.persistence.stash.keepLast }}
-#     prune: true
-#   members:
-#     - target:
-#         ref:
-#           apiVersion: apps/v1
-#           kind: AppBinding
-#           name: {{ template "postgres.fullname" . }}-postgres
-#       task:
-#         name: postgres-backup-{{ .Values.config.version }}
----
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfiguration
+kind: BackupBlueprint
 metadata:
   name: {{ template "postgres.fullname" . }}
   labels:
@@ -69,8 +9,20 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+  wipeOut: false
+  backend:
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/postgres-{{ index .Values.config.versionMap .Values.config.version }}'
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
   paused: {{ .Values.persistence.stash.paused }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
   retentionPolicy:
@@ -83,5 +35,5 @@ spec:
       kind: AppBinding
       name: {{ template "postgres.fullname" . }}-postgres
   task:
-    name: postgres-backup-{{ .Values.config.version }}
+    name: postgres-backup-{{ index .Values.config.versionMap .Values.config.version }}
 {{- end }}

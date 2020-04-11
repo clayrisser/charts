@@ -61,29 +61,3 @@ questions:
     required: false
     show_if: config.type=azure
     label: 'azure account key'
-  - variable: config.container
-    default: ''
-    description: ''
-    type: string
-    required: false
-    show_if: config.type=azure
-    label: 'backup container'
-  - variable: config.bucket
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'backup bucket'
-  - variable: config.endpoint
-    default: s3.amazonaws.com
-    description: ''
-    type: string
-    required: true
-    show_if: config.type=s3
-    label: 'backup endpoint'
-  - variable: config.prefix
-    default: stash
-    description: ''
-    type: string
-    required: false
-    label: 'backup prefix'

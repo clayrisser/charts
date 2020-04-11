@@ -3,12 +3,7 @@ config:
   awsSecretKey: ''
   azureAccountKey: ''
   azureAccountName: ''
-  bucket: ''
-  container: ''
-  enabled: false
-  endpoint: s3.amazonaws.com
   googleProjectId: ''
   googleServiceKey: ''
-  prefix: stash
   resticPassword: pass
   type: s3
