@@ -20,6 +20,16 @@ spec:
         app: {{ template "keycloak.name" . }}-keycloak
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       {{- if (not (empty .Values.config.keycloak.themeZip)) }}
       initContainers:
         - name: {{ template "keycloak.fullname" . }}-keycloak-init

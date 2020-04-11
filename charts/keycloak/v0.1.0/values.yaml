@@ -7,6 +7,7 @@ images:
     tag: 4.11
 
 config:
+  clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   debug: false

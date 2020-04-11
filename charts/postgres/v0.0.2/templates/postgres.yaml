@@ -59,10 +59,6 @@ spec:
         backup.velero.io/backup-volumes: data
     {{- end }}
     spec:
-      resources:
-{{ toYaml .Values.config.resources | indent 8 }}
-  podTemplate:
-    spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -73,6 +69,7 @@ spec:
                     operator: In
                     values:
                       - dedicated
+{{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
     metadata:
       annotations:

@@ -3,6 +3,18 @@ categories:
 questions:
 
 # Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
   - variable: config.imagePullPolicy
     default: IfNotPresent
     description: ''
