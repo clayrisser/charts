@@ -1,9 +1,9 @@
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
-  name: {{ template "stash.fullname" . }}
+  name: {{ template "stash-repository.fullname" . }}
   labels:
-    app: {{ template "stash.name" . }}
+    app: {{ template "stash-repository.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -20,4 +20,4 @@ spec:
       container: {{ .Values.config.container | quote }}
       {{- end }}
       prefix: {{ .Values.config.prefix | quote }}
-    storageSecretName: {{ template "stash.fullname" . }}-backup
+    storageSecretName: {{ template "stash-repository.fullname" . }}-backup

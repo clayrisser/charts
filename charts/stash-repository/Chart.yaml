@@ -1,9 +1,9 @@
-name: stash
+name: stash-repository
 home: https://stash.run
 icon: https://stash.run/assets/images/products/stash/stash-white.png
 version: 0.0.1
 appVersion: latest
-description: 'backup your kubernetes stateful applications'
+description: 'stash repository configuration'
 keywords:
   - stash
   - stash
