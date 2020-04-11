@@ -31,13 +31,52 @@ spec:
             - -c
             - |
               kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
+# ---
+# apiVersion: stash.appscode.com/v1beta1
+# kind: BackupBatch
+# metadata:
+#   name: {{ template "gitlab.fullname" . }}
+#   labels:
+#     app: {{ template "gitlab.name" . }}
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+# spec:
+#   repository:
+#     name: {{ .Values.persistence.stash.repository | quote }}
+#   paused: {{ .Values.persistence.stash.paused }}
+#   schedule: {{ .Values.persistence.stash.schedule | quote }}
+#   retentionPolicy:
+#     name: retention-policy
+#     keepLast: {{ .Values.persistence.stash.keepLast }}
+#     prune: true
+#   members:
+#     {{- if (and .Values.config.postgres.internal (not (and (eq .Values.config.postgres.terminationPolicy "Pause") .Values.config.postgres.pause))) }}
+#     - target:
+#         ref:
+#           apiVersion: apps/v1
+#           kind: AppBinding
+#           name: {{ template "gitlab.fullname" . }}-postgres
+#       task:
+#         name: postgres-backup-{{ .Values.config.postgres.version }}
+#     {{- end }}
+#     - target:
+#         ref:
+#           apiVersion: apps/v1
+#           kind: Deployment
+#           name: {{ template "gitlab.fullname" . }}-gitlab
+#         volumeMounts:
+#           - name: data
+#             mountPath: /_data
+#         paths:
+#           - /_data
 ---
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupBatch
+kind: BackupConfiguration
 metadata:
-  name: {{ template "gitlab.fullname" . }}
+  name: {{ template "gitlab.fullname" . }}-gitlab
   labels:
-    app: {{ template "gitlab.name" . }}
+    app: {{ template "gitlab.name" . }}-gitlab
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -50,24 +89,42 @@ spec:
     name: retention-policy
     keepLast: {{ .Values.persistence.stash.keepLast }}
     prune: true
-  members:
-    {{- if (and .Values.config.postgres.internal (not (and (eq .Values.config.postgres.terminationPolicy "Pause") .Values.config.postgres.pause))) }}
-    - target:
-        ref:
-          apiVersion: apps/v1
-          kind: AppBinding
-          name: {{ template "gitlab.fullname" . }}-postgres
-      task:
-        name: postgres-backup-{{ .Values.config.postgres.version }}
-    {{- end }}
-    - target:
-        ref:
-          apiVersion: apps/v1
-          kind: Deployment
-          name: {{ template "gitlab.fullname" . }}-gitlab
-        volumeMounts:
-          - name: data
-            mountPath: /_data
-        paths:
-          - /_data
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "gitlab.fullname" . }}-gitlab
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+    paths:
+      - /_data
+---
+{{- if (and .Values.config.postgres.internal (not (and (eq .Values.config.postgres.terminationPolicy "Pause") .Values.config.postgres.pause))) }}
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: {{ template "gitlab.fullname" . }}-postgres
+  labels:
+    app: {{ template "gitlab.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    name: {{ .Values.persistence.stash.repository | quote }}
+  paused: {{ .Values.persistence.stash.paused }}
+  schedule: {{ .Values.persistence.stash.schedule | quote }}
+  retentionPolicy:
+    name: retention-policy
+    keepLast: {{ .Values.persistence.stash.keepLast }}
+    prune: true
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: AppBinding
+      name: {{ template "gitlab.fullname" . }}-postgres
+  task:
+    name: postgres-backup-{{ .Values.config.postgres.version }}
+{{- end }}
 {{- end }}

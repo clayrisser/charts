@@ -34,7 +34,7 @@ spec:
       containers:
         - name: {{ template "postgres.fullname" . }}-pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
-          imagePullPolicy: {{ .Values.images.pgadmin.pullPolicy }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
             - name: container
               containerPort: 80

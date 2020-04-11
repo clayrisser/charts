@@ -4,6 +4,39 @@ categories:
 questions:
 
 # Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
   - variable: config.version
     default: 11.2
     description: ''
@@ -17,17 +50,6 @@ questions:
       - 11.2
     required: true
     label: version
-    group: Config
-  - variable: config.updateStrategy
-    default: RollingUpdate
-    description: ''
-    type: enum
-    options:
-      - RollingUpdate
-      - OnDelete
-      - Recreate
-    required: true
-    label: 'update strategy'
     group: Config
   - variable: config.resources.requests.cpu
     default: 100m

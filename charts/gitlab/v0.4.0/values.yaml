@@ -10,6 +10,7 @@ images:
     tag: v1.11.4
 
 config:
+  clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   gitlab:
@@ -145,7 +146,7 @@ persistence:
     enabled: false
     keepLast: 30
     paused: false
-    repository: stash-stash
+    repository: stash-repository-stash-repository
     schedule: '0 0 * * *'
     restore:
       snapshot: ''

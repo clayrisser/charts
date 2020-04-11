@@ -2,10 +2,11 @@ images:
   pgadmin:
     repository: dpage/pgadmin4
     tag: 4.17
-    pullPolicy: IfNotPresent
 
 config:
+  clusterProvider: infrastructure
   customConfig: ''
+  imagePullPolicy: IfNotPresent
   password: p@ssw0rd
   pause: true
   prometheus: false

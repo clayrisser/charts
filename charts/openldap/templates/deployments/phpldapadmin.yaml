@@ -21,6 +21,16 @@ spec:
         app: {{ template "openldap.name" . }}-phpldapadmin
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "openldap.fullname" . }}-phpldapadmin
           image: {{ .Values.images.phpldapadmin.repository }}:{{ .Values.images.phpldapadmin.tag }}

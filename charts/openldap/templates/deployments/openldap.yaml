@@ -25,6 +25,16 @@ spec:
       {{- end }}
     spec:
       hostname: {{ template "openldap.openldap-hostname" . }}
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - dedicated
       containers:
         - name: {{ template "openldap.fullname" . }}-openldap
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
