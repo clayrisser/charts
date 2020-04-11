@@ -61,6 +61,18 @@ spec:
     spec:
       resources:
 {{ toYaml .Values.config.resources | indent 8 }}
+  podTemplate:
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
   serviceTemplate:
     metadata:
       annotations:
@@ -77,18 +89,6 @@ spec:
           {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
           nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
-  podTemplate:
-    spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              preference:
-                matchExpressions:
-                  - key: group
-                    operator: In
-                    values:
-                      - dedicated
   replicaServiceTemplate:
     annotations:
       passMe: ToReplicaService

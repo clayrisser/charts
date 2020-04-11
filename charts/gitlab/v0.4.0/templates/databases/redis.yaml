@@ -25,7 +25,36 @@ spec:
   {{- else }}
   mode: Standalone
   {{- end }}
+  {{- if .Values.persistence.enabled }}
+  storageType: Durable
+  storage:
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+    storageClassName: ''
+    {{- else }}
+    storageClassName: {{ .Values.persistence.storageClass }}
+    {{- end }}
+    {{- end }}
+    accessModes:
+      - {{ .Values.persistence.accessMode }}
+    resources:
+      requests:
+        storage: {{ .Values.persistence.size }}
+  {{- else }}
   storageType: Ephemeral
+  {{- end }}
+  podTemplate:
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - spot
   serviceTemplate:
     metadata:
       annotations:

@@ -61,6 +61,18 @@ spec:
     spec:
       resources:
 {{ toYaml .Values.config.resources | indent 8 }}
+  podTemplate:
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
   serviceTemplate:
     metadata:
       annotations:

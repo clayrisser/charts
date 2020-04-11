@@ -24,6 +24,16 @@ spec:
         backup.velero.io/backup-volumes: data
       {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       initContainers:
         - name: {{ template "gitlab.fullname" . }}-gitlab-init
           image: busybox

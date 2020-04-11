@@ -42,6 +42,18 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
+  podTemplate:
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - spot
   serviceTemplate:
     metadata:
       annotations:
