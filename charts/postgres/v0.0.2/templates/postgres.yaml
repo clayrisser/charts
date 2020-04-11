@@ -84,7 +84,7 @@ spec:
           preferredDuringSchedulingIgnoredDuringExecution:
             - preference:
                 matchExpressions:
-                  - key: lifecycle
+                  - key: group
                     operator: In
                     values:
                       - dedicated
