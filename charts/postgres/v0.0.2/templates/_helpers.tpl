@@ -20,7 +20,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Random value
 */}}
 {{- define "postgres.rand" }}
-{{- printf "%s" (randAlpha 8) }}
+{{- printf "%s" (randNumeric 8) }}
 {{- end }}
 
 {{/*
