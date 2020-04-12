@@ -92,7 +92,7 @@ data:
       pubsub_createnode:
         allow: local
       trusted_network:
-        allow: loopback
+        allow: all
     api_permissions:
       'console commands':
         from:
