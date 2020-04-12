@@ -22,7 +22,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.stash.type) }}
       container: {{ .Values.persistence.stash.container | quote }}
       {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/data'
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/data'
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
@@ -77,7 +77,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.stash.type) }}
       container: {{ .Values.persistence.stash.container | quote }}
       {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/postgres-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}'
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/postgres-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}'
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
