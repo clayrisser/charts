@@ -1,5 +1,5 @@
 {{- if .Values.config.phpmyadmin }}
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "mysql.fullname" . }}-phpmyadmin
@@ -9,16 +9,32 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "mysql.name" . }}-phpmyadmin
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
         app: {{ template "mysql.name" . }}-phpmyadmin
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "mysql.fullname" . }}-phpmyadmin
           image: {{ .Values.images.phpmyadmin.repository }}:{{ .Values.images.phpmyadmin.tag }}
-          imagePullPolicy: {{ .Values.images.phpmyadmin.pullPolicy }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
             - name: container
               containerPort: 80

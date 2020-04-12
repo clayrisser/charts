@@ -4,6 +4,39 @@ categories:
 questions:
 
 # Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
   - variable: config.version
     default: 8.0.14
     description: ''
@@ -18,17 +51,6 @@ questions:
       - 8.0.14
     required: true
     label: version
-    group: Config
-  - variable: config.updateStrategy
-    default: RollingUpdate
-    description: ''
-    type: enum
-    options:
-      - RollingUpdate
-      - OnDelete
-      - Recreate
-    required: true
-    label: 'update strategy'
     group: Config
   - variable: config.resources.requests.cpu
     default: 100m
@@ -182,6 +204,38 @@ questions:
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash paused'
+      - variable: persistence.stash.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash type'
+      - variable: persistence.stash.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
+        label: 'stash container'
+      - variable: persistence.stash.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash bucket'
+      - variable: persistence.stash.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
+        label: 'stash endpoint'
       - variable: persistence.stash.schedule
         default: '0 0 * * *'
         description: ''
