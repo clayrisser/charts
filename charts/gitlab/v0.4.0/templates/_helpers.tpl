@@ -17,13 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Random value
-*/}}
-{{- define "gitlab.rand" }}
-{{- printf "%s" (randNumeric 8) }}
-{{- end }}
-
-{{/*
 Calculate gitlab certificate
 */}}
 {{- define "gitlab.gitlab-certificate" }}

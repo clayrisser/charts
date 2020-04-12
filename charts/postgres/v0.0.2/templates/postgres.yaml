@@ -135,9 +135,9 @@ spec:
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: {{ template "postgres.fullname" . }}-postgres-{{ template "postgres.rand" . }}
+  name: {{ template "postgres.fullname" . }}-postgres
   labels:
-    app: {{ template "postgres.name" . }}-postgres-{{ template "postgres.rand" . }}
+    app: {{ template "postgres.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

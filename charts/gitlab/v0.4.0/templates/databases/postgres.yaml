@@ -137,9 +137,9 @@ spec:
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: {{ template "gitlab.fullname" . }}-postgres-{{ template "gitlab.rand" . }}
+  name: {{ template "gitlab.fullname" . }}-postgres
   labels:
-    app: {{ template "gitlab.name" . }}-postgres-{{ template "gitlab.rand" . }}
+    app: {{ template "gitlab.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

@@ -131,9 +131,9 @@ spec:
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: {{ template "openldap.fullname" . }}-openldap-{{ template "openldap.rand" . }}
+  name: {{ template "openldap.fullname" . }}-openldap
   labels:
-    app: {{ template "openldap.name" . }}-openldap-{{ template "openldap.rand" . }}
+    app: {{ template "openldap.name" . }}-openldap
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
