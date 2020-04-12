@@ -121,7 +121,7 @@ spec:
   task:
     name: mysql-restore-{{ index .Values.config.versionMap .Values.config.version }}
   repository:
-    name: {{ template "mysql.fullname" . }}-postgres
+    name: {{ template "mysql.fullname" . }}-mysql
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
