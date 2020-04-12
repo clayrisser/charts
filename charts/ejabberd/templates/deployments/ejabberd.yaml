@@ -27,7 +27,8 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - preference:
+            - weight: 100
+              preference:
                 matchExpressions:
                   - key: lifecycle
                     operator: In
