@@ -8,7 +8,7 @@ config:
   clusterProvider: infrastructure
   customConfig: ''
   imagePullPolicy: IfNotPresent
-  password: p@ssw0rd
+  password: P@ssw0rd
   pause: true
   phpmyadmin: true
   prometheus: false

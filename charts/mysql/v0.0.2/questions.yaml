@@ -101,7 +101,7 @@ questions:
     label: pause
     group: Config
   - variable: config.password
-    default: p@ssw0rd
+    default: P@ssw0rd
     description: ''
     type: password
     required: true
