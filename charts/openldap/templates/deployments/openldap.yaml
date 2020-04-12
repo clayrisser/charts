@@ -140,7 +140,7 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ template "postgres.fullname" . }}-data
+    name: {{ template "openldap.fullname" . }}-data
   rules:
     - snapshots:
         - {{ .Values.persistence.stash.restore.snapshot | quote }}
