@@ -17,6 +17,13 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
+Random value
+*/}}
+{{- define "openldap.rand" }}
+{{- printf "%s" (randAlpha 8) }}
+{{- end }}
+
+{{/*
 Calculate openldap dc
 */}}
 {{- define "openldap.openldap-dc" }}

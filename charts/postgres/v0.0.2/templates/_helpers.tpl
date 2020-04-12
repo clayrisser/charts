@@ -17,6 +17,13 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
+Random value
+*/}}
+{{- define "postgres.rand" }}
+{{- printf "%s" (randAlpha 8) }}
+{{- end }}
+
+{{/*
 Calculate pgadmin certificate
 */}}
 {{- define "postgres.pgadmin-certificate" }}
