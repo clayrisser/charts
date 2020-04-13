@@ -41,7 +41,7 @@ spec:
             - sh
             - '-c'
             - |
-              chmod 0777 -R /var/opt/gitlab/git-data
+              chmod 2777 -R /var/opt/gitlab/git-data/repositories
               chmod 600 /etc/gitlab/ssh_host_*
           volumeMounts:
             - name: data
