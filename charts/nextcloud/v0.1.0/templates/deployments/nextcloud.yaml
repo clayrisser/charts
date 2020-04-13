@@ -40,6 +40,14 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           securityContext:
             fsGroup: 33
+          lifecycle:
+            preStart:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - |
+                    chown -R www-data:www-data /var/www/html
           ports:
             - name: container
               containerPort: 80
