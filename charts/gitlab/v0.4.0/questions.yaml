@@ -121,7 +121,7 @@ questions:
     show_if: config.keycloak.enabled=true
     group: 'KeyCloak Config'
   - variable: config.keycloak.realmName
-    default: gatekeeper
+    default: master
     description: ''
     type: string
     required: false

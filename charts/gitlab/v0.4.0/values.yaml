@@ -28,7 +28,7 @@ config:
     clientId: ''
     companyName: KeyCloak
     enabled: false
-    realmName: gatekeeper
+    realmName: master
     certificate: ''
     autoSignIn: false
   postgres:

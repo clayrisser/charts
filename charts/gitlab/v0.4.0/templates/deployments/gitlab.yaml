@@ -41,11 +41,15 @@ spec:
             - sh
             - '-c'
             - |
+              chmod 0777 -R /var/opt/gitlab/git-data
               chmod 600 /etc/gitlab/ssh_host_*
           volumeMounts:
             - name: data
               mountPath: /etc/gitlab
               subPath: etc
+            - name: data
+              mountPath: /var/opt/gitlab/git-data
+              subPath: git
       containers:
         - name: {{ template "gitlab.fullname" . }}-gitlab
           image: {{ .Values.images.gitlab.repository }}:{{ .Values.images.gitlab.tag }}
