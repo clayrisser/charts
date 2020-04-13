@@ -47,6 +47,9 @@ spec:
             - name: data
               mountPath: /var/www/html
               subPath: data
+            - name: config
+              mountPath: /var/www/html/config/objectstore.config.php
+              subPath: objectstore.config.php
           env:
             - name: NEXTCLOUD_TRUSTED_DOMAINS
               value: '{{ (include "nextcloud.nextcloud-hostname" .) }} {{ template "nextcloud.fullname" . }}-nextcloud'
@@ -138,6 +141,9 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
+        - name: config
+          configMap:
+            name: {{ template "nextcloud.fullname" . }}-nextcloud
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
