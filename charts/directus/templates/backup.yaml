@@ -1,71 +1,108 @@
 {{- if .Values.persistence.stash.enabled }}
-apiVersion: batch/v1
-kind: Job
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
 metadata:
-  name: {{ template "directus.fullname" . }}-backup-init
+  name: {{ template "directus.fullname" . }}-data
   labels:
-    app: {{ template "directus.name" . }}-backup-init
+    app: {{ template "directus.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '3'
-    helm.sh/hook-delete-policy: before-hook-creation
 spec:
-  strategy:
-    type: {{ .Values.config.updateStrategy }}
-  template:
-    metadata:
-      labels:
-        app: {{ template "directus.name" . }}-backup-init
-        release: {{ .Release.Name }}
-    spec:
-      restartPolicy: OnFailure
-      containers:
-        - name: kubectl
-          image: codejamninja/stash-cli:0.0.1
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-            - |
-              kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
+  wipeOut: false
+  backend:
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/data'
 ---
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupBatch
+kind: BackupConfiguration
 metadata:
-  name: {{ template "directus.fullname" . }}
+  name: {{ template "directus.fullname" . }}-data
   labels:
-    app: {{ template "directus.name" . }}
+    app: {{ template "directus.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "directus.fullname" . }}-data
   paused: {{ .Values.persistence.stash.paused }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
   retentionPolicy:
     name: retention-policy
     keepLast: {{ .Values.persistence.stash.keepLast }}
     prune: true
-  members:
-    - target:
-        ref:
-          apiVersion: apps/v1
-          kind: AppBinding
-          name: {{ template "directus.fullname" . }}-
-      task:
-        name: -backup-{{ .Values.config.version }}
-    - target:
-        ref:
-          apiVersion: apps/v1
-          kind: AppBinding
-          name: {{ template "directus.fullname" . }}-
-      volumeMounts:
-        - name: data
-          mountPath: /data
-      paths:
-        - /data
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "directus.fullname" . }}-directus
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+    paths:
+      - /_data
+{{- if (and .Values.config.mysql.internal (not (and (eq .Values.config.mysql.terminationPolicy "Pause") .Values.config.mysql.pause))) }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "directus.fullname" . }}-mysql
+  labels:
+    app: {{ template "directus.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  wipeOut: false
+  backend:
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/mysql-{{ index .Values.config.mysql.versionMap .Values.config.mysql.version }}'
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: {{ template "directus.fullname" . }}-mysql
+  labels:
+    app: {{ template "directus.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    name: {{ template "directus.fullname" . }}-mysql
+  paused: {{ .Values.persistence.stash.paused }}
+  schedule: {{ .Values.persistence.stash.schedule | quote }}
+  retentionPolicy:
+    name: retention-policy
+    keepLast: {{ .Values.persistence.stash.keepLast }}
+    prune: true
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: AppBinding
+      name: {{ template "directus.fullname" . }}-mysql
+  task:
+    name: 'mysql-backup-{{ index .Values.config.mysql.versionMap .Values.config.mysql.version }}'
+{{- end }}
 {{- end }}

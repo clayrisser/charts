@@ -28,6 +28,16 @@ spec:
         backup.velero.io/backup-volumes: data
       {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "directus.fullname" . }}-directus
           image: {{ .Values.images.directus.repository }}:{{ .Values.images.directus.tag }}
@@ -118,7 +128,7 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -132,10 +142,10 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "directus.fullname" . }}-data
   rules:
     - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot | quote }}
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
   target:
     paths:
       /_data

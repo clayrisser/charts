@@ -7,6 +7,7 @@ images:
     tag: 4.7
 
 config:
+  clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   directus:
@@ -95,13 +96,20 @@ persistence:
   velero:
     enabled: false
   stash:
+    bucket: ''
+    container: ''
     enabled: false
+    endpoint: s3.amazonaws.com
     keepLast: 30
     paused: false
-    repository: stash-stash
+    prefix: stash
     schedule: '0 0 * * *'
+    secret: stash-config-stash-config
+    type: s3
     restore:
-      snapshot: ''
+      snapshot:
+        data: ''
+        mysql: ''
 
 probes:
   liveness:

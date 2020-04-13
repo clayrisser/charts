@@ -42,12 +42,10 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
     scriptSource:
       configMap:
         name: {{ template "directus.fullname" . }}-mysql-init
-  {{- end }}
   podTemplate:
     {{- if .Values.persistence.velero.enabled }}
     metadata:
@@ -55,6 +53,16 @@ spec:
         backup.velero.io/backup-volumes: data
     {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
       resources:
 {{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
@@ -97,7 +105,7 @@ spec:
       port: 3306
       scheme: mysql
     url: tcp({{ template "directus.fullname" . }}-mysql:3306)/
-{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.mysql))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -114,7 +122,7 @@ spec:
   task:
     name: mysql-restore-{{ index .Values.config.mysql.versionMap .Values.config.mysql.version }}
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "direcuts.fullname" . }}-mysql
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -122,7 +130,7 @@ spec:
       name: {{ template "directus.fullname" . }}-mysql
   rules:
     - snapshots:
-      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot.mysql | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
