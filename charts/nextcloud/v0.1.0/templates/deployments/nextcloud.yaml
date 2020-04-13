@@ -38,6 +38,8 @@ spec:
         - name: {{ template "nextcloud.fullname" . }}-nextcloud
           image: {{ .Values.images.nextcloud.repository }}:{{ .Values.images.nextcloud.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          securityContext:
+            fsGroup: 33
           ports:
             - name: container
               containerPort: 80
