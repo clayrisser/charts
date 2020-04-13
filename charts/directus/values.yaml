@@ -25,7 +25,7 @@ config:
     database: directus
     host: ''
     internal: true
-    password: p@ssw0rd
+    password: P@ssw0rd
     pause: true
     port: 3306
     prometheus: false
