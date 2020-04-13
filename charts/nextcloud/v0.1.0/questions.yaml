@@ -543,7 +543,7 @@ questions:
     label: 'nextcloud repository'
     group: Images
   - variable: images.nextcloud.tag
-    default: 18.0.1
+    default: 18.0.3
     description: ''
     type: string
     required: true
