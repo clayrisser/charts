@@ -147,7 +147,7 @@ spec:
   task:
     name: postgres-restore-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}
   repository:
-    name: {{ template "gitlab.fullname" . }}-postgres
+    name: {{ template "nextcloud.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
