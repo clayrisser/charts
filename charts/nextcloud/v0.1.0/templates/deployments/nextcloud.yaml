@@ -45,7 +45,7 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: '/var/www/html'
+              mountPath: /var/www/html
               subPath: data
           env:
             - name: NEXTCLOUD_TRUSTED_DOMAINS
