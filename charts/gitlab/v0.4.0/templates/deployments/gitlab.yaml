@@ -41,7 +41,7 @@ spec:
             - sh
             - '-c'
             - |
-              chown git:git /var/opt/gitlab/git-data
+              chown -R git:git /var/opt/gitlab/git-data
               chmod 2770 /var/opt/gitlab/git-data
               chmod 600 /etc/gitlab/ssh_host_*
           volumeMounts:
