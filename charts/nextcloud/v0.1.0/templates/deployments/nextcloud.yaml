@@ -47,7 +47,9 @@ spec:
                   - sh
                   - -c
                   - |
-                    chown -R www-data:www-data /var/www/html
+                    echo PRE START
+                    chmod 755 /var/www/html/config
+                    chown www-data:www-data /var/www/html/config
           ports:
             - name: container
               containerPort: 80
