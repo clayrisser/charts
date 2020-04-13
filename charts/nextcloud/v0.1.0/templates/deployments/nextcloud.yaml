@@ -40,16 +40,6 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           securityContext:
             fsGroup: 33
-          lifecycle:
-            preStart:
-              exec:
-                command:
-                  - sh
-                  - -c
-                  - |
-                    echo PRE START
-                    chmod 755 /var/www/html/config
-                    chown www-data:www-data /var/www/html/config
           ports:
             - name: container
               containerPort: 80
@@ -60,7 +50,7 @@ spec:
               mountPath: /var/www/html
               subPath: data
             - name: config
-              mountPath: /var/www/html/config/objectstore.config.php
+              mountPath: /usr/src/nextcloud/config/objectstore.config.php
               subPath: objectstore.config.php
           env:
             - name: NEXTCLOUD_TRUSTED_DOMAINS
