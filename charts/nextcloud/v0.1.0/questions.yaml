@@ -353,13 +353,6 @@ questions:
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash schedule'
-      - variable: persistence.stash.schedule
-        default: '0 0 * * *'
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash schedule'
       - variable: persistence.stash.keepLast
         default: 30
         description: ''
@@ -367,14 +360,20 @@ questions:
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash keep last'
-      - variable: persistence.stash.restore.snapshot
+      - variable: persistence.stash.restore.snapshot.data
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.stash.enabled=true
-        label: 'stash restore snapshot'
-
+        label: 'stash restore snapshot data'
+      - variable: persistence.stash.restore.snapshot.postgres
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot postgres'
 
 # Services and Load Balancing
   - variable: ingress.nextcloud.enabled
