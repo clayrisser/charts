@@ -69,6 +69,7 @@ spec:
                     operator: In
                     values:
                       - dedicated
+      resources:
 {{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
     metadata:
