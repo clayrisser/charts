@@ -4,10 +4,14 @@ kind: Ingress
 metadata:
   name: {{ template "nextcloud.fullname" . }}-nextcloud
   annotations:
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
     kubernetes.io/ingress.class: nginx
+    {{- end }}
     {{- if .Values.ingress.nextcloud.tls }}
     {{- if (empty .Values.ingress.nextcloud.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.nextcloud.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.nextcloud.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'

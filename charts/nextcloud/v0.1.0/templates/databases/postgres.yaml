@@ -46,12 +46,10 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
     scriptSource:
       configMap:
         name: {{ template "nextcloud.fullname" . }}-postgres-init
-  {{- end }}
   podTemplate:
     {{- if .Values.persistence.velero.enabled }}
     metadata:
@@ -59,7 +57,16 @@ spec:
         backup.velero.io/backup-volumes: data
     {{- end }}
     spec:
-      resources:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
 {{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
     metadata:
@@ -123,7 +130,7 @@ spec:
     - renameKey:
         from: POSTGRES_PASSWORD
         to: password
-{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
+{{- if (not (empty .Values.persistence.stash.restore.snapshot.postgres)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -140,7 +147,7 @@ spec:
   task:
     name: postgres-restore-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "gitlab.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -148,7 +155,7 @@ spec:
       name: {{ template "nextcloud.fullname" . }}-postgres
   rules:
     - snapshots:
-      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot.postgres | quote }}
 {{- end }}
 {{- end }}
 {{- end }}

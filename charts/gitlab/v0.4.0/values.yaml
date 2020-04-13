@@ -36,7 +36,7 @@ config:
     database: gitlab
     host: ''
     internal: true
-    password: p@ssw0rd
+    password: P@ssw0rd
     pause: true
     port: 5432
     prometheus: false

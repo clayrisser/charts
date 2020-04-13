@@ -24,6 +24,16 @@ spec:
         app: {{ template "nextcloud.name" . }}-nextcloud
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "nextcloud.fullname" . }}-nextcloud
           image: {{ .Values.images.nextcloud.repository }}:{{ .Values.images.nextcloud.tag }}
@@ -135,7 +145,7 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -149,10 +159,10 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "nextcloud.fullname" . }}-data
   rules:
     - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot | quote }}
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
   target:
     paths:
       /_data
