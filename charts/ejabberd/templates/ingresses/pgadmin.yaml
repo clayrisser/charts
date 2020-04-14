@@ -1,0 +1,39 @@
+{{- if (and .Values.config.postgres.internal (and .Values.config.pgadmin.enabled .Values.ingress.pgadmin.enabled)) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "ejabberd.fullname" . }}-pgadmin
+  annotations:
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
+    kubernetes.io/ingress.class: nginx
+    {{- end }}
+    {{- if .Values.ingress.pgadmin.tls }}
+    {{- if (empty .Values.ingress.pgadmin.certificate) }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.pgadmin.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "ejabberd.name" . }}-pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.pgadmin.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.pgadmin.path }}
+            backend:
+              serviceName: {{ template "ejabberd.fullname" . }}-pgadmin
+              servicePort: http
+  {{- if .Values.ingress.pgadmin.tls }}
+  tls:
+    - secretName: {{ template "ejabberd.pgadmin-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.pgadmin.hostname }}
+  {{- end }}
+{{- end }}

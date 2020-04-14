@@ -20,7 +20,7 @@ data:
 {{- end }}
   data-config.yml: |
     node:
-      name:  es-node-data
+      name: es-node-data
     path:
       data: ["/data/elasticsearch/data-datadir"]
     http:
@@ -30,7 +30,7 @@ data:
 {{- end }}
   master-config.yml: |
     node:
-      name:  es-node-master
+      name: es-node-master
     path:
       data: ["/data/elasticsearch/master-datadir"]
 {{- if .Values.config.masterConfig }}

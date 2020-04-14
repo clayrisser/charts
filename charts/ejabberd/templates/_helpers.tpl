@@ -28,6 +28,17 @@ Calculate ejabberd certificate
 {{- end }}
 
 {{/*
+Calculate pgadmin certificate
+*/}}
+{{- define "ejabberd.pgadmin-certificate" }}
+{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
+{{- printf .Values.ingress.pgadmin.certificate }}
+{{- else }}
+{{- printf "%s-pgadmin-letsencrypt" (include "ejabberd.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate ejabberd hostname
 */}}
 {{- define "ejabberd.ejabberd-hostname" }}

@@ -2,6 +2,9 @@ images:
   ejabberd:
     repository: ejabberd/ecs
     tag: 20.02
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
 
 config:
   clusterProvider: infrastructure
@@ -17,6 +20,39 @@ config:
     jitsi:
       enabled: false
       secret: ''
+  postgres:
+    customConfig: ''
+    database: ejabberd
+    host: ''
+    internal: true
+    password: P@ssw0rd
+    pause: true
+    port: 5432
+    prometheus: false
+    replicas: 1
+    standbyMode: Hot
+    terminationPolicy: Delete
+    url: ''
+    username: postgres
+    version: 11.2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    versionMap:
+      9.6-v2: 9.6
+      9.6.7-v2: 9.6
+      10.2-v2: 10.2
+      10.6: 10.6
+      11.1: 11.1
+      11.2: 11.2
+  pgadmin:
+    email: admin
+    enabled: false
+    password: pass
 
 service:
   ejabberd:
@@ -24,10 +60,28 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-      xmpp: ''
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres: ''
+     xmpp: ''
 
 ingress:
   ejabberd:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  pgadmin:
     certificate: ''
     enabled: false
     hostname: ''
@@ -56,7 +110,9 @@ persistence:
     secret: stash-config-stash-config
     type: s3
     restore:
-      snapshot: ''
+      snapshot:
+        data: ''
+        postgres: ''
 
 probes:
   liveness:

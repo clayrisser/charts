@@ -125,7 +125,7 @@ spec:
     name: {{ template "ejabberd.fullname" . }}-data
   rules:
     - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot | quote }}
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
   target:
     paths:
       /_data

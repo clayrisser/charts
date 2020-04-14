@@ -569,7 +569,7 @@ questions:
         description: ''
         type: string
         required: false
-        show_if: persistence.stash.enabled=true
+        show_if: persistence.stash.enabled=true&&config.postgres.internal=true
         label: 'stash restore snapshot postgres'
 
 # Services and Load Balancing

@@ -69,16 +69,16 @@ persistence:
   velero:
     enabled: false
   stash:
-    type: s3
     bucket: ''
-    endpoint: s3.amazonaws.com
     container: ''
-    prefix: stash
     enabled: false
+    endpoint: s3.amazonaws.com
     keepLast: 30
     paused: false
+    prefix: stash
     schedule: '0 0 * * *'
     secret: stash-config-stash-config
+    type: s3
     restore:
       snapshot: ''
 
