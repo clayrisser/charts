@@ -187,7 +187,7 @@ data:
           mod_client_state: {}
           mod_configure: {}
           mod_disco: {}
-          {{- .Values.config.ejabberd.fail2Ban }}
+          {{- if .Values.config.ejabberd.fail2Ban }}
           mod_fail2ban: {}
           {{- end }}
           mod_http_api: {}
@@ -252,7 +252,7 @@ data:
         allow_multiple_connections: true
         anonymous_protocol: both
         modules:
-          {{- .Values.config.ejabberd.fail2Ban }}
+          {{- if .Values.config.ejabberd.fail2Ban }}
           mod_fail2ban: {}
           {{- end }}
           mod_bosh: {}
