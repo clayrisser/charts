@@ -34,7 +34,6 @@ data:
       - /home/ejabberd/conf/server.pem
     ca_file: /home/ejabberd/conf/cacert.pem
     {{- end }}
-    check_from: false
     trusted_proxies: all
     listen:
       - port: 5222
