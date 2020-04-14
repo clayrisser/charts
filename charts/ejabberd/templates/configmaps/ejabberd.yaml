@@ -173,7 +173,6 @@ data:
     max_fsm_queue: 10000
     host_config:
       {{ template "ejabberd.ejabberd-hostname" . }}:
-      # localhost:
         s2s_access: s2s
         modules:
           mod_adhoc: {}
@@ -217,9 +216,9 @@ data:
           mod_ping: {}
           mod_privacy: {}
           mod_private: {}
-          # mod_proxy65:
-          #   access: local
-          #   max_connections: 5
+          mod_proxy65:
+            access: local
+            max_connections: 5
           mod_pubsub:
             access_createnode: pubsub_createnode
             plugins:
