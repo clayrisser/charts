@@ -10,7 +10,7 @@ config:
   updateStrategy: RollingUpdate
   ejabberd:
     baseUrl: ''
-    captchaEnabled: true
+    captchaEnabled: false
     fail2ban: false
     hostname: ''
     registerEnabled: true

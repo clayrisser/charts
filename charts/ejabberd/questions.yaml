@@ -63,13 +63,13 @@ questions:
     required: true
     label: 'ejabberd register enabled'
     group: Config
-  - variable: config.ejabberd.jitsi.captchaEnabled
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'ejabberd captcha enabled'
-    group: Config
+  # - variable: config.ejabberd.jitsi.captchaEnabled
+  #   default: true
+  #   description: ''
+  #   type: boolean
+  #   required: true
+  #   label: 'ejabberd captcha enabled'
+  #   group: Config
   - variable: config.ejabberd.jitsi.fail2ban
     default: false
     description: ''
