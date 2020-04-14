@@ -24,6 +24,7 @@ spec:
         backup.velero.io/backup-volumes: data
       {{- end }}
     spec:
+      hostname: {{ template "ejabberd.ejabberd-hostname" . }}
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
