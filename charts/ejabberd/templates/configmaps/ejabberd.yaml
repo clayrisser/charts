@@ -51,13 +51,13 @@ data:
         module: ejabberd_http
         tls: true
         protocol_options: 'TLS_OPTIONS'
-        {{- if .Values.config.ejabberd.registerEnabled }}
-        register: true
-        {{- end }}
         request_handlers:
           /admin: ejabberd_web_admin
           /api: mod_http_api
           /bosh: mod_bosh
+          {{- if .Values.config.ejabberd.registerEnabled }}
+          /register: mod_register_web
+          {{- end }}
           {{- if .Values.config.ejabberd.captchaEnabled }}
           /captcha: ejabberd_captcha
           {{- end }}
@@ -67,13 +67,13 @@ data:
       - port: 5280
         ip: '::'
         module: ejabberd_http
-        {{- if .Values.config.ejabberd.registerEnabled }}
-        register: true
-        {{- end }}
         request_handlers:
           /admin: ejabberd_web_admin
           /api: mod_http_api
           /bosh: mod_bosh
+          {{- if .Values.config.ejabberd.registerEnabled }}
+          /register: mod_register_web
+          {{- end }}
           {{- if .Values.config.ejabberd.captchaEnabled }}
           /captcha: ejabberd_captcha
           {{- end }}
