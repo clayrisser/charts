@@ -63,7 +63,8 @@ persistence:
     secret: stash-config-stash-config
     type: s3
     restore:
-      snapshot: ''
+      snapshot:
+        data: ''
 
 probes:
   liveness:
