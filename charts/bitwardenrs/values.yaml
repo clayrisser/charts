@@ -7,6 +7,7 @@ images:
     tag: 4.11
 
 config:
+  clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   adminToken: pass
@@ -18,14 +19,30 @@ config:
     database: bitwardenrs
     host: ''
     internal: true
-    password: postgres
+    password: P@ssw0rd
+    pause: true
     port: 5432
     prometheus: false
     replicas: 1
-    standbyMode: hot
+    standbyMode: Hot
+    terminationPolicy: Delete
     url: ''
     username: postgres
     version: 11.2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    versionMap:
+      9.6-v2: 9.6
+      9.6.7-v2: 9.6
+      10.2-v2: 10.2
+      10.6: 10.6
+      11.1: 11.1
+      11.2: 11.2
   pgadmin:
     email: admin
     enabled: false
@@ -66,32 +83,29 @@ ingress:
     issuer:
       name: letsencrypt-staging
 
-
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
   existingClaim: ''
   size: 1Gi
   storageClass: ''
-  backup:
-    awsAccessKey: ''
-    awsSecretKey: ''
-    azureAccountKey: ''
-    azureAccountName: ''
+  velero:
+    enabled: false
+  stash:
     bucket: ''
     container: ''
     enabled: false
     endpoint: s3.amazonaws.com
-    googleProjectId: ''
-    googleServiceKey: ''
-    keepLast: 5
-    prefix: ''
-    resticPassword: pass
+    keepLast: 30
+    paused: false
+    prefix: stash
     schedule: '0 0 * * *'
+    secret: stash-config-stash-config
     type: s3
     restore:
-      bitwardenrsSnapshot: ''
-      postgresSnapshot: ''
+      snapshot:
+        data: ''
+        postgres: ''
 
 probes:
   liveness:

@@ -1,4 +1,4 @@
-{{- if .Values.config.postgres.internal }}
+{{- if (and .Values.config.postgres.internal (not (and (eq .Values.config.postgres.terminationPolicy "Pause") .Values.config.postgres.pause))) }}
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
@@ -14,10 +14,13 @@ spec:
     configMap:
       name: {{ template "bitwardenrs.fullname" . }}-postgres
   standbyMode: {{ .Values.config.postgres.standbyMode | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
+  streamingMode: asynchronous
+  leaderElection:
+    leaseDurationSeconds: 15
+    renewDeadlineSeconds: 10
+    retryPeriodSeconds: 2
   databaseSecret:
-    secretName: {{ template "bitwardenrs.sharedname" . }}-postgres-auth
-  {{- end }}
+    secretName: {{ template "bitwardenrs.fullname" . }}-postgres-auth
   {{- if .Values.config.postgres.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -43,12 +46,29 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
   init:
     scriptSource:
       configMap:
         name: {{ template "bitwardenrs.fullname" . }}-postgres-init
-  {{- end }}
+  podTemplate:
+    {{- if .Values.persistence.velero.enabled }}
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: data
+    {{- end }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
+      resources:
+{{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
     metadata:
       annotations:
@@ -81,10 +101,9 @@ spec:
           nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
   updateStrategy:
-    type: RollingUpdate
-  terminationPolicy: Delete
-{{- end }}
-{{- if .Values.persistence.backup.enabled }}
+    type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
+  terminationPolicy: {{ .Values.config.postgres.terminationPolicy }}
+{{- if .Values.persistence.stash.enabled }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
@@ -95,9 +114,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "bitwardenrs.fullname" . }}-postgres
 spec:
+  type: kubedb.com/postgres
+  version: {{ .Values.config.postgres.version | quote }}
   clientConfig:
     service:
       name: {{ template "bitwardenrs.fullname" . }}-postgres
@@ -112,9 +131,7 @@ spec:
     - renameKey:
         from: POSTGRES_PASSWORD
         to: password
-  type: kubedb.com/postgres
-{{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
-{{- $restore := .Values.persistence.backup.restore }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -129,9 +146,9 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: postgres-restore-{{ .Values.config.postgres.version }}
+    name: postgres-restore-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}
   repository:
-    name: postgres-{{ template "bitwardenrs.fullname" . }}-postgres
+    name: {{ template "bitwardenrs.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -139,6 +156,7 @@ spec:
       name: {{ template "bitwardenrs.fullname" . }}-postgres
   rules:
     - snapshots:
-      - {{ $restore.postgresSnapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot.postgres | quote }}
+{{- end }}
 {{- end }}
 {{- end }}

@@ -7,12 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.backup.enabled }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "bitwardenrs.sharedname" . }}-data
-    stash.appscode.com/target-paths: /_data
-    stash.appscode.com/volume-mounts: 'data:/_data'
-  {{- end }}
 spec:
   selector:
     matchLabels:
@@ -25,7 +19,21 @@ spec:
       labels:
         app: {{ template "bitwardenrs.name" . }}-bitwardenrs
         release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - dedicated
       containers:
         - name: {{ template "bitwardenrs.fullname" . }}-bitwardenrs
           image: {{ .Values.images.bitwardenrs.repository }}:{{ .Values.images.bitwardenrs.tag }}
@@ -109,8 +117,7 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.bitwardenrsSnapshot))) }}
-{{- $restore := .Values.persistence.backup.restore }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -124,10 +131,10 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ template "bitwardenrs.sharedname" . }}-bitwardenrs
+    name: {{ template "bitwardenrs.fullname" . }}-data
   rules:
     - snapshots:
-        - {{ $restore.bitwardenrsSnapshot }}
+        - {{ .Values.persistence.stash.restore.snapshot | quote }}
   target:
     paths:
       /_data
