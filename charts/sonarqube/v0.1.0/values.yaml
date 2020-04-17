@@ -104,6 +104,7 @@ persistence:
     type: s3
     restore:
       snapshot:
+        data: ''
         postgres: ''
 
 probes:
