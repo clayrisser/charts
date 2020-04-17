@@ -24,6 +24,16 @@ spec:
         app: {{ template "sonarqube.name" . }}-sonarqube
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       initContainers:
         - name: {{ template "sonarqube.fullname" . }}-sonarqube-init
           image: busybox
