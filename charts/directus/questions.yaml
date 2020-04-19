@@ -138,6 +138,7 @@ questions:
       - DoNotTerminate
     required: true
     label: 'termination policy'
+    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.pause
     default: false
@@ -164,6 +165,7 @@ questions:
     type: boolean
     required: true
     label: phpmyadmin
+    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.prometheus
     default: false
