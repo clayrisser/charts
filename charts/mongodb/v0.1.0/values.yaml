@@ -2,10 +2,11 @@ images:
   mongoExpress:
     repository: mongo-express
     tag: 0.49.0
-    pullPolicy: IfNotPresent
 
 config:
+  clusterProvider: infrastructure
   customConfig: ''
+  imagePullPolicy: IfNotPresent
   password: p@ssw0rd
   pause: true
   prometheus: false
@@ -112,11 +113,16 @@ persistence:
   velero:
     enabled: false
   stash:
+    bucket: ''
+    container: ''
     enabled: false
+    endpoint: s3.amazonaws.com
     keepLast: 30
     paused: false
-    repository: stash-stash
+    prefix: stash
     schedule: '0 0 * * *'
+    secret: stash-config-stash-config
+    type: s3
     restore:
       snapshot: ''
 

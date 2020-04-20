@@ -38,7 +38,17 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
-          resources:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: group
+                        operator: In
+                        values:
+                          - dedicated
+              resources:
 {{ toYaml .Values.config.shardTopology.configServer.resources | indent 12 }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -70,6 +80,16 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: group
+                        operator: In
+                        values:
+                          - dedicated
           resources:
 {{ toYaml .Values.config.shardTopology.mongos.resources | indent 12 }}
     shard:
@@ -86,6 +106,16 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: group
+                        operator: In
+                        values:
+                          - dedicated
           resources:
 {{ toYaml .Values.config.shardTopology.shard.resources | indent 12 }}
       {{- if .Values.persistence.enabled }}
@@ -134,15 +164,23 @@ spec:
         backup.velero.io/backup-volumes: data
     {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
       resources:
 {{ toYaml .Values.config.resources | indent 8 }}
   {{- end }}
-  {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
     scriptSource:
       configMap:
         name: {{ template "mongodb.fullname" . }}-mongodb-init
-  {{- end }}
   serviceTemplate:
     metadata:
       annotations:
@@ -188,7 +226,7 @@ spec:
     replicaSets:
       host-0: rs0/{{ template "mongodb.mongodb-server" . }}
     {{- end }}
-{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -205,7 +243,7 @@ spec:
   task:
     name: mongodb-restore-{{ index .Values.config.versionMap .Values.config.version }}
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "mongodb.fullname" . }}-mongodb
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1

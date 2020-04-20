@@ -1,5 +1,5 @@
 {{- if .Values.config.mongoExpress.enabled }}
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "mongodb.fullname" . }}-mongo-express
@@ -9,16 +9,32 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "mongodb.name" . }}-mongo-express
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
         app: {{ template "mongodb.name" . }}-mongo-express
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "mongodb.fullname" . }}-mongo-express
           image: {{ .Values.images.mongoExpress.repository }}:{{ .Values.images.mongoExpress.tag }}
-          imagePullPolicy: {{ .Values.images.mongoExpress.pullPolicy }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
             - name: container
               containerPort: 8081
