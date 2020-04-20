@@ -59,7 +59,7 @@ questions:
     label: 'resources requests cpu'
     group: Config
   - variable: config.resources.requests.memory
-    default: 128Mi
+    default: 192Mi
     description: ''
     type: string
     required: true
