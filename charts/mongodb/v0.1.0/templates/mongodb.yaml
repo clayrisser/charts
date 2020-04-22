@@ -16,8 +16,14 @@ spec:
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
+  {{- if .Values.config.ssl.enabled }}
+  sslMode: requireSSL
+  {{- else }}
   sslMode: disabled
-  # clusterAuthMode: x509
+  {{- end }}
+  {{- if (and .Values.config.ssl.enabled .Values.config.replicaSet.enabled) }}
+  clusterAuthMode: x509
+  {{- end }}
   {{- if .Values.persistence.enabled }}
   storageType: Durable
   {{- else }}
