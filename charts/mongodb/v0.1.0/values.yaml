@@ -5,7 +5,7 @@ images:
 
 config:
   clusterProvider: infrastructure
-  customConfig: ''
+  customConfig: ""
   imagePullPolicy: IfNotPresent
   password: p@ssw0rd
   pause: true
@@ -47,6 +47,8 @@ config:
   replicaSet:
     enabled: false
     replicas: 3
+  ssl:
+    enabled: false
   shardTopology:
     enabled: false
     configServer:
@@ -83,18 +85,18 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
+      http: ""
   mongodb:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      mongodb: ''
+      mongodb: ""
 
 ingress:
   mongoExpress:
-    certificate: ''
+    certificate: ""
     enabled: false
-    hostname: ''
+    hostname: ""
     path: /
     tls: false
     issuer:
@@ -107,24 +109,24 @@ issuer:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  existingClaim: ''
+  existingClaim: ""
   size: 1Gi
-  storageClass: ''
+  storageClass: ""
   velero:
     enabled: false
   stash:
-    bucket: ''
-    container: ''
+    bucket: ""
+    container: ""
     enabled: false
     endpoint: s3.amazonaws.com
     keepLast: 30
     paused: false
     prefix: stash
-    schedule: '0 0 * * *'
+    schedule: "0 0 * * *"
     secret: stash-config-stash-config
     type: s3
     restore:
-      snapshot: ''
+      snapshot: ""
 
 probes:
   liveness:

@@ -113,6 +113,13 @@ questions:
     show_if: config.shardTopology.enabled=false
     label: 'replica set enabled'
     group: Config
+  - variable: config.ssl.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'ssl enabled'
+    group: Config
   - variable: config.replicaSet.replicas
     default: 3
     description: ''
