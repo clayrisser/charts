@@ -196,7 +196,7 @@ data:
           mod_last: {}
           mod_mam:
             assume_mam_usage: true
-            default: never
+            default: always
           mod_mqtt: {}
           mod_muc:
             access:
