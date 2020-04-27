@@ -60,6 +60,7 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
+      xmpp: ''
   pgadmin:
     type: NodePort
     externalTrafficPolicy: Cluster
@@ -70,7 +71,6 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       postgres: ''
-     xmpp: ''
 
 ingress:
   ejabberd:
