@@ -47,6 +47,8 @@ config:
   replicaSet:
     enabled: false
     replicas: 3
+  ssl:
+    enabled: false
   shardTopology:
     enabled: false
     configServer:

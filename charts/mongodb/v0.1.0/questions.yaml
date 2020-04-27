@@ -2,8 +2,7 @@ categories:
   - Backup
   - Database
 questions:
-
-# Config
+  # Config
   - variable: config.clusterProvider
     default: infrastructure
     description: ''
@@ -112,6 +111,13 @@ questions:
     required: true
     show_if: config.shardTopology.enabled=false
     label: 'replica set enabled'
+    group: Config
+  - variable: config.ssl.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'ssl enabled'
     group: Config
   - variable: config.replicaSet.replicas
     default: 3
@@ -289,7 +295,7 @@ questions:
     label: 'custom config'
     group: Config
 
-# Mongo Express
+  # Mongo Express
   - variable: config.mongoExpress.enabled
     default: true
     description: ''
@@ -314,7 +320,7 @@ questions:
         label: 'mongo express password'
         group: 'Mongo Express'
 
-# Persistence
+  # Persistence
   - variable: persistence.enabled
     default: false
     description: ''
@@ -425,7 +431,7 @@ questions:
         show_if: persistence.stash.enabled=true
         label: 'stash restore snapshot'
 
-# Services and Load Balancing
+  # Services and Load Balancing
   - variable: ingress.mongoExpress.enabled
     default: true
     description: ''
@@ -517,7 +523,7 @@ questions:
         max: 32767
         label: 'mongodb port'
 
-# Images
+  # Images
   - variable: images.mongo_express.repository
     default: mongo-express
     description: ''
