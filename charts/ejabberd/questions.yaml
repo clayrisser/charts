@@ -812,3 +812,19 @@ questions:
     label: 'pgadmin tag'
     show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
     group: Images
+  - variable: images.phpredisadmin.repository
+    default: erikdubbelboer/phpredisadmin
+    description: ''
+    type: string
+    required: true
+    label: 'phpredisadmin repository'
+    show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
+    group: Images
+  - variable: images.phpredisadmin.tag
+    default: v1.11.4
+    description: ''
+    type: string
+    required: true
+    label: 'phpredisadmin tag'
+    show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
+    group: Images
