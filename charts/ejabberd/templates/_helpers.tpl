@@ -83,6 +83,30 @@ Calculate ejabberd base url
 {{- end }}
 
 {{/*
+Calculate postgres host
+*/}}
+{{- define "ejabberd.postgres-host" }}
+{{- $postgres := .Values.config.postgres }}
+{{- if $postgres.internal }}
+{{- printf "%s-postgres" (include "ejabberd.fullname" .) }}
+{{- else }}
+{{- printf "%s" $postgres.host }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate redis host
+*/}}
+{{- define "ejabberd.redis-host" }}
+{{- $redis := .Values.config.redis }}
+{{- if $redis.internal }}
+{{- printf "%s-redis" (include "ejabberd.fullname" .) }}
+{{- else }}
+{{- printf "%s" $redis.host }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate postgres url
 */}}
 {{- define "ejabberd.postgres-url" }}
