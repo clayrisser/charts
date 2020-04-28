@@ -281,7 +281,128 @@ questions:
         required: true
         show_if: config.postgres.internal=true
         label: 'pgadmin password'
-        group: PGAdmin# Persistence
+        group: PGAdmin
+
+# Redis Config
+  - variable: config.redis.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'Redis Config'
+  - variable: config.redis.version
+    default: 5.0.3-v1
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.shards
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: shards
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.redis.internal=true
+    group: 'Redis Config'
+  - variable: config.redis.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.password
+    default: ''
+    description: ''
+    type: password
+    required: false
+    label: password
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.port
+    default: 6379
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+  - variable: config.redis.username
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: username
+    show_if: config.redis.internal=false
+    group: 'Redis Config'
+
+# PHPRedisAdmin
+  - variable: config.phpredisadmin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: phpredisadmin
+    show_if: config.redis.internal=true
+    show_subquestion_if: true
+    group: PHPRedisAdmin
+    subquestions:
+      - variable: config.phpredisadmin.username
+        default: admin
+        description: ''
+        type: string
+        required: true
+        show_if: config.redis.internal=true
+        label: 'phpredisadmin username'
+        group: PHPRedisAdmin
+      - variable: config.phpredisadmin.password
+        default: pass
+        description: ''
+        type: password
+        required: true
+        show_if: config.redis.internal=true
+        label: 'phpredisadmin password'
+        group: PHPRedisAdmin
+
+# Persistence
   - variable: persistence.enabled
     default: false
     description: ''
@@ -545,6 +666,78 @@ questions:
         max: 32767
         show_if: ingress.pgadmin.enabled=false
         label: 'pgadmin port'
+
+
+  - variable: ingress.phpredisadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
+    label: 'phpredisadmin ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpredisadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
+        required: true
+        label: 'phpredisadmin ingress tls'
+      - variable: ingress.phpredisadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
+        required: true
+        label: 'phpredisadmin ingress hostname'
+      - variable: ingress.phpredisadmin.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
+        required: true
+        label: 'phpredisadmin ingress path'
+      - variable: ingress.phpredisadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true&&ingress.phpredisadmin.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpredisadmin ingress issuer name'
+      - variable: ingress.phpredisadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true&&ingress.phpredisadmin.tls=true&&ingress.phpredisadmin.issuer.name=none
+        required: false
+        label: 'phpredisadmin ingress certificate'
+  - variable: service.phpredisadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.phpredisadmin.enabled=false&&config.phpredisadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'phpredisadmin service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.phpredisadmin.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.phpredisadmin.enabled=false
+        label: 'phpredisadmin port'
   - variable: service.postgres.type
     default: ClusterIP
     description: ''
@@ -566,6 +759,27 @@ questions:
         min: 30000
         max: 32767
         label: 'postgres port'
+  - variable: service.redis.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'redis service type'
+    show_if: config.redis.internal=true
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.redis.nodePorts.redis
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'redis port'
 
 # Images
   - variable: images.ejabberd.repository

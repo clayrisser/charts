@@ -39,6 +39,17 @@ Calculate pgadmin certificate
 {{- end }}
 
 {{/*
+Calculate phpredisadmin certificate
+*/}}
+{{- define "ejabberd.phpredisadmin-certificate" }}
+{{- if (not (empty .Values.ingress.phpredisadmin.certificate)) }}
+{{- printf .Values.ingress.phpredisadmin.certificate }}
+{{- else }}
+{{- printf "%s-phpredisadmin-letsencrypt" (include "ejabberd.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate ejabberd hostname
 */}}
 {{- define "ejabberd.ejabberd-hostname" }}
@@ -67,6 +78,24 @@ Calculate ejabberd base url
 {{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
 {{- printf "http://%s" (include "ejabberd.ejabberd-hostname" .) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate redis url
+*/}}
+{{- define "ejabberd.redis-url" }}
+{{- $redis := .Values.config.redis }}
+{{- if $redis.internal }}
+{{- $credentials := (printf "%s:%s" $redis.username $redis.password) }}
+{{- printf "redis://%s-redis:6379" (include "ejabberd.fullname" .) }}
+{{- else }}
+{{- if $redis.url }}
+{{- printf $redis.url }}
+{{- else }}
+{{- $credentials := (empty $redis.username | ternary "" (printf "%s:%s" $redis.username $redis.password)) }}
+{{- printf "redis://%s@%s:%s" $credentials $redis.host $redis.port }}
 {{- end }}
 {{- end }}
 {{- end }}

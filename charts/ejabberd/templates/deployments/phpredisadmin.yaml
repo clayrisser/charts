@@ -1,0 +1,62 @@
+{{- if (and .Values.config.redis.internal .Values.config.phpredisadmin.enabled) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ejabberd.fullname" . }}-phpredisadmin
+  labels:
+    app: {{ template "ejabberd.name" . }}-phpredisadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "ejabberd.name" . }}-phpredisadmin
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ejabberd.name" . }}-phpredisadmin
+        release: {{ .Release.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
+      containers:
+        - name: {{ template "ejabberd.fullname" . }}-phpredisadmin
+          image: {{ .Values.images.phpredisadmin.repository }}:{{ .Values.images.phpredisadmin.tag }}
+          imagePullPolicy: {{ .Values.images.phpredisadmin.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          env:
+            - name: REDIS_1_HOST
+              value: {{ template "ejabberd.fullname" . }}-redis
+            - name: REDIS_1_NAME
+              value: {{ template "ejabberd.fullname" . }}-redis
+            - name: ADMIN_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "ejabberd.fullname" . }}
+                  key: phpredisadmin_username
+            - name: ADMIN_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ejabberd.fullname" . }}
+                  key: phpredisadmin_password
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}
