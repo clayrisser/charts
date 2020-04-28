@@ -171,6 +171,7 @@ data:
         normal: all
       s2s_shaper: fast
     max_fsm_queue: 10000
+    default_db: sql
     new_sql_schema: true
     sql_type: pgsql
     sql_server: {{ template "ejabberd.postgres-host" . }}
