@@ -171,6 +171,15 @@ data:
         normal: all
       s2s_shaper: fast
     max_fsm_queue: 10000
+    new_sql_schema: true
+    sql_type: pgsql
+    sql_server: {{ template "ejabberd.postgres-url" . }}
+    sql_port: {{ .Values.config.postgres.port }}
+    sql_database: {{ .Values.config.postgres.database }}
+    sql_username: {{ .Values.config.postgres.username }}
+    sql_password: {{ .Values.config.postgres.password }}
+    redis_server: {{ template "ejabberd.redis-url" . }}
+    redis_db: 1
     host_config:
       {{ template "ejabberd.ejabberd-hostname" . }}:
         s2s_access: s2s

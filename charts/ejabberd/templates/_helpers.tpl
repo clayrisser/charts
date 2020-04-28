@@ -83,6 +83,23 @@ Calculate ejabberd base url
 {{- end }}
 
 {{/*
+Calculate postgres url
+*/}}
+{{- define "ejabberd.postgres-url" }}
+{{- $postgres := .Values.config.postgres }}
+{{- if $postgres.internal }}
+{{- $credentials := (printf "%s:%s" $postgres.username $postgres.password) }}
+{{- printf "postgresql://%s@%s-postgres:5432/%s" $credentials (include "ejabberd.fullname" .) $postgres.database }}
+{{- else }}
+{{- if $postgres.url }}
+{{- printf $postgres.url }}
+{{- else }}
+{{- printf "postgresql://%s@%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate redis url
 */}}
 {{- define "ejabberd.redis-url" }}
