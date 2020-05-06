@@ -1,3 +1,4 @@
+{{- if (eq .Values.config.authPlugin "SearchGuard") }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -37,3 +38,4 @@ data:
 {{ toYaml .Values.config.masterConfig | indent 4 }}
 {{- end }}
   client-config.yml: '{}'
+{{- end }}
