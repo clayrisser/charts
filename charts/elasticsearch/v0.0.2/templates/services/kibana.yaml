@@ -1,4 +1,4 @@
-{{- if .Values.config.kibana }}
+{{- if (and (eq .Values.config.authPlugin "SearchGuard") .Values.config.kibana) }}
 apiVersion: v1
 kind: Service
 metadata:

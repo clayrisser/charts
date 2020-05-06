@@ -1,4 +1,4 @@
-{{- if (and .Values.ingress.kibana.enabled .Values.config.kibana) }}
+{{- if (and (eq .Values.config.authPlugin "SearchGuard") (and .Values.ingress.kibana.enabled .Values.config.kibana)) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
