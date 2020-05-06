@@ -9,8 +9,8 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   common-config.yml: |
-    path:
-      logs: /data/elasticsearch/common-logdir
+    # path:
+    #   logs: /data/elasticsearch/common-logdir
     {{- if (eq .Values.config.authPlugin "SearchGuard") }}
     searchguard.restapi.roles_enabled: ["sg_all_access","sg_kibana_user"]
     xpack.security.enabled: false
@@ -19,20 +19,20 @@ data:
 {{ toYaml .Values.config.commonConfig | indent 4 }}
 {{- end }}
   data-config.yml: |
-    node:
-      name: es-node-data
-    path:
-      data: ["/data/elasticsearch/data-datadir"]
-    http:
-      compression: false
+    # node:
+    #   name: es-node-data
+    # path:
+    #   data: ["/data/elasticsearch/data-datadir"]
+    # http:
+    #   compression: false
 {{- if .Values.config.dataConfig }}
 {{ toYaml .Values.config.dataConfig | indent 4 }}
 {{- end }}
   master-config.yml: |
-    node:
-      name: es-node-master
-    path:
-      data: ["/data/elasticsearch/master-datadir"]
+    # node:
+    #   name: es-node-master
+    # path:
+    #   data: ["/data/elasticsearch/master-datadir"]
 {{- if .Values.config.masterConfig }}
 {{ toYaml .Values.config.masterConfig | indent 4 }}
 {{- end }}
