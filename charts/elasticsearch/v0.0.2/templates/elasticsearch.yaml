@@ -10,11 +10,11 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   version: {{ .Values.config.version | quote }}
-  # configSource:
-  #   configMap:
-  #     name: {{ template "elasticsearch.fullname" . }}-elasticsearch
-  # databaseSecret:
-  #   secretName: {{ template "elasticsearch.fullname" . }}-elasticsearch-auth
+  configSource:
+    configMap:
+      name: {{ template "elasticsearch.fullname" . }}-elasticsearch
+  databaseSecret:
+    secretName: {{ template "elasticsearch.fullname" . }}-elasticsearch-auth
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
