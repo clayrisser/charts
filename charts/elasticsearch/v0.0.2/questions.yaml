@@ -246,7 +246,7 @@ questions:
     label: 'resources requests cpu'
     group: Config
   - variable: config.resources.limits.cpu
-    default: 500m
+    default: 2000m
     description: ''
     type: string
     required: true
@@ -254,7 +254,7 @@ questions:
     label: 'resources limits cpu'
     group: Config
   - variable: config.resources.limits.memory
-    default: 256Mi
+    default: 4Gi
     description: ''
     type: string
     required: true

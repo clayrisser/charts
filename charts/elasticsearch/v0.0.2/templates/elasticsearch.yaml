@@ -137,8 +137,8 @@ spec:
                     operator: In
                     values:
                       - dedicated
-#       resources:
-# {{ toYaml .Values.config.resources | indent 8 }}
+      resources:
+{{ toYaml .Values.config.resources | indent 8 }}
       livenessProbe:
         exec:
           command: ['curl',  'localhost:9200']
