@@ -11,7 +11,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "elasticsearch.name" . }}-elasticsearch
+      app: {{ template "elasticsearch.name" . }}-kibana
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
