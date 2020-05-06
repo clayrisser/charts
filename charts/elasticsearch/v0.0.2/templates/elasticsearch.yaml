@@ -13,8 +13,10 @@ spec:
   configSource:
     configMap:
       name: {{ template "elasticsearch.fullname" . }}-elasticsearch
+  {{- if (eq .Values.config.authPlugin "SearchGuard") }}
   databaseSecret:
     secretName: {{ template "elasticsearch.fullname" . }}-elasticsearch-auth
+  {{- end }}
   {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
