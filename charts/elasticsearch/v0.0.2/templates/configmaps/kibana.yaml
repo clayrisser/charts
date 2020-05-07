@@ -10,7 +10,7 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   kibana.yml: |
-    elasticsearch.url: "{{ template "elasticsearch.elasticsearch-base-url" . }}"
+    elasticsearch.hosts: ["{{ template "elasticsearch.elasticsearch-base-url" . }}"]
     elasticsearch.password: "kibana@secret"
     elasticsearch.requestTimeout: 180000
     elasticsearch.username: "kibanauser"
