@@ -53,9 +53,9 @@ Calculate elasticsearch base url
 {{- $hostname := ((empty (include "elasticsearch.elasticsearch-hostname" .)) | ternary .Values.ingress.elasticsearch.hostname (include "elasticsearch.elasticsearch-hostname" .)) }}
 {{- $path := (eq .Values.ingress.elasticsearch.path "/" | ternary "" .Values.ingress.elasticsearch.path) }}
 {{- $protocol := (.Values.ingress.elasticsearch.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
+{{- printf "%s://%s%s:9200" $protocol $hostname $path }}
 {{- else }}
-{{- printf "http://%s" (include "elasticsearch.elasticsearch-hostname" .) }}
+{{- printf "http://%s:9200" (include "elasticsearch.elasticsearch-hostname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
