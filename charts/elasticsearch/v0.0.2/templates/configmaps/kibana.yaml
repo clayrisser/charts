@@ -12,6 +12,7 @@ data:
   kibana.yml: |
     elasticsearch.url: "{{ template "elasticsearch.elasticsearch-base-url" . }}"
     elasticsearch.password: "kibana@secret"
+    elasticsearch.requestTimeout: 180000
     elasticsearch.username: "kibanauser"
     searchguard.auth.type: "basicauth"
     searchguard.cookie.secure: false
