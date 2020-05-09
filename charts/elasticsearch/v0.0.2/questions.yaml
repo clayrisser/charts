@@ -171,7 +171,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'topology data resources requests cpu'
+    label: 'topology data resources requests memory'
     group: Config
   - variable: config.topology.data.limits.cpu
     default: 500m
@@ -211,7 +211,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=true
-    label: 'topology master resources requests cpu'
+    label: 'topology master resources requests memory'
     group: Config
   - variable: config.topology.master.limits.cpu
     default: 500m
@@ -243,7 +243,7 @@ questions:
     type: string
     required: true
     show_if: config.topology.enabled=false
-    label: 'resources requests cpu'
+    label: 'resources requests memory'
     group: Config
   - variable: config.resources.limits.cpu
     default: 2000m

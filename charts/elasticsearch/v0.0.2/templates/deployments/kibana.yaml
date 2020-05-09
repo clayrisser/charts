@@ -35,6 +35,13 @@ spec:
         - name: {{ template "elasticsearch.fullname" . }}-kibana
           image: {{ .Values.images.kibana.repository }}:{{ .Values.images.kibana.tag }}
           imagePullPolicy: {{ .Values.images.kibana.pullPolicy }}
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: 1500m
+              memory: 4Gi
           ports:
             - name: container
               containerPort: 5601
