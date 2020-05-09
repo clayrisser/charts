@@ -42,12 +42,11 @@ spec:
             - name: config
               subPath: kibana.yml
               mountPath: /usr/share/kibana/config/kibana.yml
-            - name: config
-              subPath: kibana.sh
-              mountPath: /bin/kibana
           env:
             - name: ELASTICSEARCH_HOSTS
               value: http://{{ template "elasticsearch.fullname" . }}-elasticsearch:9200
+            - name: NODE_OPTIONS
+              value: --max-old-space-size=8192
             - name: ELASTICSEARCH_USERNAME
               valueFrom:
                 secretKeyRef:

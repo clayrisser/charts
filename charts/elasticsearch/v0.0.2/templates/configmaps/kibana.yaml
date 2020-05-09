@@ -18,24 +18,4 @@ data:
     searchguard.cookie.secure: false
     server.host: 0.0.0.0
     xpack.security.enabled: false
-  kibana.sh: |
-    #!/bin/sh
-    SCRIPT=$0
-    while [ -h "$SCRIPT" ] ; do
-      ls=$(ls -ld "$SCRIPT")
-      link=$(expr "$ls" : '.*-> \(.*\)$')
-      if expr "$link" : '/.*' > /dev/null; then
-        SCRIPT="$link"
-      else
-        SCRIPT=$(dirname "$SCRIPT")/"$link"
-      fi
-    done
-    DIR="$(dirname "${SCRIPT}")/.."
-    NODE="${DIR}/node/bin/node"
-    test -x "$NODE"
-    if [ ! -x "$NODE" ]; then
-      echo "unable to find usable node.js executable."
-      exit 1
-    fi
-    NODE_OPTIONS="--no-warnings --max-old-space-size=8192 --max-http-header-size=65536 ${NODE_OPTIONS}" NODE_ENV=production exec "${NODE}" --max-old-space-size=8192 "${DIR}/src/cli" ${@}
 {{- end }}
