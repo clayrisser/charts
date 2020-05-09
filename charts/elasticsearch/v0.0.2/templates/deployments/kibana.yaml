@@ -35,12 +35,25 @@ spec:
         - name: {{ template "elasticsearch.fullname" . }}-kibana
           image: {{ .Values.images.kibana.repository }}:{{ .Values.images.kibana.tag }}
           imagePullPolicy: {{ .Values.images.kibana.pullPolicy }}
+          lifecycle:
+            preStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    echo PRE START
+                    chmod +x /bin/kibana
           ports:
             - name: container
               containerPort: 5601
           volumeMounts:
             - name: config
-              mountPath: /usr/share/kibana/config
+              subPath: kibana.yml
+              mountPath: /usr/share/kibana/config/kibana.yml
+            - name: config
+              subPath: kibana.sh
+              mountPath: /bin/kibana
           env:
             - name: ELASTICSEARCH_HOSTS
               value: http://{{ template "elasticsearch.fullname" . }}-elasticsearch:9200
