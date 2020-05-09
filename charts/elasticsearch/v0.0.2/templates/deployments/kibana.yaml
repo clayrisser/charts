@@ -35,6 +35,9 @@ spec:
         - name: {{ template "elasticsearch.fullname" . }}-kibana
           image: {{ .Values.images.kibana.repository }}:{{ .Values.images.kibana.tag }}
           imagePullPolicy: {{ .Values.images.kibana.pullPolicy }}
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           command:
             - /bin/sh
             - -c
