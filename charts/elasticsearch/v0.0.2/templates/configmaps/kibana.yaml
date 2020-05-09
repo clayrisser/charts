@@ -37,5 +37,5 @@ data:
       echo "unable to find usable node.js executable."
       exit 1
     fi
-    NODE_OPTIONS="--no-warnings --max-http-header-size=65536 ${NODE_OPTIONS}" NODE_ENV=production exec "${NODE}" --max-old-space-size=4096 "${DIR}/src/cli" ${@}
+    NODE_OPTIONS="--no-warnings --max-http-header-size=65536 ${NODE_OPTIONS}" NODE_ENV=production exec "${NODE}" --max-old-space-size=4096 "${DIR}/src/cli" --allow-root ${@}
 {{- end }}
