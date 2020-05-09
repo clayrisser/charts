@@ -44,7 +44,7 @@ spec:
             - |
               cp /usr/share/kibana/config/kibana.sh /bin/kibana
               chmod +x /bin/kibana
-              exec /usr/local/bin/dumb-init
+              exec /usr/local/bin/dumb-init -- /usr/local/bin/kibana-docker
           ports:
             - name: container
               containerPort: 5601
