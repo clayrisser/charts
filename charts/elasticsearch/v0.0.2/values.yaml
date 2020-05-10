@@ -23,6 +23,10 @@ config:
   logtrailPlugin:
     enabled: false
     indexPattern: logstash-*
+    fields:
+      hostname: kubernetes.pod_name
+      message: log
+      program: kubernetes.container_image
   resources:
     requests:
       cpu: 250m

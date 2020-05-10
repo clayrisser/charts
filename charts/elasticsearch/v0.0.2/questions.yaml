@@ -86,15 +86,37 @@ questions:
     type: boolean
     required: true
     label: 'logtrail plugin enabled'
+    show_subquestion_if: true
     group: Config
-  - variable: config.logtrailPlugin.indexPattern
-    default: logstash-*
-    description: ''
-    type: string
-    required: true
-    show_if: config.logtrailPlugin.enabled=true
-    label: 'logtrail plugin index pattern'
-    group: Config
+    subquestions:
+      - variable: config.logtrailPlugin.indexPattern
+        default: logstash-*
+        description: ''
+        type: string
+        required: true
+        label: 'logtrail plugin index pattern'
+        group: Config
+      - variable: config.logtrailPlugin.fields.hostname
+        default: kubernetes.pod_name
+        description: ''
+        type: string
+        required: true
+        label: 'logtrail plugin hostname field'
+        group: Config
+      - variable: config.logtrailPlugin.fields.message
+        default: log
+        description: ''
+        type: string
+        required: true
+        label: 'logtrail plugin message field'
+        group: Config
+      - variable: config.logtrailPlugin.fields.program
+        default: kubernetes.container_image
+        description: ''
+        type: string
+        required: true
+        label: 'logtrail plugin program field'
+        group: Config
   - variable: config.password
     default: changeme
     description: ''

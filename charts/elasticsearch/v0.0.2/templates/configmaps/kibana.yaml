@@ -38,12 +38,12 @@ data:
           "default_search": "",
           "fields": {
             "mapping": {
-              "hostname": "kubernetes.pod_name",
-              "message": "log",
-              "program": "kubernetes.container_image",
+              "hostname": "{{ .Values.config.logtrailPlugin.fields.hostname }}",
+              "message": "{{ .Values.config.logtrailPlugin.fields.message }}",
+              "program": "{{ .Values.config.logtrailPlugin.fields.program }}",
               "timestamp": "@timestamp"
             },
-            "message_format": "{{ "{{{" }}log}}}",
+            "message_format": "{{ "{{{" }}{{ .Values.config.logtrailPlugin.fields.message }}}}}",
             "keyword_suffix": "keyword"
           },
           "color_mapping": {}
