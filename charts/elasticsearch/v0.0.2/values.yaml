@@ -1,7 +1,7 @@
 images:
   kibana:
-    repository: kubedb/kibana
-    tag: 6.3.0
+    repository: codejamninja/kibana-logtrail
+    tag: 6.4.0
     pullPolicy: IfNotPresent
 
 config:

@@ -510,7 +510,7 @@ questions:
 
 # Images
   - variable: images.kibana.repository
-    default: kubedb/kibana
+    default: codejamninja/kibana-logtrail
     description: ''
     type: string
     required: true
@@ -518,7 +518,7 @@ questions:
     show_if: config.kibana=true
     group: Images
   - variable: images.kibana.tag
-    default: 6.3.0
+    default: 6.4.0
     description: ''
     type: string
     required: true

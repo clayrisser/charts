@@ -76,5 +76,4 @@ spec:
         - name: config
           configMap:
             name: {{ template "elasticsearch.fullname" . }}-kibana
-            defaultMode: 0777
 {{- end }}
