@@ -38,16 +38,15 @@ data:
           "default_search": "",
           "fields": {
             "mapping": {
-                "timestamp" : "@timestamp",
-                "hostname" : "host",
-                "program": "url",
-                "message": "agent"
+              "hostname" : "kubernetes.host",
+              "message": "log",
+              "program": "kubernetes.container_image",
+              "timestamp" : "@timestamp"
             },
             "message_format": "{{ "{{{" }}agent}}}",
             "keyword_suffix" : "keyword"
           },
-          "color_mapping" : {
-          }
+          "color_mapping" : {}
         }
       ]
     }
