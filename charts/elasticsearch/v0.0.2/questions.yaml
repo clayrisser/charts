@@ -92,6 +92,7 @@ questions:
     description: ''
     type: string
     required: true
+    show_if: config.logtrailPlugin.enabled=true
     label: 'logtrail plugin index pattern'
     group: Config
   - variable: config.password
