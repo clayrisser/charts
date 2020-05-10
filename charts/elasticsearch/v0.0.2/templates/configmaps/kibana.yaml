@@ -43,7 +43,7 @@ data:
               "program": "kubernetes.container_image",
               "timestamp": "@timestamp"
             },
-            "message_format": "{{ "{{{" }}agent}}}",
+            "message_format": "{{ "{{{" }}message}}}",
             "keyword_suffix": "keyword"
           },
           "color_mapping": {}
