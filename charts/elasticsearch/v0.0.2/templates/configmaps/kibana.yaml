@@ -40,7 +40,7 @@ data:
             "mapping": {
               "hostname": "kubernetes.pod_name",
               "message": "log",
-              "program": "",
+              "program": "kubernetes.container_image",
               "timestamp": "@timestamp"
             },
             "message_format": "{{ "{{{" }}log}}}",
