@@ -80,6 +80,20 @@ questions:
     required: true
     label: 'auth plugin'
     group: Config
+  - variable: config.logtrailPlugin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'logtrail plugin enabled'
+    group: Config
+  - variable: config.logtrailPlugin.indexPattern
+    default: logstash-*
+    description: ''
+    type: string
+    required: true
+    label: 'logtrail plugin index pattern'
+    group: Config
   - variable: config.password
     default: changeme
     description: ''

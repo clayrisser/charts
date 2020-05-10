@@ -49,6 +49,11 @@ spec:
             - name: config
               subPath: kibana.yml
               mountPath: /usr/share/kibana/config/kibana.yml
+            {{- if .Values.config.logtrailPlugin.enabled }}
+            - name: config
+              subPath: logtrail.json
+              mountPath: /usr/share/kibana/plugins/logtrail/logtrail.json
+            {{- end }}
           env:
             - name: ELASTICSEARCH_HOSTS
               value: http://{{ template "elasticsearch.fullname" . }}-elasticsearch:9200

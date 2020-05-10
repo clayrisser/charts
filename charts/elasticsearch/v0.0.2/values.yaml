@@ -20,6 +20,9 @@ config:
   terminationPolicy: Delete
   updateStrategy: RollingUpdate
   version: 6.4.0
+  logtrailPlugin:
+    enabled: false
+    indexPattern: logstash-*
   resources:
     requests:
       cpu: 250m
