@@ -32,21 +32,21 @@ data:
           "display_timezone": "local",
           "display_timestamp_format": "MMM DD HH:mm:ss",
           "max_buckets": 500,
-          "default_time_range_in_days" : 0,
+          "default_time_range_in_days": 0,
           "max_hosts": 100,
           "max_events_to_keep_in_viewer": 5000,
           "default_search": "",
           "fields": {
             "mapping": {
-              "hostname" : "kubernetes.host",
+              "hostname": "kubernetes.pod_name",
               "message": "log",
               "program": "kubernetes.container_image",
-              "timestamp" : "@timestamp"
+              "timestamp": "@timestamp"
             },
             "message_format": "{{ "{{{" }}agent}}}",
-            "keyword_suffix" : "keyword"
+            "keyword_suffix": "keyword"
           },
-          "color_mapping" : {}
+          "color_mapping": {}
         }
       ]
     }
