@@ -36,14 +36,14 @@ data:
           "max_hosts": 100,
           "max_events_to_keep_in_viewer": 5000,
           "default_search": "",
-          "fields" : {
-            "mapping" : {
+          "fields": {
+            "mapping": {
                 "timestamp" : "@timestamp",
                 "hostname" : "host",
                 "program": "url",
                 "message": "agent"
             },
-            "message_format": "{{{agent}}}",
+            "message_format": "{{ "{{{" }}agent}}}",
             "keyword_suffix" : "keyword"
           },
           "color_mapping" : {
