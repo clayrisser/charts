@@ -49,8 +49,8 @@ runners:
   tags: ''
   env: {}
   cache: {}
-  nodeSelector:
-    group: spot
+  nodeSelector: {}
+  #   group: spot
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
