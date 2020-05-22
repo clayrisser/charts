@@ -28,6 +28,13 @@ Calculate mailserver certificate
 {{- end }}
 
 {{/*
+Calculate ldap dc
+*/}}
+{{- define "mailserver.ldap-dc" }}
+{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.ldap.domain -1) 0) (index (regexSplit "\\." .Values.config.ldap.domain -1) 1) }}
+{{- end }}
+
+{{/*
 Calculate mailserver hostname
 */}}
 {{- define "mailserver.mailserver-hostname" }}
@@ -41,6 +48,17 @@ Calculate mailserver hostname
 {{- end }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+Calculate openldap dc
+*/}}
+{{- define "openldap.openldap-dc" }}
+{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.domain -1) 0) (index (regexSplit "\\." .Values.config.domain -1) 1) }}
+{{- end }}
+
+
+
 
 {{/*
 Calculate mailserver base url

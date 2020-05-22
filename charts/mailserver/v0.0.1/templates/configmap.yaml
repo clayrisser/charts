@@ -10,26 +10,29 @@ metadata:
 data:
   clamav_enabled: {{ .Values.config.clamav.enabled | ternary "1" "0" | quote }}
   debug: {{ .Values.config.debug | ternary "1" "0" | quote }}
+  dovecot_mailbox_format: {{ .Values.config.dovecot.mailboxFormat | quote }}
   dovecot_pass_attrs: {{ .Values.config.dovecot.passAttrs | quote }}
   dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
   dovecot_user_attrs: {{ .Values.config.dovecot.userAttrs | quote }}
   dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
-  enable_managesieve: {{ .Values.config.enableManagesieve | quote }}
   fail2ban_enabled: {{ .Values.config.fail2ban.enabled | ternary "1" "0" | quote }}
   fetchmail_enabled: {{ .Values.config.fetchmail.enabled | ternary "1" "0" | quote }}
   fetchmail_poll: {{ .Values.config.fetchmail.poll | quote }}
   hostname: {{ template "mailserver.mailserver-hostname" . }}
-  ldap_bind_dn: {{ .Values.config.ldapBindDn | quote }}
-  ldap_bind_pw: {{ .Values.config.ldapBindPw | quote }}
-  ldap_enabled: {{ .Values.config.ldap.enabled | ternary "1" "0" | quote }}
+  ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
+  ldap_bind_pw: {{ .Values.config.ldap.password | quote }}
+  ldap_enabled: {{ .Values.config.ldap.enabled | ternary "1" "" | quote }}
   ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
   ldap_query_filter_domain: {{ .Values.config.ldap.queryFilterDomain | quote }}
   ldap_query_filter_group: {{ .Values.config.ldap.queryFilterGroup | quote }}
   ldap_query_filter_user: {{ .Values.config.ldap.queryFilterUser | quote }}
-  ldap_search_base: {{ .Values.config.ldap.searchBase | quote }}
-  ldap_server_host: {{ .Values.config.ldap.serverHost | quote }}
-  ldap_start_tls: {{ .Values.config.ldap.startTls | quote }}
+  ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
+  ldap_server_host: {{ .Values.config.ldap.hostname | quote }}
+  ldap_start_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote  }}
+  logrotate_interval: {{ .Values.config.reports.logrotateInterval | quote }}
+  logwatch_interval: {{ .Values.config.reports.logwatchInterval | quote }}
   managesieve_enabled: {{ .Values.config.managesieve.enabled | ternary "1" "0" | quote }}
+  pflogsumm_trigger: {{ .Values.config.reports.pflogsummTrigger | quote }}
   pop3_enabled: {{ .Values.config.pop3.enabled | ternary "1" "0" | quote }}
   postfix_mailbox_size_limit: {{ .Values.config.postfixMailboxSizeLimit | quote }}
   postfix_message_size_limit: {{ .Values.config.postfixMessageSizeLimit | quote }}
@@ -39,16 +42,14 @@ data:
   postgrey_max_age: {{ .Values.config.postgrey.maxAge | quote }}
   postgrey_text: {{ .Values.config.postgrey.text | quote }}
   postmaster_address: {{ .Values.config.postmasterAddress | quote }}
-  sasl_passwd: {{ .Values.config.saslPasswd | quote }}
-  saslauthd_enabled: {{ .Values.config.saslauthd.enabled | ternary "1" "0" | quote }}
-  saslauthd_ldap_bind_dn: {{ .Values.config.saslauthd.ldapBindDn | quote }}
-  saslauthd_ldap_filter: {{ .Values.config.saslauthd.ldapFilter | quote }}
-  saslauthd_ldap_password: {{ .Values.config.saslauthd.ldapPassword | quote }}
-  saslauthd_ldap_search_base: {{ .Values.config.saslauthd.ldapSearchBase | quote }}
-  saslauthd_ldap_server: {{ .Values.config.saslauthd.ldapServer | quote }}
-  saslauthd_ldap_ssl: {{ .Values.config.saslauthd.ldapSsl | ternary "1" "0" | quote }}
-  saslauthd_mech_options: {{ .Values.config.saslauthd.mechOptions | quote }}
-  saslauthd_mechanisms: {{ .Values.config.saslauthd.mechanisms | quote }}
+  saslauthd_enabled: {{ .Values.config.saslauthd.ldap | ternary "1" "0" | quote }}
+  saslauthd_ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
+  saslauthd_ldap_filter: {{ .Values.config.ldap.saslFilter | quote }}
+  saslauthd_ldap_password: {{ .Values.config.ldap.password | quote }}
+  saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
+  saslauthd_ldap_server: {{ .Values.config.ldap.hostname | quote }}
+  saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" | quote  }}
+  saslauthd_mechanisms: ldap
   spamassassin_enabled: {{ .Values.config.spamassassin.enabled | ternary "1" "0" | quote }}
   spamassassin_move_spam_to_junk: {{ .Values.config.spamassassin.moveSpamToJunk | ternary "1" "0" | quote }}
   spamassassin_shortcircuit_bayes_ham: {{ .Values.config.spamassassin.shortcircuitBayesHam | ternary "1" "0" | quote }}

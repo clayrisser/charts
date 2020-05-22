@@ -26,6 +26,7 @@ config:
     enabled: false
   ldap:
     admin: admin
+    domain: example.org
     enabled: false
     hostname: ''
     password: pass
@@ -33,6 +34,7 @@ config:
     queryFilterDomain: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
     queryFilterGroup: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
     queryFilterUser: '(&(mail=%s)(mailEnabled=TRUE))'
+    saslFilter: '(&(uniqueIdentifier=%u)(mailEnabled=TRUE))'
     tls: false
     usersOu: people
   managesieve:
@@ -52,7 +54,6 @@ config:
     logrotateInterval: daily
     logwatchInterval: none
     pflogsummTrigger: none
-    recipient: ''
   spamassassin:
     enabled: false
     moveSpamToJunk: true

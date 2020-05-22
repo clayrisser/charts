@@ -109,16 +109,13 @@ spec:
           env:
             - name: ONE_DIR
               value: '1'
-            - name: 'POSTFIX_INET_PROTOCOLS'
-              value: 'ipv4'
-            - name: DMS_DEBUG
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "mailserver.fullname" . }}
-                  key: debug
+            - name: POSTFIX_INET_PROTOCOLS
+              value: ipv4
             - name: PERMIT_DOCKER
               value: host
             {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
+            - name: TLS_LEVEL
+              value: modern
             - name: SSL_TYPE
               value: manual
             - name: SSL_CERT_PATH
@@ -126,31 +123,31 @@ spec:
             - name: SSL_KEY_PATH
               value: /certs/tls.key
             {{- end }}
-            - name: OVERRIDE_HOSTNAME
+            - name: DMS_DEBUG
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
-                  key: hostname
-            - name: ENABLE_SPAMASSASSIN
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "mailserver.fullname" . }}
-                  key: spamassassin_enabled
+                  key: debug
             - name: ENABLE_CLAMAV
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: clamav_enabled
+            - name: ENABLE_POP3
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: pop3_enabled
             - name: ENABLE_FAIL2BAN
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: fail2ban_enabled
-            - name: ENABLE_POSTGREY
+            - name: SMTP_ONLY
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
-                  key: postgrey_enabled
+                  key: smtp_only
             - name: SPOOF_PROTECTION
               valueFrom:
                 configMapKeyRef:
@@ -180,27 +177,47 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
-                  key: enable_managesieve
+                  key: managesieve_enabled
+            - name: OVERRIDE_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: hostname
             - name: POSTMASTER_ADDRESS
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: postmaster_address
-            - name: SA_TAG
+            - name: PFLOGSUMM_TRIGGER
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
-                  key: spamassassin_tag
-            - name: SA_TAG2
+                  key: pflogsumm_trigger
+            - name: LOGWATCH_INTERVAL
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
-                  key: spamassassin_tag2
-            - name: SA_KILL
+                  key: logwatch_interval
+            - name: LOGROTATE_INTERVAL
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
-                  key: spamassassin_kill
+                  key: logrotate_interval
+            - name: ENABLE_SPAMASSASSIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_enabled
+            - name: SPAMASSASSIN_SPAM_TO_INBOX
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_spam_to_inbox
+            - name: MOVE_SPAM_TO_JUNK
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_move_spam_to_junk
             - name: SA_SPAM_SUBJECT
               valueFrom:
                 configMapKeyRef:
@@ -216,11 +233,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: spamassassin_shortcircuit_bayes_ham
-            - name: FETCHMAIL_POLL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "mailserver.fullname" . }}
-                  key: fetchmail_poll
             - name: ENABLE_LDAP
               valueFrom:
                 configMapKeyRef:
@@ -271,11 +283,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: ldap_query_filter_domain
-            - name: DOVECOT_TLS
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "mailserver.fullname" . }}
-                  key: dovecot_tls
             - name: DOVECOT_USER_FILTER
               valueFrom:
                 configMapKeyRef:
@@ -296,6 +303,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: dovecot_pass_attrs
+            - name: ENABLE_POSTGREY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postgrey_enabled
             - name: POSTGREY_DELAY
               valueFrom:
                 configMapKeyRef:
@@ -361,11 +373,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: saslauthd_ldap_filter
-            - name: SASL_PASSWD
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "mailserver.fullname" . }}
-                  key: sasl_passwd
             - name: SRS_SENDER_CLASSES
               valueFrom:
                 configMapKeyRef:
@@ -378,19 +385,10 @@ spec:
                   key: srs_exclude_domains
             - name: SRS_SECRET
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: srs_secret
-            - name: SRS_DOMAINNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "mailserver.fullname" . }}
-                  key: srs_domainname
-            - name: DEFAULT_RELAY_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "mailserver.fullname" . }}
-                  key: default_relay_host
+
           livenessProbe:
             tcpSocket:
               port: smtp
