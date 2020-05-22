@@ -85,7 +85,7 @@ spec:
               mountPath: /container/service/slapd/assets/config/bootstrap/schema/dovecot.schema
             - name: schemas
               subPath: postfix-book.schema
-              mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix-book.schema/postfix.schema
+              mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix-book.schema
             - name: schemas
               subPath: postfix.schema
               mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix.schema
