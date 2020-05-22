@@ -66,36 +66,9 @@ spec:
             - name: data
               mountPath: /etc/ldap/slapd.d
               subPath: config
-            # - name: config
-            #   mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-organization.ldif
-            #   subPath: 01-organization.ldif
-            # - name: config
-            #   mountPath: /config/ppolicy.ldif
-            #   subPath: ppolicy.ldif
-            # - name: config
-            #   mountPath: /config/ppolicy.sh
-            #   subPath: ppolicy.sh
-            # - name: schemas
-            #   subPath: RoundCube.schema
-            #   mountPath: /container/service/slapd/assets/config/bootstrap/schema/RoundCube.schema
-            # - name: schemas
-            #   subPath: courier.schema
-            #   mountPath: /container/service/slapd/assets/config/bootstrap/schema/courier.schema
-            # - name: schemas
-            #   subPath: dovecot.schema
-            #   mountPath: /container/service/slapd/assets/config/bootstrap/schema/dovecot.schema
-            - name: schemas
+            - name: config
               subPath: postfix-book.schema
               mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix-book.schema
-            # - name: schemas
-            #   subPath: postfix.schema
-            #   mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix.schema
-            # - name: schemas
-            #   subPath: postfix2.schema
-            #   mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix2.schema
-            # - name: schemas
-            #   subPath: quota.schema
-            #   mountPath: /container/service/slapd/assets/config/bootstrap/schema/quota.schema
           env:
             {{- if .Values.config.debug }}
             - name: LDAP_LOG_LEVEL
@@ -141,9 +114,6 @@ spec:
         - name: config
           configMap:
             name: {{ template "openldap.fullname" . }}-openldap
-        - name: schemas
-          configMap:
-            name: {{ template "openldap.fullname" . }}-schemas
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
