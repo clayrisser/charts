@@ -28,10 +28,12 @@ spec:
         - name: {{ template "mailserver.fullname" . }}-mailserver
           image: {{ .Values.images.mailserver.repository }}:{{ .Values.images.mailserver.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          {{- if .Values.config.fail2ban.enabled }}
           securityContext:
             capabilities:
               add:
                 - NET_ADMIN
+          {{- end }}
           ports:
             - name: smtp
               containerPort: 25
@@ -46,6 +48,9 @@ spec:
               protocol: TCP
             - name: imap-secure
               containerPort: 993
+              protocol: TCP
+            - name: managesieve
+              containerPort: 4190
               protocol: TCP
           volumeMounts:
             - name: config
@@ -102,12 +107,15 @@ spec:
               mountPath: /var/log/mail
               subPath: log
           env:
-            - name: FETCHMAIL_POLL
-              value: '120'
             - name: ONE_DIR
               value: '1'
+            - name: 'POSTFIX_INET_PROTOCOLS'
+              value: 'ipv4'
             - name: DMS_DEBUG
-              value: '0'
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: debug
             - name: PERMIT_DOCKER
               value: host
             {{- if (and .Values.ingress.mailserver.enabled .Values.ingress.mailserver.tls) }}
@@ -123,11 +131,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: hostname
-            - name: ENABLE_FETCHMAIL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "mailserver.fullname" . }}
-                  key: fetchmail_enabled
             - name: ENABLE_SPAMASSASSIN
               valueFrom:
                 configMapKeyRef:

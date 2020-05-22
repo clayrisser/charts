@@ -9,10 +9,9 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   clamav_enabled: {{ .Values.config.clamav.enabled | ternary "1" "0" | quote }}
-  default_relay_host: {{ .Values.config.defaultRelayHost | quote }}
+  debug: {{ .Values.config.debug | ternary "1" "0" | quote }}
   dovecot_pass_attrs: {{ .Values.config.dovecot.passAttrs | quote }}
   dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
-  dovecot_tls: {{ .Values.config.dovecot.tls | quote }}
   dovecot_user_attrs: {{ .Values.config.dovecot.userAttrs | quote }}
   dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
   enable_managesieve: {{ .Values.config.enableManagesieve | quote }}
@@ -30,6 +29,8 @@ data:
   ldap_search_base: {{ .Values.config.ldap.searchBase | quote }}
   ldap_server_host: {{ .Values.config.ldap.serverHost | quote }}
   ldap_start_tls: {{ .Values.config.ldap.startTls | quote }}
+  managesieve_enabled: {{ .Values.config.managesieve.enabled | ternary "1" "0" | quote }}
+  pop3_enabled: {{ .Values.config.pop3.enabled | ternary "1" "0" | quote }}
   postfix_mailbox_size_limit: {{ .Values.config.postfixMailboxSizeLimit | quote }}
   postfix_message_size_limit: {{ .Values.config.postfixMessageSizeLimit | quote }}
   postgrey_auto_whitelist_clients: {{ .Values.config.postgrey.autoWhitelistClients | quote }}
@@ -49,16 +50,14 @@ data:
   saslauthd_mech_options: {{ .Values.config.saslauthd.mechOptions | quote }}
   saslauthd_mechanisms: {{ .Values.config.saslauthd.mechanisms | quote }}
   spamassassin_enabled: {{ .Values.config.spamassassin.enabled | ternary "1" "0" | quote }}
-  spamassassin_kill: {{ .Values.config.spamassassin.kill | quote }}
-  spamassassin_shortcircuit_bayes_ham: {{ .Values.config.spamassassin.shortcircuitBayesHam | quote }}
-  spamassassin_shortcircuit_bayes_spam: {{ .Values.config.spamassassin.shortcircuitBayesSpam | quote }}
+  spamassassin_move_spam_to_junk: {{ .Values.config.spamassassin.moveSpamToJunk | ternary "1" "0" | quote }}
+  spamassassin_shortcircuit_bayes_ham: {{ .Values.config.spamassassin.shortcircuitBayesHam | ternary "1" "0" | quote }}
+  spamassassin_shortcircuit_bayes_spam: {{ .Values.config.spamassassin.shortcircuitBayesSpam | ternary "1" "0" | quote }}
   spamassassin_spam_subject: {{ .Values.config.spamassassin.spamSubject | quote }}
-  spamassassin_tag2: {{ .Values.config.spamassassin.tag2 | quote }}
-  spamassassin_tag: {{ .Values.config.spamassassin.tag | quote }}
+  spamassassin_spam_to_inbox: {{ .Values.config.spamassassin.spamToInbox | ternary "1" "0" | quote }}
   spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" | quote }}
-  srs_domainname: {{ .Values.config.srs.domainname | quote }}
+  smtp_only: {{ .Values.config.smtpOnly | ternary "1" "0" | quote }}
   srs_enabled: {{ .Values.config.srs.enabled | ternary "1" "0" | quote }}
   srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
-  srs_secret: {{ .Values.config.srs.secret | quote }}
   srs_sender_classes: {{ .Values.config.srs.senderClasses | quote }}
   virusmails_delete_delay: {{ .Values.config.virusmailsDeleteDelay | quote }}

@@ -17,32 +17,40 @@ spec:
       port: 25
       targetPort: smtp
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.http }}
+      nodePort: {{ .Values.service.mailserver.nodePorts.smtp }}
       {{- end }}
     - name: smtp-secure
       port: 465
       targetPort: smtp-secure
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.http }}
+      nodePort: {{ .Values.service.mailserver.nodePorts.smtpSecure }}
       {{- end }}
     - name: smtp-auth
       port: 587
       targetPort: smtp-auth
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.http }}
+      nodePort: {{ .Values.service.mailserver.nodePorts.smtpAuth }}
       {{- end }}
     - name: imap
       port: 143
       targetPort: imap
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.http }}
+      nodePort: {{ .Values.service.mailserver.nodePorts.imap }}
       {{- end }}
     - name: imap-secure
       port: 993
       targetPort: imap-secure
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.http }}
+      nodePort: {{ .Values.service.mailserver.nodePorts.imapSecure }}
       {{- end }}
+    {{- if .Values.config.managesieve.enabled }}
+    - name: managesieve
+      port: 4190
+      targetPort:  managesieve
+      {{- if (eq .Values.service.mailserver.type "NodePort") }}
+      nodePort: {{ .Values.service.mailserver.nodePorts.managesieve }}
+      {{- end }}
+    {{- end }}
   selector:
     app: {{ template "mailserver.name" . }}-mailserver
     release: {{ .Release.Name }}

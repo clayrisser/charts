@@ -4,80 +4,79 @@ images:
     tag: release-v6.2.1
 
 config:
+  baseUrl: ''
+  clusterProvider: infrastructure
+  debug: false
+  hostname: ''
   imagePullPolicy: IfNotPresent
-  updateStrategy: RollingUpdate
+  postmasterUsername: postmaster
+  smtpOnly: false
   spoofProtection: true
-  defaultRelayHost: ''
+  updateStrategy: RollingUpdate
+  virusmailsDeleteDelay: 7
   clamav:
     enabled: false
-  mailserver:
-    baseUrl: ''
-    hostname: ''
   dovecot:
+    mailboxFormat: maildir
     passAttrs: ''
-    passFilter: ''
-    tls: ''
+    passFilter: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
     userAttrs: ''
-    userFilter: ''
-  enableManagesieve: ''
+    userFilter: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
   fail2ban:
     enabled: false
-  fetchmail:
-    enabled: false
-    poll: ''
-  ldapBindDn: ''
-  ldapBindPw: ''
   ldap:
+    admin: admin
     enabled: false
-    queryFilterAlias: ''
-    queryFilterDomain: ''
-    queryFilterGroup: ''
-    queryFilterUser: ''
-    searchBase: ''
-    serverHost: ''
-    startTls: ''
-  postfixMailboxSizeLimit: ''
-  postfixMessageSizeLimit: ''
+    hostname: ''
+    password: pass
+    queryFilterAlias: '(|(&(mailAlias=%s)(objectClass=PostfixBookMailForward))(&(mailAlias=%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE)))'
+    queryFilterDomain: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
+    queryFilterGroup: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
+    queryFilterUser: '(&(mail=%s)(mailEnabled=TRUE))'
+    tls: false
+    usersOu: people
+  managesieve:
+    enabled: false
+  pop3:
+    enabled: false
+  postfix:
+    mailboxSizeLimit: 0
+    messageSizeLimit: 100000000
   postgrey:
-    autoWhitelistClients: ''
-    delay: ''
+    autoWhitelistClients: 5
+    delay: 300
     enabled: false
-    maxAge: ''
-    text: ''
-  postmasterAddress: ''
-  saslPasswd: ''
-  saslauthd:
-    enabled: false
-    ldapBindDn: ''
-    ldapFilter: ''
-    ldapPassword: ''
-    ldapSearchBase: ''
-    ldapServer: ''
-    ldapSsl: false
-    mechOptions: ''
-    mechanisms: ''
+    maxAge: 35
+    text: 'Delayed by postgrey'
+  reports:
+    logrotateInterval: daily
+    logwatchInterval: none
+    pflogsummTrigger: none
+    recipient: ''
   spamassassin:
     enabled: false
-    kill: ''
-    shortcircuitBayesHam: ''
-    shortcircuitBayesSpam: ''
-    spamSubject: ''
-    tag2: ''
-    tag: ''
+    moveSpamToJunk: true
+    shortcircuitBayesHam: false
+    shortcircuitBayesSpam: false
+    spamSubject: '***SPAM***'
+    spamToInbox: true
   srs:
-    domainname: ''
     enabled: true
     excludeDomains: ''
-    secret: ''
-    senderClasses: ''
-  virusmailsDeleteDelay: ''
+    secret: P@ssw0rd
+    senderClasses: envelope_sender
 
 service:
   mailserver:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
+      imap: ''
+      imapSecure: ''
+      managesieve: ''
+      smtp: ''
+      smtpAuth: ''
+      smtpSecure: ''
 
 ingress:
   mailserver:
