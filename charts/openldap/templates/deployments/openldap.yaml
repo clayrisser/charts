@@ -87,8 +87,8 @@ spec:
               subPath: postfix-book.schema
               mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix-book.schema/postfix.schema
             - name: schemas
-              subPath:
-              mountPath: /container/service/slapd/assets/config/bootstrap/schema/
+              subPath: postfix.schema
+              mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix.schema
             - name: schemas
               subPath: postfix2.schema
               mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix2.schema
