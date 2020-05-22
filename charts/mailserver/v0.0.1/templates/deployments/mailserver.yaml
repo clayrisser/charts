@@ -7,10 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.velero.enabled }}
-  annotations:
-    backup.velero.io/backup-volumes: data
-  {{- end }}
 spec:
   selector:
     matchLabels:
@@ -24,6 +20,16 @@ spec:
         app: {{ template "mailserver.name" . }}-mailserver
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - dedicated
       containers:
         - name: {{ template "mailserver.fullname" . }}-mailserver
           image: {{ .Values.images.mailserver.repository }}:{{ .Values.images.mailserver.tag }}
@@ -188,6 +194,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: postmaster_address
+            - name: DOVECOT_MAILBOX_FORMAT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: dovecot_mailbox_format
             - name: PFLOGSUMM_TRIGGER
               valueFrom:
                 configMapKeyRef:
@@ -260,9 +271,9 @@ spec:
                   key: ldap_bind_dn
             - name: LDAP_BIND_PW
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: {{ template "mailserver.fullname" . }}
-                  key: ldap_bind_pw
+                  key: ldap_password
             - name: LDAP_QUERY_FILTER_USER
               valueFrom:
                 configMapKeyRef:
@@ -360,9 +371,9 @@ spec:
                   key: saslauthd_ldap_bind_dn
             - name: SASLAUTHD_LDAP_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: {{ template "mailserver.fullname" . }}
-                  key: saslauthd_ldap_password
+                  key: ldap_password
             - name: SASLAUTHD_LDAP_SEARCH_BASE
               valueFrom:
                 configMapKeyRef:
@@ -388,7 +399,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: srs_secret
-
           livenessProbe:
             tcpSocket:
               port: smtp
@@ -419,7 +429,7 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -433,10 +443,10 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "mailserver.fullname" . }}-data
   rules:
     - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot | quote }}
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
   target:
     paths:
       /_data

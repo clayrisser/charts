@@ -20,7 +20,6 @@ data:
   fetchmail_poll: {{ .Values.config.fetchmail.poll | quote }}
   hostname: {{ template "mailserver.mailserver-hostname" . }}
   ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
-  ldap_bind_pw: {{ .Values.config.ldap.password | quote }}
   ldap_enabled: {{ .Values.config.ldap.enabled | ternary "1" "" | quote }}
   ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
   ldap_query_filter_domain: {{ .Values.config.ldap.queryFilterDomain | quote }}
@@ -32,7 +31,7 @@ data:
   logrotate_interval: {{ .Values.config.reports.logrotateInterval | quote }}
   logwatch_interval: {{ .Values.config.reports.logwatchInterval | quote }}
   managesieve_enabled: {{ .Values.config.managesieve.enabled | ternary "1" "0" | quote }}
-  pflogsumm_trigger: {{ .Values.config.reports.pflogsummTrigger | quote }}
+  pflogsumm_trigger: {{ (eq .Values.config.reports.pflogsummTrigger "none") | ternary "" .Values.config.reports.pflogsummTrigger }}
   pop3_enabled: {{ .Values.config.pop3.enabled | ternary "1" "0" | quote }}
   postfix_mailbox_size_limit: {{ .Values.config.postfixMailboxSizeLimit | quote }}
   postfix_message_size_limit: {{ .Values.config.postfixMessageSizeLimit | quote }}
@@ -41,11 +40,10 @@ data:
   postgrey_enabled: {{ .Values.config.postgrey.enabled | ternary "1" "0" | quote }}
   postgrey_max_age: {{ .Values.config.postgrey.maxAge | quote }}
   postgrey_text: {{ .Values.config.postgrey.text | quote }}
-  postmaster_address: {{ .Values.config.postmasterAddress | quote }}
+  postmaster_address: '{{ .Values.config.postmasterUsername }}@{{ template "mailserver.mailserver-hostname" . }}'
   saslauthd_enabled: {{ .Values.config.saslauthd.ldap | ternary "1" "0" | quote }}
   saslauthd_ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
   saslauthd_ldap_filter: {{ .Values.config.ldap.saslFilter | quote }}
-  saslauthd_ldap_password: {{ .Values.config.ldap.password | quote }}
   saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
   saslauthd_ldap_server: {{ .Values.config.ldap.hostname | quote }}
   saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" | quote  }}
@@ -57,7 +55,7 @@ data:
   spamassassin_spam_subject: {{ .Values.config.spamassassin.spamSubject | quote }}
   spamassassin_spam_to_inbox: {{ .Values.config.spamassassin.spamToInbox | ternary "1" "0" | quote }}
   spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" | quote }}
-  smtp_only: {{ .Values.config.smtpOnly | ternary "1" "0" | quote }}
+  smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}
   srs_enabled: {{ .Values.config.srs.enabled | ternary "1" "0" | quote }}
   srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
   srs_sender_classes: {{ .Values.config.srs.senderClasses | quote }}

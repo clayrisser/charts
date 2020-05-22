@@ -25,7 +25,7 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: RollingUpdate
+    default: Recreate
     description: ''
     type: enum
     options:
@@ -41,12 +41,40 @@ questions:
     required: true
     label: debug
     group: Config
-  - variable: config.mailserver.hostname
+  - variable: config.hostname
     default: ''
     description: ''
     type: string
     required: false
     label: 'mailserver hostname'
+    group: Config
+  - variable: config.postmasterUsername
+    default: postmaster
+    description: ''
+    type: string
+    required: true
+    label: 'postmaster username'
+    group: Config
+  - variable: config.smtpOnly
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'smtp only'
+    group: Config
+  - variable: config.spoofProtection
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'spoof protection'
+    group: Config
+  - variable: config.virusmailsDeleteDelay
+    default: 7
+    description: ''
+    type: int
+    required: true
+    label: 'virusmails delete delay'
     group: Config
   - variable: config.clamav.enabled
     default: false
@@ -55,19 +83,16 @@ questions:
     required: true
     label: 'clamav enabled'
     group: Config
-  - variable: config.fail2ban.enabled
-    default: false
+  - variable: config.dovecot.mailboxFormat
+    default: maildir
     description: ''
-    type: boolean
+    type: enum
+    options:
+      - maildir
+      - sdbox
+      - mdbox
     required: true
-    label: 'fail2ban enabled'
-    group: Config
-  - variable: config.defaultRelayHost
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'default relay host'
+    label: 'dovecot mailbox format'
     group: Config
   - variable: config.dovecot.passAttrs
     default: ''
@@ -77,18 +102,11 @@ questions:
     label: 'dovecot pass attrs'
     group: Config
   - variable: config.dovecot.passFilter
-    default: ''
+    default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
     description: ''
     type: string
     required: false
     label: 'dovecot pass filter'
-    group: Config
-  - variable: config.dovecot.tls
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'dovecot tls'
     group: Config
   - variable: config.dovecot.userAttrs
     default: ''
@@ -98,18 +116,11 @@ questions:
     label: 'dovecot user attrs'
     group: Config
   - variable: config.dovecot.userFilter
-    default: ''
+    default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
     description: ''
     type: string
     required: false
     label: 'dovecot user filter'
-    group: Config
-  - variable: config.enableManagesieve
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'enable managesieve'
     group: Config
   - variable: config.fail2ban.enabled
     default: false
@@ -117,20 +128,6 @@ questions:
     type: boolean
     required: true
     label: 'fail2ban enabled'
-    group: Config
-  - variable: config.ldapBindDn
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'ldap bind dn'
-    group: Config
-  - variable: config.ldapBindPw
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'ldap bind pw'
     group: Config
   - variable: config.ldap.enabled
     default: false
@@ -141,29 +138,64 @@ questions:
     group: Config
     show_subquestion_if: true
     subquestions:
-      - variable: config.ldap.queryFilterAlias
+      - variable: config.ldap.domain
         default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'ldap domain'
+        group: Config
+      - variable: config.ldap.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'ldap tls'
+        group: Config
+      - variable: config.ldap.hostname
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'ldap admin'
+        group: Config
+      - variable: config.ldap.admin
+        default: admin
+        description: ''
+        type: string
+        required: false
+        label: 'ldap admin'
+        group: Config
+      - variable: config.ldap.password
+        default: P@ssw0rd
+        description: ''
+        type: password
+        required: false
+        label: 'ldap password'
+        group: Config
+      - variable: config.ldap.queryFilterAlias
+        default: '(|(&(mailAlias=%s)(objectClass=PostfixBookMailForward))(&(mailAlias=%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE)))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter alias'
         group: Config
       - variable: config.ldap.queryFilterDomain
-        default: ''
+        default: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter domain'
         group: Config
       - variable: config.ldap.queryFilterGroup
-        default: ''
+        default: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter group'
         group: Config
       - variable: config.ldap.queryFilterUser
-        default: ''
+        default: '(&(mail=%s)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
@@ -176,32 +208,46 @@ questions:
         required: false
         label: 'ldap search base'
         group: Config
-      - variable: config.ldap.serverHost
-        default: ''
+      - variable: config.ldap.saslFilter
+        default: '(&(uniqueIdentifier=%u)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
-        label: 'ldap server host'
+        label: 'ldap sasl filter'
         group: Config
-      - variable: config.ldap.startTls
-        default: ''
+      - variable: config.ldap.usersOu
+        default: people
         description: ''
         type: string
         required: false
-        label: 'ldap start tls'
+        label: 'ldap users ou'
         group: Config
-  - variable: config.postfixMailboxSizeLimit
+  - variable: config.managesieve.enabled
     default: ''
     description: ''
-    type: string
-    required: false
+    type: boolean
+    required: true
+    label: 'managesieve enabled'
+    group: Config
+  - variable: config.pop3.enabled
+    default: ''
+    description: ''
+    type: boolean
+    required: true
+    label: 'pop3 enabled'
+    group: Config
+  - variable: config.postfix.mailboxSizeLimit
+    default: 0
+    description: ''
+    type: int
+    required: true
     label: 'postfix mailbox size limit'
     group: Config
-  - variable: config.postfixMessageSizeLimit
-    default: ''
+  - variable: config.postfix.messageSizeLimit
+    default: 100000000
     description: ''
-    type: string
-    required: false
+    type: int
+    required: true
     label: 'postfix message size limit'
     group: Config
   - variable: config.postgrey.enabled
@@ -214,28 +260,25 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: config.postgrey.autoWhitelistClients
-        default: '5'
+        default: 5
         description: ''
-        type: string
+        type: int
         required: false
         label: 'postgrey auto whitelist clients'
-        show_if: config.postgrey.enabled=true
         group: Config
       - variable: config.postgrey.delay
-        default: '300'
+        default: 300
         description: ''
-        type: string
+        type: int
         required: false
         label: 'postgrey delay'
-        show_if: config.postgrey.enabled=true
         group: Config
       - variable: config.postgrey.maxAge
-        default: '35'
+        default: 35
         description: ''
-        type: string
+        type: int
         required: false
         label: 'postgrey max age'
-        show_if: config.postgrey.enabled=true
         group: Config
       - variable: config.postgrey.text
         default: 'Delayed by postgrey'
@@ -243,87 +286,40 @@ questions:
         type: string
         required: false
         label: 'postgrey text'
-        show_if: config.postgrey.enabled=true
         group: Config
-  - variable: config.postmasterAddress
-    default: ''
+  - variable: config.reports.pflogsummTrigger
+    default: none
     description: ''
-    type: string
-    required: false
-    label: 'postmaster address'
-    group: Config
-  - variable: config.saslPasswd
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'sasl password'
-    group: Config
-  - variable: config.saslauthd.enabled
-    default: false
-    description: ''
-    type: boolean
+    type: enum
+    options:
+      - none
+      - daily_cron
+      - logrotate
     required: true
-    label: 'saslauthd enabled'
+    label: 'reports pflogsumm trigger'
     group: Config
-    show_subquestion_if: true
-    subquestions:
-      - variable: config.saslauthd.ldapBindDn
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'saslauthd ldap bind dn'
-        group: Config
-      - variable: config.saslauthd.ldapFilter
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'saslauthd ldap filter'
-        group: Config
-      - variable: config.saslauthd.ldapPassword
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'saslauthd ldap password'
-        group: Config
-      - variable: config.saslauthd.ldapSearchBase
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'saslauthd ldap search base'
-        group: Config
-      - variable: config.saslauthd.ldapServer
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'saslauthd ldap server'
-        group: Config
-      - variable: config.saslauthd.ldapSsl
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'saslauthd ldap ssl'
-        group: Config
-      - variable: config.saslauthd.mechOptions
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'saslauthd mech options'
-        group: Config
-      - variable: config.saslauthd.mechanisms
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'saslauthd mechanisms'
-        group: Config
+  - variable: config.reports.logwatchInterval
+    default: none
+    description: ''
+    type: enum
+    options:
+      - none
+      - daily
+      - weekly
+    required: true
+    label: 'reports logwatch interval'
+    group: Config
+  - variable: config.reports.logrotateInterval
+    default: daily
+    description: ''
+    type: enum
+    options:
+      - daily
+      - weekly
+      - monthly
+    required: true
+    label: 'reports logrotate interval'
+    group: Config
   - variable: config.spamassassin.enabled
     default: false
     description: ''
@@ -333,25 +329,33 @@ questions:
     group: Config
     show_subquestion_if: true
     subquestions:
-      - variable: config.spamassassin.kill
-        default: '6.31'
+      - variable: config.spamassassin.spamToInbox
+        default: true
         description: ''
-        type: string
-        required: false
-        label: 'spamassassin kill'
+        type: boolean
+        required: true
+        label: 'spamassassin spam to inbox'
+        group: Config
+      - variable: config.spamassassin.moveSpamToJunk
+        default: true
+        description: ''
+        type: boolean
+        required: true
+        label: 'spamassassin move spam to junk'
+        show_if: config.spamassassin.spamToInbox=true
         group: Config
       - variable: config.spamassassin.shortcircuitBayesHam
-        default: '1'
+        default: false
         description: ''
-        type: string
-        required: false
+        type: boolean
+        required: true
         label: 'spamassassin shortcircuit bayes ham'
         group: Config
       - variable: config.spamassassin.shortcircuitBayesSpam
-        default: '1'
+        default: false
         description: ''
         type: string
-        required: false
+        required: true
         label: 'spamassassin shortcircuit bayes spam'
         group: Config
       - variable: config.spamassassin.spamSubject
@@ -361,27 +365,6 @@ questions:
         required: false
         label: 'spamassassin spam subject'
         group: Config
-      - variable: config.spamassassin.tag2
-        default: '2.0'
-        description: ''
-        type: string
-        required: false
-        label: 'spamassassin tag2'
-        group: Config
-      - variable: config.spamassassin.tag
-        default: '6.31'
-        description: ''
-        type: string
-        required: false
-        label: 'spamassassin tag'
-        group: Config
-  - variable: config.spoofProtection
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'spoof protection'
-    group: Config
   - variable: config.srs.enabled
     default: true
     description: ''
@@ -391,13 +374,6 @@ questions:
     group: Config
     show_subquestion_if: true
     subquestions:
-      - variable: config.srs.domainname
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'srs domainname'
-        group: Config
       - variable: config.srs.excludeDomains
         default: ''
         description: ''
@@ -406,26 +382,23 @@ questions:
         label: 'srs exclude domains'
         group: Config
       - variable: config.srs.secret
-        default: ''
+        default: P@ssw0rd
         description: ''
-        type: string
+        type: password
         required: false
         label: 'srs secret'
         group: Config
       - variable: config.srs.senderClasses
-        default: 'envelope_sender'
+        default: envelope_sender
         description: ''
-        type: string
+        type: enum
+        options:
+          - envelope_sender
+          - header_sender
+          - 'envelope_sender,header_sender'
         required: false
         label: 'srs sender classes'
         group: Config
-  - variable: config.virusmailsDeleteDelay
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'virusmails delete delay'
-    group: Config
 
   # Persistence
   - variable: persistence.enabled
@@ -484,6 +457,38 @@ questions:
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash paused'
+      - variable: persistence.stash.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash type'
+      - variable: persistence.stash.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
+        label: 'stash container'
+      - variable: persistence.stash.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash bucket'
+      - variable: persistence.stash.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
+        label: 'stash endpoint'
       - variable: persistence.stash.schedule
         default: '0 0 * * *'
         description: ''
@@ -498,64 +503,70 @@ questions:
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash keep last'
-      - variable: persistence.stash.restore.snapshot
+      - variable: persistence.stash.restore.snapshot.data
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.stash.enabled=true
-        label: 'stash restore snapshot'
-
-  # Services and Load Balancing
-  - variable: ingress.mailserver.enabled
-    default: true
-    description: ''
-    type: boolean
-    label: 'mailserver ingress enabled'
-    show_subquestion_if: true
-    group: 'Services and Load Balancing'
-    subquestions:
-      - variable: ingress.mailserver.tls
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'mailserver ingress tls'
-      - variable: ingress.mailserver.hostname
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: 'mailserver ingress hostname'
-      - variable: ingress.mailserver.path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'mailserver ingress path'
-      - variable: ingress.mailserver.issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.mailserver.tls=true
-        options:
-          - none
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: 'mailserver ingress issuer name'
-      - variable: ingress.mailserver.certificate
+        label: 'stash restore snapshot data'
+      - variable: persistence.stash.restore.snapshots.postgres
         default: ''
         description: ''
         type: string
-        show_if: ingress.mailserver.tls=true&&ingress.mailserver.issuer.name=none
         required: false
-        label: 'mailserver ingress certificate'
+        show_if: persistence.stash.enabled=true&&config.postgres.internal=true
+        label: 'stash restore snapshot postgres'
+
+  # Services and Load Balancing
+  # - variable: ingress.mailserver.enabled
+  #   default: true
+  #   description: ""
+  #   type: boolean
+  #   label: "mailserver ingress enabled"
+  #   show_subquestion_if: true
+  #   group: "Services and Load Balancing"
+  #   subquestions:
+  #     - variable: ingress.mailserver.tls
+  #       default: false
+  #       description: ""
+  #       type: boolean
+  #       required: true
+  #       label: "mailserver ingress tls"
+  #     - variable: ingress.mailserver.hostname
+  #       default: xip.io
+  #       description: ""
+  #       type: hostname
+  #       required: true
+  #       label: "mailserver ingress hostname"
+  #     - variable: ingress.mailserver.path
+  #       default: /
+  #       description: ""
+  #       type: string
+  #       required: true
+  #       label: "mailserver ingress path"
+  #     - variable: ingress.mailserver.issuer.name
+  #       default: letsencrypt-staging
+  #       description: ""
+  #       type: enum
+  #       show_if: ingress.mailserver.tls=true
+  #       options:
+  #         - none
+  #         - letsencrypt-staging
+  #         - letsencrypt-prod
+  #       required: true
+  #       label: "mailserver ingress issuer name"
+  #     - variable: ingress.mailserver.certificate
+  #       default: ""
+  #       description: ""
+  #       type: string
+  #       show_if: ingress.mailserver.tls=true&&ingress.mailserver.issuer.name=none
+  #       required: false
+  #       label: "mailserver ingress certificate"
   - variable: service.mailserver.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.mailserver.enabled=false
     options:
       - ClusterIP
       - NodePort
@@ -565,14 +576,48 @@ questions:
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.mailserver.nodePorts.http
+      - variable: service.mailserver.nodePorts.imap
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.mailserver.enabled=false
-        label: 'mailserver http port'
+        label: 'mailserver imap port'
+      - variable: service.mailserver.nodePorts.imapSecure
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mailserver imap secure port'
+      - variable: service.mailserver.nodePorts.managesieve
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mailserver managesieve port'
+      - variable: service.mailserver.nodePorts.smtp
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mailserver smtp port'
+      - variable: service.mailserver.nodePorts.smtpAuth
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mailserver smtp auth port'
+      - variable: service.mailserver.nodePorts.smtpSecure
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mailserver smtp secure port'
 
   # Images
   - variable: images.mailserver.repository

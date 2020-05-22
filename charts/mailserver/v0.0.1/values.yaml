@@ -12,7 +12,7 @@ config:
   postmasterUsername: postmaster
   smtpOnly: false
   spoofProtection: true
-  updateStrategy: RollingUpdate
+  updateStrategy: Recreate
   virusmailsDeleteDelay: 7
   clamav:
     enabled: false
@@ -98,13 +98,19 @@ persistence:
   velero:
     enabled: false
   stash:
+    bucket: ''
+    container: ''
     enabled: false
+    endpoint: s3.amazonaws.com
     keepLast: 30
     paused: false
-    repository: stash-stash
+    prefix: stash
     schedule: '0 0 * * *'
+    secret: stash-config-stash-config
+    type: s3
     restore:
-      snapshot: ''
+      snapshots:
+        data: ''
 
 probes:
   liveness:
