@@ -47,6 +47,7 @@ data:
   saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
   saslauthd_ldap_server: {{ .Values.config.ldap.hostname | quote }}
   saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" | quote  }}
+  saslauthd_mech_options: ''
   saslauthd_mechanisms: ldap
   spamassassin_enabled: {{ .Values.config.spamassassin.enabled | ternary "1" "0" | quote }}
   spamassassin_move_spam_to_junk: {{ .Values.config.spamassassin.moveSpamToJunk | ternary "1" "0" | quote }}
