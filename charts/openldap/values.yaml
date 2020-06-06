@@ -8,11 +8,13 @@ images:
 
 config:
   clusterProvider: infrastructure
-  imagePullPolicy: IfNotPresent
-  updateStrategy: RollingUpdate
-  organization: 'Example Inc.'
-  domain: example.org
   debug: false
+  domain: example.org
+  hashPassword: true
+  imagePullPolicy: IfNotPresent
+  organization: 'Example Inc.'
+  schema: default
+  updateStrategy: RollingUpdate
   openldap:
     baseUrl: ''
     hostname: ''

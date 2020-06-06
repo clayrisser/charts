@@ -18,6 +18,7 @@ data:
     o: {{ .Values.config.organization }}
     dc: {{ index (regexSplit "\\." .Values.config.domain -1) 0 }}
 
+  {{- if .Values.config.hashPassword }}
   ppolicy.ldif: |
     dn: cn=module{0},cn=config
     changetype: modify
@@ -37,7 +38,9 @@ data:
       ldapadd -Y EXTERNAL -H ldapi:/// -f /config/ppolicy.ldif
       touch /etc/ldap/slapd.d/_loaded_ppolicy
     fi
+  {{- end }}
 
+  {{- if (eq .Values.config.schema "postfix-book") }}
   postfix-book.schema: |
     # $Id$
     #
@@ -108,3 +111,4 @@ data:
             SUP top AUXILIARY
       DESC 'Mail forward used in Postfix Book'
       MUST ( mail $ mailAlias ))
+  {{- end }}

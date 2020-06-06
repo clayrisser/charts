@@ -41,6 +41,23 @@ questions:
     required: true
     label: debug
     group: Config
+  - variable: config.hashPassword
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'hash password'
+    group: Config
+  - variable: config.schema
+    default: default
+    description: ''
+    type: enum
+    options:
+      - default
+      - postfix-book
+    required: true
+    label: schema
+    group: Config
   - variable: config.organization
     default: 'Example Inc.'
     description: ''
