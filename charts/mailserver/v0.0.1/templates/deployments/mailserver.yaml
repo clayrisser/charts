@@ -119,6 +119,11 @@ spec:
             - name: data
               mountPath: /var/log/mail
               subPath: log
+            {{- if (eq .Values.service.mailserver.sslType "letsencrypt") }}
+            - name: data
+              mountPath: /etc/letsencrypt
+              subPath: certs
+            {{- end }}
           env:
             - name: ONE_DIR
               value: '1'
