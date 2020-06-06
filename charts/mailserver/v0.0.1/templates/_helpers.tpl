@@ -24,44 +24,8 @@ Calculate ldap dc
 {{- end }}
 
 {{/*
-Calculate mailserver hostname
-*/}}
-{{- define "mailserver.mailserver-hostname" }}
-{{- if (and .Values.config.mailserver.hostname (not (empty .Values.config.mailserver.hostname))) }}
-{{- printf .Values.config.mailserver.hostname }}
-{{- else }}
-{{- if .Values.ingress.mailserver.enabled }}
-{{- printf .Values.ingress.mailserver.hostname }}
-{{- else }}
-{{- printf "%s-mailserver" (include "mailserver.fullname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate openldap dc
 */}}
 {{- define "openldap.openldap-dc" }}
 {{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.domain -1) 0) (index (regexSplit "\\." .Values.config.domain -1) 1) }}
-{{- end }}
-
-
-
-
-{{/*
-Calculate mailserver base url
-*/}}
-{{- define "mailserver.mailserver-base-url" }}
-{{- if (and .Values.config.mailserver.baseUrl (not (empty .Values.config.mailserver.baseUrl))) }}
-{{- printf .Values.config.mailserver.baseUrl }}
-{{- else }}
-{{- if .Values.ingress.mailserver.enabled }}
-{{- $hostname := ((empty (include "mailserver.mailserver-hostname" .)) | ternary .Values.ingress.mailserver.hostname (include "mailserver.mailserver-hostname" .)) }}
-{{- $path := (eq .Values.ingress.mailserver.path "/" | ternary "" .Values.ingress.mailserver.path) }}
-{{- $protocol := (.Values.ingress.mailserver.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
-{{- else }}
-{{- printf "http://%s" (include "mailserver.mailserver-hostname" .) }}
-{{- end }}
-{{- end }}
 {{- end }}
