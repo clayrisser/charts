@@ -14,6 +14,9 @@ config:
   spoofProtection: true
   updateStrategy: Recreate
   virusmailsDeleteDelay: 7
+  fetchmail:
+    enabled: false
+    poll: 300
   clamav:
     enabled: false
   dovecot:

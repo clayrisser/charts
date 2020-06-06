@@ -102,6 +102,21 @@ questions:
     required: true
     label: 'fail2ban enabled'
     group: Config
+  - variable: config.fetchmail.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'fetchmail enabled'
+    group: Config
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.fetchmail.poll
+        default: 300
+        description: ''
+        type: int
+        required: false
+        label: 'fetchmail poll'
   - variable: config.ldap.enabled
     default: false
     description: ''
