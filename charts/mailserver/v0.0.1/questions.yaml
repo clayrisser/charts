@@ -597,6 +597,13 @@ questions:
         min: 30000
         max: 32767
         label: 'mailserver managesieve port'
+      - variable: service.mailserver.nodePorts.pop3
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mailserver pop3 port'
       - variable: service.mailserver.nodePorts.smtp
         default: ''
         description: ''

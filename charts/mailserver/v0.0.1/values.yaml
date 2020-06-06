@@ -75,6 +75,7 @@ service:
       imap: ''
       imapSecure: ''
       managesieve: ''
+      pop3: ''
       smtp: ''
       smtpAuth: ''
       smtpSecure: ''

@@ -19,6 +19,14 @@ spec:
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
       nodePort: {{ .Values.service.mailserver.nodePorts.smtp }}
       {{- end }}
+    {{- if .Values.config.pop3.enabled }}
+    - name: pop3
+      port: 110
+      targetPort: pop3
+      {{- if (eq .Values.service.mailserver.type "NodePort") }}
+      nodePort: {{ .Values.service.mailserver.nodePorts.pop3 }}
+      {{- end }}
+    {{- end }}
     - name: smtp-secure
       port: 465
       targetPort: smtp-secure

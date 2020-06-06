@@ -44,6 +44,11 @@ spec:
             - name: smtp
               containerPort: 25
               protocol: TCP
+            {{- if .Values.config.pop3.enabled }}
+            - name: pop3
+              containerPort: 110
+              protocol: TCP
+            {{- end }}
             - name: smtp-secure
               containerPort: 465
               protocol: TCP
