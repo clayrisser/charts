@@ -43,8 +43,8 @@ spec:
             - sh
             - -c
             - |
+              sh /config/ppolicy.sh &
               rm /container/service/slapd/assets/config/bootstrap/schema/mmc/mail.schema
-              # sh /config/ppolicy.sh &
           {{- if .Values.config.debug }}
               exec /container/tool/run --copy-service --loglevel debug
           {{- else }}
@@ -69,6 +69,15 @@ spec:
             - name: config
               subPath: postfix-book.schema
               mountPath: /container/service/slapd/assets/config/bootstrap/schema/postfix-book.schema
+            - name: config
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/01-organization.ldif
+              subPath: 01-organization.ldif
+            - name: config
+              mountPath: /config/ppolicy.ldif
+              subPath: ppolicy.ldif
+            - name: config
+              mountPath: /config/ppolicy.sh
+              subPath: ppolicy.sh
           env:
             {{- if .Values.config.debug }}
             - name: LDAP_LOG_LEVEL
