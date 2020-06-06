@@ -45,7 +45,7 @@ questions:
     default: ''
     description: ''
     type: string
-    required: false
+    required: true
     label: 'mailserver hostname'
     group: Config
   - variable: config.postmasterUsername
@@ -519,50 +519,23 @@ questions:
         label: 'stash restore snapshot postgres'
 
   # Services and Load Balancing
-  # - variable: ingress.mailserver.enabled
-  #   default: true
-  #   description: ""
-  #   type: boolean
-  #   label: "mailserver ingress enabled"
-  #   show_subquestion_if: true
-  #   group: "Services and Load Balancing"
-  #   subquestions:
-  #     - variable: ingress.mailserver.tls
-  #       default: false
-  #       description: ""
-  #       type: boolean
-  #       required: true
-  #       label: "mailserver ingress tls"
-  #     - variable: ingress.mailserver.hostname
-  #       default: xip.io
-  #       description: ""
-  #       type: hostname
-  #       required: true
-  #       label: "mailserver ingress hostname"
-  #     - variable: ingress.mailserver.path
-  #       default: /
-  #       description: ""
-  #       type: string
-  #       required: true
-  #       label: "mailserver ingress path"
-  #     - variable: ingress.mailserver.issuer.name
-  #       default: letsencrypt-staging
-  #       description: ""
-  #       type: enum
-  #       show_if: ingress.mailserver.tls=true
-  #       options:
-  #         - none
-  #         - letsencrypt-staging
-  #         - letsencrypt-prod
-  #       required: true
-  #       label: "mailserver ingress issuer name"
-  #     - variable: ingress.mailserver.certificate
-  #       default: ""
-  #       description: ""
-  #       type: string
-  #       show_if: ingress.mailserver.tls=true&&ingress.mailserver.issuer.name=none
-  #       required: false
-  #       label: "mailserver ingress certificate"
+  - variable: service.mailserver.sslType
+    default: empty
+    description: ''
+    type: enum
+    options:
+      - empty
+      - letsencrypt
+      - custom
+    required: true
+    label: 'mailserver service ssl type'
+  - variable: service.mailserver.certificate
+    default: ''
+    description: ''
+    type: string
+    show_if: service.mailserver.sslType=custom
+    required: false
+    label: 'mailserver service certificate'
   - variable: service.mailserver.type
     default: NodePort
     description: ''

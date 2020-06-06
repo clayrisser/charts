@@ -69,8 +69,10 @@ config:
 
 service:
   mailserver:
-    type: NodePort
+    certificate: ''
     externalTrafficPolicy: Cluster
+    type: NodePort
+    sslType: empty
     nodePorts:
       imap: ''
       imapSecure: ''
