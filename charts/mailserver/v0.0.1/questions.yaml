@@ -1,6 +1,7 @@
 categories:
   - Server
 questions:
+
   # Config
   - variable: config.clusterProvider
     default: infrastructure
@@ -116,112 +117,96 @@ questions:
         type: string
         required: false
         label: 'ldap domain'
-        group: Config
       - variable: config.ldap.tls
         default: false
         description: ''
         type: boolean
         required: true
         label: 'ldap tls'
-        group: Config
       - variable: config.ldap.hostname
         default: ''
         description: ''
         type: string
         required: false
         label: 'ldap admin'
-        group: Config
       - variable: config.ldap.admin
         default: admin
         description: ''
         type: string
         required: false
         label: 'ldap admin'
-        group: Config
       - variable: config.ldap.password
         default: P@ssw0rd
         description: ''
         type: password
         required: false
         label: 'ldap password'
-        group: Config
       - variable: config.ldap.queryFilterAlias
         default: '(|(&(mailAlias=%s)(objectClass=PostfixBookMailForward))(&(mailAlias=%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE)))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter alias'
-        group: Config
       - variable: config.ldap.queryFilterDomain
         default: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter domain'
-        group: Config
       - variable: config.ldap.queryFilterGroup
         default: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter group'
-        group: Config
       - variable: config.ldap.queryFilterUser
         default: '(&(mail=%s)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter user'
-        group: Config
       - variable: config.ldap.searchBase
         default: ''
         description: ''
         type: string
         required: false
         label: 'ldap search base'
-        group: Config
       - variable: config.ldap.saslFilter
         default: '(&(uniqueIdentifier=%u)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
         label: 'ldap sasl filter'
-        group: Config
       - variable: config.ldap.usersOu
         default: people
         description: ''
         type: string
         required: false
         label: 'ldap users ou'
-        group: Config
       - variable: config.dovecot.passAttrs
         default: ''
         description: ''
         type: string
         required: false
         label: 'dovecot pass attrs'
-        group: Config
       - variable: config.dovecot.passFilter
         default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
         description: ''
         type: string
         required: false
         label: 'dovecot pass filter'
-        group: Config
       - variable: config.dovecot.userAttrs
         default: ''
         description: ''
         type: string
         required: false
         label: 'dovecot user attrs'
-        group: Config
       - variable: config.dovecot.userFilter
         default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
         description: ''
         type: string
         required: false
         label: 'dovecot user filter'
-        group: Config
   - variable: config.managesieve.enabled
     default: ''
     description: ''
@@ -265,28 +250,24 @@ questions:
         type: int
         required: false
         label: 'postgrey auto whitelist clients'
-        group: Config
       - variable: config.postgrey.delay
         default: 300
         description: ''
         type: int
         required: false
         label: 'postgrey delay'
-        group: Config
       - variable: config.postgrey.maxAge
         default: 35
         description: ''
         type: int
         required: false
         label: 'postgrey max age'
-        group: Config
       - variable: config.postgrey.text
         default: 'Delayed by postgrey'
         description: ''
         type: string
         required: false
         label: 'postgrey text'
-        group: Config
   - variable: config.reports.pflogsummTrigger
     default: none
     description: ''
@@ -335,7 +316,6 @@ questions:
         type: boolean
         required: true
         label: 'spamassassin spam to inbox'
-        group: Config
       - variable: config.spamassassin.moveSpamToJunk
         default: true
         description: ''
@@ -343,28 +323,24 @@ questions:
         required: true
         label: 'spamassassin move spam to junk'
         show_if: config.spamassassin.spamToInbox=true
-        group: Config
       - variable: config.spamassassin.shortcircuitBayesHam
         default: false
         description: ''
         type: boolean
         required: true
         label: 'spamassassin shortcircuit bayes ham'
-        group: Config
       - variable: config.spamassassin.shortcircuitBayesSpam
         default: false
         description: ''
         type: string
         required: true
         label: 'spamassassin shortcircuit bayes spam'
-        group: Config
       - variable: config.spamassassin.spamSubject
         default: '***SPAM***'
         description: ''
         type: string
         required: false
         label: 'spamassassin spam subject'
-        group: Config
   - variable: config.srs.enabled
     default: true
     description: ''
@@ -380,14 +356,12 @@ questions:
         type: string
         required: false
         label: 'srs exclude domains'
-        group: Config
       - variable: config.srs.secret
         default: P@ssw0rd
         description: ''
         type: password
         required: false
         label: 'srs secret'
-        group: Config
       - variable: config.srs.senderClasses
         default: envelope_sender
         description: ''
@@ -398,7 +372,6 @@ questions:
           - 'envelope_sender,header_sender'
         required: false
         label: 'srs sender classes'
-        group: Config
 
   # Persistence
   - variable: persistence.enabled
@@ -529,6 +502,7 @@ questions:
       - custom
     required: true
     label: 'mailserver service ssl type'
+    group: 'Services and Load Balancing'
   - variable: service.mailserver.certificate
     default: ''
     description: ''
@@ -536,6 +510,7 @@ questions:
     show_if: service.mailserver.sslType=custom
     required: false
     label: 'mailserver service certificate'
+    group: 'Services and Load Balancing'
   - variable: service.mailserver.type
     default: NodePort
     description: ''
