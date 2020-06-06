@@ -610,6 +610,7 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: config.pop3.enabled=true
         label: 'mailserver smtp port'
       - variable: service.mailserver.nodePorts.smtpAuth
         default: ''
