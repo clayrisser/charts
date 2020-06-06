@@ -14,7 +14,7 @@ config:
   imagePullPolicy: IfNotPresent
   organization: 'Example Inc.'
   schema: default
-  updateStrategy: RollingUpdate
+  updateStrategy: Recreate
   openldap:
     baseUrl: ''
     hostname: ''
