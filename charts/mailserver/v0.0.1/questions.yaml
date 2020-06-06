@@ -94,34 +94,6 @@ questions:
     required: true
     label: 'dovecot mailbox format'
     group: Config
-  - variable: config.dovecot.passAttrs
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'dovecot pass attrs'
-    group: Config
-  - variable: config.dovecot.passFilter
-    default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
-    description: ''
-    type: string
-    required: false
-    label: 'dovecot pass filter'
-    group: Config
-  - variable: config.dovecot.userAttrs
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'dovecot user attrs'
-    group: Config
-  - variable: config.dovecot.userFilter
-    default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
-    description: ''
-    type: string
-    required: false
-    label: 'dovecot user filter'
-    group: Config
   - variable: config.fail2ban.enabled
     default: false
     description: ''
@@ -221,6 +193,34 @@ questions:
         type: string
         required: false
         label: 'ldap users ou'
+        group: Config
+      - variable: config.dovecot.passAttrs
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'dovecot pass attrs'
+        group: Config
+      - variable: config.dovecot.passFilter
+        default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+        description: ''
+        type: string
+        required: false
+        label: 'dovecot pass filter'
+        group: Config
+      - variable: config.dovecot.userAttrs
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'dovecot user attrs'
+        group: Config
+      - variable: config.dovecot.userFilter
+        default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+        description: ''
+        type: string
+        required: false
+        label: 'dovecot user filter'
         group: Config
   - variable: config.managesieve.enabled
     default: ''
