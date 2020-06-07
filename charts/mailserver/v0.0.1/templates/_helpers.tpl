@@ -31,8 +31,8 @@ Calculate mailserver certificate
 Calculate mailserver hostname
 */}}
 {{- define "mailserver.mailserver-hostname" }}
-{{- if (and .Values.config.mailserver.hostname (not (empty .Values.config.mailserver.hostname))) }}
-{{- printf .Values.config.mailserver.hostname }}
+{{- if (and .Values.config.hostname (not (empty .Values.config.hostname))) }}
+{{- printf .Values.config.hostname }}
 {{- else }}
 {{- printf .Values.ingress.mailserver.hostname }}
 {{- end }}
