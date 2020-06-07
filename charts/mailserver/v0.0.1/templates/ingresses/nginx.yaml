@@ -32,7 +32,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.mailserver.tls }}
   tls:
-    - secretName: {{ template "mailserver.nginx-certificate" . }}
+    - secretName: {{ template "mailserver.mailserver-certificate" . }}
       hosts:
         - {{ .Values.ingress.mailserver.hostname }}
   {{- end }}
