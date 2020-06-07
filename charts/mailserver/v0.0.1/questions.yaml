@@ -42,13 +42,6 @@ questions:
     required: true
     label: debug
     group: Config
-  - variable: config.hostname
-    default: ''
-    description: ''
-    type: string
-    required: true
-    label: 'mailserver hostname'
-    group: Config
   - variable: config.postmasterUsername
     default: postmaster
     description: ''
