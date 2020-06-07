@@ -1,4 +1,4 @@
-{{- if (and (and .Values.ingress.mailserver.tls (eq .Values.ingress.mailserver.issuer.name "letsencrypt-prod")) (eq .Values.ingress.mailserver.issuer.name "letsencrypt-staging")) }}
+{{- if (and .Values.ingress.mailserver.tls (or (eq .Values.ingress.mailserver.issuer.name "letsencrypt-prod") (eq .Values.ingress.mailserver.issuer.name "letsencrypt-staging"))) }}
 apiVersion: v1
 kind: Service
 metadata:
