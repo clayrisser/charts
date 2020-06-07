@@ -104,7 +104,7 @@ spec:
             #   mountPath: /etc/localtime
             - name: secret
               mountPath: /tmp/docker-mailserver/opendkim/keys
-            {{- if (eq .Values.service.mailserver.sslType "custom") }}
+            {{- if .Values.ingress.mailserver.tls }}
             - name: certs
               mountPath: /certs
             {{- end }}
@@ -119,11 +119,6 @@ spec:
             - name: data
               mountPath: /var/log/mail
               subPath: log
-            {{- if (eq .Values.service.mailserver.sslType "letsencrypt") }}
-            - name: data
-              mountPath: /etc/letsencrypt
-              subPath: certs
-            {{- end }}
           env:
             - name: ONE_DIR
               value: '1'
@@ -131,11 +126,11 @@ spec:
               value: ipv4
             - name: PERMIT_DOCKER
               value: host
-            - name: SSL_TYPE
-              value: {{ .Values.service.mailserver.sslType }}
+            {{- if .Values.ingress.mailserver.tls }}
             - name: TLS_LEVEL
               value: modern
-            {{- if (eq .Values.service.mailserver.sslType "custom") }}
+            - name: SSL_TYPE
+              value: manual
             - name: SSL_CERT_PATH
               value: /certs/tls.crt
             - name: SSL_KEY_PATH
@@ -420,10 +415,10 @@ spec:
               port: smtp
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
-        {{- if (eq .Values.service.mailserver.sslType "custom") }}
+        {{- if .Values.ingress.mailserver.tls }}
         - name: certs
           secret:
-            secretName: {{ .Values.service.mailserver.certificate }}
+            secretName: {{ template "mailserver.mailserver-certificate" . }}
         {{- end }}
         - name: config
           configMap:
