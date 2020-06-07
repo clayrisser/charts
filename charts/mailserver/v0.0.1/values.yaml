@@ -9,6 +9,7 @@ images:
 config:
   clusterProvider: infrastructure
   debug: false
+  domain: ''
   hostname: ''
   imagePullPolicy: IfNotPresent
   postmasterUsername: postmaster
