@@ -17,6 +17,28 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
+Calculate mailserver certificate
+*/}}
+{{- define "mailserver.mailserver-certificate" }}
+{{- if (not (empty .Values.ingress.mailserver.certificate)) }}
+{{- printf .Values.ingress.mailserver.certificate }}
+{{- else }}
+{{- printf "%s-mailserver-letsencrypt" (include "mailserver.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate mailserver hostname
+*/}}
+{{- define "mailserver.mailserver-hostname" }}
+{{- if (and .Values.config.mailserver.hostname (not (empty .Values.config.mailserver.hostname))) }}
+{{- printf .Values.config.mailserver.hostname }}
+{{- else }}
+{{- printf .Values.ingress.mailserver.hostname }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate ldap dc
 */}}
 {{- define "mailserver.ldap-dc" }}

@@ -2,7 +2,7 @@ categories:
   - Server
 questions:
 
-  # Config
+# Config
   - variable: config.clusterProvider
     default: infrastructure
     description: ''
@@ -507,25 +507,40 @@ questions:
         label: 'stash restore snapshot postgres'
 
   # Services and Load Balancing
-  - variable: service.mailserver.sslType
-    default: empty
-    description: ''
-    type: enum
-    options:
-      - empty
-      - letsencrypt
-      - custom
+  - variable: ingress.mailserver.tls
+    default: false
+    description: ""
+    type: boolean
     required: true
-    label: 'mailserver service ssl type'
-    group: 'Services and Load Balancing'
-  - variable: service.mailserver.certificate
-    default: ''
-    description: ''
+    label: "mailserver ingress tls"
+    group: "Services and Load Balancing"
+  - variable: ingress.mailserver.hostname
+    default: xip.io
+    description: ""
+    type: hostname
+    required: true
+    label: "mailserver ingress hostname"
+    group: "Services and Load Balancing"
+  - variable: ingress.mailserver.issuer.name
+    default: letsencrypt-staging
+    description: ""
+    type: enum
+    show_if: ingress.mailserver.tls=true
+    options:
+      - none
+      - letsencrypt-staging
+      - letsencrypt-prod
+    required: true
+    label: "mailserver ingress issuer name"
+    group: "Services and Load Balancing"
+  - variable: ingress.mailserver.certificate
+    default: ""
+    description: ""
     type: string
-    show_if: service.mailserver.sslType=custom
+    show_if: ingress.mailserver.tls=true&&ingress.mailserver.issuer.name=none
     required: false
-    label: 'mailserver service certificate'
-    group: 'Services and Load Balancing'
+    label: "mailserver ingress certificate"
+    group: "Services and Load Balancing"
   - variable: service.mailserver.type
     default: NodePort
     description: ''

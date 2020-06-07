@@ -1,0 +1,20 @@
+{{- if (and (and .Values.ingress.mailserver.tls (eq .Values.ingress.mailserver.issuer.name "letsencrypt-prod")) (eq .Values.ingress.mailserver.issuer.name "letsencrypt-staging")) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "mailserver.fullname" . }}-nginx
+  labels:
+    app: {{ template "mailserver.name" . }}-nginx
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+  selector:
+    app: {{ template "mailserver.name" . }}-nginx
+    release: {{ .Release.Name }}
+{{- end }}

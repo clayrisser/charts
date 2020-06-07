@@ -2,9 +2,11 @@ images:
   mailserver:
     repository: tvial/docker-mailserver
     tag: release-v6.2.1
+  nginx:
+    repository: nginx
+    tag: latest
 
 config:
-  baseUrl: ''
   clusterProvider: infrastructure
   debug: false
   hostname: ''
@@ -72,10 +74,8 @@ config:
 
 service:
   mailserver:
-    certificate: ''
-    externalTrafficPolicy: Cluster
     type: NodePort
-    sslType: empty
+    externalTrafficPolicy: Cluster
     nodePorts:
       imap: ''
       imapSecure: ''
@@ -88,9 +88,7 @@ service:
 ingress:
   mailserver:
     certificate: ''
-    enabled: false
     hostname: ''
-    path: /
     tls: false
     issuer:
       name: letsencrypt-staging

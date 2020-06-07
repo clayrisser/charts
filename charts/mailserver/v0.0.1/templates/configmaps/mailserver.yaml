@@ -9,10 +9,10 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   postfix-accounts.cf: |
-    user1@{{ .Values.config.hostname }}|{SHA512-CRYPT}$6$2YpW1nYtPBs2yLYS$z.5PGH1OEzsHHNhl3gJrc3D.YMZkvKw/vp.r5WIiwya6z7P/CQ9GDEJDr2G2V0cAfjDFeAQPUoopsuWPXLk3u1
+    user1@{{ template "mailserver.mailserver-hostname" . }}|{SHA512-CRYPT}$6$2YpW1nYtPBs2yLYS$z.5PGH1OEzsHHNhl3gJrc3D.YMZkvKw/vp.r5WIiwya6z7P/CQ9GDEJDr2G2V0cAfjDFeAQPUoopsuWPXLk3u1
 
   postfix-virtual.cf: |
-    alias1@{{ .Values.config.hostname }} user1@{{ .Values.config.hostname }}
+    alias1@{{ template "mailserver.mailserver-hostname" . }} user1@{{ template "mailserver.mailserver-hostname" . }}
 
   postfix-main.cf: |
     smtpd_upstream_proxy_protocol = haproxy
@@ -35,10 +35,10 @@ data:
     }
 
   SigningTable: |
-    *@{{ .Values.config.hostname }} mail._domainkey.{{ .Values.config.hostname }}
+    *@{{ template "mailserver.mailserver-hostname" . }} mail._domainkey.{{ template "mailserver.mailserver-hostname" . }}
 
   KeyTable: |
-    mail._domainkey.{{ .Values.config.hostname }} {{ .Values.config.hostname }}:mail:/etc/opendkim/keys/{{ .Values.config.hostname }}-mail.key
+    mail._domainkey.{{ template "mailserver.mailserver-hostname" . }} {{ template "mailserver.mailserver-hostname" . }}:mail:/etc/opendkim/keys/{{ template "mailserver.mailserver-hostname" . }}-mail.key
 
   TrustedHosts: |
     127.0.0.1
