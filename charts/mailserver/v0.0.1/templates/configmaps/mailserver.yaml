@@ -8,15 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  postfix-accounts.cf: |
-    user1@{{ .Values.config.domain }}|{SHA512-CRYPT}$6$2YpW1nYtPBs2yLYS$z.5PGH1OEzsHHNhl3gJrc3D.YMZkvKw/vp.r5WIiwya6z7P/CQ9GDEJDr2G2V0cAfjDFeAQPUoopsuWPXLk3u1
-
-  postfix-virtual.cf: |
-    alias1@{{ .Values.config.domain }} user1@{{ .Values.config.domain }}
-
-  postfix-main.cf: |
-    smtpd_upstream_proxy_protocol = haproxy
-
   dovecot.cf: |
     service stats {
       unix_listener stats-reader {
@@ -28,10 +19,63 @@ data:
         mode = 0666
       }
     }
+
+  dovecot-services.cf: |
     service imap-login {
-      inet_listener imaps {
-        haproxy = yes
+      inet_listener imaps-rainloop {
+        port = 10993
+        ssl = yes
       }
+    }
+
+  fail2ban-fail2ban.cf: |
+
+  fail2ban-jail.cf: |
+
+  fetchmail.cf: |
+
+  postfix-accounts.cf: |
+
+  postfix-aliases.cf: |
+
+  postfix-main.cf: |
+
+  postfix-master.cf: |
+
+  postfix-virtual.cf: |
+
+  spamassassin-rules.cf: |
+
+  80-replication.conf: |
+    mail_plugins = $mail_plugins notify replication
+    service replicator {
+      process_min_avail = 1
+      unix_listener replicator-doveadm {
+        mode = 0600
+        user = docker
+      }
+    }
+    service aggregator {
+      fifo_listener replication-notify-fifo {
+        user = docker
+      }
+      unix_listener replication-notify {
+        user = docker
+      }
+    }
+    doveadm_port = 4117
+    doveadm_password = secret
+    service doveadm {
+      inet_listener {
+        port = 4117
+        ssl = yes
+      }
+    }
+
+  91-override-sieve.conf: |
+    plugin {
+      sieve = /var/mail/sieve/%d/%n/.dovecot.sieve
+      sieve_dir = /var/mail/sieve/%d/%n/sieve
     }
 
   SigningTable: |
@@ -43,8 +87,3 @@ data:
   TrustedHosts: |
     127.0.0.1
     localhost
-
-  user-patches.sh: |
-    #!/bin/bash
-
-  fetchmail.cf: |

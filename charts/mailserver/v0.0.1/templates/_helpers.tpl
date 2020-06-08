@@ -17,24 +17,28 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate mailserver certificate
+Calculate rainloop certificate
 */}}
-{{- define "mailserver.mailserver-certificate" }}
-{{- if (not (empty .Values.ingress.mailserver.certificate)) }}
-{{- printf .Values.ingress.mailserver.certificate }}
+{{- define "mailserver.rainloop-certificate" }}
+{{- if (not (empty .Values.ingress.rainloop.certificate)) }}
+{{- printf .Values.ingress.rainloop.certificate }}
 {{- else }}
-{{- printf "%s-mailserver-letsencrypt" (include "mailserver.fullname" .) }}
+{{- printf "%s-rainloop-letsencrypt" (include "mailserver.fullname" .) }}
 {{- end }}
 {{- end }}
 
 {{/*
-Calculate mailserver hostname
+Calculate rainloop hostname
 */}}
-{{- define "mailserver.mailserver-hostname" }}
+{{- define "mailserver.rainloop-hostname" }}
 {{- if (and .Values.config.hostname (not (empty .Values.config.hostname))) }}
 {{- printf .Values.config.hostname }}
 {{- else }}
-{{- printf .Values.ingress.mailserver.hostname }}
+{{- if .Values.ingress.rainloop.enabled }}
+{{- printf .Values.ingress.rainloop.hostname }}
+{{- else }}
+{{- printf "%s-rainloop" (include "mailserver.fullname" .) }}
+{{- end }}
 {{- end }}
 {{- end }}
 

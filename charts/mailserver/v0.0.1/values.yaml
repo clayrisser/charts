@@ -2,9 +2,9 @@ images:
   mailserver:
     repository: tvial/docker-mailserver
     tag: release-v6.2.1
-  nginx:
-    repository: nginx
-    tag: latest
+  rainloop:
+    repository: hardware/rainloop
+    tag: 1.13.0
 
 config:
   clusterProvider: infrastructure
@@ -85,11 +85,18 @@ service:
       smtp: ''
       smtpAuth: ''
       smtpSecure: ''
+  rainloop:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
 
 ingress:
-  mailserver:
+  rainloop:
     certificate: ''
+    enabled: false
     hostname: ''
+    path: /
     tls: false
     issuer:
       name: letsencrypt-staging
