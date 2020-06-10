@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "rainloop.fullname" . }}-rainloop
+  name: {{ template "mailserver.fullname" . }}-rainloop
   labels:
-    app: {{ template "rainloop.name" . }}-rainloop
+    app: {{ template "mailserver.name" . }}-rainloop
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -14,18 +14,18 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "rainloop.name" . }}-rainloop
+      app: {{ template "mailserver.name" . }}-rainloop
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
-        app: {{ template "rainloop.name" . }}-rainloop
+        app: {{ template "mailserver.name" . }}-rainloop
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "rainloop.fullname" . }}-rainloop
+        - name: {{ template "mailserver.fullname" . }}-rainloop
           image: {{ .Values.images.rainloop.repository }}:{{ .Values.images.rainloop.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
@@ -55,7 +55,7 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "rainloop.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim | default (include "mailserver.fullname" . ) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
@@ -64,9 +64,9 @@ spec:
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: {{ template "rainloop.fullname" . }}-rainloop
+  name: {{ template "mailserver.fullname" . }}-rainloop
   labels:
-    app: {{ template "rainloop.name" . }}-rainloop
+    app: {{ template "mailserver.name" . }}-rainloop
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -83,7 +83,7 @@ spec:
     ref:
       apiVersion: apps/v1
       kind: Deployment
-      name: {{ template "rainloop.fullname" . }}-rainloop
+      name: {{ template "mailserver.fullname" . }}-rainloop
     volumeMounts:
       - name: data
         mountPath: /_data
