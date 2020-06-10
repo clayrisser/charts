@@ -132,7 +132,7 @@ spec:
             #   mountPath: /etc/localtime
             - name: secret
               mountPath: /tmp/docker-mailserver/opendkim/keys
-            {{- if .Values.ingress.mailserver.tls }}
+            {{- if .Values.ingress.rainloop.tls }}
             - name: certs
               mountPath: /certs
             {{- end }}
@@ -154,7 +154,7 @@ spec:
               value: ipv4
             - name: PERMIT_DOCKER
               value: host
-            {{- if .Values.ingress.mailserver.tls }}
+            {{- if .Values.ingress.rainloop.tls }}
             - name: TLS_LEVEL
               value: modern
             - name: SSL_TYPE
@@ -443,10 +443,10 @@ spec:
               port: smtp
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
-        {{- if .Values.ingress.mailserver.tls }}
+        {{- if .Values.ingress.rainloop.tls }}
         - name: certs
           secret:
-            secretName: {{ template "mailserver.mailserver-certificate" . }}
+            secretName: {{ template "mailserver.rainloop-certificate" . }}
         {{- end }}
         - name: config
           configMap:

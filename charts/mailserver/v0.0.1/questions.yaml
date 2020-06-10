@@ -507,40 +507,72 @@ questions:
         label: 'stash restore snapshot postgres'
 
   # Services and Load Balancing
-  - variable: ingress.mailserver.tls
-    default: false
-    description: ""
+  - variable: ingress.rainloop.enabled
+    default: true
+    description: ''
     type: boolean
-    required: true
-    label: "mailserver ingress tls"
-    group: "Services and Load Balancing"
-  - variable: ingress.mailserver.hostname
-    default: xip.io
-    description: ""
-    type: hostname
-    required: true
-    label: "mailserver ingress hostname"
-    group: "Services and Load Balancing"
-  - variable: ingress.mailserver.issuer.name
-    default: letsencrypt-staging
-    description: ""
+    label: 'rainloop ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.rainloop.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'rainloop ingress tls'
+      - variable: ingress.rainloop.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'rainloop ingress hostname'
+      - variable: ingress.rainloop.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'rainloop ingress path'
+      - variable: ingress.rainloop.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.rainloop.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'rainloop ingress issuer name'
+      - variable: ingress.rainloop.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.rainloop.tls=true&&ingress.rainloop.issuer.name=none
+        required: false
+        label: 'rainloop ingress certificate'
+  - variable: service.rainloop.type
+    default: NodePort
+    description: ''
     type: enum
-    show_if: ingress.mailserver.tls=true
+    show_if: ingress.rainloop.enabled=false
     options:
-      - none
-      - letsencrypt-staging
-      - letsencrypt-prod
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
     required: true
-    label: "mailserver ingress issuer name"
-    group: "Services and Load Balancing"
-  - variable: ingress.mailserver.certificate
-    default: ""
-    description: ""
-    type: string
-    show_if: ingress.mailserver.tls=true&&ingress.mailserver.issuer.name=none
-    required: false
-    label: "mailserver ingress certificate"
-    group: "Services and Load Balancing"
+    label: 'rainloop service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.rainloop.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.rainloop.enabled=false
+        label: 'rainloop http port'
   - variable: service.mailserver.type
     default: NodePort
     description: ''

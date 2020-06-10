@@ -18,7 +18,7 @@ data:
   fail2ban_enabled: {{ .Values.config.fail2ban.enabled | ternary "1" "0" | quote }}
   fetchmail_enabled: {{ .Values.config.fetchmail.enabled | ternary "1" "0" | quote }}
   fetchmail_poll: {{ .Values.config.fetchmail.poll | quote }}
-  hostname: {{ template "mailserver.mailserver-hostname" . }}
+  hostname: {{ template "mailserver.rainloop-hostname" . }}
   ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
   ldap_enabled: {{ .Values.config.ldap.enabled | ternary "1" "" | quote }}
   ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
