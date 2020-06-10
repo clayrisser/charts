@@ -59,7 +59,7 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshots))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshots.data))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -76,7 +76,7 @@ spec:
     name: {{ .Values.persistence.stash.repository | quote }}
   rules:
     - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshots | quote }}
+        - {{ .Values.persistence.stash.restore.snapshots.data | quote }}
   target:
     paths:
       /_data
