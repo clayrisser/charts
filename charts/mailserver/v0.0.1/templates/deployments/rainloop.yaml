@@ -55,7 +55,7 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.rainloop.existingClaim | default (include "mailserver.rainloop.fullname" .)-rainloop }}
+            claimName: {{ default (include "mailserver.fullname" .)-rainloop .Values.persistence.mailserver.existingClaim }}
           {{- else }}
           emptyDir: {}
           {{- end }}

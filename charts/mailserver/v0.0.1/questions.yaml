@@ -658,9 +658,23 @@ questions:
     label: 'mailserver repository'
     group: Images
   - variable: images.mailserver.tag
-    default: release-v6.2.1
+    default: release-v7.0.0
     description: ''
     type: string
     required: true
     label: 'mailserver tag'
+    group: Images
+  - variable: images.rainloop.repository
+    default: hardware/rainloop
+    description: ''
+    type: string
+    required: true
+    label: 'rainloop repository'
+    group: Images
+  - variable: images.rainloop.tag
+    default: 1.13.0
+    description: ''
+    type: string
+    required: true
+    label: 'rainloop tag'
     group: Images

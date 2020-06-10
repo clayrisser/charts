@@ -130,8 +130,8 @@ spec:
               readOnly: true
             # - name: tz
             #   mountPath: /etc/localtime
-            # - name: secret
-            #   mountPath: /tmp/docker-mailserver/opendkim/keys
+            - name: secret
+              mountPath: /tmp/docker-mailserver/opendkim/keys
             {{- if .Values.ingress.rainloop.tls }}
             - name: certs
               mountPath: /certs
@@ -451,16 +451,16 @@ spec:
         - name: config
           configMap:
             name: {{ template "mailserver.fullname" . }}-mailserver
-        # - name: secret
-        #   secret:
-        #     secretName: {{ template "mailserver.fullname" . }}-mailserver
+        - name: secret
+          secret:
+            secretName: {{ template "mailserver.fullname" . }}-mailserver
         # - name: tz
         #   hostPath:
         #     path: /etc/localtime
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.mailserver.existingClaim | default (include "mailserver.fullname" .)-mailserver }}
+            claimName: {{ default (include "mailserver.fullname" .)-mailserver .Values.persistence.mailserver.existingClaim }}
           {{- else }}
           emptyDir: {}
           {{- end }}

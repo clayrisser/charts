@@ -1,7 +1,7 @@
 images:
   mailserver:
     repository: tvial/docker-mailserver
-    tag: release-v6.2.1
+    tag: release-v7.0.0
   rainloop:
     repository: hardware/rainloop
     tag: 1.13.0
