@@ -7,14 +7,14 @@ metadata:
     {{- if (eq .Values.config.clusterProvider "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing
     {{- else }}
-    kubernetes.io/ingress.class: rainloop
+    kubernetes.io/ingress.class: nginx
     {{- end }}
     {{- if .Values.ingress.rainloop.tls }}
     {{- if (empty .Values.ingress.rainloop.certificate) }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.rainloop.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
-    rainloop.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
     app: {{ template "mailserver.name" . }}-rainloop
