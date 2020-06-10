@@ -1,20 +1,28 @@
-{{- if (and .Values.ingress.mailserver.tls (or (eq .Values.ingress.mailserver.issuer.name "letsencrypt-prod") (eq .Values.ingress.mailserver.issuer.name "letsencrypt-staging"))) }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "mailserver.fullname" . }}-nginx
+  name: {{ template "mailserver.fullname" . }}-rainloop
   labels:
-    app: {{ template "mailserver.name" . }}-nginx
+    app: {{ template "mailserver.name" . }}-rainloop
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  {{- if .Values.ingress.rainloop.enabled }}
   type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.rainloop.type }}
+  {{- if (or (eq .Values.service.rainloop.type "LoadBalancer") (eq .Values.service.rainloop.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.rainloop.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
   ports:
     - name: http
       port: 80
       targetPort: container
+      {{- if (and (eq .Values.service.rainloop.type "NodePort") (not (empty .Values.service.rainloop.nodePorts.http))) }}
+      nodePort: {{ .Values.service.rainloop.nodePorts.http }}
+      {{- end }}
   selector:
-    app: {{ template "mailserver.name" . }}-nginx
+    app: {{ template "mailserver.name" . }}-rainloop
     release: {{ .Release.Name }}
-{{- end }}
