@@ -104,8 +104,12 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  existingClaim: ''
-  size: 1Gi
+  existingClaim:
+    mailserver: ''
+    rainloop: ''
+  size:
+    mailserver: 1Gi
+    rainloop: 1Gi
   storageClass: ''
   velero:
     enabled: false
@@ -122,7 +126,8 @@ persistence:
     type: s3
     restore:
       snapshots:
-        data: ''
+        mailserver: ''
+        rainloop: ''
 
 probes:
   liveness:

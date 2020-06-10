@@ -460,11 +460,11 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "mailserver.fullname" . ) }}
+            claimName: {{ .Values.persistence.mailserver.existingClaim | default (include "mailserver.fullname" .)-mailserver }}
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshots.data))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshots.mailserver))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -481,7 +481,7 @@ spec:
     name: {{ template "mailserver.fullname" . }}-data
   rules:
     - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshots.data | quote }}
+        - {{ .Values.persistence.stash.restore.snapshots.mailserver | quote }}
   target:
     paths:
       /_data

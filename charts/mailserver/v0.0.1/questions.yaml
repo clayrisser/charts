@@ -398,12 +398,18 @@ questions:
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: persistence.size
+      - variable: persistence.mailserver.size
         default: 1Gi
         description: ''
         type: string
         required: true
-        label: size
+        label: 'mailserver size'
+      - variable: persistence.rainloop.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: 'rainloop size'
       - variable: persistence.storageClass
         default: ''
         description: ''
@@ -420,12 +426,18 @@ questions:
           - ReadOnlyMany
         required: false
         label: 'access mode'
-      - variable: persistence.existingClaim
+      - variable: persistence.mailserver.existingClaim
         default: ''
         description: ''
         type: string
         required: false
-        label: 'existing claim'
+        label: 'mailserver existing claim'
+      - variable: persistence.rainloop.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'rainloop existing claim'
       - variable: persistence.velero.enabled
         default: false
         description: ''
@@ -491,20 +503,20 @@ questions:
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash keep last'
-      - variable: persistence.stash.restore.snapshot.data
+      - variable: persistence.stash.restore.snapshot.mailserver
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.stash.enabled=true
-        label: 'stash restore snapshot data'
-      - variable: persistence.stash.restore.snapshots.postgres
+        label: 'stash restore snapshot mailserver'
+      - variable: persistence.stash.restore.snapshot.rainloop
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.stash.enabled=true&&config.postgres.internal=true
-        label: 'stash restore snapshot postgres'
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot rainloop'
 
   # Services and Load Balancing
   - variable: ingress.rainloop.enabled
