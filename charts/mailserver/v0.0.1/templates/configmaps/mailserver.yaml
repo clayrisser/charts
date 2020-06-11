@@ -9,6 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   dovecot.cf: |
+    disable_plaintext_auth = no
     service stats {
       unix_listener stats-reader {
         group = docker
