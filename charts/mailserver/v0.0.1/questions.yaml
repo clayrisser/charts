@@ -42,6 +42,13 @@ questions:
     required: true
     label: debug
     group: Config
+  - variable: config.hostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Config
   - variable: config.domain
     default: ''
     description: ''
