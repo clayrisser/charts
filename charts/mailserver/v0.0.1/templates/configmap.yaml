@@ -57,6 +57,7 @@ data:
   spamassassin_spam_to_inbox: {{ .Values.config.spamassassin.spamToInbox | ternary "1" "0" | quote }}
   spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" | quote }}
   smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}
+  srs_domainname: {{ .values.config.domain | quote }}
   srs_enabled: {{ .Values.config.srs.enabled | ternary "1" "0" | quote }}
   srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
   srs_sender_classes: {{ .Values.config.srs.senderClasses | quote }}

@@ -419,6 +419,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "mailserver.fullname" . }}
                   key: saslauthd_ldap_filter
+            - name: SRS_DOMAINNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: srs_domainname
             - name: SRS_SENDER_CLASSES
               valueFrom:
                 configMapKeyRef:
