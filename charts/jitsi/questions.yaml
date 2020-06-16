@@ -1,0 +1,340 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash type'
+      - variable: persistence.stash.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
+        label: 'stash container'
+      - variable: persistence.stash.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash bucket'
+      - variable: persistence.stash.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
+        label: 'stash endpoint'
+      - variable: persistence.stash.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot.data
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot data'
+
+# Services and Load Balancing
+  - variable: service.jicofo.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.jicofo.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'jicofo service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.jicofo.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.jicofo.enabled=false
+        label: 'jicofo http port'
+  - variable: service.prosody.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.prosody.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'prosody service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.prosody.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.prosody.enabled=false
+        label: 'prosody http port'
+  - variable: ingress.web.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'web ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.web.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'web ingress tls'
+      - variable: ingress.web.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'web ingress hostname'
+      - variable: ingress.web.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'web ingress path'
+      - variable: ingress.web.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.web.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'web ingress issuer name'
+      - variable: ingress.web.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.web.tls=true&&ingress.web.issuer.name=none
+        required: false
+        label: 'web ingress certificate'
+  - variable: service.web.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.web.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'web service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.web.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.web.enabled=false
+        label: 'web http port'
+  - variable: service.jvb.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.jvb.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'jvb service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.jvb.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.jvb.enabled=false
+        label: 'jvb http port'
+
+# Images
+  - variable: images.jicofo.repository
+    default: jitsi/jicofo
+    description: ''
+    type: string
+    required: true
+    label: 'jicofo repository'
+    group: Images
+  - variable: images.jicofo.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'jicofo tag'
+    group: Images
+  - variable: images.prosody.repository
+    default: jitsi/prosody
+    description: ''
+    type: string
+    required: true
+    label: 'prosody repository'
+    group: Images
+  - variable: images.prosody.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'prosody tag'
+    group: Images
+  - variable: images.web.repository
+    default: jitsi/web
+    description: ''
+    type: string
+    required: true
+    label: 'web repository'
+    group: Images
+  - variable: images.web.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'web tag'
+    group: Images
+  - variable: images.jvb.repository
+    default: jitsi/jvb
+    description: ''
+    type: string
+    required: true
+    label: 'jvb repository'
+    group: Images
+  - variable: images.jvb.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'jvb tag'
+    group: Images

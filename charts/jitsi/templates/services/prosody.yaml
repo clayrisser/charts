@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "jitsi.fullname" . }}-prosody
+  labels:
+    app: {{ template "jitsi.name" . }}-prosody
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.prosody.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.prosody.type }}
+  {{- if (or (eq .Values.service.prosody.type "LoadBalancer") (eq .Values.service.prosody.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.prosody.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: xmpp
+      port: 5280
+      targetPort: xmpp
+      {{- if (and (eq .Values.service.prosody.type "NodePort") (not (empty .Values.service.prosody.nodePorts.http))) }}
+      nodePort: {{ .Values.service.prosody.nodePorts.http }}
+      {{- end }}
+    - name: xmpp-components
+      port: 5347
+      targetPort: xmpp-components
+      {{- if (and (eq .Values.service.prosody.type "NodePort") (not (empty .Values.service.prosody.nodePorts.http))) }}
+      nodePort: {{ .Values.service.prosody.nodePorts.http }}
+      {{- end }}
+    - name: xmpp-client
+      port: 5222
+      targetPort: xmpp-client
+      {{- if (and (eq .Values.service.prosody.type "NodePort") (not (empty .Values.service.prosody.nodePorts.http))) }}
+      nodePort: {{ .Values.service.prosody.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "jitsi.name" . }}-prosody
+    release: {{ .Release.Name }}

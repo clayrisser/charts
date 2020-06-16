@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "jitsi.fullname" . }}-jvb
+  labels:
+    app: {{ template "jitsi.name" . }}-jvb
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
+      containers:
+        - name: {{ template "jitsi.fullname" . }}-jvb
+          image: {{ .Values.images.jvb.repository }}:{{ .Values.images.jvb.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: jvb-harvester
+              containerPort: 4443
+          env: []
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

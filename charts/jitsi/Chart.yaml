@@ -1,0 +1,14 @@
+name: jitsi
+home: https://github.com/codejamninja/charts
+icon: https://335wvf48o1332cksy23mw1pj-wpengine.netdna-ssl.com/wp-content/themes/jitsi/images/logo-web-2020.png
+version: 0.0.1
+appVersion: latest
+description: 'open-source videoconferencing'
+keywords:
+  - jitsi
+  - videoconferencing
+sources:
+  - https://github.com/codejamninja/charts
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

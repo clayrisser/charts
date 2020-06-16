@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "jitsi.fullname" . }}-jicofo
+  labels:
+    app: {{ template "jitsi.name" . }}-jicofo
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
+      containers:
+        - name: {{ template "jitsi.fullname" . }}-jicofo
+          image: {{ .Values.images.jicofo.repository }}:{{ .Values.images.jicofo.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          env: []
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}

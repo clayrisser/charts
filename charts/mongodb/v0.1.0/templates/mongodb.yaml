@@ -41,7 +41,7 @@ spec:
         {{- if .Values.persistence.velero.enabled }}
         metadata:
           annotations:
-            backup.velero.io/backup-volumes: data
+            backup.velero.io/backup-volumes: datadir
         {{- end }}
         spec:
           affinity:
