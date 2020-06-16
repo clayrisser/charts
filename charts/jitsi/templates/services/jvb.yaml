@@ -14,9 +14,16 @@ spec:
   {{- end }}
   {{- end }}
   ports:
-    - name: jvb-harvester
+    - name: jvbTcp
       port: 4443
-      targetPort: jvb-harvester
+      targetPort: jvbTcp
+      {{- if (and (eq .Values.service.jvb.type "NodePort") (not (empty .Values.service.jvb.nodePorts.http))) }}
+      nodePort: {{ .Values.service.jvb.nodePorts.http }}
+      {{- end }}
+    - name: jvb
+      port: 10000
+      protocol: UDP
+      targetPort: jvb
       {{- if (and (eq .Values.service.jvb.type "NodePort") (not (empty .Values.service.jvb.nodePorts.http))) }}
       nodePort: {{ .Values.service.jvb.nodePorts.http }}
       {{- end }}

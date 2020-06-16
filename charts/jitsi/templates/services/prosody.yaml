@@ -8,33 +8,17 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if .Values.ingress.prosody.enabled }}
   type: ClusterIP
-  {{- else }}
-  type: {{ .Values.service.prosody.type }}
-  {{- if (or (eq .Values.service.prosody.type "LoadBalancer") (eq .Values.service.prosody.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.prosody.externalTrafficPolicy }}
-  {{- end }}
-  {{- end }}
   ports:
     - name: xmpp
+      port: 5222
+      targetPort: xmppClient
+    - name: bosh
       port: 5280
       targetPort: xmpp
-      {{- if (and (eq .Values.service.prosody.type "NodePort") (not (empty .Values.service.prosody.nodePorts.http))) }}
-      nodePort: {{ .Values.service.prosody.nodePorts.http }}
-      {{- end }}
-    - name: xmpp-components
+    - name: xmppComponents
       port: 5347
-      targetPort: xmpp-components
-      {{- if (and (eq .Values.service.prosody.type "NodePort") (not (empty .Values.service.prosody.nodePorts.http))) }}
-      nodePort: {{ .Values.service.prosody.nodePorts.http }}
-      {{- end }}
-    - name: xmpp-client
-      port: 5222
-      targetPort: xmpp-client
-      {{- if (and (eq .Values.service.prosody.type "NodePort") (not (empty .Values.service.prosody.nodePorts.http))) }}
-      nodePort: {{ .Values.service.prosody.nodePorts.http }}
-      {{- end }}
+      targetPort: xmppComponents
   selector:
     app: {{ template "jitsi.name" . }}-prosody
     release: {{ .Release.Name }}

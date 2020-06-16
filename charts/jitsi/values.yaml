@@ -14,25 +14,16 @@ images:
 
 config:
   clusterProvider: infrastructure
-  dockerHostAddress: ''
+  focusUserPassword: P@ssw0rd
+  hostname: ''
   imagePullPolicy: IfNotPresent
-  jicofoAuthPassword: ''
-  jicofoAuthUser: ''
-  jicofoComponentSecret: ''
-  jvbAuthPassword: ''
-  jvbAuthUser: ''
-  jvbBreweryMuc: ''
-  jvbPort: ''
-  jvbStunServers: ''
-  jvbTcpHarvesterDisabled: ''
-  tz: ''
+  jvbUserPassword: P@ssw0rd
+  nodeIp: ''
+  secret: P@ssw0rd
+  stunServers: meet-jit-si-turnrelay.jitsi.net:443
+  tcpFallback: false
   updateStrategy: RollingUpdate
-  xmppAuthDomain: ''
-  xmppBoshUrlBase: ''
-  xmppDomain: ''
-  xmppInternalMucDomain: ''
-  xmppMucDomain: ''
-  xmppServer: ''
+  xmppDomain: meet.jitsi
   jicofo:
     baseUrl: ''
     hostname: ''

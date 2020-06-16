@@ -17,28 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate jitsi certificate
-*/}}
-{{- define "jitsi.jitsi-certificate" }}
-{{- if (not (empty .Values.ingress.jitsi.certificate)) }}
-{{- printf .Values.ingress.jitsi.certificate }}
-{{- else }}
-{{- printf "%s-jitsi-letsencrypt" (include "jitsi.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate prosody certificate
-*/}}
-{{- define "jitsi.prosody-certificate" }}
-{{- if (not (empty .Values.ingress.prosody.certificate)) }}
-{{- printf .Values.ingress.prosody.certificate }}
-{{- else }}
-{{- printf "%s-prosody-letsencrypt" (include "jitsi.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate web certificate
 */}}
 {{- define "jitsi.web-certificate" }}
@@ -46,17 +24,6 @@ Calculate web certificate
 {{- printf .Values.ingress.web.certificate }}
 {{- else }}
 {{- printf "%s-web-letsencrypt" (include "jitsi.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate jvb certificate
-*/}}
-{{- define "jitsi.jvb-certificate" }}
-{{- if (not (empty .Values.ingress.jvb.certificate)) }}
-{{- printf .Values.ingress.jvb.certificate }}
-{{- else }}
-{{- printf "%s-jvb-letsencrypt" (include "jitsi.fullname" .) }}
 {{- end }}
 {{- end }}
 
@@ -76,52 +43,16 @@ Calculate jicofo hostname
 {{- end }}
 
 {{/*
-Calculate jicofo base url
+Calculate xmpp hostname
 */}}
-{{- define "jitsi.jicofo-base-url" }}
-{{- if (and .Values.config.jicofo.baseUrl (not (empty .Values.config.jicofo.baseUrl))) }}
-{{- printf .Values.config.jicofo.baseUrl }}
-{{- else }}
-{{- if .Values.ingress.jicofo.enabled }}
-{{- $hostname := ((empty (include "jitsi.jicofo-hostname" .)) | ternary .Values.ingress.jicofo.hostname (include "jitsi.jicofo-hostname" .)) }}
-{{- $path := (eq .Values.ingress.jicofo.path "/" | ternary "" .Values.ingress.jicofo.path) }}
-{{- $protocol := (.Values.ingress.jicofo.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
-{{- else }}
-{{- printf "http://%s" (include "jitsi.jicofo-hostname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate prosody hostname
-*/}}
-{{- define "jitsi.prosody-hostname" }}
-{{- if (and .Values.config.prosody.hostname (not (empty .Values.config.prosody.hostname))) }}
-{{- printf .Values.config.prosody.hostname }}
+{{- define "jitsi.xmpp-hostname" }}
+{{- if (and .Values.config.hostname (not (empty .Values.config.hostname))) }}
+{{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.prosody.enabled }}
 {{- printf .Values.ingress.prosody.hostname }}
 {{- else }}
 {{- printf "%s-prosody" (include "jitsi.fullname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate prosody base url
-*/}}
-{{- define "jitsi.prosody-base-url" }}
-{{- if (and .Values.config.prosody.baseUrl (not (empty .Values.config.prosody.baseUrl))) }}
-{{- printf .Values.config.prosody.baseUrl }}
-{{- else }}
-{{- if .Values.ingress.prosody.enabled }}
-{{- $hostname := ((empty (include "jitsi.prosody-hostname" .)) | ternary .Values.ingress.prosody.hostname (include "jitsi.prosody-hostname" .)) }}
-{{- $path := (eq .Values.ingress.prosody.path "/" | ternary "" .Values.ingress.prosody.path) }}
-{{- $protocol := (.Values.ingress.prosody.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
-{{- else }}
-{{- printf "http://%s" (include "jitsi.prosody-hostname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -170,24 +101,6 @@ Calculate jvb hostname
 {{- printf .Values.ingress.jvb.hostname }}
 {{- else }}
 {{- printf "%s-jvb" (include "jitsi.fullname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate jvb base url
-*/}}
-{{- define "jitsi.jvb-base-url" }}
-{{- if (and .Values.config.jvb.baseUrl (not (empty .Values.config.jvb.baseUrl))) }}
-{{- printf .Values.config.jvb.baseUrl }}
-{{- else }}
-{{- if .Values.ingress.jvb.enabled }}
-{{- $hostname := ((empty (include "jitsi.jvb-hostname" .)) | ternary .Values.ingress.jvb.hostname (include "jitsi.jvb-hostname" .)) }}
-{{- $path := (eq .Values.ingress.jvb.path "/" | ternary "" .Values.ingress.jvb.path) }}
-{{- $protocol := (.Values.ingress.jvb.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
-{{- else }}
-{{- printf "http://%s" (include "jitsi.jvb-hostname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}

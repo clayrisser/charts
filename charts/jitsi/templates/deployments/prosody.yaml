@@ -24,12 +24,14 @@ metadata:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
             - name: xmpp
-              containerPort: 5280
-            - name: xmpp-components
-              containerPort: 5347
-            - name: xmpp-client
               containerPort: 5222
+            - name: bosh
+              containerPort: 5280
+            - name: xmppComponents
+              containerPort: 5347
           env:
+            - name: TZ
+              value: UTC
             - name: XMPP_DOMAIN
               valueFrom:
                 configMapKeyRef:
@@ -52,7 +54,7 @@ metadata:
                   key: xmpp_internal_muc_domain
             - name: JICOFO_COMPONENT_SECRET
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: {{ template "jitsi.fullname" . }}
                   key: jicofo_component_secret
             - name: JVB_AUTH_USER
@@ -75,11 +77,6 @@ metadata:
                 configMapKeyRef:
                   name: {{ template "jitsi.fullname" . }}
                   key: jicofo_auth_password
-            - name: TZ
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "jitsi.fullname" . }}
-                  key: tz
             - name: JVB_TCP_HARVESTER_DISABLED
               valueFrom:
                 configMapKeyRef:
@@ -87,9 +84,9 @@ metadata:
                   key: jvb_tcp_harvester_disabled
           livenessProbe:
             tcpSocket:
-              port: container
+              port: xmpp
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             tcpSocket:
-              port: container
+              port: xmpp
 {{ toYaml .Values.probes.readiness | indent 12 }}

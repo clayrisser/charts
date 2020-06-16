@@ -48,6 +48,8 @@ spec:
               mountPath: 'jitsi/jvb:latest'
               subPath: jvb
           env:
+            - name: TZ
+              value: UTC
             - name: XMPP_SERVER
               valueFrom:
                 configMapKeyRef:
@@ -83,11 +85,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "jitsi.fullname" . }}
                   key: xmpp_muc_domain
-            - name: TZ
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "jitsi.fullname" . }}
-                  key: tz
             - name: JVB_TCP_HARVESTER_DISABLED
               valueFrom:
                 configMapKeyRef:

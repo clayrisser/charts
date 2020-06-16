@@ -23,9 +23,16 @@ metadata:
           image: {{ .Values.images.jvb.repository }}:{{ .Values.images.jvb.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
-            - name: jvb-harvester
+            - name: jvbTcp
               containerPort: 4443
+            - name: jvb
+              protocol: UDP
+              containerPort: 10000
           env:
+            - name: TZ
+              value: UTC
+            - name: JVB_PORT
+              value: '10000'
             - name: XMPP_SERVER
               valueFrom:
                 configMapKeyRef:
@@ -71,11 +78,6 @@ metadata:
                 configMapKeyRef:
                   name: {{ template "jitsi.fullname" . }}
                   key: jvb_auth_user
-            - name: JVB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "jitsi.fullname" . }}
-                  key: jvb_port
             - name: JVB_AUTH_PASSWORD
               valueFrom:
                 configMapKeyRef:
@@ -91,16 +93,11 @@ metadata:
                 configMapKeyRef:
                   name: {{ template "jitsi.fullname" . }}
                   key: jvb_brewery_muc
-            - name: TZ
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "jitsi.fullname" . }}
-                  key: tz
           livenessProbe:
             tcpSocket:
-              port: container
+              port: jvb
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             tcpSocket:
-              port: container
+              port: jvb
 {{ toYaml .Values.probes.readiness | indent 12 }}

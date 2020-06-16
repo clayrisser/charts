@@ -8,20 +8,17 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  docker_host_address: {{ .Values.config.dockerHostAddress | quote }}
-  jicofo_auth_password: {{ .Values.config.jicofoAuthPassword | quote }}
-  jicofo_auth_user: {{ .Values.config.jicofoAuthUser | quote }}
-  jicofo_component_secret: {{ .Values.config.jicofoComponentSecret | quote }}
-  jvb_auth_password: {{ .Values.config.jvbAuthPassword | quote }}
-  jvb_auth_user: {{ .Values.config.jvbAuthUser | quote }}
-  jvb_brewery_muc: {{ .Values.config.jvbBreweryMuc | quote }}
+  docker_host_address: {{ .Values.config.nodeIp | quote }}
+  jicofo_auth_user: focus
+  jvb_auth_user: jvb
+  jvb_brewery_muc: jvbbrewery
   jvb_port: {{ .Values.config.jvbPort | quote }}
-  jvb_stun_servers: {{ .Values.config.jvbStunServers | quote }}
-  jvb_tcp_harvester_disabled: {{ .Values.config.jvbTcpHarvesterDisabled | quote }}
-  tz: {{ .Values.config.tz | quote }}
-  xmpp_auth_domain: {{ .Values.config.xmppAuthDomain | quote }}
-  xmpp_bosh_url_base: {{ .Values.config.xmppBoshUrlBase | quote }}
+  jvb_stun_servers: {{ .Values.config.stunServers | quote }}
+  jvb_tcp_harvester_disabled: {{ .Values.config.tcpFallback | ternary "false" "true" }}
+  xmpp_auth_domain: {{ printf "auth.%s" .Values.config.xmppDomain | quote }}
+  xmpp_bosh_url_base: {{ printf "http://%s:5280" (include "jitsi.xmpp-hostname" .) | quote }}
   xmpp_domain: {{ .Values.config.xmppDomain | quote }}
-  xmpp_internal_muc_domain: {{ .Values.config.xmppInternalMucDomain | quote }}
-  xmpp_muc_domain: {{ .Values.config.xmppMucDomain | quote }}
-  xmpp_server: {{ .Values.config.xmppServer | quote }}
+  xmpp_guest_domain: {{ printf "guest.%s" .Values.config.xmppDomain | quote }}
+  xmpp_internal_muc_domain: {{ printf "internal-muc.%s" .Values.config.xmppDomain | quote }}
+  xmpp_muc_domain: {{ printf "muc.%s" .Values.config.xmppDomain | quote }}
+  xmpp_server: {{ template "jitsi.xmpp-hostname" . }}

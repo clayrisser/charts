@@ -23,6 +23,8 @@ metadata:
           image: {{ .Values.images.jicofo.repository }}:{{ .Values.images.jicofo.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           env:
+            - name: TZ
+              value: UTC
             - name: XMPP_SERVER
               valueFrom:
                 configMapKeyRef:
@@ -53,7 +55,6 @@ metadata:
                 configMapKeyRef:
                   name: {{ template "jitsi.fullname" . }}
                   key: xmpp_auth_password
-            - name: TZ
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "jitsi.fullname" . }}
@@ -63,13 +64,8 @@ metadata:
                 configMapKeyRef:
                   name: {{ template "jitsi.fullname" . }}
                   key: jvb_brewery_muc
-          livenessProbe:
-            httpGet:
-              path: /
-              port: container
-{{ toYaml .Values.probes.liveness | indent 12 }}
-          readinessProbe:
-            httpGet:
-              path: /
-              port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}
+            - name: JICOFO_COMPONENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_component_secret

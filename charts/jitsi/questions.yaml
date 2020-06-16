@@ -35,26 +35,62 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-
-
-  # dockerHostAddress: ''
-  # jicofoAuthPassword: ''
-  # jicofoAuthUser: ''
-  # jicofoComponentSecret: ''
-  # jvbAuthPassword: ''
-  # jvbAuthUser: ''
-  # jvbBreweryMuc: ''
-  # jvbPort: ''
-  # jvbStunServers: ''
-  # jvbTcpHarvesterDisabled: ''
-  # tz: ''
-  # xmppAuthDomain: ''
-  # xmppBoshUrlBase: ''
-  # xmppDomain: ''
-  # xmppInternalMucDomain: ''
-  # xmppMucDomain: ''
-  # xmppServer: ''
-
+  - variable: config.nodeIp
+    default: ''
+    description: ''
+    type: string
+    required: true
+    label: 'node ip'
+    group: Config
+  - variable: config.secret
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: secret
+    group: Config
+  - variable: config.focusUserPassword
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'focus user password'
+    group: Config
+  - variable: config.jvbUserPassword
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'jvb user password'
+    group: Config
+  - variable: config.stunServers
+    default: meet-jit-si-turnrelay.jitsi.net:443
+    description: ''
+    type: string
+    required: true
+    label: 'stun servers'
+    group: Config
+  - variable: config.tcpFallback
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'tcp fallback'
+    group: Config
+  - variable: config.hostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Config
+  - variable: config.xmppDomain
+    default: meet.jitsi
+    description: ''
+    type: string
+    required: true
+    label: 'xmpp domain'
+    group: Config
 
 # Persistence
   - variable: persistence.enabled
