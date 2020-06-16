@@ -36,6 +36,26 @@ questions:
     label: 'update strategy'
     group: Config
 
+
+  # dockerHostAddress: ''
+  # jicofoAuthPassword: ''
+  # jicofoAuthUser: ''
+  # jicofoComponentSecret: ''
+  # jvbAuthPassword: ''
+  # jvbAuthUser: ''
+  # jvbBreweryMuc: ''
+  # jvbPort: ''
+  # jvbStunServers: ''
+  # jvbTcpHarvesterDisabled: ''
+  # tz: ''
+  # xmppAuthDomain: ''
+  # xmppBoshUrlBase: ''
+  # xmppDomain: ''
+  # xmppInternalMucDomain: ''
+  # xmppMucDomain: ''
+  # xmppServer: ''
+
+
 # Persistence
   - variable: persistence.enabled
     default: false

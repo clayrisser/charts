@@ -29,7 +29,62 @@ metadata:
               containerPort: 5347
             - name: xmpp-client
               containerPort: 5222
-          env: []
+          env:
+            - name: XMPP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_domain
+            - name: XMPP_AUTH_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_auth_domain
+            - name: XMPP_MUC_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_muc_domain
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_internal_muc_domain
+            - name: JICOFO_COMPONENT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_component_secret
+            - name: JVB_AUTH_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_auth_user
+            - name: JVB_AUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_auth_password
+            - name: JICOFO_AUTH_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_auth_user
+            - name: JICOFO_AUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_auth_password
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: tz
+            - name: JVB_TCP_HARVESTER_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_tcp_harvester_disabled
           livenessProbe:
             tcpSocket:
               port: container

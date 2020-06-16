@@ -25,7 +25,77 @@ metadata:
           ports:
             - name: jvb-harvester
               containerPort: 4443
-          env: []
+          env:
+            - name: XMPP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_server
+            - name: DOCKER_HOST_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: docker_host_address
+            - name: XMPP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_domain
+            - name: XMPP_AUTH_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_auth_domain
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_internal_muc_domain
+            - name: JVB_STUN_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_stun_servers
+            - name: JICOFO_AUTH_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_auth_user
+            - name: JVB_TCP_HARVESTER_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_tcp_harvester_disabled
+            - name: JVB_AUTH_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_auth_user
+            - name: JVB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_port
+            - name: JVB_AUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_auth_password
+            - name: JICOFO_AUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_auth_password
+            - name: JVB_BREWERY_MUC
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_brewery_muc
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: tz
           livenessProbe:
             tcpSocket:
               port: container

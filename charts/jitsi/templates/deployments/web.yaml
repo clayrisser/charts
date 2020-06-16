@@ -47,7 +47,52 @@ spec:
             - name: data
               mountPath: 'jitsi/jvb:latest'
               subPath: jvb
-          env: []
+          env:
+            - name: XMPP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_server
+            - name: JICOFO_AUTH_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_auth_user
+            - name: XMPP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_domain
+            - name: XMPP_AUTH_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_auth_domain
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_internal_muc_domain
+            - name: XMPP_BOSH_URL_BASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_bosh_url_base
+            - name: XMPP_MUC_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_muc_domain
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: tz
+            - name: JVB_TCP_HARVESTER_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_tcp_harvester_disabled
           livenessProbe:
             tcpSocket:
               port: container

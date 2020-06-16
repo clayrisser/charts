@@ -22,12 +22,54 @@ metadata:
         - name: {{ template "jitsi.fullname" . }}-jicofo
           image: {{ .Values.images.jicofo.repository }}:{{ .Values.images.jicofo.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-          env: []
+          env:
+            - name: XMPP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_server
+            - name: XMPP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_domain
+            - name: XMPP_AUTH_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_auth_domain
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_internal_muc_domain
+            - name: XMPP_AUTH_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_auth_user
+            - name: XMPP_AUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_auth_password
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: tz
+            - name: JVB_BREWERY_MUC
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_brewery_muc
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}

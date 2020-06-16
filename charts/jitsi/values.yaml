@@ -14,8 +14,25 @@ images:
 
 config:
   clusterProvider: infrastructure
+  dockerHostAddress: ''
   imagePullPolicy: IfNotPresent
+  jicofoAuthPassword: ''
+  jicofoAuthUser: ''
+  jicofoComponentSecret: ''
+  jvbAuthPassword: ''
+  jvbAuthUser: ''
+  jvbBreweryMuc: ''
+  jvbPort: ''
+  jvbStunServers: ''
+  jvbTcpHarvesterDisabled: ''
+  tz: ''
   updateStrategy: RollingUpdate
+  xmppAuthDomain: ''
+  xmppBoshUrlBase: ''
+  xmppDomain: ''
+  xmppInternalMucDomain: ''
+  xmppMucDomain: ''
+  xmppServer: ''
   jicofo:
     baseUrl: ''
     hostname: ''
