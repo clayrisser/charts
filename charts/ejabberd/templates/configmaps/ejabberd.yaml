@@ -8,10 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  mod_read_markers.yml: |
-    modules:
-      mod_read_markers:
-        db_type: sql
   ejabberd.yml: |
     hosts:
       - localhost
