@@ -47,7 +47,7 @@ spec:
             - -c
             - |
               sh /scripts/setup.sh
-              exec sh /usr/local/bin/entrypoint foreground
+              exec sh /usr/local/sbin/entrypoint foreground
           ports:
             - name: http
               containerPort: 5280
