@@ -258,7 +258,8 @@ data:
           mod_version:
             show_os: false
           {{- if .Values.config.ejabberd.readMarkers }}
-          mod_read_markers: {}
+          mod_read_markers:
+            db_type: sql
           {{- end }}
       {{- if .Values.config.ejabberd.jitsi.enabled }}
       meet.{{ template "ejabberd.ejabberd-hostname" . }}:
