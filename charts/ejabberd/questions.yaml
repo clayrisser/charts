@@ -92,6 +92,13 @@ questions:
     show_if: config.ejabberd.jitsi.enabled=true
     label: 'ejabberd jitsi secret'
     group: Config
+  - variable: config.ejabberd.readMarkers
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'ejabberd read markers'
+    group: Config
 
 # Postgres Config
   - variable: config.postgres.internal
@@ -783,14 +790,14 @@ questions:
 
 # Images
   - variable: images.ejabberd.repository
-    default: ejabberd/ecs
+    default: codejamninja/ejabberd
     description: ''
     type: string
     required: true
     label: 'ejabberd repository'
     group: Images
   - variable: images.ejabberd.tag
-    default: 20.02
+    default: 20.4.0
     description: ''
     type: string
     required: true

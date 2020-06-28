@@ -1,7 +1,7 @@
 images:
   ejabberd:
-    repository: ejabberd/ecs
-    tag: 20.02
+    repository: codejamninja/ejabberd
+    tag: 20.4.0
   pgadmin:
     repository: dpage/pgadmin4
     tag: 4.11
@@ -19,6 +19,7 @@ config:
     captchaEnabled: false
     fail2ban: false
     hostname: ''
+    readMarkers: true
     registerEnabled: true
     jitsi:
       enabled: false

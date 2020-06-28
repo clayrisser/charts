@@ -257,6 +257,9 @@ data:
           mod_vcard_xupdate: {}
           mod_version:
             show_os: false
+          {{- if .Values.config.ejabberd.readMarkers }}
+          mod_read_markers: {}
+          {{- end }}
       {{- if .Values.config.ejabberd.jitsi.enabled }}
       meet.{{ template "ejabberd.ejabberd-hostname" . }}:
         s2s_access: none
