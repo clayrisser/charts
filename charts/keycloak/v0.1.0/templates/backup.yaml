@@ -1,65 +1,84 @@
 {{- if .Values.persistence.stash.enabled }}
-apiVersion: batch/v1
-kind: Job
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
 metadata:
-  name: {{ template "keycloak.fullname" . }}-backup-init
+  name: {{ template "keycloak.fullname" . }}-data
   labels:
-    app: {{ template "keycloak.name" . }}-backup-init
+    app: {{ template "keycloak.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '3'
-    helm.sh/hook-delete-policy: before-hook-creation
 spec:
-  strategy:
-    type: {{ .Values.config.updateStrategy }}
-  template:
-    metadata:
-      labels:
-        app: {{ template "keycloak.name" . }}-backup-init
-        release: {{ .Release.Name }}
-    spec:
-      restartPolicy: OnFailure
-      containers:
-        - name: kubectl
-          image: codejamninja/stash-cli:0.0.1
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-            - |
-              kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
-# ---
-# apiVersion: stash.appscode.com/v1beta1
-# kind: BackupBatch
-# metadata:
-#   name: {{ template "keycloak.fullname" . }}
-#   labels:
-#     app: {{ template "keycloak.name" . }}
-#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-#     release: {{ .Release.Name }}
-#     heritage: {{ .Release.Service }}
-# spec:
-#   repository:
-#     name: {{ .Values.persistence.stash.repository | quote }}
-#   paused: {{ .Values.persistence.stash.paused }}
-#   schedule: {{ .Values.persistence.stash.schedule | quote }}
-#   retentionPolicy:
-#     name: retention-policy
-#     keepLast: {{ .Values.persistence.stash.keepLast }}
-#     prune: true
-#   members:
-#     - target:
-#         ref:
-#           apiVersion: apps/v1
-#           kind: AppBinding
-#           name: {{ template "keycloak.fullname" . }}-postgres
-#       task:
-#         name: postgres-backup-{{ .Values.config.postgres.version }}
+  wipeOut: false
+  backend:
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/data'
 ---
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: {{ template "keycloak.fullname" . }}-data
+  labels:
+    app: {{ template "keycloak.name" . }}-data
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    name: {{ template "keycloak.fullname" . }}-data
+  paused: {{ .Values.persistence.stash.paused }}
+  schedule: {{ .Values.persistence.stash.schedule | quote }}
+  retentionPolicy:
+    name: retention-policy
+    keepLast: {{ .Values.persistence.stash.keepLast }}
+    prune: true
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "keycloak.fullname" . }}-keycloak
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+    paths:
+      - /_data
 {{- if (and .Values.config.postgres.internal (not (and (eq .Values.config.postgres.terminationPolicy "Pause") .Values.config.postgres.pause))) }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "keycloak.fullname" . }}-postgres
+  labels:
+    app: {{ template "keycloak.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  wipeOut: false
+  backend:
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/postgres-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}'
+---
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupConfiguration
 metadata:
@@ -71,7 +90,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "keycloak.fullname" . }}-postgres
   paused: {{ .Values.persistence.stash.paused }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
   retentionPolicy:
@@ -84,6 +103,6 @@ spec:
       kind: AppBinding
       name: {{ template "keycloak.fullname" . }}-postgres
   task:
-    name: postgres-backup-{{ .Values.config.postgres.version }}
+    name: 'postgres-backup-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}'
 {{- end }}
 {{- end }}

@@ -133,7 +133,7 @@ spec:
     - renameKey:
         from: POSTGRES_PASSWORD
         to: password
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.postgres))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -150,7 +150,7 @@ spec:
   task:
     name: postgres-restore-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "keycloak.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -158,7 +158,7 @@ spec:
       name: {{ template "keycloak.fullname" . }}-postgres
   rules:
     - snapshots:
-      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot.postgres | quote }}
 {{- end }}
 {{- end }}
 {{- end }}

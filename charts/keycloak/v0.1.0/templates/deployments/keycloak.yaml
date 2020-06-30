@@ -19,6 +19,10 @@ spec:
       labels:
         app: {{ template "keycloak.name" . }}-keycloak
         release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
     spec:
       affinity:
         nodeAffinity:
@@ -159,3 +163,32 @@ spec:
         - name: data
           emptyDir: {}
       {{- end }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "keycloak.fullname" . }}-keycloak
+  labels:
+    app: {{ template "keycloak.name" . }}-keycloak
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "keycloak.fullname" . }}-data
+  rules:
+    - snapshots:
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "keycloak.fullname" . }}-keycloak
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}
