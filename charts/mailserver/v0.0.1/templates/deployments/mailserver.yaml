@@ -70,43 +70,44 @@ spec:
               readOnly: true
             - name: config
               subPath: dovecot.cf
-              mountPath: /etc/dovecot/conf.d/zz-custom.cf
+              mountPath: /tmp/docker-mailserver/dovecot.cf
+              # mountPath: /etc/dovecot/conf.d/zz-custom.cf
               readOnly: true
             - name: config
               subPath: fail2ban-fail2ban.cf
-              mountPath: /etc/docker-mailserver/fail2ban-fail2ban.cf
+              mountPath: /tmp/docker-mailserver/fail2ban-fail2ban.cf
               readOnly: true
             - name: config
               subPath: fail2ban-jail.cf
-              mountPath: /etc/docker-mailserver/fail2ban-jail.cf
+              mountPath: /tmp/docker-mailserver/fail2ban-jail.cf
               readOnly: true
             - name: config
               subPath: fetchmail.cf
-              mountPath: /etc/docker-mailserver/fetchmail.cf
+              mountPath: /tmp/docker-mailserver/fetchmail.cf
               readOnly: true
             - name: config
               subPath: postfix-accounts.cf
-              mountPath: /etc/docker-mailserver/postfix-accounts.cf
+              mountPath: /tmp/docker-mailserver/postfix-accounts.cf
               readOnly: true
             - name: config
               subPath: postfix-aliases.cf
-              mountPath: /etc/docker-mailserver/postfix-aliases.cf
+              mountPath: /tmp/docker-mailserver/postfix-aliases.cf
               readOnly: true
             - name: config
               subPath: postfix-main.cf
-              mountPath: /etc/docker-mailserver/postfix-main.cf
+              mountPath: /tmp/docker-mailserver/postfix-main.cf
               readOnly: true
             - name: config
               subPath: postfix-master.cf
-              mountPath: /etc/docker-mailserver/postfix-master.cf
+              mountPath: /tmp/docker-mailserver/postfix-master.cf
               readOnly: true
             - name: config
               subPath: postfix-virtual.cf
-              mountPath: /etc/docker-mailserver/postfix-virtual.cf
+              mountPath: /tmp/docker-mailserver/postfix-virtual.cf
               readOnly: true
             - name: config
               subPath: spamassassin-rules.cf
-              mountPath: /etc/docker-mailserver/spamassassin-rules.cf
+              mountPath: /tmp/docker-mailserver/spamassassin-rules.cf
               readOnly: true
             - name: config
               subPath: 80-replication.conf
