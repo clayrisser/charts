@@ -70,8 +70,8 @@ spec:
               readOnly: true
             - name: config
               subPath: dovecot.cf
-              # mountPath: /tmp/docker-mailserver/dovecot.cf
-              mountPath: /etc/dovecot/conf.d/zz-custom.cf
+              mountPath: /tmp/docker-mailserver/dovecot.cf
+              # mountPath: /etc/dovecot/conf.d/zz-custom.cf
               readOnly: true
             - name: config
               subPath: fail2ban-fail2ban.cf
