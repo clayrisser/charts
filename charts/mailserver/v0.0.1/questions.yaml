@@ -605,7 +605,6 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: service.mailserver.type!=ClusterIP
         label: 'mailserver imap port'
       - variable: service.mailserver.ports.imapSecure
         default: ''
@@ -613,7 +612,6 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: service.mailserver.type!=ClusterIP
         label: 'mailserver imap secure port'
       - variable: service.mailserver.ports.managesieve
         default: ''
@@ -621,7 +619,6 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: service.mailserver.type!=ClusterIP
         label: 'mailserver managesieve port'
       - variable: service.mailserver.ports.pop3
         default: ''
@@ -629,7 +626,6 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: service.mailserver.type!=ClusterIP
         label: 'mailserver pop3 port'
       - variable: service.mailserver.ports.smtp
         default: ''
@@ -645,7 +641,6 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: service.mailserver.type!=ClusterIP
         label: 'mailserver smtp auth port'
       - variable: service.mailserver.ports.smtpSecure
         default: ''
@@ -653,7 +648,6 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: service.mailserver.type!=ClusterIP
         label: 'mailserver smtp secure port'
 
   # Images
