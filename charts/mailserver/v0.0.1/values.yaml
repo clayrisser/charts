@@ -77,7 +77,7 @@ service:
   mailserver:
     type: NodePort
     externalTrafficPolicy: Cluster
-    nodePorts:
+    ports:
       imap: ''
       imapSecure: ''
       managesieve: ''
@@ -88,7 +88,7 @@ service:
   rainloop:
     type: NodePort
     externalTrafficPolicy: Cluster
-    nodePorts:
+    ports:
       http: ''
 
 ingress:
@@ -96,7 +96,6 @@ ingress:
     certificate: ''
     enabled: false
     hostname: ''
-    path: /
     tls: false
     issuer:
       name: letsencrypt-staging

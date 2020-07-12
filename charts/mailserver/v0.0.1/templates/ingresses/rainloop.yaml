@@ -26,7 +26,7 @@ spec:
     - host: {{ .Values.ingress.rainloop.hostname }}
       http:
         paths:
-          - path: {{ .Values.ingress.rainloop.path }}
+          - path: /
             backend:
               serviceName: {{ template "mailserver.fullname" . }}-rainloop
               servicePort: http

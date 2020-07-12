@@ -546,12 +546,6 @@ questions:
         type: hostname
         required: true
         label: 'rainloop ingress hostname'
-      - variable: ingress.rainloop.path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'rainloop ingress path'
       - variable: ingress.rainloop.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -581,10 +575,10 @@ questions:
       - LoadBalancer
     required: true
     label: 'rainloop service type'
-    show_subquestion_if: NodePort
+    show_subquestion_if: NodePort||LoadBalancer
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.rainloop.nodePorts.http
+      - variable: service.rainloop.ports.http
         default: ''
         description: ''
         type: int
@@ -602,38 +596,38 @@ questions:
       - LoadBalancer
     required: true
     label: 'mailserver service type'
-    show_subquestion_if: NodePort
+    show_subquestion_if: NodePort||LoadBalancer
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.mailserver.nodePorts.imap
+      - variable: service.mailserver.ports.imap
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         label: 'mailserver imap port'
-      - variable: service.mailserver.nodePorts.imapSecure
+      - variable: service.mailserver.ports.imapSecure
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         label: 'mailserver imap secure port'
-      - variable: service.mailserver.nodePorts.managesieve
+      - variable: service.mailserver.ports.managesieve
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         label: 'mailserver managesieve port'
-      - variable: service.mailserver.nodePorts.pop3
+      - variable: service.mailserver.ports.pop3
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         label: 'mailserver pop3 port'
-      - variable: service.mailserver.nodePorts.smtp
+      - variable: service.mailserver.ports.smtp
         default: ''
         description: ''
         type: int
@@ -641,14 +635,14 @@ questions:
         max: 32767
         show_if: config.pop3.enabled=true
         label: 'mailserver smtp port'
-      - variable: service.mailserver.nodePorts.smtpAuth
+      - variable: service.mailserver.ports.smtpAuth
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         label: 'mailserver smtp auth port'
-      - variable: service.mailserver.nodePorts.smtpSecure
+      - variable: service.mailserver.ports.smtpSecure
         default: ''
         description: ''
         type: int

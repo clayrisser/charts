@@ -14,49 +14,49 @@ spec:
   {{- end }}
   ports:
     - name: smtp
-      port: 25
+      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") .Values.service.mailserver.ports.smtp) | ternary .Values.service.mailserver.ports.smtp "25" }}
       targetPort: smtp
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.smtp }}
+      nodePort: {{ .Values.service.mailserver.ports.smtp }}
       {{- end }}
     {{- if .Values.config.pop3.enabled }}
     - name: pop3
-      port: 110
+      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") .Values.service.mailserver.ports.pop3) | ternary .Values.service.mailserver.ports.pop3 "110" }}
       targetPort: pop3
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.pop3 }}
+      nodePort: {{ .Values.service.mailserver.ports.pop3 }}
       {{- end }}
     {{- end }}
     - name: smtp-secure
-      port: 465
+      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") .Values.service.mailserver.ports.smtpSecure) | ternary .Values.service.mailserver.ports.smtpSecure "465" }}
       targetPort: smtp-secure
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.smtpSecure }}
+      nodePort: {{ .Values.service.mailserver.ports.smtpSecure }}
       {{- end }}
     - name: smtp-auth
-      port: 587
+      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") .Values.service.mailserver.ports.smtpAuth) | ternary .Values.service.mailserver.ports.smtpAuth "587" }}
       targetPort: smtp-auth
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.smtpAuth }}
+      nodePort: {{ .Values.service.mailserver.ports.smtpAuth }}
       {{- end }}
     - name: imap
-      port: 143
+      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") .Values.service.mailserver.ports.imap) | ternary .Values.service.mailserver.ports.imap "143" }}
       targetPort: imap
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.imap }}
+      nodePort: {{ .Values.service.mailserver.ports.imap }}
       {{- end }}
     - name: imap-secure
-      port: 993
+      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") .Values.service.mailserver.ports.imapSecure) | ternary .Values.service.mailserver.ports.imapSecure "993" }}
       targetPort: imap-secure
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.imapSecure }}
+      nodePort: {{ .Values.service.mailserver.ports.imapSecure }}
       {{- end }}
     {{- if .Values.config.managesieve.enabled }}
     - name: managesieve
-      port: 4190
+      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") .Values.service.mailserver.ports.managesieve) | ternary .Values.service.mailserver.ports.managesieve "4190" }}
       targetPort:  managesieve
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
-      nodePort: {{ .Values.service.mailserver.nodePorts.managesieve }}
+      nodePort: {{ .Values.service.mailserver.ports.managesieve }}
       {{- end }}
     {{- end }}
   selector:
