@@ -109,6 +109,7 @@ spec:
               subPath: spamassassin-rules.cf
               mountPath: /tmp/docker-mailserver/spamassassin-rules.cf
               readOnly: true
+
             # - name: config
             #   subPath: 80-replication.conf
             #   mountPath: /etc/dovecot/conf.d/80-replication.conf
@@ -117,22 +118,26 @@ spec:
             #   subPath: 91-override-sieve.conf
             #   mountPath: /etc/dovecot/conf.d/91-override-sieve.conf
             #   readOnly: true
-            - name: config
-              subPath: TrustedHosts
-              mountPath: /tmp/docker-mailserver/opendkim/TrustedHosts
-              readOnly: true
-            - name: config
-              subPath: SigningTable
-              mountPath: /tmp/docker-mailserver/opendkim/SigningTable
-              readOnly: true
-            - name: config
-              subPath: KeyTable
-              mountPath: /tmp/docker-mailserver/opendkim/KeyTable
-              readOnly: true
+
+            # - name: config
+            #   subPath: TrustedHosts
+            #   mountPath: /tmp/docker-mailserver/opendkim/TrustedHosts
+            #   readOnly: true
+            # - name: config
+            #   subPath: SigningTable
+            #   mountPath: /tmp/docker-mailserver/opendkim/SigningTable
+            #   readOnly: true
+            # - name: config
+            #   subPath: KeyTable
+            #   mountPath: /tmp/docker-mailserver/opendkim/KeyTable
+            #   readOnly: true
+
             # - name: tz
             #   mountPath: /etc/localtime
-            - name: secret
-              mountPath: /tmp/docker-mailserver/opendkim/keys
+
+            # - name: secret
+            #   mountPath: /tmp/docker-mailserver/opendkim/keys
+
             {{- if .Values.ingress.rainloop.tls }}
             - name: certs
               mountPath: /certs
@@ -148,6 +153,11 @@ spec:
             - name: data
               mountPath: /var/log/mail
               subPath: log
+
+            - name: data
+              mountPath: /tmp/docker-mailserver/opendkim
+              subPath: opendkim
+
           env:
             - name: ONE_DIR
               value: '1'
