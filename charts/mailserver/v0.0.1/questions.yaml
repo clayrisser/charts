@@ -593,7 +593,7 @@ questions:
     options:
       - ClusterIP
       - NodePort
-      - LoadBalancer
+      - LoadsBalancer
     required: true
     label: 'mailserver service type'
     show_subquestion_if: NodePort||LoadBalancer
