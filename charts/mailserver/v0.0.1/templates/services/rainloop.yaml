@@ -18,7 +18,7 @@ spec:
   {{- end }}
   ports:
     - name: http
-      port: {{ (and (eq .Values.service.rainloop.type "LoadBalancer") .Values.service.rainloop.ports.http) | ternary .Values.service.rainloop.ports.http "80" }}
+      port: {{ (and (eq .Values.service.rainloop.type "LoadBalancer") (not (empty .Values.service.rainloop.ports.http))) | ternary .Values.service.rainloop.ports.http "80" }}
       targetPort: container
       {{- if (and (eq .Values.service.rainloop.type "NodePort") (not (empty .Values.service.rainloop.ports.http))) }}
       nodePort: {{ .Values.service.rainloop.ports.http }}
