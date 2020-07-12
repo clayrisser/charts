@@ -575,6 +575,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'rainloop service type'
+    show_subquestion_if: NodePort||LoadBalancer
     group: 'Services and Load Balancing'
     subquestions:
       - variable: service.rainloop.ports.http
@@ -591,10 +592,11 @@ questions:
     type: enum
     options:
       - ClusterIP
-      - NodePort
-      - LoadBalancer
+      - NodePorts
+      - LoadsBalancer
     required: true
     label: 'mailserver service type'
+    show_subquestion_if: service.mailserver.type=NodePorts||service.mailserver.type=LoadsBalancer
     group: 'Services and Load Balancing'
     subquestions:
       - variable: service.mailserver.ports.imap
