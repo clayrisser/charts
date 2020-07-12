@@ -596,7 +596,7 @@ questions:
       - LoadsBalancer
     required: true
     label: 'mailserver service type'
-    show_subquestion_if: NodePort||LoadsBalancer
+    show_subquestion_if: service.mailserver.type!=ClusterIP # NodePort||LoadsBalancer
     group: 'Services and Load Balancing'
     subquestions:
       - variable: service.mailserver.ports.imap
