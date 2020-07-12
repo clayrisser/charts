@@ -9,25 +9,25 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   dovecot.cf: |
-    disable_plaintext_auth = no
-    service stats {
-      unix_listener stats-reader {
-        group = docker
-        mode = 0666
-      }
-      unix_listener stats-writer {
-        group = docker
-        mode = 0666
-      }
-    }
+    # disable_plaintext_auth = no
+    # service stats {
+    #   unix_listener stats-reader {
+    #     group = docker
+    #     mode = 0666
+    #   }
+    #   unix_listener stats-writer {
+    #     group = docker
+    #     mode = 0666
+    #   }
+    # }
 
-  dovecot-services.cf: |
-    service imap-login {
-      inet_listener imaps-rainloop {
-        port = 10993
-        ssl = yes
-      }
-    }
+  # dovecot-services.cf: |
+  #   service imap-login {
+  #     inet_listener imaps-rainloop {
+  #       port = 10993
+  #       ssl = yes
+  #     }
+  #   }
 
   fail2ban-fail2ban.cf: |
 
@@ -47,31 +47,31 @@ data:
 
   spamassassin-rules.cf: |
 
-  80-replication.conf: |
-    mail_plugins = $mail_plugins notify replication
-    service replicator {
-      process_min_avail = 1
-      unix_listener replicator-doveadm {
-        mode = 0600
-        user = docker
-      }
-    }
-    service aggregator {
-      fifo_listener replication-notify-fifo {
-        user = docker
-      }
-      unix_listener replication-notify {
-        user = docker
-      }
-    }
-    doveadm_port = 4117
-    doveadm_password = secret
-    service doveadm {
-      inet_listener {
-        port = 4117
-        ssl = yes
-      }
-    }
+  # 80-replication.conf: |
+  #   mail_plugins = $mail_plugins notify replication
+  #   service replicator {
+  #     process_min_avail = 1
+  #     unix_listener replicator-doveadm {
+  #       mode = 0600
+  #       user = docker
+  #     }
+  #   }
+  #   service aggregator {
+  #     fifo_listener replication-notify-fifo {
+  #       user = docker
+  #     }
+  #     unix_listener replication-notify {
+  #       user = docker
+  #     }
+  #   }
+  #   doveadm_port = 4117
+  #   doveadm_password = secret
+  #   service doveadm {
+  #     inet_listener {
+  #       port = 4117
+  #       ssl = yes
+  #     }
+  #   }
 
   91-override-sieve.conf: |
     plugin {

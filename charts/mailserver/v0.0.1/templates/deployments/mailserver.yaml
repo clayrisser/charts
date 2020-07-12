@@ -64,10 +64,10 @@ spec:
               containerPort: 4190
               protocol: TCP
           volumeMounts:
-            - name: config
-              subPath: dovecot-services.cf
-              mountPath: /etc/dovecot/conf.d/services.cf
-              readOnly: true
+            # - name: config
+            #   subPath: dovecot-services.cf
+            #   mountPath: /etc/dovecot/conf.d/services.cf
+            #   readOnly: true
             - name: config
               subPath: dovecot.cf
               mountPath: /tmp/docker-mailserver/dovecot.cf
@@ -109,10 +109,10 @@ spec:
               subPath: spamassassin-rules.cf
               mountPath: /tmp/docker-mailserver/spamassassin-rules.cf
               readOnly: true
-            - name: config
-              subPath: 80-replication.conf
-              mountPath: /etc/dovecot/conf.d/80-replication.conf
-              readOnly: true
+            # - name: config
+            #   subPath: 80-replication.conf
+            #   mountPath: /etc/dovecot/conf.d/80-replication.conf
+            #   readOnly: true
             - name: config
               subPath: 91-override-sieve.conf
               mountPath: /etc/dovecot/conf.d/91-override-sieve.conf
