@@ -592,11 +592,11 @@ questions:
     type: enum
     options:
       - ClusterIP
-      - NodePorts
-      - LoadsBalancer
+      - NodePort
+      - LoadBalancer
     required: true
     label: 'mailserver service type'
-    show_subquestion_if: service.mailserver.type=NodePorts||service.mailserver.type=LoadsBalancer
+    show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
       - variable: service.mailserver.ports.imap
