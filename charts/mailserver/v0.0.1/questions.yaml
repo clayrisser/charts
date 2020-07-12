@@ -593,10 +593,10 @@ questions:
     options:
       - ClusterIP
       - NodePort
-      - LoadBalancer
+      - 'L4 Balancer'
     required: true
     label: 'mailserver service type'
-    show_subquestion_if: NodePort||LoadBalancer
+    show_subquestion_if: 'NodePort||L4 Balancer'
     group: 'Services and Load Balancing'
     subquestions:
       - variable: service.mailserver.ports.imap
