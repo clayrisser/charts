@@ -596,7 +596,6 @@ questions:
       - LoadsBalancer
     required: true
     label: 'mailserver service type'
-    show_subquestion_if: service.mailserver.type=NodePort|service.mailserver.type=LoadsBalancer
     group: 'Services and Load Balancing'
     subquestions:
       - variable: service.mailserver.ports.imap
@@ -605,6 +604,7 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: service.mailserver.type=NodePort||service.mailserver.type=LoadsBalancer
         label: 'mailserver imap port'
       - variable: service.mailserver.ports.imapSecure
         default: ''
@@ -612,6 +612,7 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: service.mailserver.type=NodePort||service.mailserver.type=LoadsBalancer
         label: 'mailserver imap secure port'
       - variable: service.mailserver.ports.managesieve
         default: ''
@@ -619,6 +620,7 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: service.mailserver.type=NodePort||service.mailserver.type=LoadsBalancer
         label: 'mailserver managesieve port'
       - variable: service.mailserver.ports.pop3
         default: ''
@@ -626,6 +628,7 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: service.mailserver.type=NodePort||service.mailserver.type=LoadsBalancer
         label: 'mailserver pop3 port'
       - variable: service.mailserver.ports.smtp
         default: ''
@@ -633,7 +636,7 @@ questions:
         type: int
         min: 30000
         max: 32767
-        show_if: config.pop3.enabled=true
+        show_if: (service.mailserver.type=NodePort||service.mailserver.type=LoadsBalancer)&&config.pop3.enabled=true
         label: 'mailserver smtp port'
       - variable: service.mailserver.ports.smtpAuth
         default: ''
@@ -641,6 +644,7 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: service.mailserver.type=NodePort||service.mailserver.type=LoadsBalancer
         label: 'mailserver smtp auth port'
       - variable: service.mailserver.ports.smtpSecure
         default: ''
@@ -648,6 +652,7 @@ questions:
         type: int
         min: 30000
         max: 32767
+        show_if: service.mailserver.type=NodePort||service.mailserver.type=LoadsBalancer
         label: 'mailserver smtp secure port'
 
   # Images
