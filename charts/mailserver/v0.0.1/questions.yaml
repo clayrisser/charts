@@ -575,17 +575,16 @@ questions:
       - LoadBalancer
     required: true
     label: 'rainloop service type'
-    show_subquestion_if: NodePort||LoadBalancer
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.rainloop.ports.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.rainloop.enabled=false
-        label: 'rainloop http port'
+  - variable: service.rainloop.ports.http
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.rainloop.type!=ClusterIP&&ingress.rainloop.enabled=false
+    label: 'rainloop http port'
+    group: 'Services and Load Balancing'
   - variable: service.mailserver.type
     default: NodePort
     description: ''
