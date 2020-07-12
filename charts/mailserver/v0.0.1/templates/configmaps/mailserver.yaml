@@ -73,11 +73,11 @@ data:
   #     }
   #   }
 
-  91-override-sieve.conf: |
-    plugin {
-      sieve = /var/mail/sieve/%d/%n/.dovecot.sieve
-      sieve_dir = /var/mail/sieve/%d/%n/sieve
-    }
+  # 91-override-sieve.conf: |
+  #   plugin {
+  #     sieve = /var/mail/sieve/%d/%n/.dovecot.sieve
+  #     sieve_dir = /var/mail/sieve/%d/%n/sieve
+  #   }
 
   SigningTable: |
     *@{{ .Values.config.domain }} mail._domainkey.{{ .Values.config.domain }}
