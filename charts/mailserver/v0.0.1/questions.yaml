@@ -596,65 +596,70 @@ questions:
       - LoadBalancer
     required: true
     label: 'mailserver service type'
-    show_subquestion_if: true
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.mailserver.ports.imap
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: service.mailserver.type!=ClusterIP
-        label: 'mailserver imap port'
-      - variable: service.mailserver.ports.imapSecure
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: service.mailserver.type!=ClusterIP
-        label: 'mailserver imap secure port'
-      - variable: service.mailserver.ports.managesieve
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: service.mailserver.type!=ClusterIP
-        label: 'mailserver managesieve port'
-      - variable: service.mailserver.ports.pop3
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: service.mailserver.type!=ClusterIP
-        label: 'mailserver pop3 port'
-      - variable: service.mailserver.ports.smtp
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: service.mailserver.type!=ClusterIP&&config.pop3.enabled=true
-        label: 'mailserver smtp port'
-      - variable: service.mailserver.ports.smtpAuth
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: service.mailserver.type!=ClusterIP
-        label: 'mailserver smtp auth port'
-      - variable: service.mailserver.ports.smtpSecure
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: service.mailserver.type!=ClusterIP
-        label: 'mailserver smtp secure port'
+  - variable: service.mailserver.ports.imap
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.mailserver.type!=ClusterIP
+    label: 'mailserver imap port'
+    group: 'Services and Load Balancing'
+  - variable: service.mailserver.ports.imapSecure
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.mailserver.type!=ClusterIP
+    label: 'mailserver imap secure port'
+    group: 'Services and Load Balancing'
+  - variable: service.mailserver.ports.managesieve
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.mailserver.type!=ClusterIP
+    label: 'mailserver managesieve port'
+    group: 'Services and Load Balancing'
+  - variable: service.mailserver.ports.pop3
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.mailserver.type!=ClusterIP
+    label: 'mailserver pop3 port'
+    group: 'Services and Load Balancing'
+  - variable: service.mailserver.ports.smtp
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.mailserver.type!=ClusterIP&&config.pop3.enabled=true
+    label: 'mailserver smtp port'
+    group: 'Services and Load Balancing'
+  - variable: service.mailserver.ports.smtpAuth
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.mailserver.type!=ClusterIP
+    label: 'mailserver smtp auth port'
+    group: 'Services and Load Balancing'
+  - variable: service.mailserver.ports.smtpSecure
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.mailserver.type!=ClusterIP
+    label: 'mailserver smtp secure port'
+    group: 'Services and Load Balancing'
 
   # Images
   - variable: images.mailserver.repository
