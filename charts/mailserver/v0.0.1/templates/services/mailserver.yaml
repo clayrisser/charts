@@ -14,7 +14,7 @@ spec:
   {{- end }}
   ports:
     - name: smtp
-      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") .Values.service.mailserver.ports.smtp) | ternary .Values.service.mailserver.ports.smtp "25" }}
+      port: {{ (and (eq .Values.service.mailserver.type "LoadBalancer") (not (empty .Values.service.mailserver.ports.smtp))) | ternary .Values.service.mailserver.ports.smtp "25" }}
       targetPort: smtp
       {{- if (eq .Values.service.mailserver.type "NodePort") }}
       nodePort: {{ .Values.service.mailserver.ports.smtp }}
