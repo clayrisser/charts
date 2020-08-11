@@ -1,0 +1,133 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.protocol
+    default: https
+    description: ''
+    type: enum
+    options:
+      - https
+      - http
+    required: true
+    label: protocol
+    group: Config
+  - variable: config.host
+    default:
+    description: ''
+    type: string
+    required: true
+    label: host
+    group: Config
+  - variable: config.subpath
+    default:
+    description: ''
+    type: string
+    required: false
+    label: subpath
+    group: Config
+
+# Services and Load Balancing
+  - variable: ingress.kubeApiProxy.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'kube api proxy ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.kubeApiProxy.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'kube api proxy ingress tls'
+      - variable: ingress.kubeApiProxy.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'kube api proxy ingress hostname'
+      - variable: ingress.kubeApiProxy.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'kube api proxy ingress path'
+      - variable: ingress.kubeApiProxy.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.kubeApiProxy.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'kube api proxy ingress issuer name'
+      - variable: ingress.kubeApiProxy.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.kubeApiProxy.tls=true&&ingress.kubeApiProxy.issuer.name=none
+        required: false
+        label: 'kube api proxy ingress certificate'
+  - variable: service.kubeApiProxy.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.kubeApiProxy.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'kube api proxy service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.kubeApiProxy.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.kubeApiProxy.enabled=false
+        label: 'kube api proxy http port'
+
+# Images
+  - variable: images.kubeApiProxy.repository
+    default: codejamninja/kube-api-proxy
+    description: ''
+    type: string
+    required: true
+    label: 'kube api proxy repository'
+    group: Images
+  - variable: images.kubeApiProxy.tag
+    default: 0.1.0
+    description: ''
+    type: string
+    required: true
+    label: 'kube api proxy tag'
+    group: Images

@@ -1,0 +1,45 @@
+images:
+  kubeApiProxy:
+    repository: codejamninja/kube-api-proxy
+    tag: 0.1.0
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  hostname: ''
+  protocol: https
+  subpath: ''
+  kubeApiProxy:
+    baseUrl: ''
+    host: ''
+
+service:
+  kubeApiProxy:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+
+ingress:
+  kubeApiProxy:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kube-api-proxy.fullname" . }}
+  labels:
+    app: {{ template "kube-api-proxy.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  protocol: {{ .Values.config.protocol | quote }}
+  host: {{ .Values.config.host | quote }}
+  subpath: {{ .Values.config.subpath | quote }}
