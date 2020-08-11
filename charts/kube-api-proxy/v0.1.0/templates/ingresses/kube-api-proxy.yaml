@@ -4,10 +4,14 @@ kind: Ingress
 metadata:
   name: {{ template "kube-api-proxy.fullname" . }}-kube-api-proxy
   annotations:
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
     kubernetes.io/ingress.class: nginx
+    {{- end }}
     {{- if .Values.ingress.kubeApiProxy.tls }}
     {{- if (empty .Values.ingress.kubeApiProxy.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.kubeApiProxy.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.kubeApiProxy.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
