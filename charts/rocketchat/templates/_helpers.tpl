@@ -17,16 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Create a name shared accross all apps in namespace.
-We truncate at 63 chars because some Kubernetes name fields are limited to this
-(by the DNS naming spec).
-*/}}
-{{- define "rocketchat.sharedname" }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- printf "%s-%s" .Release.Namespace $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Calculate rocketchat certificate
 */}}
 {{- define "rocketchat.rocketchat-certificate" }}
@@ -82,37 +72,29 @@ Calculate rocketchat base url
 {{- end }}
 
 {{/*
+Calculate mongodb server
+*/}}
+{{- define "rocketchat.mongodb-server" }}
+{{- if .Values.config.mongodb.replicaSet.enabled }}
+{{- printf "%s-mongodb-0.%s-mongodb-gvr.%s.svc,%s-mongodb-1.%s-mongodb-gvr.%s.svc,%s-mongodb-2.%s-mongodb-gvr.%s.svc" (include "rocketchat.fullname" .) (include "rocketchat.fullname" .) .Release.Namespace (include "rocketchat.fullname" .) (include "rocketchat.fullname" .) .Release.Namespace (include "rocketchat.fullname" .) (include "rocketchat.fullname" .) .Release.Namespace }}
+{{- else }}
+{{- printf "%s-mongodb" (include "rocketchat.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate mongodb url
 */}}
 {{- define "rocketchat.mongodb-url" }}
 {{- $mongodb := .Values.config.mongodb }}
 {{- if $mongodb.internal }}
-{{- $credentials := (empty $mongodb.password | ternary "" (printf "root:%s@" $mongodb.password)) }}
-{{- printf "mongodb://%s%s-mongodb:27017/%s?authSource=admin&replSet=rs0" $credentials (include "rocketchat.fullname" .) $mongodb.database }}
+{{- printf "mongodb://%s-mongodb:27017/%s" (include "rocketchat.fullname" .) $mongodb.database }}
 {{- else }}
-{{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s@" $mongodb.username $mongodb.password)) }}
 {{- if $mongodb.url }}
 {{- printf $mongodb.url }}
 {{- else }}
-{{- printf "mongodb://%s%s:%s/%s?authSource=admin" $credentials $mongodb.host $mongodb.port $mongodb.database }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate mongodb oplog url
-*/}}
-{{- define "rocketchat.mongodb-oplog-url" }}
-{{- $mongodb := .Values.config.mongodb }}
-{{- if $mongodb.internal }}
-{{- $credentials := (empty $mongodb.password | ternary "" (printf "root:%s@" $mongodb.password)) }}
-{{- printf "mongodb://%s%s-mongodb:27017/local?authSource=admin&replSet=rs0" $credentials (include "rocketchat.fullname" .) }}
-{{- else }}
-{{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s@" $mongodb.username $mongodb.password)) }}
-{{- if $mongodb.url }}
-{{- printf $mongodb.url }}
-{{- else }}
-{{- printf "mongodb://%s%s:%s/local?authSource=admin&replSet=rs0" $credentials $mongodb.host $mongodb.port }}
+{{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s" $mongodb.username $mongodb.password)) }}
+{{- printf "mongodb://%s@%s:%s/%s" $credentials $mongodb.host $mongodb.port $mongodb.database }}
 {{- end }}
 {{- end }}
 {{- end }}
