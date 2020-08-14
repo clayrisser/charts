@@ -619,7 +619,7 @@ questions:
     label: 'rocketchat repository'
     group: Images
   - variable: images.rocketchat.tag
-    default: 2.0.0
+    default: 3.5.0
     description: ''
     type: string
     required: true

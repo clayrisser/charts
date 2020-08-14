@@ -526,14 +526,14 @@ questions:
 
 # Images
   - variable: images.bitwardenrs.repository
-    default: bitwardenrs/server
+    default: codejamninja/bitwardenrs
     description: ''
     type: string
     required: true
     label: 'bitwardenrs repository'
     group: Images
   - variable: images.bitwardenrs.tag
-    default: latest
+    default: 1.13.1
     description: ''
     type: string
     required: true
