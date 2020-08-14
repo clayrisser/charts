@@ -1,0 +1,54 @@
+{{- if (and (eq .Values.config.authPlugin "SearchGuard") .Values.config.kibana) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "elasticsearch.fullname" . }}-kibana
+  labels:
+    app: {{ template "elasticsearch.name" . }}-kibana
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  kibana.yml: |
+    elasticsearch.url: "{{ template "elasticsearch.elasticsearch-base-url" . }}"
+    elasticsearch.password: "kibana@secret"
+    elasticsearch.requestTimeout: 180000
+    elasticsearch.username: "kibanauser"
+    searchguard.auth.type: "basicauth"
+    searchguard.cookie.secure: false
+    server.host: 0.0.0.0
+    xpack.security.enabled: false
+  {{- if .Values.config.logtrailPlugin.enabled }}
+  logtrail.json: |
+    {
+      "version" : 2,
+      "index_patterns" : [
+        {
+          "es": {
+            "default_index": "{{ .Values.config.logtrailPlugin.indexPattern }}"
+          },
+          "tail_interval_in_seconds": 10,
+          "es_index_time_offset_in_seconds": 0,
+          "display_timezone": "local",
+          "display_timestamp_format": "MMM DD HH:mm:ss",
+          "max_buckets": 500,
+          "default_time_range_in_days": 0,
+          "max_hosts": 100,
+          "max_events_to_keep_in_viewer": 5000,
+          "default_search": "",
+          "fields": {
+            "mapping": {
+              "hostname": "{{ .Values.config.logtrailPlugin.fields.hostname }}",
+              "message": "{{ .Values.config.logtrailPlugin.fields.message }}",
+              "program": "{{ .Values.config.logtrailPlugin.fields.program }}",
+              "timestamp": "@timestamp"
+            },
+            "message_format": "{{ "{{{" }}{{ .Values.config.logtrailPlugin.fields.message }}}}}",
+            "keyword_suffix": "keyword"
+          },
+          "color_mapping": {}
+        }
+      ]
+    }
+  {{- end }}
+{{- end }}

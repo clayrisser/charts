@@ -1,0 +1,511 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "mailserver.fullname" . }}-mailserver
+  labels:
+    app: {{ template "mailserver.name" . }}-mailserver
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "mailserver.name" . }}-mailserver
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "mailserver.name" . }}-mailserver
+        release: {{ .Release.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - dedicated
+      containers:
+        - name: {{ template "mailserver.fullname" . }}-mailserver
+          image: {{ .Values.images.mailserver.repository }}:{{ .Values.images.mailserver.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          {{- if .Values.config.fail2ban.enabled }}
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          {{- end }}
+          ports:
+            - name: smtp
+              containerPort: 25
+              protocol: TCP
+            {{- if .Values.config.pop3.enabled }}
+            - name: pop3
+              containerPort: 110
+              protocol: TCP
+            {{- end }}
+            - name: smtp-secure
+              containerPort: 465
+              protocol: TCP
+            - name: smtp-auth
+              containerPort: 587
+            - name: imap
+              containerPort: 143
+              protocol: TCP
+            - name: imap-secure
+              containerPort: 993
+              protocol: TCP
+            - name: managesieve
+              containerPort: 4190
+              protocol: TCP
+          volumeMounts:
+            # - name: config
+            #   subPath: dovecot-services.cf
+            #   mountPath: /etc/dovecot/conf.d/services.cf
+            #   readOnly: true
+            - name: config
+              subPath: dovecot.cf
+              mountPath: /tmp/docker-mailserver/dovecot.cf
+              # mountPath: /etc/dovecot/conf.d/zz-custom.cf
+              readOnly: true
+            - name: config
+              subPath: fail2ban-fail2ban.cf
+              mountPath: /tmp/docker-mailserver/fail2ban-fail2ban.cf
+              readOnly: true
+            - name: config
+              subPath: fail2ban-jail.cf
+              mountPath: /tmp/docker-mailserver/fail2ban-jail.cf
+              readOnly: true
+            - name: config
+              subPath: fetchmail.cf
+              mountPath: /tmp/docker-mailserver/fetchmail.cf
+              readOnly: true
+            - name: config
+              subPath: postfix-accounts.cf
+              mountPath: /tmp/docker-mailserver/postfix-accounts.cf
+              readOnly: true
+            - name: config
+              subPath: postfix-aliases.cf
+              mountPath: /tmp/docker-mailserver/postfix-aliases.cf
+              readOnly: true
+            - name: config
+              subPath: postfix-main.cf
+              mountPath: /tmp/docker-mailserver/postfix-main.cf
+              readOnly: true
+            - name: config
+              subPath: postfix-master.cf
+              mountPath: /tmp/docker-mailserver/postfix-master.cf
+              readOnly: true
+            - name: config
+              subPath: postfix-virtual.cf
+              mountPath: /tmp/docker-mailserver/postfix-virtual.cf
+              readOnly: true
+            - name: config
+              subPath: spamassassin-rules.cf
+              mountPath: /tmp/docker-mailserver/spamassassin-rules.cf
+              readOnly: true
+
+            # - name: config
+            #   subPath: 80-replication.conf
+            #   mountPath: /etc/dovecot/conf.d/80-replication.conf
+            #   readOnly: true
+            # - name: config
+            #   subPath: 91-override-sieve.conf
+            #   mountPath: /etc/dovecot/conf.d/91-override-sieve.conf
+            #   readOnly: true
+
+            # - name: config
+            #   subPath: TrustedHosts
+            #   mountPath: /tmp/docker-mailserver/opendkim/TrustedHosts
+            #   readOnly: true
+            # - name: config
+            #   subPath: SigningTable
+            #   mountPath: /tmp/docker-mailserver/opendkim/SigningTable
+            #   readOnly: true
+            # - name: config
+            #   subPath: KeyTable
+            #   mountPath: /tmp/docker-mailserver/opendkim/KeyTable
+            #   readOnly: true
+
+            # - name: tz
+            #   mountPath: /etc/localtime
+
+            # - name: secret
+            #   mountPath: /tmp/docker-mailserver/opendkim/keys
+
+            {{- if .Values.ingress.rainloop.tls }}
+            - name: certs
+              mountPath: /certs
+            {{- end }}
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /var/mail
+              subPath: data
+            - name: data
+              mountPath: /var/mail-state
+              subPath: state
+            - name: data
+              mountPath: /var/log/mail
+              subPath: log
+
+            - name: data
+              mountPath: /tmp/docker-mailserver/opendkim
+              subPath: opendkim
+
+          env:
+            - name: ONE_DIR
+              value: '1'
+            - name: POSTFIX_INET_PROTOCOLS
+              value: ipv4
+            - name: PERMIT_DOCKER
+              value: host
+            {{- if .Values.ingress.rainloop.tls }}
+            - name: TLS_LEVEL
+              value: modern
+            - name: SSL_TYPE
+              value: manual
+            - name: SSL_CERT_PATH
+              value: /certs/tls.crt
+            - name: SSL_KEY_PATH
+              value: /certs/tls.key
+            {{- end }}
+            - name: DMS_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: debug
+            - name: ENABLE_CLAMAV
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: clamav_enabled
+            - name: ENABLE_POP3
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: pop3_enabled
+            - name: ENABLE_FAIL2BAN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: fail2ban_enabled
+            - name: SMTP_ONLY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: smtp_only
+            - name: SPOOF_PROTECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spoof_protection
+            - name: ENABLE_SRS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: srs_enabled
+            - name: VIRUSMAILS_DELETE_DELAY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: virusmails_delete_delay
+            - name: POSTFIX_MAILBOX_SIZE_LIMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postfix_mailbox_size_limit
+            - name: POSTFIX_MESSAGE_SIZE_LIMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postfix_message_size_limit
+            - name: ENABLE_MANAGESIEVE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: managesieve_enabled
+            - name: OVERRIDE_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: hostname
+            - name: POSTMASTER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postmaster_address
+            - name: DOVECOT_MAILBOX_FORMAT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: dovecot_mailbox_format
+            - name: PFLOGSUMM_TRIGGER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: pflogsumm_trigger
+            - name: LOGWATCH_INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: logwatch_interval
+            - name: LOGROTATE_INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: logrotate_interval
+            - name: ENABLE_SPAMASSASSIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_enabled
+            - name: SPAMASSASSIN_SPAM_TO_INBOX
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_spam_to_inbox
+            - name: MOVE_SPAM_TO_JUNK
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_move_spam_to_junk
+            - name: SA_SPAM_SUBJECT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_spam_subject
+            - name: SA_SHORTCIRCUIT_BAYES_SPAM
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_shortcircuit_bayes_spam
+            - name: SA_SHORTCIRCUIT_BAYES_HAM
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: spamassassin_shortcircuit_bayes_ham
+            - name: ENABLE_LDAP
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_enabled
+            - name: LDAP_START_TLS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_start_tls
+            - name: LDAP_SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_server_host
+            - name: LDAP_SEARCH_BASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_search_base
+            - name: LDAP_BIND_DN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_bind_dn
+            - name: LDAP_BIND_PW
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_password
+            - name: LDAP_QUERY_FILTER_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_query_filter_user
+            - name: LDAP_QUERY_FILTER_GROUP
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_query_filter_group
+            - name: LDAP_QUERY_FILTER_ALIAS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_query_filter_alias
+            - name: LDAP_QUERY_FILTER_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_query_filter_domain
+            - name: DOVECOT_USER_FILTER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: dovecot_user_filter
+            - name: DOVECOT_USER_ATTRS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: dovecot_user_attrs
+            - name: DOVECOT_PASS_FILTER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: dovecot_pass_filter
+            - name: DOVECOT_PASS_ATTRS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: dovecot_pass_attrs
+            - name: ENABLE_POSTGREY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postgrey_enabled
+            - name: POSTGREY_DELAY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postgrey_delay
+            - name: POSTGREY_MAX_AGE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postgrey_max_age
+            - name: POSTGREY_AUTO_WHITELIST_CLIENTS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postgrey_auto_whitelist_clients
+            - name: POSTGREY_TEXT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: postgrey_text
+            - name: ENABLE_SASLAUTHD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: saslauthd_enabled
+            - name: SASLAUTHD_MECHANISMS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: saslauthd_mechanisms
+            - name: SASLAUTHD_MECH_OPTIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: saslauthd_mech_options
+            - name: SASLAUTHD_LDAP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: saslauthd_ldap_server
+            - name: SASLAUTHD_LDAP_SSL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: saslauthd_ldap_ssl
+            - name: SASLAUTHD_LDAP_BIND_DN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: saslauthd_ldap_bind_dn
+            - name: SASLAUTHD_LDAP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: ldap_password
+            - name: SASLAUTHD_LDAP_SEARCH_BASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: saslauthd_ldap_search_base
+            - name: SASLAUTHD_LDAP_FILTER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: saslauthd_ldap_filter
+            - name: SRS_DOMAINNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: srs_domainname
+            - name: SRS_SENDER_CLASSES
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: srs_sender_classes
+            - name: SRS_EXCLUDE_DOMAINS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: srs_exclude_domains
+            - name: SRS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mailserver.fullname" . }}
+                  key: srs_secret
+          livenessProbe:
+            tcpSocket:
+              port: smtp
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: smtp
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        {{- if .Values.ingress.rainloop.tls }}
+        - name: certs
+          secret:
+            secretName: {{ template "mailserver.rainloop-certificate" . }}
+        {{- end }}
+        - name: config
+          configMap:
+            name: {{ template "mailserver.fullname" . }}-mailserver
+        - name: secret
+          secret:
+            secretName: {{ template "mailserver.fullname" . }}-mailserver
+        # - name: tz
+        #   hostPath:
+        #     path: /etc/localtime
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.mailserver.existingClaim | default (printf "%s-mailserver" (include "mailserver.fullname" .)) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshots.mailserver))) }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "mailserver.fullname" . }}-mailserver
+  labels:
+    app: {{ template "mailserver.name" . }}-mailserver
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "mailserver.fullname" . }}-data
+  rules:
+    - snapshots:
+        - {{ .Values.persistence.stash.restore.snapshots.mailserver | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "mailserver.fullname" . }}-mailserver
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}

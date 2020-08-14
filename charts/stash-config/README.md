@@ -1,0 +1,3 @@
+# stash-config
+
+> stash config

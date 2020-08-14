@@ -1,0 +1,107 @@
+images:
+  jicofo:
+    repository: jitsi/jicofo
+    tag: latest
+  prosody:
+    repository: jitsi/prosody
+    tag: latest
+  web:
+    repository: jitsi/web
+    tag: latest
+  jvb:
+    repository: jitsi/jvb
+    tag: latest
+
+config:
+  clusterProvider: infrastructure
+  focusUserPassword: P@ssw0rd
+  hostname: ''
+  imagePullPolicy: IfNotPresent
+  jvbUserPassword: P@ssw0rd
+  nodeIp: ''
+  secret: P@ssw0rd
+  stunServers: meet-jit-si-turnrelay.jitsi.net:443
+  tcpFallback: false
+  updateStrategy: RollingUpdate
+  xmppDomain: meet.jitsi
+  jicofo:
+    baseUrl: ''
+    hostname: ''
+  prosody:
+    baseUrl: ''
+    hostname: ''
+  web:
+    baseUrl: ''
+    hostname: ''
+  jvb:
+    baseUrl: ''
+    hostname: ''
+
+service:
+  jicofo:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  prosody:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  web:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  jvb:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+
+ingress:
+  web:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    keepLast: 30
+    paused: false
+    prefix: stash
+    schedule: '0 0 * * *'
+    secret: stash-config-stash-config
+    type: s3
+    restore:
+      snapshot:
+        data: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

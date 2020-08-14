@@ -1,0 +1,139 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ejabberd.fullname" . }}-ejabberd
+  labels:
+    app: {{ template "ejabberd.name" . }}-ejabberd
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "ejabberd.name" . }}-ejabberd
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ejabberd.name" . }}-ejabberd
+        release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - dedicated
+      containers:
+        - name: {{ template "ejabberd.fullname" . }}-ejabberd
+          image: {{ .Values.images.ejabberd.repository }}:{{ .Values.images.ejabberd.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          securityContext:
+            fsGroup: 9000
+            runAsGroup: 0
+            runAsUser: 0
+          command:
+            - sh
+            - -c
+            - |
+              sh /scripts/setup.sh
+              exec /home/ejabberd/bin/ejabberdctl foreground
+          ports:
+            - name: http
+              containerPort: 5280
+            - name: https
+              containerPort: 5443
+            - name: xmpp
+              containerPort: 5222
+            - name: s2s
+              containerPort: 5269
+            - name: mqtt
+              containerPort: 1883
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /home/ejabberd/database
+              subPath: data
+            - name: config
+              subPath: ejabberd.yml
+              mountPath: /home/ejabberd/conf/ejabberd.yml
+              readOnly: true
+            - name: config
+              subPath: setup.sh
+              mountPath: /scripts/setup.sh
+              readOnly: true
+            {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
+            - name: certs
+              subPath: tls.crt
+              mountPath: /home/ejabberd/conf/certs/tls.crt
+              readOnly: true
+            - name: certs
+              subPath: tls.key
+              mountPath: /home/ejabberd/conf/certs/tls.key
+              readOnly: true
+            {{- end }}
+          env: []
+          livenessProbe:
+            tcpSocket:
+              port: http
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: http
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        {{- if (and .Values.ingress.ejabberd.enabled .Values.ingress.ejabberd.tls) }}
+        - name: certs
+          secret:
+            secretName: {{ template "ejabberd.ejabberd-certificate" . }}
+        {{- end }}
+        - name: config
+          configMap:
+            name: {{ template "ejabberd.fullname" . }}-ejabberd
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "ejabberd.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "ejabberd.fullname" . }}-ejabberd
+  labels:
+    app: {{ template "ejabberd.name" . }}-ejabberd
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "ejabberd.fullname" . }}-data
+  rules:
+    - snapshots:
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "ejabberd.fullname" . }}-ejabberd
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}

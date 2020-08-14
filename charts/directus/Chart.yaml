@@ -1,0 +1,16 @@
+name: directus
+home: https://directus.io
+icon: https://avatars1.githubusercontent.com/u/15967950?s=200&v=4
+version: 0.0.1
+appVersion: latest
+description: 'future-proof headless cms & api for custom databases'
+keywords:
+  - directus
+  - headless
+  - cms
+  - mysql
+sources:
+  - https://github.com/directus/directus
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

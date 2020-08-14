@@ -1,0 +1,194 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "keycloak.fullname" . }}-keycloak
+  labels:
+    app: {{ template "keycloak.name" . }}-keycloak
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "keycloak.name" . }}-keycloak
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "keycloak.name" . }}-keycloak
+        release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
+      {{- if (not (empty .Values.config.keycloak.themeZip)) }}
+      initContainers:
+        - name: {{ template "keycloak.fullname" . }}-keycloak-init
+          image: busybox
+          command:
+            - sh
+            - '-c'
+            - |
+              cd /themes
+              wget -qO- {{ .Values.config.keycloak.themeZip }} | unzip -
+          volumeMounts:
+            - name: data
+              mountPath: /themes
+              subPath: themes
+      {{- end }}
+      containers:
+        - name: {{ template "keycloak.fullname" . }}-keycloak
+          image: {{ .Values.images.keycloak.repository }}:{{ .Values.images.keycloak.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+          command:
+            - sh
+            - '-c'
+            - |
+              {{- if (not (empty .Values.config.keycloak.themeZip)) }}
+              cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
+              {{- end }}
+              exec /opt/jboss/tools/docker-entrypoint.sh
+          ports:
+            - name: container
+              containerPort: 8080
+          {{- if (not (empty .Values.config.keycloak.themeZip)) }}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/jboss/keycloak/injected-themes
+              subPath: themes
+          {{- end }}
+          env:
+            - name: DB_VENDOR
+              value: POSTGRES
+            - name: DB_SCHEMA
+              value: public
+            - name: PROXY_ADDRESS_FORWARDING
+              value: 'true'
+            {{- if .Values.config.debug }}
+            - name: KEYCLOAK_LOGLEVEL
+              value: ALL
+            - name: ROOT_LOGLEVEL
+              value: ALL
+            {{- end }}
+            - name: DB_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: postgres_host
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: postgres_database
+            {{- if .Values.config.postgres.internal }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "keycloak.fullname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: KEYCLOAK_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: keycloak_hostname
+            - name: KEYCLOAK_WELCOME_THEME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: keycloak_welcome_theme
+            - name: KEYCLOAK_WELCOME_THEME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: keycloak_default_theme
+            - name: KEYCLOAK_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: keycloak_username
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: keycloak_password
+            {{- if .Values.config.postgres.internal }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "keycloak.fullname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "keycloak.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      {{- if (not (empty .Values.config.keycloak.themeZip)) }}
+      volumes:
+        - name: data
+          emptyDir: {}
+      {{- end }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "keycloak.fullname" . }}-keycloak
+  labels:
+    app: {{ template "keycloak.name" . }}-keycloak
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "keycloak.fullname" . }}-data
+  rules:
+    - snapshots:
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "keycloak.fullname" . }}-keycloak
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}

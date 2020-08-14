@@ -1,0 +1,26 @@
+{{- if (and .Values.config.postgres.internal .Values.config.pgadmin.enabled) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitlab.fullname" . }}-pgadmin
+  labels:
+    app: {{ template "gitlab.name" . }}-pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "{{ template "gitlab.fullname" . }}-postgres",
+          "Group": "Servers",
+          "Port": 5432,
+          "Username": "postgres",
+          "Host": "{{ template "gitlab.fullname" . }}-postgres",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres"
+        }
+      }
+    }
+{{- end }}

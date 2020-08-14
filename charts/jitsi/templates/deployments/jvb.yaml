@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "jitsi.fullname" . }}-jvb
+  labels:
+    app: {{ template "jitsi.name" . }}-jvb
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
+      containers:
+        - name: {{ template "jitsi.fullname" . }}-jvb
+          image: {{ .Values.images.jvb.repository }}:{{ .Values.images.jvb.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - name: jvbTcp
+              containerPort: 4443
+            - name: jvb
+              protocol: UDP
+              containerPort: 10000
+          env:
+            - name: TZ
+              value: UTC
+            - name: JVB_PORT
+              value: '10000'
+            - name: XMPP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_server
+            - name: DOCKER_HOST_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: docker_host_address
+            - name: XMPP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_domain
+            - name: XMPP_AUTH_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_auth_domain
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: xmpp_internal_muc_domain
+            - name: JVB_STUN_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_stun_servers
+            - name: JICOFO_AUTH_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_auth_user
+            - name: JVB_TCP_HARVESTER_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_tcp_harvester_disabled
+            - name: JVB_AUTH_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_auth_user
+            - name: JVB_AUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_auth_password
+            - name: JICOFO_AUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jicofo_auth_password
+            - name: JVB_BREWERY_MUC
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "jitsi.fullname" . }}
+                  key: jvb_brewery_muc
+          livenessProbe:
+            tcpSocket:
+              port: jvb
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: jvb
+{{ toYaml .Values.probes.readiness | indent 12 }}

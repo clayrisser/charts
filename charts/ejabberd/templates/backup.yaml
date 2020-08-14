@@ -1,0 +1,55 @@
+{{- if .Values.persistence.stash.enabled }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "ejabberd.fullname" . }}-data
+  labels:
+    app: {{ template "ejabberd.name" . }}-data
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  wipeOut: false
+  backend:
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/data'
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: {{ template "ejabberd.fullname" . }}-data
+  labels:
+    app: {{ template "ejabberd.name" . }}-data
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    name: {{ template "ejabberd.fullname" . }}-data
+  paused: {{ .Values.persistence.stash.paused }}
+  schedule: {{ .Values.persistence.stash.schedule | quote }}
+  retentionPolicy:
+    name: retention-policy
+    keepLast: {{ .Values.persistence.stash.keepLast }}
+    prune: true
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "ejabberd.fullname" . }}-ejabberd
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+    paths:
+      - /_data
+{{- end }}

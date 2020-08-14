@@ -1,0 +1,97 @@
+images:
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.17
+
+config:
+  clusterProvider: infrastructure
+  customConfig: ''
+  imagePullPolicy: IfNotPresent
+  password: P@ssw0rd
+  pause: true
+  prometheus: false
+  replicas: 1
+  standbyMode: Hot
+  terminationPolicy: Delete
+  updateStrategy: RollingUpdate
+  version: 11.2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  versionMap:
+    9.6-v2: 9.6
+    9.6.7-v2: 9.6
+    10.2-v2: 10.2
+    10.6: 10.6
+    11.1: 11.1
+    11.2: 11.2
+  pgadmin:
+    email: admin
+    enabled: true
+    password: pass
+
+service:
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres: ''
+
+ingress:
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    keepLast: 30
+    paused: false
+    prefix: stash
+    schedule: '0 0 * * *'
+    secret: stash-config-stash-config
+    type: s3
+    restore:
+      snapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

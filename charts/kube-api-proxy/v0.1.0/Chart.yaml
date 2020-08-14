@@ -1,0 +1,16 @@
+name: kube-api-proxy
+home: https://github.com/codejamninja/kube-api-proxy
+icon: 
+version: 0.1.0
+appVersion: latest
+description: 'proxy kubernetes api'
+keywords:
+  - kube-api-proxy
+  - kubernetes
+  - proxy
+  - api
+sources:
+  - https://github.com/codejamninja/kube-api-proxy
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

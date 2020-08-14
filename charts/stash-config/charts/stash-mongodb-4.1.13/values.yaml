@@ -1,0 +1,18 @@
+# Default values for stash-mongodb.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# we are declaring these values as global so that parent chart can overwrite them
+docker:
+  registry: stashed
+  image: stash-mongodb
+  tag: 4.1.13
+
+# optional argument to send mongodump or mongorestore command
+backup:
+  mgArgs: ""
+restore:
+  mgArgs: ""
+
+# Maximum concurrency to perform backup or restore tasks
+maxConcurrency: 3

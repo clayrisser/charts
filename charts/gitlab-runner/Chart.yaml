@@ -1,0 +1,19 @@
+name: gitlab-runner
+home: https://docs.gitlab.com/runner
+icon: https://gitlab.com/uploads/-/system/project/avatar/250833/runner_logo.png
+version: 0.15.0-rc1
+appVersion: 12.9.0-rc1
+description: 'gitlab runner'
+keywords:
+  - gitlab-runner
+  - gitlab
+  - runner
+  - git
+  - ci
+  - continuous
+  - integration
+sources:
+  - https://gitlab.com/gitlab-org/gitlab-runner
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

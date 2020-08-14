@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mailserver.fullname" . }}
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  clamav_enabled: {{ .Values.config.clamav.enabled | ternary "1" "0" | quote }}
+  debug: {{ .Values.config.debug | ternary "1" "0" | quote }}
+  dovecot_mailbox_format: {{ .Values.config.dovecot.mailboxFormat | quote }}
+  dovecot_pass_attrs: {{ .Values.config.dovecot.passAttrs | quote }}
+  dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
+  dovecot_user_attrs: {{ .Values.config.dovecot.userAttrs | quote }}
+  dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
+  fail2ban_enabled: {{ .Values.config.fail2ban.enabled | ternary "1" "0" | quote }}
+  fetchmail_enabled: {{ .Values.config.fetchmail.enabled | ternary "1" "0" | quote }}
+  fetchmail_poll: {{ .Values.config.fetchmail.poll | quote }}
+  hostname: {{ template "mailserver.rainloop-hostname" . }}
+  ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
+  ldap_enabled: {{ .Values.config.ldap.enabled | ternary "1" "" | quote }}
+  ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
+  ldap_query_filter_domain: {{ .Values.config.ldap.queryFilterDomain | quote }}
+  ldap_query_filter_group: {{ .Values.config.ldap.queryFilterGroup | quote }}
+  ldap_query_filter_user: {{ .Values.config.ldap.queryFilterUser | quote }}
+  ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
+  ldap_server_host: {{ .Values.config.ldap.hostname | quote }}
+  ldap_start_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote  }}
+  logrotate_interval: {{ .Values.config.reports.logrotateInterval | quote }}
+  logwatch_interval: {{ .Values.config.reports.logwatchInterval | quote }}
+  managesieve_enabled: {{ .Values.config.managesieve.enabled | ternary "1" "0" | quote }}
+  pflogsumm_trigger: {{ (eq .Values.config.reports.pflogsummTrigger "none") | ternary "" .Values.config.reports.pflogsummTrigger }}
+  pop3_enabled: {{ .Values.config.pop3.enabled | ternary "1" "0" | quote }}
+  postfix_mailbox_size_limit: {{ .Values.config.postfixMailboxSizeLimit | quote }}
+  postfix_message_size_limit: {{ .Values.config.postfixMessageSizeLimit | quote }}
+  postgrey_auto_whitelist_clients: {{ .Values.config.postgrey.autoWhitelistClients | quote }}
+  postgrey_delay: {{ .Values.config.postgrey.delay | quote }}
+  postgrey_enabled: {{ .Values.config.postgrey.enabled | ternary "1" "0" | quote }}
+  postgrey_max_age: {{ .Values.config.postgrey.maxAge | quote }}
+  postgrey_text: {{ .Values.config.postgrey.text | quote }}
+  postmaster_address: '{{ .Values.config.postmasterUsername }}@{{ .Values.config.domain }}'
+  saslauthd_enabled: {{ .Values.config.ldap.enabled | ternary "1" "0" | quote }}
+  saslauthd_ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
+  saslauthd_ldap_filter: {{ .Values.config.ldap.saslFilter | quote }}
+  saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
+  saslauthd_ldap_server: {{ .Values.config.ldap.hostname | quote }}
+  saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" | quote  }}
+  saslauthd_mech_options: ''
+  saslauthd_mechanisms: ldap
+  spamassassin_enabled: {{ .Values.config.spamassassin.enabled | ternary "1" "0" | quote }}
+  spamassassin_move_spam_to_junk: {{ .Values.config.spamassassin.moveSpamToJunk | ternary "1" "0" | quote }}
+  spamassassin_shortcircuit_bayes_ham: {{ .Values.config.spamassassin.shortcircuitBayesHam | ternary "1" "0" | quote }}
+  spamassassin_shortcircuit_bayes_spam: {{ .Values.config.spamassassin.shortcircuitBayesSpam | ternary "1" "0" | quote }}
+  spamassassin_spam_subject: {{ .Values.config.spamassassin.spamSubject | quote }}
+  spamassassin_spam_to_inbox: {{ .Values.config.spamassassin.spamToInbox | ternary "1" "0" | quote }}
+  spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" | quote }}
+  smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}
+  srs_domainname: {{ .Values.config.domain | quote }}
+  srs_enabled: {{ .Values.config.srs.enabled | ternary "1" "0" | quote }}
+  srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
+  srs_sender_classes: {{ .Values.config.srs.senderClasses | quote }}
+  virusmails_delete_delay: {{ .Values.config.virusmailsDeleteDelay | quote }}

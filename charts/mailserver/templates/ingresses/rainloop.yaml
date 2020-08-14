@@ -1,0 +1,39 @@
+{{- if .Values.ingress.rainloop.enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "mailserver.fullname" . }}-rainloop
+  annotations:
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
+    kubernetes.io/ingress.class: nginx
+    {{- end }}
+    {{- if .Values.ingress.rainloop.tls }}
+    {{- if (empty .Values.ingress.rainloop.certificate) }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.rainloop.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "mailserver.name" . }}-rainloop
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.rainloop.hostname }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "mailserver.fullname" . }}-rainloop
+              servicePort: http
+  {{- if .Values.ingress.rainloop.tls }}
+  tls:
+    - secretName: {{ template "mailserver.rainloop-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.rainloop.hostname }}
+  {{- end }}
+{{- end }}

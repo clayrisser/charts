@@ -1,0 +1,170 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "gitlab.fullname" . }}-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "gitlab.fullname" . }}-data
+    stash.appscode.com/target-paths: /_data
+    stash.appscode.com/volume-mounts: 'data:/_data'
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "gitlab.name" . }}-gitlab
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "gitlab.name" . }}-gitlab
+        release: {{ .Release.Name }}
+      {{- if .Values.persistence.backup.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
+    spec:
+      initContainers:
+        - name: {{ template "gitlab.fullname" . }}-gitlab-init
+          image: busybox
+          command:
+            - sh
+            - '-c'
+            - |
+              chmod 600 /etc/gitlab/ssh_host_*
+          volumeMounts:
+            - name: data
+              mountPath: /etc/gitlab
+              subPath: etc
+      containers:
+        - name: {{ template "gitlab.fullname" . }}-gitlab
+          image: {{ .Values.images.gitlab.repository }}:{{ .Values.images.gitlab.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: 400m
+              memory: 2Gi
+            limits:
+              cpu: 800m
+              memory: 4Gi
+          ports:
+            - name: container
+              containerPort: 80
+            - name: ssh
+              containerPort: 22
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /gitlab-data
+              subPath: data
+            - name: data
+              mountPath: /etc/gitlab
+              subPath: etc
+            - name: data
+              mountPath: /var/opt/gitlab/git-data
+              subPath: git
+          env:
+            - name: GITLAB_OMNIBUS_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: omnibus_config
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_host
+            {{- if .Values.config.postgres.internal }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_database
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: redis_host
+            - name: GITLAB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: password
+            {{- if .Values.config.postgres.internal }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+          livenessProbe:
+            exec:
+              command: ['curl',  'localhost/-/health']
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            exec:
+              command: ['curl',  'localhost/-/readiness']
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.gitlabSnapshot))) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "gitlab.fullname" . }}-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: deployment-{{ template "gitlab.fullname" . }}-gitlab
+  rules:
+    - snapshots:
+        - {{ $restore.gitlabSnapshot | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "gitlab.fullname" . }}-gitlab
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}

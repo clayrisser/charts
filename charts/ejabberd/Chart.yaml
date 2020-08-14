@@ -1,0 +1,14 @@
+name: ejabberd
+home: https://www.ejabberd.im
+icon: https://www.ejabberd.im/sites/all/themes/new_ejabberd_v2/style/img/header_logo_e@2x.png
+version: 0.0.1
+appVersion: latest
+description: 'robust, ubiquitous and massively scalable messaging platform'
+keywords:
+  - ejabberd
+  - xmpp
+sources:
+  - https://github.com/processone/ejabberd
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

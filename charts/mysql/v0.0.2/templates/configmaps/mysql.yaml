@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mysql.fullname" . }}-mysql
+  labels:
+    app: {{ template "mysql.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- if (eq (substr 0 1 .Values.config.version) "8") }}
+  default-authentication-plugin.cnf: |
+    [mysqld]
+    default_authentication_plugin = {{ .Values.config.authenticationPlugin }}
+  {{- end }}
+  my-config.cnf: {{ .Values.config.customConfig | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mysql.fullname" . }}-mysql-init
+  labels:
+    app: {{ template "mysql.name" . }}-mysql-init
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  init.sql: ''

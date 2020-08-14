@@ -1,0 +1,33 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: Function
+metadata:
+  name: mongodb-restore-{{- .Chart.Version }}
+  labels:
+    {{- include "stash-mongodb.labels" . | nindent 4 }}
+spec:
+  image: {{ .Values.docker.registry }}/{{ .Values.docker.image }}:{{ .Values.docker.tag }}
+  args:
+  - restore-mongo
+  # setup information
+  - --provider=${REPOSITORY_PROVIDER:=}
+  - --bucket=${REPOSITORY_BUCKET:=}
+  - --endpoint=${REPOSITORY_ENDPOINT:=}
+  - --path=${REPOSITORY_PREFIX:=}
+  - --secret-dir=/etc/repository/secret
+  - --scratch-dir=/tmp
+  - --enable-cache=false
+  - --max-connections=${MAX_CONNECTIONS:=0} # 0 indicates use default connection limit
+  - --hostname=${HOSTNAME:=}
+  - --source-hostname=${SOURCE_HOSTNAME:=}
+  - --mongo-args=${mgArgs:={{ .Values.restore.mgArgs }}} # optional arguments pass to mgdump command
+  - --max-concurrency=${MAX_CONCURRENCY:={{ .Values.maxConcurrency}}}
+  # target information
+  - --namespace=${NAMESPACE:=default}
+  - --appbinding=${TARGET_NAME:=}
+  - --restoresession=${RESTORE_SESSION:=}
+  - --snapshot=${RESTORE_SNAPSHOTS:=}
+  # output & metric information
+  - --output-dir=${outputDir:=}
+  volumeMounts:
+  - name: ${secretVolume}
+    mountPath: /etc/repository/secret

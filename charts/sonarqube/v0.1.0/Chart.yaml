@@ -6,13 +6,11 @@ appVersion: latest
 description: 'the leading product for continuous code quality'
 keywords:
   - sonarqube
-  - qc
-  - quality
-  - control
-  - continuous
   - code
+  - quality
+  - qa
 sources:
-  - https://github.com/SonarSource/sonarqube.git
+  - https://github.com/SonarSource/sonarqube
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja

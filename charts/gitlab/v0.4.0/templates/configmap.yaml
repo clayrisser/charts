@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitlab.fullname" . }}
+  labels:
+    app: {{ template "gitlab.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  base_url: {{ template "gitlab.gitlab-base-url" . }}
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "gitlab.fullname" . }}-postgres
+  {{- else }}
+  postgres_host: {{ $postgres.host | quote }}
+  {{- end }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}
+  {{- $redis := .Values.config.redis }}
+  {{- if $redis.internal }}
+  redis_host: {{ template "gitlab.fullname" . }}-redis
+  {{- else }}
+  redis_host: {{ $redis.host | quote }}
+  {{- end }}
+  redis_port: {{ $redis.port | quote }}
+  redis_username: {{ $redis.username | quote }}
+  {{- if .Values.config.phpredisadmin.enabled }}
+  phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}
+  {{- end }}
+  omnibus_config: |
+    external_url = '{{ template "gitlab.gitlab-base-url" . }}';
+    nginx['listen_port'] = 80;
+    nginx['listen_https'] = false;
+    nginx['proxy_set_headers'] = {
+      'X-Forwarded-Proto' => 'https',
+      'X-Forwarded-Ssl' => 'on'
+    };
+    git_data_dirs = ['/gitlab-data/git-data'];
+    gitlab_ci['builds_directory'] = '/gitlab-data/builds';
+    gitlab_rails['auto_link_ldap_user'] = false;
+    gitlab_rails['auto_link_saml_user'] = true;
+    gitlab_rails['auto_sign_in_with_provider'] = true;
+    gitlab_rails['db_database'] = ENV['DB_DATABASE'];
+    gitlab_rails['db_host'] = ENV['DB_HOST'];
+    gitlab_rails['db_password'] = ENV['DB_PASSWORD'];
+    gitlab_rails['db_username'] = ENV['DB_USER'];
+    gitlab_rails['external_providers'] = [];
+    gitlab_rails['omniauth_allow_single_sign_on'] = ['saml'];
+    gitlab_rails['omniauth_block_auto_created_users'] = false;
+    gitlab_rails['omniauth_enabled'] = {{ .Values.config.keycloak.enabled }};
+    gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
+    gitlab_rails['shared_path'] = '/gitlab-data/shared';
+    gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
+    gitlab_rails['gitlab_default_theme'] = {{ .Values.config.gitlab.themeId }};
+    {{- if .Values.config.keycloak.autoSignIn }}
+    gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'saml';
+    {{- end }}
+    gitlab_shell['auth_file'] = '/gitlab-data/ssh/authorized_keys';
+    manage_accounts['enable'] = true;
+    manage_storage_directories['manage_etc'] = false;
+    postgresql['enable'] = false;
+    prometheus_monitoring['enable'] = false;
+    redis['enable'] = false;
+    root_pass = ENV['GITLAB_ROOT_PASSWORD'];
+    unicorn['worker_processes'] = 2;
+    {{- if .Values.config.gitlab.s3.enabled }}
+    gitlab_rails['uploads_object_store_enabled'] = true;
+    gitlab_rails['uploads_object_store_remote_directory'] = 'uploads';
+    gitlab_rails['uploads_object_store_connection'] = {
+      'provider' => 'AWS',
+      'region' => '{{ .Values.config.gitlab.s3.awsRegion }}',
+      'aws_access_key_id' => '{{ .Values.config.gitlab.s3.awsAccessKey }}',
+      'aws_secret_access_key' => '{{ .Values.config.gitlab.s3.awsSecretKey }}'
+    };
+    {{- end }}
+    gitlab_rails['omniauth_providers'] = [
+      {
+         name: 'saml',
+         label: '{{ .Values.config.keycloak.company }}',
+         groups_attribute: 'roles',
+         external_groups: ['{{ .Values.config.keycloak.clientId }}:external'],
+         args: {
+           assertion_consumer_service_url: '{{ template "gitlab.gitlab-base-url" . }}/users/auth/saml/callback',
+           idp_cert_fingerprint_algorithm: 'http://www.w3.org/2000/09/xmldsig#sha1',
+           idp_cert: '-----BEGIN CERTIFICATE-----{{ .Values.config.keycloak.certificate }}-----END CERTIFICATE-----',
+           idp_sso_target_url: '{{ .Values.config.keycloak.baseUrl }}/auth/realms/{{ .Values.config.keycloak.realmName }}/protocol/saml/clients/{{ .Values.config.keycloak.clientId }}',
+           issuer: '{{ .Values.config.keycloak.clientId }}',
+           name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+           attribute_statements: {
+             first_name: ['first_name'],
+             last_name: ['last_name'],
+             name: ['name'],
+             username: ['name'],
+             email: ['email']
+           }
+         }
+      }
+    ];

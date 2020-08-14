@@ -1,0 +1,29 @@
+{{/*
+Appscode v0.9.0-rc.0 (https://appscode.com)
+Copyright (c) 2019 Appscode
+Licensed under Apache-2.0 (https://github.com/stashed/stash/blob/master/LICENSE)
+Modifications copyright (c) 2019 Jam Risser <jam@codejam.ninja>
+*/}}
+
+apiVersion: stash.appscode.com/v1beta1
+kind: Task
+metadata:
+  name: postgres-backup-{{- .Chart.Version }}
+  labels:
+    {{- include "stash-postgres.labels" . | nindent 4 }}
+spec:
+  steps:
+  - name: postgres-backup-{{- .Chart.Version }}
+    params:
+    - name: outputDir
+      value: /tmp/output
+    - name: secretVolume
+      value: secret-volume
+  - name: update-status
+    params:
+    - name: outputDir
+      value: /tmp/output
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: ${REPOSITORY_SECRET_NAME}

@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ejabberd.fullname" . }}-ejabberd
+  labels:
+    app: {{ template "ejabberd.name" . }}-ejabberd
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.ejabberd.enabled }}
+  type: NodePort
+  {{- else }}
+  type: {{ .Values.service.ejabberd.type }}
+  {{- if (or (eq .Values.service.ejabberd.type "LoadBalancer") (eq .Values.service.ejabberd.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.ejabberd.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.http))) }}
+      nodePort: {{ .Values.service.ejabberd.nodePorts.http }}
+      {{- end }}
+    - name: https
+      port: 443
+      targetPort: https
+      {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.http))) }}
+      nodePort: {{ .Values.service.ejabberd.nodePorts.http }}
+      {{- end }}
+    - name: xmpp
+      port: 5222
+      targetPort: xmpp
+      {{- if (and (eq .Values.service.ejabberd.type "NodePort") (not (empty .Values.service.ejabberd.nodePorts.xmpp))) }}
+      nodePort: {{ .Values.service.ejabberd.nodePorts.xmpp }}
+      {{- end }}
+    # - name: s2s
+    #   port: 5269
+    #   targetPort: s2s
+    # - name: mqtt
+    #   port: 1883
+    #   targetPort: mqtt
+  selector:
+    app: {{ template "ejabberd.name" . }}-ejabberd
+    release: {{ .Release.Name }}

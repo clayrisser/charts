@@ -1,0 +1,139 @@
+images:
+  kibana:
+    repository: codejamninja/kibana-logtrail
+    tag: 6.4.0
+    pullPolicy: IfNotPresent
+
+config:
+  authPlugin: None
+  baseUrl: ''
+  clusterProvider: infrastructure
+  commonConfig: ''
+  dataConfig: ''
+  hostname: ''
+  kibana: true
+  masterConfig: ''
+  password: changeme
+  pause: true
+  prometheus: false
+  replicas: 1
+  terminationPolicy: Delete
+  updateStrategy: RollingUpdate
+  version: 6.4.0
+  logtrailPlugin:
+    enabled: false
+    indexPattern: logstash-*
+    fields:
+      hostname: kubernetes.pod_name
+      message: log
+      program: kubernetes.container_image
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+  versionMap:
+    5.6-v1: 5.6
+    5.6.4-v1: 5.6.4
+    6.2-v1: 6.2
+    6.2.4-v1: 6.2.4
+    6.3-v1: 6.3
+    6.3.0-v1: 6.3.0
+    6.4: 6.4
+    6.4.0: 6.4.0
+  topology:
+    enabled: false
+    client:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+    data:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+    master:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+service:
+  kibana:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  elasticsearch:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      elasticsearch: ''
+
+ingress:
+  kibana:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  elasticsearch:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    enabled: false
+    keepLast: 30
+    paused: false
+    repository: stash-stash
+    schedule: '0 0 * * *'
+    restore:
+      snapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 360
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 360
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 24
+    successThreshold: 1

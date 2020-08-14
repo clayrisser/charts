@@ -1,0 +1,13 @@
+{{- if .Values.config.redis.internal }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitlab.fullname" . }}-redis
+  labels:
+    app: {{ template "gitlab.name" . }}-redis
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  redis.conf: {{ .Values.config.redis.customConfig | quote }}
+{{- end }}

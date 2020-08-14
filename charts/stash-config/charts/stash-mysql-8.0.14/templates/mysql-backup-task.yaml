@@ -1,0 +1,24 @@
+apiVersion: stash.appscode.com/v1beta1
+kind: Task
+metadata:
+  name: mysql-backup-{{- .Chart.Version }}
+  labels:
+    {{- include "stash-mysql.labels" . | nindent 4 }}
+spec:
+  steps:
+  - name: mysql-backup-{{- .Chart.Version }}
+    params:
+    - name: outputDir
+      value: /tmp/output
+    - name: secretVolume
+      value: secret-volume
+    # - name: myArgs
+    #   value: "--all-databases"
+  - name: update-status
+    params:
+    - name: outputDir
+      value: /tmp/output
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: ${REPOSITORY_SECRET_NAME}

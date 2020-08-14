@@ -1,0 +1,68 @@
+affinity: {}
+checkInterval: 30
+concurrent: 10
+gitlabUrl: ''
+hostAliases: []
+hpa: {}
+imagePullPolicy: IfNotPresent
+logFormat: runner
+logLevel: info
+nodeSelector: {}
+podAnnotations: {}
+podLabels: {}
+resources: {}
+runnerRegistrationToken: ''
+terminationGracePeriodSeconds: 3600
+tolerations: []
+unregisterRunners: true
+updateStrategy: RollingUpdate
+rbac:
+  clusterWideAccess: true
+  create: true
+  serviceAccountAnnotations: {}
+  serviceAccountName: default
+metrics:
+  enabled: false
+securityContext:
+  fsGroup: 65533
+  runAsUser: 100
+envVars:
+  - name: RUNNER_EXECUTOR
+    value: kubernetes
+runners:
+  # imagePullPolicy: if-not-present
+  # secret: gitlab-runner
+  builds: {}
+  helpers: {}
+  image: docker:19.03.1
+  imagePullSecrets: []
+  locked: true
+  outputLimit: 4096
+  podAnnotations: {}
+  podLabels: {}
+  pollTimeout: 180
+  privileged: true
+  protected: false
+  requestConcurrency: 1
+  runUntagged: true
+  services: {}
+  tags: ''
+  env: {}
+  cache: {}
+  nodeSelector: { group: dedicated }
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    enabled: false
+    keepLast: 30
+    paused: false
+    repository: stash-stash
+    schedule: '0 0 * * *'
+    restore:
+      snapshot: ''

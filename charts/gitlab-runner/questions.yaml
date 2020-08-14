@@ -1,0 +1,155 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: logLevel
+    default: info
+    description: ''
+    type: enum
+    options:
+      - debug
+      - info
+      - warn
+      - error
+      - fatal
+      - panic
+    required: true
+    label: 'log level'
+    group: Config
+  - variable: gitlabUrl
+    default: ''
+    description: ''
+    type: string
+    required: true
+    label: 'gitlab url'
+    group: Config
+  - variable: runnerRegistrationToken
+    default: ''
+    description: ''
+    type: password
+    required: true
+    label: 'registration token'
+    group: Config
+  - variable: metrics.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'metrics enabled'
+    group: Config
+
+# Runners
+  - variable: runners.image
+    default: docker:19.03.1
+    description: ''
+    type: string
+    required: true
+    label: image
+    group: Runners
+  - variable: runners.requestConcurrency
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: 'request concurrency'
+    group: Runners
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot'

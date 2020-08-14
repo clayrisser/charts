@@ -1,0 +1,47 @@
+{{- if .Values.ingress.ejabberd.enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "ejabberd.fullname" . }}-ejabberd
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
+    nginx.org/websocket-services: {{ template "ejabberd.fullname" . }}-ejabberd
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
+    kubernetes.io/ingress.class: nginx
+    {{- end }}
+    {{- if .Values.ingress.ejabberd.tls }}
+    {{- if (empty .Values.ingress.ejabberd.certificate) }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.ejabberd.issuer.name }}
+    cert-manager.io/inject-ca-from-secret: kube-system/cert-manager-webhook-tls
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "ejabberd.name" . }}-ejabberd
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.ejabberd.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.ejabberd.path }}
+            backend:
+              serviceName: {{ template "ejabberd.fullname" . }}-ejabberd
+  {{- if (not .Values.ingress.ejabberd.tls) }}
+              servicePort: http
+  {{- else }}
+              servicePort: https
+  tls:
+    - secretName: {{ template "ejabberd.ejabberd-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.ejabberd.hostname }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,542 @@
+categories:
+  - Backup
+  - Database
+questions:
+  # Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.version
+    default: 4.1.13
+    description: ''
+    type: enum
+    options:
+      - 3.4-v3
+      - 3.4.14
+      - 3.4.22
+      - 3.4-v4
+      - 3.6-v3
+      - 3.6.8
+      - 3.6.13
+      - 3.6-v4
+      - 4.0.5-v1
+      - 4.0-v1
+      - 4.0.3
+      - 4.0.5-v2
+      - 4.0.11
+      - 4.0-v2
+      - 4.1.7-v1
+      - 4.1.4
+      - 4.1.7-v2
+      - 4.1.13
+      - 4.1
+    required: true
+    label: version
+    group: Config
+  - variable: config.terminationPolicy
+    default: Delete
+    description: ''
+    type: enum
+    options:
+      - Delete
+      - Pause
+      - WipeOut
+      - DoNotTerminate
+    required: true
+    label: 'termination policy'
+    group: Config
+  - variable: config.pause
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.terminationPolicy=Pause
+    label: pause
+    group: Config
+  - variable: config.password
+    default: p@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Config
+  - variable: config.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    group: Config
+  - variable: config.shardTopology.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'shard topology enabled'
+    group: Config
+  - variable: config.replicaSet.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'replica set enabled'
+    group: Config
+  - variable: config.ssl.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'ssl enabled'
+    group: Config
+  - variable: config.replicaSet.replicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.replicaSet.enabled=true&&config.shardTopology.enabled=false
+    label: 'replica set replicas'
+    group: Config
+  - variable: config.shardTopology.configServer.replicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology config server replicas'
+    group: Config
+  - variable: config.shardTopology.configServer.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology config server resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.configServer.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    show_if: config.shardTopology.enabled=true
+    required: true
+    label: 'shard topology config server resources requests memory'
+    group: Config
+  - variable: config.shardTopology.configServer.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    show_if: config.shardTopology.enabled=true
+    required: true
+    label: 'shard topology config server resources limits cpu'
+    group: Config
+  - variable: config.shardTopology.configServer.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    show_if: config.shardTopology.enabled=true
+    required: true
+    label: 'shard topology config server resources limits memory'
+    group: Config
+  - variable: config.shardTopology.mongos.replicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos replicas'
+    group: Config
+  - variable: config.shardTopology.mongos.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.mongos.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.mongos.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos resources limits cpu'
+    group: Config
+  - variable: config.shardTopology.mongos.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology mongos resources limits memory'
+    group: Config
+  - variable: config.shardTopology.shard.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard shards'
+    group: Config
+  - variable: config.shardTopology.shard.replicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard replicas'
+    group: Config
+  - variable: config.shardTopology.shard.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.shard.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard resources requests cpu'
+    group: Config
+  - variable: config.shardTopology.shard.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard resources limits cpu'
+    group: Config
+  - variable: config.shardTopology.shard.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=true
+    label: 'shard topology shard resources limits memory'
+    group: Config
+  - variable: config.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'resources limits cpu'
+    group: Config
+  - variable: config.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    show_if: config.shardTopology.enabled=false
+    label: 'resources limits memory'
+    group: Config
+  - variable: config.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    group: Config
+
+  # Mongo Express
+  - variable: config.mongoExpress.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'mongo express'
+    show_subquestion_if: true
+    group: 'Mongo Express'
+    subquestions:
+      - variable: config.mongoExpress.username
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'mongo express username'
+        group: 'Mongo Express'
+      - variable: config.mongoExpress.password
+        default: pass
+        description: ''
+        type: password
+        required: true
+        label: 'mongo express password'
+        group: 'Mongo Express'
+
+  # Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash type'
+      - variable: persistence.stash.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
+        label: 'stash container'
+      - variable: persistence.stash.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash bucket'
+      - variable: persistence.stash.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
+        label: 'stash endpoint'
+      - variable: persistence.stash.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot'
+
+  # Services and Load Balancing
+  - variable: ingress.mongoExpress.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.mongoExpress.enabled=true
+    label: 'mongo express ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.mongoExpress.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.mongoExpress.enabled=true
+        required: true
+        label: 'mongo express ingress tls'
+      - variable: ingress.mongoExpress.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.mongoExpress.enabled=true
+        required: true
+        label: 'mongo express ingress hostname'
+      - variable: ingress.mongoExpress.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.mongoExpress.enabled=true
+        required: true
+        label: 'mongo express ingress path'
+      - variable: ingress.mongoExpress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.mongoExpress.enabled=true&&ingress.mongoExpress.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'mongo express ingress issuer name'
+      - variable: ingress.mongoExpress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.mongoExpress.enabled=true&&ingress.mongoExpress.tls=true&&ingress.mongoExpress.issuer.name=none
+        required: false
+        label: 'mongo express ingress certificate'
+  - variable: service.mongoExpress.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mongo express service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mongoExpress.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
+        label: 'mongo express port'
+  - variable: service.mongodb.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mongodb service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mongodb.nodePorts.mongodb
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        label: 'mongodb port'
+
+  # Images
+  - variable: images.mongo_express.repository
+    default: mongo-express
+    description: ''
+    type: string
+    required: true
+    label: repository
+    show_if: config.mongoExpress.enabled=true
+    group: Images
+  - variable: images.mongo_express.tag
+    default: 0.49.0
+    description: ''
+    type: string
+    required: true
+    label: tag
+    show_if: config.mongoExpress.enabled=true
+    group: Images

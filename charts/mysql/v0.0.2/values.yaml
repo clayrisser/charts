@@ -1,0 +1,95 @@
+images:
+  phpmyadmin:
+    repository: phpmyadmin/phpmyadmin
+    tag: 4.7
+
+config:
+  authenticationPlugin: mysql_native_password
+  clusterProvider: infrastructure
+  customConfig: ''
+  imagePullPolicy: IfNotPresent
+  password: P@ssw0rd
+  pause: true
+  phpmyadmin: true
+  prometheus: false
+  replicas: 1
+  terminationPolicy: Delete
+  updateStrategy: RollingUpdate
+  version: 8.0.14
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    # limits:
+    #   cpu: 500m
+    #   memory: 256Mi
+  versionMap:
+    5.7-v1: 5.7.25
+    5.7-v2: 5.7.25
+    5.7.25: 5.7.25
+    8.0-v1: 8.0.3
+    8.0-v2: 8.0.14
+    8.0.14: 8.0.14
+    8.0.3: 8.0.3
+
+service:
+  phpmyadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  mysql:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql: ''
+
+ingress:
+  phpmyadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    path: /
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    type: s3
+    bucket: ''
+    endpoint: s3.amazonaws.com
+    container: ''
+    prefix: stash
+    enabled: false
+    keepLast: 30
+    paused: false
+    repository: stash-stash
+    secret: stash-config-stash-config
+    restore:
+      snapshot: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

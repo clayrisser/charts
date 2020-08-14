@@ -1,0 +1,23 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: git-siliconhills-dev
+  name: gitlab-runner
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods", "pods/exec", "secrets"]
+  verbs: ["get", "list", "watch", "create", "patch", "delete"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gitlab-runner
+  namespace: git-siliconhills-dev
+subjects:
+- kind: ServiceAccount
+  name: default # Name is case sensitive
+  apiGroup: ""
+roleRef:
+  kind: Role #this must be Role or ClusterRole
+  name: gitlab-runner # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,71 @@
+{{- if .Values.config.phpldapadmin.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "openldap.fullname" . }}-phpldapadmin
+  labels:
+    app: {{ template "openldap.name" . }}-phpldapadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "openldap.name" . }}-phpldapadmin
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "openldap.name" . }}-phpldapadmin
+        release: {{ .Release.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
+      containers:
+        - name: {{ template "openldap.fullname" . }}-phpldapadmin
+          image: {{ .Values.images.phpldapadmin.repository }}:{{ .Values.images.phpldapadmin.tag }}
+          imagePullPolicy: {{ .Values.images.phpldapadmin.pullPolicy }}
+          {{- if .Values.config.debug }}
+          args: ['--loglevel', 'debug']
+          {{- end }}
+          ports:
+            - name: container
+              containerPort: 80
+          env:
+            - name: PHPLDAPADMIN_HTTPS
+              value: 'false'
+            - name: PHPLDAPADMIN_LDAP_CLIENT_TLS
+              value: 'false'
+            - name: PHPLDAPADMIN_TRUST_PROXY_SSL
+              value: 'true'
+            - name: PHPLDAPADMIN_LDAP_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "openldap.fullname" . }}
+                  key: phpldapadmin_ldap_hosts
+            - name: PHPLDAPADMIN_SERVER_ADMIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "openldap.fullname" . }}
+                  key: phpldapadmin_server_admin
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}

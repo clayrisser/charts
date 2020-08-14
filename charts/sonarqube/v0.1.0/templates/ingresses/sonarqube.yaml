@@ -1,34 +1,39 @@
-{{- if .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts.sonarqube }}
+{{- if .Values.ingress.sonarqube.enabled }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "sonarqube.fullname" $ }}-sonarqube
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  name: {{ template "sonarqube.fullname" . }}-sonarqube
   annotations:
-    certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
+    kubernetes.io/ingress.class: nginx
+    {{- end }}
+    {{- if .Values.ingress.sonarqube.tls }}
+    {{- if (empty .Values.ingress.sonarqube.certificate) }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.sonarqube.issuer.name }}
     kubernetes.io/tls-acme: 'true'
-  {{- end }}
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
   labels:
-    app: {{ template "sonarqube.name" $ }}-sonarqube
-    chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
-    release: {{ $.Release.Name }}
-    heritage: {{ $.Release.Service }}
+    app: {{ template "sonarqube.name" . }}-sonarqube
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ .name }}
+    - host: {{ .Values.ingress.sonarqube.hostname }}
       http:
         paths:
-          - path: {{ .path }}
+          - path: {{ .Values.ingress.sonarqube.path }}
             backend:
-              serviceName: {{ template "sonarqube.fullname" $ }}-sonarqube
+              serviceName: {{ template "sonarqube.fullname" . }}-sonarqube
               servicePort: http
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  {{- if .Values.ingress.sonarqube.tls }}
   tls:
-    - secretName: letsencrypt-staging
+    - secretName: {{ template "sonarqube.sonarqube-certificate" . }}
       hosts:
-        - {{ .name }}
+        - {{ .Values.ingress.sonarqube.hostname }}
   {{- end }}
----
-{{- end }}
 {{- end }}

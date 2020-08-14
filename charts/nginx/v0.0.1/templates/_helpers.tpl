@@ -17,16 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Create a name shared accross all apps in namespace.
-We truncate at 63 chars because some Kubernetes name fields are limited to this
-(by the DNS naming spec).
-*/}}
-{{- define "nginx.sharedname" }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- printf "%s-%s" .Release.Namespace $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Calculate nginx certificate
 */}}
 {{- define "nginx.nginx-certificate" }}
@@ -45,7 +35,7 @@ Calculate nginx hostname
 {{- printf .Values.config.nginx.hostname }}
 {{- else }}
 {{- if .Values.ingress.nginx.enabled }}
-{{- printf .Values.ingress.nginx.hostsname }}
+{{- printf .Values.ingress.nginx.hostname }}
 {{- else }}
 {{- printf "%s-nginx" (include "nginx.fullname" .) }}
 {{- end }}
@@ -69,4 +59,3 @@ Calculate nginx base url
 {{- end }}
 {{- end }}
 {{- end }}
-

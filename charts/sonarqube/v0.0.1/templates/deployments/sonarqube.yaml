@@ -1,0 +1,171 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "sonarqube.fullname" . }}-sonarqube
+  labels:
+    app: {{ template "sonarqube.name" . }}-sonarqube
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "sonarqube.sharedname" . }}-data
+    stash.appscode.com/target-paths: /_data
+    stash.appscode.com/volume-mounts: data:/_data
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "sonarqube.name" . }}-sonarqube
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "sonarqube.name" . }}-sonarqube
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+        - name: {{ template "sonarqube.fullname" . }}-sonarqube-init
+          image: busybox
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          securityContext:
+            privileged: true
+          command:
+            - sh
+            - -c
+            - |
+              chown -R 999:999 /opt/sq
+              sysctl -w vm.max_map_count=262144
+              {{- if (not (empty .Values.config.sonarqube.plugins)) }}
+              mkdir -p /opt/sq/extensions/plugins/tmp
+              rm -f /opt/sq/extensions/plugins/tmp/*
+              cp /config/install_plugins.sh /opt/sq/extensions/plugins/tmp/install_plugins.sh
+              sh /opt/sq/extensions/plugins/tmp/install_plugins.sh && pwd && ls -lah
+              {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /opt/sq/conf
+              subPath: conf
+            - name: data
+              mountPath: /opt/sq/extensions
+              subPath: extensions
+            - name: config
+              mountPath: /config
+      containers:
+        - name: {{ template "sonarqube.fullname" . }}-sonarqube
+          image: {{ .Values.images.sonarqube.repository }}:{{ .Values.images.sonarqube.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              {{- if (not (empty .Values.config.sonarqube.plugins)) }}
+              bash /config/copy_plugins.sh
+              {{- end }}
+              exec bash /opt/sq/bin/run.sh
+          ports:
+            - name: container
+              containerPort: 9000
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /opt/sq/conf
+              subPath: conf
+            - name: data
+              mountPath: /opt/sq/extensions
+              subPath: extensions
+            - name: config
+              mountPath: /config
+          env:
+            - name: sonar.core.serverBaseURL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: base_url
+            - name: SONARQUBE_JDBC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_jdbc_url
+            {{- if .Values.config.postgres.internal }}
+            - name: SONARQUBE_JDBC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sonarqube.sharedname" . }}-postgres-auth
+                  key: POSTGRES_USER
+            {{- else }}
+            - name: SONARQUBE_JDBC_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_username
+            {{- end }}
+            {{- if .Values.config.postgres.internal }}
+            - name: SONARQUBE_JDBC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sonarqube.sharedname" . }}-postgres-auth
+                  key: POSTGRES_PASSWORD
+            {{- else }}
+            - name: SONARQUBE_JDBC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "sonarqube.fullname" . }}
+                  key: postgres_password
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "sonarqube.fullname" . }}-sonarqube
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "sonarqube.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.sonarqubeSnapshot))) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "sonarqube.fullname" . }}-sonarqube
+  labels:
+    app: {{ template "sonarqube.name" . }}-sonarqube
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "sonarqube.sharedname" . }}-sonarqube
+  rules:
+    - snapshots:
+        - {{ $restore.sonarqubeSnapshot }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "sonarqube.fullname" . }}-sonarqube
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}

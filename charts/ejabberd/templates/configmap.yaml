@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ejabberd.fullname" . }}
+  labels:
+    app: {{ template "ejabberd.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- $postgres := .Values.config.postgres }}
+  {{- if $postgres.internal }}
+  postgres_host: {{ template "ejabberd.fullname" . }}-postgres
+  {{- else }}
+  postgres_host: {{ $postgres.host | quote }}
+  {{- end }}
+  postgres_database: {{ $postgres.database | quote }}
+  postgres_port: {{ $postgres.port | quote }}
+  postgres_username: {{ $postgres.username | quote }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}
+  {{- $redis := .Values.config.redis }}
+  {{- if $redis.internal }}
+  redis_host: {{ template "ejabberd.fullname" . }}-redis
+  {{- else }}
+  redis_host: {{ $redis.host | quote }}
+  {{- end }}
+  redis_port: {{ $redis.port | quote }}
+  redis_username: {{ $redis.username | quote }}
+  {{- if .Values.config.phpredisadmin.enabled }}
+  phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}
+  {{- end }}

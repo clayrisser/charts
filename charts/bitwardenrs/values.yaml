@@ -2,39 +2,51 @@ images:
   bitwardenrs:
     repository: codejamninja/bitwardenrs
     tag: 1.13.1
-  phpmyadmin:
-    repository: phpmyadmin/phpmyadmin
-    tag: 4.7
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 4.11
 
 config:
+  clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
+  adminToken: pass
   bitwardenrs:
     baseUrl: ''
     hostname: ''
-  signupsAllowed: true
-  smtp:
-    from: email@example.com
-    host: ''
-    password: ''
-    port: 587
-    ssl: true
-    username: ''
-  mysql:
+  postgres:
     customConfig: ''
     database: bitwardenrs
     host: ''
     internal: true
-    password: root
-    phpmyadmin: false
-    port: 3306
+    password: P@ssw0rd
+    pause: true
+    port: 5432
     prometheus: false
-    replicas: 3
-    standbyMode: hot
-    topologyMode: GroupReplication
+    replicas: 1
+    standbyMode: Hot
+    terminationPolicy: Delete
     url: ''
-    username: root
-    version: 8.0.14
+    username: postgres
+    version: 11.2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    versionMap:
+      9.6-v2: 9.6
+      9.6.7-v2: 9.6
+      10.2-v2: 10.2
+      10.6: 10.6
+      11.1: 11.1
+      11.2: 11.2
+  pgadmin:
+    email: admin
+    enabled: false
+    password: pass
 
 service:
   bitwardenrs:
@@ -42,16 +54,16 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  phpmyadmin:
+  pgadmin:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  mysql:
+  postgres:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      mysql: ''
+      postgres: ''
 
 ingress:
   bitwardenrs:
@@ -62,7 +74,7 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
-  phpmyadmin:
+  pgadmin:
     certificate: ''
     enabled: false
     hostname: ''
@@ -77,25 +89,23 @@ persistence:
   existingClaim: ''
   size: 1Gi
   storageClass: ''
-  backup:
-    awsAccessKey: ''
-    awsSecretKey: ''
-    azureAccountKey: ''
-    azureAccountName: ''
+  velero:
+    enabled: false
+  stash:
     bucket: ''
     container: ''
     enabled: false
     endpoint: s3.amazonaws.com
-    googleProjectId: ''
-    googleServiceKey: ''
-    keepLast: 5
-    prefix: ''
-    resticPassword: pass
+    keepLast: 30
+    paused: false
+    prefix: stash
     schedule: '0 0 * * *'
+    secret: stash-config-stash-config
     type: s3
     restore:
-      bitwardenrsSnapshot: ''
-      mysqlSnapshot: ''
+      snapshot:
+        data: ''
+        postgres: ''
 
 probes:
   liveness:

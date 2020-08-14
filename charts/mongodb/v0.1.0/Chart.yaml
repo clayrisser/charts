@@ -1,0 +1,17 @@
+name: mongodb
+home: https://www.mongodb.com
+icon: https://avatars1.githubusercontent.com/u/45120?s=200&v=4
+version: 0.1.0
+appVersion: latest
+description: 'the database for modern applications'
+keywords:
+  - mongo
+  - mongodb
+  - database
+  - document
+  - db
+sources:
+  - https://github.com/mongodb/mongo
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
