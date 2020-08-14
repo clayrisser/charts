@@ -160,10 +160,51 @@ questions:
   - variable: config.mongodb.version
     default: 4.1.13
     description: ''
-    type: string
+    type: enum
+    options:
+      - 3.4-v3
+      - 3.4.14
+      - 3.4.22
+      - 3.4-v4
+      - 3.6-v3
+      - 3.6.8
+      - 3.6.13
+      - 3.6-v4
+      - 4.0.5-v1
+      - 4.0-v1
+      - 4.0.3
+      - 4.0.5-v2
+      - 4.0.11
+      - 4.0-v2
+      - 4.1.7-v1
+      - 4.1.4
+      - 4.1.7-v2
+      - 4.1.13
+      - 4.1
     required: true
     label: version
     show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.terminationPolicy
+    default: Delete
+    description: ''
+    type: enum
+    options:
+      - Delete
+      - Pause
+      - WipeOut
+      - DoNotTerminate
+    required: true
+    show_if: config.mongodb.internal=true
+    label: 'termination policy'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.pause
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.mongodb.internal=true&&config.mongodb.terminationPolicy=Pause
+    label: pause
     group: 'MongoDB Config'
   - variable: config.mongodb.prometheus
     default: false
@@ -173,13 +214,191 @@ questions:
     label: prometheus
     show_if: config.mongodb.internal=true
     group: 'MongoDB Config'
-  - variable: config.mongodb.replicas
+  - variable: config.mongodb.shardTopology.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'shard topology enabled'
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.replicaSet.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.mongodb.shardTopology.enabled=false
+    label: 'replica set enabled'
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.replicaSet.replicas
     default: 1
     description: ''
     type: int
     required: true
-    label: replicas
+    label: 'replica set replicas'
+    show_if: config.mongodb.internal=true&&config.mongodb.replicaSet.enabled=true&&config.mongodb.shardTopology.enabled=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.configServer.replicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.shardTopology.enabled=true
+    label: 'shard topology config server replicas'
     show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.configServer.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology config server resources requests cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.configServer.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology config server resources requests memory'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.configServer.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology config server resources limits cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.configServer.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology config server resources limits memory'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.mongos.replicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    label: 'shard topology mongos replicas'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.mongos.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology mongos resources requests cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.mongos.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology mongos resources requests cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.mongos.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology mongos resources limits cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.mongos.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology mongos resources limits memory'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.shard.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    label: 'shard topology shard shards'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.shard.replicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    label: 'shard topology shard replicas'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.shard.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology shard resources requests cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.shard.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology shard resources requests cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.shard.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology shard resources limits cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.shard.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'shard topology shard resources limits memory'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'resources limits cpu'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources limits memory'
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=false
     group: 'MongoDB Config'
   - variable: config.mongodb.customConfig
     default: ''
@@ -188,38 +407,6 @@ questions:
     required: false
     label: 'custom config'
     show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.sharding.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: 'sharding enabled'
-    show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.sharding.configServerReplicas
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
-    label: 'sharding config server replicas'
-    group: 'MongoDB Config'
-  - variable: config.mongodb.sharding.mongosReplicas
-    default: 2
-    description: ''
-    type: int
-    required: true
-    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
-    label: 'sharding mongos replicas'
-    group: 'MongoDB Config'
-  - variable: config.mongodb.sharding.shards
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
-    label: 'sharding shards'
     group: 'MongoDB Config'
   - variable: config.mongodb.host
     default: ''
@@ -238,11 +425,12 @@ questions:
     show_if: config.mongodb.internal=false
     group: 'MongoDB Config'
   - variable: config.mongodb.password
-    default: ''
+    default: P@assw0rd
     description: ''
     type: password
     required: false
     label: password
+    show_if: config.mongodb.internal=false
     group: 'MongoDB Config'
   - variable: config.mongodb.port
     default: 27017
@@ -278,6 +466,7 @@ questions:
     type: boolean
     required: true
     label: 'mongo express'
+    show_if: config.mongodb.internal=true
     show_subquestion_if: true
     group: MongoExpress
     subquestions:
@@ -286,6 +475,7 @@ questions:
         description: ''
         type: string
         required: true
+        show_if: config.mongodb.internal=true
         label: 'mongo express username'
         group: MongoExpress
       - variable: config.mongoExpress.password
@@ -293,6 +483,7 @@ questions:
         description: ''
         type: password
         required: true
+        show_if: config.mongodb.internal=true
         label: 'mongo express password'
         group: MongoExpress
 
@@ -334,34 +525,26 @@ questions:
         type: string
         required: false
         label: 'existing claim'
-      - variable: persistence.backup.enabled
+      - variable: persistence.velero.enabled
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'backup enabled'
-      - variable: persistence.backup.resticPassword
-        default: pass
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
         description: ''
-        type: password
+        type: boolean
         required: true
-        show_if: persistence.backup.enabled=true
-        label: 'backup restic password'
-      - variable: persistence.backup.schedule
-        default: '0 0 * * *'
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
         description: ''
-        type: string
+        type: boolean
         required: true
-        show_if: persistence.backup.enabled=true
-        label: 'backup schedule'
-      - variable: persistence.backup.keepLast
-        default: 5
-        description: ''
-        type: int
-        required: true
-        show_if: persistence.backup.enabled=true
-        label: 'backup keep last'
-      - variable: persistence.backup.type
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.type
         default: s3
         description: ''
         type: enum
@@ -370,99 +553,51 @@ questions:
           - s3
           - azure
         required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup type'
-      - variable: persistence.backup.awsAccessKey
+        show_if: persistence.stash.enabled=true
+        label: 'stash type'
+      - variable: persistence.stash.container
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
-        label: 'aws access key'
-      - variable: persistence.backup.awsSecretKey
-        default: ''
-        description: ''
-        type: password
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
-        label: 'aws secret key'
-      - variable: persistence.backup.googleProjectId
+        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
+        label: 'stash container'
+      - variable: persistence.stash.bucket
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
-        label: 'google project id'
-      - variable: persistence.backup.googleServiceKey
-        default: ''
-        description: ''
-        type: password
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
-        label: 'google service key'
-      - variable: persistence.backup.azureAccountName
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
-        label: 'azure account name'
-      - variable: persistence.backup.azureAccountKey
-        default: ''
-        description: ''
-        type: password
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
-        label: 'azure account key'
-      - variable: persistence.backup.container
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
-        label: 'backup container'
-      - variable: persistence.backup.bucket
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup bucket'
-      - variable: persistence.backup.endpoint
+        show_if: persistence.stash.enabled=true
+        label: 'stash bucket'
+      - variable: persistence.stash.endpoint
         default: s3.amazonaws.com
         description: ''
         type: string
         required: true
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
-        label: 'backup endpoint'
-      - variable: persistence.backup.prefix
+        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
+        label: 'stash endpoint'
+      - variable: persistence.stash.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot.data
+      - variable: persistence.stash.restore.snapshot.mongodb
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup prefix'
-      - variable: persistence.backup.restore.rocketchatSnapshot
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup restore rocketchat snapshot'
-      - variable: persistence.backup.restore.rocketchatSnapshot
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup restore rocketchat snapshot'
-      - variable: persistence.backup.restore.mongodbSnapshot
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup restore mongodb snapshot'
+        show_if: persistence.stash.enabled=true&&config.mongodb.internal=true
+        label: 'stash restore snapshot mongodb'
 
 # Services and Load Balancing
   - variable: ingress.rocketchat.enabled
