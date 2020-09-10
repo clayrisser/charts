@@ -6,7 +6,6 @@ images:
 config:
   clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
-  password: P@ssw0rd
   replicas: 1
   updateStrategy: RollingUpdate
   version: '12'

@@ -1,3 +1,4 @@
+apiVersion: v2
 name: postgres
 home: https://github.com/codejamninja/charts
 icon: https://raw.githubusercontent.com/zalando/postgres-operator/master/docs/diagrams/logo.png

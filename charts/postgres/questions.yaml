@@ -73,13 +73,6 @@ questions:
     required: true
     label: 'resources limits memory'
     group: Config
-  - variable: config.password
-    default: P@ssw0rd
-    description: ''
-    type: password
-    required: true
-    label: password
-    group: Config
   - variable: config.replicas
     default: 1
     description: ''
