@@ -1,0 +1,236 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.version
+    default: '12'
+    description: ''
+    type: enum
+    options:
+      - '12'
+    required: true
+    label: version
+    group: Config
+  - variable: config.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    group: Config
+  - variable: config.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests memory'
+    group: Config
+  - variable: config.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'resources limits cpu'
+    group: Config
+  - variable: config.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources limits memory'
+    group: Config
+  - variable: config.password
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Config
+  - variable: config.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Config
+
+# PGAdmin
+  - variable: config.pgadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: pgadmin
+    show_subquestion_if: true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.email
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin email'
+        group: PGAdmin
+      - variable: config.pgadmin.password
+        default: admin
+        description: ''
+        type: password
+        required: true
+        label: 'pgadmin password'
+        group: PGAdmin
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+
+# Services and Load Balancing
+  - variable: ingress.postgres.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'postgres ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.postgres.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'postgres ingress tls'
+      - variable: ingress.postgres.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'postgres ingress hostname'
+      - variable: ingress.postgres.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.postgres.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'postgres ingress issuer name'
+      - variable: ingress.postgres.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.postgres.tls=true&&ingress.postgres.issuer.name=none
+        required: false
+        label: 'postgres ingress certificate'
+  - variable: service.postgres.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.postgres.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'postgres service type'
+    group: 'Services and Load Balancing'
+  - variable: service.postgres.ports.http
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.postgres.type!=ClusterIP&&ingress.postgres.enabled=false
+    label: 'postgres http port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.postgres.repository
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: 'postgres repository'
+    group: Images
+  - variable: images.postgres.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'postgres tag'
+    group: Images

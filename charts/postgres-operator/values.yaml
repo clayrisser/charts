@@ -1,0 +1,46 @@
+
+
+config:
+  clusterProvider: infrastructure
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+
+service:
+
+ingress:
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+  stash:
+    bucket: ''
+    container: ''
+    enabled: false
+    endpoint: s3.amazonaws.com
+    keepLast: 30
+    paused: false
+    prefix: stash
+    schedule: '0 0 * * *'
+    secret: stash-config-stash-config
+    type: s3
+    restore:
+      snapshot:
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

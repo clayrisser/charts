@@ -1,0 +1,40 @@
+apiVersion: acid.zalan.do/v1
+kind: PostgreSQL
+metadata:
+  name: {{ template "postgres.fullname" . }}-postgres
+  labels:
+    app: {{ template "postgres.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  teamId: acid
+  numberOfInstances: {{ .Values.config.replicas }}
+  {{- if .Values.persistence.velero.enabled }}
+  podAnnotations:
+    backup.velero.io/backup-volumes: data
+  {{- end }}
+  volume:
+    size: {{ .Values.persistence.size }}
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+    storageClass: ''
+    {{- else }}
+    storageClass: {{ .Values.persistence.storageClass }}
+    {{- end }}
+    {{- end }}
+  users:
+    postgres:
+      - superuser
+      - createdb
+  databases:
+    postgres: postgres
+  postgresql:
+    version: {{ .Values.config.version }}
+  resources:
+    requests:
+      cpu: {{ .Values.config.resources.requests.cpu }}
+      memory: {{ .Values.config.resources.requests.memory }}
+    limits:
+      cpu: {{ .Values.config.resources.limits.cpu }}
+      memory: {{ .Values.config.resources.limits.memory }}
