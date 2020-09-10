@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "rocketchat.fullname" . }}-rocketchat
@@ -8,40 +8,52 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "rocketchat.name" . }}-rocketchat
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
         app: {{ template "rocketchat.name" . }}-rocketchat
         release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
     spec:
       containers:
         - name: {{ template "rocketchat.fullname" . }}-rocketchat
           image: {{ .Values.images.rocketchat.repository }}:{{ .Values.images.rocketchat.tag }}
-          imagePullPolicy: {{ .Values.images.rocketchat.pullPolicy }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: 300m
+              memory: 1Gi
           ports:
             - name: container
               containerPort: 3000
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: /app/uploads
+              subPath: uploads
           env:
-            - name: MONGO_URL
-              valueFrom:
-                {{- $mongo := .Values.config.mongo }}
-                {{- if (or $mongo.url $mongo.username $mongo.password) }}
-                secretKeyRef:
-                {{- else }}
-                configMapKeyRef:
-                {{- end }}
-                  name: {{ template "rocketchat.fullname" . }}
-                  key: mongo_url
+            - name: Jitsi_SSL
+              value: {{ .Values.ingress.rocketchat.tls | quote }}
             - name: ROOT_URL
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
-                  key: base_url
-            - name: MAIL_URL
+                  key: rocketchat_base_url
+            - name: Site_Url
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
-                  key: mail_smtp_url
+                  key: rocketchat_base_url
             - name: From_Email
               valueFrom:
                 configMapKeyRef:
@@ -72,8 +84,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: jitsi_chrome_extension
-            - name: Jitsi_SSL
-              value: {{ .Values.ingress.tls | quote }}
             - name: SMTP_Host
               valueFrom:
                 configMapKeyRef:
@@ -109,13 +119,63 @@ spec:
                 configMapKeyRef:
                   name: {{ template "rocketchat.fullname" . }}
                   key: webrtc_enable_direct
+            - name: MONGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mongodb_url
+            - name: MONGO_OPLOG_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mongodb_oplog_url
+            - name: MAIL_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rocketchat.fullname" . }}
+                  key: mail_smtp_url
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "rocketchat.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "gitlab.fullname" . }}-gitlab
+  labels:
+    app: {{ template "gitlab.name" . }}-gitlab
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  driver: Restic
+  repository:
+    name: {{ template "gitlab.fullname" . }}-data
+  rules:
+    - snapshots:
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
+  target:
+    paths:
+      /_data
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "gitlab.fullname" . }}-gitlab
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+{{- end }}
