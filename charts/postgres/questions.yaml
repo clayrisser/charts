@@ -99,7 +99,7 @@ questions:
         label: 'pgadmin email'
         group: PGAdmin
       - variable: config.pgadmin.password
-        default: admin
+        default: pass
         description: ''
         type: password
         required: true
