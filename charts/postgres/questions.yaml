@@ -107,49 +107,45 @@ questions:
         group: PGAdmin
 
 # Persistence
-  - variable: persistence.enabled
+  - variable: persistence.size
+    default: 1Gi
+    description: ''
+    type: string
+    required: true
+    label: size
+    group: Persistence
+  - variable: persistence.storageClass
+    default: ''
+    description: ''
+    type: storageclass
+    required: false
+    label: 'storage class'
+    group: Persistence
+  - variable: persistence.accessMode
+    default: ReadWriteOnce
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadWriteMany
+      - ReadOnlyMany
+    required: false
+    label: 'access mode'
+    group: Persistence
+  - variable: persistence.existingClaim
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'existing claim'
+    group: Persistence
+  - variable: persistence.velero.enabled
     default: false
     description: ''
     type: boolean
     required: true
-    label: enabled
-    show_subquestion_if: true
+    label: 'velero enabled'
     group: Persistence
-    subquestions:
-      - variable: persistence.size
-        default: 1Gi
-        description: ''
-        type: string
-        required: true
-        label: size
-      - variable: persistence.storageClass
-        default: ''
-        description: ''
-        type: storageclass
-        required: false
-        label: 'storage class'
-      - variable: persistence.accessMode
-        default: ReadWriteOnce
-        description: ''
-        type: enum
-        options:
-          - ReadWriteOnce
-          - ReadWriteMany
-          - ReadOnlyMany
-        required: false
-        label: 'access mode'
-      - variable: persistence.existingClaim
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'existing claim'
-      - variable: persistence.velero.enabled
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'velero enabled'
 
 # Services and Load Balancing
   - variable: ingress.pgadmin.enabled
