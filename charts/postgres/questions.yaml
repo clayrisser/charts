@@ -45,34 +45,40 @@ questions:
     required: true
     label: version
     group: Config
-  - variable: config.resources.requests.cpu
-    default: 100m
+
+  - variable: config.resources.defaults
+    default: true
     description: ''
-    type: string
+    type: boolean
     required: true
-    label: 'resources requests cpu'
+    label: 'resources default'
+    show_subquestion_if: false
     group: Config
-  - variable: config.resources.requests.memory
-    default: 128Mi
-    description: ''
-    type: string
-    required: true
-    label: 'resources requests memory'
-    group: Config
-  - variable: config.resources.limits.cpu
-    default: 500m
-    description: ''
-    type: string
-    required: true
-    label: 'resources limits cpu'
-    group: Config
-  - variable: config.resources.limits.memory
-    default: 256Mi
-    description: ''
-    type: string
-    required: true
-    label: 'resources limits memory'
-    group: Config
+    subquestions:
+      - variable: config.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
   - variable: config.replicas
     default: 1
     description: ''
