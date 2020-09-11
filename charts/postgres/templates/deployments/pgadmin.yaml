@@ -35,6 +35,13 @@ spec:
         - name: {{ template "postgres.fullname" . }}-pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: {{ .Values.config.pgadmin.resources.requests.cpu }}
+              memory: {{ .Values.config.pgadmin.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.config.pgadmin.resources.limits.cpu }}
+              memory: {{ .Values.config.pgadmin.resources.limits.memory }}
           ports:
             - name: container
               containerPort: 80

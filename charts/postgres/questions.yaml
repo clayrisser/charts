@@ -45,13 +45,12 @@ questions:
     required: true
     label: version
     group: Config
-
   - variable: config.resources.defaults
     default: true
     description: ''
     type: boolean
     required: true
-    label: 'resources default'
+    label: 'resources defaults'
     show_subquestion_if: false
     group: Config
     subquestions:
@@ -103,14 +102,46 @@ questions:
         type: string
         required: true
         label: 'pgadmin email'
-        group: PGAdmin
       - variable: config.pgadmin.password
         default: pass
         description: ''
         type: password
         required: true
         label: 'pgadmin password'
-        group: PGAdmin
+  - variable: config.pgadmin.resources.defaults
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'resources defaults'
+    show_if: config.pgadmin.enabled=true
+    show_subquestion_if: false
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.pgadmin.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.pgadmin.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.pgadmin.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
 
 # Persistence
   - variable: persistence.size
