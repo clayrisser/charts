@@ -26,13 +26,13 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: RollingUpdate
+    default: Recreate
     description: ''
     type: enum
     options:
-      - RollingUpdate
-      - OnDelete
       - Recreate
+      - OnDelete
+      - RollingUpdate
     required: true
     label: 'update strategy'
     group: Config

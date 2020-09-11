@@ -7,7 +7,7 @@ config:
   clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   replicas: 1
-  updateStrategy: RollingUpdate
+  updateStrategy: Recreate
   version: '12'
   resources:
     requests:
