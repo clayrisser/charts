@@ -1,9 +1,9 @@
 apiVersion: acid.zalan.do/v1
 kind: postgresql
 metadata:
-  name: {{ template "postgres.fullname" . }}-{{ .Values.config.teamId }}-postgres
+  name: {{ .Values.config.teamId }}-{{ template "postgres.fullname" . }}-postgres
   labels:
-    app: {{ template "postgres.name" . }}-{{ .Values.config.teamId }}-postgres
+    app: {{ .Values.config.teamId }}-{{ template "postgres.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
