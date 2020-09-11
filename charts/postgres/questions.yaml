@@ -83,7 +83,7 @@ questions:
 
 # PGAdmin
   - variable: config.pgadmin.enabled
-    default: true
+    default: false
     description: ''
     type: boolean
     required: true
@@ -157,6 +157,7 @@ questions:
     description: ''
     type: boolean
     label: 'pgadmin ingress enabled'
+    show_if: config.pgadmin.enabled=true
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
@@ -164,19 +165,21 @@ questions:
         default: false
         description: ''
         type: boolean
+        show_if: config.pgadmin.enabled=true
         required: true
         label: 'pgadmin ingress tls'
       - variable: ingress.pgadmin.hostname
         default: xip.io
         description: ''
         type: hostname
+        show_if: config.pgadmin.enabled=true
         required: true
         label: 'pgadmin ingress hostname'
       - variable: ingress.pgadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.pgadmin.tls=true
+        show_if: ingress.pgadmin.tls=true&&config.pgadmin.enabled=true
         options:
           - none
           - letsencrypt-staging
@@ -187,14 +190,14 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
+        show_if: ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none&&config.pgadmin.enabled=true
         required: false
         label: 'pgadmin ingress certificate'
   - variable: service.pgadmin.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.pgadmin.enabled=false
+    show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     options:
       - ClusterIP
       - NodePort
@@ -208,7 +211,7 @@ questions:
     type: int
     min: 30000
     max: 32767
-    show_if: service.pgadmin.type!=ClusterIP&&ingress.pgadmin.enabled=false
+    show_if: service.pgadmin.type!=ClusterIP&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin http port'
     group: 'Services and Load Balancing'
   - variable: service.postgres.type

@@ -18,7 +18,7 @@ config:
       memory: 256Mi
   pgadmin:
     email: admin
-    enabled: true
+    enabled: false
     password: pass
 
 service:
