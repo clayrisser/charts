@@ -4,12 +4,12 @@ questions:
 
 # Config
   - variable: configKubernetes.enable_pod_antiaffinity
-    default: 'false'
+    default: '"false"'
     description: ''
     type: enum
     options:
-      - 'false'
-      - 'true'
+      - '"false"'
+      - '"true"'
     required: true
     label: 'enable antiaffinity'
     group: Config
