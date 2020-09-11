@@ -26,10 +26,15 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     ports:
+      postgres: ''
+  pgadmin:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    ports:
       http: ''
 
 ingress:
-  postgres:
+  pgadmin:
     certificate: ''
     enabled: false
     hostname: ''

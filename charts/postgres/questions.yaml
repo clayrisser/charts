@@ -152,49 +152,69 @@ questions:
         label: 'velero enabled'
 
 # Services and Load Balancing
-  - variable: ingress.postgres.enabled
+  - variable: ingress.pgadmin.enabled
     default: true
     description: ''
     type: boolean
-    label: 'postgres ingress enabled'
+    label: 'pgadmin ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.postgres.tls
+      - variable: ingress.pgadmin.tls
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'postgres ingress tls'
-      - variable: ingress.postgres.hostname
+        label: 'pgadmin ingress tls'
+      - variable: ingress.pgadmin.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'postgres ingress hostname'
-      - variable: ingress.postgres.issuer.name
+        label: 'pgadmin ingress hostname'
+      - variable: ingress.pgadmin.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.postgres.tls=true
+        show_if: ingress.pgadmin.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'postgres ingress issuer name'
-      - variable: ingress.postgres.certificate
+        label: 'pgadmin ingress issuer name'
+      - variable: ingress.pgadmin.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.postgres.tls=true&&ingress.postgres.issuer.name=none
+        show_if: ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
         required: false
-        label: 'postgres ingress certificate'
+        label: 'pgadmin ingress certificate'
+  - variable: service.pgadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.pgadmin.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'pgadmin service type'
+    group: 'Services and Load Balancing'
+  - variable: service.pgadmin.ports.http
+    default: ''
+    description: ''
+    type: int
+    min: 30000
+    max: 32767
+    show_if: service.pgadmin.type!=ClusterIP&&ingress.pgadmin.enabled=false
+    label: 'pgadmin http port'
+    group: 'Services and Load Balancing'
   - variable: service.postgres.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.postgres.enabled=false
     options:
       - ClusterIP
       - NodePort
@@ -202,28 +222,30 @@ questions:
     required: true
     label: 'postgres service type'
     group: 'Services and Load Balancing'
-  - variable: service.postgres.ports.http
+  - variable: service.postgres.ports.postgres
     default: ''
     description: ''
     type: int
     min: 30000
     max: 32767
-    show_if: service.postgres.type!=ClusterIP&&ingress.postgres.enabled=false
-    label: 'postgres http port'
+    show_if: service.postgres.type!=ClusterIP
+    label: 'postgres port'
     group: 'Services and Load Balancing'
 
 # Images
-  - variable: images.postgres.repository
-    default: postgres
+  - variable: images.pgadmin.repository
+    default: dpage/pgadmin4
     description: ''
     type: string
     required: true
-    label: 'postgres repository'
+    label: repository
+    show_if: config.pgadmin.enabled=true
     group: Images
-  - variable: images.postgres.tag
-    default: latest
+  - variable: images.pgadmin.tag
+    default: 4.17
     description: ''
     type: string
     required: true
-    label: 'postgres tag'
+    label: tag
+    show_if: config.pgadmin.enabled=true
     group: Images
