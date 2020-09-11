@@ -7,7 +7,6 @@ config:
   clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   replicas: 1
-  teamId: acid
   updateStrategy: RollingUpdate
   version: '12'
   resources:
