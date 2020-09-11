@@ -3,13 +3,10 @@ categories:
 questions:
 
 # Config
-  - variable: configKubernetes.enable_pod_antiaffinity
-    default: '"false"'
+  - variable: config.enableAntiaffinity
+    default: false
     description: ''
-    type: enum
-    options:
-      - '"false"'
-      - '"true"'
+    type: boolean
     required: true
     label: 'enable antiaffinity'
     group: Config
