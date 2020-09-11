@@ -15,7 +15,7 @@ spec:
     backup.velero.io/backup-volumes: data
   {{- end }}
   volume:
-    size: {{ .Values.persistence.size }}
+    size: {{ .Values.persistence.size | quote }}
     {{- if .Values.persistence.storageClass }}
     {{- if (eq "-" .Values.persistence.storageClass) }}
     storageClass: ''
@@ -30,7 +30,7 @@ spec:
   databases:
     postgres: postgres
   postgresql:
-    version: {{ .Values.config.version }}
+    version: {{ .Values.config.version | quote }}
   resources:
     requests:
       cpu: {{ .Values.config.resources.requests.cpu }}
