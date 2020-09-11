@@ -13,7 +13,6 @@ data:
 {{ toYaml .Values.configGeneral | indent 2 }}
 {{ toYaml .Values.configUsers | indent 2 }}
 {{ toYaml .Values.configKubernetes | indent 2 }}
-    enable_pod_antiaffinity: {{ .Values.config.enableAntiaffinity | quote }}
 {{ toYaml .Values.configTimeouts | indent 2 }}
 {{ toYaml .Values.configLoadBalancer | indent 2 }}
 {{ toYaml .Values.configAwsOrGcp | indent 2 }}
@@ -23,3 +22,6 @@ data:
 {{ toYaml .Values.configTeamsApi | indent 2 }}
 {{ toYaml .Values.configConnectionPooler | indent 2 }}
 {{- end }}
+
+
+# enable_pod_antiaffinity: {{ .Values.config.enableAntiaffinity | quote }}
