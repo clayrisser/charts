@@ -1,4 +1,5 @@
 name: tcp-proxy
+apiVersion: v1
 home: https://github.com/codejamninja/tcp-proxy
 icon: https://www.ccnahub.com/wp-content/uploads/2013/10/TCPIPRN-150x150.png
 version: 0.0.1

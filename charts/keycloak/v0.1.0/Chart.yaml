@@ -1,4 +1,5 @@
 name: keycloak
+apiVersion: v1
 home: https://www.keycloak.org
 icon: https://www.keycloak.org/resources/images/keycloak_logo_480x108.png
 version: 0.1.0

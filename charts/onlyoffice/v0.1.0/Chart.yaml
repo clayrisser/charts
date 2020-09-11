@@ -1,4 +1,5 @@
 name: onlyoffice
+apiVersion: v1
 home: https://www.onlyoffice.com
 icon: https://static-www.onlyoffice.com/images/logo_small.svg
 version: 0.1.0

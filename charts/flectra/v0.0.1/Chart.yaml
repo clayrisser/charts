@@ -1,4 +1,5 @@
 name: flectra
+apiVersion: v1
 home: https://flectrahq.com
 icon: https://flectrahq.com/flectra_website/static/src/img/logo.png
 version: 0.0.1

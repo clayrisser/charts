@@ -1,4 +1,5 @@
 name: sentry
+apiVersion: v1
 home: https://sentry.io
 icon: https://sentry-brand.storage.googleapis.com/sentry-logo-black.svg
 version: 0.1.0

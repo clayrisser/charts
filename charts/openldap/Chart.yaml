@@ -1,4 +1,5 @@
 name: openldap
+apiVersion: v1
 home: https://www.openldap.org
 icon: https://www.openldap.org/images/headers/LDAPworm.gif
 version: 0.0.1

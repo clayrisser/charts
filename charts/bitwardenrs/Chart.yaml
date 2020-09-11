@@ -1,3 +1,4 @@
+apiVersion: v1
 name: bitwardenrs
 home: https://github.com/codejamninja/charts
 icon: https://steemitimages.com/DQmfAGEd6kMtWFV3E4gN5BrwtzPUeKz4MKEofxx7tpiiZeW/image.png

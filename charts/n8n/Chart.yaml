@@ -1,4 +1,5 @@
 name: n8n
+apiVersion: v1
 home: https://n8n.io
 icon: https://n8n.io/n8n-logo.png
 version: 0.0.2

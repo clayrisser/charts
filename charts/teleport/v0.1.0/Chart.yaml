@@ -1,4 +1,5 @@
 name: teleport
+apiVersion: v1
 home: https://gravitational.com/teleport
 icon: https://gravitational.com/gravitational/images/logos/logo-teleport.svg
 version: 0.1.0

@@ -1,4 +1,5 @@
 name: taiga
+apiVersion: v1
 home: https://www.taiga.com
 icon: https://fitsmallbusiness.com/wp-content/uploads/2017/09/taiga-1.png
 version: 0.1.0

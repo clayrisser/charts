@@ -1,6 +1,7 @@
 name: onetimesecret
+apiVersion: v1
 home: https://onetimesecret.com
-icon: 
+icon:
 version: 0.0.1
 appVersion: latest
 description: 'keep sensitive info out of your email and chat logs'

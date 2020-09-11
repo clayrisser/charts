@@ -1,4 +1,5 @@
 name: wordpress
+apiVersion: v1
 home: https://github.com/codejamninja/wordpress
 icon: https://s.w.org/style/images/wporg-logo.svg?3
 version: 0.0.1

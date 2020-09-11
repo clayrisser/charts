@@ -1,4 +1,5 @@
 name: gitlab-runner
+apiVersion: v1
 home: https://docs.gitlab.com/runner
 icon: https://gitlab.com/uploads/-/system/project/avatar/250833/runner_logo.png
 version: 0.15.0-rc1

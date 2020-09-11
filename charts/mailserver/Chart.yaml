@@ -1,4 +1,5 @@
 name: mailserver
+apiVersion: v1
 home: https://github.com/tomav/docker-mailserver
 icon: https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/black/svg/envelope.svg
 version: 0.0.1

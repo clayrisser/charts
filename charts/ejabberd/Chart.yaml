@@ -1,4 +1,5 @@
 name: ejabberd
+apiVersion: v1
 home: https://www.ejabberd.im
 icon: https://www.ejabberd.im/sites/all/themes/new_ejabberd_v2/style/img/header_logo_e@2x.png
 version: 0.0.1

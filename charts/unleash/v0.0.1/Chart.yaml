@@ -1,4 +1,5 @@
 name: unleash
+apiVersion: v1
 home: https://unleash.github.io
 icon: https://unleash.github.io/img/logo-inverted.png
 version: 0.0.1

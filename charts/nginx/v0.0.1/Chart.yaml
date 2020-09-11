@@ -1,4 +1,5 @@
 name: nginx
+apiVersion: v1
 home: https://github.com/codejaminja/charts
 icon: https://www.nginx.com/wp-content/uploads/2019/10/NGINX-Logo-White-Endorsement-RGB.svg
 version: 0.0.1

@@ -1,4 +1,5 @@
 name: webdav
+apiVersion: v1
 home: https://github.com/codejamninja/webdav
 icon: http://www.pvhc.net/img87/emmugcxybtnqmazbcdxh.png
 version: 0.1.0

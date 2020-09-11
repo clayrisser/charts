@@ -1,4 +1,5 @@
 name: mysql
+apiVersion: v1
 home: https://www.mysql.com
 icon: https://www.mysql.com/common/logos/logo-mysql-170x115.png
 version: 0.0.1

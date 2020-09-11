@@ -1,4 +1,5 @@
 name: xbrowsersync
+apiVersion: v1
 home: https://www.xbrowsersync.org
 icon: https://www.xbrowsersync.org/assets/89e40751d0e7b7f69bd0e2dec3e98f18.svg
 version: 0.0.1

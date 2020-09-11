@@ -1,4 +1,5 @@
 name: stash-config
+apiVersion: v1
 home: https://stash.run
 icon: https://stash.run/assets/images/products/stash/stash-white.png
 version: 0.0.1

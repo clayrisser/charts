@@ -1,6 +1,7 @@
 name: kube-api-proxy
+apiVersion: v1
 home: https://github.com/codejamninja/kube-api-proxy
-icon: 
+icon:
 version: 0.1.0
 appVersion: latest
 description: 'proxy kubernetes api'
