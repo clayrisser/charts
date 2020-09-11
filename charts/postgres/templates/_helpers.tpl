@@ -51,9 +51,8 @@ Calculate postgres base url
 {{- else }}
 {{- if .Values.ingress.postgres.enabled }}
 {{- $hostname := ((empty (include "postgres.postgres-hostname" .)) | ternary .Values.ingress.postgres.hostname (include "postgres.postgres-hostname" .)) }}
-{{- $path := (eq .Values.ingress.postgres.path "/" | ternary "" .Values.ingress.postgres.path) }}
 {{- $protocol := (.Values.ingress.postgres.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
+{{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "postgres.postgres-hostname" .) }}
 {{- end }}
