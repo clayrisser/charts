@@ -122,24 +122,28 @@ questions:
         default: 100m
         description: ''
         type: string
+        show_if: config.pgadmin.enabled=true
         required: true
         label: 'resources requests cpu'
       - variable: config.pgadmin.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
+        show_if: config.pgadmin.enabled=true
         required: true
         label: 'resources requests memory'
       - variable: config.pgadmin.resources.limits.cpu
         default: 500m
         description: ''
         type: string
+        show_if: config.pgadmin.enabled=true
         required: true
         label: 'resources limits cpu'
       - variable: config.pgadmin.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
+        show_if: config.pgadmin.enabled=true
         required: true
         label: 'resources limits memory'
 
