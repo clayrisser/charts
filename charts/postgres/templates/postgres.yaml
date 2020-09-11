@@ -1,14 +1,14 @@
 apiVersion: acid.zalan.do/v1
 kind: postgresql
 metadata:
-  name: {{ template "postgres.fullname" . }}-postgres
+  name: {{ template "postgres.fullname" . }}-{{ .Values.config.teamId }}-postgres
   labels:
-    app: {{ template "postgres.name" . }}-postgres
+    app: {{ template "postgres.name" . }}-{{ .Values.config.teamId }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  teamId: acid
+  teamId: {{ .Values.config.teamId | quote }}
   numberOfInstances: {{ .Values.config.replicas }}
   {{- if .Values.persistence.velero.enabled }}
   podAnnotations:
