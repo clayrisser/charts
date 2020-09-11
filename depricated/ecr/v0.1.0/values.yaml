@@ -1,7 +1,0 @@
-config:
-  email: 'tech@example.com'
-  aws:
-    account: ''
-    accessKey: ''
-    secretKey: ''
-    region: ''
