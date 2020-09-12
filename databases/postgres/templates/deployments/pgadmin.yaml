@@ -24,13 +24,24 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: {{ .Values.persistence.enabled | ternary "110" "90" }}
               preference:
                 matchExpressions:
-                  - key: lifecycle
+                  - key: application/state
                     operator: In
                     values:
-                      - spot
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "postgres.name" . }}-pgadmin
       containers:
         - name: {{ template "postgres.fullname" . }}-pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
