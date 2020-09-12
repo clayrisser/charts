@@ -5,10 +5,9 @@ config:
 
 velero:
   configuration:
-    provider: velero.io/aws
+    provider: aws
     backupStorageLocation:
       name: default
-      provider:
       bucket: ''
       caCert:
       prefix: velero
@@ -18,7 +17,6 @@ velero:
         s3Url: https://sfo2.digitaloceanspaces.com
     volumeSnapshotLocation:
       name: default
-      provider:
       config:
         profile: default
         region: sfo2
