@@ -15,7 +15,3 @@ sources:
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
-dependencies:
-  - name: velero
-    version: 2.12.17
-    repository: https://vmware-tanzu.github.io/helm-charts
