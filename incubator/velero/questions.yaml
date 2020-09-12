@@ -3,43 +3,6 @@ categories:
 questions:
 
 # Config
-  - variable: velero.configuration.provider
-    default: aws
-    description: ''
-    type: enum
-    options:
-      - aws
-    required: true
-    label: provider
-    group: Config
-  - variable: config.accessKeyId
-    default: ''
-    description: ''
-    type: string
-    required: true
-    label: 'access key id'
-    group: Config
-  - variable: config.secretAccessKey
-    default: ''
-    description: ''
-    type: password
-    required: true
-    label: 'secret access key'
-    group: Config
-  - variable: config.digitaloceanToken
-    default: ''
-    description: ''
-    type: password
-    required: false
-    label: 'digitalocean token'
-    group: Config
-  - variable: velero.deployRestic
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'restic enabled'
-    group: Config
   - variable: velero.metrics.enabled
     default: true
     description: ''
@@ -47,43 +10,106 @@ questions:
     required: true
     label: 'metrics enabled'
     group: Config
-  - variable: velero.configuration.backupStorageLocation.bucket
+
+# Backups
+  - variable: velero.backupsEnabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'backups enabled'
+    group: Backups
+    show_subquestions_if: true
+    subquestions:
+      - variable: velero.configuration.backupStorageLocation.provider
+        default: aws
+        description: ''
+        type: enum
+        options:
+          - aws
+        required: true
+        label: provider
+      - variable: velero.configuration.backupStorageLocation.bucket
+        default: ''
+        description: ''
+        type: string
+        show_if: velero.configuration.backupStorageLocation.provider=aws
+        required: true
+        label: bucket
+      - variable: velero.configuration.backupStorageLocation.prefix
+        default: velero
+        description: ''
+        type: string
+        show_if: velero.configuration.backupStorageLocation.provider=aws
+        required: false
+        label: prefix
+      - variable: velero.configuration.backupStorageLocation.config.s3Url
+        default: https://sfo2.digitaloceanspaces.com
+        description: ''
+        type: string
+        show_if: velero.configuration.backupStorageLocation.provider=aws
+        required: true
+        label: 's3 url'
+      - variable: velero.configuration.backupStorageLocation.config.region
+        default: sfo2
+        description: ''
+        type: string
+        show_if: velero.configuration.backupStorageLocation.provider=aws
+        required: true
+        label: region
+
+# Snapshots
+  - variable: velero.snapshotsEnabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'snapshots enabled'
+    group: Snapshots
+    show_subquestions_if: true
+    subquestions:
+      - variable: velero.deployRestic
+        default: true
+        description: ''
+        type: boolean
+        required: true
+        label: 'restic enabled'
+      - variable: velero.configuration.volumeSnapshotLocation.provider
+        default: aws
+        description: ''
+        type: enum
+        options:
+          - aws
+        required: true
+        label: provider
+      - variable: velero.configuration.volumeSnapshotLocation.config.region
+        default: sfo2
+        description: ''
+        type: string
+        required: true
+        label: region
+        show_if: velero.configuration.volumeSnapshotLocation.provider=aws
+
+# Credentials
+  - variable: config.accessKeyId
     default: ''
     description: ''
     type: string
     required: true
-    label: 'backup storage location bucket'
-    show_if: velero.configuration.provider=aws
-    group: Config
-  - variable: velero.configuration.backupStorageLocation.prefix
-    default: velero
+    label: 'access key id'
+    group: Credentials
+  - variable: config.secretAccessKey
+    default: ''
     description: ''
-    type: string
+    type: password
+    required: true
+    label: 'secret access key'
+    group: Credentials
+  - variable: config.digitaloceanToken
+    default: ''
+    description: ''
+    type: password
     required: false
-    label: 'backup storage location prefix'
-    show_if: velero.configuration.provider=aws
-    group: Config
-  - variable: velero.configuration.backupStorageLocation.config.s3Url
-    default: https://sfo2.digitaloceanspaces.com
-    description: ''
-    type: string
-    required: true
-    label: 'backup storage location s3 url'
-    show_if: velero.configuration.provider=aws
-    group: Config
-  - variable: velero.configuration.backupStorageLocation.config.region
-    default: sfo2
-    description: ''
-    type: string
-    required: true
-    label: 'backup storage location region'
-    show_if: velero.configuration.provider=aws
-    group: Config
-  - variable: velero.configuration.volumeSnapshotLocation.config.region
-    default: sfo2
-    description: ''
-    type: string
-    required: true
-    label: 'volume snapshot location region'
-    show_if: velero.configuration.provider=aws
-    group: Config
+    label: 'digitalocean token'
+    show_if: velero.configuration.backupStorageLocation.provider=aws
+    group: Credentials

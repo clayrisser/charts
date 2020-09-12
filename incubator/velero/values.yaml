@@ -4,19 +4,22 @@ config:
   digitaloceanToken: ''
 
 velero:
+  backupsEnabled: true
+  snapshotsEnabled: true
   configuration:
-    provider: aws
     backupStorageLocation:
-      name: default
       bucket: ''
       caCert:
+      name: default
       prefix: velero
+      provider: aws
       config:
         profile: default
         region: sfo2
         s3Url: https://sfo2.digitaloceanspaces.com
     volumeSnapshotLocation:
       name: default
+      provider: digitalocean.com/velero
       config:
         profile: default
         region: sfo2
@@ -85,7 +88,5 @@ velero:
       create: true
       name:
       annotations:
-  backupsEnabled: true
-  snapshotsEnabled: true
   schedules: {}
   configMaps: {}
