@@ -12,14 +12,21 @@ questions:
     required: true
     label: provider
     group: Config
-  - variable: velero.credentials.secretContents.cloud
+  - variable: config.accessKeyId
     default: ''
     description: ''
-    type: multiline
+    type: string
     required: true
-    label: 'cloud secret'
+    label: 'access key id'
     group: Config
-  - variable: velero.credentials.secretContents.digitalocean_token
+  - variable: config.secretAccessKey
+    default: ''
+    description: ''
+    type: password
+    required: true
+    label: 'secret access key'
+    group: Config
+  - variable: config.digitaloceanToken
     default: ''
     description: ''
     type: password
@@ -57,7 +64,7 @@ questions:
     show_if: velero.configuration.provider=velero.io/aws
     group: Config
   - variable: velero.configuration.backupStorageLocation.config.s3Url
-    default: sfo2.digitaloceanspaces.com
+    default: https://sfo2.digitaloceanspaces.com
     description: ''
     type: string
     required: true

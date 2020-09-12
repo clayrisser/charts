@@ -1,3 +1,8 @@
+config:
+  accessKeyId: ''
+  secretAccessKey: ''
+  digitaloceanToken: ''
+
 velero:
   configuration:
     provider: velero.io/aws
@@ -10,7 +15,7 @@ velero:
       config:
         profile: default
         region: sfo2
-        s3Url: sfo2.digitaloceanspaces.com
+        s3Url: https://sfo2.digitaloceanspaces.com
     volumeSnapshotLocation:
       name: default
       provider:
@@ -50,10 +55,8 @@ velero:
     securityContext: {}
   credentials:
     useSecret: true
-    existingSecret:
+    existingSecret: cloud-credentials
     secretContents:
-      cloud: ''
-      digitalocean_token: ''
     extraEnvVars: {}
   image:
     repository: velero/velero
