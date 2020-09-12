@@ -6,6 +6,7 @@ config:
 velero:
   backupsEnabled: true
   snapshotsEnabled: true
+  deployRestic: false
   configuration:
     backupStorageLocation:
       bucket: ''
@@ -44,7 +45,6 @@ velero:
       volumeMounts:
         - mountPath: /target
           name: plugins
-  deployRestic: true
   restic:
     podVolumePath: /var/lib/kubelet/pods
     privileged: false

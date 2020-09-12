@@ -69,16 +69,17 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: velero.deployRestic
-        default: true
+        default: false
         description: ''
         type: boolean
         required: true
         label: 'restic enabled'
       - variable: velero.configuration.volumeSnapshotLocation.provider
-        default: aws
+        default: digitalocean.com/velero
         description: ''
         type: enum
         options:
+          - digitalocean.com/velero
           - aws
         required: true
         label: provider
