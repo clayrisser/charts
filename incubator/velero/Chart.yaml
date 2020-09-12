@@ -1,0 +1,21 @@
+name: velero
+apiVersion: v2
+home: https://github.com/codejamninja/charts/tree/master/incubator/velero
+icon: https://cdn-images-1.medium.com/max/1600/1*-9mb3AKnKdcL_QD3CMnthQ.png
+version: 2.12.17
+appVersion: latest
+description: 'an open source tool to safely backup and restore, perform disaster recovery, and migrate kubernetes cluster resources and persistent volumes'
+keywords:
+  - velero
+  - backup
+  - restic
+  - s3
+sources:
+  - https://github.com/vmware-tanzu/helm-charts/tree/main/charts/velero
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
+dependencies:
+  - name: velero
+    version: 2.12.17
+    repository: https://vmware-tanzu.github.io/helm-charts

@@ -1,0 +1,90 @@
+velero:
+  configuration:
+    provider: velero.io/aws
+    backupStorageLocation:
+      name: default
+      provider:
+      bucket: ''
+      caCert:
+      prefix: velero
+      config:
+        profile: default
+        region: sfo2
+        s3Url: sfo2.digitaloceanspaces.com
+    volumeSnapshotLocation:
+      name: default
+      provider:
+      config:
+        profile: default
+        region: sfo2
+    backupSyncPeriod:
+    resticTimeout:
+    restoreResourcePriorities:
+    restoreOnlyMode:
+    extraEnvVars: {}
+    features:
+    logLevel:
+    logFormat:
+  initContainers:
+    - name: velero-plugin-for-aws
+      image: velero/velero-plugin-for-aws:v1.1.0
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /target
+          name: plugins
+    - name: velero-plugin
+      image: digitalocean/velero-plugin:v1.0.0
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /target
+          name: plugins
+  deployRestic: true
+  restic:
+    podVolumePath: /var/lib/kubelet/pods
+    privileged: false
+    priorityClassName: {}
+    resources: {}
+    tolerations: []
+    extraVolumes: []
+    extraVolumeMounts: []
+    securityContext: {}
+  credentials:
+    useSecret: true
+    existingSecret:
+    secretContents:
+      cloud: ''
+      digitalocean_token: ''
+    extraEnvVars: {}
+  image:
+    repository: velero/velero
+    tag: v1.4.2
+    pullPolicy: IfNotPresent
+    imagePullSecrets: []
+  metrics:
+    enabled: true
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "8085"
+      prometheus.io/path: "/metrics"
+  podAnnotations: {}
+  podLabels: {}
+  resources: {}
+  securityContext: {}
+  tolerations: []
+  affinity: {}
+  nodeSelector: {}
+  extraVolumes: []
+  extraVolumeMounts: []
+  installCRDs: true
+  rbac:
+    create: true
+    clusterAdministrator: true
+  serviceAccount:
+    server:
+      create: true
+      name:
+      annotations:
+  backupsEnabled: true
+  snapshotsEnabled: true
+  schedules: {}
+  configMaps: {}

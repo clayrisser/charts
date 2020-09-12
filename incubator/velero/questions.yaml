@@ -1,0 +1,85 @@
+categories:
+  - Backup
+questions:
+
+# Config
+  - variable: velero.configuration.provider
+    default: velero.io/aws
+    description: ''
+    type: enum
+    options:
+      - velero.io/aws
+    required: true
+    label: provider
+    group: Config
+  - variable: velero.credentials.secretContents.cloud
+    default: ''
+    description: ''
+    type: multiline
+    required: true
+    label: 'cloud secret'
+    group: Config
+  - variable: velero.credentials.secretContents.digitalocean_token
+    default: ''
+    description: ''
+    type: password
+    required: false
+    label: 'digitalocean token'
+    group: Config
+  - variable: velero.deployRestic
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'restic enabled'
+    group: Config
+  - variable: velero.metrics.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'metrics enabled'
+    group: Config
+  - variable: velero.configuration.backupStorageLocation.config.bucket
+    default: ''
+    description: ''
+    type: string
+    required: true
+    label: 'backup storage location bucket'
+    show_if: velero.configuration.provider=velero.io/aws
+    group: Config
+  - variable: velero.configuration.backupStorageLocation.config.prefix
+    default: velero
+    description: ''
+    type: string
+    required: false
+    label: 'backup storage location prefix'
+    show_if: velero.configuration.provider=velero.io/aws
+    group: Config
+  - variable: velero.configuration.backupStorageLocation.config.s3Url
+    default: sfo2.digitaloceanspaces.com
+    description: ''
+    type: string
+    required: true
+    label: 'backup storage location s3 url'
+    show_if: velero.configuration.provider=velero.io/aws
+    group: Config
+  - variable: velero.configuration.backupStorageLocation.config.region
+    default: sfo2
+    description: ''
+    type: string
+    required: true
+    label: 'backup storage location region'
+    show_if: velero.configuration.provider=velero.io/aws
+    group: Config
+
+
+
+  - variable: velero.configuration.volumeSnapshotLocation.config.region
+    default: sfo2
+    description: ''
+    type: string
+    required: true
+    label: 'volume snapshot location region'
+    show_if: velero.configuration.provider=velero.io/aws
+    group: Config
