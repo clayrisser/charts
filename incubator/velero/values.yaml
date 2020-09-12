@@ -8,12 +8,12 @@ velero:
   snapshotsEnabled: true
   deployRestic: false
   configuration:
+    provider: aws
     backupStorageLocation:
       bucket: ''
       caCert:
       name: default
       prefix: velero
-      provider: aws
       config:
         profile: default
         region: sfo2

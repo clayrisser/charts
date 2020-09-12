@@ -21,7 +21,7 @@ questions:
     group: Backups
     show_subquestion_if: true
     subquestions:
-      - variable: velero.configuration.backupStorageLocation.provider
+      - variable: velero.configuration.provider
         default: aws
         description: ''
         type: enum
@@ -33,28 +33,28 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: velero.configuration.backupStorageLocation.provider=aws
+        show_if: velero.configuration.provider=aws
         required: true
         label: bucket
       - variable: velero.configuration.backupStorageLocation.prefix
         default: velero
         description: ''
         type: string
-        show_if: velero.configuration.backupStorageLocation.provider=aws
+        show_if: velero.configuration.provider=aws
         required: false
         label: prefix
       - variable: velero.configuration.backupStorageLocation.config.s3Url
         default: https://sfo2.digitaloceanspaces.com
         description: ''
         type: string
-        show_if: velero.configuration.backupStorageLocation.provider=aws
+        show_if: velero.configuration.provider=aws
         required: true
         label: 's3 url'
       - variable: velero.configuration.backupStorageLocation.config.region
         default: sfo2
         description: ''
         type: string
-        show_if: velero.configuration.backupStorageLocation.provider=aws
+        show_if: velero.configuration.provider=aws
         required: true
         label: region
 
@@ -112,5 +112,5 @@ questions:
     type: password
     required: false
     label: 'digitalocean token'
-    show_if: velero.configuration.backupStorageLocation.provider=aws
+    show_if: velero.configuration.provider=aws
     group: Credentials
