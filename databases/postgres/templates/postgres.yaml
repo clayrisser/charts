@@ -12,7 +12,7 @@ spec:
   numberOfInstances: {{ .Values.config.replicas }}
   {{- if .Values.persistence.velero.enabled }}
   podAnnotations:
-    backup.velero.io/backup-volumes: data
+    backup.velero.io/backup-volumes: pgdata
   {{- end }}
   volume:
     size: {{ .Values.persistence.size | quote }}
