@@ -40,7 +40,7 @@ questions:
     required: true
     label: 'metrics enabled'
     group: Config
-  - variable: velero.configuration.backupStorageLocation.config.bucket
+  - variable: velero.configuration.backupStorageLocation.bucket
     default: ''
     description: ''
     type: string
@@ -48,7 +48,7 @@ questions:
     label: 'backup storage location bucket'
     show_if: velero.configuration.provider=velero.io/aws
     group: Config
-  - variable: velero.configuration.backupStorageLocation.config.prefix
+  - variable: velero.configuration.backupStorageLocation.prefix
     default: velero
     description: ''
     type: string
@@ -72,9 +72,6 @@ questions:
     label: 'backup storage location region'
     show_if: velero.configuration.provider=velero.io/aws
     group: Config
-
-
-
   - variable: velero.configuration.volumeSnapshotLocation.config.region
     default: sfo2
     description: ''
