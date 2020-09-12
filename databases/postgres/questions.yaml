@@ -133,7 +133,7 @@ questions:
         required: true
         label: 'resources requests memory'
       - variable: config.pgadmin.resources.limits.cpu
-        default: 500m
+        default: 200m
         description: ''
         type: string
         show_if: config.pgadmin.enabled=true
