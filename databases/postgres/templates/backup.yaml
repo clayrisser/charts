@@ -1,0 +1,17 @@
+{{- if .Values.persistence.velero.enabled }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ template "postgres.fullname" . }}-pgadmin
+  labels:
+    app: {{ template "postgres.name" . }}-pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: {{ .Values.persistence.velero.schedule }}
+  template:
+    includedNamespaces:
+    - {{ .Release.Namespace }}
+      ttl: 0h30m00s
+{{- end }}

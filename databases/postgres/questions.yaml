@@ -187,6 +187,14 @@ questions:
     required: true
     label: 'velero enabled'
     group: Persistence
+  - variable: persistence.velero.schedule
+    default: '@midnight'
+    description: ''
+    type: string
+    required: true
+    label: 'velero schedule'
+    show_if: persistence.velero.enabled=true
+    group: Persistence
 
 # Services and Load Balancing
   - variable: ingress.pgadmin.enabled

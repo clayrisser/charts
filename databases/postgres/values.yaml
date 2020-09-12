@@ -57,6 +57,7 @@ persistence:
   storageClass: ''
   velero:
     enabled: false
+    schedule: '@midnight'
 
 probes:
   liveness:
