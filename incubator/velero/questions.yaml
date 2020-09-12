@@ -19,7 +19,7 @@ questions:
     required: true
     label: 'backups enabled'
     group: Backups
-    show_subquestions_if: true
+    show_subquestion_if: true
     subquestions:
       - variable: velero.configuration.backupStorageLocation.provider
         default: aws
@@ -66,7 +66,7 @@ questions:
     required: true
     label: 'snapshots enabled'
     group: Snapshots
-    show_subquestions_if: true
+    show_subquestion_if: true
     subquestions:
       - variable: velero.deployRestic
         default: true
