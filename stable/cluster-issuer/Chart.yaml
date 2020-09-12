@@ -1,8 +1,8 @@
-name: cluster-issuer
 apiVersion: v1
+name: cluster-issuer
 home: https://letsencrypt.org
 icon: https://raw.githubusercontent.com/jetstack/cert-manager/master/logo/logo.png
-version: 0.1.0
+version: 0.2.0
 appVersion: 1.15.3
 description: |
   cert manager cluster issuer
