@@ -56,8 +56,8 @@ persistence:
   size: 1Gi
   storageClass: ''
   velero:
-    enabled: false
-    schedule: '@midnight'
+    restic: true
+    schedule: ''
 
 probes:
   liveness:

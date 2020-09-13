@@ -10,7 +10,7 @@ metadata:
 spec:
   teamId: {{ template "postgres.fullname" . }}
   numberOfInstances: {{ .Values.config.replicas }}
-  {{- if .Values.persistence.velero.enabled }}
+  {{- if .Values.persistence.velero.restic }}
   podAnnotations:
     backup.velero.io/backup-volumes: pgdata
   {{- end }}

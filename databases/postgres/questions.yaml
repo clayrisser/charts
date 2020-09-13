@@ -180,18 +180,18 @@ questions:
     required: false
     label: 'existing claim'
     group: Persistence
-  - variable: persistence.velero.enabled
-    default: false
+  - variable: persistence.velero.restic
+    default: true
     description: ''
     type: boolean
     required: true
-    label: 'velero enabled'
+    label: 'velero restic'
     group: Persistence
   - variable: persistence.velero.schedule
-    default: '@midnight'
+    default: ''
     description: ''
     type: string
-    required: true
+    required: false
     label: 'velero schedule'
     show_if: persistence.velero.enabled=true
     group: Persistence
