@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "postgres.fullname" . }}-postgres
+  labels:
+    app: {{ template "postgres.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.postgres.type }}
+  {{- if (eq .Values.service.postgres.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.postgres.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - name: postgres
+      port: {{ (and (eq .Values.service.postgres.type "LoadBalancer") (not (empty .Values.service.postgres.ports.postgres))) | ternary .Values.service.postgres.ports.postgres "5432" }}
+      targetPort: container
+      {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.ports.postgres))) }}
+      nodePort: {{ .Values.service.postgres.ports.postgres }}
+      {{- end }}
+    {{ .Values.config.metrics }}
+    - name: exporter
+      port: 9187
+      targetPort: exporter
+    {{- end }}
+  selector:
+    application: spilo
+    team: {{ template "postgres.fullname" . }}

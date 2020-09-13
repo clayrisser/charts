@@ -31,6 +31,35 @@ spec:
     postgres: postgres
   postgresql:
     version: {{ .Values.config.version | quote }}
+  {{ .Values.config.metrics }}
+  sidecars:
+    - name: exporter
+      image: wrouesnel/postgres_exporter:latest
+      ports:
+        - name: exporter
+          containerPort: 9187
+          protocol: TCP
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256M
+        requests:
+          cpu: 100m
+          memory: 200M
+      env:
+        - name: DATA_SOURCE_URI
+          value: postgres/database?sslmode=disable
+        - name: DATA_SOURCE_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres.{{ template "postgres.fullname" . }}-postgres.credentials
+              key: username
+        - name: DATA_SOURCE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres.{{ template "postgres.fullname" . }}-postgres.credentials
+              key: password
+  {{- end }}
   resources:
     requests:
       cpu: {{ .Values.config.resources.requests.cpu }}

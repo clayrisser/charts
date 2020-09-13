@@ -6,6 +6,7 @@ images:
 config:
   clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
+  metrics: false
   replicas: 1
   updateStrategy: Recreate
   version: '12'

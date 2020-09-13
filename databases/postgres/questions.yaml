@@ -112,6 +112,13 @@ questions:
         type: string
         required: false
         label: 'walE s3 bucket'
+  - variable: config.metrics
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: metrics
+    group: Config
 
 # PGAdmin
   - variable: config.pgadmin.enabled

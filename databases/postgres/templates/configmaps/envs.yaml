@@ -10,6 +10,10 @@ metadata:
 data:
   {{- if .Values.config.walE.enabled }}
   USE_WALE: {{ .Values.config.walE.enabled | quote }}
+  USE_WALG_BACKUP: 'true'
+  USE_WALG_RESTORE: 'true'
+  WALG_DISABLE_S3_SSE: 'true'
+  AWS_S3_FORCE_PATH_STYLE: 'true'
   {{- if .Values.config.walE.schedule }}
   BACKUP_SCHEDULE: {{ .Values.config.walE.schedule | quote}}
   {{- end }}
@@ -25,4 +29,16 @@ data:
   {{- if .Values.config.walE.backupThresholdPercentage }}
   WALE_BACKUP_THRESHOLD_PERCENTAGE: {{ .Values.config.walE.backupThresholdPercentage | quote }}
   {{- end }}
+  AWS_ENDPOINT: <MinIO endpoint (e.g. http://<MinIO server IP>:9000)>
+  AWS_ACCESS_KEY_ID: <MinIO access key>
+  AWS_SECRET_ACCESS_KEY: <MinIO secret key>
+  AWS_REGION: us-east-1
   {{- end }}
+
+  STANDBY_AWS_ACCESS_KEY_ID: <MinIO access key>
+  STANDBY_AWS_SECRET_ACCESS_KEY: <MinIO secret key>
+  STANDBY_WALE_ENV_DIR: /home/postgres/etc/wal-e.d/env-standby
+  STANDBY_USE_WALG_RESTORE: "true"
+  STANDBY_AWS_S3_FORCE_PATH_STYLE: "true"
+  STANDBY_AWS_REGION: us-east-1
+  STANDBY_AWS_ENDPOINT: <MinIO endpoint (e.g. http://<MinIO Server IP>:9000)>
