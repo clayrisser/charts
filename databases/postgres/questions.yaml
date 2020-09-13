@@ -180,20 +180,19 @@ questions:
     required: false
     label: 'existing claim'
     group: Persistence
-  - variable: persistence.velero.restic
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'velero restic'
-    group: Persistence
   - variable: persistence.velero.schedule
     default: ''
     description: ''
     type: string
     required: false
     label: 'velero schedule'
-    show_if: persistence.velero.enabled=true
+    group: Persistence
+  - variable: persistence.velero.restic
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'velero restic'
     group: Persistence
 
 # Services and Load Balancing
