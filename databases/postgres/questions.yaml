@@ -85,6 +85,33 @@ questions:
     required: true
     label: replicas
     group: Config
+  - variable: config.walE.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'walE enabled'
+    show_subquestion_if: true
+    group: Config
+    subquestions:
+      - variable: config.walE.retainBackups
+        default: 2
+        description: ''
+        type: int
+        required: false
+        label: 'walE retain backups'
+      - variable: config.walE.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: false
+        label: 'walE schedule'
+      - variable: config.walE.s3Bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'walE s3 bucket'
 
 # PGAdmin
   - variable: config.pgadmin.enabled
