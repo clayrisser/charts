@@ -69,7 +69,7 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: velero.deployRestic
-        default: false
+        default: true
         description: ''
         type: boolean
         required: true

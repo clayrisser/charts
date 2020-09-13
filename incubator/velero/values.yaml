@@ -6,7 +6,7 @@ config:
 velero:
   backupsEnabled: true
   snapshotsEnabled: true
-  deployRestic: false
+  deployRestic: true
   configuration:
     provider: aws
     backupStorageLocation:
