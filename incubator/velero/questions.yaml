@@ -112,5 +112,5 @@ questions:
     type: password
     required: false
     label: 'digitalocean token'
-    show_if: velero.configuration.volumeSnapshotLocation.provider=digitalocean.com/velero
+    show_if: velero.snapshotsEnabled=true&&velero.configuration.volumeSnapshotLocation.provider=digitalocean.com/velero
     group: Credentials
