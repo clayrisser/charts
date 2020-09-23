@@ -4,7 +4,7 @@ questions:
 
 # Config
   - variable: config.clusterProvider
-    default: infrastructure
+    default: aks
     description: ''
     type: enum
     options:
@@ -23,7 +23,7 @@ questions:
     label: debug
     group: Config
   - variable: config.imagePullPolicy
-    default: IfNotPresent
+    default: Always
     description: ''
     type: enum
     options:
@@ -93,11 +93,25 @@ questions:
     label: 'ejabberd jitsi secret'
     group: Config
   - variable: config.ejabberd.readMarkers
-    default: true
+    default: false
     description: ''
     type: boolean
     required: true
     label: 'ejabberd read markers'
+    group: Config
+  - variable: config.ejabberd.authBaseUrl
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'auth base url'
+    group: Config
+  - variable: config.ejabberd.testUsers
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'test users'
     group: Config
 
 # Postgres Config
@@ -790,14 +804,14 @@ questions:
 
 # Images
   - variable: images.ejabberd.repository
-    default: codejamninja/ejabberd
+    default: cvtecregistry.azurecr.io/ejabberd-auth
     description: ''
     type: string
     required: true
     label: 'ejabberd repository'
     group: Images
   - variable: images.ejabberd.tag
-    default: 20.4.0
+    default: latest
     description: ''
     type: string
     required: true

@@ -1,7 +1,7 @@
 images:
   ejabberd:
-    repository: codejamninja/ejabberd
-    tag: 20.4.0
+    repository: cvtecregistry.azurecr.io/ejabberd-auth
+    tag: latest
   pgadmin:
     repository: dpage/pgadmin4
     tag: 4.11
@@ -10,17 +10,19 @@ images:
     tag: v1.11.4
 
 config:
-  clusterProvider: infrastructure
+  clusterProvider: aks
   debug: false
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Always
   updateStrategy: RollingUpdate
   ejabberd:
+    authBaseUrl: ''
     baseUrl: ''
     captchaEnabled: false
     fail2ban: false
     hostname: ''
-    readMarkers: true
+    readMarkers: false
     registerEnabled: true
+    testUsers: ''
     jitsi:
       enabled: false
       secret: ''
