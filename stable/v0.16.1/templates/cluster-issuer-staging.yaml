@@ -1,0 +1,25 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+  labels:
+    app: {{ template "cluster-issuer.name" . }}-staging
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  acme:
+    server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+    email: {{ .Values.config.email }}
+    privateKeySecretRef:
+      name: letsencrypt-staging-account-key
+    solvers:
+      - selector: {}
+        http01:
+          serviceType: ClusterIP
+          ingress:
+            {{- if (eq .Values.config.clusterProvider "aks") }}
+            class: addon-http-application-routing
+            {{- else }}
+            class: nginx
+            {{- end }}

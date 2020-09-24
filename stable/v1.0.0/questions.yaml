@@ -1,0 +1,22 @@
+categories:
+  - Certificates
+questions:
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.email
+    default: ''
+    required: true
+    type: string
+    description: ''
+    label: email
+    group: Config
