@@ -247,7 +247,7 @@ questions:
     label: 'keycloak http node port'
     group: 'Services and Load Balancing'
   - variable: service.keycloak.lbPorts.http
-    default: ''
+    default: 80
     description: ''
     type: int
     min: 0

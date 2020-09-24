@@ -306,7 +306,7 @@ questions:
     label: 'gitlab http node port'
     group: 'Services and Load Balancing'
   - variable: service.gitlab.lbPorts.http
-    default: ''
+    default: 80
     description: ''
     type: int
     min: 0
@@ -326,7 +326,7 @@ questions:
     label: 'gitlab ssh node port'
     group: 'Services and Load Balancing'
   - variable: service.gitlab.lbPorts.ssh
-    default: ''
+    default: 22
     description: ''
     type: int
     min: 0

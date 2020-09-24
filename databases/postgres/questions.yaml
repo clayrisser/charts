@@ -294,7 +294,7 @@ questions:
     label: 'pgadmin http node port'
     group: 'Services and Load Balancing'
   - variable: service.pgadmin.lbPorts.http
-    default: ''
+    default: 80
     description: ''
     type: int
     required: true
@@ -325,7 +325,7 @@ questions:
     label: 'postgres node port'
     group: 'Services and Load Balancing'
   - variable: service.postgres.lbPorts.postgres
-    default: ''
+    default: 5432
     description: ''
     type: int
     required: true
