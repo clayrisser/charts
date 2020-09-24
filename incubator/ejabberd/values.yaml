@@ -12,15 +12,17 @@ images:
 config:
   clusterProvider: infrastructure
   debug: false
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Always
   updateStrategy: RollingUpdate
   ejabberd:
+    authBaseUrl: ''
     baseUrl: ''
     captchaEnabled: false
     fail2ban: false
     hostname: ''
-    readMarkers: true
+    readMarkers: false
     registerEnabled: true
+    testUsers: ''
     jitsi:
       enabled: false
       secret: ''
