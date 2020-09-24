@@ -24,6 +24,6 @@ spec:
       port: 9187
       targetPort: exporter
     {{- end }}
-  selector:
-    application: spilo
-    team: {{ template "postgres.fullname" . }}
+subsets:
+  - addresses:
+      - {{ template "postgres.fullname" . }}-postgresql-repl
