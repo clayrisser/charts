@@ -104,7 +104,7 @@ questions:
 
 # PHPLdapAdmin
   - variable: config.phpldapadmin.enabled
-    default: true
+    default: false
     description: ''
     type: boolean
     required: true

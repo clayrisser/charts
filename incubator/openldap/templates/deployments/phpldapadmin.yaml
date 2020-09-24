@@ -24,7 +24,7 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 90
+            - weight: 91
               preference:
                 matchExpressions:
                   - key: application/state
@@ -33,7 +33,7 @@ spec:
                       - stateless
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: 90
               podAffinityTerm:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:

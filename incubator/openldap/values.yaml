@@ -20,7 +20,7 @@ config:
     hostname: ''
     tls: false
   phpldapadmin:
-    enabled: true
+    enabled: false
     serverAdmin: email@example.com
 
 service:

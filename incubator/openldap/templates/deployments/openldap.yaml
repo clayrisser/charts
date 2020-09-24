@@ -28,7 +28,7 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: {{ .Values.persistence.enabled | ternary "110" "90" }}
+            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
               preference:
                 matchExpressions:
                   - key: application/state
@@ -37,7 +37,7 @@ spec:
                       - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: 90
               podAffinityTerm:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:
