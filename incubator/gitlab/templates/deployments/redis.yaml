@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "gitlab.fullname" . }}-redis
+  labels:
+    app: {{ template "gitlab.name" . }}-redis
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "gitlab.name" . }}-redis
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "gitlab.name" . }}-redis
+        release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.restic }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "gitlab.name" . }}-redis
+      containers:
+        - name: {{ template "gitlab.fullname" . }}-redis
+          image: redis:6.0.8-alpine
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          # resources:
+          #   requests:
+          #     cpu: 400m
+          #     memory: 2Gi
+          #   limits:
+          #     cpu: 800m
+          #     memory: 4Gi
+          ports:
+            - name: container
+              containerPort: 6379
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              subPath: cache
+          env: []
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

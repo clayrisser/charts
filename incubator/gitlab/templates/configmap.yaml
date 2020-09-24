@@ -14,6 +14,7 @@ data:
   postgres_database: {{ $postgres.database | quote }}
   postgres_port: {{ $postgres.port | quote }}
   postgres_username: {{ $postgres.username | quote }}
+  redis_host: {{ template "gitlab.fullname" . }}-redis
   omnibus_config: |
     external_url = '{{ template "gitlab.gitlab-base-url" . }}';
     nginx['listen_port'] = 80;
@@ -35,6 +36,7 @@ data:
     gitlab_rails['omniauth_allow_single_sign_on'] = ['saml'];
     gitlab_rails['omniauth_block_auto_created_users'] = false;
     gitlab_rails['omniauth_enabled'] = {{ .Values.config.keycloak.enabled }};
+    gitlab_rails['redis_host'] = ENV['REDIS_HOST'];
     gitlab_rails['shared_path'] = '/gitlab-data/shared';
     gitlab_rails['uploads_directory'] = '/gitlab-data/uploads';
     gitlab_rails['gitlab_default_theme'] = {{ .Values.config.gitlab.themeId }};
@@ -46,7 +48,7 @@ data:
     manage_storage_directories['manage_etc'] = false;
     postgresql['enable'] = false;
     prometheus_monitoring['enable'] = false;
-    redis['enable'] = true;
+    redis['enable'] = false;
     root_pass = ENV['GITLAB_ROOT_PASSWORD'];
     unicorn['worker_processes'] = 2;
     {{- if .Values.config.gitlab.s3.enabled }}
