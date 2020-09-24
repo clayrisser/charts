@@ -41,12 +41,10 @@ subsets:
     ports:
       - name: postgres
         port: {{ (eq .Values.service.postgres.type "LoadBalancer") | ternary .Values.service.postgres.lbPorts.postgres "5432" }}
-        targetPort: container
         {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
         nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
         {{- end }}
       {{ if .Values.config.metrics }}
       - name: exporter
         port: 9187
-        targetPort: exporter
       {{- end }}
