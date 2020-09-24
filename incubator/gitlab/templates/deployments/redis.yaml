@@ -19,10 +19,6 @@ spec:
       labels:
         app: {{ template "gitlab.name" . }}-redis
         release: {{ .Release.Name }}
-      {{- if .Values.persistence.velero.restic }}
-      annotations:
-        backup.velero.io/backup-volumes: data
-      {{- end }}
     spec:
       affinity:
         nodeAffinity:
@@ -60,9 +56,8 @@ spec:
             - name: container
               containerPort: 6379
           volumeMounts:
-            - name: data
+            - name: cache
               mountPath: /data
-              subPath: cache
           env: []
           livenessProbe:
             tcpSocket:
@@ -73,10 +68,10 @@ spec:
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
-        - name: data
+        - name: cache
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" . ) }}
+            claimName: {{ printf "%s-redis" (include "gitlab.fullname" . ) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
