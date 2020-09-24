@@ -16,7 +16,6 @@ spec:
     solvers:
       - selector: {}
         http01:
-          serviceType: ClusterIP
           ingress:
             {{- if (eq .Values.config.clusterProvider "aks") }}
             class: addon-http-application-routing
