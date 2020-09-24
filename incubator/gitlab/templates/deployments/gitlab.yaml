@@ -111,11 +111,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "gitlab.fullname" . }}
                   key: postgres_database
-            - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "gitlab.fullname" . }}
-                  key: redis_host
             - name: GITLAB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
