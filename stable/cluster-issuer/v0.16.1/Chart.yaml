@@ -3,7 +3,7 @@ name: cluster-issuer
 home: https://letsencrypt.org
 icon: https://raw.githubusercontent.com/jetstack/cert-manager/master/logo/logo.png
 version: 0.16.1
-appVersion: 1.15.3
+appVersion: 0.16.1
 description: |
   cert manager cluster issuer
 keywords:
