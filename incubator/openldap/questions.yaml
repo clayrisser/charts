@@ -238,6 +238,17 @@ questions:
     show_if: service.phpldapadmin.type=LoadBalancer&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
     label: 'phpldapadmin http lb port'
     group: 'Services and Load Balancing'
+  - variable: service.openldap.type
+    default: NodePort
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'openldap service type'
+    group: 'Services and Load Balancing'
   - variable: service.openldap.nodePorts.ldap
     default: ''
     description: ''
