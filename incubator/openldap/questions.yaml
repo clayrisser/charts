@@ -219,7 +219,6 @@ questions:
       - LoadBalancer
     required: true
     label: 'phpldapadmin service type'
-    show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
   - variable: service.phpldapadmin.nodePorts.http
     default: ''
@@ -254,6 +253,8 @@ questions:
     description: ''
     type: int
     required: true
+    min: 0
+    max: 65535
     show_if: service.openldap.type=LoadBalancer
     label: 'openldap ldap lb port'
     group: 'Services and Load Balancing'
@@ -272,6 +273,8 @@ questions:
     description: ''
     type: int
     required: true
+    min: 0
+    max: 65535
     show_if: service.openldap.type=LoadBalancer&&config.openldap.tls=true
     label: 'openldap ldaps lb port'
     group: 'Services and Load Balancing'

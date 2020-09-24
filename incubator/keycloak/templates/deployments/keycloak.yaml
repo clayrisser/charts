@@ -19,7 +19,7 @@ spec:
       labels:
         app: {{ template "keycloak.name" . }}-keycloak
         release: {{ .Release.Name }}
-      {{- if .Values.persistence.velero.enabled }}
+      {{- if .Values.persistence.velero.restic }}
       annotations:
         backup.velero.io/backup-volumes: data
       {{- end }}
@@ -27,13 +27,24 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: {{ .Values.persistence.enabled | ternary "110" "90" }}
               preference:
                 matchExpressions:
-                  - key: lifecycle
+                  - key: application/state
                     operator: In
                     values:
-                      - spot
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "keycloak.name" . }}-keycloak
       {{- if (not (empty .Values.config.keycloak.themeZip)) }}
       initContainers:
         - name: {{ template "keycloak.fullname" . }}-keycloak-init
@@ -97,19 +108,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "keycloak.fullname" . }}
                   key: postgres_database
-            {{- if .Values.config.postgres.internal }}
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "keycloak.fullname" . }}-postgres-auth
-                  key: POSTGRES_USER
-            {{- else }}
             - name: DB_USER
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "keycloak.fullname" . }}
                   key: postgres_username
-            {{- end }}
             - name: KEYCLOAK_HOSTNAME
               valueFrom:
                 configMapKeyRef:
@@ -135,19 +138,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "keycloak.fullname" . }}
                   key: keycloak_password
-            {{- if .Values.config.postgres.internal }}
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "keycloak.fullname" . }}-postgres-auth
-                  key: POSTGRES_PASSWORD
-            {{- else }}
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "keycloak.fullname" . }}
                   key: postgres_password
-            {{- end }}
           livenessProbe:
             httpGet:
               path: /
@@ -163,32 +158,3 @@ spec:
         - name: data
           emptyDir: {}
       {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "keycloak.fullname" . }}-keycloak
-  labels:
-    app: {{ template "keycloak.name" . }}-keycloak
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ template "keycloak.fullname" . }}-data
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "keycloak.fullname" . }}-keycloak
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}

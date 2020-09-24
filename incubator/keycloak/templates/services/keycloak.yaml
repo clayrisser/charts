@@ -12,13 +12,13 @@ spec:
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.keycloak.type }}
-  {{- if (or (eq .Values.service.keycloak.type "LoadBalancer") (eq .Values.service.keycloak.type "NodePort")) }}
+  {{- if (eq .Values.service.keycloak.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.keycloak.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: {{ (eq .Values.service.keycloak.type "LoadBalancer") | ternary .Values.service.keycloak.lbPorts.http "80" }}
       targetPort: container
       {{- if (and (eq .Values.service.keycloak.type "NodePort") (not (empty .Values.service.keycloak.nodePorts.http))) }}
       nodePort: {{ .Values.service.keycloak.nodePorts.http }}

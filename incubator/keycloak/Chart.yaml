@@ -1,8 +1,8 @@
-name: keycloak
 apiVersion: v1
+name: keycloak
 home: https://www.keycloak.org
 icon: https://www.keycloak.org/resources/images/keycloak_logo_480x108.png
-version: 0.0.4
+version: 0.1.0
 appVersion: latest
 description: 'an open source identity and access management solution'
 keywords:

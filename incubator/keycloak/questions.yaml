@@ -26,124 +26,64 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: RollingUpdate
+    default: Recreate
     description: ''
     type: enum
     options:
-      - RollingUpdate
       - Recreate
+      - RollingUpdate
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.gitlab.password
-    default: password
+  - variable: config.debug
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.keycloak.hostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'keycloak hostname'
+    group: Config
+  - variable: config.keycloak.username
+    default: admin
+    description: ''
+    type: string
+    required: true
+    label: 'keycloak username'
+    group: Config
+  - variable: config.keycloak.password
+    default: pass
     description: ''
     type: password
     required: true
-    label: 'gitlab password'
+    label: 'keycloak password'
     group: Config
-  - variable: config.gitlab.baseUrl
-    default:
-    description: ''
-    type: string
-    required: false
-    label: 'gitlab base url'
-    group: Config
-  - variable: config.gitlab.themeId
-    default: 2
-    description: ''
-    type: int
-    required: true
-    label: 'gitlab theme id'
-    group: Config
-  - variable: config.gitlab.s3.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: 'gitlab s3 enabled'
-    group: Config
-  - variable: config.gitlab.s3.awsRegion
-    default: us-west-2
-    description: ''
-    type: string
-    required: false
-    label: 'gitlab s3 aws region'
-    show_if: config.gitlab.s3.enabled=true
-    group: Config
-  - variable: config.gitlab.s3.awsAccessKey
+  - variable: config.keycloak.themeZip
     default: ''
     description: ''
     type: string
     required: false
-    label: 'gitlab s3 aws access key'
-    show_if: config.gitlab.s3.enabled=true
+    label: 'keycloak theme zip'
     group: Config
-  - variable: config.gitlab.s3.awsSecretKey
-    default: ''
+  - variable: config.keycloak.defaultTheme
+    default: keycloak
     description: ''
     type: string
     required: false
-    label: 'gitlab s3 aws secret key'
-    show_if: config.gitlab.s3.enabled=true
+    label: 'keycloak default theme'
     group: Config
-
-# Keycloak Config
-  - variable: config.keycloak.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: enabled
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.baseUrl
-    default: ''
+  - variable: config.keycloak.welcomeTheme
+    default: keycloak
     description: ''
     type: string
     required: false
-    label: 'base url'
-    show_if: config.keycloak.enabled=true
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.company
-    default: KeyCloak
-    description: ''
-    type: string
-    required: false
-    label: company
-    show_if: config.keycloak.enabled=true
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.clientId
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'client id'
-    show_if: config.keycloak.enabled=true
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.realmName
-    default: master
-    description: ''
-    type: string
-    required: false
-    label: 'realm name'
-    show_if: config.keycloak.enabled=true
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.certificate
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: certificate
-    show_if: config.keycloak.enabled=true
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.autoSignIn
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: 'auto sign in'
-    show_if: config.keycloak.enabled=true
-    group: 'KeyCloak Config'
+    label: 'keycloak welcome theme'
+    group: Config
 
 # Postgres Config
   - variable: config.postgres.host
@@ -154,21 +94,14 @@ questions:
     label: host
     group: 'Postgres Config'
   - variable: config.postgres.database
-    default: gitlab
+    default: keycloak
     description: ''
     type: string
     required: true
     label: database
     group: 'Postgres Config'
-  - variable: config.postgres.username
-    default: postgres
-    description: ''
-    type: string
-    required: true
-    label: username
-    group: 'Postgres Config'
   - variable: config.postgres.password
-    default: P@ssw0rd
+    default: p@ssw0rd
     description: ''
     type: password
     required: true
@@ -182,6 +115,14 @@ questions:
     max: 65535
     required: true
     label: port
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   # - variable: config.postgres.url
   #   default: ''
@@ -245,109 +186,89 @@ questions:
         group: Persistence
 
 # Services and Load Balancing
-  - variable: ingress.gitlab.enabled
+  - variable: ingress.keycloak.enabled
     default: true
     description: ''
     type: boolean
-    label: 'gitlab ingress enabled'
+    label: 'keycloak ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.gitlab.tls
+      - variable: ingress.keycloak.tls
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'gitlab ingress tls'
-      - variable: ingress.gitlab.hostname
+        label: 'keycloak ingress tls'
+      - variable: ingress.keycloak.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'gitlab ingress hostname'
-      - variable: ingress.gitlab.issuer.name
+        label: 'keycloak ingress hostname'
+      - variable: ingress.keycloak.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.gitlab.tls=true
+        show_if: ingress.keycloak.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'gitlab ingress issuer name'
-      - variable: ingress.gitlab.certificate
+        label: 'keycloak ingress issuer name'
+      - variable: ingress.keycloak.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.gitlab.tls=true&&ingress.gitlab.issuer.name=none
+        show_if: ingress.keycloak.tls=true&&ingress.keycloak.issuer.name=none
         required: false
-        label: 'gitlab ingress certificate'
-  - variable: service.gitlab.type
+        label: 'keycloak ingress certificate'
+  - variable: service.keycloak.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.gitlab.enabled=false
+    show_if: ingress.keycloak.enabled=false
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    label: 'gitlab service type'
+    label: 'keycloak service type'
     group: 'Services and Load Balancing'
-  - variable: service.gitlab.nodePorts.http
+  - variable: service.keycloak.nodePorts.http
     default: ''
     description: ''
     type: int
     required: false
     min: 30000
     max: 32767
-    show_if: service.gitlab.type=NodePort&&ingress.gitlab.enabled=false
-    label: 'gitlab http node port'
+    show_if: service.keycloak.type=NodePort&&ingress.keycloak.enabled=false
+    label: 'keycloak http node port'
     group: 'Services and Load Balancing'
-  - variable: service.gitlab.lbPorts.http
+  - variable: service.keycloak.lbPorts.http
     default: ''
     description: ''
     type: int
     min: 0
     max: 65535
     required: true
-    show_if: service.gitlab.type=LoadBalancer&&ingress.gitlab.enabled=false
-    label: 'gitlab http lb port'
-    group: 'Services and Load Balancing'
-  - variable: service.gitlab.nodePorts.ssh
-    default: ''
-    description: ''
-    type: int
-    required: false
-    min: 30000
-    max: 32767
-    show_if: service.gitlab.type=NodePort&&ingress.gitlab.enabled=false
-    label: 'gitlab ssh node port'
-    group: 'Services and Load Balancing'
-  - variable: service.gitlab.lbPorts.ssh
-    default: ''
-    description: ''
-    type: int
-    min: 0
-    max: 65535
-    required: true
-    show_if: service.gitlab.type=LoadBalancer&&ingress.gitlab.enabled=false
-    label: 'gitlab ssh lb port'
+    show_if: service.keycloak.type=LoadBalancer&&ingress.keycloak.enabled=false
+    label: 'keycloak http lb port'
     group: 'Services and Load Balancing'
 
 # Images
-  - variable: images.gitlab.repository
-    default: gitlab/gitlab-ce
+  - variable: images.keycloak.repository
+    default: jboss/keycloak
     description: ''
     type: string
     required: true
-    label: 'gitlab repository'
+    label: 'keycloak repository'
     group: Images
-  - variable: images.gitlab.tag
-    default: 13.2.3-ce.0
+  - variable: images.keycloak.tag
+    default: 9.0.0
     description: ''
     type: string
     required: true
-    label: 'gitlab tag'
+    label: 'keycloak tag'
     group: Images
