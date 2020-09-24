@@ -14,8 +14,7 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
     solvers:
-      - selector: {}
-        http01:
+      - http01:
           ingress:
             {{- if (eq .Values.config.clusterProvider "aks") }}
             class: addon-http-application-routing
