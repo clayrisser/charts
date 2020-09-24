@@ -4,7 +4,7 @@ questions:
 
 # Config
   - variable: config.clusterProvider
-    default: aks
+    default: infrastructure
     description: ''
     type: enum
     options:
@@ -804,14 +804,14 @@ questions:
 
 # Images
   - variable: images.ejabberd.repository
-    default: cvtecregistry.azurecr.io/ejabberd-auth
+    default: codejamninja/ejabberd
     description: ''
     type: string
     required: true
     label: 'ejabberd repository'
     group: Images
   - variable: images.ejabberd.tag
-    default: latest
+    default: 20.4.0
     description: ''
     type: string
     required: true
