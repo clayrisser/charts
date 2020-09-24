@@ -1,0 +1,75 @@
+images:
+  gitlab:
+    repository: gitlab/gitlab-ce
+    tag: 13.2.3-ce.0
+
+config:
+  clusterProvider: infrastructure
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  gitlab:
+    baseUrl: ''
+    hostname: ''
+    password: password
+    themeId: 2
+    s3:
+      awsAccessKey: ''
+      awsRegion: us-west-2
+      awsSecretKey: ''
+      enabled: false
+  keycloak:
+    baseUrl: ''
+    clientId: ''
+    companyName: KeyCloak
+    enabled: false
+    realmName: master
+    certificate: ''
+    autoSignIn: false
+  postgres:
+    database: gitlab
+    host: ''
+    password: P@ssw0rd
+    port: 5432
+    username: postgres
+    # url: ''
+
+service:
+  gitlab:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    ports:
+      http: ''
+      ssh: ''
+
+ingress:
+  gitlab:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    restic: true
+    schedule: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
