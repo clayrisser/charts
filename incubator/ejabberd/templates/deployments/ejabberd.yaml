@@ -34,14 +34,14 @@ spec:
                     operator: In
                     values:
                       - dedicated
+      securityContext:
+        fsGroup: 9000
+        runAsGroup: 0
+        runAsUser: 0
       containers:
         - name: {{ template "ejabberd.fullname" . }}-ejabberd
           image: {{ .Values.images.ejabberd.repository }}:{{ .Values.images.ejabberd.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-          securityContext:
-            fsGroup: 9000
-            runAsGroup: 0
-            runAsUser: 0
           command:
             - sh
             - -c
