@@ -31,7 +31,14 @@ spec:
     postgres: postgres
   postgresql:
     version: {{ .Values.config.version | quote }}
-  {{ .Values.config.metrics }}
+  resources:
+    requests:
+      cpu: {{ .Values.config.resources.requests.cpu }}
+      memory: {{ .Values.config.resources.requests.memory }}
+    limits:
+      cpu: {{ .Values.config.resources.limits.cpu }}
+      memory: {{ .Values.config.resources.limits.memory }}
+  {{ if .Values.config.metrics }}
   sidecars:
     - name: exporter
       image: wrouesnel/postgres_exporter:latest
@@ -60,10 +67,3 @@ spec:
               name: postgres.{{ template "postgres.fullname" . }}-postgres.credentials
               key: password
   {{- end }}
-  resources:
-    requests:
-      cpu: {{ .Values.config.resources.requests.cpu }}
-      memory: {{ .Values.config.resources.requests.memory }}
-    limits:
-      cpu: {{ .Values.config.resources.limits.cpu }}
-      memory: {{ .Values.config.resources.limits.memory }}
