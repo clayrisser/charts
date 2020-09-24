@@ -100,12 +100,6 @@ data:
             password: {{ .Values.config.ejabberd.jitsi.secret | quote }}
       {{- end }}
     s2s_use_starttls: optional
-    {{ if .Values.config.ejabberd.authBaseUrl }}
-    auth_method: external
-    extauth_program: /scripts/auth.sh
-    extauth_instances: 1
-    auth_use_cache: false
-    {{- end }}
     acl:
       local:
         user_regexp: ''

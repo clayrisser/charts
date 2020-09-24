@@ -34,20 +34,20 @@ spec:
                     operator: In
                     values:
                       - dedicated
-      securityContext:
-        fsGroup: 9000
-        runAsGroup: 0
-        runAsUser: 0
       containers:
         - name: {{ template "ejabberd.fullname" . }}-ejabberd
           image: {{ .Values.images.ejabberd.repository }}:{{ .Values.images.ejabberd.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          securityContext:
+            fsGroup: 9000
+            runAsGroup: 0
+            runAsUser: 0
           command:
             - sh
             - -c
             - |
-                sh /scripts/setup.sh
-                exec /home/ejabberd/bin/ejabberdctl foreground
+              sh /scripts/setup.sh
+              exec /home/ejabberd/bin/ejabberdctl foreground
           ports:
             - name: http
               containerPort: 5280
@@ -83,22 +83,7 @@ spec:
               mountPath: /home/ejabberd/conf/certs/tls.key
               readOnly: true
             {{- end }}
-          env:
-            - name: EXTERNAL_AUTH_DEBUG
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "ejabberd.fullname" . }}
-                  key: debug
-            - name: EXTERNAL_AUTH_TEST_USERS
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "ejabberd.fullname" . }}
-                  key: test_users
-            - name: BASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "ejabberd.fullname" . }}
-                  key: auth_base_url
+          env: []
           livenessProbe:
             tcpSocket:
               port: http

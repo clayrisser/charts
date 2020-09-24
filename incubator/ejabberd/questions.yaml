@@ -23,7 +23,7 @@ questions:
     label: debug
     group: Config
   - variable: config.imagePullPolicy
-    default: Always
+    default: IfNotPresent
     description: ''
     type: enum
     options:
@@ -93,25 +93,11 @@ questions:
     label: 'ejabberd jitsi secret'
     group: Config
   - variable: config.ejabberd.readMarkers
-    default: false
+    default: true
     description: ''
     type: boolean
     required: true
     label: 'ejabberd read markers'
-    group: Config
-  - variable: config.ejabberd.authBaseUrl
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'auth base url'
-    group: Config
-  - variable: config.ejabberd.testUsers
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'test users'
     group: Config
 
 # Postgres Config
