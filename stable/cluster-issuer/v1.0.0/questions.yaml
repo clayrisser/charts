@@ -20,3 +20,10 @@ questions:
     description: ''
     label: email
     group: Config
+  - variable: config.cloudflareApiKey
+    default: ''
+    required: false
+    type: password
+    description: ''
+    label: 'cloudflare api key'
+    group: Config

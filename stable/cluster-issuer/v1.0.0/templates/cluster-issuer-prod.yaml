@@ -14,6 +14,14 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
     solvers:
+      {{- if .Values.config.cloudflareApiKey }}
+      - dns01:
+          cloudflare:
+            email: {{ .Values.config.email }}
+            apiKeySecretRef:
+              name: {{ template "cluster-issuer.name" . }}
+              key: cloudflare_api_key
+      {{- end }}
       - http01:
           ingress:
             {{- if (eq .Values.config.clusterProvider "aks") }}
