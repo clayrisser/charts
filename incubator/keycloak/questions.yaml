@@ -100,6 +100,13 @@ questions:
     required: true
     label: database
     group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: 'Postgres Config'
   - variable: config.postgres.password
     default: p@ssw0rd
     description: ''
@@ -115,14 +122,6 @@ questions:
     max: 65535
     required: true
     label: port
-    group: 'Postgres Config'
-  - variable: config.postgres.username
-    default: postgres
-    description: ''
-    type: string
-    required: true
-    label: username
-    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   # - variable: config.postgres.url
   #   default: ''
