@@ -14,12 +14,12 @@ spec:
   {{- end }}
   ports:
     - name: postgres
-      port: {{ (and (eq .Values.service.postgres.type "LoadBalancer") (not (empty .Values.service.postgres.ports.postgres))) | ternary .Values.service.postgres.ports.postgres "5432" }}
+      port: {{ (eq .Values.service.postgres.type "LoadBalancer") | ternary .Values.service.postgres.lbPorts.postgres "5432" }}
       targetPort: container
-      {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.ports.postgres))) }}
-      nodePort: {{ .Values.service.postgres.ports.postgres }}
+      {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
+      nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
       {{- end }}
-    {{ .Values.config.metrics }}
+    {{ if .Values.config.metrics }}
     - name: exporter
       port: 9187
       targetPort: exporter

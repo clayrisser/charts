@@ -283,14 +283,25 @@ questions:
     required: true
     label: 'pgadmin service type'
     group: 'Services and Load Balancing'
-  - variable: service.pgadmin.ports.http
+  - variable: service.pgadmin.nodePorts.http
     default: ''
     description: ''
     type: int
+    required: false
     min: 30000
     max: 32767
-    show_if: service.pgadmin.type!=ClusterIP&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
-    label: 'pgadmin http port'
+    show_if: service.pgadmin.type=NodePort&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    label: 'pgadmin http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.pgadmin.lbPorts.http
+    default: ''
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.pgadmin.type=LoadBalancer&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    label: 'pgadmin http lb port'
     group: 'Services and Load Balancing'
   - variable: service.postgres.type
     default: NodePort
@@ -303,14 +314,25 @@ questions:
     required: true
     label: 'postgres service type'
     group: 'Services and Load Balancing'
-  - variable: service.postgres.ports.postgres
+  - variable: service.postgres.nodePorts.postgres
     default: ''
     description: ''
     type: int
+    required: false
     min: 30000
     max: 32767
-    show_if: service.postgres.type!=ClusterIP
-    label: 'postgres port'
+    show_if: service.postgres.type=NodePort
+    label: 'postgres node port'
+    group: 'Services and Load Balancing'
+  - variable: service.postgres.lbPorts.postgres
+    default: ''
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.postgres.type=LoadBalancer
+    label: 'postgres lb port'
     group: 'Services and Load Balancing'
 
 # Images

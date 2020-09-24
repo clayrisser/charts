@@ -40,13 +40,17 @@ service:
   postgres:
     type: NodePort
     externalTrafficPolicy: Cluster
-    ports:
+    nodePorts:
       postgres: ''
+    lbPorts:
+      postgres: 5432
   pgadmin:
     type: NodePort
     externalTrafficPolicy: Cluster
-    ports:
+    nodePorts:
       http: ''
+    lbPorts:
+      http: 80
 
 ingress:
   pgadmin:
