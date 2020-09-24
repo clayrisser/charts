@@ -19,7 +19,7 @@ spec:
           cloudflare:
             email: {{ .Values.config.email }}
             apiKeySecretRef:
-              name: {{ template "cluster-issuer.name" . }}
+              name: {{ template "cluster-issuer.fullname" . }}
               key: cloudflare_api_key
       {{- end }}
       - http01:
