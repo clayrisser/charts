@@ -150,7 +150,7 @@ questions:
     default: ''
     description: ''
     type: string
-    required: false
+    required: true
     label: host
     group: 'Postgres Config'
   - variable: config.postgres.database
@@ -295,23 +295,41 @@ questions:
     required: true
     label: 'gitlab service type'
     group: 'Services and Load Balancing'
-  - variable: service.gitlab.ports.http
+  - variable: service.gitlab.nodePorts.http
     default: ''
     description: ''
     type: int
+    required: false
     min: 30000
     max: 32767
-    show_if: ingress.gitlab.enabled=false&&service.gitlab.type!=ClusterIP
-    label: 'gitlab http port'
+    show_if: service.gitlab.type=NodePort&&ingress.gitlab.enabled=false
+    label: 'gitlab http node port'
     group: 'Services and Load Balancing'
-  - variable: service.gitlab.ports.ssh
+  - variable: service.gitlab.lbPorts.http
     default: ''
     description: ''
     type: int
+    required: true
+    show_if: service.gitlab.type=LoadBalancer&&ingress.gitlab.enabled=false
+    label: 'gitlab http lb port'
+    group: 'Services and Load Balancing'
+  - variable: service.gitlab.nodePorts.ssh
+    default: ''
+    description: ''
+    type: int
+    required: false
     min: 30000
     max: 32767
-    show_if: service.gitlab.type!=ClusterIP&&ingress.gitlab.enabled=false
-    label: 'gitlab ssh port'
+    show_if: service.gitlab.type=NodePort&&ingress.gitlab.enabled=false
+    label: 'gitlab ssh node port'
+    group: 'Services and Load Balancing'
+  - variable: service.gitlab.lbPorts.ssh
+    default: ''
+    description: ''
+    type: int
+    required: true
+    show_if: service.gitlab.type=LoadBalancer&&ingress.gitlab.enabled=false
+    label: 'gitlab ssh lb port'
     group: 'Services and Load Balancing'
 
 # Images

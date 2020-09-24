@@ -1,7 +1,8 @@
 categories:
   - Server
 questions:
-  # Config
+
+# Config
   - variable: config.clusterProvider
     default: infrastructure
     description: ''
@@ -101,7 +102,7 @@ questions:
     label: 'openldap hostname'
     group: Config
 
-  # PHPLdapAdmin
+# PHPLdapAdmin
   - variable: config.phpldapadmin.enabled
     default: true
     description: ''
@@ -119,7 +120,7 @@ questions:
         label: 'server admin'
         group: PHPLdapAdmin
 
-  # Persistence
+# Persistence
   - variable: persistence.enabled
     default: false
     description: ''
@@ -157,80 +158,22 @@ questions:
         type: string
         required: false
         label: 'existing claim'
-      - variable: persistence.velero.enabled
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'velero enabled'
-      - variable: persistence.stash.enabled
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'stash enabled'
-      - variable: persistence.stash.paused
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash paused'
-      - variable: persistence.stash.type
-        default: s3
-        description: ''
-        type: enum
-        options:
-          - gcs
-          - s3
-          - azure
-        required: false
-        show_if: persistence.stash.enabled=true
-        label: 'stash type'
-      - variable: persistence.stash.container
+      - variable: persistence.velero.schedule
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
-        label: 'stash container'
-      - variable: persistence.stash.bucket
-        default: ''
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
         description: ''
-        type: string
-        required: false
-        show_if: persistence.stash.enabled=true
-        label: 'stash bucket'
-      - variable: persistence.stash.endpoint
-        default: s3.amazonaws.com
-        description: ''
-        type: string
+        type: boolean
         required: true
-        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
-        label: 'stash endpoint'
-      - variable: persistence.stash.schedule
-        default: '0 0 * * *'
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash schedule'
-      - variable: persistence.stash.keepLast
-        default: 30
-        description: ''
-        type: int
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash keep last'
-      - variable: persistence.stash.restore.snapshot.data
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.stash.enabled=true
-        label: 'stash restore snapshot data'
+        label: 'velero restic'
+        group: Persistence
 
-  # Services and Load Balancing
+# Services and Load Balancing
   - variable: ingress.phpldapadmin.enabled
     default: true
     description: ''
@@ -247,13 +190,6 @@ questions:
         show_if: config.phpldapadmin.enabled=true
         required: true
         label: 'phpldapadmin ingress hostname'
-      - variable: ingress.phpldapadmin.path
-        default: /
-        description: ''
-        type: string
-        show_if: config.phpldapadmin.enabled=true
-        required: true
-        label: 'phpldapadmin ingress path'
       - variable: ingress.phpldapadmin.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -285,37 +221,62 @@ questions:
     label: 'phpldapadmin service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.phpldapadmin.nodePorts.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
-        label: 'phpldapadmin http port'
-  - variable: service.openldap.type
-    default: NodePort
+  - variable: service.phpldapadmin.nodePorts.http
+    default: ''
     description: ''
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    label: 'openldap service type'
-    show_subquestion_if: NodePort
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.phpldapadmin.type=NodePort&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
+    label: 'phpldapadmin http node port'
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.openldap.nodePorts.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        label: 'openldap http port'
+  - variable: service.phpldapadmin.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    required: true
+    show_if: service.phpldapadmin.type=LoadBalancer&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
+    label: 'phpldapadmin http lb port'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.nodePorts.ldap
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.openldap.type=NodePort
+    label: 'openldap ldap node port'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.lbPorts.ldap
+    default: 389
+    description: ''
+    type: int
+    required: true
+    show_if: service.openldap.type=LoadBalancer
+    label: 'openldap ldap lb port'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.nodePorts.ldaps
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.openldap.type=NodePort&&config.openldap.tls=true
+    label: 'openldap ldaps node port'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.lbPorts.ldaps
+    default: 636
+    description: ''
+    type: int
+    required: true
+    show_if: service.openldap.type=LoadBalancer&&config.openldap.tls=true
+    label: 'openldap ldaps lb port'
+    group: 'Services and Load Balancing'
 
-  # Images
+# Images
   - variable: images.openldap.repository
     default: osixia/openldap
     description: ''

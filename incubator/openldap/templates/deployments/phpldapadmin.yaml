@@ -24,13 +24,24 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: 90
               preference:
                 matchExpressions:
-                  - key: lifecycle
+                  - key: application/state
                     operator: In
                     values:
-                      - spot
+                      - stateless
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "openldap.name" . }}-phpldapadmin
       containers:
         - name: {{ template "openldap.fullname" . }}-phpldapadmin
           image: {{ .Values.images.phpldapadmin.repository }}:{{ .Values.images.phpldapadmin.tag }}

@@ -69,9 +69,8 @@ Calculate phpldapadmin base url
 {{- else }}
 {{- if .Values.ingress.phpldapadmin.enabled }}
 {{- $hostname := ((empty (include "openldap.phpldapadming-hostname" .)) | ternary .Values.ingress.phpldapadmin.hostname (include "openldap.phpldapadming-hostname" .)) }}
-{{- $path := (eq .Values.ingress.phpldapadmin.path "/" | ternary "" .Values.ingress.phpldapadmin.path) }}
 {{- $protocol := (.Values.ingress.phpldapadmin.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
+{{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "openldap.phpldapadming-hostname" .) }}
 {{- end }}

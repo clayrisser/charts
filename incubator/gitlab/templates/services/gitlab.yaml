@@ -18,16 +18,16 @@ spec:
   {{- end }}
   ports:
     - name: http
-      port: {{ (and (eq .Values.service.gitlab.type "LoadBalancer") (not (empty .Values.service.gitlab.ports.http))) | ternary .Values.service.gitlab.ports.http "80" }}
+      port: {{ (eq .Values.service.gitlab.type "LoadBalancer") | ternary .Values.service.gitlab.lbPorts.http "80" }}
       targetPort: container
-      {{- if (and (eq .Values.service.gitlab.type "NodePort") (not (empty .Values.service.gitlab.ports.http))) }}
-      nodePort: {{ .Values.service.gitlab.ports.http }}
+      {{- if (and (eq .Values.service.gitlab.type "NodePort") (not (empty .Values.service.gitlab.nodePorts.http))) }}
+      nodePort: {{ .Values.service.gitlab.nodePorts.http }}
       {{- end }}
     - name: ssh
-      port: {{ (and (eq .Values.service.gitlab.type "LoadBalancer") (not (empty .Values.service.gitlab.ports.ssh))) | ternary .Values.service.gitlab.ports.ssh "22" }}
+      port: {{ (eq .Values.service.gitlab.type "LoadBalancer") | ternary .Values.service.gitlab.lbPorts.ssh "22" }}
       targetPort: ssh
-      {{- if (and (eq .Values.service.gitlab.type "NodePort") (not (empty .Values.service.gitlab.ports.ssh))) }}
-      nodePort: {{ .Values.service.gitlab.ports.ssh }}
+      {{- if (and (eq .Values.service.gitlab.type "NodePort") (not (empty .Values.service.gitlab.nodePorts.ssh))) }}
+      nodePort: {{ .Values.service.gitlab.nodePorts.ssh }}
       {{- end }}
   selector:
     app: {{ template "gitlab.name" . }}-gitlab

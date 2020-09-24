@@ -37,9 +37,12 @@ service:
   gitlab:
     type: NodePort
     externalTrafficPolicy: Cluster
-    ports:
+    nodePorts:
       http: ''
       ssh: ''
+    lbPorts:
+      http: 80
+      ssh: 22
 
 ingress:
   gitlab:

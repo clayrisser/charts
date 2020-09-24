@@ -9,22 +9,22 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   type: {{ .Values.service.openldap.type }}
-  {{- if (or (eq .Values.service.openldap.type "LoadBalancer") (eq .Values.service.openldap.type "NodePort")) }}
+  {{- if (eq .Values.service.openldap.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.openldap.externalTrafficPolicy }}
   {{- end }}
   ports:
     - name: ldap
-      port: 389
+      port: {{ (eq .Values.service.openldap.type "LoadBalancer") | ternary .Values.service.openldap.lbPorts.ldap "389" }}
       targetPort: ldap
-      {{- if (and (eq .Values.service.openldap.type "NodePort")) }}
-      nodePort: {{ .Values.service.openldap.nodePorts.http }}
+      {{- if (and (eq .Values.service.openldap.type "NodePort") (not (empty .Values.service.openldap.nodePorts.ldap))) }}
+      nodePort: {{ .Values.service.openldap.nodePorts.ldap }}
       {{- end }}
     {{- if .Values.config.openldap.tls }}
     - name: ldaps
-      port: 636
+      port: {{ (eq .Values.service.openldap.type "LoadBalancer") | ternary .Values.service.openldap.lbPorts.ldaps "636" }}
       targetPort: ldaps
-      {{- if (and (eq .Values.service.openldap.type "NodePort")) }}
-      nodePort: {{ .Values.service.openldap.nodePorts.http }}
+      {{- if (and (eq .Values.service.openldap.type "NodePort") (not (empty .Values.service.openldap.nodePorts.ldaps))) }}
+      nodePort: {{ .Values.service.openldap.nodePorts.ldaps }}
       {{- end }}
     {{- end }}
   selector:

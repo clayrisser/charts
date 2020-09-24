@@ -28,19 +28,24 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
+      ldap: ''
+      ldaps: ''
+    lbPorts:
+      ldap: 389
+      ldaps: 636
   phpldapadmin:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
+    lbPorts:
+      http: 80
 
 ingress:
   phpldapadmin:
     certificate: ''
     enabled: false
     hostname: ''
-    path: /
     tls: false
     issuer:
       name: letsencrypt-staging
@@ -52,21 +57,8 @@ persistence:
   size: 1Gi
   storageClass: ''
   velero:
-    enabled: false
-  stash:
-    bucket: ''
-    container: ''
-    enabled: false
-    endpoint: s3.amazonaws.com
-    keepLast: 30
-    paused: false
-    prefix: stash
-    schedule: '0 0 * * *'
-    secret: stash-config-stash-config
-    type: s3
-    restore:
-      snapshot:
-        data: ''
+    restic: true
+    schedule: ''
 
 probes:
   liveness:

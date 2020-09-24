@@ -13,16 +13,16 @@ spec:
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.phpldapadmin.type }}
-  {{- if (or (eq .Values.service.phpldapadmin.type "LoadBalancer") (eq .Values.service.phpldapadmin.type "NodePort")) }}
+  {{- if (eq .Values.service.phpldapadmin.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.phpldapadmin.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: {{ (and (eq .Values.service.openldap.type "LoadBalancer") (not (empty .Values.service.openldap.ports.http))) | ternary .Values.service.openldap.ports.http "80" }}
       targetPort: container
-      {{- if (and (eq .Values.service.phpldapadmin.type "NodePort") (not (empty .Values.service.phpldapadmin.nodePorts.http))) }}
-      nodePort: {{ .Values.service.phpldapadmin.nodePorts.http }}
+      {{- if (and (eq .Values.service.phpldapadmin.type "NodePort") (not (empty .Values.service.phpldapadmin.ports.http))) }}
+      nodePort: {{ .Values.service.phpldapadmin.ports.http }}
       {{- end }}
   selector:
     app: {{ template "openldap.name" . }}-phpldapadmin

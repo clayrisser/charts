@@ -19,7 +19,7 @@ spec:
       labels:
         app: {{ template "openldap.name" . }}-openldap
         release: {{ .Release.Name }}
-      {{- if .Values.persistence.velero.enabled }}
+      {{- if .Values.persistence.velero.restic }}
       annotations:
         backup.velero.io/backup-volumes: data
       {{- end }}
@@ -28,13 +28,24 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: {{ .Values.persistence.enabled | ternary "110" "90" }}
               preference:
                 matchExpressions:
-                  - key: lifecycle
+                  - key: application/state
                     operator: In
                     values:
-                      - dedicated
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "openldap.name" . }}-openldap
       containers:
         - name: {{ template "openldap.fullname" . }}-openldap
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
@@ -136,32 +147,3 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "openldap.fullname" . }}-openldap
-  labels:
-    app: {{ template "openldap.name" . }}-openldap
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ template "openldap.fullname" . }}-data
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "openldap.fullname" . }}-openldap
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}

@@ -19,7 +19,7 @@ spec:
       labels:
         app: {{ template "gitlab.name" . }}-gitlab
         release: {{ .Release.Name }}
-      {{- if .Values.persistence.velero.enabled }}
+      {{- if .Values.persistence.velero.restic }}
       annotations:
         backup.velero.io/backup-volumes: data
       {{- end }}
@@ -101,19 +101,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "gitlab.fullname" . }}
                   key: postgres_host
-            {{- if .Values.config.postgres.internal }}
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
-                  key: POSTGRES_USER
-            {{- else }}
             - name: DB_USER
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "gitlab.fullname" . }}
                   key: postgres_username
-            {{- end }}
             - name: DB_DATABASE
               valueFrom:
                 configMapKeyRef:
@@ -129,19 +121,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "gitlab.fullname" . }}
                   key: password
-            {{- if .Values.config.postgres.internal }}
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "gitlab.sharedname" . }}-postgres-auth
-                  key: POSTGRES_PASSWORD
-            {{- else }}
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "gitlab.fullname" . }}
                   key: postgres_password
-            {{- end }}
           livenessProbe:
             exec:
               command: ['curl',  'localhost/-/health']
@@ -158,32 +142,3 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "gitlab.fullname" . }}-gitlab
-  labels:
-    app: {{ template "gitlab.name" . }}-gitlab
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ template "gitlab.fullname" . }}-data
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "gitlab.fullname" . }}-gitlab
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}
