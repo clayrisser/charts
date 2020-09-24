@@ -27,4 +27,4 @@ spec:
   selector:
     application: spilo
     cluster-name: {{ template "postgres.fullname" . }}-postgresql
-    spilo-role: master
+    spilo-role: replica
