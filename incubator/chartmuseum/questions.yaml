@@ -22,7 +22,7 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: chartmuseum.resources.defaults
+  - variable: config.resources.defaults
     default: true
     description: ''
     type: boolean
