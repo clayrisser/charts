@@ -55,6 +55,27 @@ questions:
         type: string
         required: true
         label: 'resources limits memory'
+  - variable: chartmuseum.env.open.DEPTH
+    default: 2
+    description: ''
+    type: int
+    required: true
+    label: 'depth'
+    group: Config
+  - variable: chartmuseum.env.secret.BASIC_AUTH_USER
+    default: root
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: Config
+  - variable: chartmuseum.env.secret.BASIC_AUTH_PASS
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Config
 
 # Persistence
   - variable: chartmuseum.persistence.enabled
