@@ -5,11 +5,9 @@ icon: https://www.nginx.com/wp-content/uploads/2019/10/NGINX-Logo-White-Endorsem
 version: 0.0.1
 type: application
 appVersion: latest
-description: 'some nginx'
+description: 'A project for charts'
 keywords:
   - nginx
-  - file
-  - server
 sources:
   - https://github.com/codejamninja/nginx
 maintainers:

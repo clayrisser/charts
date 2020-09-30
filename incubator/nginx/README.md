@@ -1,3 +1,3 @@
 # nginx
 
-> some nginx
+> A project for charts
