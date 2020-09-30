@@ -7,10 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.velero.enabled }}
-  annotations:
-    backup.velero.io/backup-volumes: data
-  {{- end }}
 spec:
   selector:
     matchLabels:
@@ -23,11 +19,43 @@ spec:
       labels:
         app: {{ template "nginx.name" . }}-nginx
         release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: {{ .Values.persistence.enabled | ternary "110" "90" }}
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "nginx.name" . }}-nginx
       containers:
         - name: {{ template "nginx.fullname" . }}-nginx
           image: {{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: {{ .Values.config.nginx.resources.requests.cpu }}
+              memory: {{ .Values.config.nginx.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.config.nginx.resources.limits.cpu }}
+              memory: {{ .Values.config.nginx.resources.limits.memory }}
           ports:
             - name: container
               containerPort: 80
@@ -35,7 +63,7 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: /data
+              mountPath: '/data'
               subPath: data
           env: []
           livenessProbe:
@@ -52,36 +80,7 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "nginx.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim.nginx | default (printf "%s-nginx" (include "nginx.fullname" . )) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "nginx.fullname" . }}-nginx
-  labels:
-    app: {{ template "nginx.name" . }}-nginx
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "nginx.fullname" . }}-nginx
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}

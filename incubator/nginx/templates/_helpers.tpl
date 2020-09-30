@@ -51,9 +51,8 @@ Calculate nginx base url
 {{- else }}
 {{- if .Values.ingress.nginx.enabled }}
 {{- $hostname := ((empty (include "nginx.nginx-hostname" .)) | ternary .Values.ingress.nginx.hostname (include "nginx.nginx-hostname" .)) }}
-{{- $path := (eq .Values.ingress.nginx.path "/" | ternary "" .Values.ingress.nginx.path) }}
 {{- $protocol := (.Values.ingress.nginx.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
+{{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "nginx.nginx-hostname" .) }}
 {{- end }}

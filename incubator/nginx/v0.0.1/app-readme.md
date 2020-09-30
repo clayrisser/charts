@@ -1,3 +1,0 @@
-# nginx
-
-> some nginx container

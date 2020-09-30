@@ -12,13 +12,13 @@ spec:
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.nginx.type }}
-  {{- if (or (eq .Values.service.nginx.type "LoadBalancer") (eq .Values.service.nginx.type "NodePort")) }}
+  {{- if (eq .Values.service.nginx.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.nginx.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: {{ (eq .Values.service.nginx.type "LoadBalancer") | ternary .Values.service.nginx.lbPorts.http "80" }}
       targetPort: container
       {{- if (and (eq .Values.service.nginx.type "NodePort") (not (empty .Values.service.nginx.nodePorts.http))) }}
       nodePort: {{ .Values.service.nginx.nodePorts.http }}

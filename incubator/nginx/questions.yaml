@@ -16,32 +16,59 @@ questions:
     label: 'cluster provider'
     group: Config
   - variable: config.imagePullPolicy
-    default: IfNotPresent
+    default: Always
     description: ''
     type: enum
     options:
-      - IfNotPresent
       - Always
+      - IfNotPresent
     required: true
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: RollingUpdate
+    default: Recreate
     description: ''
     type: enum
     options:
-      - RollingUpdate
       - Recreate
+      - RollingUpdate
+      - OnDelete
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.secret
-    default: pass
+  - variable: config.nginx.resources.defaults
+    default: true
     description: ''
-    type: password
+    type: boolean
     required: true
-    label: secret
+    label: 'nginx resources defaults'
+    show_subquestion_if: false
     group: Config
+    subquestions:
+      - variable: config.nginx.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'nginx resources requests cpu'
+      - variable: config.nginx.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'nginx resources requests memory'
+      - variable: config.nginx.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'nginx resources limits cpu'
+      - variable: config.nginx.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'nginx resources limits memory'
 
 # Persistence
   - variable: persistence.enabled
@@ -53,12 +80,6 @@ questions:
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: persistence.size
-        default: 1Gi
-        description: ''
-        type: string
-        required: true
-        label: size
       - variable: persistence.storageClass
         default: ''
         description: ''
@@ -75,53 +96,39 @@ questions:
           - ReadOnlyMany
         required: false
         label: 'access mode'
-      - variable: persistence.existingClaim
+      - variable: persistence.existingClaim.nginx
         default: ''
         description: ''
         type: string
         required: false
-        label: 'existing claim'
+        label: 'nginx existing claim'
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: 'nginx size'
       - variable: persistence.velero.enabled
         default: false
         description: ''
-        type: boolean
+        type: string
         required: true
         label: 'velero enabled'
-      - variable: persistence.stash.enabled
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'stash enabled'
-      - variable: persistence.stash.paused
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash paused'
-      - variable: persistence.stash.schedule
-        default: '0 0 * * *'
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash schedule'
-      - variable: persistence.stash.keepLast
-        default: 30
-        description: ''
-        type: int
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash keep last'
-      - variable: persistence.stash.restore.snapshot
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.stash.enabled=true
-        label: 'stash restore snapshot'
-
+        group: Persistence
+        show_subquestion_if: true
+        subquestions:
+          - variable: persistence.velero.schedule
+            default: '@midnight'
+            description: ''
+            type: string
+            required: false
+            label: 'velero schedule'
+          - variable: persistence.velero.restic
+            default: true
+            description: ''
+            type: boolean
+            required: true
+            label: 'velero restic'
 
 # Services and Load Balancing
   - variable: ingress.nginx.enabled
@@ -144,12 +151,6 @@ questions:
         type: hostname
         required: true
         label: 'nginx ingress hostname'
-      - variable: ingress.nginx.path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'nginx ingress path'
       - variable: ingress.nginx.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -179,17 +180,27 @@ questions:
       - LoadBalancer
     required: true
     label: 'nginx service type'
-    show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.nginx.nodePorts.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.nginx.enabled=false
-        label: 'nginx http port'
+  - variable: service.nginx.nodePorts.http
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.nginx.type=NodePort&&ingress.nginx.enabled=false
+    label: 'nginx http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.nginx.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.nginx.type=LoadBalancer&&ingress.nginx.enabled=false
+    label: 'nginx http lb port'
+    group: 'Services and Load Balancing'
 
 # Images
   - variable: images.nginx.repository

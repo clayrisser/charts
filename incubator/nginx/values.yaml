@@ -5,25 +5,33 @@ images:
 
 config:
   clusterProvider: infrastructure
-  imagePullPolicy: IfNotPresent
-  updateStrategy: RollingUpdate
+  imagePullPolicy: Always
+  updateStrategy: Recreate
   nginx:
     baseUrl: ''
     hostname: ''
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
 
 service:
   nginx:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
+      http:
+    lbPorts:
+      http: 80
 
 ingress:
   nginx:
     certificate: ''
     enabled: false
     hostname: ''
-    path: /
     tls: false
     issuer:
       name: letsencrypt-staging
@@ -31,19 +39,15 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  existingClaim: ''
-  size: 1Gi
   storageClass: ''
+  existingClaim:
+    nginx: ''
+  size:
+    nginx: 1Gi
   velero:
     enabled: false
-  stash:
-    enabled: false
-    keepLast: 30
-    paused: false
-    repository: stash-stash
-    schedule: '0 0 * * *'
-    restore:
-      snapshot: ''
+    restic: true
+    schedule: '@midnight'
 
 probes:
   liveness:
