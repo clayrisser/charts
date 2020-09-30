@@ -1,0 +1,165 @@
+chartmuseum:
+  extraArgs:
+  replicaCount: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  image:
+    repository: chartmuseum/chartmuseum
+    tag: v0.12.0
+    pullPolicy: IfNotPresent
+  secret:
+    labels: {}
+  env:
+    open:
+      STORAGE: local
+      STORAGE_ALIBABA_BUCKET:
+      STORAGE_ALIBABA_PREFIX:
+      STORAGE_ALIBABA_ENDPOINT:
+      STORAGE_ALIBABA_SSE:
+      STORAGE_AMAZON_BUCKET:
+      STORAGE_AMAZON_PREFIX:
+      STORAGE_AMAZON_REGION:
+      STORAGE_AMAZON_ENDPOINT:
+      STORAGE_AMAZON_SSE:
+      STORAGE_GOOGLE_BUCKET:
+      STORAGE_GOOGLE_PREFIX:
+      STORAGE_MICROSOFT_CONTAINER:
+      STORAGE_MICROSOFT_PREFIX:
+      STORAGE_OPENSTACK_CONTAINER:
+      STORAGE_OPENSTACK_PREFIX:
+      STORAGE_OPENSTACK_REGION:
+      STORAGE_OPENSTACK_CACERT:
+      STORAGE_ORACLE_COMPARTMENTID:
+      STORAGE_ORACLE_BUCKET:
+      STORAGE_ORACLE_PREFIX:
+      CHART_POST_FORM_FIELD_NAME: chart
+      PROV_POST_FORM_FIELD_NAME: prov
+      DEPTH: 0
+      DEBUG: false
+      LOG_JSON: true
+      DISABLE_STATEFILES: false
+      DISABLE_METRICS: true
+      DISABLE_API: true
+      ALLOW_OVERWRITE: false
+      CHART_URL:
+      AUTH_ANONYMOUS_GET: false
+      CONTEXT_PATH:
+      INDEX_LIMIT: 0
+      CACHE:
+      CACHE_REDIS_ADDR:
+      CACHE_REDIS_DB: 0
+      BEARER_AUTH: false
+      AUTH_REALM:
+      AUTH_SERVICE:
+    field:
+    secret:
+      BASIC_AUTH_USER:
+      BASIC_AUTH_PASS:
+      GOOGLE_CREDENTIALS_JSON:
+      CACHE_REDIS_PASSWORD:
+    existingSecret:
+    existingSecretMappings:
+      BASIC_AUTH_USER:
+      BASIC_AUTH_PASS:
+      GOOGLE_CREDENTIALS_JSON:
+      CACHE_REDIS_PASSWORD:
+  deployment:
+    schedulerName: ""
+    annotations: {}
+    labels: {}
+    matchlabels: {}
+  replica:
+    annotations: {}
+  service:
+    servicename:
+    type: ClusterIP
+    externalTrafficPolicy: Local
+    loadBalancerSourceRanges: []
+    externalPort: 8080
+    nodePort:
+    annotations: {}
+    labels: {}
+  serviceMonitor:
+    enabled: false
+    labels: {}
+    metricsPath: "/metrics"
+  resources:
+   limits:
+     cpu: 100m
+     memory: 128Mi
+   requests:
+     cpu: 80m
+     memory: 64Mi
+  probes:
+    liveness:
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
+    readiness:
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
+  serviceAccount:
+    create: false
+    annotations: {}
+  securityContext:
+    enabled: true
+    fsGroup: 1000
+  priorityClassName: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  persistence:
+    enabled: false
+    accessMode: ReadWriteOnce
+    size: 1Gi
+    labels: {}
+    path: /storage
+    existingClaim:
+    storageClass:
+    pv:
+      enabled: false
+      pvname:
+      capacity:
+        storage: 1Gi
+      accessMode: ReadWriteOnce
+      nfs:
+        server:
+        path:
+  volumePermissions:
+    image:
+      registry: docker.io
+      repository: bitnami/minideb
+      tag: buster
+      pullPolicy: Always
+  ingress:
+    enabled: false
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+    hosts:
+      - name: ''
+        path: /
+        tls: true
+        tlsSecret: chartmuseum.domain2-tls
+  gcp:
+    secret:
+      enabled: false
+      name:
+      key: credentials.json
+  oracle:
+    secret:
+      enabled: false
+      name:
+      config: config
+      key_file: key_file
+  bearerAuth:
+    secret:
+      enabled: false
+      publicKeySecret: chartmuseum-public-key
