@@ -116,33 +116,42 @@ questions:
     show_subquestion_if: ingress
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: harbor.expose.tls.enabled
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'harbor ingress tls'
       - variable: harbor.expose.ingress.hosts.core
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'harbor ingress hostname'
+        label: 'harbor core ingress hostname'
+      - variable: harbor.expose.ingress.hosts.notary
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'harbor notary ingress hostname'
+  - variable: harbor.expose.tls.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'harbor ingress tls'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
       - variable: harbor.expose.tls.certSource
         default: auto
         description: ''
         type: enum
-        show_if: harbor.expose.tls.enabled=true
         options:
           - auto
           - secret
+          - none
         required: true
         label: 'harbor cert source'
       - variable: harbor.expose.tls.secret.secretName
         default: ''
         description: ''
         type: string
-        show_if: harbor.expose.tls.enabled=true&&=harbor.expose.tls.certSource=secret
+        show_if: harbor.expose.tls.certSource=secret
         required: false
         label: 'harbor ingress certificate'
   - variable: harbor.expose.nodePort.ports.http.nodePort
@@ -154,4 +163,14 @@ questions:
     max: 32767
     show_if: harbor.expose.type!=ingress
     label: 'harbor http node port'
+    group: 'Services and Load Balancing'
+  - variable: harbor.expose.nodePort.ports.notary.nodePort
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: harbor.expose.type!=ingress
+    label: 'harbor notary node port'
     group: 'Services and Load Balancing'
