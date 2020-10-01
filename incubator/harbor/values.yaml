@@ -479,7 +479,6 @@ harbor:
       image:
         repository: goharbor/harbor-registryctl
         tag: dev
-
       # resources:
       #  requests:
       #    memory: 256Mi
@@ -489,7 +488,8 @@ harbor:
     tolerations: []
     affinity: {}
     ## Additional deployment annotations
-    podAnnotations: {}
+    podAnnotations:
+      backup.velero.io/backup-volumes: registry-data
     # Secret is used to secure the upload state from client
     # and registry storage backend.
     # See: https://github.com/docker/distribution/blob/master/docs/configuration.md#http
@@ -504,7 +504,6 @@ harbor:
       # If you update the username or password of registry, make sure use cli tool htpasswd to generate the bcrypt hash
       # e.g. "htpasswd -nbBC10 $username $password"
       htpasswd: "harbor_registry_user:$2y$10$9L4Tc0DJbFFMB6RdSCunrOpTHdwhid4ktBJmLD00bYgqkkGOvll3m"
-
     middleware:
       enabled: false
       type: cloudFront
@@ -535,7 +534,8 @@ harbor:
     tolerations: []
     affinity: {}
     ## Additional deployment annotations
-    podAnnotations: {}
+    podAnnotations:
+      backup.velero.io/backup-volumes: chartmuseum-data
 
   clair:
     enabled: false

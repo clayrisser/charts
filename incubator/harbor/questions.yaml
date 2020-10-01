@@ -56,7 +56,7 @@ questions:
         description: ''
         type: storageclass
         required: false
-        label: 'storage class'
+        label: 'registry storage class'
       - variable: harbor.persistence.persistentVolumeClaim.registry.existingClaim
         default: ''
         description: ''
@@ -64,7 +64,7 @@ questions:
         required: false
         label: 'registry existing claim'
       - variable: harbor.persistence.persistentvolumeclaim.registry.size
-        default: 1Gi
+        default: 5Gi
         description: ''
         type: string
         required: true
@@ -74,7 +74,7 @@ questions:
         description: ''
         type: storageclass
         required: false
-        label: 'storage class'
+        label: 'chartmuseum storage class'
       - variable: harbor.persistence.persistentvolumeclaim.chartmuseum.existingClaim
         default: ''
         description: ''
@@ -92,7 +92,7 @@ questions:
         description: ''
         type: storageclass
         required: false
-        label: 'storage class'
+        label: 'jobservice storage class'
       - variable: harbor.persistence.persistentvolumeclaim.jobservice.existingClaim
         default: ''
         description: ''
@@ -110,7 +110,7 @@ questions:
         description: ''
         type: storageclass
         required: false
-        label: 'storage class'
+        label: 'redis storage class'
       - variable: harbor.persistence.persistentvolumeclaim.redis.existingClaim
         default: ''
         description: ''
@@ -123,24 +123,24 @@ questions:
         type: string
         required: true
         label: 'redis size'
-      - variable: harbor.persistence.persistentvolumeclaim.trivy.storageClass
-        default: ''
-        description: ''
-        type: storageclass
-        required: false
-        label: 'storage class'
-      - variable: harbor.persistence.persistentvolumeclaim.trivy.existingClaim
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'trivy existing claim'
-      - variable: harbor.persistence.persistentvolumeclaim.trivy.size
-        default: 1Gi
-        description: ''
-        type: string
-        required: true
-        label: 'trivy size'
+      # - variable: harbor.persistence.persistentvolumeclaim.trivy.storageClass
+      #   default: ''
+      #   description: ''
+      #   type: storageclass
+      #   required: false
+      #   label: 'trivy storage class'
+      # - variable: harbor.persistence.persistentvolumeclaim.trivy.existingClaim
+      #   default: ''
+      #   description: ''
+      #   type: string
+      #   required: false
+      #   label: 'trivy existing claim'
+      # - variable: harbor.persistence.persistentvolumeclaim.trivy.size
+      #   default: 1Gi
+      #   description: ''
+      #   type: string
+      #   required: true
+      #   label: 'trivy size'
 
 # Services and Load Balancing
   - variable: harbor.expose.type
