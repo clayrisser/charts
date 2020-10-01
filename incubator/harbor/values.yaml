@@ -664,7 +664,7 @@ harbor:
   database:
     # if external database is used, set "type" to "external"
     # and fill the connection informations in "external" section
-    type: internal
+    type: external
     internal:
       # set the service account to be used, default if left empty
       serviceAccountName: ""
