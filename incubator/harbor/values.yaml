@@ -538,7 +538,7 @@ harbor:
     podAnnotations: {}
 
   clair:
-    enabled: true
+    enabled: false
     # set the service account to be used, default if left empty
     serviceAccountName: ""
     clair:
@@ -569,7 +569,7 @@ harbor:
 
   trivy:
     # enabled the flag to enable Trivy scanner
-    enabled: true
+    enabled: false
     image:
       # repository the repository for Trivy adapter image
       repository: goharbor/trivy-adapter-photon
@@ -625,7 +625,7 @@ harbor:
     podAnnotations: {}
 
   notary:
-    enabled: true
+    enabled: false
     server:
       # set the service account to be used, default if left empty
       serviceAccountName: ""
