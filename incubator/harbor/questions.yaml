@@ -2,6 +2,45 @@ categories:
   - Server
 questions:
 
+# Postgres Config
+  - variable: harbor.database.external.host
+    default: ''
+    description: ''
+    type: string
+    required: true
+    label: host
+    group: 'Postgres Config'
+  - variable: harbor.database.external.coreDatabase
+    default: gitlab
+    description: ''
+    type: string
+    required: true
+    label: database
+    group: 'Postgres Config'
+  - variable: harbor.database.external.username
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: 'Postgres Config'
+  - variable: harbor.database.external.password
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: 'Postgres Config'
+  - variable: harbor.database.external.port
+    default: 5432
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    group: 'Postgres Config'
+
 # Persistence
   - variable: harbor.persistence.enabled
     default: false
