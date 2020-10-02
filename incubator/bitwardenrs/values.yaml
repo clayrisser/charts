@@ -2,33 +2,15 @@ images:
   bitwardenrs:
     repository: codejamninja/bitwardenrs
     tag: 1.13.1
-  pgadmin:
-    repository: dpage/pgadmin4
-    tag: 4.11
 
 config:
   clusterProvider: infrastructure
-  imagePullPolicy: IfNotPresent
-  updateStrategy: RollingUpdate
+  imagePullPolicy: Always
+  updateStrategy: Recreate
   adminToken: pass
   bitwardenrs:
     baseUrl: ''
     hostname: ''
-  postgres:
-    customConfig: ''
-    database: bitwardenrs
-    host: ''
-    internal: true
-    password: P@ssw0rd
-    pause: true
-    port: 5432
-    prometheus: false
-    replicas: 1
-    standbyMode: Hot
-    terminationPolicy: Delete
-    url: ''
-    username: postgres
-    version: 11.2
     resources:
       requests:
         cpu: 100m
@@ -36,49 +18,28 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
-    versionMap:
-      9.6-v2: 9.6
-      9.6.7-v2: 9.6
-      10.2-v2: 10.2
-      10.6: 10.6
-      11.1: 11.1
-      11.2: 11.2
-  pgadmin:
-    email: admin
-    enabled: false
-    password: pass
+  postgres:
+    database: bitwardenrs
+    host: ''
+    password: P@ssw0rd
+    port: 5432
+    url: ''
+    username: postgres
 
 service:
   bitwardenrs:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
-  pgadmin:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http: ''
-  postgres:
-    type: ClusterIP
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      postgres: ''
+      http:
+    lbPorts:
+      http: 80
 
 ingress:
   bitwardenrs:
     certificate: ''
     enabled: false
     hostname: ''
-    path: /
-    tls: false
-    issuer:
-      name: letsencrypt-staging
-  pgadmin:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    path: /
     tls: false
     issuer:
       name: letsencrypt-staging
@@ -86,26 +47,15 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  existingClaim: ''
-  size: 1Gi
   storageClass: ''
+  existingClaim:
+    bitwardenrs: ''
+  size:
+    bitwardenrs: 1Gi
   velero:
     enabled: false
-  stash:
-    bucket: ''
-    container: ''
-    enabled: false
-    endpoint: s3.amazonaws.com
-    keepLast: 30
-    paused: false
-    prefix: stash
-    schedule: '0 0 * * *'
-    secret: stash-config-stash-config
-    type: s3
-    restore:
-      snapshot:
-        data: ''
-        postgres: ''
+    restic: true
+    schedule: '@midnight'
 
 probes:
   liveness:

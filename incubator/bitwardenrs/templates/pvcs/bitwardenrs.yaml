@@ -1,10 +1,10 @@
-{{- if (and .Values.persistence.enabled (eq .Values.persistence.existingClaim "")) }}
+{{- if (and .Values.persistence.enabled (eq .Values.persistence.existingClaim.bitwardenrs "")) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "bitwardenrs.fullname" . }}
+  name: {{ template "bitwardenrs.fullname" . }}-bitwardenrs
   labels:
-    app: {{ template "bitwardenrs.name" . }}
+    app: {{ template "bitwardenrs.name" . }}-bitwardenrs
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,7 +13,7 @@ spec:
     - {{ .Values.persistence.accessMode }}
   resources:
     requests:
-      storage: {{ .Values.persistence.size }}
+      storage: {{ .Values.persistence.size.bitwardenrs }}
 {{- if .Values.persistence.storageClass }}
 {{- if (eq "-" .Values.persistence.storageClass) }}
   storageClassName: ''

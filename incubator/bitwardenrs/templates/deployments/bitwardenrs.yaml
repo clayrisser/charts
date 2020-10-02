@@ -27,17 +27,35 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
               preference:
                 matchExpressions:
-                  - key: lifecycle
+                  - key: application/state
                     operator: In
                     values:
-                      - dedicated
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "bitwardenrs.name" . }}-bitwardenrs
       containers:
         - name: {{ template "bitwardenrs.fullname" . }}-bitwardenrs
           image: {{ .Values.images.bitwardenrs.repository }}:{{ .Values.images.bitwardenrs.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: {{ .Values.config.bitwardenrs.resources.requests.cpu }}
+              memory: {{ .Values.config.bitwardenrs.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.config.bitwardenrs.resources.limits.cpu }}
+              memory: {{ .Values.config.bitwardenrs.resources.limits.memory }}
           ports:
             - name: container
               containerPort: 80
@@ -45,7 +63,7 @@ spec:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: /data
+              mountPath: '/data'
               subPath: data
           env:
             - name: ADMIN_TOKEN
@@ -53,19 +71,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: admin_token
-            {{- if .Values.config.postgres.internal }}
-            - name: POSTGRES_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "bitwardenrs.sharedname" . }}-postgres-auth
-                  key: POSTGRES_USER
-            {{- else }}
             - name: POSTGRES_USERNAME
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: postgres_username
-            {{- end }}
             - name: POSTGRES_DATABASE
               valueFrom:
                 configMapKeyRef:
@@ -81,19 +91,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: postgres_host
-            {{- if .Values.config.postgres.internal }}
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "bitwardenrs.sharedname" . }}-postgres-auth
-                  key: POSTGRES_PASSWORD
-            {{- else }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "bitwardenrs.fullname" . }}
                   key: postgres_password
-            {{- end }}
             - name: POSTGRES_URL
               valueFrom:
                 secretKeyRef:
@@ -101,48 +103,19 @@ spec:
                   key: postgres_url
           livenessProbe:
             httpGet:
-              path: /alive
+              path: /
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /alive
+              path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "bitwardenrs.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim.bitwardenrs | default (printf "%s-bitwardenrs" (include "bitwardenrs.fullname" . )) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "bitwardenrs.fullname" . }}-bitwardenrs
-  labels:
-    app: {{ template "bitwardenrs.name" . }}-bitwardenrs
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ template "bitwardenrs.fullname" . }}-data
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "bitwardenrs.fullname" . }}-bitwardenrs
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}

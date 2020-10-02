@@ -17,16 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Create a name shared accross all apps in namespace.
-We truncate at 63 chars because some Kubernetes name fields are limited to this
-(by the DNS naming spec).
-*/}}
-{{- define "bitwardenrs.sharedname" }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- printf "%s-%s" .Release.Namespace $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Calculate bitwardenrs certificate
 */}}
 {{- define "bitwardenrs.bitwardenrs-certificate" }}
@@ -34,17 +24,6 @@ Calculate bitwardenrs certificate
 {{- printf .Values.ingress.bitwardenrs.certificate }}
 {{- else }}
 {{- printf "%s-bitwardenrs-letsencrypt" (include "bitwardenrs.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate pgadmin certificate
-*/}}
-{{- define "bitwardenrs.pgadmin-certificate" }}
-{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
-{{- printf .Values.ingress.pgadmin.certificate }}
-{{- else }}
-{{- printf "%s-pgadmin-letsencrypt" (include "bitwardenrs.fullname" .) }}
 {{- end }}
 {{- end }}
 
@@ -72,9 +51,8 @@ Calculate bitwardenrs base url
 {{- else }}
 {{- if .Values.ingress.bitwardenrs.enabled }}
 {{- $hostname := ((empty (include "bitwardenrs.bitwardenrs-hostname" .)) | ternary .Values.ingress.bitwardenrs.hostname (include "bitwardenrs.bitwardenrs-hostname" .)) }}
-{{- $path := (eq .Values.ingress.bitwardenrs.path "/" | ternary "" .Values.ingress.bitwardenrs.path) }}
 {{- $protocol := (.Values.ingress.bitwardenrs.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
+{{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "bitwardenrs.bitwardenrs-hostname" .) }}
 {{- end }}
@@ -86,14 +64,10 @@ Calculate postgres url
 */}}
 {{- define "bitwardenrs.postgres-url" }}
 {{- $postgres := .Values.config.postgres }}
-{{- if $postgres.internal }}
-{{- $credentials := (printf "%s:%s" $postgres.username $postgres.password) }}
-{{- printf "postgresql://%s@%s-postgres:5432/%s" $credentials (include "bitwardenrs.fullname" .) $postgres.database }}
-{{- else }}
 {{- if $postgres.url }}
 {{- printf $postgres.url }}
 {{- else }}
-{{- printf "postgresql://%s@%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
-{{- end }}
+{{- $credentials := ((or (empty $postgres.username) (empty $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) }}
+{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
 {{- end }}
 {{- end }}

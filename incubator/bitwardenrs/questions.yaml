@@ -16,25 +16,59 @@ questions:
     label: 'cluster provider'
     group: Config
   - variable: config.imagePullPolicy
-    default: IfNotPresent
+    default: Always
     description: ''
     type: enum
     options:
-      - IfNotPresent
       - Always
+      - IfNotPresent
     required: true
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: RollingUpdate
+    default: Recreate
     description: ''
     type: enum
     options:
-      - RollingUpdate
       - Recreate
+      - RollingUpdate
+      - OnDelete
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.bitwardenrs.resources.defaults
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'bitwardenrs resources defaults'
+    show_subquestion_if: false
+    group: Config
+    subquestions:
+      - variable: config.bitwardenrs.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'bitwardenrs resources requests cpu'
+      - variable: config.bitwardenrs.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'bitwardenrs resources requests memory'
+      - variable: config.bitwardenrs.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'bitwardenrs resources limits cpu'
+      - variable: config.bitwardenrs.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'bitwardenrs resources limits memory'
   - variable: config.adminToken
     default: ''
     description: ''
@@ -44,56 +78,6 @@ questions:
     group: Config
 
 # Postgres Config
-  - variable: config.postgres.internal
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: internal
-    group: 'Postgres Config'
-  - variable: config.postgres.version
-    default: 11.2
-    description: ''
-    type: string
-    required: true
-    label: version
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.standbyMode
-    default: hot
-    description: ''
-    type: enum
-    options:
-      - hot
-      - warm
-    required: true
-    label: 'standby mode'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.prometheus
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: prometheus
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.replicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: replicas
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.customConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'custom config'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
     description: ''
@@ -111,7 +95,7 @@ questions:
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.password
-    default: postgres
+    default: P@ssw0rd
     description: ''
     type: password
     required: true
@@ -123,7 +107,7 @@ questions:
     description: ''
     type: int
     min: 0
-    max: 50000
+    max: 65535
     required: true
     label: port
     show_if: config.postgres.internal=false
@@ -145,31 +129,6 @@ questions:
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
 
-# PGAdmin
-  - variable: config.pgadmin.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: pgadmin
-    show_subquestion_if: true
-    group: PGAdmin
-    subquestions:
-      - variable: config.pgadmin.email
-        default: admin
-        description: ''
-        type: string
-        required: true
-        label: 'pgadmin email'
-        group: PGAdmin
-      - variable: config.pgadmin.password
-        default: admin
-        description: ''
-        type: password
-        required: true
-        label: 'pgadmin password'
-        group: PGAdmin
-
 # Persistence
   - variable: persistence.enabled
     default: false
@@ -180,12 +139,6 @@ questions:
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: persistence.size
-        default: 1Gi
-        description: ''
-        type: string
-        required: true
-        label: size
       - variable: persistence.storageClass
         default: ''
         description: ''
@@ -202,91 +155,42 @@ questions:
           - ReadOnlyMany
         required: false
         label: 'access mode'
-      - variable: persistence.existingClaim
+      - variable: persistence.existingClaim.bitwardenrs
         default: ''
         description: ''
         type: string
         required: false
-        label: 'existing claim'
+        label: 'bitwardenrs existing claim'
+      - variable: persistence.size.bitwardenrs
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: 'bitwardenrs size'
       - variable: persistence.velero.enabled
         default: false
         description: ''
-        type: boolean
+        type: string
+        show_if: persistence.velero.enabled=true
         required: true
         label: 'velero enabled'
-      - variable: persistence.stash.enabled
-        default: false
+        group: Persistence
+      - variable: persistence.velero.schedule
+        default: '@midnight'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
         description: ''
         type: boolean
+        show_if: persistence.velero.enabled=true
         required: true
-        label: 'stash enabled'
-      - variable: persistence.stash.paused
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash paused'
-      - variable: persistence.stash.type
-        default: s3
-        description: ''
-        type: enum
-        options:
-          - gcs
-          - s3
-          - azure
-        required: false
-        show_if: persistence.stash.enabled=true
-        label: 'stash type'
-      - variable: persistence.stash.container
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
-        label: 'stash container'
-      - variable: persistence.stash.bucket
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.stash.enabled=true
-        label: 'stash bucket'
-      - variable: persistence.stash.endpoint
-        default: s3.amazonaws.com
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
-        label: 'stash endpoint'
-      - variable: persistence.stash.schedule
-        default: '0 0 * * *'
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash schedule'
-      - variable: persistence.stash.keepLast
-        default: 30
-        description: ''
-        type: int
-        required: true
-        show_if: persistence.stash.enabled=true
-        label: 'stash keep last'
-      - variable: persistence.stash.restore.snapshot.data
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.stash.enabled=true
-        label: 'stash restore snapshot data'
-      - variable: persistence.stash.restore.snapshot.postgres
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.stash.enabled=true&&config.postgres.internal=true
-        label: 'stash restore snapshot postgres'
+        label: 'velero restic'
+        group: Persistence
 
 # Services and Load Balancing
   - variable: ingress.bitwardenrs.enabled
@@ -309,12 +213,6 @@ questions:
         type: hostname
         required: true
         label: 'bitwardenrs ingress hostname'
-      - variable: ingress.bitwardenrs.path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: 'bitwardenrs ingress path'
       - variable: ingress.bitwardenrs.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -344,107 +242,27 @@ questions:
       - LoadBalancer
     required: true
     label: 'bitwardenrs service type'
-    show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.bitwardenrs.nodePorts.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.bitwardenrs.enabled=false
-        label: 'bitwardenrs http port'
-  - variable: ingress.pgadmin.enabled
-    default: true
+  - variable: service.bitwardenrs.nodePorts.http
+    default:
     description: ''
-    type: boolean
-    show_if: config.pgadmin.enabled=true
-    label: 'pgadmin ingress enabled'
-    show_subquestion_if: true
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.bitwardenrs.type=NodePort&&ingress.bitwardenrs.enabled=false
+    label: 'bitwardenrs http node port'
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: ingress.pgadmin.tls
-        default: false
-        description: ''
-        type: boolean
-        show_if: config.pgadmin.enabled=true
-        required: true
-        label: 'pgadmin ingress tls'
-      - variable: ingress.pgadmin.hostname
-        default: xip.io
-        description: ''
-        type: hostname
-        show_if: config.pgadmin.enabled=true
-        required: true
-        label: 'pgadmin ingress hostname'
-      - variable: ingress.pgadmin.path
-        default: /
-        description: ''
-        type: string
-        show_if: config.pgadmin.enabled=true
-        required: true
-        label: 'pgadmin ingress path'
-      - variable: ingress.pgadmin.issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true
-        options:
-          - none
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: 'pgadmin ingress issuer name'
-      - variable: ingress.pgadmin.certificate
-        default: ''
-        description: ''
-        type: string
-        show_if: config.pgadmin.enabled=true&&ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none
-        required: false
-        label: 'pgadmin ingress certificate'
-  - variable: service.pgadmin.type
-    default: NodePort
+  - variable: service.bitwardenrs.lbPorts.http
+    default: 80
     description: ''
-    type: enum
-    show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
+    type: int
+    min: 0
+    max: 65535
     required: true
-    label: 'pgadmin service type'
-    show_subquestion_if: NodePort
+    show_if: service.bitwardenrs.type=LoadBalancer&&ingress.bitwardenrs.enabled=false
+    label: 'bitwardenrs http lb port'
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.pgadmin.nodePorts.http
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        show_if: ingress.pgadmin.enabled=false
-        label: 'pgadmin port'
-  - variable: service.postgres.type
-    default: ClusterIP
-    description: ''
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    label: 'postgres service type'
-    show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.postgres.nodePorts.postgres
-        default: ''
-        description: ''
-        type: int
-        min: 30000
-        max: 32767
-        label: 'postgres port'
 
 # Images
   - variable: images.bitwardenrs.repository
@@ -460,20 +278,4 @@ questions:
     type: string
     required: true
     label: 'bitwardenrs tag'
-    group: Images
-  - variable: images.pgadmin.repository
-    default: dpage/pgadmin4
-    description: ''
-    type: string
-    required: true
-    label: 'pgadmin repository'
-    show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
-    group: Images
-  - variable: images.pgadmin.tag
-    default: 4.11
-    description: ''
-    type: string
-    required: true
-    label: 'pgadmin tag'
-    show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
     group: Images

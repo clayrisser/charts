@@ -1,107 +1,17 @@
-{{- if .Values.persistence.stash.enabled }}
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
+{{- if (not (empty .Values.persistence.velero.schedule)) }}
+apiVersion: velero.io/v1
+kind: Schedule
 metadata:
-  name: {{ template "bitwardenrs.fullname" . }}-data
+  name: {{ template "bitwardenrs.fullname" . }}
   labels:
-    app: {{ template "bitwardenrs.name" . }}-data
+    app: {{ template "bitwardenrs.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  wipeOut: false
-  backend:
-    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
-    {{ .Values.persistence.stash.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
-      bucket: {{ .Values.persistence.stash.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.stash.type) }}
-      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.stash.type) }}
-      container: {{ .Values.persistence.stash.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/data'
----
-apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfiguration
-metadata:
-  name: {{ template "bitwardenrs.fullname" . }}-data
-  labels:
-    app: {{ template "bitwardenrs.name" . }}-data
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  repository:
-    name: {{ template "bitwardenrs.fullname" . }}-data
-  paused: {{ .Values.persistence.stash.paused }}
-  schedule: {{ .Values.persistence.stash.schedule | quote }}
-  retentionPolicy:
-    name: retention-policy
-    keepLast: {{ .Values.persistence.stash.keepLast }}
-    prune: true
-  target:
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "bitwardenrs.fullname" . }}-bitwardenrs
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-    paths:
-      - /_data
-{{- if (and .Values.config.postgres.internal (not (and (eq .Values.config.postgres.terminationPolicy "Pause") .Values.config.postgres.pause))) }}---
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: {{ template "bitwardenrs.fullname" . }}-postgres
-  labels:
-    app: {{ template "bitwardenrs.name" . }}-postgres
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  wipeOut: false
-  backend:
-    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
-    {{ .Values.persistence.stash.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
-      bucket: {{ .Values.persistence.stash.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.stash.type) }}
-      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.stash.type) }}
-      container: {{ .Values.persistence.stash.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/postgres-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}'
----
-apiVersion: stash.appscode.com/v1beta1
-kind: BackupConfiguration
-metadata:
-  name: {{ template "bitwardenrs.fullname" . }}-postgres
-  labels:
-    app: {{ template "bitwardenrs.name" . }}-postgres
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  repository:
-    name: {{ template "bitwardenrs.fullname" . }}-postgres
-  paused: {{ .Values.persistence.stash.paused }}
-  schedule: {{ .Values.persistence.stash.schedule | quote }}
-  retentionPolicy:
-    name: retention-policy
-    keepLast: {{ .Values.persistence.stash.keepLast }}
-    prune: true
-  target:
-    ref:
-      apiVersion: apps/v1
-      kind: AppBinding
-      name: {{ template "bitwardenrs.fullname" . }}-postgres
-  task:
-    name: 'postgres-backup-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}'
-{{- end }}
+  schedule: {{ .Values.persistence.velero.schedule | quote }}
+  template:
+    includedNamespaces:
+      - {{ .Release.Namespace }}
+    ttl: 0h30m00s
 {{- end }}

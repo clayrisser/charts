@@ -9,14 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   {{- $postgres := .Values.config.postgres }}
-  {{- if $postgres.internal }}
-  postgres_host: {{ template "bitwardenrs.fullname" . }}-postgres
-  {{- else }}
   postgres_host: {{ $postgres.host | quote }}
-  {{- end }}
   postgres_database: {{ $postgres.database | quote }}
   postgres_port: {{ $postgres.port | quote }}
   postgres_username: {{ $postgres.username | quote }}
-  {{- if .Values.config.pgadmin.enabled }}
-  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
-  {{- end }}

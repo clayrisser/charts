@@ -12,13 +12,13 @@ spec:
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.bitwardenrs.type }}
-  {{- if (or (eq .Values.service.bitwardenrs.type "LoadBalancer") (eq .Values.service.bitwardenrs.type "NodePort")) }}
+  {{- if (eq .Values.service.bitwardenrs.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.bitwardenrs.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: {{ (eq .Values.service.bitwardenrs.type "LoadBalancer") | ternary .Values.service.bitwardenrs.lbPorts.http "80" }}
       targetPort: container
       {{- if (and (eq .Values.service.bitwardenrs.type "NodePort") (not (empty .Values.service.bitwardenrs.nodePorts.http))) }}
       nodePort: {{ .Values.service.bitwardenrs.nodePorts.http }}
