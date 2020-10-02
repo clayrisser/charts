@@ -217,6 +217,9 @@ spec:
       tolerations: []
       affinity: {}
       podAnnotations: {}
+      podLabels:
+        app: {{ template "harbor.name" . }}-harbor
+        release: {{ .Release.Name }}
     core:
       image:
         repository: goharbor/harbor-core
