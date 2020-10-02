@@ -29,6 +29,9 @@ spec:
           core: {{ .Values.ingress.harbor.hostname | quote }}
           # notary: notary.harbor.domain
         controller: default
+        # labels:
+        #   app: {{ template "harbor.name" . }}-harbor
+        #   release: {{ .Release.Name }}
         annotations:
           ingress.kubernetes.io/ssl-redirect: "true"
           ingress.kubernetes.io/proxy-body-size: "0"
@@ -197,6 +200,9 @@ spec:
       tolerations: []
       affinity: {}
       podAnnotations: {}
+      podLabels:
+        app: {{ template "harbor.name" . }}-harbor
+        release: {{ .Release.Name }}
     portal:
       image:
         repository: goharbor/harbor-portal
