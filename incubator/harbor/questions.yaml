@@ -167,7 +167,6 @@ questions:
         default: false
         description: ''
         type: string
-        show_if: persistence.velero.enabled=true
         required: true
         label: 'velero enabled'
         group: Persistence
