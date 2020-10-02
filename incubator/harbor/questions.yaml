@@ -2,36 +2,72 @@ categories:
   - Server
 questions:
 
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.password
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Config
+  - variable: config.secret
+    default: ''
+    description: ''
+    type: password
+    required: true
+    label: secret
+    group: Config
+
 # Postgres Config
-  - variable: harbor.database.external.host
+  - variable: config.postgres.host
     default: ''
     description: ''
     type: string
     required: true
     label: host
     group: 'Postgres Config'
-  - variable: harbor.database.external.coreDatabase
+  - variable: config.postgres.database
     default: gitlab
     description: ''
     type: string
     required: true
     label: database
     group: 'Postgres Config'
-  - variable: harbor.database.external.username
+  - variable: config.postgres.username
     default: postgres
     description: ''
     type: string
     required: true
     label: username
     group: 'Postgres Config'
-  - variable: harbor.database.external.password
+  - variable: config.postgres.password
     default: P@ssw0rd
     description: ''
     type: password
     required: true
     label: password
     group: 'Postgres Config'
-  - variable: harbor.database.external.port
+  - variable: config.postgres.port
     default: 5432
     description: ''
     type: int
@@ -42,174 +78,184 @@ questions:
     group: 'Postgres Config'
 
 # Persistence
-  - variable: harbor.persistence.enabled
+  - variable: persistence.enabled
     default: false
     description: ''
     type: boolean
     required: true
     label: enabled
     show_subquestion_if: true
-    group: harbor.persistence
+    group: persistence
     subquestions:
-      - variable: harbor.persistence.persistentVolumeClaim.registry.storageClass
+      - variable: persistence.storageClass
         default: ''
         description: ''
         type: storageclass
         required: false
-        label: 'registry storage class'
-      - variable: harbor.persistence.persistentVolumeClaim.registry.existingClaim
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.persistentVolumeClaim.existingClaim.registry
         default: ''
         description: ''
         type: string
         required: false
         label: 'registry existing claim'
-      - variable: harbor.persistence.persistentvolumeclaim.registry.size
+      - variable: persistence.persistentvolumeclaim.size.registry
         default: 5Gi
         description: ''
         type: string
         required: true
         label: 'registry size'
-      - variable: harbor.persistence.persistentvolumeclaim.chartmuseum.storageClass
-        default: ''
-        description: ''
-        type: storageclass
-        required: false
-        label: 'chartmuseum storage class'
-      - variable: harbor.persistence.persistentvolumeclaim.chartmuseum.existingClaim
+      - variable: persistence.persistentvolumeclaim.existingClaim.chartmuseum
         default: ''
         description: ''
         type: string
         required: false
         label: 'chartmuseum existing claim'
-      - variable: harbor.persistence.persistentvolumeclaim.chartmuseum.size
+      - variable: persistence.persistentvolumeclaim.size.chartmuseum
         default: 1Gi
         description: ''
         type: string
         required: true
         label: 'chartmuseum size'
-      - variable: harbor.persistence.persistentvolumeclaim.jobservice.storageClass
-        default: ''
-        description: ''
-        type: storageclass
-        required: false
-        label: 'jobservice storage class'
-      - variable: harbor.persistence.persistentvolumeclaim.jobservice.existingClaim
+      - variable: persistence.persistentvolumeclaim.existingClaim.jobservice
         default: ''
         description: ''
         type: string
         required: false
         label: 'jobservice existing claim'
-      - variable: harbor.persistence.persistentvolumeclaim.jobservice.size
+      - variable: persistence.persistentvolumeclaim.size.jobservice
         default: 1Gi
         description: ''
         type: string
         required: true
         label: 'jobservice size'
-      - variable: harbor.persistence.persistentvolumeclaim.redis.storageClass
-        default: ''
-        description: ''
-        type: storageclass
-        required: false
-        label: 'redis storage class'
-      - variable: harbor.persistence.persistentvolumeclaim.redis.existingClaim
+      - variable: persistence.persistentvolumeclaim.existingClaim.redis
         default: ''
         description: ''
         type: string
         required: false
         label: 'redis existing claim'
-      - variable: harbor.persistence.persistentvolumeclaim.redis.size
+      - variable: persistence.persistentvolumeclaim.size.redis
         default: 1Gi
         description: ''
         type: string
         required: true
         label: 'redis size'
-      # - variable: harbor.persistence.persistentvolumeclaim.trivy.storageClass
-      #   default: ''
-      #   description: ''
-      #   type: storageclass
-      #   required: false
-      #   label: 'trivy storage class'
-      # - variable: harbor.persistence.persistentvolumeclaim.trivy.existingClaim
+      # - variable: persistence.persistentvolumeclaim.existingClaim.trivy
       #   default: ''
       #   description: ''
       #   type: string
       #   required: false
       #   label: 'trivy existing claim'
-      # - variable: harbor.persistence.persistentvolumeclaim.trivy.size
+      # - variable: persistence.persistentvolumeclaim.size.trivy
       #   default: 1Gi
       #   description: ''
       #   type: string
       #   required: true
       #   label: 'trivy size'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        default: '@midnight'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
 
 # Services and Load Balancing
-  - variable: harbor.expose.type
-    default: ingress
+  - variable: ingress.harbor.enabled
+    default: true
     description: ''
-    type: enum
-    options:
-      - ingress
-      - clusterIP
-      - nodePort
-    label: 'harbor expose type'
-    show_subquestion_if: ingress
+    type: boolean
+    label: 'harbor ingress enabled'
+    show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: harbor.expose.ingress.hosts.core
+      - variable: ingress.harbor.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'harbor ingress tls'
+      - variable: ingress.harbor.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'harbor core ingress hostname'
-      # - variable: harbor.expose.ingress.hosts.notary
-      #   default: xip.io
-      #   description: ''
-      #   type: hostname
-      #   required: true
-      #   label: 'harbor notary ingress hostname'
-  - variable: harbor.expose.tls.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: 'harbor ingress tls'
-    show_subquestion_if: true
-    group: 'Services and Load Balancing'
-    subquestions:
-      - variable: harbor.expose.tls.certSource
-        default: auto
+        label: 'harbor ingress hostname'
+      - variable: ingress.harbor.issuer.name
+        default: letsencrypt-staging
         description: ''
         type: enum
+        show_if: ingress.harbor.tls=true
         options:
-          - auto
-          - secret
           - none
+          - letsencrypt-staging
+          - letsencrypt-prod
         required: true
-        label: 'harbor cert source'
-      - variable: harbor.expose.tls.secret.secretName
+        label: 'harbor ingress issuer name'
+      - variable: ingress.harbor.certificate
         default: ''
         description: ''
         type: string
-        show_if: harbor.expose.tls.certSource=secret
+        show_if: ingress.harbor.tls=true&&ingress.harbor.issuer.name=none
         required: false
         label: 'harbor ingress certificate'
-  - variable: harbor.expose.nodePort.ports.http.nodePort
-    default: ''
+  - variable: service.harbor.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.harbor.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'harbor service type'
+    group: 'Services and Load Balancing'
+  - variable: service.harbor.nodePorts.http
+    default:
     description: ''
     type: int
     required: false
     min: 30000
     max: 32767
-    show_if: harbor.expose.type!=ingress
+    show_if: service.harbor.type=NodePort&&ingress.harbor.enabled=false
     label: 'harbor http node port'
     group: 'Services and Load Balancing'
-  # - variable: harbor.expose.nodePort.ports.notary.nodePort
-  #   default: ''
-  #   description: ''
-  #   type: int
-  #   required: false
-  #   min: 30000
-  #   max: 32767
-  #   show_if: harbor.expose.type!=ingress
-  #   label: 'harbor notary node port'
-  #   group: 'Services and Load Balancing'
+  - variable: service.harbor.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.harbor.type=LoadBalancer&&ingress.harbor.enabled=false
+    label: 'harbor http lb port'
+    group: 'Services and Load Balancing'

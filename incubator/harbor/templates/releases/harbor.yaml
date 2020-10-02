@@ -101,31 +101,31 @@ spec:
           existingClaim: {{ .Values.persistence.existingClaim.registry }}
           storageClass: {{ .Values.persistence.storageClass }}
           subPath: ""
-          accessMode: ReadWriteOnce
+          accessMode: {{ .Values.persistence.accessMode }}
           size: {{ .Values.persistence.size.registry }}
         chartmuseum:
           existingClaim: {{ .Values.persistence.existingClaim.chartmuseum }}
           storageClass: {{ .Values.persistence.storageClass }}
           subPath: ""
-          accessMode: ReadWriteOnce
+          accessMode: {{ .Values.persistence.accessMode }}
           size: {{ .Values.persistence.size.chartmuseum }}
         jobservice:
           existingClaim: {{ .Values.persistence.existingClaim.jobservice }}
           storageClass: {{ .Values.persistence.storageClass }}
           subPath: ""
-          accessMode: ReadWriteOnce
+          accessMode: {{ .Values.persistence.accessMode }}
           size: {{ .Values.persistence.size.jobservice }}
         redis:
           existingClaim: {{ .Values.persistence.existingClaim.redis }}
           storageClass: {{ .Values.persistence.storageClass }}
           subPath: ""
-          accessMode: ReadWriteOnce
+          accessMode: {{ .Values.persistence.accessMode }}
           size: {{ .Values.persistence.size.redis }}
         trivy:
           existingClaim: {{ .Values.persistence.existingClaim.trivy }}
           storageClass: {{ .Values.persistence.storageClass }}
           subPath: ""
-          accessMode: ReadWriteOnce
+          accessMode: {{ .Values.persistence.accessMode }}
           size: {{ .Values.persistence.size.trivy }}
       imageChartStorage:
         disableredirect: false
