@@ -169,7 +169,7 @@ spec:
     imagePullPolicy: {{ .Values.config.imagePullPolicy }}
     imagePullSecrets:
     updateStrategy:
-      type: RollingUpdate
+      type: {{ .Values.config.updateStrategy }}
     logLevel: info
     harborAdminPassword: {{ .Values.config.password | quote }}
     caSecretName: ""
