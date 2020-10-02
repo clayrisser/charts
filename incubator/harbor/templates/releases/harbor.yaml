@@ -388,10 +388,10 @@ spec:
         username: {{ .Values.config.postgres.username | quote }}
         password: {{ .Values.config.postgres.password | quote }}
         coreDatabase: {{ .Values.config.postgres.database | quote }}
-        clairDatabase: "clair"
-        notaryServerDatabase: "notary_server"
-        notarySignerDatabase: "notary_signer"
-        sslmode: "disable"
+        # clairDatabase: "clair"
+        # notaryServerDatabase: "notary_server"
+        # notarySignerDatabase: "notary_signer"
+        sslmode: "require"
       maxIdleConns: 50
       maxOpenConns: 1000
       podAnnotations: {}
