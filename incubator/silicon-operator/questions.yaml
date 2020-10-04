@@ -1,0 +1,87 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: Always
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.siliconOperator.resources.defaults
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'silicon operator resources defaults'
+    show_subquestion_if: false
+    group: Config
+    subquestions:
+      - variable: config.siliconOperator.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'silicon operator resources requests cpu'
+      - variable: config.siliconOperator.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'silicon operator resources requests memory'
+      - variable: config.siliconOperator.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'silicon operator resources limits cpu'
+      - variable: config.siliconOperator.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'silicon operator resources limits memory'
+
+# Images
+  - variable: images.siliconOperator.repository
+    default: codejamninja/silicon-operator
+    description: ''
+    type: string
+    required: true
+    label: 'silicon operator repository'
+    group: Images
+  - variable: images.siliconOperator.tag
+    default: 0.0.1
+    description: ''
+    type: string
+    required: true
+    label: 'silicon operator tag'
+    group: Images

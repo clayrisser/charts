@@ -1,0 +1,19 @@
+name: silicon-operator
+apiVersion: v1
+home: https://codejam.ninja
+icon: ''
+version: 0.0.1
+appVersion: latest
+description: 'operator to improve kubernetes in random ways'
+keywords:
+  - silicon
+  - operator
+  - database
+  - key
+  - cache
+  - db
+sources:
+  - https://github.com/codejamninja/silicon-operator
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

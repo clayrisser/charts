@@ -1,0 +1,19 @@
+images:
+  siliconOperator:
+    repository: codejamninja/silicon-operator
+    tag: 0.0.1
+
+config:
+  clusterProvider: infrastructure
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  siliconOperator:
+    baseUrl: ''
+    hostname: ''
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
