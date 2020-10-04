@@ -129,7 +129,7 @@ spec:
           size: {{ .Values.persistence.size.trivy }}
       imageChartStorage:
         disableredirect: false
-        type: filesystem
+        type: {{ .Values.config.storage.type }}
         filesystem:
           rootdirectory: /storage
         azure:
@@ -140,18 +140,18 @@ spec:
           bucket: bucketname
           encodedkey: base64-encoded-json-key-file
         s3:
-          region: us-west-1
-          bucket: bucketname
-          #accesskey: awsaccesskey
-          #secretkey: awssecretkey
-          #regionendpoint: http://myobjects.local
+          region: {{ .Values.config.storage.s3.region }}
+          bucket: {{ .Values.config.storage.s3.bucket }}
+          accesskey: {{ .Values.config.storage.s3.accessKey }}
+          secretkey: {{ .Values.config.storage.s3.secretKey }}
+          regionendpoint: {{ .Values.config.storage.s3.regionEndpoint }}
+          rootdirectory: {{ .Values.config.storage.s3.prefix }}
           #encrypt: false
           #keyid: mykeyid
           #secure: true
           #skipverify: false
           #v4auth: true
           #chunksize: "5242880"
-          #rootdirectory: /s3/object/name/prefix
           #storageclass: STANDARD
           #multipartcopychunksize: "33554432"
           #multipartcopymaxconcurrency: 100

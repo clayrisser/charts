@@ -3,6 +3,15 @@ config:
   password: P@ssw0rd
   secret: shhh
   updateStrategy: Recreate
+  storage:
+    type: s3
+    s3:
+      region: sfo2
+      bucket: ''
+      accessKey: ''
+      secretKey: ''
+      regionEndpoint: https://sfo2.digitaloceanspaces.com
+      prefix: harbor
   postgres:
     database: harbor
     host: ''

@@ -38,6 +38,66 @@ questions:
     label: secret
     group: Config
 
+# Storage Config
+  - variable: config.storage.type
+    default: s3
+    description: ''
+    type: enum
+    options:
+      - s3
+      - filesystem
+    required: true
+    label: type
+    group: 'Storage Config'
+  - variable: config.storage.s3.region
+    default: sfo2
+    description: ''
+    type: string
+    required: true
+    show_if: config.storage.type=s3
+    label: 's3 region'
+    group: 'Storage Config'
+  - variable: config.storage.s3.bucket
+    default: ''
+    description: ''
+    type: string
+    required: true
+    show_if: config.storage.type=s3
+    label: 's3 bucket'
+    group: 'Storage Config'
+  - variable: config.storage.s3.accessKey
+    default: ''
+    description: ''
+    type: string
+    required: true
+    show_if: config.storage.type=s3
+    label: 's3 access key'
+    group: 'Storage Config'
+  - variable: config.storage.s3.secretKey
+    default: ''
+    description: ''
+    type: password
+    required: true
+    show_if: config.storage.type=s3
+    label: 's3 secret key'
+    group: 'Storage Config'
+  - variable: config.storage.s3.regionEndpoint
+    default: https://sfo2.digitaloceanspaces.com
+    description: ''
+    type: string
+    required: true
+    show_if: config.storage.type=s3
+    label: 's3 region endpoint'
+    group: 'Storage Config'
+  - variable: config.storage.s3.prefix
+    default: harbor
+    description: ''
+    type: string
+    required: true
+    show_if: config.storage.type=s3
+    label: 's3 prefix'
+    group: 'Storage Config'
+
 # Postgres Config
   - variable: config.postgres.host
     default: ''
