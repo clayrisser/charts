@@ -23,13 +23,13 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+            - weight: 89
               preference:
                 matchExpressions:
                   - key: application/state
                     operator: In
                     values:
-                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+                      - stateless
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 90
