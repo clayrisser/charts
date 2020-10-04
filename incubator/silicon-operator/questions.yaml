@@ -36,39 +36,39 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.siliconOperator.resources.defaults
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'silicon operator resources defaults'
-    show_subquestion_if: false
-    group: Config
-    subquestions:
-      - variable: config.siliconOperator.resources.requests.cpu
-        default: 100m
-        description: ''
-        type: string
-        required: true
-        label: 'silicon operator resources requests cpu'
-      - variable: config.siliconOperator.resources.requests.memory
-        default: 128Mi
-        description: ''
-        type: string
-        required: true
-        label: 'silicon operator resources requests memory'
-      - variable: config.siliconOperator.resources.limits.cpu
-        default: 500m
-        description: ''
-        type: string
-        required: true
-        label: 'silicon operator resources limits cpu'
-      - variable: config.siliconOperator.resources.limits.memory
-        default: 256Mi
-        description: ''
-        type: string
-        required: true
-        label: 'silicon operator resources limits memory'
+  # - variable: config.siliconOperator.resources.defaults
+  #   default: true
+  #   description: ''
+  #   type: boolean
+  #   required: true
+  #   label: 'silicon operator resources defaults'
+  #   show_subquestion_if: false
+  #   group: Config
+  #   subquestions:
+  #     - variable: config.siliconOperator.resources.requests.cpu
+  #       default: 100m
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'silicon operator resources requests cpu'
+  #     - variable: config.siliconOperator.resources.requests.memory
+  #       default: 128Mi
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'silicon operator resources requests memory'
+  #     - variable: config.siliconOperator.resources.limits.cpu
+  #       default: 500m
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'silicon operator resources limits cpu'
+  #     - variable: config.siliconOperator.resources.limits.memory
+  #       default: 256Mi
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'silicon operator resources limits memory'
 
 # Images
   - variable: images.siliconOperator.repository
