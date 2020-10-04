@@ -17,5 +17,5 @@ roleRef:
   name: cluster-admin
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: {{ template "silicon-operator.fullname" . }}
     namespace: {{ .Release.Namespace }}
