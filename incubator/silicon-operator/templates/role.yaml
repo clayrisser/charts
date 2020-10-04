@@ -19,3 +19,17 @@ subjects:
   - kind: ServiceAccount
     name: {{ template "silicon-operator.fullname" . }}
     namespace: {{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "silicon-operator.fullname" . }}
+  labels:
+    app: {{ template "silicon-operator.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: '0'
+    helm.sh/hook-delete-policy: before-hook-creation
