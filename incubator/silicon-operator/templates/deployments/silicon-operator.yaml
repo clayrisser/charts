@@ -46,11 +46,6 @@ spec:
         - name: {{ template "silicon-operator.fullname" . }}-silicon-operator
           image: {{ .Values.images.siliconOperator.repository }}:{{ .Values.images.siliconOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-          command:
-            - /bin/sh
-            - -c
-            - |
-              tail -f /dev/null
           # resources:
           #   requests:
           #     cpu: {{ .Values.config.siliconOperator.resources.requests.cpu }}

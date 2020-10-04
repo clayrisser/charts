@@ -3,35 +3,23 @@ categories:
 questions:
 
 # Config
-  - variable: config.clusterProvider
-    default: infrastructure
-    description: ''
-    type: enum
-    options:
-      - infrastructure
-      - eks
-      - aks
-      - gke
-    required: true
-    label: 'cluster provider'
-    group: Config
   - variable: config.imagePullPolicy
-    default: Always
+    default: IfNotPresent
     description: ''
     type: enum
     options:
-      - Always
       - IfNotPresent
+      - Always
     required: true
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: Recreate
+    default: RollingUpdate
     description: ''
     type: enum
     options:
-      - Recreate
       - RollingUpdate
+      - Recreate
       - OnDelete
     required: true
     label: 'update strategy'

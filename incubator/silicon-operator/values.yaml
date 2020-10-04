@@ -5,8 +5,8 @@ images:
 
 config:
   clusterProvider: infrastructure
-  imagePullPolicy: Always
-  updateStrategy: Recreate
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
   siliconOperator:
     baseUrl: ''
     hostname: ''
