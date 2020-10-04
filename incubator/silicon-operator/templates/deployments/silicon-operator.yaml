@@ -20,6 +20,7 @@ spec:
         app: {{ template "silicon-operator.name" . }}-silicon-operator
         release: {{ .Release.Name }}
     spec:
+      serviceAccountName: {{ template "silicon-operator.fullname" . }}-silicon-operator
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
