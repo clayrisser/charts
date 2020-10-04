@@ -1,0 +1,159 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: Always
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.perconaXtradbOperator.resources.defaults
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'percona xtradb operator resources defaults'
+    show_subquestion_if: false
+    group: Config
+    subquestions:
+      - variable: config.perconaXtradbOperator.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'percona xtradb operator resources requests cpu'
+      - variable: config.perconaXtradbOperator.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'percona xtradb operator resources requests memory'
+      - variable: config.perconaXtradbOperator.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'percona xtradb operator resources limits cpu'
+      - variable: config.perconaXtradbOperator.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'percona xtradb operator resources limits memory'
+
+# Services and Load Balancing
+  - variable: ingress.perconaXtradbOperator.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'percona xtradb operator ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.perconaXtradbOperator.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'percona xtradb operator ingress tls'
+      - variable: ingress.perconaXtradbOperator.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'percona xtradb operator ingress hostname'
+      - variable: ingress.perconaXtradbOperator.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.perconaXtradbOperator.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'percona xtradb operator ingress issuer name'
+      - variable: ingress.perconaXtradbOperator.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.perconaXtradbOperator.tls=true&&ingress.perconaXtradbOperator.issuer.name=none
+        required: false
+        label: 'percona xtradb operator ingress certificate'
+  - variable: service.perconaXtradbOperator.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.perconaXtradbOperator.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'percona xtradb operator service type'
+    group: 'Services and Load Balancing'
+  - variable: service.perconaXtradbOperator.nodePorts.http
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.perconaXtradbOperator.type=NodePort&&ingress.perconaXtradbOperator.enabled=false
+    label: 'percona xtradb operator http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.perconaXtradbOperator.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.perconaXtradbOperator.type=LoadBalancer&&ingress.perconaXtradbOperator.enabled=false
+    label: 'percona xtradb operator http lb port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.perconaXtradbOperator.repository
+    default: percona-xtradb-operator
+    description: ''
+    type: string
+    required: true
+    label: 'percona xtradb operator repository'
+    group: Images
+  - variable: images.perconaXtradbOperator.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'percona xtradb operator tag'
+    group: Images
