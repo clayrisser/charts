@@ -10,9 +10,9 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://github.com/percona/percona-helm-charts.git
-    name: pxc-operator
-    version: 1.5.0
+    git: https://github.com/percona/percona-helm-charts.git
+    ref: pxc-operator-0.1.9
+    path: charts/pxc-operator
   values:
     image:
       repository: {{ .Values.images.pxcOperator.repository }}
