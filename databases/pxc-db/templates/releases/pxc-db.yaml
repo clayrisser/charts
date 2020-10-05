@@ -18,17 +18,17 @@ spec:
       - delete-pxc-pods-in-order
       - delete-proxysql-pvc
       - delete-pxc-pvc
-    nameOverride: ""
-    fullnameOverride: ""
-    pause: false
+    nameOverride: {{ template "pxc-db.name" . }}-pxc-db
+    fullnameOverride: {{ template "pxc-db.fullname" . }}-pxc-db
+    pause: {{ .Values.config.pxcDb.pause }}
     allowUnsafeConfigurations: true
     updateStrategy: SmartUpdate
     upgradeOptions:
       versionServiceEndpoint: https://check.percona.com/versions
       apply: recommended
-      schedule: "0 4 * * *"
+      schedule: {{ .Values.config.pxcDb.upgrade.schedule }}
     pxc:
-      size: 3
+      size: {{ .Values.config.pxcDb.size }}
       image:
         repository: {{ .Values.images.pxcDb.repository }}
         tag: {{ .Values.images.pxcDb.tag }}
@@ -56,19 +56,19 @@ spec:
       podDisruptionBudget:
         maxUnavailable: 1
       persistence:
-        enabled: true
-        storageClass: "-"
-        accessMode: ReadWriteOnce
-        size: 8Gi
+        enabled: {{ .Values.persistence.enabled }}
+        storageClass: {{ .Values.persistence.accessMode }}
+        accessMode: {{ .Values.persistence.accessMode }}
+        size: {{ .Values.persistence.size.pxcDb }}
       disableTLS: false
       certManager: false
       # clusterSecretName:
     haproxy:
-      enabled: true
-      size: 3
+      enabled: {{ .Values.config.haproxy.enabled }}
+      size: {{ .Values.config.haproxy.size }}
       image:
-        repository: percona/percona-xtradb-cluster-operator
-        tag: 1.5.0-haproxy
+        repository: {{ .Values.images.haproxy.repository }}
+        tag: {{ .Values.images.haproxy.tag }}
       annotations: {}
       labels: {}
       readinessDelaySec: 15
@@ -86,11 +86,11 @@ spec:
         accessMode: ReadWriteOnce
         size: 8Gi
     proxysql:
-      enabled: false
-      size: 3
+      enabled: {{ .Values.config.proxysql.enabled }}
+      size: {{ .Values.config.proxysql.size }}
       image:
-        repository: percona/percona-xtradb-cluster-operator
-        tag: 1.5.0-proxysql
+        repository: {{ .Values.images.proxysql.repository }}
+        tag: {{ .Values.images.proxysql.tag }}
       annotations: {}
       labels: {}
       readinessDelaySec: 15
@@ -108,17 +108,17 @@ spec:
         accessMode: ReadWriteOnce
         size: 8Gi
     pmm:
-      enabled: false
+      enabled: {{ .Values.config.pmm.enabled }}
       image:
-        repository: perconalab/pmm-client
-        tag: 1.17.1
+        repository: {{ .Values.images.pmm.repository }}
+        tag: {{ .Values.images.pmm.tag }}
       serverHost: monitoring-service
       serverUser: pmm
     backup:
-      enabled: true
+      enabled: {{ .Values.config.backup.enabled }}
       image:
-        repository: percona/percona-xtradb-cluster-operator
-        tag: 1.5.0-pxc8.0-backup
+        repository: {{ .Values.images.backup.repository }}
+        tag: {{ .Values.images.backup.tag }}
       storages:
         s3-us-west:
           type: s3
@@ -130,11 +130,11 @@ spec:
       schedule: []
     secrets:
       passwords:
-        root: insecure-root-password
-        xtrabackup: insecure-xtrabackup-password
-        monitor: insecure-monitor-password
-        clustercheck: insecure-clustercheck-password
-        proxyadmin: insecure-proxyadmin-password
-        pmmserver: insecure-pmmserver-password
-        operator: insecure-operator-password
+        root: {{ .Values.config.passwords.root }}
+        xtrabackup: {{ .Values.config.passwords.xtrabackup }}
+        monitor: {{ .Values.config.passwords.monitor }}
+        clustercheck: {{ .Values.config.passwords.clustercheck }}
+        proxyadmin: {{ .Values.config.passwords.proxyadmin }}
+        pmmserver: {{ .Values.config.passwords.pmmserver }}
+        operator: {{ .Values.config.passwords.operator }}
       tls: {}

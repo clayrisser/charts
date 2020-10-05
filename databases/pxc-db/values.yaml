@@ -2,12 +2,28 @@ images:
   pxcDb:
     repository: percona/percona-xtradb-cluster
     tag: 8.0.19-10.1
+  haproxy:
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.5.0-haproxy
+  proxysql:
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.5.0-proxysql
+  pmm:
+    repository: perconalab/pmm-client
+    tag: 1.17.1
+  backup:
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.5.0-pxc8.0-backup
 
 config:
   clusterProvider: infrastructure
   imagePullPolicy: Always
   updateStrategy: Recreate
   pxcDb:
+    size: 1
+    pause: false
+    upgrade:
+      schedule: '0 4 * * *'
     mysqlConfig: ''
     password: P@ssw0rd
     resources:
@@ -17,6 +33,24 @@ config:
       limits:
         cpu: 1G
         memory: 600m
+  backup:
+    enabled: false
+  pmm:
+    enabled: false
+  proxysql:
+    enabled: false
+    size: 1
+  haproxy:
+    enabled: false
+    size: 1
+  passwords:
+    root: P@ssw0rd
+    xtrabackup: P@ssw0rd
+    monitor: P@ssw0rd
+    clustercheck: P@ssw0rd
+    proxyadmin: P@ssw0rd
+    pmmserver: P@ssw0rd
+    operator: P@ssw0rd
 
 service:
   pxcDb:
