@@ -10,7 +10,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://helm.gopxc-operator.io
+    repository: https://percona.github.io/percona-helm-charts
     name: pxc-operator
     version: 1.5.0
   values:
