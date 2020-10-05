@@ -1,0 +1,31 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ template "pxc-operator.fullname" . }}-pxc-operator
+  labels:
+    app: {{ template "pxc-operator.name" . }}-pxc-operator
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://helm.gopxc-operator.io
+    name: pxc-operator
+    version: 1.5.0
+  values:
+    image:
+      repository: {{ .Values.images.pxcOperator.repository }}
+      tag: {{ .Values.images.pxcOperator.tag }}
+      pullPolicy: {{ .Values.config.pullPolicy }}
+      pullSecrets: {}
+    nodeSelector: {}
+    replicaCount: 1
+    tolerations: []
+    resources:
+      requests:
+        cpu: {{ .Values.config.pxcOperator.resources.requests.cpu }}
+        memory: {{ .Values.config.pxcOperator.resources.requests.memory }}
+      limits:
+        cpu: {{ .Values.config.pxcOperator.resources.limits.cpu }}
+        memory: {{ .Values.config.pxcOperator.resources.limits.memory }}

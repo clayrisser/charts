@@ -1,0 +1,71 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: Always
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.replicaCount
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: 'replica count'
+    group: Config
+  - variable: config.pxcOperator.resources.defaults
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'pxc operator resources defaults'
+    show_subquestion_if: false
+    group: Config
+    subquestions:
+      - variable: config.pxcOperator.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'pxc operator resources requests cpu'
+      - variable: config.pxcOperator.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'pxc operator resources requests memory'
+      - variable: config.pxcOperator.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'pxc operator resources limits cpu'
+      - variable: config.pxcOperator.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'pxc operator resources limits memory'
+
+# Images
+  - variable: images.pxcOperator.repository
+    default: percona/percona-xtradb-cluster-operator
+    description: ''
+    type: string
+    required: true
+    label: 'pxc operator repository'
+    group: Images
+  - variable: images.pxcOperator.tag
+    default: 1.5.0
+    description: ''
+    type: string
+    required: true
+    label: 'pxc operator tag'
+    group: Images
