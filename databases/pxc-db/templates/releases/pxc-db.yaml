@@ -20,18 +20,18 @@ spec:
       - delete-pxc-pvc
     nameOverride: {{ template "pxc-db.name" . }}-pxc-db
     fullnameOverride: {{ template "pxc-db.fullname" . }}-pxc-db
-    pause: {{ .Values.config.pxcDb.pause }}
+    pause: {{ .Values.config.pxc.pause }}
     allowUnsafeConfigurations: true
     updateStrategy: SmartUpdate
     upgradeOptions:
       versionServiceEndpoint: https://check.percona.com/versions
       apply: recommended
-      schedule: {{ .Values.config.pxcDb.upgrade.schedule }}
+      schedule: {{ .Values.config.pxc.upgrade.schedule }}
     pxc:
-      size: {{ .Values.config.pxcDb.size }}
+      size: {{ .Values.config.pxc.size }}
       image:
-        repository: {{ .Values.images.pxcDb.repository }}
-        tag: {{ .Values.images.pxcDb.tag }}
+        repository: {{ .Values.images.pxc.repository }}
+        tag: {{ .Values.images.pxc.tag }}
       imagePullSecrets: []
       {{- if .Values.persistence.velero.enabled }}
       annotations:
@@ -41,14 +41,14 @@ spec:
       readinessDelaySec: 15
       livenessDelaySec: 300
       forceUnsafeBootstrap: false
-      configuration: {{ .Values.config.pxcDb.mysqlConfig | quote }}
+      configuration: {{ .Values.config.pxc.mysqlConfig | quote }}
       resources:
         requests:
-          cpu: {{ .Values.config.pxcDb.resources.requests.cpu }}
-          memory: {{ .Values.config.pxcDb.resources.requests.memory }}
+          cpu: {{ .Values.config.pxc.resources.requests.cpu }}
+          memory: {{ .Values.config.pxc.resources.requests.memory }}
         limits:
-          cpu: {{ .Values.config.pxcDb.resources.limits.cpu }}
-          memory: {{ .Values.config.pxcDb.resources.limits.memory }}
+          cpu: {{ .Values.config.pxc.resources.limits.cpu }}
+          memory: {{ .Values.config.pxc.resources.limits.memory }}
       nodeSelector: {}
       affinity: {}
       tolerations: []
@@ -57,12 +57,12 @@ spec:
         maxUnavailable: 1
       persistence:
         enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ .Values.persistence.accessMode }}
+        storageClass: {{ .Values.persistence.storageClass | ternary .Values.persistence.storageClass '-' }}
         accessMode: {{ .Values.persistence.accessMode }}
-        size: {{ .Values.persistence.size.pxcDb }}
+        size: {{ .Values.persistence.size.pxc }}
       disableTLS: false
       certManager: false
-      # clusterSecretName:
+      clusterSecretName: {{ template "pxc-db.fullname" . }}-pxc
     haproxy:
       enabled: {{ .Values.config.haproxy.enabled }}
       size: {{ .Values.config.haproxy.size }}
@@ -81,10 +81,10 @@ spec:
       podDisruptionBudget:
         maxUnavailable: 1
       persistence:
-        enabled: true
-        storageClass: "-"
-        accessMode: ReadWriteOnce
-        size: 8Gi
+        enabled: {{ .Values.persistence.enabled }}
+        storageClass: {{ .Values.persistence.storageClass | ternary .Values.persistence.storageClass '-' }}
+        accessMode: {{ .Values.persistence.accessMode }}
+        size: {{ .Values.persistence.size.haproxy }}
     proxysql:
       enabled: {{ .Values.config.proxysql.enabled }}
       size: {{ .Values.config.proxysql.size }}
@@ -103,16 +103,16 @@ spec:
       podDisruptionBudget:
         maxUnavailable: 1
       persistence:
-        enabled: true
-        storageClass: "-"
-        accessMode: ReadWriteOnce
-        size: 8Gi
+        enabled: {{ .Values.persistence.enabled }}
+        storageClass: {{ .Values.persistence.storageClass | ternary .Values.persistence.storageClass '-' }}
+        accessMode: {{ .Values.persistence.accessMode }}
+        size: {{ .Values.persistence.size.proxysql }}
     pmm:
       enabled: {{ .Values.config.pmm.enabled }}
       image:
         repository: {{ .Values.images.pmm.repository }}
         tag: {{ .Values.images.pmm.tag }}
-      serverHost: monitoring-service
+      serverHost: {{ template "pxc-db.fullname" . }}-monitoring
       serverUser: pmm
     backup:
       enabled: {{ .Values.config.backup.enabled }}
@@ -120,14 +120,18 @@ spec:
         repository: {{ .Values.images.backup.repository }}
         tag: {{ .Values.images.backup.tag }}
       storages:
-        s3-us-west:
+        s3:
           type: s3
           s3:
-            bucket: S3-BACKUP-BUCKET-NAME-HERE
-            credentialsSecret: my-cluster-name-backup-s3
-            region: us-west-2
-            endpointUrl: https://sfo2.digitaloceanspaces.com
-      schedule: []
+            bucket: {{ .Values.config.backup.s3.bucket }}
+            credentialsSecret: {{ template "pxc-db.fullname" . }}-backup
+            region: {{ .Values.config.backup.s3.region }}
+            endpointUrl: {{ .Values.config.backup.s3.endpoint }}
+      schedule:
+        - name: backup
+          schedule: {{ .Values.config.backup.schedule }}
+          keep: {{ .Values.config.backup.keep }}
+          storageName: s3
     secrets:
       passwords:
         root: {{ .Values.config.passwords.root }}

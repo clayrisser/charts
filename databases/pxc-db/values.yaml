@@ -1,5 +1,5 @@
 images:
-  pxcDb:
+  pxc:
     repository: percona/percona-xtradb-cluster
     tag: 8.0.19-10.1
   haproxy:
@@ -19,7 +19,7 @@ config:
   clusterProvider: infrastructure
   imagePullPolicy: Always
   updateStrategy: Recreate
-  pxcDb:
+  pxc:
     size: 1
     pause: false
     upgrade:
@@ -35,6 +35,14 @@ config:
         memory: 600m
   backup:
     enabled: false
+    keep: 5
+    schedule: '0 0 * * *'
+    s3:
+      accessKey: ''
+      bucket: ''
+      endpoint: https://sfo2.digitaloceanspaces.com
+      region: sfo2
+      secretKey: ''
   pmm:
     enabled: false
   proxysql:
@@ -53,7 +61,7 @@ config:
     operator: P@ssw0rd
 
 service:
-  pxcDb:
+  pxc:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -62,7 +70,7 @@ service:
       http: 80
 
 ingress:
-  pxcDb:
+  pxc:
     certificate: ''
     enabled: false
     hostname: ''
@@ -74,25 +82,11 @@ persistence:
   accessMode: ReadWriteOnce
   enabled: false
   storageClass: ''
-  existingClaim:
-    pxcDb: ''
   size:
-    pxcDb: 1Gi
+    pxc: 1Gi
+    proxysql: 1Gi
+    haproxy: 1Gi
   velero:
     enabled: false
     restic: true
     schedule: '@midnight'
-
-probes:
-  liveness:
-    initialDelaySeconds: 120
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
