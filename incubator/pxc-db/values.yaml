@@ -1,0 +1,64 @@
+images:
+  pxcDb:
+    repository: percona/percona-xtradb-cluster
+    tag: 8.0.19-10.1
+
+config:
+  clusterProvider: infrastructure
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  pxcDb:
+    mysqlConfig: ''
+    password: P@ssw0rd
+    resources:
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
+
+service:
+  pxcDb:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  pxcDb:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  existingClaim:
+    pxcDb: ''
+  size:
+    pxcDb: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

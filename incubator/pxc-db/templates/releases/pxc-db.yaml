@@ -1,0 +1,140 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ template "pxc-db.fullname" . }}-pxc-db
+  labels:
+    app: {{ template "pxc-db.name" . }}-pxc-db
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  helmVersion: v3
+  chart:
+    git: https://github.com/percona/percona-helm-charts.git
+    ref: pxc-db-0.1.9
+    path: charts/pxc-db
+  values:
+    finalizers:
+      - delete-pxc-pods-in-order
+      - delete-proxysql-pvc
+      - delete-pxc-pvc
+    nameOverride: ""
+    fullnameOverride: ""
+    pause: false
+    allowUnsafeConfigurations: true
+    updateStrategy: SmartUpdate
+    upgradeOptions:
+      versionServiceEndpoint: https://check.percona.com/versions
+      apply: recommended
+      schedule: "0 4 * * *"
+    pxc:
+      size: 3
+      image:
+        repository: {{ .Values.images.pxcDb.repository }}
+        tag: {{ .Values.images.pxcDb.tag }}
+      imagePullSecrets: []
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
+      labels: {}
+      readinessDelaySec: 15
+      livenessDelaySec: 300
+      forceUnsafeBootstrap: false
+      configuration: {{ .Values.config.pxcDb.mysqlConfig | quote }}
+      resources:
+        requests:
+          cpu: {{ .Values.config.pxcDb.resources.requests.cpu }}
+          memory: {{ .Values.config.pxcDb.resources.requests.memory }}
+        limits:
+          cpu: {{ .Values.config.pxcDb.resources.limits.cpu }}
+          memory: {{ .Values.config.pxcDb.resources.limits.memory }}
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+      gracePeriod: 600
+      podDisruptionBudget:
+        maxUnavailable: 1
+      persistence:
+        enabled: true
+        storageClass: "-"
+        accessMode: ReadWriteOnce
+        size: 8Gi
+      disableTLS: false
+      certManager: false
+      # clusterSecretName:
+    haproxy:
+      enabled: true
+      size: 3
+      image:
+        repository: percona/percona-xtradb-cluster-operator
+        tag: 1.5.0-haproxy
+      annotations: {}
+      labels: {}
+      readinessDelaySec: 15
+      livenessDelaySec: 300
+      resources: {}
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+      gracePeriod: 600
+      podDisruptionBudget:
+        maxUnavailable: 1
+      persistence:
+        enabled: true
+        storageClass: "-"
+        accessMode: ReadWriteOnce
+        size: 8Gi
+    proxysql:
+      enabled: false
+      size: 3
+      image:
+        repository: percona/percona-xtradb-cluster-operator
+        tag: 1.5.0-proxysql
+      annotations: {}
+      labels: {}
+      readinessDelaySec: 15
+      livenessDelaySec: 300
+      resources: {}
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+      gracePeriod: 600
+      podDisruptionBudget:
+        maxUnavailable: 1
+      persistence:
+        enabled: true
+        storageClass: "-"
+        accessMode: ReadWriteOnce
+        size: 8Gi
+    pmm:
+      enabled: false
+      image:
+        repository: perconalab/pmm-client
+        tag: 1.17.1
+      serverHost: monitoring-service
+      serverUser: pmm
+    backup:
+      enabled: true
+      image:
+        repository: percona/percona-xtradb-cluster-operator
+        tag: 1.5.0-pxc8.0-backup
+      storages:
+        s3-us-west:
+          type: s3
+          s3:
+            bucket: S3-BACKUP-BUCKET-NAME-HERE
+            credentialsSecret: my-cluster-name-backup-s3
+            region: us-west-2
+            endpointUrl: https://sfo2.digitaloceanspaces.com
+      schedule: []
+    secrets:
+      passwords:
+        root: insecure-root-password
+        xtrabackup: insecure-xtrabackup-password
+        monitor: insecure-monitor-password
+        clustercheck: insecure-clustercheck-password
+        proxyadmin: insecure-proxyadmin-password
+        pmmserver: insecure-pmmserver-password
+        operator: insecure-operator-password
+      tls: {}
