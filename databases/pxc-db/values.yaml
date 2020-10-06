@@ -19,6 +19,11 @@ config:
   clusterProvider: infrastructure
   imagePullPolicy: Always
   updateStrategy: Recreate
+  passwords:
+    clustercheck: P@ssw0rd
+    monitor: P@ssw0rd
+    operator: P@ssw0rd
+    root: P@ssw0rd
   pxc:
     size: 1
     pause: false
@@ -33,20 +38,6 @@ config:
       limits:
         cpu: 1G
         memory: 600m
-  backup:
-    enabled: false
-    password: P@ssw0rd
-    keep: 5
-    schedule: '0 0 * * *'
-    s3:
-      accessKey: ''
-      bucket: ''
-      endpoint: https://sfo2.digitaloceanspaces.com
-      region: sfo2
-      secretKey: ''
-  pmm:
-    enabled: false
-    password: P@ssw0rd
   proxysql:
     enabled: false
     password: P@ssw0rd
@@ -70,29 +61,24 @@ config:
       limits:
         cpu: 1G
         memory: 600m
-  passwords:
-    clustercheck: P@ssw0rd
-    monitor: P@ssw0rd
-    operator: P@ssw0rd
-    root: P@ssw0rd
-
-service:
-  pxc:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http:
-    lbPorts:
-      http: 80
-
-ingress:
-  pxc:
-    certificate: ''
+  pmm:
     enabled: false
-    hostname: ''
-    tls: false
-    issuer:
-      name: letsencrypt-staging
+    password: P@ssw0rd
+  backup:
+    enabled: false
+    password: P@ssw0rd
+    keep: 5
+    schedule: '0 0 * * *'
+    s3:
+      accessKey: ''
+      bucket: ''
+      endpoint: https://sfo2.digitaloceanspaces.com
+      region: sfo2
+      secretKey: ''
+
+service: {}
+
+ingress: {}
 
 persistence:
   accessMode: ReadWriteOnce
