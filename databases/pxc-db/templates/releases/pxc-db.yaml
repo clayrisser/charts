@@ -48,6 +48,13 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
+{{- if (not .Values.config.pxc.resources.enabled) }}
+      resources:
+        requests:
+{{ toYaml .Values.config.pxc.resources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.pxc.resources.limits | indent 10 }}
+{{- end }}
       persistence:
         enabled: {{ .Values.persistence.enabled }}
         storageClass: {{ .Values.persistence.storageClass }}
@@ -72,6 +79,13 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
+{{- if (not .Values.config.haproxy.resources.enabled) }}
+      resources:
+        requests:
+{{ toYaml .Values.config.haproxy.resources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.haproxy.resources.limits | indent 10 }}
+{{- end }}
       persistence:
         enabled: {{ .Values.persistence.enabled }}
         storageClass: {{ .Values.persistence.storageClass }}
@@ -93,6 +107,13 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
+{{- if (not .Values.config.proxysql.resources.enabled) }}
+      resources:
+        requests:
+{{ toYaml .Values.config.proxysql.resources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.proxysql.resources.limits | indent 10 }}
+{{- end }}
       persistence:
         enabled: {{ .Values.persistence.enabled }}
         storageClass: {{ .Values.persistence.storageClass }}
