@@ -22,10 +22,10 @@ spec:
     nodeSelector: {}
     replicaCount: 1
     tolerations: []
+{{- if .Values.config.pxcOperator.resources.enabled }}
     resources:
       requests:
-        cpu: {{ .Values.config.pxcOperator.resources.requests.cpu }}
-        memory: {{ .Values.config.pxcOperator.resources.requests.memory }}
+{{ toYaml .Values.config.pxcOperator.resources.requests | indent 8 }}
       limits:
-        cpu: {{ .Values.config.pxcOperator.resources.limits.cpu }}
-        memory: {{ .Values.config.pxcOperator.resources.limits.memory }}
+{{ toYaml .Values.config.pxcOperator.resources.limits | indent 8 }}
+{{- end }}

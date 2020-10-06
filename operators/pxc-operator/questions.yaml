@@ -4,12 +4,12 @@ questions:
 
 # Config
   - variable: config.imagePullPolicy
-    default: Always
+    default: IfNotPresent
     description: ''
     type: enum
     options:
-      - Always
       - IfNotPresent
+      - Always
     required: true
     label: 'pull policy'
     group: Config
@@ -20,13 +20,17 @@ questions:
     required: true
     label: 'replica count'
     group: Config
-  - variable: config.pxcOperator.resources.defaults
-    default: true
+  - variable: config.pxcOperator.resources.enabled
+    default: defaults
     description: ''
-    type: boolean
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
     required: true
-    label: 'pxc operator resources defaults'
-    show_subquestion_if: false
+    label: 'pxc operator resources enabled'
+    show_subquestion_if: 'true'
     group: Config
     subquestions:
       - variable: config.pxcOperator.resources.requests.cpu
