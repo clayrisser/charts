@@ -48,7 +48,7 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
-{{- if (not .Values.config.pxc.resources.enabled) }}
+{{- if .Values.config.pxc.resources.enabled }}
       resources:
         requests:
 {{ toYaml .Values.config.pxc.resources.requests | indent 10 }}
@@ -79,7 +79,7 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
-{{- if (not .Values.config.haproxy.resources.enabled) }}
+{{- if .Values.config.haproxy.resources.enabled }}
       resources:
         requests:
 {{ toYaml .Values.config.haproxy.resources.requests | indent 10 }}
@@ -107,7 +107,7 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
-{{- if (not .Values.config.proxysql.resources.enabled) }}
+{{- if .Values.config.proxysql.resources.enabled }}
       resources:
         requests:
 {{ toYaml .Values.config.proxysql.resources.requests | indent 10 }}
