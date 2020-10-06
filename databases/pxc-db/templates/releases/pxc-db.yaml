@@ -57,7 +57,7 @@ spec:
         maxUnavailable: 1
       persistence:
         enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ .Values.persistence.storageClass | ternary .Values.persistence.storageClass '-' }}
+        storageClass: {{ (empty .Values.persistence.storageClass) | ternary "-" .Values.persistence.storageClass }}
         accessMode: {{ .Values.persistence.accessMode }}
         size: {{ .Values.persistence.size.pxc }}
       disableTLS: false
@@ -88,7 +88,7 @@ spec:
         maxUnavailable: 1
       persistence:
         enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ .Values.persistence.storageClass | ternary .Values.persistence.storageClass '-' }}
+        storageClass: {{ (empty .Values.persistence.storageClass) | ternary "-" .Values.persistence.storageClass }}
         accessMode: {{ .Values.persistence.accessMode }}
         size: {{ .Values.persistence.size.haproxy }}
     proxysql:
@@ -116,7 +116,7 @@ spec:
         maxUnavailable: 1
       persistence:
         enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ .Values.persistence.storageClass | ternary .Values.persistence.storageClass '-' }}
+        storageClass: {{ (empty .Values.persistence.storageClass) | ternary "-" .Values.persistence.storageClass }}
         accessMode: {{ .Values.persistence.accessMode }}
         size: {{ .Values.persistence.size.proxysql }}
     pmm:
