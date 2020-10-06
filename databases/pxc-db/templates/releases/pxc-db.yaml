@@ -44,8 +44,9 @@ spec:
       configuration: {{ .Values.config.pxc.mysqlConfig | quote }}
 {{- if (not .Values.config.pxc.resources.enabled) }}
       resources:
-{{ .Values.config.pxc.resources.requests | toYaml | indent 8 }}
-{{ .Values.config.pxc.resources.limits | toYaml | indent 8 }}
+        requests:
+{{ toYaml .Values.config.pxc.resources.requests | indent 10 }}
+{{ toYaml .Values.config.pxc.resources.limits | indent 10 }}
 {{- end }}
       nodeSelector: {}
       affinity: {}
@@ -74,9 +75,9 @@ spec:
 {{- if (not .Values.config.haproxy.resources.enabled) }}
       resources:
         requests:
-{{ .Values.config.haproxy.resources.requests | toYaml | indent 10 }}
+{{ toYaml .Values.config.haproxy.resources.requests | indent 10 }}
         limits:
-{{ .Values.config.haproxy.resources.limits | toYaml | indent 10 }}
+{{ toYaml .Values.config.haproxy.resources.limits | indent 10 }}
 {{- end }}
       nodeSelector: {}
       affinity: {}
@@ -102,9 +103,9 @@ spec:
 {{- if (not .Values.config.proxysql.resources.enabled) }}
       resources:
         requests:
-{{ .Values.config.proxysql.resources.requests | toYaml | indent 10 }}
+{{ toYaml .Values.config.proxysql.resources.requests | indent 10 }}
         limits:
-{{ .Values.config.proxysql.resources.limits | toYaml | indent 10 }}
+{{ toYaml .Values.config.proxysql.resources.limits | indent 10 }}
 {{- end }}
       nodeSelector: {}
       affinity: {}
