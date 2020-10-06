@@ -46,13 +46,13 @@ spec:
       affinity: {}
       tolerations: []
       gracePeriod: 600
-      # podDisruptionBudget:
-      #   maxUnavailable: 1
-      # persistence:
-      #   enabled: {{ .Values.persistence.enabled }}
-      #   storageClass: {{ (empty .Values.persistence.storageClass) | ternary "-" .Values.persistence.storageClass }}
-      #   accessMode: {{ .Values.persistence.accessMode }}
-      #   size: {{ .Values.persistence.size.pxc }}
+      podDisruptionBudget:
+        maxUnavailable: 1
+      persistence:
+        enabled: {{ .Values.persistence.enabled }}
+        storageClass: {{ .Values.persistence.storageClass }}
+        accessMode: {{ .Values.persistence.accessMode }}
+        size: {{ .Values.persistence.size.pxc }}
       disableTLS: false
       certManager: false
       clusterSecretName: {{ template "pxc-db.fullname" . }}-pxc
@@ -74,7 +74,7 @@ spec:
         maxUnavailable: 1
       persistence:
         enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ (empty .Values.persistence.storageClass) | ternary "-" .Values.persistence.storageClass }}
+        storageClass: {{ .Values.persistence.storageClass }}
         accessMode: {{ .Values.persistence.accessMode }}
         size: {{ .Values.persistence.size.haproxy }}
     proxysql:
@@ -95,7 +95,7 @@ spec:
         maxUnavailable: 1
       persistence:
         enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ (empty .Values.persistence.storageClass) | ternary "-" .Values.persistence.storageClass }}
+        storageClass: {{ .Values.persistence.storageClass }}
         accessMode: {{ .Values.persistence.accessMode }}
         size: {{ .Values.persistence.size.proxysql }}
     pmm:
