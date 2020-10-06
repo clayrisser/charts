@@ -46,6 +46,7 @@ spec:
       resources:
         requests:
 {{ toYaml .Values.config.pxc.resources.requests | indent 10 }}
+        limits:
 {{ toYaml .Values.config.pxc.resources.limits | indent 10 }}
 {{- end }}
       nodeSelector: {}
