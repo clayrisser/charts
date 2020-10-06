@@ -40,7 +40,7 @@ spec:
       labels: {}
       readinessDelaySec: 15
       livenessDelaySec: 300
-      forceUnsafeBootstrap: true
+      forceUnsafeBootstrap: false
       configuration: {{ .Values.config.pxc.mysqlConfig | quote }}
       nodeSelector: {}
       affinity: {}
