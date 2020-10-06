@@ -47,7 +47,7 @@ questions:
       - 'true'
       - 'false'
     required: true
-    label: 'pxc resources defaults'
+    label: 'pxc resources enabled'
     show_subquestion_if: 'true'
     group: 'Pxc Config'
     subquestions:
@@ -77,6 +77,13 @@ questions:
         label: 'pxc resources limits memory'
 
 # HaProxy Config
+  - variable: config.haproxy.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'HaProxy Config'
   - variable: config.haproxy.resources.enabled
     default: defaults
     description: ''
@@ -86,7 +93,8 @@ questions:
       - 'true'
       - 'false'
     required: true
-    label: 'haproxy resources defaults'
+    show_if: config.haproxy.enabled=true
+    label: 'resources enabled'
     show_subquestion_if: 'true'
     group: 'HaProxy Config'
     subquestions:
@@ -95,27 +103,38 @@ questions:
         description: ''
         type: string
         required: true
-        label: 'haproxy resources requests cpu'
+        show_if: config.haproxy.enabled=true
+        label: 'resources requests cpu'
       - variable: config.haproxy.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
-        label: 'haproxy resources requests memory'
+        show_if: config.haproxy.enabled=true
+        label: 'resources requests memory'
       - variable: config.haproxy.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
-        label: 'haproxy resources limits cpu'
+        show_if: config.haproxy.enabled=true
+        label: 'resources limits cpu'
       - variable: config.haproxy.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
-        label: 'haproxy resources limits memory'
+        show_if: config.haproxy.enabled=true
+        label: 'resources limits memory'
 
 # ProxySql Config
+  - variable: config.proxysql.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'ProxySql Config'
   - variable: config.proxysql.resources.enabled
     default: defaults
     description: ''
@@ -125,8 +144,9 @@ questions:
       - 'true'
       - 'false'
     required: true
-    label: 'proxysql resources defaults'
+    label: 'resources enabled'
     show_subquestion_if: 'true'
+    show_if: config.proxysql.enabled=true
     group: 'ProxySql Config'
     subquestions:
       - variable: config.proxysql.resources.requests.cpu
@@ -134,25 +154,47 @@ questions:
         description: ''
         type: string
         required: true
-        label: 'proxysql resources requests cpu'
+        show_if: config.proxysql.enabled=true
+        label: 'resources requests cpu'
       - variable: config.proxysql.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
-        label: 'proxysql resources requests memory'
+        show_if: config.proxysql.enabled=true
+        label: 'resources requests memory'
       - variable: config.proxysql.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
-        label: 'proxysql resources limits cpu'
+        show_if: config.proxysql.enabled=true
+        label: 'resources limits cpu'
       - variable: config.proxysql.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
-        label: 'proxysql resources limits memory'
+        show_if: config.proxysql.enabled=true
+        label: 'resources limits memory'
+
+# Pmm Config
+  - variable: config.pmm.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'Pmm Config'
+
+# Backup Config
+  - variable: config.backup.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'Backup Config'
 
 # Persistence
   - variable: persistence.enabled
