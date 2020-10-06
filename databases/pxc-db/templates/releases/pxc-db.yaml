@@ -42,7 +42,7 @@ spec:
       livenessDelaySec: 300
       forceUnsafeBootstrap: false
       configuration: {{ .Values.config.pxc.mysqlConfig | quote }}
-{{- if (not (eq .Values.config.pxc.resources.enabled "false")) }}
+{{- if (not .Values.config.pxc.resources.enabled) }}
       resources:
         requests:
 {{ .Values.config.pxc.resources.requests | toYaml | indent 10 }}
@@ -73,7 +73,7 @@ spec:
       labels: {}
       readinessDelaySec: 15
       livenessDelaySec: 300
-{{- if (not (eq .Values.config.haproxy.resources.enabled "false")) }}
+{{- if (not .Values.config.haproxy.resources.enabled) }}
       resources:
         requests:
 {{ .Values.config.haproxy.resources.requests | toYaml | indent 10 }}
@@ -101,7 +101,7 @@ spec:
       labels: {}
       readinessDelaySec: 15
       livenessDelaySec: 300
-{{- if (not (eq .Values.config.proxysql.resources.enabled "false")) }}
+{{- if (not .Values.config.proxysql.resources.enabled) }}
       resources:
         requests:
 {{ .Values.config.proxysql.resources.requests | toYaml | indent 10 }}
