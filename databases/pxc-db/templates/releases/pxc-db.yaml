@@ -46,8 +46,8 @@ spec:
       affinity: {}
       tolerations: []
       gracePeriod: 600
-      podDisruptionBudget:
-        maxUnavailable: 1
+      # podDisruptionBudget:
+      #   maxUnavailable: 1
       persistence:
         enabled: {{ .Values.persistence.enabled }}
         storageClass: {{ (empty .Values.persistence.storageClass) | ternary "-" .Values.persistence.storageClass }}
