@@ -38,6 +38,13 @@ questions:
     group: Config
 
 # Pxc Config
+  - variable: config.pxc.size
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: size
+    group: 'Pxc Config'
   - variable: config.pxc.resources.enabled
     default: defaults
     description: ''
@@ -83,6 +90,14 @@ questions:
     type: boolean
     required: true
     label: enabled
+    group: 'HaProxy Config'
+  - variable: config.haproxy.size
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: size
+    show_if: config.haproxy.enabled=true
     group: 'HaProxy Config'
   - variable: config.haproxy.resources.enabled
     default: defaults
@@ -134,6 +149,14 @@ questions:
     type: boolean
     required: true
     label: enabled
+    group: 'ProxySql Config'
+  - variable: config.proxysql.size
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: size
+    show_if: config.proxysql.enabled=true
     group: 'ProxySql Config'
   - variable: config.proxysql.resources.enabled
     default: defaults
@@ -339,17 +362,81 @@ questions:
     group: 'Services and Load Balancing'
 
 # Images
-  - variable: images.pxcDb.repository
+  - variable: images.pxc.repository
     default: percona/percona-xtradb-cluster
     description: ''
     type: string
     required: true
-    label: 'pxc db repository'
+    label: 'pxc repository'
     group: Images
-  - variable: images.pxcDb.tag
+  - variable: images.pxc.tag
     default: 8.0.19-10.1
     description: ''
     type: string
     required: true
-    label: 'pxc db tag'
+    label: 'pxc tag'
+    group: Images
+  - variable: images.haproxy.repository
+    default: percona/percona-xtradb-cluster-operator
+    description: ''
+    type: string
+    required: true
+    show_if: config.haproxy.enabled=true
+    label: 'haproxy repository'
+    group: Images
+  - variable: images.haproxy.tag
+    default: 1.5.0-haproxy
+    description: ''
+    type: string
+    required: true
+    show_if: config.haproxy.enabled=true
+    label: 'haproxy tag'
+    group: Images
+  - variable: images.proxysql.repository
+    default: percona/percona-xtradb-cluster-operator
+    description: ''
+    type: string
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql repository'
+    group: Images
+  - variable: images.proxysql.tag
+    default: 1.5.0-proxysql
+    description: ''
+    type: string
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql tag'
+    group: Images
+  - variable: images.pmm.repository
+    default: perconalab/pmm-client
+    description: ''
+    type: string
+    required: true
+    show_if: config.pmm.enabled=true
+    label: 'pmm repository'
+    group: Images
+  - variable: images.pmm.tag
+    default: 1.17.1
+    description: ''
+    type: string
+    required: true
+    show_if: config.pmm.enabled=true
+    label: 'pmm tag'
+    group: Images
+  - variable: images.backup.repository
+    default: percona/percona-xtradb-cluster-operator
+    description: ''
+    type: string
+    required: true
+    show_if: config.backup.enabled=true
+    label: 'backup repository'
+    group: Images
+  - variable: images.backup.tag
+    default: 1.5.0-pxc8.0-backup
+    description: ''
+    type: string
+    required: true
+    show_if: config.backup.enabled=true
+    label: 'backup tag'
     group: Images
