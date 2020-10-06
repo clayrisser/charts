@@ -146,11 +146,11 @@ spec:
           storageName: s3
     secrets:
       passwords:
-        root: {{ .Values.config.passwords.root }}
-        xtrabackup: {{ .Values.config.passwords.xtrabackup }}
-        monitor: {{ .Values.config.passwords.monitor }}
-        clustercheck: {{ .Values.config.passwords.clustercheck }}
-        proxyadmin: {{ .Values.config.passwords.proxyadmin }}
-        pmmserver: {{ .Values.config.passwords.pmmserver }}
-        operator: {{ .Values.config.passwords.operator }}
+        root: {{ .Values.config.passwords.root | quote }}
+        xtrabackup: {{ .Values.config.backup.password | quote }}
+        monitor: {{ .Values.config.passwords.monitor | quote }}
+        clustercheck: {{ .Values.config.passwords.clustercheck | quote }}
+        proxyadmin: {{ .Values.config.proxysql.password | quote }}
+        pmmserver: {{ .Values.config.pmm.password | quote }}
+        operator: {{ .Values.config.passwords.operator | quote }}
       tls: {}

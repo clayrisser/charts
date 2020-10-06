@@ -25,7 +25,6 @@ config:
     upgrade:
       schedule: '0 4 * * *'
     mysqlConfig: ''
-    password: P@ssw0rd
     resources:
       enabled: defaults
       requests:
@@ -36,6 +35,7 @@ config:
         memory: 600m
   backup:
     enabled: false
+    password: P@ssw0rd
     keep: 5
     schedule: '0 0 * * *'
     s3:
@@ -46,8 +46,10 @@ config:
       secretKey: ''
   pmm:
     enabled: false
+    password: P@ssw0rd
   proxysql:
     enabled: false
+    password: P@ssw0rd
     size: 1
     resources:
       enabled: defaults
@@ -69,13 +71,10 @@ config:
         cpu: 1G
         memory: 600m
   passwords:
-    root: P@ssw0rd
-    xtrabackup: P@ssw0rd
-    monitor: P@ssw0rd
     clustercheck: P@ssw0rd
-    proxyadmin: P@ssw0rd
-    pmmserver: P@ssw0rd
+    monitor: P@ssw0rd
     operator: P@ssw0rd
+    root: P@ssw0rd
 
 service:
   pxc:

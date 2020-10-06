@@ -36,6 +36,34 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.passwords.root
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'root password'
+    group: Config
+  - variable: config.passwords.operator
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'operator password'
+    group: Config
+  - variable: config.passwords.monitor
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'monitor password'
+    group: Config
+  - variable: config.passwords.clustercheck
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'clustercheck password'
+    group: Config
 
 # Pxc Config
   - variable: config.pxc.size
@@ -44,6 +72,27 @@ questions:
     type: int
     required: true
     label: size
+    group: 'Pxc Config'
+  - variable: config.pxc.pause
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: pause
+    group: 'Pxc Config'
+  - variable: config.pxc.upgrade.schedule
+    default: '0 4 * * *'
+    description: ''
+    type: string
+    required: false
+    label: 'upgrade schedule'
+    group: 'Pxc Config'
+  - variable: config.pxc.mysqlConfig
+    default: ''
+    description: ''
+    type: multiline
+    required: false
+    label: 'mysql config'
     group: 'Pxc Config'
   - variable: config.pxc.resources.enabled
     default: defaults
@@ -150,6 +199,14 @@ questions:
     required: true
     label: enabled
     group: 'ProxySql Config'
+  - variable: config.proxysql.password
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql password'
+    group: 'ProxySql Config'
   - variable: config.proxysql.size
     default: 1
     description: ''
@@ -209,6 +266,14 @@ questions:
     required: true
     label: enabled
     group: 'Pmm Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.pmm.password
+        default: P@ssw0rd
+        description: ''
+        type: password
+        required: true
+        label: password
 
 # Backup Config
   - variable: config.backup.enabled
@@ -218,6 +283,56 @@ questions:
     required: true
     label: enabled
     group: 'Backup Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.backup.password
+        default: P@ssw0rd
+        description: ''
+        type: password
+        required: true
+        label: 'backup password'
+      - variable: config.backup.keep
+        default: 5
+        description: ''
+        type: int
+        required: true
+        label: keep
+      - variable: config.backup.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        label: schedule
+      - variable: config.backup.s3.endpoint
+        default: https://sfo2.digitaloceanspaces.com
+        description: ''
+        type: string
+        required: true
+        label: 's3 endpoint'
+      - variable: config.backup.s3.region
+        default: sfo2
+        description: ''
+        type: string
+        required: true
+        label: 's3 region'
+      - variable: config.backup.s3.bucket
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: 's3 bucket'
+      - variable: config.backup.s3.accessKey
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: 's3 access key'
+      - variable: config.backup.s3.secretKey
+        default: ''
+        description: ''
+        type: password
+        required: true
+        label: 's3 secret key'
 
 # Persistence
   - variable: persistence.enabled
@@ -268,7 +383,7 @@ questions:
       - variable: persistence.velero.enabled
         default: false
         description: ''
-        type: string
+        type: boolean
         required: true
         label: 'velero enabled'
         group: Persistence
