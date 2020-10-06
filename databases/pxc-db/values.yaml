@@ -27,6 +27,7 @@ config:
     mysqlConfig: ''
     password: P@ssw0rd
     resources:
+      enabled: defaults
       requests:
         cpu: 600m
         memory: 1G
@@ -48,9 +49,25 @@ config:
   proxysql:
     enabled: false
     size: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
   haproxy:
     enabled: false
     size: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
   passwords:
     root: P@ssw0rd
     xtrabackup: P@ssw0rd

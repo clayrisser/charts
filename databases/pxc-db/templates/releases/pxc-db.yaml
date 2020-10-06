@@ -42,13 +42,13 @@ spec:
       livenessDelaySec: 300
       forceUnsafeBootstrap: false
       configuration: {{ .Values.config.pxc.mysqlConfig | quote }}
+{{- if (not (eq .Values.config.pxc.resources.enabled "false")) }}
       resources:
         requests:
-          cpu: {{ .Values.config.pxc.resources.requests.cpu }}
-          memory: {{ .Values.config.pxc.resources.requests.memory }}
+{{ .Values.config.pxc.resources.requests | toYaml | indent 10 }}
         limits:
-          cpu: {{ .Values.config.pxc.resources.limits.cpu }}
-          memory: {{ .Values.config.pxc.resources.limits.memory }}
+{{ .Values.config.pxc.resources.limits | toYaml | indent 10 }}
+{{- end }}
       nodeSelector: {}
       affinity: {}
       tolerations: []
@@ -73,7 +73,13 @@ spec:
       labels: {}
       readinessDelaySec: 15
       livenessDelaySec: 300
-      resources: {}
+{{- if (not (eq .Values.config.haproxy.resources.enabled "false")) }}
+      resources:
+        requests:
+{{ .Values.config.haproxy.resources.requests | toYaml | indent 10 }}
+        limits:
+{{ .Values.config.haproxy.resources.limits | toYaml | indent 10 }}
+{{- end }}
       nodeSelector: {}
       affinity: {}
       tolerations: []
@@ -95,7 +101,13 @@ spec:
       labels: {}
       readinessDelaySec: 15
       livenessDelaySec: 300
-      resources: {}
+{{- if (not (eq .Values.config.proxysql.resources.enabled "false")) }}
+      resources:
+        requests:
+{{ .Values.config.proxysql.resources.requests | toYaml | indent 10 }}
+        limits:
+{{ .Values.config.proxysql.resources.limits | toYaml | indent 10 }}
+{{- end }}
       nodeSelector: {}
       affinity: {}
       tolerations: []

@@ -36,46 +36,123 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.pxcDb.resources.defaults
-    default: true
+
+# Pxc Config
+  - variable: config.pxc.resources.enabled
+    default: defaults
     description: ''
-    type: boolean
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
     required: true
-    label: 'pxc db resources defaults'
-    show_subquestion_if: false
-    group: Config
+    label: 'pxc resources defaults'
+    show_subquestion_if: 'true'
+    group: 'Pxc Config'
     subquestions:
-      - variable: config.pxcDb.resources.requests.cpu
+      - variable: config.pxc.resources.requests.cpu
         default: 100m
         description: ''
         type: string
         required: true
-        label: 'pxc db resources requests cpu'
-      - variable: config.pxcDb.resources.requests.memory
+        label: 'pxc resources requests cpu'
+      - variable: config.pxc.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
-        label: 'pxc db resources requests memory'
-      - variable: config.pxcDb.resources.limits.cpu
+        label: 'pxc resources requests memory'
+      - variable: config.pxc.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
-        label: 'pxc db resources limits cpu'
-      - variable: config.pxcDb.resources.limits.memory
+        label: 'pxc resources limits cpu'
+      - variable: config.pxc.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
-        label: 'pxc db resources limits memory'
-  - variable: config.pxcDb.password
-    default: P@ssw0rd
+        label: 'pxc resources limits memory'
+
+# HaProxy Config
+  - variable: config.haproxy.resources.enabled
+    default: defaults
     description: ''
-    type: password
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
     required: true
-    label: password
-    group: Config
+    label: 'haproxy resources defaults'
+    show_subquestion_if: 'true'
+    group: 'HaProxy Config'
+    subquestions:
+      - variable: config.haproxy.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'haproxy resources requests cpu'
+      - variable: config.haproxy.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'haproxy resources requests memory'
+      - variable: config.haproxy.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'haproxy resources limits cpu'
+      - variable: config.haproxy.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'haproxy resources limits memory'
+
+# ProxySql Config
+  - variable: config.proxysql.resources.enabled
+    default: defaults
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    label: 'proxysql resources defaults'
+    show_subquestion_if: 'true'
+    group: 'ProxySql Config'
+    subquestions:
+      - variable: config.proxysql.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'proxysql resources requests cpu'
+      - variable: config.proxysql.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'proxysql resources requests memory'
+      - variable: config.proxysql.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'proxysql resources limits cpu'
+      - variable: config.proxysql.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'proxysql resources limits memory'
 
 # Persistence
   - variable: persistence.enabled
@@ -103,18 +180,26 @@ questions:
           - ReadOnlyMany
         required: false
         label: 'access mode'
-      - variable: persistence.existingClaim.pxcDb
-        default: ''
-        description: ''
-        type: string
-        required: false
-        label: 'pxc db existing claim'
-      - variable: persistence.size.pxcDb
+      - variable: persistence.size.pxc
         default: 1Gi
         description: ''
         type: string
         required: true
-        label: 'pxc db size'
+        label: 'pxc size'
+      - variable: persistence.size.haproxy
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'haproxy size'
+      - variable: persistence.size.proxysql
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'proxysql size'
       - variable: persistence.velero.enabled
         default: false
         description: ''
