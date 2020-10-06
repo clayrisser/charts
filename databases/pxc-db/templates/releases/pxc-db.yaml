@@ -44,10 +44,8 @@ spec:
       configuration: {{ .Values.config.pxc.mysqlConfig | quote }}
 {{- if (not .Values.config.pxc.resources.enabled) }}
       resources:
-        requests:
-{{ .Values.config.pxc.resources.requests | toYaml | indent 10 }}
-        limits:
-{{ .Values.config.pxc.resources.limits | toYaml | indent 10 }}
+{{ .Values.config.pxc.resources.requests | toYaml | indent 8 }}
+{{ .Values.config.pxc.resources.limits | toYaml | indent 8 }}
 {{- end }}
       nodeSelector: {}
       affinity: {}
