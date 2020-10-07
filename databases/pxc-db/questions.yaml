@@ -32,6 +32,7 @@ questions:
     options:
       - Recreate
       - RollingUpdate
+      - SmartUpdate
       - OnDelete
     required: true
     label: 'update strategy'

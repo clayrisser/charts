@@ -15,14 +15,14 @@ spec:
     path: charts/pxc-db
   values:
     finalizers:
-      - delete-pxc-pods-in-order
       - delete-proxysql-pvc
+      - delete-pxc-pods-in-order
       - delete-pxc-pvc
     nameOverride: {{ template "pxc-db.name" . }}-pxc-db
     fullnameOverride: {{ template "pxc-db.fullname" . }}-pxc-db
     pause: {{ .Values.config.pxc.pause }}
     allowUnsafeConfigurations: true
-    updateStrategy: SmartUpdate
+    updateStrategy: {{ .Values.config.updateStrategy }}
     upgradeOptions:
       versionServiceEndpoint: https://check.percona.com/versions
       apply: recommended
