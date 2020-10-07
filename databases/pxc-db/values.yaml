@@ -24,6 +24,8 @@ config:
     monitor: P@ssw0rd
     operator: P@ssw0rd
     root: P@ssw0rd
+  operator:
+    enabled: false
   pxc:
     size: 1
     pause: false

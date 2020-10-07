@@ -1,3 +1,4 @@
+{{- if .Values.config.operator.enabled }}
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
@@ -27,3 +28,4 @@ spec:
     replicaCount: 1
     tolerations: []
     resources: {}
+{{- end }}

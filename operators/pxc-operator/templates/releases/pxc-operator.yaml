@@ -10,8 +10,8 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    git: https://github.com/percona/percona-helm-charts.git
-    ref: pxc-operator-0.1.9
+    git: https://github.com/codejamninja/percona-helm-charts.git
+    ref: codejamninja/pxc-operator-0.1.9
     path: charts/pxc-operator
   values:
     image:
