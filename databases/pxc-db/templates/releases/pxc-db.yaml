@@ -14,10 +14,10 @@ spec:
     ref: pxc-db-0.1.9
     path: charts/pxc-db
   values:
-    finalizers:
-      - delete-proxysql-pvc
-      - delete-pxc-pods-in-order
-      - delete-pxc-pvc
+    # finalizers:
+    #   - delete-proxysql-pvc
+    #   - delete-pxc-pods-in-order
+    #   - delete-pxc-pvc
     nameOverride: {{ template "pxc-db.name" . }}-pxc-db
     fullnameOverride: {{ template "pxc-db.fullname" . }}-pxc-db
     pause: {{ .Values.config.pxc.pause }}
