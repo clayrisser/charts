@@ -96,7 +96,7 @@ questions:
     label: 'mysql config'
     group: 'Pxc Config'
   - variable: config.pxc.resources.enabled
-    default: defaults
+    default: false
     description: ''
     type: enum
     options:
@@ -150,7 +150,7 @@ questions:
     show_if: config.haproxy.enabled=true
     group: 'HaProxy Config'
   - variable: config.haproxy.resources.enabled
-    default: defaults
+    default: false
     description: ''
     type: enum
     options:
@@ -217,7 +217,7 @@ questions:
     show_if: config.proxysql.enabled=true
     group: 'ProxySql Config'
   - variable: config.proxysql.resources.enabled
-    default: defaults
+    default: false
     description: ''
     type: enum
     options:

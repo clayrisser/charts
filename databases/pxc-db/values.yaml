@@ -33,7 +33,7 @@ config:
       schedule: '0 4 * * *'
     mysqlConfig: ''
     resources:
-      enabled: defaults
+      enabled: false
       requests:
         cpu: 600m
         memory: 1G
@@ -45,7 +45,7 @@ config:
     password: P@ssw0rd
     size: 1
     resources:
-      enabled: defaults
+      enabled: false
       requests:
         cpu: 600m
         memory: 1G
@@ -56,7 +56,7 @@ config:
     enabled: false
     size: 1
     resources:
-      enabled: defaults
+      enabled: false
       requests:
         cpu: 600m
         memory: 1G
