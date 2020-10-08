@@ -2,7 +2,7 @@ name: silicon-operator
 apiVersion: v1
 home: https://codejam.ninja
 icon: ''
-version: 0.0.1
+version: 0.0.4
 appVersion: latest
 description: 'operator to improve kubernetes in random ways'
 keywords:
