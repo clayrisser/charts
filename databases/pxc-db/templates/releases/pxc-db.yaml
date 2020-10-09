@@ -126,6 +126,7 @@ spec:
         tag: {{ .Values.images.pmm.tag }}
       serverHost: {{ template "pxc-db.fullname" . }}-monitoring
       serverUser: pmm
+{{- if .Values.config.backup.enabled }}
     backup:
       enabled: {{ .Values.config.backup.enabled }}
       image:
@@ -144,6 +145,7 @@ spec:
           schedule: {{ .Values.config.backup.schedule }}
           keep: {{ .Values.config.backup.keep }}
           storageName: s3
+{{- end }}
     secrets:
       passwords:
         root: {{ .Values.config.passwords.root | quote }}
