@@ -10,8 +10,8 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    git: https://github.com/percona/percona-helm-charts.git
-    ref: pxc-db-0.1.10
+    git: https://github.com/codejamninja/percona-helm-charts.git
+    ref: codejamninja/pxc-db-0.1.10
     path: charts/pxc-db
   values:
     nameOverride: {{ template "pxc-db.name" . }}-pxc-db
