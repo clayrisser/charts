@@ -61,7 +61,7 @@ spec:
         size: {{ .Values.persistence.size.pxc }}
       disableTLS: false
       certManager: false
-      clusterSecretName: {{ template "pxc-db.fullname" . }}-pxc
+      # clusterSecretName: {{ template "pxc-db.fullname" . }}-pxc
     haproxy:
       enabled: {{ .Values.config.haproxy.enabled }}
       size: {{ .Values.config.haproxy.size }}
