@@ -71,3 +71,16 @@ Calculate mysql url
 {{- printf "jdbc:mysql://%s%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
 {{- end }}
 {{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "pxc-db.labels" -}}
+app.kubernetes.io/name: {{ include "pxc-db.name" . }}
+helm.sh/chart: {{ include "pxc-db.chart" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
