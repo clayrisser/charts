@@ -44,12 +44,15 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
-{{- if .Values.config.pxc.resources.enabled }}
       resources:
+{{- if .Values.config.pxc.resources.enabled }}
         requests:
 {{ toYaml .Values.config.pxc.resources.requests | indent 10 }}
         limits:
 {{ toYaml .Values.config.pxc.resources.limits | indent 10 }}
+{{- else }}
+        requests: {}
+        limits: {}
 {{- end }}
       persistence:
         enabled: {{ .Values.persistence.enabled }}
@@ -75,12 +78,15 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
-{{- if .Values.config.haproxy.resources.enabled }}
       resources:
+{{- if .Values.config.haproxy.resources.enabled }}
         requests:
 {{ toYaml .Values.config.haproxy.resources.requests | indent 10 }}
         limits:
 {{ toYaml .Values.config.haproxy.resources.limits | indent 10 }}
+{{- else }}
+        requests: {}
+        limits: {}
 {{- end }}
       persistence:
         enabled: {{ .Values.persistence.enabled }}
@@ -103,12 +109,15 @@ spec:
       gracePeriod: 600
       podDisruptionBudget:
         maxUnavailable: 1
-{{- if .Values.config.proxysql.resources.enabled }}
       resources:
+{{- if .Values.config.proxysql.resources.enabled }}
         requests:
 {{ toYaml .Values.config.proxysql.resources.requests | indent 10 }}
         limits:
 {{ toYaml .Values.config.proxysql.resources.limits | indent 10 }}
+{{- else }}
+        requests: {}
+        limits: {}
 {{- end }}
       persistence:
         enabled: {{ .Values.persistence.enabled }}
