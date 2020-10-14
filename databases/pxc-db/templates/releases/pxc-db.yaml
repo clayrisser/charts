@@ -31,7 +31,7 @@ spec:
       imagePullSecrets: []
       {{- if .Values.persistence.velero.enabled }}
       annotations:
-        backup.velero.io/backup-volumes: data
+        backup.velero.io/backup-volumes: datadir
       {{- end }}
       labels: {}
       readinessDelaySec: 15
