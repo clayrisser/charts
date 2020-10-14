@@ -2,9 +2,6 @@ images:
   directus:
     repository: directus/directus
     tag: v8-apache
-  phpmyadmin:
-    repository: phpmyadmin/phpmyadmin
-    tag: 4.7
 
 config:
   clusterProvider: infrastructure
@@ -17,72 +14,38 @@ config:
     email: email@example.com
     hostname: ''
     password: pass
-  authPublicKey: 'authSecretKey'
-  authSecretKey: ''
-  mysql:
-    authenticationPlugin: mysql_native_password
-    customConfig: ''
-    database: directus
-    host: ''
-    internal: true
-    password: P@ssw0rd
-    pause: true
-    port: 3306
-    prometheus: false
-    replicas: 1
-    terminationPolicy: Delete
-    url: ''
-    username: root
-    version: 8.0.14
     resources:
+      enabled: false
       requests:
         cpu: 100m
         memory: 128Mi
       limits:
         cpu: 500m
         memory: 256Mi
-    versionMap:
-      5.7-v1: 5.7.25
-      5.7-v2: 5.7.25
-      5.7.25: 5.7.25
-      8.0-v1: 8.0.3
-      8.0-v2: 8.0.14
-      8.0.14: 8.0.14
-      8.0.3: 8.0.3
-  phpmyadmin:
-    enabled: false
+  authPublicKey: 'authSecretKey'
+  authSecretKey: ''
+  mysql:
+    database: directus
+    host: ''
+    password: P@ssw0rd
+    port: 3306
+    url: ''
+    username: root
 
 service:
   directus:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
-  phpmyadmin:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http: ''
-  mysql:
-    type: ClusterIP
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      mysql: ''
+      http:
+    lbPorts:
+      http: 80
 
 ingress:
   directus:
     certificate: ''
     enabled: false
     hostname: ''
-    path: /
-    tls: false
-    issuer:
-      name: letsencrypt-staging
-  phpmyadmin:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    path: /
     tls: false
     issuer:
       name: letsencrypt-staging
@@ -90,26 +53,15 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  existingClaim: ''
-  size: 1Gi
   storageClass: ''
+  existingClaim:
+    directus: ''
+  size:
+    directus: 1Gi
   velero:
     enabled: false
-  stash:
-    bucket: ''
-    container: ''
-    enabled: false
-    endpoint: s3.amazonaws.com
-    keepLast: 30
-    paused: false
-    prefix: stash
-    schedule: '0 0 * * *'
-    secret: stash-config-stash-config
-    type: s3
-    restore:
-      snapshot:
-        data: ''
-        mysql: ''
+    restic: true
+    schedule: '@midnight'
 
 probes:
   liveness:

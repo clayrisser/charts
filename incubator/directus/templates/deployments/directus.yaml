@@ -7,10 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.velero.enabled }}
-  annotations:
-    backup.velero.io/backup-volumes: data
-  {{- end }}
 spec:
   selector:
     matchLabels:
@@ -31,17 +27,35 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
               preference:
                 matchExpressions:
-                  - key: lifecycle
+                  - key: application/state
                     operator: In
                     values:
-                      - spot
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "directus.name" . }}-directus
       containers:
         - name: {{ template "directus.fullname" . }}-directus
           image: {{ .Values.images.directus.repository }}:{{ .Values.images.directus.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+{{- if .Values.config.directus.resources.enabled }}
+          resources:
+            requests:
+{{ toYaml .Values.config.directus.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.directus.resources.limits | indent 14 }}
+{{- end }}
           ports:
             - name: container
               containerPort: 80
@@ -124,36 +138,7 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "directus.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim.directus | default (printf "%s-directus" (include "directus.fullname" . )) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "directus.fullname" . }}-directus
-  labels:
-    app: {{ template "directus.name" . }}-directus
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ template "directus.fullname" . }}-data
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "directus.fullname" . }}-directus
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}

@@ -28,17 +28,6 @@ Calculate directus certificate
 {{- end }}
 
 {{/*
-Calculate phpmyadmin certificate
-*/}}
-{{- define "directus.phpmyadmin-certificate" }}
-{{- if (not (empty .Values.ingress.phpmyadmin.certificate)) }}
-{{- printf .Values.ingress.phpmyadmin.certificate }}
-{{- else }}
-{{- printf "%s-phpmyadmin-letsencrypt" (include "directus.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate directus hostname
 */}}
 {{- define "directus.directus-hostname" }}
@@ -62,9 +51,8 @@ Calculate directus base url
 {{- else }}
 {{- if .Values.ingress.directus.enabled }}
 {{- $hostname := ((empty (include "directus.directus-hostname" .)) | ternary .Values.ingress.directus.hostname (include "directus.directus-hostname" .)) }}
-{{- $path := (eq .Values.ingress.directus.path "/" | ternary "" .Values.ingress.directus.path) }}
 {{- $protocol := (.Values.ingress.directus.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
+{{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "directus.directus-hostname" .) }}
 {{- end }}
@@ -76,14 +64,10 @@ Calculate mysql url
 */}}
 {{- define "directus.mysql-url" }}
 {{- $mysql := .Values.config.mysql }}
-{{- if $mysql.internal }}
-{{- $credentials := (printf "%s:%s" $mysql.username $mysql.password) }}
-{{- printf "jdbc:mysql://%s@%s-mysql:3306/%s" $credentials (include "directus.fullname" .) $mysql.database }}
-{{- else }}
 {{- if $mysql.url }}
 {{- printf $mysql.url }}
 {{- else }}
-{{- printf "jdbc:mysql://%s@%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
-{{- end }}
+{{- $credentials := ((or (empty $mysql.username) (empty $mysql.password)) | ternary "" (printf "%s:%s@" $mysql.username $mysql.password)) }}
+{{- printf "mysqlql://%s%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
 {{- end }}
 {{- end }}
