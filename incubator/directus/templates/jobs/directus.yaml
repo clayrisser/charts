@@ -12,8 +12,6 @@ metadata:
     helm.sh/hook-weight: '3'
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
-  strategy:
-    type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
