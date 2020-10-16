@@ -150,7 +150,7 @@ questions:
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: persistence.size
+      - variable: persistence.size.sonarqube
         default: 1Gi
         description: ''
         type: string
@@ -172,7 +172,7 @@ questions:
           - ReadOnlyMany
         required: false
         label: 'access mode'
-      - variable: persistence.existingClaim
+      - variable: persistence.existingClaim.sonarqube
         default: ''
         description: ''
         type: string
