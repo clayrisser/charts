@@ -78,7 +78,7 @@ spec:
                   - key: app
                     operator: In
                     values:
-                      - {{ template "nginx.name" . }}-nginx
+                      - {{ template "sonarqube.name" . }}-sonarqube
     tolerations: []
     nodeSelector: {}
     hostAliases: []
