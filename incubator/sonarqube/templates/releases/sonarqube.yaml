@@ -30,7 +30,7 @@ spec:
       {{- else }}
       type: {{ .Values.service.sonarqube.type }}
       {{- end }}
-      externalPort: {{ .Values.service.sonarqube.nodePorts.http }}
+      externalPort: {{ .Values.service.sonarqube.nodePorts.http | default "30000" }}
       internalPort: 80
       labels:
       annotations: {}
