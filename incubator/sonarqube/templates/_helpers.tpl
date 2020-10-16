@@ -17,16 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Create a name shared accross all apps in namespace.
-We truncate at 63 chars because some Kubernetes name fields are limited to this
-(by the DNS naming spec).
-*/}}
-{{- define "sonarqube.sharedname" }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- printf "%s-%s" .Release.Namespace $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Calculate sonarqube certificate
 */}}
 {{- define "sonarqube.sonarqube-certificate" }}
@@ -34,17 +24,6 @@ Calculate sonarqube certificate
 {{- printf .Values.ingress.sonarqube.certificate }}
 {{- else }}
 {{- printf "%s-sonarqube-letsencrypt" (include "sonarqube.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate pgadmin certificate
-*/}}
-{{- define "sonarqube.pgadmin-certificate" }}
-{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
-{{- printf .Values.ingress.pgadmin.certificate }}
-{{- else }}
-{{- printf "%s-pgadmin-letsencrypt" (include "sonarqube.fullname" .) }}
 {{- end }}
 {{- end }}
 
@@ -72,9 +51,8 @@ Calculate sonarqube base url
 {{- else }}
 {{- if .Values.ingress.sonarqube.enabled }}
 {{- $hostname := ((empty (include "sonarqube.sonarqube-hostname" .)) | ternary .Values.ingress.sonarqube.hostname (include "sonarqube.sonarqube-hostname" .)) }}
-{{- $path := (eq .Values.ingress.sonarqube.path "/" | ternary "" .Values.ingress.sonarqube.path) }}
 {{- $protocol := (.Values.ingress.sonarqube.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
+{{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "sonarqube.sonarqube-hostname" .) }}
 {{- end }}
@@ -86,14 +64,10 @@ Calculate postgres url
 */}}
 {{- define "sonarqube.postgres-url" }}
 {{- $postgres := .Values.config.postgres }}
-{{- if $postgres.internal }}
-{{- $credentials := (printf "%s:%s" $postgres.username $postgres.password) }}
-{{- printf "postgresql://%s@%s-postgres:5432/%s" $credentials (include "sonarqube.fullname" .) $postgres.database }}
-{{- else }}
 {{- if $postgres.url }}
 {{- printf $postgres.url }}
 {{- else }}
-{{- printf "postgresql://%s@%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
-{{- end }}
+{{- $credentials := ((or (empty $postgres.username) (empty $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) }}
+{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
 {{- end }}
 {{- end }}

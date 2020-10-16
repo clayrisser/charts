@@ -1,34 +1,42 @@
 images:
-  nginx:
-    repository: nginx
-    tag: latest
+  sonarqube:
+    repository: sonarqube
+    tag: 8.1-community
 
 config:
   clusterProvider: infrastructure
-  imagePullPolicy: Always
-  updateStrategy: Recreate
-  nginx:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  sonarqube:
     baseUrl: ''
     hostname: ''
+    replicas: 1
+    secret: ''
     resources:
+      enabled: false
       requests:
         cpu: 100m
         memory: 128Mi
       limits:
-        cpu: 500m
-        memory: 256Mi
+        cpu: 100m
+        memory: 128Mi
+  postgres:
+    database: sonarqube
+    host: ''
+    password: P@ssw0rd
+    port: 5432
+    url: ''
+    username: postgres
 
 service:
-  nginx:
+  sonarqube:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http:
-    lbPorts:
-      http: 80
 
 ingress:
-  nginx:
+  sonarqube:
     certificate: ''
     enabled: false
     hostname: ''
@@ -40,8 +48,10 @@ persistence:
   accessMode: ReadWriteOnce
   enabled: false
   storageClass: ''
+  existingClaim:
+    sonarqube: ''
   size:
-    nginx: 1Gi
+    sonarqube: 1Gi
   velero:
     enabled: false
     restic: true

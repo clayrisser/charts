@@ -1,0 +1,159 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ template "sonarqube.fullname" . }}-sonarqube
+  labels:
+    app: {{ template "sonarqube.name" . }}-sonarqube
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://oteemo.github.io/charts
+    name: sonarqube
+    version: 6.8.1
+  values:
+    replicaCount: {{ .Values.config.sonarqube.replicas }}
+    deploymentStrategy: {}
+    image:
+      repository: {{ .Values.images.sonarqube.repository }}
+      tag: {{ .Values.images.sonarqube.tag }}
+    securityContext:
+      fsGroup: 999
+    elasticsearch:
+      configureNode: true
+      bootstrapChecks: true
+    service:
+      {{- if .Values.ingress.sonarqube.enabled }}
+      type: ClusterIP
+      {{- else }}
+      type: {{ .Values.service.sonarqube.type }}
+      {{- end }}
+      externalPort: {{ .Values.service.sonarqube.nodePorts.http }}
+      internalPort: 80
+      labels:
+      annotations: {}
+    ingress:
+      enabled: {{ .Values.ingress.sonarqube.enabled }}
+      hosts:
+        - name: {{ .Values.ingress.sonarqube.hostname }}
+          path: /
+      annotations:
+        {{- if (eq .Values.config.clusterProvider "aks") }}
+        kubernetes.io/ingress.class: addon-http-application-routing
+        {{- else }}
+        kubernetes.io/ingress.class: nginx
+        {{- end }}
+        {{- if .Values.ingress.sonarqube.tls }}
+        {{- if (empty .Values.ingress.sonarqube.certificate) }}
+        cert-manager.io/cluster-issuer: {{ .Values.ingress.sonarqube.issuer.name }}
+        kubernetes.io/tls-acme: 'true'
+        {{- end }}
+        nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+        {{- end }}
+      {{- if .Values.ingress.sonarqube.tls }}
+      tls:
+        - secretName: {{ template "sonarqube.sonarqube-certificate" . }}
+          hosts:
+            - {{ .Values.ingress.sonarqube.hostname }}
+      {{- end }}
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+            preference:
+              matchExpressions:
+                - key: application/state
+                  operator: In
+                  values:
+                    - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 90
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - {{ template "nginx.name" . }}-nginx
+    tolerations: []
+    nodeSelector: {}
+    hostAliases: []
+    readinessProbe:
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      failureThreshold: 6
+      sonarWebContext: /
+    livenessProbe:
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      sonarWebContext: /
+    initContainersSecurityContext:
+      privileged: true
+    jvmOpts: ""
+    env:
+      - name: sonar.core.serverBaseURL
+        value: {{ template "sonarqube.sonarqube-base-url" . }}
+    {{- if .Values.persistence.velero.enabled }}
+    annotations:
+      backup.velero.io/backup-volumes: data
+    {{- end }}
+{{- if .Values.config.sonarqube.resources.enabled }}
+    resources:
+      requests:
+{{ toYaml .Values.config.sonarqube.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.sonarqube.resources.limits | indent 8 }}
+{{- else }}
+    resources: {}
+{{- end }}
+    persistence:
+      enabled: {{ .Values.persistence.enabled }}
+      annotations: {}
+      {{- if (not (eq .Values.persistence.existingClaim.sonarqube "")) }}
+      existingClaim: .Values.persistence.existingClaim.sonarqube
+      {{- end }}
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClass: ''
+      {{- else }}
+      storageClass: {{ .Values.persistence.storageClass }}
+      {{- end }}
+      accessMode: {{ .Values.persistence.accessMode }}
+      size: {{ .Values.persistence.size.sonarqube }}
+      volumes: []
+      mounts: []
+    emptyDir: {}
+    plugins:
+      install: []
+      lib: []
+      resources: {}
+    sonarProperties: {}
+    sonarSecretProperties: {}
+    sonarSecretKey: {{ template "sonarqube.fullname" . }}-sonarqube
+    database:
+      type: "postgresql"
+    postgresql:
+      enabled: false
+      postgresqlServer: {{ .Values.config.postgres.host | quote }}
+      postgresqlUsername: {{ .Values.config.postgres.username | quote }}
+      postgresqlPassword: {{ .Values.config.postgres.password | quote }}
+      postgresqlDatabase: {{ .Values.config.postgres.database | quote }}
+      service:
+        port: {{ .Values.config.postgres.port }}
+    podLabels:
+      io.cattle.field/appId: {{ .Release.Name }}
+    sonarqubeFolder: /opt/sonarqube
+    enableTests: true
+    serviceAccount:
+      create: false
+      annotations: {}
+    extraConfig:
+      secrets: []
+      configmaps: []
+    account:
+      adminPassword: admin
+      currentAdminPassword: admin
+    curlContainerImage: curlimages/curl:latest
