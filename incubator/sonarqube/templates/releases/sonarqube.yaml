@@ -132,7 +132,7 @@ spec:
       resources: {}
     sonarProperties: {}
     sonarSecretProperties: {}
-    sonarSecretKey: {{ template "sonarqube.fullname" . }}-sonarqube
+    # sonarSecretKey: {{ template "sonarqube.fullname" . }}-sonarqube
     database:
       type: "postgresql"
     postgresql:
