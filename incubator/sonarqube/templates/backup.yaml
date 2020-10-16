@@ -2,9 +2,9 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: {{ template "nginx.fullname" . }}
+  name: {{ template "sonarqube.fullname" . }}
   labels:
-    app: {{ template "nginx.name" . }}
+    app: {{ template "sonarqube.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
