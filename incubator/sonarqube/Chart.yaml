@@ -3,7 +3,7 @@ apiVersion: v1
 home: https://www.sonarqube.org
 icon: https://www.sonarqube.org/assets/logo-31ad3115b1b4b120f3d1efd63e6b13ac9f1f89437f0cf6881cc4d8b5603a52b4.svg
 version: 6.8.1
-appVersion: 8.1
+appVersion: 8.2
 description: 'the leading product for continuous code quality'
 keywords:
   - sonarqube
