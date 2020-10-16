@@ -1,7 +1,7 @@
 images:
   sonarqube:
     repository: sonarqube
-    tag: 8.1-community
+    tag: 8.2-community
 
 config:
   clusterProvider: infrastructure
