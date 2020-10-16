@@ -1,7 +1,7 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ template "sonarqube.fullname" . }}-sonarqube
+  name: sonarqube
   labels:
     app: {{ template "sonarqube.name" . }}-sonarqube
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
