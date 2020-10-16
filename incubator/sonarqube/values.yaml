@@ -6,7 +6,7 @@ images:
 config:
   clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
-  updateStrategy: RollingUpdate
+  updateStrategy: Recreate
   sonarqube:
     baseUrl: ''
     hostname: ''
