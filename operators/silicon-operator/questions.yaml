@@ -67,7 +67,7 @@ questions:
     label: 'silicon operator repository'
     group: Images
   - variable: images.siliconOperator.tag
-    default: 0.0.4
+    default: 0.0.5
     description: ''
     type: string
     required: true
