@@ -9,6 +9,6 @@ metadata:
     heritage: {{ .Release.Service }}
     dev.siliconhills.helm2cattle/release: {{ template "pxc-db.fullname" . }}-pxc-db
 data:
-  # cattle_app_matcher:
-  #   path: 'metadata.name'
-  #   regex: '/{{ template "pxc-db.fullname" . }}/g'
+  cattle_app_matcher:
+    path: 'metadata.name'
+    regex: '/{{ template "pxc-db.fullname" . }}/g'
