@@ -135,8 +135,8 @@ spec:
       image:
         repository: {{ .Values.images.pmm.repository }}
         tag: {{ .Values.images.pmm.tag }}
-      serverHost: {{ template "pxc-db.fullname" . }}-monitoring
-      serverUser: pmm
+      serverHost: {{ .Values.config.pmm.hostname | quote }}
+      serverUser: {{ .Values.config.pmm.username | quote }}
     backup:
       enabled: {{ .Values.config.backup.enabled }}
       image:

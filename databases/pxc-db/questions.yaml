@@ -269,6 +269,18 @@ questions:
     group: 'Pmm Config'
     show_subquestion_if: true
     subquestions:
+      - variable: config.pmm.hostname
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: hostname
+      - variable: config.pmm.username
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: username
       - variable: config.pmm.password
         default: P@ssw0rd
         description: ''

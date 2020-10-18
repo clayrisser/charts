@@ -65,7 +65,9 @@ config:
         memory: 600m
   pmm:
     enabled: false
+    hostname: ''
     password: P@ssw0rd
+    username: admin
   backup:
     enabled: false
     password: P@ssw0rd
