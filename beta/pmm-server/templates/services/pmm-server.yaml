@@ -13,7 +13,7 @@ spec:
   {{- else }}
   type: {{ .Values.service.pmmServer.type }}
   {{- if (eq .Values.service.pmm-server.type "NodePort") }}
-  externalTrafficPolicy: {{ .Values.service.pmm-server.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.service.pmmServer.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
