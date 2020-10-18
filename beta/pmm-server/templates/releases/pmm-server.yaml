@@ -14,59 +14,49 @@ spec:
     ref: master
     path: helm/pmm-server
   values:
-    ## percona image version
-    ## ref: https://hub.docker.com/r/library/percona/tags/
-    ##
-    imageRepo: "percona/pmm-server"
-    imageTag: "2.7.0"
-
-    ## A choice between "kubernetes" and "openshift"
-    platform: "kubernetes"
-
-    ## Specify an imagePullPolicy (Required)
-    ## It's recommended to change this to 'Always' if the image tag is 'latest'
-    ## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
-    ##
-    imagePullPolicy: Always
-
-    ## Persist data to a persitent volume
+    imageRepo: {{ .Values.images.pmmServer.repository }}
+    imageTag: {{ .Values.images.pmmServer.imageTag | quote }}
+    platform: kubernetes
+    imagePullPolicy: {{ .Values.config.imagePullPolicy }}
     persistence:
-      enabled: true
-      ## percona data Persistent Volume Storage Class
-      ## If defined, storageClassName: <storageClass>
-      ## If set to "-", storageClassName: "", which disables dynamic provisioning
-      ## If undefined (the default) or set to null, no storageClassName spec is
-      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      ##   GKE, AWS & OpenStack)
-      ##
-      # storageClass: "-"
-      accessMode: ReadWriteOnce
-      size: 8Gi
-
-    ## set credentials
+      enabled: {{ .Values.persistence.enabled }}
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClass: ''
+      {{- else }}
+      storageClass: {{ .Values.persistence.storageClass }}
+      {{- end }}
+      accessMode: {{ .Values.persistence.accessMode }}
+      size: {{ .Values.persistence.size.pmmServer }}
     credentials:
-      password: "admin"
-
-    ## set metric collection settings
+      password: {{ .Values.config.pmmServer.password }}
     metric:
       resolution: 1s
       retention: 720h
     queries:
       retention: 8
-
-    ## Configure resource requests and limits
-    ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-    ##
+{{- if .Values.config.pmmServer.resources.enabled }}
     resources:
-      requests:
-        memory: 1Gi
-        cpu: 0.5
-
+{{ toYaml .Values.config.pmmServer.resources | indent 6 }}
+{{- end }}
     service:
-      type: LoadBalancer
-      loadBalancerIP: ""
-
-    ## Mount prometheus scrape config https://www.percona.com/blog/2020/03/23/extending-pmm-prometheus-configuration/
-    prometheus:
-      configMap:
-        name: ""
+      {{- if .Values.ingress.pmmServer.enabled }}
+      type: ClusterIP
+      {{- else }}
+      type: {{ .Values.service.pmmServer.type }}
+      {{- if (eq .Values.service.pmmServer.type "NodePort") }}
+      externalTrafficPolicy: {{ .Values.service.pmmServer.externalTrafficPolicy }}
+      {{- end }}
+      {{- end }}
+      # ports:
+      #   - name: http
+      #     port: {{ (eq .Values.service.pmmServer.type "LoadBalancer") | ternary .Values.service.pmmServer.lbPorts.http "80" }}
+      #     targetPort: container
+      #     {{- if (and (eq .Values.service.pmmServer.type "NodePort") (not (empty .Values.service.pmmServer.nodePorts.http))) }}
+      #     nodePort: {{ .Values.service.pmmServer.nodePorts.http }}
+      #     {{- end }}
+      # selector:
+      #   app: {{ template "pmm-server.name" . }}-pmmServer
+      #   release: {{ .Release.Name }}
+    # prometheus:
+    #   configMap:
+    #     name: ""

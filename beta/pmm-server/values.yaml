@@ -1,95 +1,47 @@
 images:
-  pxc:
-    repository: percona/percona-xtradb-cluster
-    tag: 8.0.19-10.1
-  haproxy:
-    repository: percona/percona-xtradb-cluster-operator
-    tag: 1.5.0-haproxy
-  proxysql:
-    repository: percona/percona-xtradb-cluster-operator
-    tag: 1.5.0-proxysql
-  pmm:
-    repository: perconalab/pmm-client
-    tag: 1.17.1
-  backup:
-    repository: percona/percona-xtradb-cluster-operator
-    tag: 1.5.0-pxc8.0-backup
+  pmmServer:
+    repository: percona/pmm-server
+    tag: 2.7.0
 
 config:
   clusterProvider: infrastructure
   imagePullPolicy: Always
   updateStrategy: Recreate
-  passwords:
-    clustercheck: P@ssw0rd
-    monitor: P@ssw0rd
-    operator: P@ssw0rd
-    root: P@ssw0rd
-  operator:
-    enabled: false
-  pxc:
-    size: 1
-    pause: false
-    upgrade:
-      schedule: '0 4 * * *'
-    mysqlConfig: ''
+  pmmServer:
+    password: P@ssw0rd
     resources:
       enabled: false
       requests:
-        cpu: 600m
-        memory: 1G
+        cpu: 0.5
+        memory: 1Gi
       limits:
-        cpu: 1G
-        memory: 600m
-  proxysql:
-    enabled: false
-    password: P@ssw0rd
-    size: 1
-    resources:
-      enabled: false
-      requests:
-        cpu: 600m
-        memory: 1G
-      limits:
-        cpu: 1G
-        memory: 600m
-  haproxy:
-    enabled: false
-    size: 1
-    resources:
-      enabled: false
-      requests:
-        cpu: 600m
-        memory: 1G
-      limits:
-        cpu: 1G
-        memory: 600m
-  pmm:
-    enabled: false
-    password: P@ssw0rd
-  backup:
-    enabled: false
-    password: P@ssw0rd
-    keep: 5
-    schedule: '0 0 * * *'
-    s3:
-      accessKey: ''
-      bucket: ''
-      endpoint: https://sfo2.digitaloceanspaces.com
-      region: sfo2
-      secretKey: ''
+        cpu: 0.5
+        memory: 1Gi
 
-service: {}
+service:
+  pmmServer:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
 
-ingress: {}
+ingress:
+  pmmServer:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
 
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
   storageClass: ''
   size:
-    pxc: 1Gi
-    proxysql: 1Gi
-    haproxy: 1Gi
+    pmmServer: 1Gi
   velero:
     enabled: false
     restic: true
