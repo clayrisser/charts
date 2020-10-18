@@ -66,36 +66,36 @@ questions:
     label: 'clustercheck password'
     group: Config
 
-# Psmdb Config
-  - variable: config.psmdb.size
+# Pxc Config
+  - variable: config.pxc.size
     default: 1
     description: ''
     type: int
     required: true
     label: size
-    group: 'Psmdb Config'
-  - variable: config.psmdb.pause
+    group: 'Pxc Config'
+  - variable: config.pxc.pause
     default: false
     description: ''
     type: boolean
     required: true
     label: pause
-    group: 'Psmdb Config'
-  - variable: config.psmdb.upgrade.schedule
+    group: 'Pxc Config'
+  - variable: config.pxc.upgrade.schedule
     default: '0 4 * * *'
     description: ''
     type: string
     required: false
     label: 'upgrade schedule'
-    group: 'Psmdb Config'
-  - variable: config.psmdb.mongoConfig
+    group: 'Pxc Config'
+  - variable: config.pxc.mysqlConfig
     default: ''
     description: ''
     type: multiline
     required: false
-    label: 'mongo config'
-    group: 'Psmdb Config'
-  - variable: config.psmdb.resources.enabled
+    label: 'mysql config'
+    group: 'Pxc Config'
+  - variable: config.pxc.resources.enabled
     default: false
     description: ''
     type: enum
@@ -104,34 +104,34 @@ questions:
       - 'true'
       - 'false'
     required: true
-    label: 'psmdb resources enabled'
+    label: 'pxc resources enabled'
     show_subquestion_if: 'true'
-    group: 'Psmdb Config'
+    group: 'Pxc Config'
     subquestions:
-      - variable: config.psmdb.resources.requests.cpu
+      - variable: config.pxc.resources.requests.cpu
         default: 100m
         description: ''
         type: string
         required: true
-        label: 'psmdb resources requests cpu'
-      - variable: config.psmdb.resources.requests.memory
+        label: 'pxc resources requests cpu'
+      - variable: config.pxc.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
-        label: 'psmdb resources requests memory'
-      - variable: config.psmdb.resources.limits.cpu
+        label: 'pxc resources requests memory'
+      - variable: config.pxc.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
-        label: 'psmdb resources limits cpu'
-      - variable: config.psmdb.resources.limits.memory
+        label: 'pxc resources limits cpu'
+      - variable: config.pxc.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
-        label: 'psmdb resources limits memory'
+        label: 'pxc resources limits memory'
 
 # HaProxy Config
   - variable: config.haproxy.enabled
@@ -361,12 +361,12 @@ questions:
           - ReadOnlyMany
         required: false
         label: 'access mode'
-      - variable: persistence.size.psmdb
+      - variable: persistence.size.pxc
         default: 1Gi
         description: ''
         type: string
         required: true
-        label: 'psmdb size'
+        label: 'pxc size'
       - variable: persistence.size.haproxy
         default: 1Gi
         description: ''
@@ -406,94 +406,94 @@ questions:
         group: Persistence
 
 # # Services and Load Balancing
-#   - variable: ingress.psmdbDb.enabled
+#   - variable: ingress.pxcDb.enabled
 #     default: true
 #     description: ''
 #     type: boolean
-#     label: 'psmdb db ingress enabled'
+#     label: 'pxc db ingress enabled'
 #     show_subquestion_if: true
 #     group: 'Services and Load Balancing'
 #     subquestions:
-#       - variable: ingress.psmdbDb.tls
+#       - variable: ingress.pxcDb.tls
 #         default: false
 #         description: ''
 #         type: boolean
 #         required: true
-#         label: 'psmdb db ingress tls'
-#       - variable: ingress.psmdbDb.hostname
+#         label: 'pxc db ingress tls'
+#       - variable: ingress.pxcDb.hostname
 #         default: xip.io
 #         description: ''
 #         type: hostname
 #         required: true
-#         label: 'psmdb db ingress hostname'
-#       - variable: ingress.psmdbDb.issuer.name
+#         label: 'pxc db ingress hostname'
+#       - variable: ingress.pxcDb.issuer.name
 #         default: letsencrypt-staging
 #         description: ''
 #         type: enum
-#         show_if: ingress.psmdbDb.tls=true
+#         show_if: ingress.pxcDb.tls=true
 #         options:
 #           - none
 #           - letsencrypt-staging
 #           - letsencrypt-prod
 #         required: true
-#         label: 'psmdb db ingress issuer name'
-#       - variable: ingress.psmdbDb.certificate
+#         label: 'pxc db ingress issuer name'
+#       - variable: ingress.pxcDb.certificate
 #         default: ''
 #         description: ''
 #         type: string
-#         show_if: ingress.psmdbDb.tls=true&&ingress.psmdbDb.issuer.name=none
+#         show_if: ingress.pxcDb.tls=true&&ingress.pxcDb.issuer.name=none
 #         required: false
-#         label: 'psmdb db ingress certificate'
-#   - variable: service.psmdbDb.type
+#         label: 'pxc db ingress certificate'
+#   - variable: service.pxcDb.type
 #     default: NodePort
 #     description: ''
 #     type: enum
-#     show_if: ingress.psmdbDb.enabled=false
+#     show_if: ingress.pxcDb.enabled=false
 #     options:
 #       - ClusterIP
 #       - NodePort
 #       - LoadBalancer
 #     required: true
-#     label: 'psmdb db service type'
+#     label: 'pxc db service type'
 #     group: 'Services and Load Balancing'
-#   - variable: service.psmdbDb.nodePorts.http
+#   - variable: service.pxcDb.nodePorts.http
 #     default:
 #     description: ''
 #     type: int
 #     required: false
 #     min: 30000
 #     max: 32767
-#     show_if: service.psmdbDb.type=NodePort&&ingress.psmdbDb.enabled=false
-#     label: 'psmdb db http node port'
+#     show_if: service.pxcDb.type=NodePort&&ingress.pxcDb.enabled=false
+#     label: 'pxc db http node port'
 #     group: 'Services and Load Balancing'
-#   - variable: service.psmdbDb.lbPorts.http
+#   - variable: service.pxcDb.lbPorts.http
 #     default: 80
 #     description: ''
 #     type: int
 #     min: 0
 #     max: 65535
 #     required: true
-#     show_if: service.psmdbDb.type=LoadBalancer&&ingress.psmdbDb.enabled=false
-#     label: 'psmdb db http lb port'
+#     show_if: service.pxcDb.type=LoadBalancer&&ingress.pxcDb.enabled=false
+#     label: 'pxc db http lb port'
 #     group: 'Services and Load Balancing'
 
 # Images
-  - variable: images.psmdb.repository
-    default: percona/percona-mongodb-cluster
+  - variable: images.pxc.repository
+    default: percona/percona-xtradb-cluster
     description: ''
     type: string
     required: true
-    label: 'psmdb repository'
+    label: 'pxc repository'
     group: Images
-  - variable: images.psmdb.tag
+  - variable: images.pxc.tag
     default: 8.0.19-10.1
     description: ''
     type: string
     required: true
-    label: 'psmdb tag'
+    label: 'pxc tag'
     group: Images
   - variable: images.haproxy.repository
-    default: percona/percona-mongodb-cluster-operator
+    default: percona/percona-xtradb-cluster-operator
     description: ''
     type: string
     required: true
@@ -509,7 +509,7 @@ questions:
     label: 'haproxy tag'
     group: Images
   - variable: images.proxysql.repository
-    default: percona/percona-mongodb-cluster-operator
+    default: percona/percona-xtradb-cluster-operator
     description: ''
     type: string
     required: true
@@ -541,7 +541,7 @@ questions:
     label: 'pmm tag'
     group: Images
   - variable: images.backup.repository
-    default: percona/percona-mongodb-cluster-operator
+    default: percona/percona-xtradb-cluster-operator
     description: ''
     type: string
     required: true
@@ -549,7 +549,7 @@ questions:
     label: 'backup repository'
     group: Images
   - variable: images.backup.tag
-    default: 1.5.0-psmdb8.0-backup
+    default: 1.5.0-pxc8.0-backup
     description: ''
     type: string
     required: true

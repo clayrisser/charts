@@ -1,3 +1,4 @@
+{{- if (not .Values.config.operator.enabled) }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -31,3 +32,4 @@ roleRef:
   {{- end }}
   name: {{ include "pxc-db.fullname" . }}
   apiGroup: rbac.authorization.k8s.io
+{{- end }}

@@ -1,0 +1,17 @@
+{{- if .Values.persistence.velero.enabled }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ template "pmm-server.fullname" . }}
+  labels:
+    app: {{ template "pmm-server.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: {{ .Values.persistence.velero.schedule | quote }}
+  template:
+    includedNamespaces:
+      - {{ .Release.Namespace }}
+    ttl: 0h30m00s
+{{- end }}

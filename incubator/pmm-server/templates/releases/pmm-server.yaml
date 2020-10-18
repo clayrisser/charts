@@ -1,0 +1,72 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ template "pmm-server.fullname" . }}-pmm-server
+  labels:
+    app: {{ template "pmm-server.name" . }}-pmm-server
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  helmVersion: v3
+  chart:
+    git: https://github.com/Percona-Lab/percona-openshift.git
+    ref: master
+    path: helm/pmm-server
+  values:
+    ## percona image version
+    ## ref: https://hub.docker.com/r/library/percona/tags/
+    ##
+    imageRepo: "percona/pmm-server"
+    imageTag: "2.7.0"
+
+    ## A choice between "kubernetes" and "openshift"
+    platform: "kubernetes"
+
+    ## Specify an imagePullPolicy (Required)
+    ## It's recommended to change this to 'Always' if the image tag is 'latest'
+    ## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
+    ##
+    imagePullPolicy: Always
+
+    ## Persist data to a persitent volume
+    persistence:
+      enabled: true
+      ## percona data Persistent Volume Storage Class
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      ##
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 8Gi
+
+    ## set credentials
+    credentials:
+      password: "admin"
+
+    ## set metric collection settings
+    metric:
+      resolution: 1s
+      retention: 720h
+    queries:
+      retention: 8
+
+    ## Configure resource requests and limits
+    ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+    ##
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 0.5
+
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ""
+
+    ## Mount prometheus scrape config https://www.percona.com/blog/2020/03/23/extending-pmm-prometheus-configuration/
+    prometheus:
+      configMap:
+        name: ""

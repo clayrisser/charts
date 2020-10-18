@@ -1,19 +1,19 @@
 images:
-  psmdb:
-    repository: percona/percona-server-mongodb
-    tag: 4.2.8-8
+  pxc:
+    repository: percona/percona-xtradb-cluster
+    tag: 8.0.19-10.1
   haproxy:
-    repository: percona/percona-mongodb-cluster-operator
+    repository: percona/percona-xtradb-cluster-operator
     tag: 1.5.0-haproxy
   proxysql:
-    repository: percona/percona-mongodb-cluster-operator
+    repository: percona/percona-xtradb-cluster-operator
     tag: 1.5.0-proxysql
   pmm:
     repository: perconalab/pmm-client
     tag: 1.17.1
   backup:
-    repository: percona/percona-mongodb-cluster-operator
-    tag: 1.5.0-psmdb8.0-backup
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.5.0-pxc8.0-backup
 
 config:
   clusterProvider: infrastructure
@@ -26,12 +26,12 @@ config:
     root: P@ssw0rd
   operator:
     enabled: false
-  psmdb:
+  pxc:
     size: 1
     pause: false
     upgrade:
       schedule: '0 4 * * *'
-    mongoConfig: ''
+    mysqlConfig: ''
     resources:
       enabled: false
       requests:
@@ -87,7 +87,7 @@ persistence:
   enabled: false
   storageClass: ''
   size:
-    psmdb: 1Gi
+    pxc: 1Gi
     proxysql: 1Gi
     haproxy: 1Gi
   velero:
