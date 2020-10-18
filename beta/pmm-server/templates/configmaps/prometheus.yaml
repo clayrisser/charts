@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "pmm-server.fullname" . }}-prometheus
+  labels:
+    app: {{ template "pmm-server.name" . }}-prometheus
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  prometheus.base.yml: |

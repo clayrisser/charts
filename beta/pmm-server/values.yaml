@@ -8,7 +8,14 @@ config:
   imagePullPolicy: Always
   updateStrategy: Recreate
   pmmServer:
+    baseUrl: ''
+    hostname: ''
     password: P@ssw0rd
+    metric:
+      resolution: 1s
+      retention: 720h
+    queries:
+      retention: 8
     resources:
       enabled: false
       requests:
@@ -40,9 +47,25 @@ persistence:
   accessMode: ReadWriteOnce
   enabled: false
   storageClass: ''
+  existingClaim:
+    pmmServer: ''
   size:
     pmmServer: 1Gi
   velero:
     enabled: false
     restic: true
     schedule: '@midnight'
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
