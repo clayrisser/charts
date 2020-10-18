@@ -12,7 +12,7 @@ spec:
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.pmmServer.type }}
-  {{- if (eq .Values.service.pmm-server.type "NodePort") }}
+  {{- if (eq .Values.service.pmmServer.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.pmmServer.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
