@@ -127,3 +127,4 @@ spec:
         - name: prometheus
           configMap:
             name: {{ template "pmm-server.fullname" . }}-prometheus
+            defaultMode: 0777
