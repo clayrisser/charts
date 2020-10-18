@@ -96,7 +96,7 @@ spec:
                   key: queries_retention
             - name: METRICS_MEMORY
               value: "600000"
-            {{ if .Values.config.password }}
+            {{ if .Values.config.pmmServer.password }}
             - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
