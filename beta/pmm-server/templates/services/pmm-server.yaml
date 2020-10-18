@@ -8,10 +8,10 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if .Values.ingress.pmm-server.enabled }}
+  {{- if .Values.ingress.pmmServer.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.pmm-server.type }}
+  type: {{ .Values.service.pmmServer.type }}
   {{- if (eq .Values.service.pmm-server.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.pmm-server.externalTrafficPolicy }}
   {{- end }}
