@@ -4,7 +4,7 @@ home: https://github.com/codejamninja/charts/tree/master/databases/pxc-db
 icon: https://avatars2.githubusercontent.com/u/2452804?s=200&v=4
 version: 0.1.10
 type: application
-appVersion: 1.5.0
+appVersion: 8.0.19
 description: 'percona xtradb operator managed databases'
 keywords:
   - database

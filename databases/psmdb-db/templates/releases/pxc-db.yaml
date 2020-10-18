@@ -1,9 +1,9 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ template "pxc-db.fullname" . }}-pxc-db
+  name: {{ template "psmdb-db.fullname" . }}-psmdb-db
   labels:
-    app: {{ template "pxc-db.name" . }}-pxc-db
+    app: {{ template "psmdb-db.name" . }}-psmdb-db
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,28 +12,28 @@ spec:
   chart:
 {{- if .Values.config.operator.enabled }}
     git: https://github.com/percona/percona-helm-charts.git
-    ref: pxc-db-0.1.10
-    path: charts/pxc-db
+    ref: psmdb-db-0.1.0
+    path: charts/psmdb-db
 {{- else }}
     git: https://github.com/codejamninja/percona-helm-charts.git
-    ref: codejamninja/pxc-db-0.1.10
-    path: charts/pxc-db
+    ref: codejamninja/psmdb-db-0.1.0
+    path: charts/psmdb-db
 {{- end }}
   values:
-    nameOverride: {{ template "pxc-db.name" . }}-pxc-db
-    fullnameOverride: {{ template "pxc-db.fullname" . }}-pxc-db
-    pause: {{ .Values.config.pxc.pause }}
+    nameOverride: {{ template "psmdb-db.name" . }}-psmdb-db
+    fullnameOverride: {{ template "psmdb-db.fullname" . }}-psmdb-db
+    pause: {{ .Values.config.psmdb.pause }}
     allowUnsafeConfigurations: true
     updateStrategy: {{ .Values.config.updateStrategy }}
     upgradeOptions:
       versionServiceEndpoint: https://check.percona.com/versions
       apply: recommended
-      schedule: {{ .Values.config.pxc.upgrade.schedule }}
-    pxc:
-      size: {{ .Values.config.pxc.size }}
+      schedule: {{ .Values.config.psmdb.upgrade.schedule }}
+    psmdb:
+      size: {{ .Values.config.psmdb.size }}
       image:
-        repository: {{ .Values.images.pxc.repository }}
-        tag: {{ .Values.images.pxc.tag }}
+        repository: {{ .Values.images.psmdb.repository }}
+        tag: {{ .Values.images.psmdb.tag }}
       imagePullSecrets: []
       {{- if .Values.persistence.velero.enabled }}
       annotations:
@@ -43,7 +43,7 @@ spec:
       readinessDelaySec: 15
       livenessDelaySec: 300
       forceUnsafeBootstrap: false
-      configuration: {{ .Values.config.pxc.mysqlConfig | quote }}
+      configuration: {{ .Values.config.psmdb.mysqlConfig | quote }}
       nodeSelector: {}
       affinity: {}
       tolerations: []
@@ -51,11 +51,11 @@ spec:
       podDisruptionBudget:
         maxUnavailable: 1
       resources:
-{{- if .Values.config.pxc.resources.enabled }}
+{{- if .Values.config.psmdb.resources.enabled }}
         requests:
-{{ toYaml .Values.config.pxc.resources.requests | indent 10 }}
+{{ toYaml .Values.config.psmdb.resources.requests | indent 10 }}
         limits:
-{{ toYaml .Values.config.pxc.resources.limits | indent 10 }}
+{{ toYaml .Values.config.psmdb.resources.limits | indent 10 }}
 {{- else }}
         requests: {}
         limits: {}
@@ -64,10 +64,10 @@ spec:
         enabled: {{ .Values.persistence.enabled }}
         storageClass: {{ .Values.persistence.storageClass }}
         accessMode: {{ .Values.persistence.accessMode }}
-        size: {{ .Values.persistence.size.pxc }}
+        size: {{ .Values.persistence.size.psmdb }}
       disableTLS: false
       certManager: false
-      # clusterSecretName: {{ template "pxc-db.fullname" . }}-pxc
+      # clusterSecretName: {{ template "psmdb-db.fullname" . }}-psmdb
     haproxy:
       enabled: {{ .Values.config.haproxy.enabled }}
       size: {{ .Values.config.haproxy.size }}
@@ -135,7 +135,7 @@ spec:
       image:
         repository: {{ .Values.images.pmm.repository }}
         tag: {{ .Values.images.pmm.tag }}
-      serverHost: {{ template "pxc-db.fullname" . }}-monitoring
+      serverHost: {{ template "psmdb-db.fullname" . }}-monitoring
       serverUser: pmm
     backup:
       enabled: {{ .Values.config.backup.enabled }}
@@ -147,7 +147,7 @@ spec:
           type: s3
           s3:
             bucket: {{ .Values.config.backup.s3.bucket }}
-            credentialsSecret: {{ template "pxc-db.fullname" . }}-backup
+            credentialsSecret: {{ template "psmdb-db.fullname" . }}-backup
             region: {{ .Values.config.backup.s3.region }}
             endpointUrl: {{ .Values.config.backup.s3.endpoint }}
       schedule:

@@ -1,0 +1,558 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: Always
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - SmartUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.passwords.root
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'root password'
+    group: Config
+  - variable: config.passwords.operator
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'operator password'
+    group: Config
+  - variable: config.passwords.monitor
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'monitor password'
+    group: Config
+  - variable: config.passwords.clustercheck
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'clustercheck password'
+    group: Config
+
+# Psmdb Config
+  - variable: config.psmdb.size
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: size
+    group: 'Psmdb Config'
+  - variable: config.psmdb.pause
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: pause
+    group: 'Psmdb Config'
+  - variable: config.psmdb.upgrade.schedule
+    default: '0 4 * * *'
+    description: ''
+    type: string
+    required: false
+    label: 'upgrade schedule'
+    group: 'Psmdb Config'
+  - variable: config.psmdb.mysqlConfig
+    default: ''
+    description: ''
+    type: multiline
+    required: false
+    label: 'mysql config'
+    group: 'Psmdb Config'
+  - variable: config.psmdb.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    label: 'psmdb resources enabled'
+    show_subquestion_if: 'true'
+    group: 'Psmdb Config'
+    subquestions:
+      - variable: config.psmdb.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb resources requests cpu'
+      - variable: config.psmdb.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb resources requests memory'
+      - variable: config.psmdb.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb resources limits cpu'
+      - variable: config.psmdb.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb resources limits memory'
+
+# HaProxy Config
+  - variable: config.haproxy.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'HaProxy Config'
+  - variable: config.haproxy.size
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: size
+    show_if: config.haproxy.enabled=true
+    group: 'HaProxy Config'
+  - variable: config.haproxy.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    show_if: config.haproxy.enabled=true
+    label: 'resources enabled'
+    show_subquestion_if: 'true'
+    group: 'HaProxy Config'
+    subquestions:
+      - variable: config.haproxy.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.haproxy.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'resources requests memory'
+      - variable: config.haproxy.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.haproxy.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'resources limits memory'
+
+# ProxySql Config
+  - variable: config.proxysql.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'ProxySql Config'
+  - variable: config.proxysql.password
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql password'
+    group: 'ProxySql Config'
+  - variable: config.proxysql.size
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: size
+    show_if: config.proxysql.enabled=true
+    group: 'ProxySql Config'
+  - variable: config.proxysql.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: 'true'
+    show_if: config.proxysql.enabled=true
+    group: 'ProxySql Config'
+    subquestions:
+      - variable: config.proxysql.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.proxysql.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'resources requests memory'
+      - variable: config.proxysql.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.proxysql.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'resources limits memory'
+
+# Pmm Config
+  - variable: config.pmm.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'Pmm Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.pmm.password
+        default: P@ssw0rd
+        description: ''
+        type: password
+        required: true
+        label: password
+
+# Backup Config
+  - variable: config.backup.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'Backup Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.backup.password
+        default: P@ssw0rd
+        description: ''
+        type: password
+        required: true
+        label: 'backup password'
+      - variable: config.backup.keep
+        default: 5
+        description: ''
+        type: int
+        required: true
+        label: keep
+      - variable: config.backup.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        label: schedule
+      - variable: config.backup.s3.endpoint
+        default: https://sfo2.digitaloceanspaces.com
+        description: ''
+        type: string
+        required: true
+        label: 's3 endpoint'
+      - variable: config.backup.s3.region
+        default: sfo2
+        description: ''
+        type: string
+        required: true
+        label: 's3 region'
+      - variable: config.backup.s3.bucket
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: 's3 bucket'
+      - variable: config.backup.s3.accessKey
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: 's3 access key'
+      - variable: config.backup.s3.secretKey
+        default: ''
+        description: ''
+        type: password
+        required: true
+        label: 's3 secret key'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.size.psmdb
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb size'
+      - variable: persistence.size.haproxy
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'haproxy size'
+      - variable: persistence.size.proxysql
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'proxysql size'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        default: '@midnight'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+
+# # Services and Load Balancing
+#   - variable: ingress.psmdbDb.enabled
+#     default: true
+#     description: ''
+#     type: boolean
+#     label: 'psmdb db ingress enabled'
+#     show_subquestion_if: true
+#     group: 'Services and Load Balancing'
+#     subquestions:
+#       - variable: ingress.psmdbDb.tls
+#         default: false
+#         description: ''
+#         type: boolean
+#         required: true
+#         label: 'psmdb db ingress tls'
+#       - variable: ingress.psmdbDb.hostname
+#         default: xip.io
+#         description: ''
+#         type: hostname
+#         required: true
+#         label: 'psmdb db ingress hostname'
+#       - variable: ingress.psmdbDb.issuer.name
+#         default: letsencrypt-staging
+#         description: ''
+#         type: enum
+#         show_if: ingress.psmdbDb.tls=true
+#         options:
+#           - none
+#           - letsencrypt-staging
+#           - letsencrypt-prod
+#         required: true
+#         label: 'psmdb db ingress issuer name'
+#       - variable: ingress.psmdbDb.certificate
+#         default: ''
+#         description: ''
+#         type: string
+#         show_if: ingress.psmdbDb.tls=true&&ingress.psmdbDb.issuer.name=none
+#         required: false
+#         label: 'psmdb db ingress certificate'
+#   - variable: service.psmdbDb.type
+#     default: NodePort
+#     description: ''
+#     type: enum
+#     show_if: ingress.psmdbDb.enabled=false
+#     options:
+#       - ClusterIP
+#       - NodePort
+#       - LoadBalancer
+#     required: true
+#     label: 'psmdb db service type'
+#     group: 'Services and Load Balancing'
+#   - variable: service.psmdbDb.nodePorts.http
+#     default:
+#     description: ''
+#     type: int
+#     required: false
+#     min: 30000
+#     max: 32767
+#     show_if: service.psmdbDb.type=NodePort&&ingress.psmdbDb.enabled=false
+#     label: 'psmdb db http node port'
+#     group: 'Services and Load Balancing'
+#   - variable: service.psmdbDb.lbPorts.http
+#     default: 80
+#     description: ''
+#     type: int
+#     min: 0
+#     max: 65535
+#     required: true
+#     show_if: service.psmdbDb.type=LoadBalancer&&ingress.psmdbDb.enabled=false
+#     label: 'psmdb db http lb port'
+#     group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.psmdb.repository
+    default: percona/percona-mongodb-cluster
+    description: ''
+    type: string
+    required: true
+    label: 'psmdb repository'
+    group: Images
+  - variable: images.psmdb.tag
+    default: 8.0.19-10.1
+    description: ''
+    type: string
+    required: true
+    label: 'psmdb tag'
+    group: Images
+  - variable: images.haproxy.repository
+    default: percona/percona-mongodb-cluster-operator
+    description: ''
+    type: string
+    required: true
+    show_if: config.haproxy.enabled=true
+    label: 'haproxy repository'
+    group: Images
+  - variable: images.haproxy.tag
+    default: 1.5.0-haproxy
+    description: ''
+    type: string
+    required: true
+    show_if: config.haproxy.enabled=true
+    label: 'haproxy tag'
+    group: Images
+  - variable: images.proxysql.repository
+    default: percona/percona-mongodb-cluster-operator
+    description: ''
+    type: string
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql repository'
+    group: Images
+  - variable: images.proxysql.tag
+    default: 1.5.0-proxysql
+    description: ''
+    type: string
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql tag'
+    group: Images
+  - variable: images.pmm.repository
+    default: perconalab/pmm-client
+    description: ''
+    type: string
+    required: true
+    show_if: config.pmm.enabled=true
+    label: 'pmm repository'
+    group: Images
+  - variable: images.pmm.tag
+    default: 1.17.1
+    description: ''
+    type: string
+    required: true
+    show_if: config.pmm.enabled=true
+    label: 'pmm tag'
+    group: Images
+  - variable: images.backup.repository
+    default: percona/percona-mongodb-cluster-operator
+    description: ''
+    type: string
+    required: true
+    show_if: config.backup.enabled=true
+    label: 'backup repository'
+    group: Images
+  - variable: images.backup.tag
+    default: 1.5.0-psmdb8.0-backup
+    description: ''
+    type: string
+    required: true
+    show_if: config.backup.enabled=true
+    label: 'backup tag'
+    group: Images

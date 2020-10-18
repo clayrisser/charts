@@ -1,0 +1,96 @@
+images:
+  psmdb:
+    repository: percona/percona-server-mongodb
+    tag: 4.2.8-8
+  haproxy:
+    repository: percona/percona-mongodb-cluster-operator
+    tag: 1.5.0-haproxy
+  proxysql:
+    repository: percona/percona-mongodb-cluster-operator
+    tag: 1.5.0-proxysql
+  pmm:
+    repository: perconalab/pmm-client
+    tag: 1.17.1
+  backup:
+    repository: percona/percona-mongodb-cluster-operator
+    tag: 1.5.0-psmdb8.0-backup
+
+config:
+  clusterProvider: infrastructure
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  passwords:
+    clustercheck: P@ssw0rd
+    monitor: P@ssw0rd
+    operator: P@ssw0rd
+    root: P@ssw0rd
+  operator:
+    enabled: false
+  psmdb:
+    size: 1
+    pause: false
+    upgrade:
+      schedule: '0 4 * * *'
+    mysqlConfig: ''
+    resources:
+      enabled: false
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
+  proxysql:
+    enabled: false
+    password: P@ssw0rd
+    size: 1
+    resources:
+      enabled: false
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
+  haproxy:
+    enabled: false
+    size: 1
+    resources:
+      enabled: false
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
+  pmm:
+    enabled: false
+    password: P@ssw0rd
+  backup:
+    enabled: false
+    password: P@ssw0rd
+    keep: 5
+    schedule: '0 0 * * *'
+    s3:
+      accessKey: ''
+      bucket: ''
+      endpoint: https://sfo2.digitaloceanspaces.com
+      region: sfo2
+      secretKey: ''
+
+service: {}
+
+ingress: {}
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  size:
+    psmdb: 1Gi
+    proxysql: 1Gi
+    haproxy: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
