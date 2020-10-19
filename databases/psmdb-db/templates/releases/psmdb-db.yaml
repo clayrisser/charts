@@ -20,8 +20,8 @@ spec:
     path: charts/psmdb-db
 {{- end }}
   values:
-    nameOverride: {{ template "psmdb-db.name" . }}-psmdb-db
-    fullnameOverride: {{ template "psmdb-db.fullname" . }}-psmdb-db
+    platform: kubernetes
+    DNSsuffix: .svc.cluster.local
     pause: {{ .Values.config.psmdb.pause }}
     allowUnsafeConfigurations: true
     updateStrategy: {{ .Values.config.updateStrategy }}
@@ -29,27 +29,52 @@ spec:
       versionServiceEndpoint: https://check.percona.com/versions
       apply: recommended
       schedule: {{ .Values.config.psmdb.upgrade.schedule }}
-    psmdb:
-      size: {{ .Values.config.psmdb.size }}
+    image:
+      repository: {{ .Values.images.psmdb.repository | quote }}
+      tag: {{ .Values.images.psmdb.repository | quote }}
+    imagePullSecrets: []
+    # runUid: 1001
+    secrets: {}
+    pmm:
+      enabled: {{ .Values.config.pmm.enabled }}
       image:
-        repository: {{ .Values.images.psmdb.repository }}
-        tag: {{ .Values.images.psmdb.tag }}
-      imagePullSecrets: []
+        repository: {{ .Values.images.pmm.repository }}
+        tag: {{ .Values.images.pmm.tag }}
+      serverHost: {{ .Values.config.pmm.hostname | quote }}
+      serverUser: {{ .Values.config.pmm.username | quote }}
+    replset:
+      name: rs0
+      size: {{ .Values.config.psmdb.size }}
+      antiAffinityTopologyKey: "kubernetes.io/hostname"
       {{- if .Values.persistence.velero.enabled }}
       annotations:
         backup.velero.io/backup-volumes: datadir
       {{- end }}
-      labels: {}
-      readinessDelaySec: 15
-      livenessDelaySec: 300
-      forceUnsafeBootstrap: false
-      configuration: {{ .Values.config.psmdb.mysqlConfig | quote }}
+      # priorityClass: ""
+      # labels: {}
       nodeSelector: {}
-      affinity: {}
-      tolerations: []
-      gracePeriod: 600
+      livenessProbe:
+        failureThreshold: 4
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        successThreshold: 1
+        timeoutSeconds: 5
+        startupDelaySeconds: 7200
       podDisruptionBudget:
         maxUnavailable: 1
+      expose:
+        enabled: false
+        exposeType: LoadBalancer
+      arbiter:
+        enabled: false
+        size: {{ .Values.config.arbiter.size }}
+        antiAffinityTopologyKey: "kubernetes.io/hostname"
+        # priorityClass: ""
+        # annotations: {}
+        # labels: {}
+        # nodeSelector: {}
+        # livenessProbe: {}
+      # schedulerName: ""
       resources:
 {{- if .Values.config.psmdb.resources.enabled }}
         requests:
@@ -60,88 +85,32 @@ spec:
         requests: {}
         limits: {}
 {{- end }}
-      persistence:
-        enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ .Values.persistence.storageClass }}
-        accessMode: {{ .Values.persistence.accessMode }}
-        size: {{ .Values.persistence.size.psmdb }}
-      disableTLS: false
-      certManager: false
-      # clusterSecretName: {{ template "psmdb-db.fullname" . }}-psmdb
-    haproxy:
-      enabled: {{ .Values.config.haproxy.enabled }}
-      size: {{ .Values.config.haproxy.size }}
-      image:
-        repository: {{ .Values.images.haproxy.repository }}
-        tag: {{ .Values.images.haproxy.tag }}
-      annotations: {}
-      labels: {}
-      readinessDelaySec: 15
-      livenessDelaySec: 300
-      nodeSelector: {}
-      affinity: {}
-      tolerations: []
-      gracePeriod: 600
-      podDisruptionBudget:
-        maxUnavailable: 1
-      resources:
-{{- if .Values.config.haproxy.resources.enabled }}
-        requests:
-{{ toYaml .Values.config.haproxy.resources.requests | indent 10 }}
-        limits:
-{{ toYaml .Values.config.haproxy.resources.limits | indent 10 }}
-{{- else }}
-        requests: {}
-        limits: {}
-{{- end }}
-      persistence:
-        enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ .Values.persistence.storageClass }}
-        accessMode: {{ .Values.persistence.accessMode }}
-        size: {{ .Values.persistence.size.haproxy }}
-    proxysql:
-      enabled: {{ .Values.config.proxysql.enabled }}
-      size: {{ .Values.config.proxysql.size }}
-      image:
-        repository: {{ .Values.images.proxysql.repository }}
-        tag: {{ .Values.images.proxysql.tag }}
-      annotations: {}
-      labels: {}
-      readinessDelaySec: 15
-      livenessDelaySec: 300
-      nodeSelector: {}
-      affinity: {}
-      tolerations: []
-      gracePeriod: 600
-      podDisruptionBudget:
-        maxUnavailable: 1
-      resources:
-{{- if .Values.config.proxysql.resources.enabled }}
-        requests:
-{{ toYaml .Values.config.proxysql.resources.requests | indent 10 }}
-        limits:
-{{ toYaml .Values.config.proxysql.resources.limits | indent 10 }}
-{{- else }}
-        requests: {}
-        limits: {}
-{{- end }}
-      persistence:
-        enabled: {{ .Values.persistence.enabled }}
-        storageClass: {{ .Values.persistence.storageClass }}
-        accessMode: {{ .Values.persistence.accessMode }}
-        size: {{ .Values.persistence.size.proxysql }}
-    pmm:
-      enabled: {{ .Values.config.pmm.enabled }}
-      image:
-        repository: {{ .Values.images.pmm.repository }}
-        tag: {{ .Values.images.pmm.tag }}
-      serverHost: {{ template "psmdb-db.fullname" . }}-monitoring
-      serverUser: pmm
+      volumeSpec:
+        {{- if .Values.persistence.enabled }}
+        pvc:
+          storageClassName: {{ .Values.persistence.storageClass }}
+          accessModes:
+            - {{ .Values.persistence.accessMode | quote }}
+          resources:
+            requests:
+              storage: {{ .Values.persistence.size.psmdb }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
     backup:
       enabled: {{ .Values.config.backup.enabled }}
+      restartOnFailure: true
       image:
         repository: {{ .Values.images.backup.repository }}
         tag: {{ .Values.images.backup.tag }}
+      serviceAccountName: percona-server-mongodb-operator
+      # resources:
+      #   limits:
+      #     cpu: "300m"
+      #     memory: "0.5G"
+      #   requests:
+      #     cpu: "300m"
+      #     memory: "0.5G"
       storages:
         s3:
           type: s3
@@ -153,15 +122,17 @@ spec:
       schedule:
         - name: backup
           schedule: {{ .Values.config.backup.enabled | ternary .Values.config.backup.schedule "0 0 31 2 *" }}
-          keep: {{ .Values.config.backup.keep }}
+          # keep: {{ .Values.config.backup.keep }}
           storageName: s3
-    secrets:
-      passwords:
-        root: {{ .Values.config.passwords.root | quote }}
-        xtrabackup: {{ .Values.config.backup.password | quote }}
-        monitor: {{ .Values.config.passwords.monitor | quote }}
-        clustercheck: {{ .Values.config.passwords.clustercheck | quote }}
-        proxyadmin: {{ .Values.config.proxysql.password | quote }}
-        pmmserver: {{ .Values.config.pmm.password | quote }}
-        operator: {{ .Values.config.passwords.operator | quote }}
-      tls: {}
+          compressionType: gzip
+    users:
+      MONGODB_BACKUP_USER: {{ "backup" | b64enc }}
+      MONGODB_BACKUP_PASSWORD: {{ "backup" | b64enc }}
+      MONGODB_CLUSTER_ADMIN_USER: {{ "clusterAdmin" | b64enc }}
+      MONGODB_CLUSTER_ADMIN_PASSWORD: {{ "clusterAdmin" | b64enc }}
+      MONGODB_CLUSTER_MONITOR_USER: {{ "clusterMonitor" | b64enc }}
+      MONGODB_CLUSTER_MONITOR_PASSWORD: {{ "clusterMonitor" | b64enc }}
+      MONGODB_USER_ADMIN_USER: {{ "userAdmin" | b64enc }}
+      MONGODB_USER_ADMIN_PASSWORD: {{ "userAdmin" | b64enc }}
+      PMM_SERVER_USER: {{ "admin" | b64enc }}
+      PMM_SERVER_PASSWORD: {{ "admin" | b64enc }}
