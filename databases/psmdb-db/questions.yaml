@@ -270,7 +270,7 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: config.pmm.password
-        default: P@ssw0rd
+        default: Passw0rd
         description: ''
         type: password
         required: true

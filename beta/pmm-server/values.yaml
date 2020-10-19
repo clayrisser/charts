@@ -10,7 +10,7 @@ config:
   pmmServer:
     baseUrl: ''
     hostname: ''
-    password: P@ssw0rd
+    password: Passw0rd
     metric:
       resolution: 1s
       retention: 720h

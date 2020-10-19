@@ -282,7 +282,7 @@ questions:
         required: true
         label: username
       - variable: config.pmm.password
-        default: P%40ssw0rd
+        default: Passw0rd
         description: ''
         type: password
         required: true

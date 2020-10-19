@@ -65,7 +65,7 @@ config:
         memory: 600m
   pmm:
     enabled: false
-    password: P@ssw0rd
+    password: Passw0rd
   backup:
     enabled: false
     password: P@ssw0rd

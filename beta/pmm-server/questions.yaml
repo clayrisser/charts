@@ -37,7 +37,7 @@ questions:
     label: 'update strategy'
     group: Config
   - variable: config.pmmServer.password
-    default: P@ssw0rd
+    default: Passw0rd
     description: ''
     type: password
     required: true
