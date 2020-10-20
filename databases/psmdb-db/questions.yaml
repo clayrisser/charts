@@ -37,34 +37,6 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.passwords.root
-    default: P@ssw0rd
-    description: ''
-    type: password
-    required: true
-    label: 'root password'
-    group: Config
-  - variable: config.passwords.operator
-    default: P@ssw0rd
-    description: ''
-    type: password
-    required: true
-    label: 'operator password'
-    group: Config
-  - variable: config.passwords.monitor
-    default: P@ssw0rd
-    description: ''
-    type: password
-    required: true
-    label: 'monitor password'
-    group: Config
-  - variable: config.passwords.clustercheck
-    default: P@ssw0rd
-    description: ''
-    type: password
-    required: true
-    label: 'clustercheck password'
-    group: Config
 
 # Psmdb Config
   - variable: config.psmdb.size
@@ -109,155 +81,29 @@ questions:
     group: 'Psmdb Config'
     subquestions:
       - variable: config.psmdb.resources.requests.cpu
-        default: 100m
+        default: 600m
         description: ''
         type: string
         required: true
         label: 'psmdb resources requests cpu'
       - variable: config.psmdb.resources.requests.memory
-        default: 128Mi
+        default: 1G
         description: ''
         type: string
         required: true
         label: 'psmdb resources requests memory'
       - variable: config.psmdb.resources.limits.cpu
-        default: 500m
+        default: 600m
         description: ''
         type: string
         required: true
         label: 'psmdb resources limits cpu'
       - variable: config.psmdb.resources.limits.memory
-        default: 256Mi
+        default: 1G
         description: ''
         type: string
         required: true
         label: 'psmdb resources limits memory'
-
-# HaProxy Config
-  - variable: config.haproxy.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: enabled
-    group: 'HaProxy Config'
-  - variable: config.haproxy.size
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: size
-    show_if: config.haproxy.enabled=true
-    group: 'HaProxy Config'
-  - variable: config.haproxy.resources.enabled
-    default: false
-    description: ''
-    type: enum
-    options:
-      - defaults
-      - 'true'
-      - 'false'
-    required: true
-    show_if: config.haproxy.enabled=true
-    label: 'resources enabled'
-    show_subquestion_if: 'true'
-    group: 'HaProxy Config'
-    subquestions:
-      - variable: config.haproxy.resources.requests.cpu
-        default: 100m
-        description: ''
-        type: string
-        required: true
-        show_if: config.haproxy.enabled=true
-        label: 'resources requests cpu'
-      - variable: config.haproxy.resources.requests.memory
-        default: 128Mi
-        description: ''
-        type: string
-        required: true
-        show_if: config.haproxy.enabled=true
-        label: 'resources requests memory'
-      - variable: config.haproxy.resources.limits.cpu
-        default: 500m
-        description: ''
-        type: string
-        required: true
-        show_if: config.haproxy.enabled=true
-        label: 'resources limits cpu'
-      - variable: config.haproxy.resources.limits.memory
-        default: 256Mi
-        description: ''
-        type: string
-        required: true
-        show_if: config.haproxy.enabled=true
-        label: 'resources limits memory'
-
-# ProxySql Config
-  - variable: config.proxysql.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: enabled
-    group: 'ProxySql Config'
-  - variable: config.proxysql.password
-    default: P@ssw0rd
-    description: ''
-    type: password
-    required: true
-    show_if: config.proxysql.enabled=true
-    label: 'proxysql password'
-    group: 'ProxySql Config'
-  - variable: config.proxysql.size
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: size
-    show_if: config.proxysql.enabled=true
-    group: 'ProxySql Config'
-  - variable: config.proxysql.resources.enabled
-    default: false
-    description: ''
-    type: enum
-    options:
-      - defaults
-      - 'true'
-      - 'false'
-    required: true
-    label: 'resources enabled'
-    show_subquestion_if: 'true'
-    show_if: config.proxysql.enabled=true
-    group: 'ProxySql Config'
-    subquestions:
-      - variable: config.proxysql.resources.requests.cpu
-        default: 100m
-        description: ''
-        type: string
-        required: true
-        show_if: config.proxysql.enabled=true
-        label: 'resources requests cpu'
-      - variable: config.proxysql.resources.requests.memory
-        default: 128Mi
-        description: ''
-        type: string
-        required: true
-        show_if: config.proxysql.enabled=true
-        label: 'resources requests memory'
-      - variable: config.proxysql.resources.limits.cpu
-        default: 500m
-        description: ''
-        type: string
-        required: true
-        show_if: config.proxysql.enabled=true
-        label: 'resources limits cpu'
-      - variable: config.proxysql.resources.limits.memory
-        default: 256Mi
-        description: ''
-        type: string
-        required: true
-        show_if: config.proxysql.enabled=true
-        label: 'resources limits memory'
 
 # Pmm Config
   - variable: config.pmm.enabled
@@ -269,6 +115,18 @@ questions:
     group: 'Pmm Config'
     show_subquestion_if: true
     subquestions:
+      - variable: config.pmm.hostname
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: hostname
+      - variable: config.pmm.username
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: username
       - variable: config.pmm.password
         default: Passw0rd
         description: ''
@@ -477,55 +335,24 @@ questions:
 #     label: 'psmdb db http lb port'
 #     group: 'Services and Load Balancing'
 
+
 # Images
   - variable: images.psmdb.repository
-    default: percona/percona-mongodb-cluster
+    default: percona/percona-server-mongodb
     description: ''
     type: string
     required: true
     label: 'psmdb repository'
     group: Images
   - variable: images.psmdb.tag
-    default: 8.0.19-10.1
+    default: 4.2.8-8
     description: ''
     type: string
     required: true
     label: 'psmdb tag'
     group: Images
-  - variable: images.haproxy.repository
-    default: percona/percona-mongodb-cluster-operator
-    description: ''
-    type: string
-    required: true
-    show_if: config.haproxy.enabled=true
-    label: 'haproxy repository'
-    group: Images
-  - variable: images.haproxy.tag
-    default: 1.5.0-haproxy
-    description: ''
-    type: string
-    required: true
-    show_if: config.haproxy.enabled=true
-    label: 'haproxy tag'
-    group: Images
-  - variable: images.proxysql.repository
-    default: percona/percona-mongodb-cluster-operator
-    description: ''
-    type: string
-    required: true
-    show_if: config.proxysql.enabled=true
-    label: 'proxysql repository'
-    group: Images
-  - variable: images.proxysql.tag
-    default: 1.5.0-proxysql
-    description: ''
-    type: string
-    required: true
-    show_if: config.proxysql.enabled=true
-    label: 'proxysql tag'
-    group: Images
   - variable: images.pmm.repository
-    default: perconalab/pmm-client
+    default: percona/percona-server-mongodb-operator
     description: ''
     type: string
     required: true
@@ -533,7 +360,7 @@ questions:
     label: 'pmm repository'
     group: Images
   - variable: images.pmm.tag
-    default: 1.17.1
+    default: 1.5.0-pmm
     description: ''
     type: string
     required: true
@@ -541,7 +368,7 @@ questions:
     label: 'pmm tag'
     group: Images
   - variable: images.backup.repository
-    default: percona/percona-mongodb-cluster-operator
+    default: percona/percona-server-mongodb-operator
     description: ''
     type: string
     required: true
@@ -549,7 +376,7 @@ questions:
     label: 'backup repository'
     group: Images
   - variable: images.backup.tag
-    default: 1.5.0-psmdb8.0-backup
+    default: 1.5.0-backup
     description: ''
     type: string
     required: true
