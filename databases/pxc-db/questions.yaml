@@ -417,77 +417,38 @@ questions:
         label: 'velero restic'
         group: Persistence
 
-# # Services and Load Balancing
-#   - variable: ingress.pxcDb.enabled
-#     default: true
-#     description: ''
-#     type: boolean
-#     label: 'pxc db ingress enabled'
-#     show_subquestion_if: true
-#     group: 'Services and Load Balancing'
-#     subquestions:
-#       - variable: ingress.pxcDb.tls
-#         default: false
-#         description: ''
-#         type: boolean
-#         required: true
-#         label: 'pxc db ingress tls'
-#       - variable: ingress.pxcDb.hostname
-#         default: xip.io
-#         description: ''
-#         type: hostname
-#         required: true
-#         label: 'pxc db ingress hostname'
-#       - variable: ingress.pxcDb.issuer.name
-#         default: letsencrypt-staging
-#         description: ''
-#         type: enum
-#         show_if: ingress.pxcDb.tls=true
-#         options:
-#           - none
-#           - letsencrypt-staging
-#           - letsencrypt-prod
-#         required: true
-#         label: 'pxc db ingress issuer name'
-#       - variable: ingress.pxcDb.certificate
-#         default: ''
-#         description: ''
-#         type: string
-#         show_if: ingress.pxcDb.tls=true&&ingress.pxcDb.issuer.name=none
-#         required: false
-#         label: 'pxc db ingress certificate'
-#   - variable: service.pxcDb.type
-#     default: NodePort
-#     description: ''
-#     type: enum
-#     show_if: ingress.pxcDb.enabled=false
-#     options:
-#       - ClusterIP
-#       - NodePort
-#       - LoadBalancer
-#     required: true
-#     label: 'pxc db service type'
-#     group: 'Services and Load Balancing'
-#   - variable: service.pxcDb.nodePorts.http
-#     default:
-#     description: ''
-#     type: int
-#     required: false
-#     min: 30000
-#     max: 32767
-#     show_if: service.pxcDb.type=NodePort&&ingress.pxcDb.enabled=false
-#     label: 'pxc db http node port'
-#     group: 'Services and Load Balancing'
-#   - variable: service.pxcDb.lbPorts.http
-#     default: 80
-#     description: ''
-#     type: int
-#     min: 0
-#     max: 65535
-#     required: true
-#     show_if: service.pxcDb.type=LoadBalancer&&ingress.pxcDb.enabled=false
-#     label: 'pxc db http lb port'
-#     group: 'Services and Load Balancing'
+# Services and Load Balancing
+  - variable: service.pxc.type
+    default: NodePort
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'pxc service type'
+    group: 'Services and Load Balancing'
+  - variable: service.pxc.nodePorts.mysql
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.pxc.type=NodePort
+    label: 'pxc mysql node port'
+    group: 'Services and Load Balancing'
+  - variable: service.pxc.lbPorts.mysql
+    default: 3306
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.pxc.type=LoadBalancer
+    label: 'pxc mysql lb port'
+    group: 'Services and Load Balancing'
 
 # Images
   - variable: images.pxc.repository

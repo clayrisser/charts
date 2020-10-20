@@ -25,7 +25,6 @@ config:
     pause: false
     upgrade:
       schedule: '0 4 * * *'
-    mongoConfig: ''
     resources:
       enabled: false
       requests:
@@ -53,9 +52,14 @@ config:
       region: sfo2
       secretKey: ''
 
-service: {}
-
-ingress: {}
+service:
+  psmdb:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql: ''
+    lbPorts:
+      mysql: 27017
 
 persistence:
   accessMode: ReadWriteOnce

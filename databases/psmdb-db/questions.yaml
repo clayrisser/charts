@@ -60,13 +60,6 @@ questions:
     required: false
     label: 'upgrade schedule'
     group: 'Psmdb Config'
-  - variable: config.psmdb.mongoConfig
-    default: ''
-    description: ''
-    type: multiline
-    required: false
-    label: 'mongo config'
-    group: 'Psmdb Config'
   - variable: config.psmdb.resources.enabled
     default: false
     description: ''
@@ -104,6 +97,15 @@ questions:
         type: string
         required: true
         label: 'psmdb resources limits memory'
+
+# Arbiter Config
+  - variable: config.arbiter.size
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: size
+    group: 'Arbiter Config'
 
 # Pmm Config
   - variable: config.pmm.enabled
@@ -263,78 +265,38 @@ questions:
         label: 'velero restic'
         group: Persistence
 
-# # Services and Load Balancing
-#   - variable: ingress.psmdbDb.enabled
-#     default: true
-#     description: ''
-#     type: boolean
-#     label: 'psmdb db ingress enabled'
-#     show_subquestion_if: true
-#     group: 'Services and Load Balancing'
-#     subquestions:
-#       - variable: ingress.psmdbDb.tls
-#         default: false
-#         description: ''
-#         type: boolean
-#         required: true
-#         label: 'psmdb db ingress tls'
-#       - variable: ingress.psmdbDb.hostname
-#         default: xip.io
-#         description: ''
-#         type: hostname
-#         required: true
-#         label: 'psmdb db ingress hostname'
-#       - variable: ingress.psmdbDb.issuer.name
-#         default: letsencrypt-staging
-#         description: ''
-#         type: enum
-#         show_if: ingress.psmdbDb.tls=true
-#         options:
-#           - none
-#           - letsencrypt-staging
-#           - letsencrypt-prod
-#         required: true
-#         label: 'psmdb db ingress issuer name'
-#       - variable: ingress.psmdbDb.certificate
-#         default: ''
-#         description: ''
-#         type: string
-#         show_if: ingress.psmdbDb.tls=true&&ingress.psmdbDb.issuer.name=none
-#         required: false
-#         label: 'psmdb db ingress certificate'
-#   - variable: service.psmdbDb.type
-#     default: NodePort
-#     description: ''
-#     type: enum
-#     show_if: ingress.psmdbDb.enabled=false
-#     options:
-#       - ClusterIP
-#       - NodePort
-#       - LoadBalancer
-#     required: true
-#     label: 'psmdb db service type'
-#     group: 'Services and Load Balancing'
-#   - variable: service.psmdbDb.nodePorts.http
-#     default:
-#     description: ''
-#     type: int
-#     required: false
-#     min: 30000
-#     max: 32767
-#     show_if: service.psmdbDb.type=NodePort&&ingress.psmdbDb.enabled=false
-#     label: 'psmdb db http node port'
-#     group: 'Services and Load Balancing'
-#   - variable: service.psmdbDb.lbPorts.http
-#     default: 80
-#     description: ''
-#     type: int
-#     min: 0
-#     max: 65535
-#     required: true
-#     show_if: service.psmdbDb.type=LoadBalancer&&ingress.psmdbDb.enabled=false
-#     label: 'psmdb db http lb port'
-#     group: 'Services and Load Balancing'
-
+# Services and Load Balancing
+  - variable: service.psmdb.type
+    default: NodePort
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'psmdb service type'
+    group: 'Services and Load Balancing'
+  - variable: service.psmdb.nodePorts.mongo
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.psmdb.type=NodePort
+    label: 'psmdb mongo node port'
+    group: 'Services and Load Balancing'
+  - variable: service.psmdb.lbPorts.mongo
+    default: 27017
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.psmdb.type=LoadBalancer
+    label: 'psmdb mongo lb port'
+    group: 'Services and Load Balancing'
 
 # Images
   - variable: images.psmdb.repository

@@ -80,9 +80,14 @@ config:
       region: sfo2
       secretKey: ''
 
-service: {}
-
-ingress: {}
+service:
+  pxc:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      mysql: ''
+    lbPorts:
+      mysql: 3306
 
 persistence:
   accessMode: ReadWriteOnce
