@@ -459,7 +459,7 @@ questions:
     label: 'pxc repository'
     group: Images
   - variable: images.pxc.tag
-    default: 8.0.19-10.1
+    default: 8.0.20-11.1
     description: ''
     type: string
     required: true
@@ -490,7 +490,7 @@ questions:
     label: 'proxysql repository'
     group: Images
   - variable: images.proxysql.tag
-    default: 1.5.0-proxysql
+    default: 1.6.0-proxysql
     description: ''
     type: string
     required: true
@@ -522,7 +522,7 @@ questions:
     label: 'backup repository'
     group: Images
   - variable: images.backup.tag
-    default: 1.5.0-pxc8.0-backup
+    default: 1.6.0-pxc8.0-backup
     description: ''
     type: string
     required: true

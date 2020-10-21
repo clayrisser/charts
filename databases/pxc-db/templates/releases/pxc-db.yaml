@@ -12,11 +12,11 @@ spec:
   chart:
 {{- if .Values.config.operator.enabled }}
     git: https://github.com/percona/percona-helm-charts.git
-    ref: pxc-db-0.1.10
+    ref: pxc-db-0.1.13
     path: charts/pxc-db
 {{- else }}
     git: https://github.com/codejamninja/percona-helm-charts.git
-    ref: codejamninja/pxc-db-0.1.10
+    ref: codejamninja/pxc-db-0.1.13
     path: charts/pxc-db
 {{- end }}
   values:

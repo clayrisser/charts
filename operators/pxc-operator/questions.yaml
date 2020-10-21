@@ -67,7 +67,7 @@ questions:
     label: 'pxc operator repository'
     group: Images
   - variable: images.pxcOperator.tag
-    default: 1.5.0
+    default: 1.6.0
     description: ''
     type: string
     required: true
