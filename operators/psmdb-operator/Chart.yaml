@@ -1,0 +1,15 @@
+apiVersion: v1
+name: psmdb-operator
+home: https://github.com/codejamninja/psmdb-operator
+icon: https://avatars1.githubusercontent.com/u/1683025?s=200&v=4
+version: 0.1.9
+type: application
+appVersion: 1.5.0
+description: 'percona kubernetes operator for percona xtradb cluster'
+keywords:
+  - psmdb-operator
+sources:
+  - https://github.com/codejamninja/psmdb-operator
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

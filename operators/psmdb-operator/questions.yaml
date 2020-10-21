@@ -1,0 +1,75 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.replicaCount
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: 'replica count'
+    group: Config
+  - variable: config.psmdbOperator.resources.enabled
+    default: defaults
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    label: 'psmdb operator resources enabled'
+    show_subquestion_if: 'true'
+    group: Config
+    subquestions:
+      - variable: config.psmdbOperator.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb operator resources requests cpu'
+      - variable: config.psmdbOperator.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb operator resources requests memory'
+      - variable: config.psmdbOperator.resources.limits.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb operator resources limits cpu'
+      - variable: config.psmdbOperator.resources.limits.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'psmdb operator resources limits memory'
+
+# Images
+  - variable: images.psmdbOperator.repository
+    default: percona/percona-server-mongodb-operator
+    description: ''
+    type: string
+    required: true
+    label: 'psmdb operator repository'
+    group: Images
+  - variable: images.psmdbOperator.tag
+    default: 1.5.0
+    description: ''
+    type: string
+    required: true
+    label: 'psmdb operator tag'
+    group: Images
