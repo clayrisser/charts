@@ -31,7 +31,7 @@ spec:
       schedule: {{ .Values.config.psmdb.upgrade.schedule }}
     image:
       repository: {{ .Values.images.psmdb.repository | quote }}
-      tag: {{ .Values.images.psmdb.repository | quote }}
+      tag: {{ .Values.images.psmdb.tag | quote }}
     imagePullSecrets: []
     # runUid: 1001
     secrets: {}
