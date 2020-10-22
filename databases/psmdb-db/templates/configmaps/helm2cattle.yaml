@@ -11,4 +11,4 @@ metadata:
 data:
   cattle_app_matcher: |
     path: 'metadata.name'
-    regex: '/{{ template "psmdb-db.fullname" . }}/g'
+    regex: '/{{ .Release.Name }}/g'
