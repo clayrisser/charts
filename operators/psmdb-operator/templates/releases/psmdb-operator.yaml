@@ -11,7 +11,7 @@ spec:
   helmVersion: v3
   chart:
     git: https://github.com/codejamninja/percona-helm-charts.git
-    ref: codejamninja/psmdb-operator-0.1.0
+    ref: codejamninja/psmdb-operator-0.1.0-0
     path: charts/psmdb-operator
   values:
     image:
