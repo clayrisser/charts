@@ -1,9 +1,9 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ template "harbor.fullname" . }}-harbor
+  name: {{ .Release.Name }}
   labels:
-    app: {{ template "harbor.name" . }}-harbor
+    app: {{ template "harbor.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

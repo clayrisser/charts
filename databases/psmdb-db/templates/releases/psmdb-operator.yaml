@@ -2,7 +2,7 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ template "psmdb-db.fullname" . }}-psmdb-operator
+  name: {{ .Release.Name }}-psmdb-operator
   labels:
     app: {{ template "psmdb-db.name" . }}-psmdb-operator
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

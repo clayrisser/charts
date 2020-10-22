@@ -1,9 +1,9 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ template "pxc-db.fullname" . }}-pxc-db
+  name: {{ .Release.Name }}
   labels:
-    app: {{ template "pxc-db.name" . }}-pxc-db
+    app: {{ template "pxc-db.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

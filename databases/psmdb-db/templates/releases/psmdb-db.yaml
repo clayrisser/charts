@@ -1,9 +1,9 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ template "psmdb-db.fullname" . }}-psmdb-db
+  name: {{ .Release.Name }}
   labels:
-    app: {{ template "psmdb-db.name" . }}-psmdb-db
+    app: {{ template "psmdb-db.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

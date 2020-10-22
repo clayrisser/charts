@@ -2,7 +2,7 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ template "pxc-db.fullname" . }}-pxc-operator
+  name: {{ .Release.Name }}-pxc-operator
   labels:
     app: {{ template "pxc-db.name" . }}-pxc-operator
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
