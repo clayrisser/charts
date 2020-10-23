@@ -33,7 +33,7 @@ spec:
       {{- if (eq .Values.service.sonarqube.type "NodePort") }}
       externalPort: {{ .Values.service.sonarqube.nodePorts.http | default "30000" }}
       {{- end }}
-      internalPort: 80
+      internalPort: 9000
       # labels:
       annotations: {}
     ingress:
