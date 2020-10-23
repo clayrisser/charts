@@ -84,15 +84,15 @@ spec:
     tolerations: []
     nodeSelector: {}
     hostAliases: []
-    readinessProbe:
-      initialDelaySeconds: 60
-      periodSeconds: 30
-      failureThreshold: 6
-      sonarWebContext: /
-    livenessProbe:
-      initialDelaySeconds: 60
-      periodSeconds: 30
-      sonarWebContext: /
+    # readinessProbe:
+    #   initialDelaySeconds: 60
+    #   periodSeconds: 30
+    #   failureThreshold: 6
+    #   sonarWebContext: /
+    # livenessProbe:
+    #   initialDelaySeconds: 60
+    #   periodSeconds: 30
+    #   sonarWebContext: /
     initContainersSecurityContext:
       privileged: true
     jvmOpts: ""
