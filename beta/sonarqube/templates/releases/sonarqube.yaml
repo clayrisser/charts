@@ -34,7 +34,7 @@ spec:
       externalPort: {{ .Values.service.sonarqube.nodePorts.http | default "30000" }}
       {{- end }}
       internalPort: 9000
-      # labels:
+      labels:
       annotations: {}
     ingress:
       enabled: {{ .Values.ingress.sonarqube.enabled }}
@@ -84,15 +84,15 @@ spec:
     tolerations: []
     nodeSelector: {}
     hostAliases: []
-    # readinessProbe:
-    #   initialDelaySeconds: 60
-    #   periodSeconds: 30
-    #   failureThreshold: 6
-    #   sonarWebContext: /
-    # livenessProbe:
-    #   initialDelaySeconds: 60
-    #   periodSeconds: 30
-    #   sonarWebContext: /
+    readinessProbe:
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      failureThreshold: 6
+      sonarWebContext: /
+    livenessProbe:
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      sonarWebContext: /
     initContainersSecurityContext:
       privileged: true
     jvmOpts: ""
