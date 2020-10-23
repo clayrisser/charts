@@ -40,6 +40,8 @@ persistence:
   accessMode: ReadWriteOnce
   enabled: false
   storageClass: ''
+  existingClaim:
+    nginx: ''
   size:
     nginx: 1Gi
   velero:
