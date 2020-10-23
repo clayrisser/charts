@@ -51,6 +51,7 @@ persistence:
   velero:
     restic: true
     schedule: ''
+    ttl: 2160h0m00s
 
 probes:
   liveness:
