@@ -2,9 +2,9 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-prod
+  name: letsencrypt-cloudflare-prod
   labels:
-    app: {{ template "cluster-issuer.name" . }}-prod
+    app: {{ template "cluster-issuer.name" . }}-cloudflare-prod
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
