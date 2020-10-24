@@ -1,31 +1,24 @@
+{{- if .Values.config.cloudflareApiKey }}
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-prod
+  name: letsencrypt-staging
   labels:
-    app: {{ template "cluster-issuer.name" . }}-prod
+    app: {{ template "cluster-issuer.name" . }}-staging
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   acme:
-    server: "https://acme-v02.api.letsencrypt.org/directory"
+    server: "https://acme-staging-v02.api.letsencrypt.org/directory"
     email: {{ .Values.config.email }}
     privateKeySecretRef:
-      name: letsencrypt-prod-account-key
+      name: letsencrypt-staging-account-key
     solvers:
-      {{- if .Values.config.cloudflareApiKey }}
       - dns01:
           cloudflare:
             email: {{ .Values.config.email }}
             apiKeySecretRef:
               name: {{ template "cluster-issuer.fullname" . }}
               key: cloudflare_api_key
-      {{- end }}
-      - http01:
-          ingress:
-            {{- if (eq .Values.config.clusterProvider "aks") }}
-            class: addon-http-application-routing
-            {{- else }}
-            class: nginx
-            {{- end }}
+{{- end }}
