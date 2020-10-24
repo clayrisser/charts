@@ -7,7 +7,7 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    dev.siliconhills.helm2cattle/release: sonarqube
+    dev.siliconhills.helm2cattle/release: {{ .Release.Name }}
 data:
   cattle_app_matcher: |
     path: 'metadata.name'
