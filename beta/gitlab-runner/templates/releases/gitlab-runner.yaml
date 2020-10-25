@@ -15,7 +15,7 @@ spec:
     version: 0.22.0
   values:
     image: {{ .Values.images.gitlabRunner.repository }}:{{ .Values.images.gitlabRunner.tag }}
-    imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+    imagePullPolicy: {{ (eq .Values.config.imagePullPolicy "Always") | ternary "always" "if-not-present" }}
     gitlabUrl: {{ .Values.config.gitlabUrl | quote }}
     runnerRegistrationToken: {{ .Values.config.gitlabRunner.registrationToken | quote }}
     # runnerToken: ""
