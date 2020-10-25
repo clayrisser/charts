@@ -15,7 +15,7 @@ spec:
     version: 0.22.0
   values:
     image: {{ .Values.images.gitlabRunner.repository }}:{{ .Values.images.gitlabRunner.tag }}
-    imagePullPolicy: {{ (eq .Values.config.imagePullPolicy "Always") | ternary "always" "if-not-present" }}
+    imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     gitlabUrl: {{ .Values.config.gitlabUrl | quote }}
     runnerRegistrationToken: {{ .Values.config.gitlabRunner.registrationToken | quote }}
     # runnerToken: ""
@@ -57,7 +57,7 @@ spec:
     runners:
       image: ubuntu:16.04
       imagePullSecrets: []
-      imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      imagePullPolicy: {{ (eq .Values.config.imagePullPolicy "Always") | ternary "always" "if-not-present" }}
       requestConcurrency: 1
       locked: true
       tags: ''
