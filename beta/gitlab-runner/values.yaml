@@ -5,7 +5,7 @@ images:
 
 config:
   clusterProvider: infrastructure
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: if-not-present
   updateStrategy: Recreate
   gitlabUrl: ''
   logLevel: info
