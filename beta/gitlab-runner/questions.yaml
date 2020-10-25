@@ -76,6 +76,7 @@ questions:
     type: boolean
     required: true
     label: 'gitlab runner cache enabled'
+    show_subquestion_if: true
     group: Config
     subquestions:
       - variable: config.gitlabRunner.cache.type
