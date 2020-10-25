@@ -29,13 +29,13 @@ spec:
     # sentryDsn:
     preEntrypointScript: |
       {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
-      mkdir -p /tmp/gitlab/cache/cache  /tmp/gitlab/cache/build
+      mkdir -p /tmp/gitlab/cache  /tmp/gitlab/build
       {{- end }}
       cat >> /home/gitlab-runner/.gitlab-runner/config.toml << EOF
       {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
           [[runners.kubernetes.volumes.pvc]]
             name = '{{ .Values.persistence.existingClaim.gitlabRunner | default (printf "%s-gitlab-runner" (include "gitlab-runner.fullname" . )) }}'
-            mount_path = "/tmp/gitlab/cache"
+            mount_path = "/tmp/gitlab"
       {{- end }}
       {{- if .Values.config.gitlabRunner.docker.sock }}
           [[runners.kubernetes.volumes.host_path]]
@@ -102,9 +102,9 @@ spec:
         value: kubernetes
 {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
       - name: RUNNER_CACHE_DIR
-        value: /tmp/gitlab/cache/cache
+        value: /tmp/gitlab/cache
       - name: RUNNER_BUILDS_DIR
-        value: /tmp/gitlab/cache/builds
+        value: /tmp/gitlab/builds
 {{- end }}
     hostAliases: []
     podAnnotations: {}
