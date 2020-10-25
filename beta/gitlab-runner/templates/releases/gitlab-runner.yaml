@@ -103,8 +103,8 @@ spec:
 {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
       - name: RUNNER_CACHE_DIR
         value: /tmp/gitlab/cache/cache
-      # - name: RUNNER_BUILDS_DIR
-      #   value: /tmp/gitlab/cache/builds
+      - name: RUNNER_BUILDS_DIR
+        value: /tmp/gitlab/cache/builds
 {{- end }}
     hostAliases: []
     podAnnotations: {}
