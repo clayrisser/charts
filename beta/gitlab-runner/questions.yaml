@@ -16,13 +16,12 @@ questions:
     label: 'cluster provider'
     group: Config
   - variable: config.imagePullPolicy
-    default: if-not-present
+    default: IfNotPresent
     description: ''
     type: enum
     options:
-      - if-not-present
-      - always
-      - never
+      - IfNotPresent
+      - Always
     required: true
     label: 'pull policy'
     group: Config
