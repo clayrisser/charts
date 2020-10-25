@@ -10,8 +10,9 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://gitlab.com/gitlab-org/charts/gitlab-runner.git
-    version: v0.22.0
+    repository: https://charts.gitlab.io
+    name: gitlab-runner
+    version: 0.22.0
   values:
     image: {{ .Values.images.gitlabRunner.repository }}:{{ .Values.images.gitlabRunner.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy }}
