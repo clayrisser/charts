@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitlab-runner.fullname" . }}-helm2cattle
+  labels:
+    app: {{ template "gitlab-runner.name" . }}-helm2cattle
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    dev.siliconhills.helm2cattle/release: {{ .Release.Name }}
+data:
+  cattle_app_matcher: |
+    path: 'metadata.name'
+    regex: '/{{ .Release.Name }}/g'

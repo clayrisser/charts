@@ -1,0 +1,108 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ template "gitlab-runner.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://gitlab.com/gitlab-org/charts/gitlab-runner.git
+    version: v0.22.0
+  values:
+    image: {{ .Values.images.gitlabRunner.repository }}:{{ .Values.images.gitlabRunner.tag }}
+    imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+    gitlabUrl: {{ .Values.config.gitlabUrl | quote }}
+    runnerRegistrationToken: {{ .Values.config.gitlabRunner.registrationToken | quote }}
+    # runnerToken: ""
+    unregisterRunners: true
+    terminationGracePeriodSeconds: 3600
+    # certsSecretName:
+    concurrent: 10
+    checkInterval: 30
+    logLevel: {{ .Values.config.logLevel | quote }}
+    logFormat: text
+    # sentryDsn:
+    preEntrypointScript: |
+      cat >> /home/gitlab-runner/.gitlab-runner/config.toml << EOF
+{{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+          [[runners.kubernetes.volumes.pvc]]
+            name = "gitlab-cache"
+            mount_path = "/tmp/gitlab/cache"
+{{- end }}
+{{- if .Values.config.docker.sock }}
+          [[runners.kubernetes.volumes.host_path]]
+            name = "docker-sock"
+            mount_path = "/var/run/docker.sock"
+{{- end }}
+      EOF
+    rbac:
+      create: true
+      clusterWideAccess: true
+      serviceAccountName: default
+      serviceAccountAnnotations: {}
+      # resources: ["pods", "pods/exec", "secrets"]
+      # verbs: ["get", "list", "watch", "create", "patch", "delete"]
+      # podSecurityPolicy:
+      #   enabled: false
+      #   resourceNames:
+      #     - gitlab-runner
+      # imagePullSecrets: []
+    metrics:
+      enabled: true
+    runners:
+      image: ubuntu:16.04
+      imagePullSecrets: []
+      imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      requestConcurrency: 1
+      locked: true
+      tags: ''
+      runUntagged: true
+      protected: false
+      privileged: true
+      # secret: gitlab-runner
+      # namespace:
+      pollTimeout: 180
+      outputLimit: 4096
+      cache: {}
+      builds: {}
+      services: {}
+      helpers: {}
+      # serviceAccountName:
+      # cloneUrl:
+      nodeSelector: {}
+      nodeTolerations: {}
+      podLabels: {}
+      podAnnotations: {}
+      env: {}
+    securityContext:
+      fsGroup: 65533
+      runAsUser: 100
+{{- if .Values.config.gitlabRunner.resources.enabled }}
+    resources:
+      limits:
+{{ toYaml .Values.config.gitlabRunner.resources.limits | indent 8 }}
+      requests:
+{{ toYaml .Values.config.gitlabRunner.resources.requests | indent 8 }}
+{{- else }}
+    resources: {}
+{{- end }}
+    affinity: {}
+    nodeSelector: {}
+    tolerations: []
+    envVars:
+      - name: RUNNER_EXECUTOR
+        value: kubernetes
+{{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+      - name: RUNNER_CACHE_DIR
+        value: /tmp/gitlab/cache/cache
+      - name: RUNNER_BUILDS_DIR
+        value: /tmp/gitlab/cache/builds
+{{- end }}
+    hostAliases: []
+    podAnnotations: {}
+    podLabels: {}
+    hpa: {}

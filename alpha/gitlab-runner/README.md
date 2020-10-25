@@ -1,3 +1,0 @@
-# gitlab-runner
-
-> gitlab runner
