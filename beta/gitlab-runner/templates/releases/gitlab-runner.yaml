@@ -28,17 +28,20 @@ spec:
     logFormat: text
     # sentryDsn:
     preEntrypointScript: |
+      {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+      mkdir -p /tmp/gitlab/cache/cache  /tmp/gitlab/cache/build
+      {{- end }}
       cat >> /home/gitlab-runner/.gitlab-runner/config.toml << EOF
-{{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+      {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
           [[runners.kubernetes.volumes.pvc]]
             name = '{{ .Values.persistence.existingClaim.gitlabRunner | default (printf "%s-gitlab-runner" (include "gitlab-runner.fullname" . )) }}'
             mount_path = "/tmp/gitlab/cache"
-{{- end }}
-{{- if .Values.config.gitlabRunner.docker.sock }}
+      {{- end }}
+      {{- if .Values.config.gitlabRunner.docker.sock }}
           [[runners.kubernetes.volumes.host_path]]
             name = "docker-sock"
             mount_path = "/var/run/docker.sock"
-{{- end }}
+      {{- end }}
       EOF
     rbac:
       create: true
