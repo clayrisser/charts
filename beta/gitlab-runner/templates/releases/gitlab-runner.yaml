@@ -33,7 +33,7 @@ spec:
             name = "gitlab-cache"
             mount_path = "/tmp/gitlab/cache"
 {{- end }}
-{{- if .Values.config.docker.sock }}
+{{- if .Values.config.gitlabRunner.docker.sock }}
           [[runners.kubernetes.volumes.host_path]]
             name = "docker-sock"
             mount_path = "/var/run/docker.sock"
