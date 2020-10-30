@@ -68,6 +68,7 @@ persistence:
   size: 1Gi
   storageClass: ''
   velero:
+    enabled: false
     restic: true
     schedule: ''
     ttl: 2160h0m00s
