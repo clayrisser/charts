@@ -158,10 +158,18 @@ questions:
         type: string
         required: false
         label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
       - variable: persistence.velero.schedule
         default: ''
         description: ''
         type: string
+        show_if: persistence.velero.enabled=true
         required: false
         label: 'velero schedule'
         group: Persistence
@@ -169,6 +177,7 @@ questions:
         default: true
         description: ''
         type: boolean
+        show_if: persistence.velero.enabled=true
         required: true
         label: 'velero restic'
         group: Persistence
