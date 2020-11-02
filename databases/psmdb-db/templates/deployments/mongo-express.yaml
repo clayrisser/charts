@@ -54,43 +54,43 @@ spec:
             - name: container
               containerPort: 8081
           env:
+            - name: ME_CONFIG_MONGODB_AUTH_DATABASE
+              value: admin
             - name: ME_CONFIG_MONGODB_SERVER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "mongodb.fullname" . }}
-                  key: mongodb_server
-            - name: ME_CONFIG_MONGODB_AUTH_DATABASE
-              value: admin
+                  name: {{ template "psmdb-db.fullname" . }}
+                  key: mongo_host
             - name: ME_CONFIG_BASICAUTH_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "mongodb.fullname" . }}
+                  name: {{ template "psmdb-db.fullname" . }}
                   key: mongo_express_username
             - name: ME_CONFIG_BASICAUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mongodb.fullname" . }}
+                  name: {{ template "psmdb-db.fullname" . }}
                   key: mongo_express_password
             - name: ME_CONFIG_MONGODB_AUTH_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mongodb.sharedname" . }}-mongodb-auth
-                  key: username
+                  name: internal-{{ .Release.Namespace }}-psmdb-db-users
+                  key: MONGODB_CLUSTER_ADMIN_USER
             - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mongodb.sharedname" . }}-mongodb-auth
-                  key: password
+                  name: internal-{{ .Release.Namespace }}-psmdb-db-users
+                  key: MONGODB_CLUSTER_ADMIN_PASSWORD
             - name: ME_CONFIG_MONGODB_ADMINUSERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mongodb.sharedname" . }}-mongodb-auth
-                  key: username
+                  name: internal-{{ .Release.Namespace }}-psmdb-db-users
+                  key: MONGODB_CLUSTER_ADMIN_USER
             - name: ME_CONFIG_MONGODB_ADMINPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mongodb.sharedname" . }}-mongodb-auth
-                  key: password
+                  name: internal-{{ .Release.Namespace }}-psmdb-db-users
+                  key: MONGODB_CLUSTER_ADMIN_PASSWORD
           livenessProbe:
             exec:
               command: ['sh', '-c', "wget localhost:8081 2>&1 | grep 'HTTP/1.1 401 Unauthorized'"]
