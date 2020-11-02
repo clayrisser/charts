@@ -10,15 +10,9 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-{{- if .Values.config.operator.enabled }}
-    git: https://github.com/percona/percona-helm-charts.git
-    ref: pxc-db-0.1.13
-    path: charts/pxc-db
-{{- else }}
     git: https://github.com/codejamninja/percona-helm-charts.git
     ref: codejamninja/pxc-db-0.1.13
     path: charts/pxc-db
-{{- end }}
   values:
     nameOverride: {{ template "pxc-db.name" . }}-pxc-db
     fullnameOverride: {{ template "pxc-db.fullname" . }}-pxc-db

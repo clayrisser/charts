@@ -10,15 +10,9 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-{{- if .Values.config.operator.enabled }}
-    git: https://github.com/percona/percona-helm-charts.git
-    ref: psmdb-db-0.1.0
-    path: charts/psmdb-db
-{{- else }}
     git: https://github.com/codejamninja/percona-helm-charts.git
     ref: codejamninja/psmdb-db-0.1.0
     path: charts/psmdb-db
-{{- end }}
   values:
     platform: kubernetes
     DNSsuffix: .svc.cluster.local
