@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "psmdb-db.fullname" . }}-psmdb
+  labels:
+    app: {{ template "psmdb-db.name" . }}-psmdb
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.psmdb.type }}
+  {{- if (eq .Values.service.psmdb.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.psmdb.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - name: mongo
+      port: {{ (eq .Values.service.psmdb.type "LoadBalancer") | ternary .Values.service.psmdb.lbPorts.mongo "27017" }}
+      targetPort: 27017
+      {{- if (and (eq .Values.service.psmdb.type "NodePort") (not (empty .Values.service.psmdb.nodePorts.mongo))) }}
+      nodePort: {{ .Values.service.psmdb.nodePorts.mongo }}
+      {{- end }}
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Namespace }}-psmdb-db
+    app.kubernetes.io/managed-by: percona-server-mongodb-operator
+    app.kubernetes.io/name: percona-server-mongodb
+    app.kubernetes.io/part-of: percona-server-mongodb
+    app.kubernetes.io/replset: rs0
