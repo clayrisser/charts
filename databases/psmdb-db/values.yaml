@@ -8,6 +8,9 @@ images:
   backup:
     repository: percona/percona-server-mongodb-operator
     tag: 1.5.0-backup
+  mongoExpress:
+    repository: mongo-express
+    tag: 0.54.0
 
 config:
   clusterProvider: infrastructure
@@ -51,15 +54,43 @@ config:
       endpoint: https://sfo2.digitaloceanspaces.com
       region: sfo2
       secretKey: ''
+  mongoExpress:
+    enabled: false
+    baseUrl: ''
+    hostname: ''
+    resources:
+      enabled: false
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
 
 service:
   psmdb:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      mysql: ''
+      mongo: ''
     lbPorts:
-      mysql: 27017
+      mongo: 27017
+  mongoExpress:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  mongoExpress:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
 
 persistence:
   accessMode: ReadWriteOnce

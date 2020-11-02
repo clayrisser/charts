@@ -136,6 +136,57 @@ questions:
         required: true
         label: password
 
+# Mongo Express Config
+  - variable: config.mongoExpress.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'mongo express enabled'
+    group: 'Mongo Express Config'
+  - variable: config.mongoExpress.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    label: 'mongo express resources defaults'
+    show_subquestion_if: 'true'
+    show_if: config.mongoExpress.enabled=true
+    group: 'Mongo Express Config'
+    subquestions:
+      - variable: config.mongoExpress.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        show_if: config.mongoExpress.enabled=true
+        label: 'mongo express resources requests cpu'
+      - variable: config.mongoExpress.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.mongoExpress.enabled=true
+        label: 'mongo express resources requests memory'
+      - variable: config.mongoExpress.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        show_if: config.mongoExpress.enabled=true
+        label: 'mongo express resources limits cpu'
+      - variable: config.mongoExpress.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.mongoExpress.enabled=true
+        label: 'mongo express resources limits memory'
+
 # Backup Config
   - variable: config.backup.enabled
     default: false
@@ -305,6 +356,79 @@ questions:
     show_if: service.psmdb.type=LoadBalancer
     label: 'psmdb mongo lb port'
     group: 'Services and Load Balancing'
+  - variable: ingress.mongoExpress.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'mongo express ingress enabled'
+    show_if: config.mongoExpress.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.mongoExpress.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: config.mongoExpress.enabled=true
+        label: 'mongo express ingress tls'
+      - variable: ingress.mongoExpress.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        show_if: config.mongoExpress.enabled=true
+        label: 'mongo express ingress hostname'
+      - variable: ingress.mongoExpress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.mongoExpress.tls=true&&config.mongoExpress.enabled=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'mongo express ingress issuer name'
+      - variable: ingress.mongoExpress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.mongoExpress.tls=true&&ingress.mongoExpress.issuer.name=none&&config.mongoExpress.enabled=true
+        required: false
+        label: 'mongo express ingress certificate'
+  - variable: service.mongoExpress.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mongo express service type'
+    group: 'Services and Load Balancing'
+  - variable: service.mongoExpress.nodePorts.http
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.mongoExpress.type=NodePort&&ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
+    label: 'mongo express http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.mongoExpress.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.mongoExpress.type=LoadBalancer&&ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
+    label: 'mongo express http lb port'
+    group: 'Services and Load Balancing'
 
 # Images
   - variable: images.psmdb.repository
@@ -352,4 +476,20 @@ questions:
     required: true
     show_if: config.backup.enabled=true
     label: 'backup tag'
+    group: Images
+  - variable: images.mongoExpress.repository
+    default: mongo-express
+    description: ''
+    type: string
+    required: true
+    label: 'mongo express repository'
+    show_if: config.mongoExpress.enabled=true
+    group: Images
+  - variable: images.mongoExpress.tag
+    default: 0.54.0
+    description: ''
+    type: string
+    required: true
+    label: 'mongo express tag'
+    show_if: config.mongoExpress.enabled=true
     group: Images
