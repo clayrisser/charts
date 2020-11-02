@@ -9,4 +9,4 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   mongo_express_username: user
-  mongo_host: {{ template "psmdb-db.fullname" . }}-psmdb
+  mongo_host: {{ template "psmdb-db.fullname" . }}-psmdb.{{ .Release.Namespace }}.svc
