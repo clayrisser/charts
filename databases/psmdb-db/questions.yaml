@@ -142,7 +142,7 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'mongo express enabled'
+    label: enabled
     group: 'Mongo Express Config'
   - variable: config.mongoExpress.resources.enabled
     default: false
@@ -153,7 +153,7 @@ questions:
       - 'true'
       - 'false'
     required: true
-    label: 'mongo express resources defaults'
+    label: 'resources defaults'
     show_subquestion_if: 'true'
     show_if: config.mongoExpress.enabled=true
     group: 'Mongo Express Config'
@@ -164,28 +164,28 @@ questions:
         type: string
         required: true
         show_if: config.mongoExpress.enabled=true
-        label: 'mongo express resources requests cpu'
+        label: 'resources requests cpu'
       - variable: config.mongoExpress.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
         show_if: config.mongoExpress.enabled=true
-        label: 'mongo express resources requests memory'
+        label: 'resources requests memory'
       - variable: config.mongoExpress.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
         show_if: config.mongoExpress.enabled=true
-        label: 'mongo express resources limits cpu'
+        label: 'resources limits cpu'
       - variable: config.mongoExpress.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
         show_if: config.mongoExpress.enabled=true
-        label: 'mongo express resources limits memory'
+        label: 'resources limits memory'
 
 # Backup Config
   - variable: config.backup.enabled

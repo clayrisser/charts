@@ -288,6 +288,57 @@ questions:
         required: true
         label: password
 
+# PhpMyAdmin Config
+  - variable: config.phpmyadmin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'PhpMyAdmin Config'
+  - variable: config.phpmyadmin.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    label: 'resources defaults'
+    show_if: config.phpmyadmin.enabled=true
+    show_subquestion_if: 'true'
+    group: 'PhpMyAdmin Config'
+    subquestions:
+      - variable: config.phpmyadmin.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.phpmyadmin.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'resources requests memory'
+      - variable: config.phpmyadmin.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.phpmyadmin.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'resources limits memory'
+
 # Backup Config
   - variable: config.backup.enabled
     default: false
@@ -457,6 +508,79 @@ questions:
     show_if: service.pxc.type=LoadBalancer
     label: 'pxc mysql lb port'
     group: 'Services and Load Balancing'
+  - variable: ingress.phpmyadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'phpmyadmin ingress enabled'
+    show_if: config.phpmyadmin.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpmyadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'phpmyadmin ingress tls'
+      - variable: ingress.phpmyadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'phpmyadmin ingress hostname'
+      - variable: ingress.phpmyadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.phpmyadmin.tls=true&&config.phpmyadmin.enabled=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpmyadmin ingress issuer name'
+      - variable: ingress.phpmyadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none&&config.phpmyadmin.enabled=true
+        required: false
+        label: 'phpmyadmin ingress certificate'
+  - variable: service.phpmyadmin.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'phpmyadmin service type'
+    group: 'Services and Load Balancing'
+  - variable: service.phpmyadmin.nodePorts.http
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.phpmyadmin.type=NodePort&&ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    label: 'phpmyadmin http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.phpmyadmin.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.phpmyadmin.type=LoadBalancer&&ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    label: 'phpmyadmin http lb port'
+    group: 'Services and Load Balancing'
 
 # Images
   - variable: images.pxc.repository
@@ -536,4 +660,20 @@ questions:
     required: true
     show_if: config.backup.enabled=true
     label: 'backup tag'
+    show_if: config.phpmyadmin.enabled=true
+    group: Images
+  - variable: images.phpmyadmin.repository
+    default: phpmyadmin/phpmyadmin
+    description: ''
+    type: string
+    required: true
+    label: 'phpmyadmin repository'
+    group: Images
+  - variable: images.phpmyadmin.tag
+    default: 4.9.7
+    description: ''
+    type: string
+    required: true
+    label: 'phpmyadmin tag'
+    show_if: config.phpmyadmin.enabled=true
     group: Images
