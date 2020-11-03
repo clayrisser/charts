@@ -41,14 +41,14 @@ service:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      postgres: ''
+      postgres:
     lbPorts:
       postgres: 5432
   pgadmin:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
+      http:
     lbPorts:
       http: 80
 

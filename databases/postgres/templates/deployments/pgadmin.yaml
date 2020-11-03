@@ -24,13 +24,13 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+            - weight: 89
               preference:
                 matchExpressions:
                   - key: application/state
                     operator: In
                     values:
-                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+                      - stateless
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 90
@@ -46,13 +46,10 @@ spec:
         - name: {{ template "postgres.fullname" . }}-pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+{{- if .Values.config.pgadmin.resources.enabled }}
           resources:
-            requests:
-              cpu: {{ .Values.config.pgadmin.resources.requests.cpu }}
-              memory: {{ .Values.config.pgadmin.resources.requests.memory }}
-            limits:
-              cpu: {{ .Values.config.pgadmin.resources.limits.cpu }}
-              memory: {{ .Values.config.pgadmin.resources.limits.memory }}
+{{ toYaml .Values.config.pgadmin.resources | indent 12 }}
+{{- end }}
           ports:
             - name: container
               containerPort: 80
