@@ -61,19 +61,19 @@ questions:
         required: true
         label: 'resources requests cpu'
       - variable: config.resources.requests.memory
-        default: 128Mi
+        default: 256Mi
         description: ''
         type: string
         required: true
         label: 'resources requests memory'
       - variable: config.resources.limits.cpu
-        default: 500m
+        default: 250m
         description: ''
         type: string
         required: true
         label: 'resources limits cpu'
       - variable: config.resources.limits.memory
-        default: 256Mi
+        default: 512Mi
         description: ''
         type: string
         required: true

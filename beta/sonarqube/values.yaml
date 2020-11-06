@@ -16,10 +16,10 @@ config:
       enabled: false
       requests:
         cpu: 100m
-        memory: 128Mi
+        memory: 1.5Gi
       limits:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 250m
+        memory: 1.7Gi
   postgres:
     database: sonarqube
     host: ''

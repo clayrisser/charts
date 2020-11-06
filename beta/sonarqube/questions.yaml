@@ -76,19 +76,19 @@ questions:
         required: true
         label: 'sonarqube resources requests cpu'
       - variable: config.sonarqube.resources.requests.memory
-        default: 128Mi
+        default: 1.5Gi
         description: ''
         type: string
         required: true
         label: 'sonarqube resources requests memory'
       - variable: config.sonarqube.resources.limits.cpu
-        default: 500m
+        default: 250m
         description: ''
         type: string
         required: true
         label: 'sonarqube resources limits cpu'
       - variable: config.sonarqube.resources.limits.memory
-        default: 256Mi
+        default: 1.7Gi
         description: ''
         type: string
         required: true
