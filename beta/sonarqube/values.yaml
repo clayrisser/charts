@@ -18,7 +18,7 @@ config:
         cpu: 100m
         memory: 1.5Gi
       limits:
-        cpu: 250m
+        cpu: 500m
         memory: 1.7Gi
   postgres:
     database: sonarqube

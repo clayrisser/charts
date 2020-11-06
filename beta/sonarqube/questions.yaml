@@ -82,7 +82,7 @@ questions:
         required: true
         label: 'sonarqube resources requests memory'
       - variable: config.sonarqube.resources.limits.cpu
-        default: 250m
+        default: 500m
         description: ''
         type: string
         required: true
