@@ -8,6 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  forceUpgrade: true
   helmVersion: v3
   chart:
     repository: https://oteemo.github.io/charts
