@@ -39,10 +39,10 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Calculate phpmyadmin certificate
 */}}
-{{- define "phpmyadmin.phpmyadmin-certificate" }}
+{{- define "pxc-db.phpmyadmin-certificate" }}
 {{- if (not (empty .Values.ingress.phpmyadmin.certificate)) }}
 {{- printf .Values.ingress.phpmyadmin.certificate }}
 {{- else }}
-{{- printf "%s-phpmyadmin-letsencrypt" (include "phpmyadmin.fullname" .) }}
+{{- printf "%s-phpmyadmin-letsencrypt" (include "pxc-db.fullname" .) }}
 {{- end }}
 {{- end }}
