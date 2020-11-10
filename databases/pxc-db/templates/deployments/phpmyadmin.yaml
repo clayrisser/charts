@@ -55,7 +55,7 @@ spec:
               containerPort: 80
           env:
             - name: PMA_HOST
-              value: {{ template "pxc-db.fullname" . }}-pxc-db-pxc
+              value: {{ printf "%s-%s" (include "pxc-db.fullname" .) "pxc-db" | trunc 21 }}-pxc
           livenessProbe:
             httpGet:
               path: /
