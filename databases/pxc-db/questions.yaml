@@ -478,7 +478,7 @@ questions:
 
 # Services and Load Balancing
   - variable: service.pxc.type
-    default: NodePort
+    default: ClusterIP
     description: ''
     type: enum
     options:

@@ -95,7 +95,7 @@ config:
 
 service:
   pxc:
-    type: NodePort
+    type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
       mysql:
