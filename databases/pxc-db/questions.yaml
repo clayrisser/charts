@@ -16,12 +16,12 @@ questions:
     label: 'cluster provider'
     group: Config
   - variable: config.imagePullPolicy
-    default: Always
+    default: IfNotPresent
     description: ''
     type: enum
     options:
-      - Always
       - IfNotPresent
+      - Always
     required: true
     label: 'pull policy'
     group: Config
@@ -668,6 +668,7 @@ questions:
     type: string
     required: true
     label: 'phpmyadmin repository'
+    show_if: config.phpmyadmin.enabled=true
     group: Images
   - variable: images.phpmyadmin.tag
     default: 4.9.7

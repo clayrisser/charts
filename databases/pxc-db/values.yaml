@@ -20,7 +20,7 @@ images:
 
 config:
   clusterProvider: infrastructure
-  imagePullPolicy: Always
+  imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   passwords:
     clustercheck: P@ssw0rd
