@@ -7,14 +7,14 @@ metadata:
     {{- if (eq .Values.config.clusterProvider "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing
     {{- else }}
-    kubernetes.io/ingress.class: directus
+    kubernetes.io/ingress.class: nginx
     {{- end }}
     {{- if .Values.ingress.directus.tls }}
     {{- if (empty .Values.ingress.directus.certificate) }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.directus.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
-    directus.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
     app: {{ template "directus.name" . }}-directus
