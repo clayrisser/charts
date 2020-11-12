@@ -26,7 +26,7 @@ questions:
     type: string
     description: ''
     label: hostname
-    show_if: config.url!=
+    show_if: config.url=
     group: Config
   - variable: config.port
     default: ''
@@ -34,7 +34,7 @@ questions:
     type: int
     description: ''
     label: port
-    show_if: config.url!=
+    show_if: config.url=
     group: Config
   - variable: config.username
     default: ''
@@ -42,7 +42,7 @@ questions:
     type: string
     description: ''
     label: username
-    show_if: config.url!=
+    show_if: config.url=
     group: Config
   - variable: config.password
     default: ''
@@ -50,7 +50,7 @@ questions:
     type: password
     description: ''
     label: password
-    show_if: config.url!=
+    show_if: config.url=
     group: Config
   - variable: config.name
     default: ''
