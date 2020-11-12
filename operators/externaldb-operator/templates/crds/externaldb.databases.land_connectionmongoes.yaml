@@ -1,0 +1,82 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.0
+  creationTimestamp: null
+  name: connectionmongoes.externaldb.databases.land
+spec:
+  group: externaldb.databases.land
+  names:
+    kind: ConnectionMongo
+    listKind: ConnectionMongoList
+    plural: connectionmongoes
+    singular: connectionmongo
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: ConnectionMongo is the Schema for the connectionmongoes API
+      properties:
+        apiVersion:
+          description:
+            'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description:
+            'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: ConnectionMongoSpec defines the desired state of ConnectionMongo
+          properties:
+            configMapName:
+              description:
+                config map name containing `MONGO_HOSTNAME`, `MONGO_PORT`,
+                `MONGO_USERNAME` or `MONGO_DATABASE`
+              type: string
+            database:
+              description: mongo database name
+              type: string
+            hostname:
+              description: mongo hostname
+              type: string
+            password:
+              description: mongo password
+              type: string
+            port:
+              description: mongo port
+              format: int64
+              type: integer
+            secretName:
+              description: secret name containing `MONGO_PASSWORD` or `MONGO_CONNECITON_URL`
+              type: string
+            url:
+              description: mongo connection url
+              type: string
+            username:
+              description: mongo username
+              type: string
+          type: object
+        status:
+          description: ConnectionMongoStatus defines the observed state of ConnectionMongo
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+status:
+  acceptedNames:
+    kind: ''
+    plural: ''
+  conditions: []
+  storedVersions: []

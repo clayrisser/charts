@@ -1,0 +1,75 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  # - variable: config.externaldbOperator.resources.defaults
+  #   default: true
+  #   description: ''
+  #   type: boolean
+  #   required: true
+  #   label: 'externaldb operator resources defaults'
+  #   show_subquestion_if: false
+  #   group: Config
+  #   subquestions:
+  #     - variable: config.externaldbOperator.resources.requests.cpu
+  #       default: 100m
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'externaldb operator resources requests cpu'
+  #     - variable: config.externaldbOperator.resources.requests.memory
+  #       default: 128Mi
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'externaldb operator resources requests memory'
+  #     - variable: config.externaldbOperator.resources.limits.cpu
+  #       default: 500m
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'externaldb operator resources limits cpu'
+  #     - variable: config.externaldbOperator.resources.limits.memory
+  #       default: 256Mi
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'externaldb operator resources limits memory'
+
+# Images
+  - variable: images.externaldbOperator.repository
+    default: codejamninja/externaldb-operator
+    description: ''
+    type: string
+    required: true
+    label: 'externaldb operator repository'
+    group: Images
+  - variable: images.externaldbOperator.tag
+    default: 0.0.1
+    description: ''
+    type: string
+    required: true
+    label: 'externaldb operator tag'
+    group: Images
