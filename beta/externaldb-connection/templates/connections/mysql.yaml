@@ -1,0 +1,16 @@
+{{- if (eq .Values.config.engine "mysql") }}
+apiVersion: externaldb.databases.land/v1alpha1
+kind: ConnectionPostgres
+metadata:
+  name: {{ .Values.config.name | default (printf "%s-mysql" (include "externaldb-connection.name" .)) }}
+  labels:
+    app: {{ template "externaldb-connection.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  hostname: {{ .Values.config.hostname | quote }}
+  port: {{ .Values.config.port | default "3306" }}
+  secretName: {{ template "externaldb-connection.name" . }}
+  username: {{ .Values.config.username | quote }}
+{{- end }}

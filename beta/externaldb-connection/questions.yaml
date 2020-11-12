@@ -1,0 +1,61 @@
+categories:
+  - Database
+questions:
+
+# Config
+  - variable: config.engine
+    default: mysql
+    required: true
+    type: enum
+    options:
+      - mysql
+      - postgres
+    description: ''
+    label: engine
+    group: Config
+  - variable: config.url
+    default: ''
+    required: false
+    type: string
+    description: ''
+    label: url
+    group: Config
+  - variable: config.hostname
+    default: ''
+    required: false
+    type: string
+    description: ''
+    label: hostname
+    show_if: config.url!=
+    group: Config
+  - variable: config.port
+    default: ''
+    required: false
+    type: int
+    description: ''
+    label: port
+    show_if: config.url!=
+    group: Config
+  - variable: config.username
+    default: ''
+    required: false
+    type: string
+    description: ''
+    label: username
+    show_if: config.url!=
+    group: Config
+  - variable: config.password
+    default: ''
+    required: false
+    type: password
+    description: ''
+    label: password
+    show_if: config.url!=
+    group: Config
+  - variable: config.name
+    default: ''
+    required: false
+    type: string
+    description: ''
+    label: name
+    group: Config
