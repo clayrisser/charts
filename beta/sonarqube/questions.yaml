@@ -99,7 +99,7 @@ questions:
     default: ''
     description: ''
     type: string
-    required: true
+    required: false
     label: integration
     group: 'Postgres Config'
   - variable: config.postgres.host
