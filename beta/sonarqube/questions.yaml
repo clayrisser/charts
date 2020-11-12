@@ -95,12 +95,20 @@ questions:
         label: 'sonarqube resources limits memory'
 
 # Postgres Config
+  - variable: config.postgres.integration
+    default: ''
+    description: ''
+    type: string
+    required: true
+    label: integration
+    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
     description: ''
     type: string
     required: true
     label: host
+    show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.database
     default: sonarqube
@@ -115,6 +123,7 @@ questions:
     type: string
     required: true
     label: username
+    show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.password
     default: P@ssw0rd
@@ -122,6 +131,7 @@ questions:
     type: password
     required: true
     label: password
+    show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.port
     default: 5432
@@ -131,6 +141,7 @@ questions:
     max: 65535
     required: true
     label: port
+    show_if: config.postgres.integration=
     group: 'Postgres Config'
   # - variable: config.postgres.url
   #   default: ''

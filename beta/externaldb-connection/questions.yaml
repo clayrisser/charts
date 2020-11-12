@@ -32,6 +32,8 @@ questions:
     default: ''
     required: false
     type: int
+    min: 0
+    max: 65535
     description: ''
     label: port
     show_if: config.url=

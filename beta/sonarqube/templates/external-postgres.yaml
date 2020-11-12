@@ -1,0 +1,16 @@
+{{- if (not (empty .Values.config.postgres.integration)) }}
+apiVersion: externaldb.databases.land/v1alpha1
+kind: ExternalPostgres
+metadata:
+  name: {{ template "sonarqube.fullname" . }}-postgres
+  labels:
+    app: {{ template "sonarqube.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  cleanup: true
+  name: {{ .Values.config.postgres.database | quote }}
+  connection:
+    name: {{ .Values.config.postgres.integration | quote }}
+{{- end }}

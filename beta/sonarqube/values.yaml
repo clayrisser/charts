@@ -21,6 +21,7 @@ config:
         cpu: 500m
         memory: 1.7Gi
   postgres:
+    integration:
     database: sonarqube
     host: ''
     password: P@ssw0rd
