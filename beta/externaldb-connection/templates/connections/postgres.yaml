@@ -11,6 +11,6 @@ metadata:
 spec:
   hostname: {{ .Values.config.hostname | quote }}
   port: {{ .Values.config.port | default "5432" }}
-  secretName: {{ template "externaldb-connection.name" . }}
+  secretName: {{ template "externaldb-connection.fullname" . }}
   username: {{ .Values.config.username | quote }}
 {{- end }}
