@@ -16,7 +16,7 @@ spec:
     solvers:
       - http01:
           ingress:
-            {{- if (eq .Values.config.clusterProvider "aks") }}
+            {{- if (eq .Values.config.clusterType "aks") }}
             class: addon-http-application-routing
             {{- else }}
             class: nginx
