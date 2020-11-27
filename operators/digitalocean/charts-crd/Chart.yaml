@@ -1,0 +1,10 @@
+apiVersion: v1
+version: 0.1.30
+description: Installs the CRDs for digitalocean.
+name: digitalocean-crd
+type: application
+annotations:
+  catalog.cattle.io/hidden: "true"
+  catalog.cattle.io/release-name: digitalocean-crd
+  catalog.cattle.io/certified: rancher
+  catalog.cattle.io/namespace: digitalocean-system
