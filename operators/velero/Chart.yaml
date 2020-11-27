@@ -15,3 +15,6 @@ sources:
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
+annotations:
+  catalog.cattle.io/namespace: velero
+  catalog.cattle.io/release-name: velero
