@@ -1,0 +1,12 @@
+categories:
+  - Cloud
+questions:
+
+# Config
+  - variable: config.accessToken
+    default: ''
+    description: ''
+    type: password
+    required: true
+    label: 'access token'
+    group: Config
