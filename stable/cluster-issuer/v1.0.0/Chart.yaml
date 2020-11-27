@@ -18,6 +18,5 @@ maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
 annotations:
-  catalog.cattle.io/hidden: false
   catalog.cattle.io/release-name: cluster-issuer
   catalog.cattle.io/namespace: kube-system
