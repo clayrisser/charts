@@ -13,3 +13,7 @@ sources:
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
+annotations:
+  catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/release-name: kube-system
+  catalog.cattle.io/auto-install: longhorn-crd=match
