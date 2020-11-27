@@ -4,6 +4,6 @@ description: Installs the CRDs for digitalocean.
 name: digitalocean-crd
 type: application
 annotations:
-  # catalog.cattle.io/hidden: "true"
+  catalog.cattle.io/hidden: "true"
   catalog.cattle.io/release-name: digitalocean-crd
   catalog.cattle.io/namespace: kube-system
