@@ -15,4 +15,5 @@ maintainers:
     email: jam@codejam.ninja
 annotations:
   catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/release-name: digitalocean
   catalog.cattle.io/auto-install: longhorn-crd=match
