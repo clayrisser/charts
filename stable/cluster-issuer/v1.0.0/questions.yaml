@@ -1,15 +1,16 @@
 categories:
   - Certificates
 questions:
-  - variable: config.clusterProvider
-    default: infrastructure
+  - variable: config.clusterType
+    default: rke
     description: ''
     type: enum
     options:
-      - infrastructure
-      - eks
       - aks
+      - eks
       - gke
+      - k3s
+      - rke
     required: true
     label: 'cluster type'
     group: Config
