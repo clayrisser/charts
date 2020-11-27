@@ -28,9 +28,6 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
     api-approved.kubernetes.io: "https://github.com/kubernetes-csi/external-snapshotter/pull/260"
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '0'
-    helm.sh/hook-delete-policy: before-hook-creation
   creationTimestamp: null
   name: volumesnapshotclasses.snapshot.storage.k8s.io
 spec:
@@ -117,9 +114,6 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
     api-approved.kubernetes.io: "https://github.com/kubernetes-csi/external-snapshotter/pull/260"
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '0'
-    helm.sh/hook-delete-policy: before-hook-creation
   creationTimestamp: null
   name: volumesnapshotcontents.snapshot.storage.k8s.io
 spec:
@@ -354,9 +348,6 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
     api-approved.kubernetes.io: "https://github.com/kubernetes-csi/external-snapshotter/pull/260"
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '0'
-    helm.sh/hook-delete-policy: before-hook-creation
   creationTimestamp: null
   name: volumesnapshots.snapshot.storage.k8s.io
 spec:
