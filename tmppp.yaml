@@ -1,0 +1,15 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: BundleDeployment
+metadata:
+  name: tmp
+  namespace: tmp
+spec:
+  options:
+    defaultNamespace: fleet-system
+    helm:
+      takeOwnership: true
+      values:
+        global:
+          fleet:
+            clusterLabels:
+              name: local
