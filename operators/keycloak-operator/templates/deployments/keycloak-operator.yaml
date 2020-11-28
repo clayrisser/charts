@@ -46,12 +46,12 @@ spec:
         - name: {{ template "keycloak-operator.fullname" . }}-keycloak-operator
           image: {{ .Values.images.keycloakOperator.repository }}:{{ .Values.images.keycloakOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-{{- if .Values.config.pxcOperator.resources.enabled }}
+{{- if .Values.config.keycloakOperator.resources.enabled }}
           resources:
             requests:
-{{ toYaml .Values.config.pxcOperator.resources.requests | indent 14 }}
+{{ toYaml .Values.config.keycloakOperator.resources.requests | indent 14 }}
             limits:
-{{ toYaml .Values.config.pxcOperator.resources.limits | indent 14 }}
+{{ toYaml .Values.config.keycloakOperator.resources.limits | indent 14 }}
 {{- end }}
           env:
             # - name: WATCH_NAMESPACE
