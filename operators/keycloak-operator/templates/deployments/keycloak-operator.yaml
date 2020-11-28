@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "keycloak-operator.fullname" . }}-operator
+  name: keycloak-operator
   labels:
-    app: {{ template "keycloak-operator.name" . }}-operator
+    app: keycloak-operator
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "keycloak-operator.name" . }}-operator
+      app: keycloak-operator
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
-        app: {{ template "keycloak-operator.name" . }}-operator
+        app: keycloak-operator
         release: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ template "keycloak-operator.fullname" . }}
@@ -43,7 +43,7 @@ spec:
                       values:
                         - {{ template "keycloak-operator.name" . }}-operator
       containers:
-        - name: {{ template "keycloak-operator.fullname" . }}-operator
+        - name: keycloak-operator
           image: {{ .Values.images.keycloakOperator.repository }}:{{ .Values.images.keycloakOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
 {{- if .Values.config.keycloakOperator.resources.enabled }}
