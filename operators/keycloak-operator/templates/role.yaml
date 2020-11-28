@@ -141,3 +141,8 @@ roleRef:
   kind: Role
   name: keycloak-operator
   apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: keycloak-operator

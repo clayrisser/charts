@@ -2,8 +2,8 @@ name: keycloak-operator
 apiVersion: v1
 home: https://codejam.ninja
 icon: ''
-version: 0.0.1
-appVersion: 0.0.1
+version: 11.0.3
+appVersion: 11.0.3
 description: 'operator to deploy and manage keycloak'
 keywords:
   - auth
@@ -16,3 +16,6 @@ sources:
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
+annotations:
+  catalog.cattle.io/namespace: keycloak
+  catalog.cattle.io/release-name: keycloak
