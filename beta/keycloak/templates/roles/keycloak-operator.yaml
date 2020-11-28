@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   creationTimestamp: null
-  name: {{ template "keycloak.fullname" . }}-keycloak-operator
+  name: {{ template "keycloak.fullname" . }}
 rules:
 - apiGroups:
   - ""
@@ -92,7 +92,7 @@ rules:
 - apiGroups:
   - apps
   resourceNames:
-  - {{ template "keycloak.fullname" . }}-keycloak-operator
+  - {{ template "keycloak.fullname" . }}
   resources:
   - deployments/finalizers
   verbs:
@@ -134,16 +134,16 @@ rules:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "keycloak.fullname" . }}-keycloak-operator
+  name: {{ template "keycloak.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "keycloak.fullname" . }}-keycloak-operator
+  name: {{ template "keycloak.fullname" . }}
 roleRef:
   kind: Role
-  name: {{ template "keycloak.fullname" . }}-keycloak-operator
+  name: {{ template "keycloak.fullname" . }}
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ template "keycloak.fullname" . }}-keycloak-operator
+  name: {{ template "keycloak.fullname" . }}
