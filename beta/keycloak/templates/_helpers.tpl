@@ -28,17 +28,6 @@ Calculate keycloak certificate
 {{- end }}
 
 {{/*
-Calculate pgadmin certificate
-*/}}
-{{- define "keycloak.pgadmin-certificate" }}
-{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
-{{- printf .Values.ingress.pgadmin.certificate }}
-{{- else }}
-{{- printf "%s-pgadmin-letsencrypt" (include "keycloak.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate keycloak hostname
 */}}
 {{- define "keycloak.keycloak-hostname" }}
