@@ -10,3 +10,40 @@ questions:
     required: true
     label: 'enable antiaffinity'
     group: Config
+  - variable: config.postgresOperator.resources.enabled
+    default: defaults
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'postgres operator resources enabled'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.postgresOperator.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'postgres operator resources requests cpu'
+      - variable: config.postgresOperator.resources.requests.memory
+        default: 250Mi
+        description: ''
+        type: string
+        required: true
+        label: 'postgres operator resources requests memory'
+      - variable: config.postgresOperator.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'postgres operator resources limits cpu'
+      - variable: config.postgresOperator.resources.limits.memory
+        default: 500Mi
+        description: ''
+        type: string
+        required: true
+        label: 'postgres operator resources limits memory'
