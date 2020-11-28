@@ -20,7 +20,7 @@ spec:
         app: {{ template "keycloak.fullname" . }}-keycloak-operator
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "keycloak-operator.fullname" . }}
+      serviceAccountName: {{ template "keycloak.fullname" . }}
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -41,7 +41,7 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - {{ template "keycloak-operator.name" . }}-keycloak-operator
+                        - {{ template "keycloak.name" . }}-keycloak-operator
       containers:
         - name: {{ template "keycloak.fullname" . }}-keycloak-operator
           image: {{ .Values.images.keycloakOperator.repository }}:{{ .Values.images.keycloakOperator.tag }}
