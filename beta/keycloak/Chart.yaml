@@ -25,5 +25,3 @@ sources:
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
-annotations:
-  catalog.cattle.io/auto-install: keycloak-crd=match
