@@ -2,6 +2,9 @@ images:
   keycloak:
     repository: jboss/keycloak
     tag: 9.0.0
+  keycloakOperator:
+    repository: quay.io/keycloak/keycloak-operator
+    tag: 11.0.3
 
 config:
   clusterProvider: infrastructure
@@ -16,6 +19,16 @@ config:
     themeZip: keycloak
     username: admin
     welcomeTheme: ''
+  keycloakOperator:
+    baseUrl: ''
+    hostname: ''
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
   postgres:
     database: keycloak
     host: ''

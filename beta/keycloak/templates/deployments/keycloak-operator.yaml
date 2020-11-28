@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: keycloak-operator
+  name: {{ template "keycloak.fullname" . }}-keycloak-operator
   labels:
-    app: keycloak-operator
+    app: {{ template "keycloak.fullname" . }}-keycloak-operator
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: keycloak-operator
+      app: {{ template "keycloak.fullname" . }}-keycloak-operator
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
-        app: keycloak-operator
+        app: {{ template "keycloak.fullname" . }}-keycloak-operator
         release: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ template "keycloak-operator.fullname" . }}
@@ -41,9 +41,9 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - {{ template "keycloak-operator.name" . }}-operator
+                        - {{ template "keycloak-operator.name" . }}-keycloak-operator
       containers:
-        - name: keycloak-operator
+        - name: {{ template "keycloak.fullname" . }}-keycloak-operator
           image: {{ .Values.images.keycloakOperator.repository }}:{{ .Values.images.keycloakOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
 {{- if .Values.config.keycloakOperator.resources.enabled }}
@@ -54,13 +54,13 @@ spec:
 {{ toYaml .Values.config.keycloakOperator.resources.limits | indent 14 }}
 {{- end }}
           env:
-            # - name: WATCH_NAMESPACE
-            #   valueFrom:
-            #     fieldRef:
-            #       fieldPath: metadata.namespace
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "keycloak-operator"
+              value: {{ template "keycloak.fullname" . }}-keycloak-operator
