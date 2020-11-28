@@ -26,11 +26,11 @@ questions:
     type: enum
     options:
       - defaults
-      - one
-      - two
+      - true
+      - false
     required: true
-    label: 'pxc operator resources enabled L'
-    show_subquestion_if: two
+    label: 'pxc operator resources enabled'
+    show_subquestion_if: true
     group: Config
     subquestions:
       - variable: config.pxcOperator.resources.requests.cpu
