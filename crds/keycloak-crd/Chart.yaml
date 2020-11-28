@@ -1,8 +1,0 @@
-apiVersion: v1
-version: 0.1.30
-description: Installs the CRDs for keycloak.
-name: keycloak-crd
-type: application
-annotations:
-  catalog.cattle.io/release-name: keycloak-crd
-  catalog.cattle.io/namespace: kube-system
