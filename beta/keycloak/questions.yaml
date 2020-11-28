@@ -84,6 +84,16 @@ questions:
     required: false
     label: 'keycloak welcome theme'
     group: Config
+  - variable: config.keycloak.migrationStrategy
+    default: IGNORE_EXISTING
+    description: ''
+    type: enum
+    options:
+      - IGNORE_EXISTING
+      - OVERWRITE_EXISTING
+    required: true
+    label: 'keycloak migration strategy'
+    group: Config
 
 # Postgres Config
   - variable: config.postgres.host

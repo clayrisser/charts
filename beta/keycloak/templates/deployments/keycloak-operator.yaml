@@ -7,6 +7,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: '0'
+    helm.sh/hook-delete-policy: before-hook-creation
 spec:
   selector:
     matchLabels:

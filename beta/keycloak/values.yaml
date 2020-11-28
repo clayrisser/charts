@@ -19,6 +19,14 @@ config:
     themeZip: keycloak
     username: admin
     welcomeTheme: ''
+    migrationStrategy: IGNORE_EXISTING
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
   keycloakOperator:
     baseUrl: ''
     hostname: ''
