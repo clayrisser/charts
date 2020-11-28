@@ -3,7 +3,7 @@ kind: HelmRelease
 metadata:
   name: {{ .Release.Name }}
   labels:
-    app: {{ template "pxc-operator.name" . }}
+    app: {{ template "postgres-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
