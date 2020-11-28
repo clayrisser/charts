@@ -24,7 +24,7 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.externaldbOperator.resources.enabled
+  - variable: config.keycloakOperator.resources.enabled
     default: false
     description: ''
     type: enum
@@ -33,47 +33,47 @@ questions:
       - custom
       - false
     required: true
-    label: 'externaldb operator resources enabled'
+    label: 'keycloak operator resources enabled'
     show_subquestion_if: custom
     group: Config
     subquestions:
-      - variable: config.externaldbOperator.resources.requests.cpu
+      - variable: config.keycloakOperator.resources.requests.cpu
         default: 100m
         description: ''
         type: string
         required: true
-        label: 'externaldb operator resources requests cpu'
-      - variable: config.externaldbOperator.resources.requests.memory
+        label: 'keycloak operator resources requests cpu'
+      - variable: config.keycloakOperator.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
-        label: 'externaldb operator resources requests memory'
-      - variable: config.externaldbOperator.resources.limits.cpu
+        label: 'keycloak operator resources requests memory'
+      - variable: config.keycloakOperator.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
-        label: 'externaldb operator resources limits cpu'
-      - variable: config.externaldbOperator.resources.limits.memory
+        label: 'keycloak operator resources limits cpu'
+      - variable: config.keycloakOperator.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
-        label: 'externaldb operator resources limits memory'
+        label: 'keycloak operator resources limits memory'
 
 # Images
-  - variable: images.externaldbOperator.repository
-    default: codejamninja/externaldb-operator
+  - variable: images.keycloakOperator.repository
+    default: quay.io/keycloak/keycloak-operator
     description: ''
     type: string
     required: true
-    label: 'externaldb operator repository'
+    label: 'keycloak operator repository'
     group: Images
-  - variable: images.externaldbOperator.tag
-    default: 0.0.1
+  - variable: images.keycloakOperator.tag
+    default: 11.0.3
     description: ''
     type: string
     required: true
-    label: 'externaldb operator tag'
+    label: 'keycloak operator tag'
     group: Images

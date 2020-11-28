@@ -1,0 +1,18 @@
+name: keycloak-operator
+apiVersion: v1
+home: https://codejam.ninja
+icon: ''
+version: 0.0.1
+appVersion: 0.0.1
+description: 'operator to deploy and manage keycloak'
+keywords:
+  - auth
+  - oauth
+  - sso
+  - saml
+sources:
+  - https://github.com/keycloak/keycloak
+  - https://github.com/keycloak/keycloak-operator
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

@@ -1,13 +1,13 @@
 images:
-  externaldbOperator:
-    repository: codejamninja/externaldb-operator
-    tag: 0.0.1
+  keycloakOperator:
+    repository: quay.io/keycloak/keycloak-operator
+    tag: 11.0.3
 
 config:
   clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
-  externaldbOperator:
+  keycloakOperator:
     baseUrl: ''
     hostname: ''
     resources:
