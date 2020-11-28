@@ -29,7 +29,7 @@ questions:
       - one
       - two
     required: true
-    label: 'pxc operator resources enabled'
+    label: 'pxc operator resources enabled L'
     show_subquestion_if: two
     group: Config
     subquestions:
