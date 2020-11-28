@@ -297,6 +297,7 @@ questions:
       - ClusterIP
       - NodePort
       - LoadBalancer
+      - RancherProxy
     required: true
     label: 'pgadmin service type'
     group: 'Services and Load Balancing'

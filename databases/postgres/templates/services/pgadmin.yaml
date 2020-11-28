@@ -8,8 +8,11 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- if (eq .Values.service.pgadmin.type "RancherProxy") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
 spec:
-  {{- if .Values.ingress.pgadmin.enabled }}
+  {{- if (or .Values.ingress.pgadmin.enabled (eq .Values.service.pgadmin.type "RancherProxy")) }}
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.pgadmin.type }}
