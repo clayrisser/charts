@@ -53,7 +53,13 @@ spec:
           #   limits:
           #     cpu: {{ .Values.config.externaldbOperator.resources.limits.cpu }}
           #     memory: {{ .Values.config.externaldbOperator.resources.limits.memory }}
+          {{- if .Values.config.debug }}
+          env:
+            - name: DEBUG_OPERATOR
+              value: 'true'
+          {{- else }}
           env: []
+          {{- end }}
         - name: {{ template "externaldb-operator.fullname" . }}-kubectl
           image: bitnami/kubectl:1.17.12
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}

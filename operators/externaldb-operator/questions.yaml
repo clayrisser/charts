@@ -24,6 +24,13 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.debug
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
   - variable: config.externaldbOperator.resources.enabled
     default: false
     description: ''
