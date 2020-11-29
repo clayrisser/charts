@@ -72,12 +72,12 @@ questions:
     show_subquestion_if: true
     group: Connections
     subquestions:
-      - variable: connections.postgres.host
+      - variable: connections.postgres.hostname
         default: ''
         description: ''
         type: string
         required: false
-        label: 'postgres host'
+        label: 'postgres hostname'
       - variable: connections.postgres.username
         default: postgres
         description: ''
@@ -113,12 +113,12 @@ questions:
     show_subquestion_if: true
     group: Connections
     subquestions:
-      - variable: connections.mysql.host
+      - variable: connections.mysql.hostname
         default: ''
         description: ''
         type: string
         required: false
-        label: 'mysql host'
+        label: 'mysql hostname'
       - variable: connections.mysql.username
         default: mysql
         description: ''
