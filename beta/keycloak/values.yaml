@@ -38,6 +38,7 @@ config:
         cpu: 500m
         memory: 256Mi
   postgres:
+    integration: ''
     database: keycloak
     host: ''
     password: p@ssw0rd

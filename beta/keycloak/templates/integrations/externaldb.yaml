@@ -1,0 +1,73 @@
+{{- if (not (empty .Values.config.postgres.integration)) }}
+apiVersion: externaldb.databases.land/v1alpha1
+kind: ExternalPostgres
+metadata:
+  name: {{ template "keycloak.fullname" . }}
+  labels:
+    app: {{ template "keycloak.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  cleanup: false
+  name: {{ template "keycloak.fullname" . }}
+  connection:
+    name: {{ .Values.config.postgres.integration }}
+    namespace: kube-system
+  # kustomization:
+  #   patches:
+  #     - patch: |
+  #         apiVersion: v1
+  #         kind: Secret
+  #         metadata:
+  #           name: keycloak-db-secret
+  #           namespace: {{ .Release.Namespace }}
+  #         type: Opaque
+  #         stringData:
+  #           POSTGRES_DATABASE: "$(POSTGRES_DATABASE)"
+  #           POSTGRES_EXTERNAL_ADDRESS: "$(POSTGRES_HOST)"
+  #           POSTGRES_EXTERNAL_PORT: "$(POSTGRES_PORT)"
+  #           POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
+  #           POSTGRES_USERNAME: "$(POSTGRES_USERNAME)"
+  #   vars:
+  #     - name: POSTGRES_DATABASE
+  #       fieldref:
+  #         fieldPath: POSTGRES_DATABASE
+  #       objref:
+  #         apiVersion: v1
+  #         kind: Secret
+  #         namespace: {{ .Release.Namespace }}
+  #         name: {{ template "keycloak.fullname" . }}
+  #     - name: POSTGRES_HOST
+  #       fieldref:
+  #         fieldPath: POSTGRES_HOST
+  #       objref:
+  #         apiVersion: v1
+  #         kind: Secret
+  #         namespace: {{ .Release.Namespace }}
+  #         name: {{ template "keycloak.fullname" . }}
+  #     - name: POSTGRES_PASSWORD
+  #       fieldref:
+  #         fieldPath: POSTGRES_PASSWORD
+  #       objref:
+  #         apiVersion: v1
+  #         kind: Secret
+  #         namespace: {{ .Release.Namespace }}
+  #         name: {{ template "keycloak.fullname" . }}
+  #     - name: POSTGRES_PORT
+  #       fieldref:
+  #         fieldPath: POSTGRES_PORT
+  #       objref:
+  #         apiVersion: v1
+  #         kind: Secret
+  #         namespace: {{ .Release.Namespace }}
+  #         name: {{ template "keycloak.fullname" . }}
+  #     - name: POSTGRES_USERNAME
+  #       fieldref:
+  #         fieldPath: POSTGRES_USERNAME
+  #       objref:
+  #         apiVersion: v1
+  #         kind: Secret
+  #         namespace: {{ .Release.Namespace }}
+  #         name: {{ template "keycloak.fullname" . }}
+{{- end }}
