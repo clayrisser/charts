@@ -11,7 +11,7 @@ metadata:
 spec:
   hostname: {{ .Values.connections.postgres.hostname | quote }}
   password: {{ .Values.connections.postgres.password | quote }}
-  port: {{ .Values.connections.postgres.port | quote }}
+  port: {{ .Values.connections.postgres.port }}
   username: {{ .Values.connections.postgres.username | quote }}
   # url: {{ .Values.connections.postgres.url | quote }}
 {{- end }}
