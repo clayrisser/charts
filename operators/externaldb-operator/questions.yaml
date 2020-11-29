@@ -64,10 +64,10 @@ questions:
 
 # Connections
   - variable: connections.postgres.enabled
-    default: ''
+    default: false
     description: ''
-    type: string
-    required: false
+    type: boolean
+    required: true
     label: 'postgres enabled'
     show_subquestion_if: true
     group: Connections
@@ -105,10 +105,10 @@ questions:
       #   required: false
       #   label: 'postgres url'
   - variable: connections.mysql.enabled
-    default: ''
+    default: false
     description: ''
-    type: string
-    required: false
+    type: boolean
+    required: true
     label: 'mysql enabled'
     show_subquestion_if: true
     group: Connections
