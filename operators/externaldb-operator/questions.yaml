@@ -85,7 +85,7 @@ questions:
         required: false
         label: 'postgres username'
       - variable: connections.postgres.password
-        default: p@ssw0rd
+        default: ''
         description: ''
         type: password
         required: false
@@ -126,7 +126,7 @@ questions:
         required: false
         label: 'mysql username'
       - variable: connections.mysql.password
-        default: p@ssw0rd
+        default: ''
         description: ''
         type: password
         required: false
