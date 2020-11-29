@@ -10,7 +10,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   cleanup: false
-  name: {{ template "keycloak.fullname" . }}
+  name: {{ .Values.config.postgres.database }}
   connection:
     name: {{ .Values.config.postgres.integration }}
     namespace: kube-system
