@@ -25,7 +25,7 @@ spec:
   #         type: Opaque
   #         stringData:
   #           POSTGRES_DATABASE: "$(POSTGRES_DATABASE)"
-  #           POSTGRES_EXTERNAL_ADDRESS: "$(POSTGRES_HOST)"
+  #           POSTGRES_EXTERNAL_ADDRESS: "$(POSTGRES_HOSTNAME)"
   #           POSTGRES_EXTERNAL_PORT: "$(POSTGRES_PORT)"
   #           POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
   #           POSTGRES_USERNAME: "$(POSTGRES_USERNAME)"
@@ -38,9 +38,9 @@ spec:
   #         kind: Secret
   #         namespace: {{ .Release.Namespace }}
   #         name: {{ template "keycloak.fullname" . }}
-  #     - name: POSTGRES_HOST
+  #     - name: POSTGRES_HOSTNAME
   #       fieldref:
-  #         fieldPath: POSTGRES_HOST
+  #         fieldPath: POSTGRES_HOSTNAME
   #       objref:
   #         apiVersion: v1
   #         kind: Secret
