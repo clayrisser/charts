@@ -17,3 +17,19 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
+
+connections:
+  postgres:
+    enabled: false
+    hostname: ''
+    password: ''
+    port: 5432
+    url: ''
+    username: postgres
+  mysql:
+    enabled: false
+    hostname: ''
+    password: ''
+    port: 3306
+    url: ''
+    username: root

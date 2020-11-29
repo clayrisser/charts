@@ -62,6 +62,90 @@ questions:
         required: true
         label: 'externaldb operator resources limits memory'
 
+# Connections
+  - variable: connections.postgres.enabled
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'postgres enabled'
+    show_subquestion_if: true
+    group: Connections
+    subquestions:
+      - variable: connections.postgres.host
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'postgres host'
+      - variable: connections.postgres.username
+        default: postgres
+        description: ''
+        type: string
+        required: false
+        label: 'postgres username'
+      - variable: connections.postgres.password
+        default: p@ssw0rd
+        description: ''
+        type: password
+        required: false
+        label: 'postgres password'
+      - variable: connections.postgres.port
+        default: 5432
+        description: ''
+        type: int
+        min: 0
+        max: 65535
+        required: false
+        label: 'postgres port'
+      # - variable: connections.postgres.url
+      #   default: ''
+      #   description: ''
+      #   type: string
+      #   required: false
+      #   label: 'postgres url'
+  - variable: connections.mysql.enabled
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'mysql enabled'
+    show_subquestion_if: true
+    group: Connections
+    subquestions:
+      - variable: connections.mysql.host
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'mysql host'
+      - variable: connections.mysql.username
+        default: mysql
+        description: ''
+        type: string
+        required: false
+        label: 'mysql username'
+      - variable: connections.mysql.password
+        default: p@ssw0rd
+        description: ''
+        type: password
+        required: false
+        label: 'mysql password'
+      - variable: connections.mysql.port
+        default: 3306
+        description: ''
+        type: int
+        min: 0
+        max: 65535
+        required: false
+        label: 'mysql port'
+      # - variable: connections.mysql.url
+      #   default: ''
+      #   description: ''
+      #   type: string
+      #   required: false
+      #   label: 'mysql url'
+
 # Images
   - variable: images.externaldbOperator.repository
     default: codejamninja/externaldb-operator
