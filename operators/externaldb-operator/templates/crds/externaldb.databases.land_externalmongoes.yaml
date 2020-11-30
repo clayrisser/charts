@@ -541,9 +541,18 @@ spec:
           properties:
             database:
               description:
-                database status (CREATING, DELETING, CREATED, ALREADY_EXISTS
-                OR FAILED)
+                database status (Creating, Deleting, Created, AlreadyExists
+                or Failed)
               type: string
+            message:
+              description: external mongo message
+              type: string
+            phase:
+              description: external mongo phase (Pending, Succeeded, Failed, Unknown)
+              type: string
+            ready:
+              description: external mongo ready
+              type: boolean
           type: object
       type: object
   version: v1alpha1

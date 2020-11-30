@@ -37,7 +37,7 @@ spec:
   #         apiVersion: v1
   #         kind: Secret
   #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}
+  #         name: {{ template "keycloak.fullname" . }}-externaldb
   #     - name: POSTGRES_HOSTNAME
   #       fieldref:
   #         fieldPath: POSTGRES_HOSTNAME
@@ -45,7 +45,7 @@ spec:
   #         apiVersion: v1
   #         kind: Secret
   #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}
+  #         name: {{ template "keycloak.fullname" . }}-externaldb
   #     - name: POSTGRES_PASSWORD
   #       fieldref:
   #         fieldPath: POSTGRES_PASSWORD
@@ -53,7 +53,7 @@ spec:
   #         apiVersion: v1
   #         kind: Secret
   #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}
+  #         name: {{ template "keycloak.fullname" . }}-externaldb
   #     - name: POSTGRES_PORT
   #       fieldref:
   #         fieldPath: POSTGRES_PORT
@@ -61,7 +61,7 @@ spec:
   #         apiVersion: v1
   #         kind: Secret
   #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}
+  #         name: {{ template "keycloak.fullname" . }}-externaldb
   #     - name: POSTGRES_USERNAME
   #       fieldref:
   #         fieldPath: POSTGRES_USERNAME
@@ -69,5 +69,5 @@ spec:
   #         apiVersion: v1
   #         kind: Secret
   #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}
+  #         name: {{ template "keycloak.fullname" . }}-externaldb
 {{- end }}
