@@ -24,7 +24,7 @@ connections:
     hostname: ''
     password: ''
     port: 5432
-    sslMode: prefer
+    sslMode: allow-unauthorized
     url: ''
     username: postgres
   mysql:
