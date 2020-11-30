@@ -106,13 +106,14 @@ questions:
         required: false
         label: 'postgres port'
       - variable: connections.postgres.sslMode
-        default: prefer
+        default: allow-unauthorized
         description: ''
         type: enum
         options:
-          - prefer
           - allow
+          - allow-unauthorized
           - disable
+          - prefer
           - require
           - verify-ca
           - verify-full
@@ -175,7 +176,7 @@ questions:
     label: 'externaldb operator repository'
     group: Images
   - variable: images.externaldbOperator.tag
-    default: 0.0.5
+    default: 0.0.6
     description: ''
     type: string
     required: true
