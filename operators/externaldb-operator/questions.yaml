@@ -105,6 +105,19 @@ questions:
         max: 65535
         required: false
         label: 'postgres port'
+      - variable: connections.postgres.sslMode
+        default: prefer
+        description: ''
+        type: enum
+        options:
+          - prefer
+          - allow
+          - disable
+          - require
+          - verify-ca
+          - verify-full
+        required: false
+        label: 'postgres port'
       # - variable: connections.postgres.url
       #   default: ''
       #   description: ''
@@ -162,7 +175,7 @@ questions:
     label: 'externaldb operator repository'
     group: Images
   - variable: images.externaldbOperator.tag
-    default: 0.0.2
+    default: 0.0.3
     description: ''
     type: string
     required: true

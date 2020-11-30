@@ -1,7 +1,7 @@
 images:
   externaldbOperator:
     repository: codejamninja/externaldb-operator
-    tag: 0.0.2
+    tag: 0.0.3
 
 config:
   clusterProvider: infrastructure
@@ -24,6 +24,7 @@ connections:
     hostname: ''
     password: ''
     port: 5432
+    sslMode: prefer
     url: ''
     username: postgres
   mysql:

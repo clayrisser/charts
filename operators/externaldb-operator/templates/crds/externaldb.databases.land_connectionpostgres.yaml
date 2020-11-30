@@ -58,6 +58,9 @@ spec:
             secretName:
               description: secret name containing `POSTGRES_PASSWORD` or `POSTGRES_CONNECITON_URL`
               type: string
+            sslMode:
+              description: ssl mode (ALLOW, DISABLE, PREFER, REQUIRE, VERIFY_CA, VERIFY_FULL)
+              type: string
             url:
               description: postgres connection url
               type: string

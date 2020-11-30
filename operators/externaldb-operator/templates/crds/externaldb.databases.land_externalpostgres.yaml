@@ -42,6 +42,11 @@ spec:
                 cleanup will delete the database when the ExternalPostgres
                 resource is deleted
               type: boolean
+            configMapName:
+              description:
+                name of generated config map containing `POSTGRES_HOSTNAME`,
+                `POSTGRES_PORT`, `POSTGRES_USERNAME` or `POSTGRES_DATABASE`
+              type: string
             connection:
               description: connection postgres resource
               properties:
@@ -525,9 +530,20 @@ spec:
             name:
               description: name is the name of the database to create
               type: string
+            secretName:
+              description:
+                name of generated secret containing `POSTGRES_PASSWORD`
+                or `POSTGRES_CONNECITON_URL`
+              type: string
           type: object
         status:
           description: ExternalPostgresStatus defines the observed state of ExternalPostgres
+          properties:
+            database:
+              description:
+                database status (CREATING, DELETING, CREATED, ALREADY_EXISTS
+                OR FAILED)
+              type: string
           type: object
       type: object
   version: v1alpha1
