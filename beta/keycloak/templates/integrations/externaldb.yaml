@@ -20,6 +20,10 @@ spec:
         kind: Secret
         name: keycloak-db-secret
         namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: {{ template "keycloak.fullname" . }}-externaldb
+        namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
@@ -41,38 +45,38 @@ spec:
         objref:
           apiVersion: v1
           kind: Secret
-          namespace: {{ .Release.Namespace }}
           name: {{ template "keycloak.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
       - name: POSTGRES_HOSTNAME
         fieldref:
           fieldPath: POSTGRES_HOSTNAME
         objref:
           apiVersion: v1
           kind: Secret
-          namespace: {{ .Release.Namespace }}
           name: {{ template "keycloak.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PASSWORD
         fieldref:
           fieldPath: POSTGRES_PASSWORD
         objref:
           apiVersion: v1
           kind: Secret
-          namespace: {{ .Release.Namespace }}
           name: {{ template "keycloak.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PORT
         fieldref:
           fieldPath: POSTGRES_PORT
         objref:
           apiVersion: v1
           kind: Secret
-          namespace: {{ .Release.Namespace }}
           name: {{ template "keycloak.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
       - name: POSTGRES_USERNAME
         fieldref:
           fieldPath: POSTGRES_USERNAME
         objref:
           apiVersion: v1
           kind: Secret
-          namespace: {{ .Release.Namespace }}
           name: {{ template "keycloak.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
 {{- end }}
