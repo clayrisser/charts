@@ -41,23 +41,23 @@ spec:
     vars:
       - name: POSTGRES_DATABASE
         fieldref:
-          fieldPath: POSTGRES_DATABASE
+          fieldPath: data.POSTGRES_DATABASE
         objref:
           apiVersion: v1
-          kind: Secret
+          kind: ConfigMap
           name: {{ template "keycloak.fullname" . }}-externaldb
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_HOSTNAME
         fieldref:
-          fieldPath: POSTGRES_HOSTNAME
+          fieldPath: data.POSTGRES_HOSTNAME
         objref:
           apiVersion: v1
-          kind: Secret
+          kind: ConfigMap
           name: {{ template "keycloak.fullname" . }}-externaldb
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PASSWORD
         fieldref:
-          fieldPath: POSTGRES_PASSWORD
+          fieldPath: data.POSTGRES_PASSWORD
         objref:
           apiVersion: v1
           kind: Secret
@@ -65,18 +65,18 @@ spec:
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PORT
         fieldref:
-          fieldPath: POSTGRES_PORT
+          fieldPath: data.POSTGRES_PORT
         objref:
           apiVersion: v1
-          kind: Secret
+          kind: ConfigMap
           name: {{ template "keycloak.fullname" . }}-externaldb
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_USERNAME
         fieldref:
-          fieldPath: POSTGRES_USERNAME
+          fieldPath: data.POSTGRES_USERNAME
         objref:
           apiVersion: v1
-          kind: Secret
+          kind: ConfigMap
           name: {{ template "keycloak.fullname" . }}-externaldb
           namespace: {{ .Release.Namespace }}
 {{- end }}
