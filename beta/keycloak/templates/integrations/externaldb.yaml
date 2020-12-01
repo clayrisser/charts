@@ -14,60 +14,60 @@ spec:
   connection:
     name: {{ .Values.config.postgres.integration }}
     namespace: kube-system
-  # kustomization:
-  #   patches:
-  #     - patch: |
-  #         apiVersion: v1
-  #         kind: Secret
-  #         metadata:
-  #           name: keycloak-db-secret
-  #           namespace: {{ .Release.Namespace }}
-  #         type: Opaque
-  #         stringData:
-  #           POSTGRES_DATABASE: "$(POSTGRES_DATABASE)"
-  #           POSTGRES_EXTERNAL_ADDRESS: "$(POSTGRES_HOSTNAME)"
-  #           POSTGRES_EXTERNAL_PORT: "$(POSTGRES_PORT)"
-  #           POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
-  #           POSTGRES_USERNAME: "$(POSTGRES_USERNAME)"
-  #   vars:
-  #     - name: POSTGRES_DATABASE
-  #       fieldref:
-  #         fieldPath: POSTGRES_DATABASE
-  #       objref:
-  #         apiVersion: v1
-  #         kind: Secret
-  #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}-externaldb
-  #     - name: POSTGRES_HOSTNAME
-  #       fieldref:
-  #         fieldPath: POSTGRES_HOSTNAME
-  #       objref:
-  #         apiVersion: v1
-  #         kind: Secret
-  #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}-externaldb
-  #     - name: POSTGRES_PASSWORD
-  #       fieldref:
-  #         fieldPath: POSTGRES_PASSWORD
-  #       objref:
-  #         apiVersion: v1
-  #         kind: Secret
-  #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}-externaldb
-  #     - name: POSTGRES_PORT
-  #       fieldref:
-  #         fieldPath: POSTGRES_PORT
-  #       objref:
-  #         apiVersion: v1
-  #         kind: Secret
-  #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}-externaldb
-  #     - name: POSTGRES_USERNAME
-  #       fieldref:
-  #         fieldPath: POSTGRES_USERNAME
-  #       objref:
-  #         apiVersion: v1
-  #         kind: Secret
-  #         namespace: {{ .Release.Namespace }}
-  #         name: {{ template "keycloak.fullname" . }}-externaldb
+  kustomization:
+    patches:
+      - patch: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: keycloak-db-secret
+            namespace: {{ .Release.Namespace }}
+          type: Opaque
+          stringData:
+            POSTGRES_DATABASE: "$(POSTGRES_DATABASE)"
+            POSTGRES_EXTERNAL_ADDRESS: "$(POSTGRES_HOSTNAME)"
+            POSTGRES_EXTERNAL_PORT: "$(POSTGRES_PORT)"
+            POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
+            POSTGRES_USERNAME: "$(POSTGRES_USERNAME)"
+    vars:
+      - name: POSTGRES_DATABASE
+        fieldref:
+          fieldPath: POSTGRES_DATABASE
+        objref:
+          apiVersion: v1
+          kind: Secret
+          namespace: {{ .Release.Namespace }}
+          name: {{ template "keycloak.fullname" . }}-externaldb
+      - name: POSTGRES_HOSTNAME
+        fieldref:
+          fieldPath: POSTGRES_HOSTNAME
+        objref:
+          apiVersion: v1
+          kind: Secret
+          namespace: {{ .Release.Namespace }}
+          name: {{ template "keycloak.fullname" . }}-externaldb
+      - name: POSTGRES_PASSWORD
+        fieldref:
+          fieldPath: POSTGRES_PASSWORD
+        objref:
+          apiVersion: v1
+          kind: Secret
+          namespace: {{ .Release.Namespace }}
+          name: {{ template "keycloak.fullname" . }}-externaldb
+      - name: POSTGRES_PORT
+        fieldref:
+          fieldPath: POSTGRES_PORT
+        objref:
+          apiVersion: v1
+          kind: Secret
+          namespace: {{ .Release.Namespace }}
+          name: {{ template "keycloak.fullname" . }}-externaldb
+      - name: POSTGRES_USERNAME
+        fieldref:
+          fieldPath: POSTGRES_USERNAME
+        objref:
+          apiVersion: v1
+          kind: Secret
+          namespace: {{ .Release.Namespace }}
+          name: {{ template "keycloak.fullname" . }}-externaldb
 {{- end }}
