@@ -15,6 +15,13 @@ spec:
     name: {{ .Values.config.postgres.integration }}
     namespace: kube-system
   kustomization:
+    resources:
+      - |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: keycloak-db-secret
+            namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
