@@ -14,13 +14,14 @@ spec:
       - kind: ConnectionPostgres
         path: spec.password
   resources:
-    - version: externaldb.databases.land/v1alpha1
+    - group: externaldb.databases.land
       kind: ConnectionPostgres
       name: {{ template "postgres.fullname" . }}
       namespace: {{ .Release.Namespace }}
+      version: v1alpha1
     - version: v1
       kind: Secret
-      name: some-secret
+      name: postgres.{{ template "postgres.fullname" . }}-postgres-postgresql.credentials.postgresql.acid.zalan.do
       namespace: {{ .Release.Namespace }}
   patches:
     - patch: |
@@ -28,6 +29,7 @@ spec:
         kind: ConnectionPostgres
         metadata:
           name: {{ template "postgres.fullname" . }}
+          namespace: {{ .Release.Namespace }}
           labels:
             app: {{ template "postgres.name" . }}
             chart: {{ .Chart.Name }}-{{ .Chart.Version }}
