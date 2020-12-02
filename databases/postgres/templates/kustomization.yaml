@@ -37,7 +37,7 @@ spec:
   vars:
     - name: POSTGRES_PASSWORD
       fieldref:
-        fieldPath: data.POSTGRES_PASSWORD
+        fieldPath: data.password
       objref:
         apiVersion: v1
         kind: Secret
