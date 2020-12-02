@@ -18,7 +18,7 @@ spec:
     configuration:
       varReference:
         - kind: Secret
-          path: data
+          path: stringData
     resources:
       - version: v1
         kind: Secret
