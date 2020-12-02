@@ -14,8 +14,7 @@ spec:
       - kind: ConnectionPostgres
         path: spec.password
   resources:
-    - group: externaldb.databases.land
-      version: v1alpha1
+    - version: externaldb.databases.land/v1alpha1
       kind: ConnectionPostgres
       name: {{ template "postgres.fullname" . }}
       namespace: {{ .Release.Namespace }}
