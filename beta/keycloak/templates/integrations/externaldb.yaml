@@ -25,6 +25,10 @@ spec:
         name: keycloak-db-secret
         namespace: {{ .Release.Namespace }}
       - version: v1
+        kind: ConfigMap
+        name: {{ template "keycloak.fullname" . }}-externaldb
+        namespace: {{ .Release.Namespace }}
+      - version: v1
         kind: Secret
         name: {{ template "keycloak.fullname" . }}-externaldb
         namespace: {{ .Release.Namespace }}
