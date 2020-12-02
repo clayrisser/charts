@@ -39,7 +39,7 @@ spec:
           metadata:
             name: keycloak-db-secret
             namespace: {{ .Release.Namespace }}
-          data:
+          stringData:
             POSTGRES_DATABASE: "$(POSTGRES_DATABASE)"
             POSTGRES_EXTERNAL_ADDRESS: "$(POSTGRES_HOSTNAME)"
             POSTGRES_EXTERNAL_PORT: "$(POSTGRES_PORT)"
