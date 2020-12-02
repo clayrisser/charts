@@ -45,6 +45,13 @@ questions:
     required: true
     label: version
     group: Config
+  - variable: config.connection.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'connection enabled'
+    group: Config
   - variable: config.resources.defaults
     default: true
     description: ''
