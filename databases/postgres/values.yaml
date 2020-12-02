@@ -10,6 +10,8 @@ config:
   replicas: 1
   updateStrategy: Recreate
   version: '12'
+  connection:
+    enabled: true
   walE:
     enabled: false
     backupThresholdMegabytes: 1024

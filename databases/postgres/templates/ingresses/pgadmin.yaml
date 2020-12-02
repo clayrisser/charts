@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "postgres.fullname" . }}-gitlab
+  name: {{ template "postgres.fullname" . }}-pgadmin
   annotations:
     {{- if (eq .Values.config.clusterProvider "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing
@@ -17,7 +17,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "postgres.name" . }}-gitlab
+    app: {{ template "postgres.name" . }}-pgadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -28,7 +28,7 @@ spec:
         paths:
           - path: {{ .Values.ingress.pgadmin.path }}
             backend:
-              serviceName: {{ template "postgres.fullname" . }}-gitlab
+              serviceName: {{ template "postgres.fullname" . }}-pgadmin
               servicePort: http
   {{- if .Values.ingress.pgadmin.tls }}
   tls:

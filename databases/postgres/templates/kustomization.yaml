@@ -1,0 +1,48 @@
+{{- if .Values.config.connection.enabled }}
+apiVersion: kustomize.siliconhills.dev/v1alpha1
+kind: Kustomization
+metadata:
+  name: {{ template "postgres.fullname" . }}
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  configuration:
+    varReference:
+      - kind: ConnectionPostgres
+        path: spec.password
+  resources:
+    - group: externaldb.databases.land
+      version: v1alpha1
+      kind: ConnectionPostgres
+      name: {{ template "postgres.fullname" . }}
+      namespace: {{ .Release.Namespace }}
+    - version: v1
+      kind: Secret
+      name: some-secret
+      namespace: {{ .Release.Namespace }}
+  patches:
+    - patch: |
+        apiVersion: externaldb.databases.land/v1alpha1
+        kind: ConnectionPostgres
+        metadata:
+          name: {{ template "postgres.fullname" . }}
+          labels:
+            app: {{ template "postgres.name" . }}
+            chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+            release: {{ .Release.Name }}
+            heritage: {{ .Release.Service }}
+        spec:
+          password: "$(POSTGRES_PASSWORD)"
+  vars:
+    - name: POSTGRES_PASSWORD
+      fieldref:
+        fieldPath: data.POSTGRES_PASSWORD
+      objref:
+        apiVersion: v1
+        kind: Secret
+        name: postgres.{{ template "postgres.fullname" . }}-postgres-postgresql.credentials.postgresql.acid.zalan.do
+        namespace: {{ .Release.Namespace }}
+{{- end }}
