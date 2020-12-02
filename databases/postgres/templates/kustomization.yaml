@@ -11,8 +11,10 @@ metadata:
 spec:
   configuration:
     varReference:
-      - kind: ConnectionPostgres
-        path: spec.password
+      - group: externaldb.databases.land
+        version: v1alpha1
+        kind: ConnectionPostgres
+        path: spec
   resources:
     - group: externaldb.databases.land
       kind: ConnectionPostgres
@@ -30,11 +32,6 @@ spec:
         metadata:
           name: {{ template "postgres.fullname" . }}
           namespace: {{ .Release.Namespace }}
-          labels:
-            app: {{ template "postgres.name" . }}
-            chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-            release: {{ .Release.Name }}
-            heritage: {{ .Release.Service }}
         spec:
           password: "$(POSTGRES_PASSWORD)"
   vars:
