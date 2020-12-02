@@ -67,7 +67,7 @@ questions:
     label: 'kustomize operator repository'
     group: Images
   - variable: images.kustomizeOperator.tag
-    default: 0.0.1
+    default: 0.0.2
     description: ''
     type: string
     required: true

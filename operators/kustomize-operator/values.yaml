@@ -1,7 +1,7 @@
 images:
   siliconOperator:
     repository: codejamninja/kustomize-operator
-    tag: 0.0.1
+    tag: 0.0.2
 
 config:
   clusterProvider: infrastructure
