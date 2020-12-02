@@ -148,6 +148,221 @@ spec:
                         type: object
                     type: object
                   type: array
+                configuration:
+                  description: kustomization config
+                  properties:
+                    commonAnnotations:
+                      description:
+                        NameReference     nbrSlice      `json:"nameReference,omitempty"
+                        yaml:"nameReference,omitempty"`
+                      items:
+                        description:
+                          "FieldSpec completely specifies a kustomizable
+                          field in an unstructured representation of a k8s API object.
+                          It helps define the operands of transformations. \n For
+                          example, a directive to add a common label to objects will
+                          need to know that a 'Deployment' object (in API group 'apps',
+                          any version) can have labels at field path 'spec/template/metadata/labels',
+                          and further that it is OK (or not OK) to add that field
+                          path to the object if the field path doesn't exist already.
+                          \n This would look like {   group: apps   kind: Deployment
+                          \  path: spec/template/metadata/labels   create: true }"
+                        properties:
+                          create:
+                            type: boolean
+                          group:
+                            type: string
+                          kind:
+                            type: string
+                          path:
+                            type: string
+                          version:
+                            type: string
+                        type: object
+                      type: array
+                    commonLabels:
+                      items:
+                        description:
+                          "FieldSpec completely specifies a kustomizable
+                          field in an unstructured representation of a k8s API object.
+                          It helps define the operands of transformations. \n For
+                          example, a directive to add a common label to objects will
+                          need to know that a 'Deployment' object (in API group 'apps',
+                          any version) can have labels at field path 'spec/template/metadata/labels',
+                          and further that it is OK (or not OK) to add that field
+                          path to the object if the field path doesn't exist already.
+                          \n This would look like {   group: apps   kind: Deployment
+                          \  path: spec/template/metadata/labels   create: true }"
+                        properties:
+                          create:
+                            type: boolean
+                          group:
+                            type: string
+                          kind:
+                            type: string
+                          path:
+                            type: string
+                          version:
+                            type: string
+                        type: object
+                      type: array
+                    images:
+                      items:
+                        description:
+                          "FieldSpec completely specifies a kustomizable
+                          field in an unstructured representation of a k8s API object.
+                          It helps define the operands of transformations. \n For
+                          example, a directive to add a common label to objects will
+                          need to know that a 'Deployment' object (in API group 'apps',
+                          any version) can have labels at field path 'spec/template/metadata/labels',
+                          and further that it is OK (or not OK) to add that field
+                          path to the object if the field path doesn't exist already.
+                          \n This would look like {   group: apps   kind: Deployment
+                          \  path: spec/template/metadata/labels   create: true }"
+                        properties:
+                          create:
+                            type: boolean
+                          group:
+                            type: string
+                          kind:
+                            type: string
+                          path:
+                            type: string
+                          version:
+                            type: string
+                        type: object
+                      type: array
+                    namePrefix:
+                      items:
+                        description:
+                          "FieldSpec completely specifies a kustomizable
+                          field in an unstructured representation of a k8s API object.
+                          It helps define the operands of transformations. \n For
+                          example, a directive to add a common label to objects will
+                          need to know that a 'Deployment' object (in API group 'apps',
+                          any version) can have labels at field path 'spec/template/metadata/labels',
+                          and further that it is OK (or not OK) to add that field
+                          path to the object if the field path doesn't exist already.
+                          \n This would look like {   group: apps   kind: Deployment
+                          \  path: spec/template/metadata/labels   create: true }"
+                        properties:
+                          create:
+                            type: boolean
+                          group:
+                            type: string
+                          kind:
+                            type: string
+                          path:
+                            type: string
+                          version:
+                            type: string
+                        type: object
+                      type: array
+                    nameSuffix:
+                      items:
+                        description:
+                          "FieldSpec completely specifies a kustomizable
+                          field in an unstructured representation of a k8s API object.
+                          It helps define the operands of transformations. \n For
+                          example, a directive to add a common label to objects will
+                          need to know that a 'Deployment' object (in API group 'apps',
+                          any version) can have labels at field path 'spec/template/metadata/labels',
+                          and further that it is OK (or not OK) to add that field
+                          path to the object if the field path doesn't exist already.
+                          \n This would look like {   group: apps   kind: Deployment
+                          \  path: spec/template/metadata/labels   create: true }"
+                        properties:
+                          create:
+                            type: boolean
+                          group:
+                            type: string
+                          kind:
+                            type: string
+                          path:
+                            type: string
+                          version:
+                            type: string
+                        type: object
+                      type: array
+                    namespace:
+                      items:
+                        description:
+                          "FieldSpec completely specifies a kustomizable
+                          field in an unstructured representation of a k8s API object.
+                          It helps define the operands of transformations. \n For
+                          example, a directive to add a common label to objects will
+                          need to know that a 'Deployment' object (in API group 'apps',
+                          any version) can have labels at field path 'spec/template/metadata/labels',
+                          and further that it is OK (or not OK) to add that field
+                          path to the object if the field path doesn't exist already.
+                          \n This would look like {   group: apps   kind: Deployment
+                          \  path: spec/template/metadata/labels   create: true }"
+                        properties:
+                          create:
+                            type: boolean
+                          group:
+                            type: string
+                          kind:
+                            type: string
+                          path:
+                            type: string
+                          version:
+                            type: string
+                        type: object
+                      type: array
+                    replicas:
+                      items:
+                        description:
+                          "FieldSpec completely specifies a kustomizable
+                          field in an unstructured representation of a k8s API object.
+                          It helps define the operands of transformations. \n For
+                          example, a directive to add a common label to objects will
+                          need to know that a 'Deployment' object (in API group 'apps',
+                          any version) can have labels at field path 'spec/template/metadata/labels',
+                          and further that it is OK (or not OK) to add that field
+                          path to the object if the field path doesn't exist already.
+                          \n This would look like {   group: apps   kind: Deployment
+                          \  path: spec/template/metadata/labels   create: true }"
+                        properties:
+                          create:
+                            type: boolean
+                          group:
+                            type: string
+                          kind:
+                            type: string
+                          path:
+                            type: string
+                          version:
+                            type: string
+                        type: object
+                      type: array
+                    varReference:
+                      items:
+                        description:
+                          "FieldSpec completely specifies a kustomizable
+                          field in an unstructured representation of a k8s API object.
+                          It helps define the operands of transformations. \n For
+                          example, a directive to add a common label to objects will
+                          need to know that a 'Deployment' object (in API group 'apps',
+                          any version) can have labels at field path 'spec/template/metadata/labels',
+                          and further that it is OK (or not OK) to add that field
+                          path to the object if the field path doesn't exist already.
+                          \n This would look like {   group: apps   kind: Deployment
+                          \  path: spec/template/metadata/labels   create: true }"
+                        properties:
+                          create:
+                            type: boolean
+                          group:
+                            type: string
+                          kind:
+                            type: string
+                          path:
+                            type: string
+                          version:
+                            type: string
+                        type: object
+                      type: array
+                  type: object
                 crds:
                   description:
                     Crds specifies relative paths to Custom Resource Definition
