@@ -14,6 +14,10 @@ spec:
   connection:
     name: {{ .Values.config.postgres.integration }}
     namespace: kube-system
+  configuration:
+    varReference:
+      - kind: Secret
+        path: data
   kustomization:
     resources:
       - version: v1
