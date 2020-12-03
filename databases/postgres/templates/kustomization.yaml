@@ -13,7 +13,7 @@ spec:
     varReference:
       - version: v1
         kind: Secret
-        path: stringData
+        path: data
   resources:
     - version: v1
       kind: Secret
@@ -30,8 +30,7 @@ spec:
         metadata:
           name: {{ template "postgres.fullname" . }}-connection
           namespace: {{ .Release.Namespace }}
-        type: Opaque
-        stringData:
+        data:
           POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
   vars:
     - name: POSTGRES_PASSWORD
