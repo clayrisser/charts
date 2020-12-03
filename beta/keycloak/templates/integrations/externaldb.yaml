@@ -17,7 +17,8 @@ spec:
   kustomization:
     configuration:
       varReference:
-        - kind: Secret
+        - version: v1
+          kind: Secret
           path: stringData
     resources:
       - version: v1

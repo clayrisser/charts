@@ -10,8 +10,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   hostname: {{ (include "postgres.fullname" .) | quote }}
-  password: ''
   port: 5432
+  secretName: {{ template "postgres.fullname" . }}-connection
   sslMode: allow-unauthorized
   username: postgres
 {{- end }}
