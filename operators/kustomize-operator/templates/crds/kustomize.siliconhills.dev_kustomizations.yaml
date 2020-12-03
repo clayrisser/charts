@@ -716,6 +716,11 @@ spec:
             phase:
               description: kustomization phase (Pending, Succeeded, Failed, Unknown)
               type: string
+            previousPhase:
+              description:
+                kustomization previous phase (Pending, Succeeded, Failed,
+                Unknown)
+              type: string
             ready:
               description: kustomization ready
               type: boolean
