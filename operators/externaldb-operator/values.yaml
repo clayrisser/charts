@@ -1,7 +1,7 @@
 images:
   externaldbOperator:
     repository: codejamninja/externaldb-operator
-    tag: 0.0.10
+    tag: 0.0.11
 
 config:
   clusterProvider: infrastructure

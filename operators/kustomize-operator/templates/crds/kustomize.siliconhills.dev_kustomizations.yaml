@@ -710,9 +710,6 @@ spec:
         status:
           description: KustomizationStatus defines the observed state of Kustomization
           properties:
-            lastUpdateTime:
-              description: last update time
-              type: string
             message:
               description: kustomization message
               type: string

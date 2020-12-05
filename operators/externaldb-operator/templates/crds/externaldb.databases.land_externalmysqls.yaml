@@ -765,11 +765,6 @@ spec:
             phase:
               description: external mysql phase (Pending, Succeeded, Failed, Unknown)
               type: string
-            previousPhase:
-              description:
-                external mysql previous phase (Pending, Succeeded, Failed,
-                Unknown)
-              type: string
             ready:
               description: external mysql ready
               type: boolean
