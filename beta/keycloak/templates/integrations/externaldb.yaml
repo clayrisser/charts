@@ -12,8 +12,8 @@ spec:
   cleanup: false
   name: {{ .Values.config.postgres.database }}
   connection:
-    name: {{ .Values.config.postgres.integration }}
-    namespace: kube-system
+    name: {{ (split ":" .Values.config.postgres.integration)._0 }}
+    namespace: {{ (split ":" (printf "%s:" .Values.config.postgres.integration))._1 | default "kube-system" }}
   kustomization:
     configuration:
       varReference:
