@@ -44,8 +44,15 @@ spec:
             POSTGRES_DATABASE: "$(POSTGRES_DATABASE)"
             POSTGRES_EXTERNAL_ADDRESS: "$(POSTGRES_HOSTNAME)"
             POSTGRES_EXTERNAL_PORT: "$(POSTGRES_PORT)"
-            POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
             POSTGRES_USERNAME: "$(POSTGRES_USERNAME)"
+      - patch: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: keycloak-db-secret
+            namespace: {{ .Release.Namespace }}
+          data:
+            POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
     vars:
       - name: POSTGRES_DATABASE
         fieldref:
