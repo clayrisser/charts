@@ -165,6 +165,7 @@ questions:
     required: true
     label: 'pgadmin resources enabled'
     show_subquestion_if: custom
+    show_if: config.pgadmin.enabled=true
     group: PGAdmin
     subquestions:
       - variable: config.pgadmin.resources.requests.cpu
