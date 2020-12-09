@@ -110,8 +110,6 @@ spec:
 {{ toYaml .Values.config.sonarqube.resources.requests | indent 8 }}
       limits:
 {{ toYaml .Values.config.sonarqube.resources.limits | indent 8 }}
-{{- else }}
-    resources: {}
 {{- end }}
     persistence:
       enabled: {{ .Values.persistence.enabled }}

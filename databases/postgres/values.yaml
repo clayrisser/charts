@@ -4,7 +4,7 @@ images:
     tag: 4.17
 
 config:
-  clusterProvider: infrastructure
+  clusterType: rke
   imagePullPolicy: IfNotPresent
   metrics: false
   replicas: 1
@@ -20,6 +20,7 @@ config:
     s3Bucket: ''
     schedule: '0 0 * * *'
   resources:
+    enabled: false
     requests:
       cpu: 100m
       memory: 256Mi
@@ -31,6 +32,7 @@ config:
     enabled: false
     password: pass
     resources:
+      enabled: false
       requests:
         cpu: 100m
         memory: 128Mi

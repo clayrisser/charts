@@ -31,13 +31,13 @@ spec:
     postgres: postgres
   postgresql:
     version: {{ .Values.config.version | quote }}
+{{- if .Values.config.resources.enabled }}
   resources:
     requests:
-      cpu: {{ .Values.config.resources.requests.cpu }}
-      memory: {{ .Values.config.resources.requests.memory }}
+{{ toYaml .Values.config.resources.requests | indent 6 }}
     limits:
-      cpu: {{ .Values.config.resources.limits.cpu }}
-      memory: {{ .Values.config.resources.limits.memory }}
+{{ toYaml .Values.config.resources.limits | indent 6 }}
+{{- end }}
   {{ if .Values.config.metrics }}
   sidecars:
     - name: exporter
@@ -66,4 +66,4 @@ spec:
             secretKeyRef:
               name: postgres.{{ template "postgres.fullname" . }}-postgres.credentials
               key: password
-  {{- end }}
+ {{- end }}

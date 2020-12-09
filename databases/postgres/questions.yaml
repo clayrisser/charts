@@ -3,17 +3,18 @@ categories:
 questions:
 
 # Config
-  - variable: config.clusterProvider
-    default: infrastructure
+  - variable: config.clusterType
+    default: rke
     description: ''
     type: enum
     options:
-      - infrastructure
-      - eks
       - aks
+      - eks
       - gke
+      - k3s
+      - rke
     required: true
-    label: 'cluster provider'
+    label: 'cluster type'
     group: Config
   - variable: config.imagePullPolicy
     default: IfNotPresent
@@ -52,45 +53,19 @@ questions:
     required: true
     label: 'connection enabled'
     group: Config
-  - variable: config.resources.defaults
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: 'resources defaults'
-    show_subquestion_if: false
-    group: Config
-    subquestions:
-      - variable: config.resources.requests.cpu
-        default: 100m
-        description: ''
-        type: string
-        required: true
-        label: 'resources requests cpu'
-      - variable: config.resources.requests.memory
-        default: 256Mi
-        description: ''
-        type: string
-        required: true
-        label: 'resources requests memory'
-      - variable: config.resources.limits.cpu
-        default: 250m
-        description: ''
-        type: string
-        required: true
-        label: 'resources limits cpu'
-      - variable: config.resources.limits.memory
-        default: 512Mi
-        description: ''
-        type: string
-        required: true
-        label: 'resources limits memory'
   - variable: config.replicas
     default: 1
     description: ''
     type: int
     required: true
     label: replicas
+    group: Config
+  - variable: config.metrics
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: metrics
     group: Config
   - variable: config.walE.enabled
     default: false
@@ -119,13 +94,43 @@ questions:
         type: string
         required: false
         label: 'walE s3 bucket'
-  - variable: config.metrics
+  - variable: config.resources.enabled
     default: false
     description: ''
-    type: boolean
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
     required: true
-    label: metrics
+    label: 'resources enabled'
+    show_subquestion_if: custom
     group: Config
+    subquestions:
+      - variable: config.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.resources.requests.memory
+        default: 1.5Gi
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.resources.limits.memory
+        default: 1.7Gi
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
 
 # PGAdmin
   - variable: config.pgadmin.enabled
@@ -149,44 +154,43 @@ questions:
         type: password
         required: true
         label: 'pgadmin password'
-  - variable: config.pgadmin.resources.defaults
-    default: true
+  - variable: config.pgadmin.resources.enabled
+    default: false
     description: ''
-    type: boolean
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
     required: true
-    label: 'resources defaults'
-    show_if: config.pgadmin.enabled=true
-    show_subquestion_if: false
-    group: PGAdmin
+    label: 'pgadmin resources enabled'
+    show_subquestion_if: custom
+    group: Config
     subquestions:
       - variable: config.pgadmin.resources.requests.cpu
         default: 100m
         description: ''
         type: string
-        show_if: config.pgadmin.enabled=true
         required: true
-        label: 'resources requests cpu'
+        label: 'pgadmin resources requests cpu'
       - variable: config.pgadmin.resources.requests.memory
-        default: 128Mi
+        default: 1.5Gi
         description: ''
         type: string
-        show_if: config.pgadmin.enabled=true
         required: true
-        label: 'resources requests memory'
+        label: 'pgadmin resources requests memory'
       - variable: config.pgadmin.resources.limits.cpu
-        default: 200m
+        default: 500m
         description: ''
         type: string
-        show_if: config.pgadmin.enabled=true
         required: true
-        label: 'resources limits cpu'
+        label: 'pgadmin resources limits cpu'
       - variable: config.pgadmin.resources.limits.memory
-        default: 256Mi
+        default: 1.7Gi
         description: ''
         type: string
-        show_if: config.pgadmin.enabled=true
         required: true
-        label: 'resources limits memory'
+        label: 'pgadmin resources limits memory'
 
 # Persistence
   - variable: persistence.size

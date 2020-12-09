@@ -48,7 +48,10 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
 {{- if .Values.config.pgadmin.resources.enabled }}
           resources:
-{{ toYaml .Values.config.pgadmin.resources | indent 12 }}
+            requests:
+{{ toYaml .Values.config.pgadmin.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.pgadmin.resources.limits | indent 14 }}
 {{- end }}
           ports:
             - name: container
