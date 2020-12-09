@@ -296,7 +296,7 @@ questions:
         required: false
         label: 'pgadmin ingress certificate'
   - variable: service.pgadmin.type
-    default: NodePort
+    default: RancherProxy
     description: ''
     type: enum
     show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true

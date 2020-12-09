@@ -47,7 +47,7 @@ service:
     lbPorts:
       postgres: 5432
   pgadmin:
-    type: NodePort
+    type: RancherProxy
     externalTrafficPolicy: Cluster
     nodePorts:
       http:
