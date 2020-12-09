@@ -23,6 +23,10 @@ spec:
       kind: Secret
       name: postgres.{{ template "postgres.fullname" . }}-postgresql.credentials.postgresql.acid.zalan.do
       namespace: {{ .Release.Namespace }}
+    - version: v1
+      kind: Service
+      name: {{ template "postgres.fullname" . }}-postgresql
+      namespace: {{ .Release.Namespace }}
   patches:
     - patch: |
         apiVersion: v1
@@ -32,6 +36,28 @@ spec:
           namespace: {{ .Release.Namespace }}
         data:
           POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
+    - patch: |
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: {{ template "postgres.fullname" . }}-postgresql
+          namespace: {{ .Release.Namespace }}
+        spec:
+          type: {{ .Values.service.postgres.type }}
+          {{- if (eq .Values.service.postgres.type "NodePort") }}
+          externalTrafficPolicy: {{ .Values.service.postgres.externalTrafficPolicy }}
+          {{- end }}
+          ports:
+            - name: postgresql
+              port: {{ (eq .Values.service.postgres.type "LoadBalancer") | ternary .Values.service.postgres.lbPorts.postgres "5432" }}
+              {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
+              nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
+              {{- end }}
+            {{ if .Values.config.metrics }}
+            - name: exporter
+              port: 9187
+              targetPort: exporter
+            {{- end }}
   vars:
     - name: POSTGRES_PASSWORD
       fieldref:
