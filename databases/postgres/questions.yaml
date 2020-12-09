@@ -165,7 +165,7 @@ questions:
     required: true
     label: 'pgadmin resources enabled'
     show_subquestion_if: custom
-    group: Config
+    group: PGAdmin
     subquestions:
       - variable: config.pgadmin.resources.requests.cpu
         default: 100m
