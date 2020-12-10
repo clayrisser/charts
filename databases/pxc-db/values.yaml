@@ -19,7 +19,7 @@ images:
     tag: 4.9.7
 
 config:
-  clusterType: aks
+  clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   connection:

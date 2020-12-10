@@ -1,4 +1,4 @@
 config:
   cloudflareApiKey: ''
-  clusterType: aks
+  clusterType: rke
   email: ''
