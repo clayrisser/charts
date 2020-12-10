@@ -14,8 +14,6 @@ spec:
     enabled: true
     host: {{ template "keycloak.keycloak-hostname" . }}
     tlsTermination: reencrypt
-  externalDatabase:
-    enabled: true
   keycloakDeploymentSpec:
     experimental:
       # command:

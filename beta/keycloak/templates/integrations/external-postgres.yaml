@@ -24,6 +24,11 @@ spec:
           kind: Secret
           path: data
     resources:
+      - group: keycloak.org
+        version: v1alpha1
+        kind: Keycloak
+        name: {{ template "keycloak.fullname" . }}
+        namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
         name: keycloak-db-secret
@@ -56,6 +61,15 @@ spec:
             namespace: {{ .Release.Namespace }}
           data:
             POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
+      - patch: |
+          apiVersion: keycloak.org/v1alpha1
+          kind: Keycloak
+          metadata:
+            name: {{ template "keycloak.fullname" . }}
+            namespace: {{ .Release.Namespace }}
+          spec:
+            externalDatabase:
+              enabled: true
     vars:
       - name: POSTGRES_DATABASE
         fieldref:
