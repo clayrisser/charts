@@ -3,17 +3,18 @@ categories:
 questions:
 
 # Config
-  - variable: config.clusterProvider
-    default: infrastructure
+  - variable: config.clusterType
+    default: rke
     description: ''
     type: enum
     options:
-      - infrastructure
-      - eks
       - aks
+      - eks
       - gke
+      - k3s
+      - rke
     required: true
-    label: 'cluster provider'
+    label: 'cluster type'
     group: Config
   - variable: config.imagePullPolicy
     default: IfNotPresent
@@ -65,6 +66,13 @@ questions:
     required: true
     label: 'clustercheck password'
     group: Config
+  - variable: config.connection.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'connection enabled'
+    group: Config
 
 # Pxc Config
   - variable: config.pxc.size
@@ -101,11 +109,11 @@ questions:
     type: enum
     options:
       - defaults
-      - 'true'
-      - 'false'
+      - custom
+      - false
     required: true
     label: 'pxc resources enabled'
-    show_subquestion_if: 'true'
+    show_subquestion_if: custom
     group: 'Pxc Config'
     subquestions:
       - variable: config.pxc.resources.requests.cpu
@@ -155,12 +163,12 @@ questions:
     type: enum
     options:
       - defaults
-      - 'true'
-      - 'false'
+      - custom
+      - false
     required: true
     show_if: config.haproxy.enabled=true
     label: 'resources enabled'
-    show_subquestion_if: 'true'
+    show_subquestion_if: custom
     group: 'HaProxy Config'
     subquestions:
       - variable: config.haproxy.resources.requests.cpu

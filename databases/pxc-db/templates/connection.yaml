@@ -1,0 +1,16 @@
+{{- if .Values.config.connection.enabled }}
+apiVersion: externaldb.databases.land/v1alpha1
+kind: ConnectionMysql
+metadata:
+  name: {{ template "pxc-db.fullname" . }}
+  labels:
+    app: {{ template "pxc-db.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  hostname: {{ (include "pxc-db.fullname" .) }}-mysql.{{ .Release.Namespace }}.svc.cluster.local
+  port: 3306
+  secretName: {{ template "pxc-db.fullname" . }}-connection
+  username: root
+{{- end }}

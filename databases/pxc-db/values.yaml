@@ -19,9 +19,11 @@ images:
     tag: 4.9.7
 
 config:
-  clusterProvider: infrastructure
+  clusterType: aks
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
+  connection:
+    enabled: true
   passwords:
     clustercheck: P@ssw0rd
     monitor: P@ssw0rd
