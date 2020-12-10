@@ -8,8 +8,11 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- if (eq .Values.service.phpmyadmin.type "RancherProxy") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
 spec:
-  {{- if .Values.ingress.phpmyadmin.enabled }}
+  {{- if (or .Values.ingress.phpmyadmin.enabled (eq .Values.service.phpmyadmin.type "RancherProxy")) }}
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.phpmyadmin.type }}

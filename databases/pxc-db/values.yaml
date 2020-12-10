@@ -104,7 +104,7 @@ service:
     lbPorts:
       mysql: 3306
   phpmyadmin:
-    type: NodePort
+    type: RancherProxy
     externalTrafficPolicy: Cluster
     nodePorts:
       http:
