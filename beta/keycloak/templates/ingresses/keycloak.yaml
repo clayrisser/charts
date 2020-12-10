@@ -28,8 +28,8 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: {{ template "keycloak.fullname" . }}-keycloak
-              servicePort: http
+              serviceName: keycloak-discovery
+              servicePort: 8080
   {{- if .Values.ingress.keycloak.tls }}
   tls:
     - secretName: {{ template "keycloak.keycloak-certificate" . }}
