@@ -7,8 +7,11 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- if (eq .Values.service.keycloak.type "RancherProxy") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
 spec:
-  {{- if .Values.ingress.keycloak.enabled }}
+  {{- if (or .Values.ingress.keycloak.enabled (eq .Values.service.keycloak.type "RancherProxy")) }}
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.keycloak.type }}
