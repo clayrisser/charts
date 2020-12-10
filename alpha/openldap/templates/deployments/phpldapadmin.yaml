@@ -46,6 +46,13 @@ spec:
         - name: {{ template "openldap.fullname" . }}-phpldapadmin
           image: {{ .Values.images.phpldapadmin.repository }}:{{ .Values.images.phpldapadmin.tag }}
           imagePullPolicy: {{ .Values.images.phpldapadmin.pullPolicy }}
+{{- if .Values.config.phpldapadmin.resources.enabled }}
+          resources:
+            requests:
+{{ toYaml .Values.config.phpldapadmin.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.phpldapadmin.resources.limits | indent 14 }}
+{{- end }}
           {{- if .Values.config.debug }}
           args: ['--loglevel', 'debug']
           {{- end }}

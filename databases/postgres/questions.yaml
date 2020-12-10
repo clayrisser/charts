@@ -173,24 +173,28 @@ questions:
         description: ''
         type: string
         required: true
+        show_if: config.pgadmin.enabled=true
         label: 'pgadmin resources requests cpu'
       - variable: config.pgadmin.resources.requests.memory
         default: 1.5Gi
         description: ''
         type: string
         required: true
+        show_if: config.pgadmin.enabled=true
         label: 'pgadmin resources requests memory'
       - variable: config.pgadmin.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
+        show_if: config.pgadmin.enabled=true
         label: 'pgadmin resources limits cpu'
       - variable: config.pgadmin.resources.limits.memory
         default: 1.7Gi
         description: ''
         type: string
         required: true
+        show_if: config.pgadmin.enabled=true
         label: 'pgadmin resources limits memory'
 
 # Persistence

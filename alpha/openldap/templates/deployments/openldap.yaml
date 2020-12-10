@@ -50,6 +50,13 @@ spec:
         - name: {{ template "openldap.fullname" . }}-openldap
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+{{- if .Values.config.openldap.resources.enabled }}
+          resources:
+            requests:
+{{ toYaml .Values.config.openldap.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.openldap.resources.limits | indent 14 }}
+{{- end }}
           command:
             - sh
             - -c
