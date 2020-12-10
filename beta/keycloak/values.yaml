@@ -41,7 +41,7 @@ config:
     integration: ''
     database: keycloak
     host: ''
-    password: p@ssw0rd
+    password: P@ssw0rd
     port: 5432
     username: postgres
     # url: ''
