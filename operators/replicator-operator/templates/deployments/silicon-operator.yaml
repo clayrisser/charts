@@ -44,7 +44,7 @@ spec:
                         - {{ template "replicator-operator.name" . }}-replicator-operator
       containers:
         - name: {{ template "replicator-operator.fullname" . }}-replicator-operator
-          image: {{ .Values.images.siliconOperator.repository }}:{{ .Values.images.siliconOperator.tag }}
+          image: {{ .Values.images.replicatorOperator.repository }}:{{ .Values.images.replicatorOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
 {{- if .Values.config.resources.enabled }}
           resources:
