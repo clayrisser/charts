@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "replicator-operator.fullname" . }}-replicator-operator
+  labels:
+    app: {{ template "replicator-operator.name" . }}-replicator-operator
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "replicator-operator.name" . }}-replicator-operator
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "replicator-operator.name" . }}-replicator-operator
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ template "replicator-operator.fullname" . }}
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "replicator-operator.name" . }}-replicator-operator
+      containers:
+        - name: {{ template "replicator-operator.fullname" . }}-replicator-operator
+          image: {{ .Values.images.siliconOperator.repository }}:{{ .Values.images.siliconOperator.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+{{- if .Values.config.resources.enabled }}
+          resources:
+{{ toYaml .Values.config.resources | indent 12 }}
+{{- end }}
+          env: []
+        - name: {{ template "replicator-operator.fullname" . }}-kubectl
+          image: bitnami/kubectl:1.17.12
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              kubectl proxy

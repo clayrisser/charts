@@ -1,0 +1,15 @@
+name: replicator-operator
+apiVersion: v1
+home: https://github.com/silicon-hills/replicator-operator
+icon: ''
+version: 0.0.2
+appVersion: 0.0.2
+description: 'replicate resources across kubernetes'
+keywords:
+  - operator
+  - replicate
+sources:
+  - https://github.com/silicon-hills/replicator-operator
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
