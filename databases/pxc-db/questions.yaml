@@ -80,6 +80,7 @@ questions:
     required: true
     label: 'tls enabled'
     group: Config
+    show_subquestion_if: true
     subquestions:
       - variable: config.tls.certificate
         default:
