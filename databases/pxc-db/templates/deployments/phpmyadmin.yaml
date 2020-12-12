@@ -55,7 +55,7 @@ spec:
               containerPort: 80
           env:
             - name: PMA_HOST
-              value: {{ printf "%s-%s" {{ .Release.Name }} "pxc" | trunc 21 }}-pxc
+              value: {{ printf "%s-%s" .Release.Name "pxc" | trunc 21 }}-pxc
           livenessProbe:
             httpGet:
               path: /
