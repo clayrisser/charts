@@ -56,7 +56,7 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  existingClaim: ''
+  # existingClaim: ''
   size: 1Gi
   storageClass: ''
   velero:
