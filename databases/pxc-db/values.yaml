@@ -23,7 +23,7 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   tls:
-    enabled: true
+    enabled: false
     certificate:
   connection:
     enabled: true

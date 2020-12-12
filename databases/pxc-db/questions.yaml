@@ -73,6 +73,20 @@ questions:
     required: true
     label: 'connection enabled'
     group: Config
+  - variable: config.tls.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'tls enabled'
+    group: Config
+    subquestions:
+      - variable: config.tls.certificate
+        default:
+        description: ''
+        type: string
+        required: false
+        label: 'tls certificate'
 
 # Pxc Config
   - variable: config.pxc.size
