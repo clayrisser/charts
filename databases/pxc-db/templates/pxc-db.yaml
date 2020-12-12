@@ -15,7 +15,7 @@ metadata:
     - delete-proxysql-pvc
     - delete-pxc-pvc
 spec:
-  crVersion: {{ .Chart.AppVersion }}
+  crVersion: 1.6.0
   secretsName: {{ include "pxc-db.fullname" . }}
   {{- if .Values.config.tls.enabled }}
   sslSecretName: {{ .Values.config.tls.certificate | default (printf "%s-tls" (include "pxc-db.fullname" .)) }}
