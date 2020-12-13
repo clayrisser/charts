@@ -687,7 +687,7 @@ questions:
     show_if: config.phpmyadmin.enabled=true
     group: Images
   - variable: images.phpmyadmin.repository
-    default: phpmyadmin/phpmyadmin
+    default: osixia/phpmyadmin
     description: ''
     type: string
     required: true
@@ -695,7 +695,7 @@ questions:
     show_if: config.phpmyadmin.enabled=true
     group: Images
   - variable: images.phpmyadmin.tag
-    default: 4.9.7
+    default: 5.0.2
     description: ''
     type: string
     required: true

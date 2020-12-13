@@ -15,8 +15,8 @@ images:
     repository: percona/percona-xtradb-cluster-operator
     tag: 1.6.0-pxc8.0-backup
   phpmyadmin:
-    repository: phpmyadmin/phpmyadmin
-    tag: 4.9.7
+    repository: osixia/phpmyadmin
+    tag: 5.0.2
 
 config:
   clusterType: rke

@@ -53,9 +53,27 @@ spec:
           ports:
             - name: container
               containerPort: 80
+          {{- if .Values.config.tls.enabled }}
+          volumeMounts:
+            - name: tls
+              subPath: ca.crt
+              mountPath: /container/service/mariadb-client/assets/certs/ca.crt
+              readOnly: true
+            - name: tls
+              subPath: tls.crt
+              mountPath: /container/service/mariadb-client/assets/certs/tls.crt
+              readOnly: true
+            - name: tls
+              subPath: tls.key
+              mountPath: /container/service/mariadb-client/assets/certs/tls.key
+              readOnly: true
+          {{- end }}
           env:
-            - name: PMA_HOST
-              value: {{ .Release.Name | trunc 21 }}-pxc
+            - name: PHPMYADMIN_DB_HOSTS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "pxc-db.fullname" . }}-phpmyadmin
+                  key: db_hosts
           livenessProbe:
             httpGet:
               path: /
@@ -66,4 +84,10 @@ spec:
               path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
+      {{- if .Values.config.tls.enabled }}
+      volumes:
+        - name: tls
+          secret:
+            secretName: {{ .Values.config.tls.certificate | default (printf "%s-tls" (include "pxc-db.fullname" .)) }}
+      {{- end }}
 {{- end }}
