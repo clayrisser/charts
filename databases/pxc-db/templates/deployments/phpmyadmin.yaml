@@ -53,7 +53,6 @@ spec:
           ports:
             - name: container
               containerPort: 80
-          {{- if .Values.config.tls.enabled }}
           lifecycle:
             postStart:
               exec:
@@ -67,7 +66,6 @@ spec:
             - name: tls
               mountPath: /tmp/tls
               readOnly: true
-          {{- end }}
           env:
             - name: PHPMYADMIN_DB_HOSTS
               valueFrom:
@@ -88,10 +86,8 @@ spec:
               path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
-      {{- if .Values.config.tls.enabled }}
       volumes:
         - name: tls
           secret:
             secretName: {{ .Values.config.tls.certificate | default (printf "%s-tls" (include "pxc-db.fullname" .)) }}
-      {{- end }}
 {{- end }}
