@@ -1,0 +1,113 @@
+apiVersion: wordpress.presslabs.org/v1alpha1
+kind: Wordpress
+metadata:
+  name: {{ template "wordpress.fullname" . }}
+  labels:
+    app: {{ template "wordpress.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.config.wordpress.replicas }}
+  domains:
+    - {{ template "wordpress.wordpress-hostname" . }}
+  image: {{ .Values.images.wordpress.repository | quote }}
+  tag: {{ .Values.images.wordpress.tag | quote }}
+  code:
+    # contentSubpath: wp-content/
+    # git:
+    #   repository: https://github.com/example.com
+    #   reference: master
+    #   env:
+    #     - name: SSH_RSA_PRIVATE_KEY
+    #       valueFrom:
+    #         secretKeyRef:
+    #           name: mysite
+    #           key: id_rsa
+    # hostPath: {}
+    # {{- if .Values.persistence.enabled }}
+    # persistentVolumeClaim:
+    #   claimName: {{ .Values.persistence.existingClaim | default (include "wordpress.fullname" . ) }}
+    # {{- else }}
+    emptyDir: {}
+    # {{- end }}
+  media:
+    # persistentVolumeClaim: {}
+    # hostPath: {}
+    {{- if .Values.persistence.enabled }}
+    persistentVolumeClaim:
+      claimName: {{ .Values.persistence.existingClaim | default (include "wordpress.fullname" . ) }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
+  bootstrap:
+    env:
+      - name: WORDPRESS_BOOTSTRAP_USER
+        valueFrom:
+          configMapKeyRef:
+            name: {{ template "wordpress.fullname" . }}
+            key: username
+      - name: WORDPRESS_BOOTSTRAP_EMAIL
+        valueFrom:
+          configMapKeyRef:
+            name: {{ template "wordpress.fullname" . }}
+            key: email
+      - name: WORDPRESS_BOOTSTRAP_TITLE
+        valueFrom:
+          configMapKeyRef:
+            name: {{ template "wordpress.fullname" . }}
+            key: title
+      - name: WORDPRESS_BOOTSTRAP_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ template "wordpress.fullname" . }}
+            key: password
+  volumes: []
+  volumeMounts: []
+  env:
+    {{- if (not .Values.config.mysql.integration) }}
+    - name: DB_HOST
+      valueFrom:
+        configMapKeyRef: {{ template "wordpress.fullname" . }}
+        key: mysql_host
+    - name: DB_USER
+      valueFrom:
+        configMapKeyRef: {{ template "wordpress.fullname" . }}
+        key: mysql_username
+    - name: DB_PORT
+      valueFrom:
+        configMapKeyRef: {{ template "wordpress.fullname" . }}
+        key: mysql_port
+    - name: DB_NAME
+      valueFrom:
+        configMapKeyRef: {{ template "wordpress.fullname" . }}
+        key: mysql_database
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef: {{ template "wordpress.fullname" . }}
+        key: mysql_password
+    {{- else }}
+    - name: DB_HOST
+      valueFrom:
+        configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
+        key: MYSQL_HOSTNAME
+    - name: DB_USER
+      valueFrom:
+        configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
+        key: MYSQL_USERNAME
+    - name: DB_PORT
+      valueFrom:
+        configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
+        key: MYSQL_PORT
+    - name: DB_NAME
+      valueFrom:
+        configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
+        key: MYSQL_DATABASE
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef: {{ template "wordpress.fullname" . }}-externaldb
+        key: MYSQL_PASSWORD
+    {{- end }}
+  envFrom: []
+  ingressAnnotations: {}
+  # tlsSecretRef: mysite-tls

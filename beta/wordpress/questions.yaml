@@ -1,0 +1,293 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterType
+    default: rke
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: Always
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.wordpress.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'wordpress resources defaults'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.wordpress.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'wordpress resources requests cpu'
+      - variable: config.wordpress.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'wordpress resources requests memory'
+      - variable: config.wordpress.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'wordpress resources limits cpu'
+      - variable: config.wordpress.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'wordpress resources limits memory'
+
+# MySQL Config
+  - variable: config.mysql.integration
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: integration
+    group: 'MySQL Config'
+  - variable: config.mysql.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.mysql.integration=
+    group: 'MySQL Config'
+  - variable: config.mysql.database
+    default: wordpress
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.mysql.integration=
+    group: 'MySQL Config'
+  - variable: config.mysql.password
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.mysql.integration=
+    group: 'MySQL Config'
+  - variable: config.mysql.port
+    default: 3306
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    show_if: config.mysql.integration=
+    group: 'MySQL Config'
+  - variable: config.mysql.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.mysql.integration=
+    group: 'MySQL Config'
+  - variable: config.mysql.username
+    default: root
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.mysql.integration=
+    group: 'MySQL Config'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim.wordpress
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'wordpress existing claim'
+      - variable: persistence.size.wordpress
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: 'wordpress size'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        default: '@midnight'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        default: '2160h0m00s'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
+        group: Persistence
+
+# Services and Load Balancing
+  - variable: ingress.wordpress.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'wordpress ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.wordpress.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'wordpress ingress tls'
+      - variable: ingress.wordpress.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'wordpress ingress hostname'
+      - variable: ingress.wordpress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.wordpress.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'wordpress ingress issuer name'
+      - variable: ingress.wordpress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.wordpress.tls=true&&ingress.wordpress.issuer.name=none
+        required: false
+        label: 'wordpress ingress certificate'
+  - variable: service.wordpress.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    show_if: ingress.wordpress.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'wordpress service type'
+    group: 'Services and Load Balancing'
+  - variable: service.wordpress.nodePorts.http
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.wordpress.type=NodePort&&ingress.wordpress.enabled=false
+    label: 'wordpress http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.wordpress.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.wordpress.type=LoadBalancer&&ingress.wordpress.enabled=false
+    label: 'wordpress http lb port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.wordpress.repository
+    default: wordpress
+    description: ''
+    type: string
+    required: true
+    label: 'wordpress repository'
+    group: Images
+  - variable: images.wordpress.tag
+    default: latest
+    description: ''
+    type: string
+    required: true
+    label: 'wordpress tag'
+    group: Images
