@@ -53,18 +53,11 @@ spec:
           ports:
             - name: container
               containerPort: 80
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    mkdir -p /container/service/mariadb-client/assets/certs
-                    cp -r /tmp/tls/* /container/service/mariadb-client/assets/certs
+          {{- if .Values.config.tls.enabled }}
           volumeMounts:
             - name: tls
-              mountPath: /tmp/tls
+              mountPath: /certs
+          {{- end }}
           env:
             - name: PHPMYADMIN_DB_HOSTS
               valueFrom:
@@ -85,8 +78,10 @@ spec:
               path: /
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
+      {{- if .Values.config.tls.enabled }}
       volumes:
         - name: tls
           secret:
             secretName: {{ .Values.config.tls.certificate | default (printf "%s-tls" (include "pxc-db.fullname" .)) }}
+      {{- end }}
 {{- end }}
