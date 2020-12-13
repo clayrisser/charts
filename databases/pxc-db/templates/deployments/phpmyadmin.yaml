@@ -64,9 +64,9 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    mkdir -p /container/service/mariadb-client/assets/certs
-                    rm -rf /container/service/mariadb-client/assets/certs/* >/dev/null || true
-                    cp -r /tmp/certs/* /container/service/mariadb-client/assets/certs
+                    mkdir -p /certs
+                    rm -rf /certs/* >/dev/null || true
+                    cp -r /tmp/certs/* /certs
           {{- end }}
           env:
             - name: PHPMYADMIN_DB_HOSTS
