@@ -57,15 +57,15 @@ spec:
           volumeMounts:
             - name: tls
               subPath: ca.crt
-              mountPath: /container/service/phpmyadmin/assets/apache2/certs/ca.crt
+              mountPath: /container/service/mariadb-client/assets/certs/ca.crt
               readOnly: true
             - name: tls
               subPath: tls.crt
-              mountPath: /container/service/phpmyadmin/assets/apache2/certs/phpmyadmin.crt
+              mountPath: /container/service/mariadb-client/assets/certs/tls.crt
               readOnly: true
             - name: tls
               subPath: tls.key
-              mountPath: /container/service/phpmyadmin/assets/apache2/certs/phpmyadmin.key
+              mountPath: /container/service/mariadb-client/assets/certs/tls.key
               readOnly: true
           {{- end }}
           env:
