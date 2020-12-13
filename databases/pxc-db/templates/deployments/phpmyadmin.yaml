@@ -65,7 +65,6 @@ spec:
           volumeMounts:
             - name: tls
               mountPath: /tmp/tls
-              readOnly: true
           env:
             - name: PHPMYADMIN_DB_HOSTS
               valueFrom:
