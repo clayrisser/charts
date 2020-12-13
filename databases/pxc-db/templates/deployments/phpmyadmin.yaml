@@ -54,18 +54,18 @@ spec:
             - name: container
               containerPort: 80
           {{- if .Values.config.tls.enabled }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    mkdir -p /container/service/mariadb-client/assets/certs
+                    cp -r /tmp/tls/* /container/service/mariadb-client/assets/certs
           volumeMounts:
             - name: tls
-              subPath: ca.crt
-              mountPath: /container/service/mariadb-client/assets/certs/ca.crt
-              readOnly: true
-            - name: tls
-              subPath: tls.crt
-              mountPath: /container/service/mariadb-client/assets/certs/tls.crt
-              readOnly: true
-            - name: tls
-              subPath: tls.key
-              mountPath: /container/service/mariadb-client/assets/certs/tls.key
+              mountPath: /tmp/tls
               readOnly: true
           {{- end }}
           env:
