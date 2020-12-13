@@ -65,6 +65,7 @@ spec:
                   - -c
                   - |
                     mkdir -p /container/service/mariadb-client/assets/certs
+                    rm -rf /container/service/mariadb-client/assets/certs/* >/dev/null || true
                     cp -r /tmp/certs/* /container/service/mariadb-client/assets/certs
           {{- end }}
           env:
