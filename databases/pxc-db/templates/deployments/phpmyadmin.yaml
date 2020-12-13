@@ -64,6 +64,7 @@ spec:
                   - /bin/sh
                   - -c
                   - |
+                    mkdir -p /certs
                     cp -r /tmp/certs/* /certs
           {{- end }}
           env:
