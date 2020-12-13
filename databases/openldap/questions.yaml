@@ -306,7 +306,7 @@ questions:
         required: false
         label: 'phpldapadmin ingress certificate'
   - variable: service.phpldapadmin.type
-    default: RancherProxy
+    default: ClusterIP
     description: ''
     type: enum
     show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
@@ -314,7 +314,6 @@ questions:
       - ClusterIP
       - LoadBalancer
       - NodePort
-      - RancherProxy
     required: true
     label: 'phpldapadmin service type'
     group: 'Services and Load Balancing'

@@ -57,6 +57,7 @@ spec:
           volumeMounts:
             - name: tls
               mountPath: /tmp/certs
+              readOnly: true
           lifecycle:
             postStart:
               exec:

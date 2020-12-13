@@ -573,7 +573,7 @@ questions:
         required: false
         label: 'phpmyadmin ingress certificate'
   - variable: service.phpmyadmin.type
-    default: RancherProxy
+    default: ClusterIP
     description: ''
     type: enum
     show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
@@ -581,7 +581,6 @@ questions:
       - ClusterIP
       - LoadBalancer
       - NodePort
-      - RancherProxy
     required: true
     label: 'phpmyadmin service type'
     group: 'Services and Load Balancing'

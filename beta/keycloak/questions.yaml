@@ -262,7 +262,7 @@ questions:
         required: false
         label: 'keycloak ingress certificate'
   - variable: service.keycloak.type
-    default: RancherProxy
+    default: ClusterIP
     description: ''
     type: enum
     show_if: ingress.keycloak.enabled=false
@@ -270,7 +270,6 @@ questions:
       - ClusterIP
       - LoadBalancer
       - NodePort
-      - RancherProxy
     required: true
     label: 'keycloak service type'
     group: 'Services and Load Balancing'

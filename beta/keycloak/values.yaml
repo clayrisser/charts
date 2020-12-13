@@ -48,7 +48,7 @@ config:
 
 service:
   keycloak:
-    type: RancherProxy
+    type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''

@@ -50,7 +50,7 @@ service:
       ldap: 389
       ldaps: 636
   phpldapadmin:
-    type: RancherProxy
+    type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
