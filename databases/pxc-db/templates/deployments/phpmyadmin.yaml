@@ -58,12 +58,15 @@ spec:
             - name: tls
               subPath: ca.crt
               mountPath: /container/service/phpmyadmin/assets/apache2/certs/ca.crt
+              readOnly: true
             - name: tls
               subPath: tls.crt
               mountPath: /container/service/phpmyadmin/assets/apache2/certs/phpmyadmin.crt
+              readOnly: true
             - name: tls
               subPath: tls.key
               mountPath: /container/service/phpmyadmin/assets/apache2/certs/phpmyadmin.key
+              readOnly: true
           {{- end }}
           env:
             - name: PHPMYADMIN_DB_HOSTS
