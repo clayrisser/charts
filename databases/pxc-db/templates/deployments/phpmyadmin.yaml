@@ -56,7 +56,15 @@ spec:
           {{- if .Values.config.tls.enabled }}
           volumeMounts:
             - name: tls
-              mountPath: /certs
+              mountPath: /tmp/certs
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    cp -r /tmp/certs/* /certs
           {{- end }}
           env:
             - name: PHPMYADMIN_DB_HOSTS
