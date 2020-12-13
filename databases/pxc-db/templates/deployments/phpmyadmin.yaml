@@ -74,6 +74,8 @@ spec:
                 secretKeyRef:
                   name: {{ template "pxc-db.fullname" . }}-phpmyadmin
                   key: db_hosts
+            - name: PHPMYADMIN_TRUST_PROXY_SSL
+              value: true
           livenessProbe:
             httpGet:
               path: /
