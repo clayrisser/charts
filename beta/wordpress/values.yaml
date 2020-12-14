@@ -20,7 +20,7 @@ config:
         cpu: 500m
         memory: 256Mi
   git:
-    repo: ''
+    repo:
     branch: main
     privateKey:
   mysql:

@@ -16,8 +16,9 @@ spec:
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
   code:
     # contentSubpath: wp-content/
+    {{- if .Values.config.git.repo }}
     git:
-      repository: {{ .Values.config.git.repo }}
+      repository: {{ .Values.config.git.repo | quote }}
       reference: {{ .Values.config.git.branch | default "main" }}
       {{- if (not (empty .Values.config.git.privateKey)) }}
       env:
@@ -27,6 +28,7 @@ spec:
               name: {{ template "wordpress.fullname" . }}-ssh
               key: id_rsa
       {{- end }}
+    {{- else }}
     # hostPath: {}
     # {{- if .Values.persistence.enabled }}
     # persistentVolumeClaim:
@@ -34,6 +36,7 @@ spec:
     # {{- else }}
     emptyDir: {}
     # {{- end }}
+    {{- end }}
   media:
     # persistentVolumeClaim: {}
     # hostPath: {}
