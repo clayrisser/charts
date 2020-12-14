@@ -37,7 +37,7 @@ Calculate wordpress hostname
 {{- if .Values.ingress.wordpress.enabled }}
 {{- printf .Values.ingress.wordpress.hostname }}
 {{- else }}
-{{- printf "%s-wordpress.%s.svc.cluster.local" (include "wordpress.fullname" .) .Release.Namespace }}
+{{- printf "%s.%s.svc.cluster.local" (include "wordpress.fullname" .) .Release.Namespace }}
 {{- end }}
 {{- end }}
 {{- end }}
