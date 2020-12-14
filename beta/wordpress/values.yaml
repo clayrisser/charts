@@ -11,6 +11,7 @@ config:
     replicas: 1
     baseUrl: ''
     hostname: ''
+    debug: false
     resources:
       enabled: false
       requests:

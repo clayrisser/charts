@@ -37,6 +37,13 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.wordpress.debug
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'wordpress debug'
+    group: Config
   - variable: config.wordpress.resources.enabled
     default: false
     description: ''
