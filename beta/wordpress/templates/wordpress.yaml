@@ -11,9 +11,6 @@ spec:
   replicas: {{ .Values.config.wordpress.replicas }}
   domains:
     - {{ template "wordpress.wordpress-hostname" . }}
-  routes:
-    - domain: {{ template "wordpress.wordpress-hostname" . }}
-      path: /
   image: '{{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}'
   # tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
