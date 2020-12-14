@@ -14,9 +14,9 @@ spec:
   image: {{ .Values.images.wordpress.repository | quote }}
   tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+  {{- if .Values.config.git.repo }}
   code:
     # contentSubpath: wp-content/
-    {{- if .Values.config.git.repo }}
     git:
       repository: {{ .Values.config.git.repo | quote }}
       reference: {{ .Values.config.git.branch | default "main" }}
@@ -28,15 +28,14 @@ spec:
               name: {{ template "wordpress.fullname" . }}-ssh
               key: id_rsa
       {{- end }}
-    {{- else }}
     # hostPath: {}
     # {{- if .Values.persistence.enabled }}
-    persistentVolumeClaim:
+    # persistentVolumeClaim:
     #   claimName: {{ .Values.persistence.existingClaim | default (include "wordpress.fullname" . ) }}
     # {{- else }}
-      emptyDir: {}
+    # emptyDir: {}
     # {{- end }}
-    {{- end }}
+  {{- end }}
   media:
     # persistentVolumeClaim: {}
     # hostPath: {}
