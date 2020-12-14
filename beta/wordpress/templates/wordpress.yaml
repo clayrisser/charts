@@ -12,6 +12,8 @@ spec:
   routes:
     - domain: {{ template "wordpress.wordpress-hostname" . }}
       path: /
+    - domain: {{ template "wordpress.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+      path: /
     - domain: {{ template "wordpress.fullname" . }}
       path: /
     - domain: localhost
@@ -83,6 +85,8 @@ spec:
     #   value: '/-/php-ping'
     # - name: PHP_PING_PATH
     #   value: '/-/_php-ping'
+    - name: STATS_WHITELIST_CIDR
+      value: all
     {{- if (not .Values.config.mysql.integration) }}
     - name: DB_HOST
       valueFrom:
