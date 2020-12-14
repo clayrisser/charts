@@ -85,8 +85,6 @@ spec:
     #   value: '/-/php-ping'
     # - name: PHP_PING_PATH
     #   value: '/-/_php-ping'
-    - name: WP_CORE_DIRECTORY
-      value: /
     - name: STATS_WHITELIST_CIDR
       value: all
     {{- if (not .Values.config.mysql.integration) }}
@@ -188,6 +186,6 @@ spec:
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
+  wordpressPathPrefix: /
   # tlsSecretRef: {{ template "wordpress.wordpress-certificate" . }}
   # priorityClassName:
-  # wordpressPathPrefix:
