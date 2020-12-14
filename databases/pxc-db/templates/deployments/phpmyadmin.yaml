@@ -58,7 +58,6 @@ spec:
             - name: tls
               mountPath: /tmp/certs
               readOnly: true
-          {{- end }}
           lifecycle:
             postStart:
               exec:
@@ -67,11 +66,10 @@ spec:
                   - -c
                   - |
                     mkdir -p /container/service/mariadb-client/assets/certs
-                    {{- if .Values.config.tls.enabled }}
                     cat /tmp/certs/ca.crt > /container/service/mariadb-client/assets/certs/ca.crt
                     cat /tmp/certs/tls.crt > /container/service/mariadb-client/assets/certs/tls.crt
                     cat /tmp/certs/tls.key > /container/service/mariadb-client/assets/certs/tls.key
-                    {{- end }}
+          {{- end }}
           env:
             - name: PHPMYADMIN_DB_HOSTS
               valueFrom:
@@ -80,12 +78,14 @@ spec:
                   key: db_hosts
             - name: PHPMYADMIN_TRUST_PROXY_SSL
               value: 'true'
+            - name: PHPMYADMIN_HTTPS
+              value: 'false'
+            {{- if .Values.config.tls.enabled }}
             - name: DATABASE_SSL_HELPER_TOOL
               value: 'true'
             - name: DATABASE_SSL_HELPER_AUTO_RENEW
               value: 'false'
-            - name: PHPMYADMIN_HTTPS
-              value: 'false'
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /
