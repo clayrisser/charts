@@ -11,13 +11,15 @@ spec:
   replicas: {{ .Values.config.wordpress.replicas }}
   routes:
     - domain: {{ template "wordpress.wordpress-hostname" . }}
-      path: /wp
+      path: /
+    {{- if (not (equal (printf "%s.%s.svc.cluster.local" (include "wordpress.fullname" .) .Release.Namespace) (include "wordpress.wordpress-hostname" .))) }}
     - domain: {{ template "wordpress.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-      path: /wp
+      path: /
+    {{- end }}
     - domain: {{ template "wordpress.fullname" . }}
-      path: /wp
+      path: /
     - domain: localhost
-      path: /wp
+      path: /
   image: '{{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}'
   # tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
