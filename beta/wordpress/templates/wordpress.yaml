@@ -13,7 +13,7 @@ spec:
     - {{ template "wordpress.wordpress-hostname" . }}
   image: {{ .Values.images.wordpress.repository | quote }}
   tag: {{ .Values.images.wordpress.tag | quote }}
-  imagePullPolicy: string
+  imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
   code:
     # contentSubpath: wp-content/
     git:
