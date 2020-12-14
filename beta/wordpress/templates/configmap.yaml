@@ -13,3 +13,6 @@ data:
   mysql_database: {{ $mysql.database | quote }}
   mysql_port: {{ $mysql.port | quote }}
   mysql_username: {{ $mysql.username | quote }}
+  username: clayrisser
+  email: email@clayrisser.com
+  title: Hello
