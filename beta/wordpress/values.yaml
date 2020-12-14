@@ -19,6 +19,10 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
+  git:
+    repo: ''
+    branch: main
+    privateKey:
   mysql:
     integration:
     database: wordpress

@@ -13,17 +13,20 @@ spec:
     - {{ template "wordpress.wordpress-hostname" . }}
   image: {{ .Values.images.wordpress.repository | quote }}
   tag: {{ .Values.images.wordpress.tag | quote }}
+  imagePullPolicy: string
   code:
     # contentSubpath: wp-content/
-    # git:
-    #   repository: https://github.com/example.com
-    #   reference: master
-    #   env:
-    #     - name: SSH_RSA_PRIVATE_KEY
-    #       valueFrom:
-    #         secretKeyRef:
-    #           name: mysite
-    #           key: id_rsa
+    git:
+      repository: {{ .Values.config.git.repo }}
+      reference: {{ .Values.config.git.branch | default "main" }}
+      {{- if (not (empty .Values.config.git.privateKey)) }}
+      env:
+        - name: SSH_RSA_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "wordpress.fullname" . }}-ssh
+              key: id_rsa
+      {{- end }}
     # hostPath: {}
     # {{- if .Values.persistence.enabled }}
     # persistentVolumeClaim:
@@ -40,6 +43,10 @@ spec:
     {{- else }}
     emptyDir: {}
     {{- end }}
+    # TODO
+    # s3:
+    #   bucket: string
+    #   prefix: string
   bootstrap:
     env:
       - name: WORDPRESS_BOOTSTRAP_USER
@@ -108,6 +115,40 @@ spec:
         secretKeyRef: {{ template "wordpress.fullname" . }}-externaldb
         key: MYSQL_PASSWORD
     {{- end }}
-  envFrom: []
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+          preference:
+            matchExpressions:
+              - key: application/state
+                operator: In
+                values:
+                  - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 90
+          podAffinityTerm:
+            topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    # TODO
+                    - {{ template "wordpress.name" . }}-wordpress
+{{- if .Values.config.wordpress.resources.enabled }}
+  resources:
+{{ toYaml .Values.config.wordpress.resources | indent 4 }}
+{{- end }}
+  deploymentStrategy:
+    type: {{ .Values.config.updateStrategy | quote }}
+  podMetadata:
+    {{- if .Values.persistence.velero.restic }}
+    annotations:
+      backup.velero.io/backup-volumes: data
+    {{- end }}
   ingressAnnotations: {}
-  # tlsSecretRef: mysite-tls
+  # priorityClassName:
+  # tlsSecretRef:
+  # wordpressPathPrefix:
