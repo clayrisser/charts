@@ -77,6 +77,8 @@ spec:
   volumes: []
   volumeMounts: []
   env:
+    - name: PHP_PING_PATH
+      value: '/'
     {{- if (not .Values.config.mysql.integration) }}
     - name: DB_HOST
       valueFrom:
