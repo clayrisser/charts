@@ -76,29 +76,33 @@ questions:
         label: 'wordpress resources limits memory'
 
 # Git
-  - variable: config.git.repo
-    default: ''
+  - variable: config.git.enabled
+    default: false
     description: ''
-    type: string
-    required: false
-    label: repo
-    group: Git
-  - variable: config.git.branch
-    default: main
-    description: ''
-    type: string
+    type: boolean
     required: true
-    show_if: config.git.repo!=''
-    label: branch
-    group: Git
-  - variable: config.git.privateKey
-    default: ''
-    description: ''
-    type: string
-    required: false
-    show_if: config.git.repo!=''
-    label: 'private key'
-    group: Git
+    label: enabled
+    show_subquestion_if: true
+    group: Config
+    subquestions:
+      - variable: config.git.repo
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: repo
+      - variable: config.git.branch
+        default: main
+        description: ''
+        type: string
+        required: true
+        label: branch
+      - variable: config.git.privateKey
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'private key'
 
 # MySQL Config
   - variable: config.mysql.integration

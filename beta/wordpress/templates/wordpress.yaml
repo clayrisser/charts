@@ -23,7 +23,7 @@ spec:
   image: '{{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}'
   # tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
-  {{- if .Values.config.git.repo }}
+  {{- if (and .Values.config.git.enabled .Values.config.git.repo) }}
   code:
     # contentSubpath: wp-content/
     git:
