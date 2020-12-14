@@ -83,10 +83,10 @@ spec:
       valueFrom:
         configMapKeyRef: {{ template "wordpress.fullname" . }}
         key: mysql_username
-    - name: DB_PORT
-      valueFrom:
-        configMapKeyRef: {{ template "wordpress.fullname" . }}
-        key: mysql_port
+    # - name: DB_PORT
+    #   valueFrom:
+    #     configMapKeyRef: {{ template "wordpress.fullname" . }}
+    #     key: mysql_port
     - name: DB_NAME
       valueFrom:
         configMapKeyRef: {{ template "wordpress.fullname" . }}
@@ -104,10 +104,10 @@ spec:
       valueFrom:
         configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
         key: MYSQL_USERNAME
-    - name: DB_PORT
-      valueFrom:
-        configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
-        key: MYSQL_PORT
+    # - name: DB_PORT
+    #   valueFrom:
+    #     configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
+    #     key: MYSQL_PORT
     - name: DB_NAME
       valueFrom:
         configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
