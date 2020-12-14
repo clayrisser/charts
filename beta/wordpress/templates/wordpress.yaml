@@ -12,7 +12,7 @@ spec:
   routes:
     - domain: {{ template "wordpress.wordpress-hostname" . }}
       path: /
-    {{- if (not (equal (printf "%s.%s.svc.cluster.local" (include "wordpress.fullname" .) .Release.Namespace) (include "wordpress.wordpress-hostname" .))) }}
+    {{- if (not (eq (printf "%s.%s.svc.cluster.local" (include "wordpress.fullname" .) .Release.Namespace) (include "wordpress.wordpress-hostname" .))) }}
     - domain: {{ template "wordpress.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
       path: /
     {{- end }}
