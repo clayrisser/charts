@@ -177,6 +177,6 @@ spec:
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
-  # tlsSecretRef: {{ template "gitlab.gitlab-certificate" . }}
+  # tlsSecretRef: {{ template "wordpress.wordpress-certificate" . }}
   # priorityClassName:
   # wordpressPathPrefix:
