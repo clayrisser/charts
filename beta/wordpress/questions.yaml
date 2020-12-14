@@ -83,7 +83,7 @@ questions:
     required: true
     label: enabled
     show_subquestion_if: true
-    group: Config
+    group: Git
     subquestions:
       - variable: config.git.repo
         default: ''
