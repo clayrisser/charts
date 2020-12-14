@@ -16,6 +16,8 @@ spec:
     - domain: {{ template "wordpress.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
       path: /
     {{- end }}
+    - domain: {{ template "wordpress.fullname" . }}.{{ .Release.Namespace }}.svc
+      path: /
     - domain: {{ template "wordpress.fullname" . }}
       path: /
     - domain: localhost
