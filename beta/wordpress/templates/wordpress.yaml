@@ -50,7 +50,7 @@ spec:
     # hostPath: {}
     {{- if .Values.persistence.enabled }}
     persistentVolumeClaim:
-      claimName: {{ .Values.persistence.existingClaim | default (include "wordpress.fullname" . ) }}
+      claimName: {{ .Values.persistence.existingClaim.wordpress | default (include "wordpress.fullname" . ) }}
     {{- else }}
     emptyDir: {}
     {{- end }}
