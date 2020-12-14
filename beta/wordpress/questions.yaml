@@ -97,7 +97,6 @@ questions:
     type: string
     required: true
     label: database
-    show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.password
     default: P@ssw0rd
