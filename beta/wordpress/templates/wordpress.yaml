@@ -77,7 +77,7 @@ spec:
   volumes: []
   volumeMounts: []
   env:
-    - name: PHP_PING_PATH
+    - name: NGINX_STATUS_PATH
       value: '/-/php-ping'
     {{- if (not .Values.config.mysql.integration) }}
     - name: DB_HOST
