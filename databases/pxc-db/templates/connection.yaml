@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  hostname: {{ (include "pxc-db.fullname" .) }}-mysql.{{ .Release.Namespace }}.svc.cluster.local
+  hostname: {{ .Release.Name | trunc 21 }}-pxc.{{ .Release.Namespace }}.svc.cluster.local
   port: 3306
   secretName: {{ template "pxc-db.fullname" . }}-connection
   username: root
