@@ -87,7 +87,7 @@ questions:
     default: ''
     description: ''
     type: string
-    required: false
+    required: true
     label: host
     show_if: config.mysql.integration=
     group: 'MySQL Config'
