@@ -9,8 +9,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.config.wordpress.replicas }}
-  # domains:
-  #   - {{ template "wordpress.wordpress-hostname" . }}
+  domains:
+    - {{ template "wordpress.wordpress-hostname" . }}
   image: '{{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}'
   # tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
@@ -164,7 +164,19 @@ spec:
     annotations:
       backup.velero.io/backup-volumes: data
     {{- end }}
-  ingressAnnotations: {}
+  ingressAnnotations:
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
+    kubernetes.io/ingress.class: nginx
+    {{- end }}
+    {{- if .Values.ingress.wordpress.tls }}
+    {{- if (empty .Values.ingress.wordpress.certificate) }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.wordpress.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  # tlsSecretRef: {{ template "gitlab.gitlab-certificate" . }}
   # priorityClassName:
-  # tlsSecretRef:
   # wordpressPathPrefix:
