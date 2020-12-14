@@ -77,45 +77,55 @@ spec:
     {{- if (not .Values.config.mysql.integration) }}
     - name: DB_HOST
       valueFrom:
-        configMapKeyRef: {{ template "wordpress.fullname" . }}
-        key: mysql_host
+        configMapKeyRef:
+          name: {{ template "wordpress.fullname" . }}
+          key: mysql_host
     - name: DB_USER
       valueFrom:
-        configMapKeyRef: {{ template "wordpress.fullname" . }}
-        key: mysql_username
-    # - name: DB_PORT
-    #   valueFrom:
-    #     configMapKeyRef: {{ template "wordpress.fullname" . }}
-    #     key: mysql_port
+        configMapKeyRef:
+          name: {{ template "wordpress.fullname" . }}
+          key: mysql_username
+    - name: DB_PORT
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "wordpress.fullname" . }}
+          key: mysql_port
     - name: DB_NAME
       valueFrom:
-        configMapKeyRef: {{ template "wordpress.fullname" . }}
-        key: mysql_database
+        configMapKeyRef:
+          name: {{ template "wordpress.fullname" . }}
+          key: mysql_database
     - name: DB_PASSWORD
       valueFrom:
-        secretKeyRef: {{ template "wordpress.fullname" . }}
-        key: mysql_password
+        secretKeyRef:
+          name: {{ template "wordpress.fullname" . }}
+          key: mysql_password
     {{- else }}
     - name: DB_HOST
       valueFrom:
-        configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
-        key: MYSQL_HOSTNAME
+        configMapKeyRef:
+          name: {{ template "wordpress.fullname" . }}-externaldb
+          key: MYSQL_HOSTNAME
     - name: DB_USER
       valueFrom:
-        configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
-        key: MYSQL_USERNAME
-    # - name: DB_PORT
-    #   valueFrom:
-    #     configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
-    #     key: MYSQL_PORT
+        configMapKeyRef:
+          name: {{ template "wordpress.fullname" . }}-externaldb
+          key: MYSQL_USERNAME
+    - name: DB_PORT
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "wordpress.fullname" . }}-externaldb
+          key: MYSQL_PORT
     - name: DB_NAME
       valueFrom:
-        configMapKeyRef: {{ template "wordpress.fullname" . }}-externaldb
-        key: MYSQL_DATABASE
+        configMapKeyRef:
+          name: {{ template "wordpress.fullname" . }}-externaldb
+          key: MYSQL_DATABASE
     - name: DB_PASSWORD
       valueFrom:
-        secretKeyRef: {{ template "wordpress.fullname" . }}-externaldb
-        key: MYSQL_PASSWORD
+        secretKeyRef:
+          name: {{ template "wordpress.fullname" . }}-externaldb
+          key: MYSQL_PASSWORD
     {{- end }}
   affinity:
     nodeAffinity:
