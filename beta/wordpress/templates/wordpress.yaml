@@ -25,7 +25,7 @@ spec:
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
   {{- if (and .Values.config.git.enabled .Values.config.git.repo) }}
   code:
-    readOnly: true
+    # readOnly: true
     contentSubpath: wp-content/
     git:
       repository: {{ .Values.config.git.repo | quote }}
