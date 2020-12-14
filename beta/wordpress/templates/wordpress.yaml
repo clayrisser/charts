@@ -11,13 +11,13 @@ spec:
   replicas: {{ .Values.config.wordpress.replicas }}
   routes:
     - domain: {{ template "wordpress.wordpress-hostname" . }}
-      path: /
+      path: /wp
     - domain: {{ template "wordpress.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-      path: /
+      path: /wp
     - domain: {{ template "wordpress.fullname" . }}
-      path: /
+      path: /wp
     - domain: localhost
-      path: /
+      path: /wp
   image: '{{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}'
   # tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
