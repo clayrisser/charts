@@ -159,11 +159,10 @@ spec:
             topologyKey: kubernetes.io/hostname
             labelSelector:
               matchExpressions:
-                - key: app
+                - key: app.kubernetes.io/instance
                   operator: In
                   values:
-                    # TODO
-                    - {{ template "wordpress.name" . }}-wordpress
+                    - {{ template "wordpress.name" . }}
 {{- if .Values.config.wordpress.resources.enabled }}
   resources:
 {{ toYaml .Values.config.wordpress.resources | indent 4 }}
