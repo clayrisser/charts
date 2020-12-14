@@ -88,7 +88,7 @@ questions:
     description: ''
     type: string
     required: true
-    show_if: config.git.repo!=
+    show_if: config.git.repo!=''
     label: branch
     group: Git
   - variable: config.git.privateKey
@@ -96,7 +96,7 @@ questions:
     description: ''
     type: string
     required: false
-    show_if: config.git.repo!=
+    show_if: config.git.repo!=''
     label: 'private key'
     group: Git
 
