@@ -11,8 +11,8 @@ spec:
   replicas: {{ .Values.config.wordpress.replicas }}
   domains:
     - {{ template "wordpress.wordpress-hostname" . }}
-  image: {{ .Values.images.wordpress.repository | quote }}
-  tag: {{ .Values.images.wordpress.tag | quote }}
+  image: '{{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}'
+  # tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
   {{- if .Values.config.git.repo }}
   code:
