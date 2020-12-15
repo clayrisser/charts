@@ -293,6 +293,8 @@ questions:
         show_if: ingress.pgadmin.tls=true&&config.pgadmin.enabled=true
         options:
           - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
