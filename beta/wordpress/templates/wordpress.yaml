@@ -12,16 +12,6 @@ spec:
   routes:
     - domain: {{ template "wordpress.wordpress-hostname" . }}
       path: /
-    {{- if (not (eq (printf "%s.%s.svc.cluster.local" (include "wordpress.fullname" .) .Release.Namespace) (include "wordpress.wordpress-hostname" .))) }}
-    - domain: {{ template "wordpress.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-      path: /
-    {{- end }}
-    - domain: {{ template "wordpress.fullname" . }}.{{ .Release.Namespace }}.svc
-      path: /
-    - domain: {{ template "wordpress.fullname" . }}
-      path: /
-    - domain: localhost
-      path: /
   image: '{{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}'
   # tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
@@ -195,5 +185,7 @@ spec:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   wordpressPathPrefix: /wp
-  # tlsSecretRef: {{ template "wordpress.wordpress-certificate" . }}
+  {{- if .Values.ingress.wordpress.tls }}
+  tlsSecretRef: {{ template "wordpress.wordpress-certificate" . }}
+  {{- end }}
   # priorityClassName:
