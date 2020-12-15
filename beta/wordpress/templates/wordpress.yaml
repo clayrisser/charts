@@ -13,7 +13,6 @@ spec:
     - domain: {{ template "wordpress.wordpress-hostname" . }}
       path: /
   image: '{{ .Values.images.wordpress.repository }}:{{ .Values.images.wordpress.tag }}'
-  # tag: {{ .Values.images.wordpress.tag | quote }}
   imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
   {{- if (and .Values.config.git.enabled .Values.config.git.repo) }}
   code:
