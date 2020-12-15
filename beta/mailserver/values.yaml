@@ -1,0 +1,98 @@
+images:
+  rainloop:
+    repository: hardware/rainloop
+    tag: 1.13.0
+  mailserver:
+    repository: tvial/docker-mailserver
+    tag: release-v7.0.0
+
+config:
+  clusterProvider: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  mailserver:
+    baseUrl: ''
+    hostname: ''
+    replicas: 1
+    resources:
+      enabled: false
+      requests:
+        cpu: '1'
+        memory: 1536Mi
+      limits:
+        cpu: '2'
+        memory: 2048Mi
+  rainloop:
+    enabled: false
+    baseUrl: ''
+    hostname: ''
+    resources:
+      enabled: false
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+service:
+  mailserver:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+  rainloop:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  rainloop:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  mailserver:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  existingClaim:
+    rainloop: ''
+    mailserver: ''
+  size:
+    rainloop: 1Gi
+    mailserver: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

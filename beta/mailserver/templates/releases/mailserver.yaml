@@ -1,0 +1,244 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  forceUpgrade: true
+  helmVersion: v3
+  chart:
+    git: https://github.com/funkypenguin/helm-docker-mailserver.git
+    ref: docker-mailserver-0.2.7
+    path: charts/docker-mailserver
+  values:
+    image:
+      name: {{ .Values.images.mailserver.repository | quote }}
+      tag: {{ .Values.images.mailserver.tag | quote }}
+      pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    initContainer:
+      image:
+        name: busybox
+        tag: '1.28'
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      # TODO
+      # resources:
+      #   requests:
+      #     cpu: 10m
+      #     memory: 32Mi
+      #   limits:
+      #     cpu: 50m
+      #     memory: 64Mi
+    serviceAccount:
+      create: 'true'
+    configMap:
+      useExisting: false
+    secret:
+      useExisting: false
+    ssl:
+      issuer:
+        name: {{ .Values.ingress.mailserver.issuer.name | quote }}
+        kind: ClusterIssuer
+      dnsname: {{ template "mailserver.mailserver-hostname" . }}
+      # TODO
+      # dns01provider: cloudflare
+      useExisting: true
+      existingName: {{ template "mailserver.mailserver-certificate" . }}
+    psp:
+      create: true
+    demoMode:
+      enabled: false
+    # TODO
+    spfTestsDisabled: false
+    # TODO
+    rblRejectDomains: []
+    # TODO
+    poorMansK8sLb:
+      enabled: false
+      webhookUrl:
+      webhookSecret:
+    domains:
+      - {{ template "mailserver.mailserver-hostname" . }}
+    livenessTests:
+      enabled: true
+      commands:
+        - 'clamscan /tmp/docker-mailserver/TrustedHosts'
+    pod:
+      dockermailserver:
+        hostNetwork: false
+        hostPID: false
+        strategy:
+          type: {{ .Values.config.updateStrategy | quote }}
+        override_hostname: {{ printf "mail.%s" (include "mailserver.mailserver-hostname" .) }}
+        dms_debug: 0
+        enable_clamav: 1
+        one_dir: 1
+        enable_pop3: 0
+        enable_fail2ban: 0
+        enable_dovecot_replication: true
+        smtp_only: 0
+        ssl_type:
+        # ssl_cert_path: "/tmp/ssl/tls.crt"
+        # ssl_key_path: "/tmp/ssl/tls.key"
+        tls_level:
+        spoof_protection:
+        enable_srs: 0
+        permit_docker:
+        virusmails_delete_delay:
+        enable_postfix_virtual_transport:
+        postfix_dagent:
+        postfix_mailbox_size_limit:
+        postfix_message_size_limit:
+        enable_managesieve:
+        postmaster_address: "postmaster@domain.com"
+        postscreen_action: "enforce"
+        report_recipient: 0
+        report_sender:
+        report_interval: "daily"
+        enable_spamassassin: 1
+        sa_tag: 2.0
+        sa_tag2: 6.31
+        sa_kill: 6.31
+        sa_spam_subject: "*** spam ***"
+        enable_fetchmail: 0
+        fetchmail_poll: 300
+        enable_ldap:
+        ldap_start_tls: # MUST BE "yes" or "no" - quoted strings
+        ldap_server_host:
+        ldap_search_base:
+        ldap_bind_dn:
+        ldap_bind_pw:
+        ldap_query_filter_user:
+        ldap_query_filter_group:
+        ldap_query_filter_alias:
+        ldap_query_filter_domain:
+        dovecot_tls:
+        dovecot_user_filter:
+        dovecot_user_attr:
+        dovecot_pass_filter:
+        dovecot_pass_attr:
+        enable_postgrey: 0
+        postgrey_delay: 300
+        postgrey_max_age: 35
+        postgrey_auto_whitelist_clients: 5
+        postgrey_text: "delayed by postgrey"
+        pflogsumm_trigger:
+        pflogsumm_recipient:
+        enable_saslauthd: 0
+        saslauthd_mechanisms:
+        saslauthd_mech_options:
+        saslauthd_ldap_server:
+        saslauthd_ldap_ssl:
+        saslauthd_ldap_bind_dn:
+        saslauthd_ldap_password:
+        saslauthd_ldap_search_base:
+        saslauthd_ldap_filter:
+        sasl_passwd:
+        srs_exclude_domains:
+        srs_secret:
+        srs_domainname:
+        default_relay_host:
+        relay_host:
+        relay_port: 25
+        relay_user:
+        relay_password:
+    service:
+      type: {{ .Values.service.mailserver.type | quote }}
+      port: {{ .Values.service.mailserver.nodePorts.http | quote }}
+      # privateIp:
+      loadBalancer:
+        # publicIp:
+        allowedIps:
+          - "0.0.0.0/0"
+        # hostName:
+      nodePort:
+        smtp: 30025
+        pop3: 30110
+        imap: 30143
+        smtps: 30465
+        submission: 30587
+        imaps: 30993
+        pop3s: 30995
+      annotations: {}
+    deployment:
+      replicas: {{ .Values.config.mailserver.replicas }}
+      annotations:
+      {{- if .Values.persistence.velero.enabled }}
+        backup.velero.io/backup-volumes: data
+      {{- end }}
+{{- if .Values.config.mailserver.resources.enabled }}
+    resources:
+      requests:
+{{ toYaml .Values.config.mailserver.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.mailserver.resources.limits | indent 8 }}
+{{- else }}
+    resources:
+      requests: {}
+      limits: {}
+{{- end }}
+    persistence:
+      size: {{ .Values.persistence.size.mailserver | quote }}
+      annotations: {}
+    monitoring:
+      service:
+        scrape: 'true'
+        probe: 'false'
+        path: '/metrics'
+        port: '9102'
+      pod:
+        scrape: 'true'
+        probe: 'false'
+        path: '/metrics'
+        port: '9102'
+    rainloop:
+      enabled: {{ .Values.config.rainloop.enabled }}
+      serviceAccount:
+        create: true
+        name: "rainloop"
+      image:
+        name: {{ .Values.images.rainloop.repository | quote }}
+        tag: {{ .Values.images.rainloop.tag | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        strategy:
+          type: {{ .Values.config.updateStrategy | quote }}
+      persistence:
+        size: {{ .Values.persistence.size.rainloop | quote }}
+        annotations: {}
+      service:
+        port: 80
+      container:
+        port: 8888
+      ingress:
+        enabled: true
+        hosts:
+          - {{ template "mailserver.rainloop-hostname" . }}
+        annotations: {}
+        path: /
+        tls: []
+    # TODO
+    haproxy:
+      enabled: false
+      controller:
+        replicaCount: 1
+        kind: 'Deployment'
+        enableStaticPorts: false
+        tcp:
+          25: "default/docker-mailserver:25::PROXY-V1"
+          110: "default/docker-mailserver:110::PROXY-V1"
+          143: "default/docker-mailserver:143::PROXY-V1"
+          465: "default/docker-mailserver:465"
+          587: "default/docker-mailserver:587"
+          993: "default/docker-mailserver:993::PROXY-V1"
+          995: "default/docker-mailserver:995::PROXY-V1"
+        service:
+          externalTrafficPolicy: "Local"
+        podAnnotations:
+          set-to-avoid-lint-errors-in: "docker-mailserver"
+      defaultBackend:
+        replicaCount: 1
+      trustedNetworks: "10.0.0.0/8 192.168.0.0/16 172.16.0.0/16"
+      revisionHistoryLimit: 10
