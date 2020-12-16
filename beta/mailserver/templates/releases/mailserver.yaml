@@ -155,21 +155,21 @@ spec:
         enable_dovecot_replication: true
     service:
       type: {{ .Values.service.mailserver.type | quote }}
-      port: {{ .Values.service.mailserver.nodePorts.http | quote }}
+      # port:
       # privateIp:
       loadBalancer:
         # publicIp:
         allowedIps:
           - "0.0.0.0/0"
-        # hostName:
+        hostName: {{ template "mailserver.mailserver-hostname" . }}
       nodePort:
-        smtp: 30025
-        pop3: 30110
-        imap: 30143
-        smtps: 30465
-        submission: 30587
-        imaps: 30993
-        pop3s: 30995
+        smtp: {{ .Values.service.mailserver.nodePorts.smtp | default "30025" }}
+        pop3: {{ .Values.service.mailserver.nodePorts.pop3 | default "30110" }}
+        imap: {{ .Values.service.mailserver.nodePorts.imap | default "30143" }}
+        smtps: {{ .Values.service.mailserver.nodePorts.smtps | default "30465" }}
+        submission: {{ .Values.service.mailserver.nodePorts.submission | default "30587" }}
+        imaps: {{ .Values.service.mailserver.nodePorts.imaps | default "30993" }}
+        pop3s: {{ .Values.service.mailserver.nodePorts.pop3s | default "30995" }}
       annotations: {}
     deployment:
       replicas: {{ .Values.config.mailserver.replicas }}
@@ -206,7 +206,7 @@ spec:
       enabled: {{ .Values.config.rainloop.enabled }}
       serviceAccount:
         create: true
-        name: "rainloop"
+        name: rainloop
       image:
         name: {{ .Values.images.rainloop.repository | quote }}
         tag: {{ .Values.images.rainloop.tag | quote }}
@@ -221,13 +221,54 @@ spec:
       container:
         port: 8888
       ingress:
-        enabled: true
+        enabled: {{ .Values.ingress.rainloop.enabled }}
         hosts:
           - {{ template "mailserver.rainloop-hostname" . }}
-        annotations: {}
+        annotations:
+          {{- if (eq .Values.config.clusterProvider "aks") }}
+          kubernetes.io/ingress.class: addon-http-application-routing
+          {{- else }}
+          kubernetes.io/ingress.class: nginx
+          {{- end }}
+          {{- if .Values.ingress.rainloop.tls }}
+          {{- if (empty .Values.ingress.rainloop.certificate) }}
+          cert-manager.io/cluster-issuer: {{ .Values.ingress.rainloop.issuer.name }}
+          kubernetes.io/tls-acme: 'true'
+          {{- end }}
+          nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+          {{- end }}
         path: /
+        {{- if .Values.ingress.rainloop.tls }}
+        tls:
+          - secretName: {{ template "mailserver.rainloop-certificate" . }}
+            hosts:
+              - {{ .Values.ingress.rainloop.hostname }}
+              {{- else }}
         tls: []
+        {{- end }}
     poorMansK8sLb:
       enabled: false
+      # webhookUrl:
+      # webhookSecret:
     haproxy:
       enabled: false
+      # controller:
+      #   replicaCount: 1
+      #   kind: Deployment
+      #   enableStaticPorts: false
+      #   tcp:
+      #     25: 'default/docker-mailserver:25::PROXY-V1'
+      #     110: 'default/docker-mailserver:110::PROXY-V1'
+      #     143: 'default/docker-mailserver:143::PROXY-V1'
+      #     465: 'default/docker-mailserver:465'
+      #     587: 'default/docker-mailserver:587'
+      #     993: 'default/docker-mailserver:993::PROXY-V1'
+      #     995: 'default/docker-mailserver:995::PROXY-V1'
+      #   service:
+      #     externalTrafficPolicy: Local
+      #   podAnnotations:
+      #     set-to-avoid-lint-errors-in: docker-mailserver
+      # defaultBackend:
+      #   replicaCount: 1
+      # trustedNetworks: '10.0.0.0/8 192.168.0.0/16 172.16.0.0/16'
+      # revisionHistoryLimit: 10

@@ -104,9 +104,21 @@ service:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      http:
+      smtp: 30025
+      pop3: 30110
+      imap: 30143
+      smtps: 30465
+      submission: 30587
+      imaps: 30993
+      pop3s: 30995
     lbPorts:
-      http: 80
+      smtp: 25
+      pop3: 110
+      imap: 143
+      smtps: 465
+      submission: 587
+      imaps: 993
+      pop3s: 995
   rainloop:
     type: ClusterIP
     externalTrafficPolicy: Cluster
