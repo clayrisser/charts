@@ -7,9 +7,11 @@ images:
     tag: release-v7.0.0
 
 config:
-  clusterProvider: rke
+  clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
+  spfTests:
+    enabled: true
   mailserver:
     baseUrl: ''
     hostname: ''
@@ -34,6 +36,68 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
+  debug: false
+  domain: ''
+  hostname: ''
+  postmasterUsername: postmaster
+  smtpOnly: false
+  spoofProtection: true
+  virusmailsDeleteDelay: 7
+  fetchmail:
+    enabled: false
+    poll: 300
+  clamav:
+    enabled: false
+  dovecot:
+    # mailboxFormat: maildir
+    passAttrs: ''
+    passFilter: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+    userAttrs: ''
+    userFilter: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+  fail2ban:
+    enabled: false
+  ldap:
+    admin: admin
+    domain: example.org
+    enabled: false
+    hostname: ''
+    password: pass
+    queryFilterAlias: '(|(&(mailAlias=%s)(objectClass=PostfixBookMailForward))(&(mailAlias=%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE)))'
+    queryFilterDomain: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
+    queryFilterGroup: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
+    queryFilterUser: '(&(mail=%s)(mailEnabled=TRUE))'
+    saslFilter: '(&(uniqueIdentifier=%u)(mailEnabled=TRUE))'
+    tls: false
+    usersOu: people
+  managesieve:
+    enabled: false
+  pop3:
+    enabled: false
+  postfix:
+    mailboxSizeLimit: 0
+    messageSizeLimit: 100000000
+  postgrey:
+    autoWhitelistClients: 5
+    delay: 300
+    enabled: false
+    maxAge: 35
+    text: 'Delayed by postgrey'
+  reports:
+    # logrotateInterval: daily
+    # logwatchInterval: none
+    pflogsummTrigger: none
+  spamassassin:
+    # moveSpamToJunk: true
+    # shortcircuitBayesHam: false
+    # shortcircuitBayesSpam: false
+    # spamToInbox: true
+    enabled: false
+    spamSubject: '***SPAM***'
+  srs:
+    # senderClasses: envelope_sender
+    enabled: true
+    excludeDomains: ''
+    secret: P@ssw0rd
 
 service:
   mailserver:

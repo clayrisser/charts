@@ -24,127 +24,135 @@ spec:
         name: busybox
         tag: '1.28'
         pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
-      # TODO
-      # resources:
-      #   requests:
-      #     cpu: 10m
-      #     memory: 32Mi
-      #   limits:
-      #     cpu: 50m
-      #     memory: 64Mi
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 50m
+          memory: 64Mi
     serviceAccount:
       create: 'true'
     configMap:
-      useExisting: false
+      useExisting: true
     secret:
-      useExisting: false
+      useExisting: true
     ssl:
-      issuer:
-        name: {{ .Values.ingress.mailserver.issuer.name | quote }}
-        kind: ClusterIssuer
-      dnsname: {{ template "mailserver.mailserver-hostname" . }}
-      # TODO
-      # dns01provider: cloudflare
       useExisting: true
       existingName: {{ template "mailserver.mailserver-certificate" . }}
     psp:
       create: true
     demoMode:
       enabled: false
-    # TODO
-    spfTestsDisabled: false
-    # TODO
+    spfTestsDisabled: {{ .Values.config.spfTests.enabled | ternary "false" "true" }}
     rblRejectDomains: []
-    # TODO
-    poorMansK8sLb:
-      enabled: false
-      webhookUrl:
-      webhookSecret:
     domains:
       - {{ template "mailserver.mailserver-hostname" . }}
-    livenessTests:
-      enabled: true
-      commands:
-        - 'clamscan /tmp/docker-mailserver/TrustedHosts'
     pod:
+      # TODO: cannot inject env without kustomize
+      # env:
+      #   - name: LOGROTATE_INTERVAL
+      #     value: {{ .Values.config.reports.logrotateInterval | quote }}
+      #   - name: LOGWATCH_INTERVAL
+      #     value: {{ .Values.config.reports.logwatchInterval | quote }}
+      #   - name: DOVECOT_MAILBOX_FORMAT
+      #     value: {{ .Values.config.dovecot.mailboxFormat | quote }}
+      #   - name: MOVE_SPAM_TO_JUNK
+      #     value: {{ .Values.config.spamassassin.moveSpamToJunk | ternary "1" "0" | quote }}
+      #   - name: SA_SHORTCIRCUIT_BAYES_HAM
+      #     value: {{ .Values.config.spamassassin.shortcircuitBayesHam | ternary "1" "0" | quote }}
+      #   - name: SA_SHORTCIRCUIT_BAYES_SPAM
+      #     value: {{ .Values.config.spamassassin.shortcircuitBayesSpam | ternary "1" "0" | quote }}
+      #   - name: SPAMASSASSIN_SPAM_TO_INBOX
+      #     value: {{ .Values.config.spamassassin.spamToInbox | ternary "1" "0" | quote }}
+      #   - name: SRS_SENDER_CLASSES
+      #     value: {{ .Values.config.srs.senderClasses | quote }}
       dockermailserver:
-        hostNetwork: false
-        hostPID: false
-        strategy:
-          type: {{ .Values.config.updateStrategy | quote }}
-        override_hostname: {{ printf "mail.%s" (include "mailserver.mailserver-hostname" .) }}
-        dms_debug: 0
-        enable_clamav: 1
-        one_dir: 1
-        enable_pop3: 0
-        enable_fail2ban: 0
-        enable_dovecot_replication: true
-        smtp_only: 0
-        ssl_type:
-        # ssl_cert_path: "/tmp/ssl/tls.crt"
-        # ssl_key_path: "/tmp/ssl/tls.key"
-        tls_level:
-        spoof_protection:
-        enable_srs: 0
-        permit_docker:
-        virusmails_delete_delay:
-        enable_postfix_virtual_transport:
-        postfix_dagent:
-        postfix_mailbox_size_limit:
-        postfix_message_size_limit:
-        enable_managesieve:
-        postmaster_address: "postmaster@domain.com"
-        postscreen_action: "enforce"
-        report_recipient: 0
-        report_sender:
-        report_interval: "daily"
-        enable_spamassassin: 1
-        sa_tag: 2.0
-        sa_tag2: 6.31
-        sa_kill: 6.31
-        sa_spam_subject: "*** spam ***"
-        enable_fetchmail: 0
-        fetchmail_poll: 300
-        enable_ldap:
-        ldap_start_tls: # MUST BE "yes" or "no" - quoted strings
-        ldap_server_host:
-        ldap_search_base:
-        ldap_bind_dn:
-        ldap_bind_pw:
-        ldap_query_filter_user:
-        ldap_query_filter_group:
-        ldap_query_filter_alias:
-        ldap_query_filter_domain:
-        dovecot_tls:
-        dovecot_user_filter:
-        dovecot_user_attr:
-        dovecot_pass_filter:
-        dovecot_pass_attr:
-        enable_postgrey: 0
-        postgrey_delay: 300
-        postgrey_max_age: 35
-        postgrey_auto_whitelist_clients: 5
-        postgrey_text: "delayed by postgrey"
-        pflogsumm_trigger:
-        pflogsumm_recipient:
-        enable_saslauthd: 0
-        saslauthd_mechanisms:
-        saslauthd_mech_options:
-        saslauthd_ldap_server:
-        saslauthd_ldap_ssl:
-        saslauthd_ldap_bind_dn:
-        saslauthd_ldap_password:
-        saslauthd_ldap_search_base:
-        saslauthd_ldap_filter:
-        sasl_passwd:
-        srs_exclude_domains:
-        srs_secret:
-        srs_domainname:
         default_relay_host:
+        dms_debug: {{ .Values.config.debug | ternary "1" "0" }}
+        dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
+        dovecot_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote }}
+        dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
+        enable_clamav: {{ .Values.config.clamav.enabled | ternary "1" "0" }}
+        enable_fail2ban: {{ .Values.config.fail2ban.enabled | ternary "1" "0" }}
+        enable_fetchmail: {{ .Values.config.fetchmail.enabled | ternary "1" "0" }}
+        enable_ldap: {{ .Values.config.ldap.enabled | ternary "1" "" | quote }}
+        enable_managesieve: {{ .Values.config.managesieve.enabled | ternary "1" "0" }}
+        enable_pop3: {{ .Values.config.pop3.enabled | ternary "1" "0" }}
+        enable_postfix_virtual_transport:
+        enable_postgrey: {{ .Values.config.postgrey.enabled | ternary "1" "0" }}
+        enable_saslauthd: {{ .Values.config.ldap.enabled | ternary "1" "0" }}
+        enable_spamassassin: {{ .Values.config.spamassassin.enabled | ternary "1" "0" }}
+        enable_srs: {{ .Values.config.srs.enabled | ternary "1" "0" }}
+        fetchmail_poll: {{ .Values.config.fetchmail.poll }}
+        ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
+        ldap_bind_pw: {{ .Values.config.ldap.password | quote }}
+        ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
+        ldap_query_filter_domain: {{ .Values.config.ldap.queryFilterDomain | quote }}
+        ldap_query_filter_group: {{ .Values.config.ldap.queryFilterGroup | quote }}
+        ldap_query_filter_user: {{ .Values.config.ldap.queryFilterUser | quote }}
+        ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
+        ldap_server_host: {{ .Values.config.ldap.hostname | quote }}
+        ldap_start_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote }}
+        one_dir: 1
+        pflogsumm_recipient:
+        pflogsumm_trigger: {{ (eq .Values.config.reports.pflogsummTrigger "none") | ternary "" .Values.config.reports.pflogsummTrigger }}
+        postfix_dagent:
+        postfix_mailbox_size_limit: {{ .Values.config.postfixMailboxSizeLimit | quote }}
+        postfix_message_size_limit: {{ .Values.config.postfixMessageSizeLimit | quote }}
+        postgrey_auto_whitelist_clients: {{ .Values.config.postgrey.autoWhitelistClients }}
+        postgrey_delay: {{ .Values.config.postgrey.delay }}
+        postgrey_max_age: {{ .Values.config.postgrey.maxAge }}
+        postgrey_text: {{ .Values.config.postgrey.text | quote }}
+        postmaster_address: '{{ .Values.config.postmasterUsername }}@{{ .Values.config.domain }}'
+        postscreen_action: enforce
         relay_host:
+        relay_password:
         relay_port: 25
         relay_user:
-        relay_password:
+        report_interval:
+        report_recipient: 0
+        report_sender:
+        sa_kill: 6.31
+        sa_spam_subject: {{ .Values.config.spamassassin.spamSubject | quote }}
+        sa_tag2: 6.31
+        sa_tag: 2.0
+        sasl_passwd:
+        saslauthd_ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
+        saslauthd_ldap_filter: {{ .Values.config.ldap.saslFilter | quote }}
+        saslauthd_ldap_password: {{ .Values.config.ldap.password | quote }}
+        saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
+        saslauthd_ldap_server: {{ .Values.config.ldap.hostname | quote }}
+        saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" }}
+        saslauthd_mech_options: ''
+        saslauthd_mechanisms: ldap
+        smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}
+        spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" }}
+        srs_domainname: {{ .Values.config.domain | quote }}
+        srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
+        srs_secret: {{ .Values.config.srs.secret | quote }}
+        tls_level:
+        virusmails_delete_delay: {{ .Values.config.virusmailsDeleteDelay | quote }}
+        {{- if .Values.ingress.rainloop.tls }}
+        ssl_type: manual
+        ssl_cert_path: '/tmp/ssl/tls.crt'
+        ssl_key_path: '/tmp/ssl/tls.key'
+        {{- else }}
+        ssl_type:
+        {{- end }}
+        strategy:
+          type: {{ .Values.config.updateStrategy | quote }}
+        # TODO: possibly incorrect
+        dovecot_pass_attr: {{ .Values.config.dovecot.passAttrs | quote }}
+        dovecot_user_attr: {{ .Values.config.dovecot.userAttrs | quote }}
+        # override_hostname: {{ printf "mail.%s" (include "mailserver.mailserver-hostname" .) }}
+        override_hostname: {{ template "mailserver.rainloop-hostname" . }}
+        # permit_docker:
+        permit_docker: host
+        # TODO: unused
+        hostPID: false
+        hostNetwork: false
+        enable_dovecot_replication: true
     service:
       type: {{ .Values.service.mailserver.type | quote }}
       port: {{ .Values.service.mailserver.nodePorts.http | quote }}
@@ -187,12 +195,12 @@ spec:
       service:
         scrape: 'true'
         probe: 'false'
-        path: '/metrics'
+        path: /metrics
         port: '9102'
       pod:
         scrape: 'true'
         probe: 'false'
-        path: '/metrics'
+        path: /metrics
         port: '9102'
     rainloop:
       enabled: {{ .Values.config.rainloop.enabled }}
@@ -219,26 +227,7 @@ spec:
         annotations: {}
         path: /
         tls: []
-    # TODO
+    poorMansK8sLb:
+      enabled: false
     haproxy:
       enabled: false
-      controller:
-        replicaCount: 1
-        kind: 'Deployment'
-        enableStaticPorts: false
-        tcp:
-          25: "default/docker-mailserver:25::PROXY-V1"
-          110: "default/docker-mailserver:110::PROXY-V1"
-          143: "default/docker-mailserver:143::PROXY-V1"
-          465: "default/docker-mailserver:465"
-          587: "default/docker-mailserver:587"
-          993: "default/docker-mailserver:993::PROXY-V1"
-          995: "default/docker-mailserver:995::PROXY-V1"
-        service:
-          externalTrafficPolicy: "Local"
-        podAnnotations:
-          set-to-avoid-lint-errors-in: "docker-mailserver"
-      defaultBackend:
-        replicaCount: 1
-      trustedNetworks: "10.0.0.0/8 192.168.0.0/16 172.16.0.0/16"
-      revisionHistoryLimit: 10
