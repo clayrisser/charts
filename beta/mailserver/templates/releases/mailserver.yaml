@@ -52,21 +52,21 @@ spec:
       # TODO: cannot inject env without kustomize
       # env:
       #   - name: LOGROTATE_INTERVAL
-      #     value: {{ .Values.config.reports.logrotateInterval | quote }}
+      #     value: {\{ .Values.config.reports.logrotateInterval | quote }}
       #   - name: LOGWATCH_INTERVAL
-      #     value: {{ .Values.config.reports.logwatchInterval | quote }}
+      #     value: {\{ .Values.config.reports.logwatchInterval | quote }}
       #   - name: DOVECOT_MAILBOX_FORMAT
-      #     value: {{ .Values.config.dovecot.mailboxFormat | quote }}
+      #     value: {\{ .Values.config.dovecot.mailboxFormat | quote }}
       #   - name: MOVE_SPAM_TO_JUNK
-      #     value: {{ .Values.config.spamassassin.moveSpamToJunk | ternary "1" "0" | quote }}
+      #     value: {\{ .Values.config.spamassassin.moveSpamToJunk | ternary "1" "0" | quote }}
       #   - name: SA_SHORTCIRCUIT_BAYES_HAM
-      #     value: {{ .Values.config.spamassassin.shortcircuitBayesHam | ternary "1" "0" | quote }}
+      #     value: {\{ .Values.config.spamassassin.shortcircuitBayesHam | ternary "1" "0" | quote }}
       #   - name: SA_SHORTCIRCUIT_BAYES_SPAM
-      #     value: {{ .Values.config.spamassassin.shortcircuitBayesSpam | ternary "1" "0" | quote }}
+      #     value: {\{ .Values.config.spamassassin.shortcircuitBayesSpam | ternary "1" "0" | quote }}
       #   - name: SPAMASSASSIN_SPAM_TO_INBOX
-      #     value: {{ .Values.config.spamassassin.spamToInbox | ternary "1" "0" | quote }}
+      #     value: {\{ .Values.config.spamassassin.spamToInbox | ternary "1" "0" | quote }}
       #   - name: SRS_SENDER_CLASSES
-      #     value: {{ .Values.config.srs.senderClasses | quote }}
+      #     value: {\{ .Values.config.srs.senderClasses | quote }}
       dockermailserver:
         default_relay_host:
         dms_debug: {{ .Values.config.debug | ternary "1" "0" }}
@@ -269,5 +269,5 @@ spec:
       #     set-to-avoid-lint-errors-in: docker-mailserver
       # defaultBackend:
       #   replicaCount: 1
-      # trustedNetworks: {{ .Values.config.proxy.trustedNetworks | quote }}
+      # trustedNetworks: {\{ .Values.config.proxy.trustedNetworks | quote }}
       # revisionHistoryLimit: 10
