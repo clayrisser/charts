@@ -74,6 +74,8 @@ Calculate mailserver domain
 Calculate ldap dc
 */}}
 {{- define "mailserver.ldap-dc" }}
+{{- if .Values.config.ldap.domain }}
 {{- $splitDomain := (regexSplit "\\." .Values.config.ldap.domain -1) }}
 {{- printf "dc=%s,dc=%s" (index $splitDomain 0) (index $splitDomain 1) }}
+{{- end }}
 {{- end }}
