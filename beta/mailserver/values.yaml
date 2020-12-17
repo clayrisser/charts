@@ -10,8 +10,6 @@ config:
   clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
-
-
   debug: false
   domain: ''
   postmasterUsername: postmaster
