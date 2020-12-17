@@ -68,6 +68,7 @@ Calculate mailserver domain
 {{- else }}
 {{- printf (include "mailserver.rainloop-hostname" .) }}
 {{- end }}
+{{- end }}
 
 {{/*
 Calculate ldap dc
