@@ -9,25 +9,25 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   postfix-main.cf: |
-    {{- if .Values.haproxy.enabled }}
     postscreen_upstream_proxy_protocol = haproxy
-    {{ end }}
-    {{ if not .Values.spfTestsDisabled }}
-    smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range .Values.rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
+    {{ if not .Values.config.spfTests.enabled }}
+    smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range .Values.config.spfTests.rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
     {{ end -}}
 
+  postfix-master.cf: |
+    submission/inet/smtpd_upstream_proxy_protocol=haproxy
+    smtps/inet/smtpd_upstream_proxy_protocol=haproxy
+
   dovecot-services.cf: |
-    {{- if .Values.haproxy.enabled }}
-    haproxy_trusted_networks = {{ .Values.haproxy.trustedNetworks }}
-    {{ end }}
+    haproxy_trusted_networks = {{ .Values.config.proxy.trustedNetworks }}
     service imap-login {
       inet_listener imap {
-        {{ if .Values.haproxy.enabled -}}haproxy = yes{{ end }}
+        haproxy = yes
       }
       inet_listener imaps {
-        {{ if .Values.haproxy.enabled -}}haproxy = yes{{ end }}
+        haproxy = yes
       }
-      {{- if .Values.rainloop.enabled }}
+      {{- if .Values.config.rainloop.enabled }}
       inet_listener imaps-rainloop {
         port = 10993
         ssl = yes
@@ -36,12 +36,34 @@ data:
     }
     service pop3-login {
       inet_listener pop3 {
-        {{ if .Values.haproxy.enabled -}}haproxy = yes{{ end }}
+        haproxy = yes
       }
       inet_listener pop3s {
-        {{ if .Values.haproxy.enabled -}}haproxy = yes{{ end }}
+        haproxy = yes
       }
     }
+
+  dovecot.cf: |
+   # service stats {
+   #   unix_listener stats-reader {
+   #     group = docker
+   #     mode = 0666
+   #   }
+   #   unix_listener stats-writer {
+   #     group = docker
+   #     mode = 0666
+   #   }
+   # }
+
+  fail2ban-fail2ban.cf: |
+    [Definition]
+
+  fail2ban-jail.cf: |
+    [DEFAULT]
+
+  fetchmail.cf: |
+
+  spamassassin-rules.cf: |
 
   80-replication.conf: |
     mail_plugins = $mail_plugins notify replication
@@ -69,8 +91,8 @@ data:
       }
     }
     plugin {
-      #mail_replica = tcp:anotherhost.example.com       # use doveadm_port
-      #mail_replica = tcp:anotherhost.example.com:12345 # use port 12345 explicitly
+      # mail_replica = tcp:anotherhost.example.com       # use doveadm_port
+      # mail_replica = tcp:anotherhost.example.com:12345 # use port 12345 explicitly
     }
 
   91-override-sieve.conf: |
@@ -83,3 +105,21 @@ data:
     #!/bin/bash
     clamscan /tmp/docker-mailserver/TrustedHosts
     echo "All healthy"
+
+  postfix-aliases.cf: |
+
+  postfix-virtual.cf: |
+
+  postfix-accounts.cf: {{ .Values.config.accounts }}
+
+  postfix-accounts.cf.bak: |
+
+  SigningTable: |
+    *@{{ template "mailserver.mailserver-domain" . }} mail._domainkey.{{ template "mailserver.mailserver-domain" . }}
+
+  KeyTable: |
+    mail._domainkey.{{ template "mailserver.mailserver-domain" . }} {{ template "mailserver.mailserver-domain" . }}:mail:/etc/opendkim/keys/{{ template "mailserver.mailserver-domain" . }}/mail.private
+
+  TrustedHosts: |
+    127.0.0.1
+    localhost

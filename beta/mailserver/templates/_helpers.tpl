@@ -60,44 +60,19 @@ Calculate rainloop base url
 {{- end }}
 
 {{/*
-Calculate mailserver certificate
+Calculate mailserver domain
 */}}
-{{- define "mailserver.mailserver-certificate" }}
-{{- if (not (empty .Values.ingress.mailserver.certificate)) }}
-{{- printf .Values.ingress.mailserver.certificate }}
+{{- define "mailserver.mailserver-domain" }}
+{{- if (and .Values.config.domain (not (empty .Values.config.domain))) }}
+{{- printf .Values.config.domain }}
 {{- else }}
-{{- printf "%s-mailserver-letsencrypt" (include "mailserver.fullname" .) }}
-{{- end }}
+{{- printf (include "mailserver.rainloop-hostname" .) }}
 {{- end }}
 
 {{/*
-Calculate mailserver hostname
+Calculate ldap dc
 */}}
-{{- define "mailserver.mailserver-hostname" }}
-{{- if (and .Values.config.mailserver.hostname (not (empty .Values.config.mailserver.hostname))) }}
-{{- printf .Values.config.mailserver.hostname }}
-{{- else }}
-{{- if .Values.ingress.mailserver.enabled }}
-{{- printf .Values.ingress.mailserver.hostname }}
-{{- else }}
-{{- printf "%s-mailserver" (include "mailserver.fullname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate mailserver base url
-*/}}
-{{- define "mailserver.mailserver-base-url" }}
-{{- if (and .Values.config.mailserver.baseUrl (not (empty .Values.config.mailserver.baseUrl))) }}
-{{- printf .Values.config.mailserver.baseUrl }}
-{{- else }}
-{{- if .Values.ingress.mailserver.enabled }}
-{{- $hostname := ((empty (include "mailserver.mailserver-hostname" .)) | ternary .Values.ingress.mailserver.hostname (include "mailserver.mailserver-hostname" .)) }}
-{{- $protocol := (.Values.ingress.mailserver.tls | ternary "https" "http") }}
-{{- printf "%s://%s" $protocol $hostname }}
-{{- else }}
-{{- printf "http://%s" (include "mailserver.mailserver-hostname" .) }}
-{{- end }}
-{{- end }}
+{{- define "mailserver.ldap-dc" }}
+{{- $splitDomain := (regexSplit "\\." .Values.config.ldap.domain -1) }}
+{{- printf "dc=%s,dc=%s" (index $splitDomain 0) (index $splitDomain 1) }}
 {{- end }}

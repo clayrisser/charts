@@ -39,7 +39,7 @@ spec:
       useExisting: true
     ssl:
       useExisting: true
-      existingName: {{ template "mailserver.mailserver-certificate" . }}
+      existingName: {{ .Values.config.tls.certificate | default (include "mailserver.rainloop-certificate" .) }}
     psp:
       create: true
     demoMode:
@@ -47,7 +47,7 @@ spec:
     spfTestsDisabled: {{ .Values.config.spfTests.enabled | ternary "false" "true" }}
     rblRejectDomains: []
     domains:
-      - {{ template "mailserver.mailserver-hostname" . }}
+      - {{ template "mailserver.mailserver-domain" . }}
     pod:
       # TODO: cannot inject env without kustomize
       # env:
@@ -104,7 +104,7 @@ spec:
         postgrey_delay: {{ .Values.config.postgrey.delay }}
         postgrey_max_age: {{ .Values.config.postgrey.maxAge }}
         postgrey_text: {{ .Values.config.postgrey.text | quote }}
-        postmaster_address: '{{ .Values.config.postmasterUsername }}@{{ .Values.config.domain }}'
+        postmaster_address: '{{ .Values.config.postmasterUsername }}@{{ template "mailserver.mailserver-domain" . }}'
         postscreen_action: enforce
         relay_host:
         relay_password:
@@ -128,12 +128,12 @@ spec:
         saslauthd_mechanisms: ldap
         smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}
         spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" }}
-        srs_domainname: {{ .Values.config.domain | quote }}
+        srs_domainname: {{ template "mailserver.mailserver-domain" . | quote }}
         srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
         srs_secret: {{ .Values.config.srs.secret | quote }}
         tls_level:
         virusmails_delete_delay: {{ .Values.config.virusmailsDeleteDelay | quote }}
-        {{- if .Values.ingress.rainloop.tls }}
+        {{- if .Values.config.tls.enabled }}
         ssl_type: manual
         ssl_cert_path: '/tmp/ssl/tls.crt'
         ssl_key_path: '/tmp/ssl/tls.key'
@@ -145,8 +145,7 @@ spec:
         # TODO: possibly incorrect
         dovecot_pass_attr: {{ .Values.config.dovecot.passAttrs | quote }}
         dovecot_user_attr: {{ .Values.config.dovecot.userAttrs | quote }}
-        # override_hostname: {{ printf "mail.%s" (include "mailserver.mailserver-hostname" .) }}
-        override_hostname: {{ template "mailserver.rainloop-hostname" . }}
+        override_hostname: {{ template "mailserver.mailserver-domain" . }}
         # permit_docker:
         permit_docker: host
         # TODO: unused
@@ -161,7 +160,7 @@ spec:
         # publicIp:
         allowedIps:
           - "0.0.0.0/0"
-        hostName: {{ template "mailserver.mailserver-hostname" . }}
+        hostName: {{ template "mailserver.mailserver-domain" . }}
       nodePort:
         smtp: {{ .Values.service.mailserver.nodePorts.smtp | default "30025" }}
         pop3: {{ .Values.service.mailserver.nodePorts.pop3 | default "30110" }}
@@ -242,8 +241,8 @@ spec:
         tls:
           - secretName: {{ template "mailserver.rainloop-certificate" . }}
             hosts:
-              - {{ .Values.ingress.rainloop.hostname }}
-              {{- else }}
+              - {{ template "mailserver.rainloop-hostname" . }}
+        {{- else }}
         tls: []
         {{- end }}
     poorMansK8sLb:
@@ -270,5 +269,5 @@ spec:
       #     set-to-avoid-lint-errors-in: docker-mailserver
       # defaultBackend:
       #   replicaCount: 1
-      # trustedNetworks: '10.0.0.0/8 192.168.0.0/16 172.16.0.0/16'
+      # trustedNetworks: {{ .Values.config.proxy.trustedNetworks | quote }}
       # revisionHistoryLimit: 10
