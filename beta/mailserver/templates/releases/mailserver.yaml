@@ -125,7 +125,7 @@ spec:
         saslauthd_ldap_server: {{ .Values.config.ldap.hostname | quote }}
         saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" }}
         saslauthd_mech_options: ''
-        saslauthd_mechanisms: ldap
+        saslauthd_mechanisms: {{ .Values.config.ldap.enabled | ternary "ldap" "" }}
         smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}
         spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" }}
         srs_domainname: {{ template "mailserver.mailserver-domain" . }}
