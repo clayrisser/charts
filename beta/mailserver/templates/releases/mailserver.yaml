@@ -224,7 +224,7 @@ spec:
         hosts:
           - {{ template "mailserver.rainloop-hostname" . }}
         annotations:
-          {{- if (eq .Values.config.clusterProvider "aks") }}
+          {{- if (eq .Values.config.clusterType "aks") }}
           kubernetes.io/ingress.class: addon-http-application-routing
           {{- else }}
           kubernetes.io/ingress.class: nginx
