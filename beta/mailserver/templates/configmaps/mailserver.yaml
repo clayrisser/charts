@@ -8,17 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- $rblRejectDomains := (regexSplit "\\," .Values.config.spfTests.rblRejectDomains -1) }}
-  postfix-main.cf: |
-    postscreen_upstream_proxy_protocol = haproxy
-    {{ if not .Values.config.spfTests.enabled }}
-    smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range $rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
-    {{ end -}}
-
-  postfix-master.cf: |
-    submission/inet/smtpd_upstream_proxy_protocol=haproxy
-    smtps/inet/smtpd_upstream_proxy_protocol=haproxy
-
   dovecot-services.cf: |
     haproxy_trusted_networks = {{ .Values.config.proxy.trustedNetworks }}
     service imap-login {
@@ -115,6 +104,10 @@ data:
 
   postfix-accounts.cf.bak: |
 
+  postfix-master.cf: |
+    submission/inet/smtpd_upstream_proxy_protocol=haproxy
+    smtps/inet/smtpd_upstream_proxy_protocol=haproxy
+
   SigningTable: |
     *@{{ template "mailserver.mailserver-domain" . }} mail._domainkey.{{ template "mailserver.mailserver-domain" . }}
 
@@ -124,3 +117,10 @@ data:
   TrustedHosts: |
     127.0.0.1
     localhost
+
+  {{- $rblRejectDomains := (regexSplit "\\," .Values.config.spfTests.rblRejectDomains -1) }}
+  postfix-main.cf: |
+    postscreen_upstream_proxy_protocol = haproxy
+    {{- if not .Values.config.spfTests.enabled }}
+    smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range $rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
+    {{- end }}
