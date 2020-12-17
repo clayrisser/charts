@@ -37,6 +37,413 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.debug
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.domain
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: domain
+    group: Config
+  - variable: config.postmasterUsername
+    default: postmaster
+    description: ''
+    type: string
+    required: true
+    label: 'postmaster username'
+    group: Config
+  - variable: config.privateKey
+    default:
+    description: ''
+    type: string
+    required: false
+    label: 'private key'
+    group: Config
+  - variable: config.smtpOnly
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'smtp only'
+    group: Config
+  - variable: config.spoofProtection
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'spoof protection'
+    group: Config
+  - variable: config.virusmailsDeleteDelay
+    default: 7
+    description: ''
+    type: int
+    required: true
+    label: 'virusmails delete delay'
+    group: Config
+  - variable: config.clamav.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'clamav enabled'
+    group: Config
+  # - variable: config.dovecot.mailboxFormat
+  #   default: maildir
+  #   description: ''
+  #   type: enum
+  #   options:
+  #     - maildir
+  #     - sdbox
+  #     - mdbox
+  #   required: true
+  #   label: 'dovecot mailbox format'
+  #   group: Config
+  - variable: config.proxy.trustedNetworks
+    default: '10.0.0.0/8 192.168.0.0/16 172.16.0.0/16 127.0.0.0/8'
+    description: ''
+    type: string
+    required: true
+    label: 'trusted networks'
+    group: Config
+  - variable: config.spfTests.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'spf tests enabled'
+    group: Config
+    show_submission_if: true
+    subquestions:
+      - variable: config.spfTests.rblRejectDomains
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'spf tests rbl reject domains'
+  - variable: config.fail2ban.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'fail2ban enabled'
+    group: Config
+  - variable: config.fetchmail.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'fetchmail enabled'
+    group: Config
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.fetchmail.poll
+        default: 300
+        description: ''
+        type: int
+        required: false
+        label: 'fetchmail poll'
+  - variable: config.tls.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'tls enabled'
+    group: Config
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.tls.certificate
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'tls certificate'
+  - variable: config.managesieve.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'managesieve enabled'
+    group: Config
+  - variable: config.pop3.enabled
+    default: ''
+    description: ''
+    type: boolean
+    required: true
+    label: 'pop3 enabled'
+    group: Config
+  - variable: config.postfix.mailboxSizeLimit
+    default: 0
+    description: ''
+    type: int
+    required: true
+    label: 'postfix mailbox size limit'
+    group: Config
+  - variable: config.postfix.messageSizeLimit
+    default: 100000000
+    description: ''
+    type: int
+    required: true
+    label: 'postfix message size limit'
+    group: Config
+  - variable: config.postgrey.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'postgrey enabled'
+    group: Config
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.postgrey.autoWhitelistClients
+        default: 5
+        description: ''
+        type: int
+        required: false
+        label: 'postgrey auto whitelist clients'
+      - variable: config.postgrey.delay
+        default: 300
+        description: ''
+        type: int
+        required: false
+        label: 'postgrey delay'
+      - variable: config.postgrey.maxAge
+        default: 35
+        description: ''
+        type: int
+        required: false
+        label: 'postgrey max age'
+      - variable: config.postgrey.text
+        default: 'Delayed by postgrey'
+        description: ''
+        type: string
+        required: false
+        label: 'postgrey text'
+  - variable: config.reports.pflogsummTrigger
+    default: none
+    description: ''
+    type: enum
+    options:
+      - none
+      - daily_cron
+      - logrotate
+    required: true
+    label: 'reports pflogsumm trigger'
+    group: Config
+  # - variable: config.reports.logwatchInterval
+  #   default: none
+  #   description: ''
+  #   type: enum
+  #   options:
+  #     - none
+  #     - daily
+  #     - weekly
+  #   required: true
+  #   label: 'reports logwatch interval'
+  #   group: Config
+  # - variable: config.reports.logrotateInterval
+  #   default: daily
+  #   description: ''
+  #   type: enum
+  #   options:
+  #     - daily
+  #     - weekly
+  #     - monthly
+  #   required: true
+  #   label: 'reports logrotate interval'
+  #   group: Config
+  - variable: config.spamassassin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'spamassassin enabled'
+    group: Config
+    show_subquestion_if: true
+    subquestions:
+      # - variable: config.spamassassin.spamToInbox
+      #   default: true
+      #   description: ''
+      #   type: boolean
+      #   required: true
+      #   label: 'spamassassin spam to inbox'
+      # - variable: config.spamassassin.moveSpamToJunk
+      #   default: true
+      #   description: ''
+      #   type: boolean
+      #   required: true
+      #   label: 'spamassassin move spam to junk'
+      #   show_if: config.spamassassin.spamToInbox=true
+      # - variable: config.spamassassin.shortcircuitBayesHam
+      #   default: false
+      #   description: ''
+      #   type: boolean
+      #   required: true
+      #   label: 'spamassassin shortcircuit bayes ham'
+      # - variable: config.spamassassin.shortcircuitBayesSpam
+      #   default: false
+      #   description: ''
+      #   type: string
+      #   required: true
+      #   label: 'spamassassin shortcircuit bayes spam'
+      - variable: config.spamassassin.spamSubject
+        default: '***SPAM***'
+        description: ''
+        type: string
+        required: false
+        label: 'spamassassin spam subject'
+  - variable: config.srs.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'srs enabled'
+    group: Config
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.srs.excludeDomains
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'srs exclude domains'
+      - variable: config.srs.secret
+        default: P@ssw0rd
+        description: ''
+        type: password
+        required: false
+        label: 'srs secret'
+      # - variable: config.srs.senderClasses
+      #   default: envelope_sender
+      #   description: ''
+      #   type: enum
+      #   options:
+      #     - envelope_sender
+      #     - header_sender
+      #     - 'envelope_sender,header_sender'
+      #   required: false
+      #   label: 'srs sender classes'
+
+# Ldap
+  - variable: config.ldap.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'ldap enabled'
+    group: Ldap
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.ldap.domain
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'ldap domain'
+      - variable: config.ldap.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'ldap tls'
+      - variable: config.ldap.hostname
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'ldap hostname'
+      - variable: config.ldap.admin
+        default: admin
+        description: ''
+        type: string
+        required: false
+        label: 'ldap admin'
+      - variable: config.ldap.password
+        default: P@ssw0rd
+        description: ''
+        type: password
+        required: false
+        label: 'ldap password'
+      - variable: config.ldap.queryFilterAlias
+        default: '(|(&(mailAlias=%s)(objectClass=PostfixBookMailForward))(&(mailAlias=%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE)))'
+        description: ''
+        type: string
+        required: false
+        label: 'ldap query filter alias'
+      - variable: config.ldap.queryFilterDomain
+        default: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
+        description: ''
+        type: string
+        required: false
+        label: 'ldap query filter domain'
+      - variable: config.ldap.queryFilterGroup
+        default: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
+        description: ''
+        type: string
+        required: false
+        label: 'ldap query filter group'
+      - variable: config.ldap.queryFilterUser
+        default: '(&(mail=%s)(mailEnabled=TRUE))'
+        description: ''
+        type: string
+        required: false
+        label: 'ldap query filter user'
+      - variable: config.ldap.searchBase
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'ldap search base'
+      - variable: config.ldap.saslFilter
+        default: '(&(uniqueIdentifier=%u)(mailEnabled=TRUE))'
+        description: ''
+        type: string
+        required: false
+        label: 'ldap sasl filter'
+      - variable: config.ldap.usersOu
+        default: people
+        description: ''
+        type: string
+        required: false
+        label: 'ldap users ou'
+      - variable: config.dovecot.passAttrs
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'dovecot pass attrs'
+      - variable: config.dovecot.passFilter
+        default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+        description: ''
+        type: string
+        required: false
+        label: 'dovecot pass filter'
+      - variable: config.dovecot.userAttrs
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'dovecot user attrs'
+      - variable: config.dovecot.userFilter
+        default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+        description: ''
+        type: string
+        required: false
+        label: 'dovecot user filter'
+
+# Rainloop
+  - variable: config.rainloop.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'rainloop enabled'
+    group: Rainloop
   - variable: config.rainloop.resources.enabled
     default: false
     description: ''
@@ -47,33 +454,40 @@ questions:
       - false
     required: true
     label: 'rainloop resources defaults'
+    show_if: config.rainloop.enabled=true
     show_subquestion_if: custom
-    group: Config
+    group: Rainloop
     subquestions:
       - variable: config.rainloop.resources.requests.cpu
         default: 100m
         description: ''
         type: string
         required: true
+        show_if: config.rainloop.enabled=true
         label: 'rainloop resources requests cpu'
       - variable: config.rainloop.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
+        show_if: config.rainloop.enabled=true
         label: 'rainloop resources requests memory'
       - variable: config.rainloop.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
+        show_if: config.rainloop.enabled=true
         label: 'rainloop resources limits cpu'
       - variable: config.rainloop.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
+        show_if: config.rainloop.enabled=true
         label: 'rainloop resources limits memory'
+
+
 
 # Persistence
   - variable: persistence.enabled

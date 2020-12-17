@@ -45,7 +45,7 @@ spec:
     demoMode:
       enabled: false
     spfTestsDisabled: {{ .Values.config.spfTests.enabled | ternary "false" "true" }}
-    rblRejectDomains: []
+    rblRejectDomains: {{ regexSplit "\\," .Values.config.spfTests.rblRejectDomains -1 }}
     domains:
       - {{ template "mailserver.mailserver-domain" . }}
     pod:

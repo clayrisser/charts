@@ -10,9 +10,16 @@ config:
   clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
+
+
+  debug: false
+  domain: ''
+  postmasterUsername: postmaster
+  privateKey:
+  smtpOnly: false
+  spoofProtection: true
+  virusmailsDeleteDelay: 7
   mailserver:
-    baseUrl: ''
-    hostname: ''
     replicas: 1
     resources:
       enabled: false
@@ -34,35 +41,24 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
-  spfTests:
-    enabled: true
-    rblRejectDomains: []
-  debug: false
-  domain: ''
-  hostname: ''
-  postmasterUsername: postmaster
-  privateKey:
-  smtpOnly: false
-  spoofProtection: true
-  virusmailsDeleteDelay: 7
-  proxy:
-    trustedNetworks: '10.0.0.0/8 192.168.0.0/16 172.16.0.0/16 127.0.0.0/8'
-  fetchmail:
-    enabled: false
-    poll: 300
   clamav:
     enabled: false
+  spfTests:
+    enabled: true
+    rblRejectDomains: ''
   dovecot:
     # mailboxFormat: maildir
     passAttrs: ''
     passFilter: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
     userAttrs: ''
     userFilter: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+  proxy:
+    trustedNetworks: '10.0.0.0/8 192.168.0.0/16 172.16.0.0/16 127.0.0.0/8'
+  fetchmail:
+    enabled: false
+    poll: 300
   fail2ban:
     enabled: false
-  tls:
-    enabled: false
-    certificate:
   ldap:
     admin: admin
     domain:
@@ -76,6 +72,9 @@ config:
     saslFilter: '(&(uniqueIdentifier=%u)(mailEnabled=TRUE))'
     tls: false
     usersOu: people
+  tls:
+    enabled: false
+    certificate:
   managesieve:
     enabled: false
   pop3:
