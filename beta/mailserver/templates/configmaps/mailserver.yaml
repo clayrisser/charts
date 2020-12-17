@@ -100,7 +100,7 @@ data:
 
   postfix-virtual.cf: |
 
-  postfix-accounts.cf: {{ .Values.config.accounts }}
+  postfix-accounts.cf: {{ .Values.config.accounts | quote }}
 
   postfix-accounts.cf.bak: |
 
