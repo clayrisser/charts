@@ -63,7 +63,7 @@ Calculate rainloop base url
 Calculate mailserver domain
 */}}
 {{- define "mailserver.mailserver-domain" }}
-{{- printf (0 | default (include "mailserver.rainloop-hostname" .)) }}
+{{- printf (.Values.config.domain | default (include "mailserver.rainloop-hostname" .)) }}
 {{- end }}
 
 {{/*

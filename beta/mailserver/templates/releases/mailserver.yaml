@@ -128,7 +128,7 @@ spec:
         saslauthd_mechanisms: ldap
         smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}
         spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" }}
-        srs_domainname: {{ template "mailserver.mailserver-domain" . | quote }}
+        srs_domainname: {{ template "mailserver.mailserver-domain" . }}
         srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
         srs_secret: {{ .Values.config.srs.secret | quote }}
         tls_level:
