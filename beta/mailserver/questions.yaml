@@ -343,7 +343,7 @@ questions:
         default: ''
         description: ''
         type: string
-        required: false
+        required: true
         label: 'ldap domain'
       - variable: config.ldap.tls
         default: false
