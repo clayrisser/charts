@@ -335,6 +335,48 @@ questions:
       #     - 'envelope_sender,header_sender'
       #   required: false
       #   label: 'srs sender classes'
+  - variable: config.mailserver.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'mailserver resources defaults'
+    show_if: config.mailserver.enabled=true
+    show_subquestion_if: custom
+    group: Mailserver
+    subquestions:
+      - variable: config.mailserver.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        show_if: config.mailserver.enabled=true
+        label: 'mailserver resources requests cpu'
+      - variable: config.mailserver.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.mailserver.enabled=true
+        label: 'mailserver resources requests memory'
+      - variable: config.mailserver.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        show_if: config.mailserver.enabled=true
+        label: 'mailserver resources limits cpu'
+      - variable: config.mailserver.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        show_if: config.mailserver.enabled=true
+        label: 'mailserver resources limits memory'
 
 # Ldap
   - variable: config.ldap.enabled
@@ -460,7 +502,7 @@ questions:
       - custom
       - false
     required: true
-    label: 'rainloop resources defaults'
+    label: 'resources defaults'
     show_if: config.rainloop.enabled=true
     show_subquestion_if: custom
     group: Rainloop
@@ -471,30 +513,28 @@ questions:
         type: string
         required: true
         show_if: config.rainloop.enabled=true
-        label: 'rainloop resources requests cpu'
+        label: 'resources requests cpu'
       - variable: config.rainloop.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
         show_if: config.rainloop.enabled=true
-        label: 'rainloop resources requests memory'
+        label: 'resources requests memory'
       - variable: config.rainloop.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
         show_if: config.rainloop.enabled=true
-        label: 'rainloop resources limits cpu'
+        label: 'resources limits cpu'
       - variable: config.rainloop.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
         show_if: config.rainloop.enabled=true
-        label: 'rainloop resources limits memory'
-
-
+        label: 'resources limits memory'
 
 # Persistence
   - variable: persistence.enabled
