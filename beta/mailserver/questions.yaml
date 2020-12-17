@@ -118,7 +118,7 @@ questions:
     required: true
     label: 'spf tests enabled'
     group: Config
-    show_submission_if: true
+    show_subquestion_if: true
     subquestions:
       - variable: config.spfTests.rblRejectDomains
         default: ''
