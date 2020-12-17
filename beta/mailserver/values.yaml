@@ -48,9 +48,9 @@ config:
   dovecot:
     # mailboxFormat: maildir
     passAttrs: ''
-    passFilter: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+    passFilter: '(&(objectClass=PostfixBookMailAccount)(uid=%n))'
     userAttrs: ''
-    userFilter: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
+    userFilter: '(&(objectClass=PostfixBookMailAccount)(uid=%n))'
   proxy:
     trustedNetworks: '10.0.0.0/8 192.168.0.0/16 172.16.0.0/16 127.0.0.0/8'
   fetchmail:
@@ -68,7 +68,7 @@ config:
     queryFilterDomain: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
     queryFilterGroup: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
     queryFilterUser: '(&(mail=%s)(mailEnabled=TRUE))'
-    saslFilter: '(&(uniqueIdentifier=%u)(mailEnabled=TRUE))'
+    saslFilter: '(&(uid=%u)(mailEnabled=TRUE))'
     tls: false
     usersOu: people
   tls:
