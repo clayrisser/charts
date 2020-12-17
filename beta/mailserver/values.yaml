@@ -17,8 +17,7 @@ config:
   smtpOnly: false
   spoofProtection: true
   virusmailsDeleteDelay: 7
-  accounts: |
-    user@example.com|{SHA512-CRYPT}$6$l4023rZnQEy/l0Rg$JeNjAAICB43VAX7GTJ9jeE7DR0LeyR5nU.ftq3c42T5E1IZSuRBqwM8erRh6t0CyIT6aYpBIAopzcQHNUvMV00
+  accounts: ''
   mailserver:
     replicas: 1
     resources:

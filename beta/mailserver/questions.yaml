@@ -58,6 +58,13 @@ questions:
     required: true
     label: 'postmaster username'
     group: Config
+  - variable: config.accounts
+    default: ''
+    description: ''
+    type: multiline
+    required: true
+    label: accounts
+    group: Config
   - variable: config.privateKey
     default:
     description: ''
