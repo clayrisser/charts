@@ -345,37 +345,32 @@ questions:
       - false
     required: true
     label: 'mailserver resources defaults'
-    show_if: config.mailserver.enabled=true
     show_subquestion_if: custom
-    group: Mailserver
+    group: Config
     subquestions:
       - variable: config.mailserver.resources.requests.cpu
         default: 100m
         description: ''
         type: string
         required: true
-        show_if: config.mailserver.enabled=true
         label: 'mailserver resources requests cpu'
       - variable: config.mailserver.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
-        show_if: config.mailserver.enabled=true
         label: 'mailserver resources requests memory'
       - variable: config.mailserver.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
-        show_if: config.mailserver.enabled=true
         label: 'mailserver resources limits cpu'
       - variable: config.mailserver.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
-        show_if: config.mailserver.enabled=true
         label: 'mailserver resources limits memory'
 
 # Ldap
