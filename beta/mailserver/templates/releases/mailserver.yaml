@@ -172,8 +172,8 @@ spec:
       annotations: {}
     deployment:
       replicas: {{ .Values.config.mailserver.replicas }}
-      annotations:
       {{- if .Values.persistence.velero.enabled }}
+      annotations:
         backup.velero.io/backup-volumes: data
       {{- end }}
 {{- if .Values.config.mailserver.resources.enabled }}

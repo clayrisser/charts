@@ -62,7 +62,7 @@ questions:
     default: ''
     description: ''
     type: multiline
-    required: true
+    required: false
     label: accounts
     group: Config
   - variable: config.privateKey
