@@ -13,9 +13,11 @@ data:
     service imap-login {
       inet_listener imap {
         haproxy = yes
+        disable_plaintext_auth = no
       }
       inet_listener imaps {
         haproxy = yes
+        disable_plaintext_auth = no
       }
       {{- if .Values.config.rainloop.enabled }}
       inet_listener imaps-rainloop {
@@ -27,9 +29,11 @@ data:
     service pop3-login {
       inet_listener pop3 {
         haproxy = yes
+        disable_plaintext_auth = no
       }
       inet_listener pop3s {
         haproxy = yes
+        disable_plaintext_auth = no
       }
     }
 
