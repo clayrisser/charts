@@ -19,12 +19,17 @@ data:
         disable_plaintext_auth = no
         haproxy = yes
         ssl = yes
+        ssl_cert = </tmp/ssl/tls.crt
+        ssl_key = </tmp/ssl/tls.key
         ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 !SSLv3 !SSLv2
       }
       {{- if .Values.config.rainloop.enabled }}
       inet_listener imaps-rainloop {
         port = 10993
         ssl = yes
+        ssl_cert = </tmp/ssl/tls.crt
+        ssl_key = </tmp/ssl/tls.key
+        ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 !SSLv3 !SSLv2
       }
       {{ end }}
     }
@@ -37,6 +42,8 @@ data:
         disable_plaintext_auth = no
         haproxy = yes
         ssl = yes
+        ssl_cert = </tmp/ssl/tls.crt
+        ssl_key = </tmp/ssl/tls.key
         ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 !SSLv3 !SSLv2
       }
     }
