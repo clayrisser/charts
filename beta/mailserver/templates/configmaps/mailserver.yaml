@@ -16,8 +16,10 @@ data:
         disable_plaintext_auth = no
       }
       inet_listener imaps {
-        haproxy = yes
         disable_plaintext_auth = no
+        haproxy = yes
+        ssl = yes
+        ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 !SSLv3 !SSLv2
       }
       {{- if .Values.config.rainloop.enabled }}
       inet_listener imaps-rainloop {
@@ -32,8 +34,10 @@ data:
         disable_plaintext_auth = no
       }
       inet_listener pop3s {
-        haproxy = yes
         disable_plaintext_auth = no
+        haproxy = yes
+        ssl = yes
+        ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 !SSLv3 !SSLv2
       }
     }
 
