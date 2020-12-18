@@ -34,16 +34,17 @@ data:
     }
 
   dovecot.cf: |
-   # service stats {
-   #   unix_listener stats-reader {
-   #     group = docker
-   #     mode = 0666
-   #   }
-   #   unix_listener stats-writer {
-   #     group = docker
-   #     mode = 0666
-   #   }
-   # }
+    disable_plaintext_auth = no
+    # service stats {
+    #   unix_listener stats-reader {
+    #     group = docker
+    #     mode = 0666
+    #   }
+    #   unix_listener stats-writer {
+    #     group = docker
+    #     mode = 0666
+    #   }
+    # }
 
   fail2ban-fail2ban.cf: |
     [Definition]
