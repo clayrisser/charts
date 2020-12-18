@@ -131,7 +131,7 @@ spec:
         srs_domainname: {{ template "mailserver.mailserver-domain" . }}
         srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
         srs_secret: {{ .Values.config.srs.secret | quote }}
-        tls_level:
+        tls_level: intermediate
         virusmails_delete_delay: {{ .Values.config.virusmailsDeleteDelay | quote }}
         {{- if .Values.config.tls.enabled }}
         ssl_type: manual
