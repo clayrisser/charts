@@ -12,10 +12,10 @@ data:
     haproxy_trusted_networks = {{ .Values.config.proxy.trustedNetworks }}
     service imap-login {
       inet_listener imap {
-        # haproxy = yes
+        haproxy = yes
       }
       inet_listener imaps {
-        # haproxy = yes
+        haproxy = yes
       }
       {{- if .Values.config.rainloop.enabled }}
       inet_listener imaps-rainloop {
@@ -26,15 +26,14 @@ data:
     }
     service pop3-login {
       inet_listener pop3 {
-        # haproxy = yes
+        haproxy = yes
       }
       inet_listener pop3s {
-        # haproxy = yes
+        haproxy = yes
       }
     }
 
   dovecot.cf: |
-   disable_plaintext_auth = no
    # service stats {
    #   unix_listener stats-reader {
    #     group = docker
@@ -106,8 +105,8 @@ data:
   postfix-accounts.cf.bak: |
 
   postfix-master.cf: |
-    # submission/inet/smtpd_upstream_proxy_protocol=haproxy
-    # smtps/inet/smtpd_upstream_proxy_protocol=haproxy
+    submission/inet/smtpd_upstream_proxy_protocol=haproxy
+    smtps/inet/smtpd_upstream_proxy_protocol=haproxy
 
   SigningTable: |
     *@{{ template "mailserver.mailserver-domain" . }} mail._domainkey.{{ template "mailserver.mailserver-domain" . }}
@@ -121,7 +120,7 @@ data:
 
   {{- $rblRejectDomains := (regexSplit "\\," .Values.config.spfTests.rblRejectDomains -1) }}
   postfix-main.cf: |
-    # postscreen_upstream_proxy_protocol = haproxy
+    postscreen_upstream_proxy_protocol = haproxy
     {{- if not .Values.config.spfTests.enabled }}
     smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range $rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
     {{- end }}
