@@ -13,43 +13,28 @@ data:
     service imap-login {
       inet_listener imap {
         haproxy = yes
-        disable_plaintext_auth = no
       }
       inet_listener imaps {
-        disable_plaintext_auth = no
         haproxy = yes
-        ssl = yes
-        ssl_cert = </tmp/ssl/tls.crt
-        ssl_key = </tmp/ssl/tls.key
-        ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 SSLv3 SSLv2
       }
       {{- if .Values.config.rainloop.enabled }}
       inet_listener imaps-rainloop {
         port = 10993
         ssl = yes
-        ssl_cert = </tmp/ssl/tls.crt
-        ssl_key = </tmp/ssl/tls.key
-        ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 SSLv3 SSLv2
       }
       {{ end }}
     }
     service pop3-login {
       inet_listener pop3 {
         haproxy = yes
-        disable_plaintext_auth = no
       }
       inet_listener pop3s {
-        disable_plaintext_auth = no
         haproxy = yes
-        ssl = yes
-        ssl_cert = </tmp/ssl/tls.crt
-        ssl_key = </tmp/ssl/tls.key
-        ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 SSLv3 SSLv2
       }
     }
 
   dovecot.cf: |
-    disable_plaintext_auth = no
+    ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 SSLv3 SSLv2
     # service stats {
     #   unix_listener stats-reader {
     #     group = docker
@@ -123,14 +108,6 @@ data:
   postfix-master.cf: |
     submission/inet/smtpd_upstream_proxy_protocol=haproxy
     smtps/inet/smtpd_upstream_proxy_protocol=haproxy
-    smtpd_tls_cert_file = /tmp/ssl/tls.crt
-    smtpd_tls_key_file = /tmp/ssl/tls.key
-    smtpd_tls_security_level = may
-    smtpd_tls_loglevel = 1
-    smtpd_tls_received_header = yes
-    # smtpd_tls_exclude_ciphers = NULL, aNULL, RC4, 3DES, eNULL, DHE_EXPORT
-    smtpd_tls_mandatory_ciphers = high
-    smtpd_tls_ciphers = medium
     smtpd_tls_protocols = TLSv1.2 TLSv1.1 TLSv1 SSLv3 SSLv2
 
   SigningTable: |
