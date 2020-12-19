@@ -34,7 +34,7 @@ data:
     }
 
   dovecot.cf: |
-    ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 SSLv3 SSLv2
+    ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 !SSLv3 !SSLv2
     # service stats {
     #   unix_listener stats-reader {
     #     group = docker
@@ -108,7 +108,7 @@ data:
   postfix-master.cf: |
     submission/inet/smtpd_upstream_proxy_protocol=haproxy
     smtps/inet/smtpd_upstream_proxy_protocol=haproxy
-    smtpd_tls_protocols = TLSv1.2 TLSv1.1 TLSv1 SSLv3 SSLv2
+    smtpd_tls_protocols = TLSv1.2 TLSv1.1 TLSv1 !SSLv3 !SSLv2
 
   SigningTable: |
     *@{{ template "mailserver.mailserver-domain" . }} mail._domainkey.{{ template "mailserver.mailserver-domain" . }}
