@@ -18,10 +18,10 @@ data:
         haproxy = yes
       }
       {{- if .Values.config.rainloop.enabled }}
-      inet_listener imaps-rainloop {
-        port = 10993
-        ssl = yes
-      }
+      # inet_listener imaps-rainloop {
+      #   port = 10993
+      #   ssl = yes
+      # }
       {{ end }}
     }
     service pop3-login {
@@ -34,7 +34,6 @@ data:
     }
 
   dovecot.cf: |
-    # ssl_protocols = TLSv1.2 TLSv1.1 TLSv1 !SSLv3 !SSLv2
     # service stats {
     #   unix_listener stats-reader {
     #     group = docker
