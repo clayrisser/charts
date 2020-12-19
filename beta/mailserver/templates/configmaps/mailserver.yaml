@@ -18,10 +18,10 @@ data:
         haproxy = yes
       }
       {{- if .Values.config.rainloop.enabled }}
-      # inet_listener imaps-rainloop {
-      #   port = 10993
-      #   ssl = yes
-      # }
+      inet_listener imaps-rainloop {
+        port = 10993
+        ssl = yes
+      }
       {{ end }}
     }
     service pop3-login {
