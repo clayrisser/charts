@@ -1,8 +1,9 @@
-name: sentry
 apiVersion: v1
-home: https://sentry.io
+name: sentry
+home: https://github.com/getsentry/sentry
 icon: https://sentry-brand.storage.googleapis.com/sentry-logo-black.svg
-version: 0.1.0
+version: 0.2.0
+type: application
 appVersion: latest
 description: 'a cross-platform crash reporting and aggregation platform'
 keywords:
@@ -12,5 +13,5 @@ keywords:
 sources:
   - https://github.com/getsentry/sentry
 maintainers:
-  - name: 'Jam Risser'
-    email: jam@codejam.ninja
+  - name: 'Clay Risser'
+    email: email@clayrisser.com

@@ -1,0 +1,411 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ template "sentry.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  forceUpgrade: true
+  helmVersion: v3
+  chart:
+    repository: https://sentry-kubernetes.github.io/charts
+    name: sentry
+    version: 8.1.0
+  values:
+    user:
+      create: true
+      email: {{ .Values.config.sentry.email | quote }}
+      password: {{ .Values.config.sentry.password | quote }}
+    asHook: true
+    images:
+      sentry:
+        repository: {{ .Values.images.sentry.repository | quote }}
+        tag: {{ .Values.images.sentry.tag | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        imagePullSecrets: []
+      snuba:
+        repository: {{ .Values.images.sentry.repository | quote }}
+        tag: {{ .Values.images.sentry.tag | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        imagePullSecrets: []
+      relay:
+        repository: {{ .Values.images.relay.repository | quote }}
+        tag: {{ .Values.images.relay.tag | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        imagePullSecrets: []
+      symbolicator:
+        repository: {{ .Values.images.symbolicator.repository | quote }}
+        tag: {{ .Values.images.symbolicator.tag | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        imagePullSecrets: []
+    relay:
+      replicas: {{ .Values.config.relay.replicas }}
+      mode: proxy
+      env: []
+      probeInitialDelaySeconds: 10
+      resources: {}
+      affinity: {}
+      nodeSelector: {}
+      tolerations: []
+      podLabels: []
+      autoscaling:
+        enabled: false
+        minReplicas: 2
+        maxReplicas: 5
+        targetCPUUtilizationPercentage: 50
+    sentry:
+      singleOrganization: true
+      web:
+        strategyType: {{ .Values.config.updateStrategy | quote }}
+        replicas: {{ .Values.config.sentry.replicas }}
+        env: []
+        probeInitialDelaySeconds: 10
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+        autoscaling:
+          enabled: false
+          minReplicas: 2
+          maxReplicas: 5
+          targetCPUUtilizationPercentage: 50
+      features:
+        orgSubdomains: false
+      worker:
+        replicas: {{ .Values.config.sentry.workerReplicas }}
+        concurrency: 4
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+        autoscaling:
+          enabled: false
+          minReplicas: 2
+          maxReplicas: 5
+          targetCPUUtilizationPercentage: 50
+      ingestConsumer:
+        replicas: 1
+        concurrency: 4
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+        autoscaling:
+          enabled: false
+          minReplicas: 1
+          maxReplicas: 3
+          targetCPUUtilizationPercentage: 50
+      cron:
+        replicas: 1
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+      postProcessForward:
+        replicas: 1
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+        commitBatchSize: 1
+      cleanup:
+        enabled: true
+        schedule: "0 0 * * *"
+        days: 90
+    snuba:
+      api:
+        replicas: 1
+        env: []
+        probeInitialDelaySeconds: 10
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+        autoscaling:
+          enabled: false
+          minReplicas: 2
+          maxReplicas: 5
+          targetCPUUtilizationPercentage: 50
+      consumer:
+        replicas: 1
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+      outcomesConsumer:
+        replicas: 1
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+      replacer:
+        replicas: 1
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+      sessionsConsumer:
+        replicas: 1
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+      transactionsConsumer:
+        replicas: 1
+        env: []
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+      dbInitJob:
+        env: []
+      migrateJob:
+        env: []
+    hooks:
+      enabled: true
+      removeOnSuccess: true
+      dbInit:
+        env: []
+        resources:
+          limits:
+            memory: 2048Mi
+          requests:
+            cpu: 300m
+            memory: 2048Mi
+      snubaInit:
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 1Gi
+          requests:
+            cpu: 700m
+            memory: 1Gi
+    system:
+      url: {{ template "sentry.sentry-base-url" . }}
+      adminEmail: {{ .Values.config.sentry.email | quote }}
+      public: false
+    mail:
+      backend: {{ .Values.config.smtp.enabled | ternary "smtp" "dummy" }}
+      useTls: {{ .Values.config.smtp.tls }}
+      username: {{ .Values.config.smtp.username | quote }}
+      password: {{ .Values.config.smtp.password | quote }}
+      port: {{ .Values.config.smtp.port }}
+      host: {{ .Values.config.smtp.host | quote }}
+      from: {{ .Values.config.smtp.from | quote }}
+    symbolicator:
+      enabled: false
+      api:
+        replicas: 1
+        env: []
+        probeInitialDelaySeconds: 10
+        resources: {}
+        affinity: {}
+        nodeSelector: {}
+        tolerations: []
+        podLabels: []
+        logging:
+          level: warn
+        autoscaling:
+          enabled: false
+          minReplicas: 2
+          maxReplicas: 5
+          targetCPUUtilizationPercentage: 50
+      cleanup:
+        enabled: false
+        podLabels: []
+        affinity: {}
+        env: []
+    auth:
+      register: true
+    service:
+      name: sentry
+      {{- if .Values.ingress.sentry.enabled }}
+      type: ClusterIP
+      {{- else }}
+      type: {{ .Values.service.sentry.type }}
+      {{- end }}
+      {{- if (and (eq .Values.service.sentry.type "NodePort") (not (empty .Values.service.sentry.nodePorts.http))) }}
+      externalPort: {{ .Values.service.sentry.nodePorts.http }}
+      {{- else }}
+      externalPort: {{ (eq .Values.service.sentry.type "LoadBalancer") | ternary .Values.service.sentry.lbPorts.http "80" }}
+      {{- end }}
+      annotations: {}
+    github: {}
+    slack: {}
+    nginx:
+      enabled: false
+      containerPort: 8080
+      existingServerBlockConfigmap: '{{ template "sentry.fullname" . }}'
+      resources: {}
+      replicaCount: 1
+      service:
+        type: ClusterIP
+        port: 80
+    ingress:
+      enabled: {{ .Values.ingress.sentry.enabled }}
+      annotations:
+        {{- if (eq .Values.config.clusterProvider "aks") }}
+        kubernetes.io/ingress.class: addon-http-application-routing
+        {{- else }}
+        kubernetes.io/ingress.class: nginx
+        {{- end }}
+        {{- if .Values.ingress.sentry.tls }}
+        {{- if (empty .Values.ingress.sentry.certificate) }}
+        cert-manager.io/cluster-issuer: {{ .Values.ingress.sentry.issuer.name }}
+        kubernetes.io/tls-acme: 'true'
+        {{- end }}
+        nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+        {{- end }}
+      hostname: {{ .Values.ingress.sentry.hostname }}
+      {{- if .Values.ingress.sentry.tls }}
+      tls:
+        - secretName: {{ template "sentry.sentry-certificate" . }}
+          hosts:
+            - {{ .Values.ingress.sentry.hostname }}
+      {{- end }}
+    filestore:
+      backend: filesystem
+      filesystem:
+        path: /var/lib/sentry/files
+        persistence:
+          enabled: true
+          storageClass: {{ .Values.persistence.storageClass | quote }}
+          accessMode: {{ .Values.persistence.accessMode | quote }}
+          size: {{ .Values.persistence.size.sentry }}
+          persistentWorkers: false
+      gcs: {}
+      s3: {}
+    config:
+      configYml: {}
+      sentryConfPy: |
+      snubaSettingsPy: |
+      relay: |
+    clickhouse:
+      enabled: true
+      clickhouse:
+        imageVersion: '20.8.9.6'
+        configmap:
+          remote_servers:
+            internal_replication: true
+        persistentVolumeClaim:
+          enabled: true
+          dataPersistentVolume:
+            enabled: true
+            accessModes:
+              - {{ .Values.persistence.accessMode | quote }}
+            storage: {{ .Values.persistence.size.clickhouse }}
+    kafka:
+      enabled: true
+      replicaCount: 1
+      allowPlaintextListener: true
+      defaultReplicationFactor: 3
+      offsetsTopicReplicationFactor: 3
+      transactionStateLogReplicationFactor: 3
+      transactionStateLogMinIsr: 3
+      maxMessageBytes: '50000000'
+      socketRequestMaxBytes: '50000000'
+      service:
+        port: 9092
+    redis:
+      enabled: true
+      nameOverride: sentry-redis
+      usePassword: false
+      master:
+        persistence:
+          enabled: true
+    postgresql:
+      enabled: false
+    externalPostgresql:
+      host: {{ .Values.config.postgres.host | quote }}
+      port: {{ .Values.config.postgres.port }}
+      username: {{ .Values.config.postgres.username | quote }}
+      password: {{ .Values.config.postgres.password | quote }}
+      database: {{ .Values.config.postgres.database | quote }}
+      sslMode: require
+    rabbitmq:
+      enabled: true
+      forceBoot: true
+      replicaCount: 1
+      rabbitmqErlangCookie: pHgpy3Q6adTskzAT6bLHCFqFTF7lMxhA
+      rabbitmqUsername: guest
+      rabbitmqPassword: guest
+      nameOverride: ""
+      podDisruptionBudget:
+        minAvailable: 1
+      persistentVolume:
+        enabled: true
+      resources: {}
+      definitions:
+        policies: |-
+         {
+           "name": "ha-all",
+           "pattern": "^((?!celeryev.*).)*$",
+           "vhost": "/",
+           "definition": {
+             "ha-mode": "all",
+             "ha-sync-mode": "automatic",
+             "ha-sync-batch-size": 1
+           }
+         }
+    metrics:
+      enabled: false
+      livenessProbe:
+        enabled: true
+        initialDelaySeconds: 30
+        periodSeconds: 5
+        timeoutSeconds: 2
+        failureThreshold: 3
+        successThreshold: 1
+      readinessProbe:
+        enabled: true
+        initialDelaySeconds: 30
+        periodSeconds: 5
+        timeoutSeconds: 2
+        failureThreshold: 3
+        successThreshold: 1
+      resources:
+        limits:
+          cpu: 100m
+          memory: 100Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+      podLabels: []
+      service:
+        type: ClusterIP
+        labels: {}
+      image:
+        repository: prom/statsd-exporter
+        tag: v0.17.0
+        pullPolicy: IfNotPresent
+      serviceMonitor:
+        enabled: false
+        additionalLabels: {}
+        namespace: ""
+        namespaceSelector: {}
+        scrapeInterval: 30s

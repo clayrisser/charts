@@ -1,0 +1,88 @@
+images:
+  sentry:
+    repository: sentry
+    tag: 8.1.0
+  snuba:
+    repository: getsentry/snuba
+    tag: 8.1.0
+  relay:
+    repository: getsentry/relay
+    tag: 8.1.0
+  symbolicator:
+    repository: getsentry/symbolicator
+    tag: 8.1.0
+
+config:
+  clusterProvider: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  sentry:
+    email: admin@example.com
+    password: P@ssw0rd
+    replicas: 1
+    workerReplicas: 1
+  relay:
+    replicas: 1
+  postgres:
+    integration:
+    database: sentry
+    host: ''
+    password: P@ssw0rd
+    port: 5432
+    url: ''
+    username: postgres
+  smtp:
+    enabled: false
+    tls: false
+    username: ''
+    password: ''
+    port: 25
+    host: ''
+    from: ''
+
+service:
+  sentry:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  sentry:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  storageClass: ''
+  existingClaim:
+    sentry: ''
+    clickhouse: ''
+  size:
+    sentry: 1Gi
+    clickhouse: 10Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

@@ -1,0 +1,375 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterType
+    default: rke
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: Always
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.sentry.email
+    default: admin@example.com
+    description: ''
+    type: string
+    required: true
+    label: 'sentry email'
+    group: Config
+  - variable: config.sentry.password
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: 'sentry password'
+    group: Config
+  - variable: config.sentry.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: 'sentry replicas'
+    group: Config
+  - variable: config.sentry.workerReplicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: 'sentry worker replicas'
+    group: Config
+  - variable: config.sentry.relay.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: 'sentry relay replicas'
+    group: Config
+
+# Postgres Config
+  - variable: config.postgres.integration
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: integration
+    group: 'Postgres Config'
+  - variable: config.postgres.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    default: sentry
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    default: P@ssw0rd
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: 5432
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: postgres
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+
+# SMTP
+  - variable: config.smtp.enabled
+    default: ''
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: SMTP
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.smtp.username
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: username
+      - variable: config.smtp.password
+        default: ''
+        description: ''
+        type: password
+        required: true
+        label: password
+      - variable: config.smtp.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: tls
+      - variable: config.smtp.port
+        default: 25
+        description: ''
+        type: int
+        required: true
+        label: tls
+      - variable: config.smtp.host
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: host
+      - variable: config.smtp.from
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: from
+
+# Persistence
+  - variable: persistence.size.sentry
+    default: 1Gi
+    description: ''
+    type: string
+    required: true
+    label: 'sentry size'
+    group: Persistence
+  - variable: persistence.size.clickhouse
+    default: 1Gi
+    description: ''
+    type: string
+    required: true
+    label: 'clickhouse size'
+    group: Persistence
+  - variable: persistence.storageClass
+    default: ''
+    description: ''
+    type: storageclass
+    required: false
+    label: 'storage class'
+    group: Persistence
+  - variable: persistence.accessMode
+    default: ReadWriteOnce
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadWriteMany
+      - ReadOnlyMany
+    required: false
+    label: 'access mode'
+    group: Persistence
+  - variable: persistence.velero.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'velero enabled'
+    group: Persistence
+  - variable: persistence.velero.schedule
+    default: ''
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: false
+    label: 'velero schedule'
+    group: Persistence
+  - variable: persistence.velero.restic
+    default: true
+    description: ''
+    type: boolean
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero restic'
+    group: Persistence
+  - variable: persistence.velero.ttl
+    default: '2160h0m00s'
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero ttl'
+    group: Persistence
+
+# Services and Load Balancing
+  - variable: ingress.sentry.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'sentry ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.sentry.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'sentry ingress tls'
+      - variable: ingress.sentry.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'sentry ingress hostname'
+      - variable: ingress.sentry.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.sentry.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'sentry ingress issuer name'
+      - variable: ingress.sentry.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.sentry.tls=true&&ingress.sentry.issuer.name=none
+        required: false
+        label: 'sentry ingress certificate'
+  - variable: service.sentry.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.sentry.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'sentry service type'
+    group: 'Services and Load Balancing'
+  - variable: service.sentry.nodePorts.http
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.sentry.type=NodePort&&ingress.sentry.enabled=false
+    label: 'sentry http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.sentry.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.sentry.type=LoadBalancer&&ingress.sentry.enabled=false
+    label: 'sentry http lb port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.sentry.repository
+    default: sentry
+    description: ''
+    type: string
+    required: true
+    label: 'sentry repository'
+    group: Images
+  - variable: images.sentry.tag
+    default: 8.1.0
+    description: ''
+    type: string
+    required: true
+    label: 'sentry tag'
+    group: Images
+  - variable: images.snuba.repository
+    default: getsentry/snuba
+    description: ''
+    type: string
+    required: true
+    label: 'snuba repository'
+    group: Images
+  - variable: images.snuba.tag
+    default: 8.1.0
+    description: ''
+    type: string
+    required: true
+    label: 'snuba tag'
+    group: Images
+  - variable: images.relay.repository
+    default: getsentry/relay
+    description: ''
+    type: string
+    required: true
+    label: 'relay repository'
+    group: Images
+  - variable: images.relay.tag
+    default: 8.1.0
+    description: ''
+    type: string
+    required: true
+    label: 'relay tag'
+    group: Images
+  - variable: images.symbolicator.repository
+    default: getsentry/symbolicator
+    description: ''
+    type: string
+    required: true
+    label: 'symbolicator repository'
+    group: Images
+  - variable: images.symbolicator.tag
+    default: 8.1.0
+    description: ''
+    type: string
+    required: true
+    label: 'symbolicator tag'
+    group: Images
