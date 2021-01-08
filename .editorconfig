@@ -13,3 +13,7 @@ trim_trailing_whitespace = false
 
 [*.yaml]
 quote_type = single
+
+[{m,M}akefile{,.*}]
+charset = utf-8
+indent_style = tab
