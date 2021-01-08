@@ -68,27 +68,27 @@ spec:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "-externaldb" "") }}
+                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
                   key: POSTGRES_HOSTNAME
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "-externaldb" "") }}
+                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
                   key: POSTGRES_PORT
             - name: DB_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "-externaldb" "") }}
+                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
                   key: POSTGRES_DATABASE
             - name: DB_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "-externaldb" "") }}
+                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
                   key: POSTGRES_USERNAME
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "-externaldb" "") }}
+                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
                   key: POSTGRES_PASSWORD
             # - name: DB_CONNECTION_STRING
             #   valueFrom:
