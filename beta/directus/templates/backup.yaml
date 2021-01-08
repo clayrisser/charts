@@ -1,0 +1,36 @@
+{{- if .Values.persistence.velero.enabled }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ template "directus.fullname" . }}
+  labels:
+    app: {{ template "directus.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: {{ .Values.persistence.velero.schedule | quote }}
+  template:
+    includedNamespaces:
+      - {{ .Release.Namespace }}
+    ttl: {{ .Values.persistence.velero.ttl | quote }}
+---
+apiVersion: replicator.siliconhills.dev/v1alpha1
+kind: Replicator
+metadata:
+  name: {{ template "directus.fullname" . }}-backup
+  labels:
+    app: {{ template "directus.name" . }}-backup
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+ from:
+   apiVersion: velero.io/v1
+   kind: Schedule
+   name: {{ template "directus.fullname" . }}
+   namespace: {{ .Release.Namespace }}
+ to:
+   name: {{ template "directus.fullname" . }}.{{ .Release.Namespace }}
+   namespace: velero
+{{- end }}

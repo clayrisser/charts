@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "directus.fullname" . }}-directus
+  labels:
+    app: {{ template "directus.name" . }}-directus
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "directus.name" . }}-directus
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "directus.name" . }}-directus
+        release: {{ .Release.Name }}
+      {{- if .Values.persistence.velero.enabled }}
+      annotations:
+        backup.velero.io/backup-volumes: data
+      {{- end }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "directus.name" . }}-directus
+      containers:
+        - name: {{ template "directus.fullname" . }}-directus
+          image: {{ .Values.images.directus.repository }}:{{ .Values.images.directus.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+{{- if .Values.config.directus.resources.enabled }}
+          resources:
+{{ toYaml .Values.config.directus.resources | indent 12 }}
+{{- end }}
+          ports:
+            - name: container
+              containerPort: 8055
+          volumeMounts:
+            - name: data
+              mountPath: /_data
+            - name: data
+              mountPath: '/directus/uploads'
+              subPath: uploads
+          env:
+            - name: DB_CLIENT
+              value: postgres
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: POSTGRES_HOSTNAME
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: POSTGRES_PORT
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: POSTGRES_DATABASE
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: POSTGRES_USERNAME
+                  # {{ (empty .Values.config.postgres.integration) | ternary (include "directus.fullname" .) (include "directus.fullname" .) }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: POSTGRES_PASSWORD
+            # - name: DB_CONNECTION_STRING
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: {{ template "directus.fullname" . }}
+            #       key: POSTGRES_URL
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim.directus | default (printf "%s-directus" (include "directus.fullname" . )) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
