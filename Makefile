@@ -1,5 +1,5 @@
 CHART := .
-CHARTS := $(shell git ls-files | grep -oE '^[^/]+\/[^\/]+' | sort -u)
+CHARTS := $(shell git ls-files | grep -oE '.+\/Chart\.yaml' | sed 's/\/Chart\.yaml$$//g' | sort -u)
 
 .PHONY: all
 all: $(CHARTS)
