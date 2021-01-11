@@ -64,9 +64,19 @@ spec:
               subPath: uploads
           env:
             - name: DB_CLIENT
-              value: postgres
+              value: pg
             - name: LOG_LEVEL
               value: trace
+            - name: ADMIN_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: admin_email
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: admin_password
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
