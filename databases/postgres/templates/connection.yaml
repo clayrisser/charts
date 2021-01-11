@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  hostname: {{ (include "postgres.fullname" .) }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local
+  hostname: {{ (include "postgres.fullname" .) }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
   port: 5432
   secretName: {{ template "postgres.fullname" . }}-connection
   sslMode: allow-unauthorized
