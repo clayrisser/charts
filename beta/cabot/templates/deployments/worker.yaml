@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "cabot.fullname" . }}-worker
+  labels:
+    app: {{ template "cabot.name" . }}-worker
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "cabot.name" . }}-worker
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "cabot.name" . }}-worker
+        release: {{ .Release.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "cabot.name" . }}-worker
+      containers:
+        - name: {{ template "cabot.fullname" . }}-worker
+          image: {{ .Values.images.cabot.repository }}:{{ .Values.images.cabot.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          args:
+            - celery
+            - worker
+            - -A
+            - cabot
+{{- if .Values.config.cabot.resources.enabled }}
+          resources:
+{{ toYaml .Values.config.cabot.resources | indent 12 }}
+{{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ template "cabot.fullname" . }}-envs
+            - secretRef:
+                name: {{ template "cabot.fullname" . }}-envs
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "cabot.postgres-storage" . }}
+                  key: POSTGRES_URL

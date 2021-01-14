@@ -1,0 +1,74 @@
+images:
+  cabot:
+    repository: cabotapp/cabot
+    tag: 0.11.12
+
+config:
+  clusterProvider: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  cabot:
+    baseUrl: ''
+    hostname: ''
+    resources:
+      enabled: false
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  smtp:
+    hostname: ''
+    password: ''
+    port: 587
+    tls: ''
+    user: ''
+  admin:
+    email: admin@example.com
+  calendarIcalUrl: ''
+  postgres:
+    integration:
+    database: cabot
+    host: ''
+    password: P@ssw0rd
+    port: 5432
+    url: ''
+    username: postgres
+
+service:
+  cabot:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  cabot:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+rabbitmq:
+  rabbitmq:
+    password: cabot
+    username: cabot
