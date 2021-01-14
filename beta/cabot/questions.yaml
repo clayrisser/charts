@@ -75,40 +75,44 @@ questions:
         required: true
         label: 'cabot resources limits memory'
   - variable: config.smtp.hostname
-    default:
+    default: ''
     description: ''
     type: string
     required: false
     label: 'smtp hostname'
     group: Config
-  - variable: config.smtp.password
-    default:
-    description: ''
-    type: password
-    required: false
-    label: 'smtp password'
-    group: Config
-  - variable: config.smtp.port
-    default: 587
-    description: ''
-    type: int
-    required: false
-    label: 'smtp port'
-    group: Config
-  - variable: config.smtp.tls
-    default: true
-    description: ''
-    type: boolean
-    required: false
-    label: 'smtp tls'
-    group: Config
-  - variable: config.smtp.user
-    default:
-    description: ''
-    type: string
-    required: false
-    label: 'smtp user'
-    group: Config
+    show_subquestion_if: config.smtp.hostname!=
+    subquestions:
+      - variable: config.smtp.from
+        default: ''
+        description: ''
+        type: string
+        required: true
+        label: 'smtp from'
+      - variable: config.smtp.password
+        default:
+        description: ''
+        type: password
+        required: true
+        label: 'smtp password'
+      - variable: config.smtp.port
+        default: 587
+        description: ''
+        type: int
+        required: true
+        label: 'smtp port'
+      - variable: config.smtp.tls
+        default: true
+        description: ''
+        type: boolean
+        required: true
+        label: 'smtp tls'
+      - variable: config.smtp.user
+        default:
+        description: ''
+        type: string
+        required: true
+        label: 'smtp user'
   - variable: config.admin.email
     default: admin@example.com
     description: ''

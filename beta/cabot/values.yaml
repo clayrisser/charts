@@ -19,10 +19,11 @@ config:
         cpu: 500m
         memory: 256Mi
   smtp:
+    from: ''
     hostname: ''
     password: ''
     port: 587
-    tls: ''
+    tls: true
     user: ''
   admin:
     email: admin@example.com

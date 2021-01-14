@@ -59,7 +59,7 @@ spec:
                 name: {{ template "cabot.fullname" . }}-envs
             - secretRef:
                 name: {{ template "cabot.fullname" . }}-envs
-          env: []
+          env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

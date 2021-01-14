@@ -3,7 +3,6 @@ name: cabot
 home: https://github.com/clayrisser/cabot
 icon: https://cabotapp.com/images/favicon.ico
 version: 0.0.1
-type: application
 appVersion: latest
 description: 'monitoring and alerts service'
 keywords:

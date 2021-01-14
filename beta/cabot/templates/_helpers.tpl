@@ -76,5 +76,5 @@ Calculate postgres url
 Calculate postgres storage name
 */}}
 {{- define "cabot.postgres-storage" }}
-{{ printf "%s%s" (include "cabot.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
+{{- printf "%s%s" (include "cabot.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
 {{- end }}
