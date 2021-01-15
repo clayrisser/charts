@@ -4,7 +4,7 @@ images:
     tag: 0.0.1
 
 config:
-  clusterProvider: rke
+  clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
   wordpress:
