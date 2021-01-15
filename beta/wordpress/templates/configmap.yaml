@@ -13,6 +13,7 @@ data:
   mysql_database: {{ $mysql.database | quote }}
   mysql_port: {{ $mysql.port | quote }}
   mysql_username: {{ $mysql.username | quote }}
-  username: clayrisser
-  email: email@clayrisser.com
-  title: Hello
+  username: {{ .Values.config.wordpress.username | quote }}
+  email: {{ .Values.config.wordpress.email | quote }}
+  title: {{ .Values.config.wordpress.title | quote }}
+  disallow_file_mods: {{ .Values.config.wordpress.enableFileMods | ternary "false" "true" | quote }}

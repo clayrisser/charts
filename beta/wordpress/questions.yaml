@@ -4,7 +4,6 @@ questions:
 
 # Config
   - variable: config.clusterType
-    default: rke
     description: ''
     type: enum
     options:
@@ -17,7 +16,6 @@ questions:
     label: 'cluster type'
     group: Config
   - variable: config.imagePullPolicy
-    default: Always
     description: ''
     type: enum
     options:
@@ -27,7 +25,6 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: Recreate
     description: ''
     type: enum
     options:
@@ -38,14 +35,42 @@ questions:
     label: 'update strategy'
     group: Config
   - variable: config.wordpress.debug
-    default: false
     description: ''
     type: boolean
     required: true
     label: 'wordpress debug'
     group: Config
+  - variable: config.wordpress.title
+    description: ''
+    type: string
+    required: true
+    label: 'wordpress title'
+    group: Config
+  - variable: config.wordpress.email
+    description: ''
+    type: string
+    required: true
+    label: 'wordpress email'
+    group: Config
+  - variable: config.wordpress.username
+    description: ''
+    type: string
+    required: true
+    label: 'wordpress username'
+    group: Config
+  - variable: config.wordpress.password
+    description: ''
+    type: password
+    required: true
+    label: 'wordpress password'
+    group: Config
+  - variable: config.wordpress.enableFileMods
+    description: ''
+    type: boolean
+    required: true
+    label: 'wordpress enable file mods'
+    group: Config
   - variable: config.wordpress.resources.enabled
-    default: false
     description: ''
     type: enum
     options:
@@ -58,25 +83,21 @@ questions:
     group: Config
     subquestions:
       - variable: config.wordpress.resources.requests.cpu
-        default: 100m
         description: ''
         type: string
         required: true
         label: 'wordpress resources requests cpu'
       - variable: config.wordpress.resources.requests.memory
-        default: 128Mi
         description: ''
         type: string
         required: true
         label: 'wordpress resources requests memory'
       - variable: config.wordpress.resources.limits.cpu
-        default: 500m
         description: ''
         type: string
         required: true
         label: 'wordpress resources limits cpu'
       - variable: config.wordpress.resources.limits.memory
-        default: 256Mi
         description: ''
         type: string
         required: true
@@ -84,7 +105,6 @@ questions:
 
 # Git
   - variable: config.git.enabled
-    default: false
     description: unstable
     type: boolean
     required: true
@@ -93,19 +113,16 @@ questions:
     group: Git
     subquestions:
       - variable: config.git.repo
-        default: ''
         description: unstable
         type: string
         required: true
         label: repo
       - variable: config.git.branch
-        default: main
         description: unstable
         type: string
         required: true
         label: branch
       - variable: config.git.privateKey
-        default: ''
         description: unstable
         type: string
         required: false
@@ -113,14 +130,12 @@ questions:
 
 # MySQL Config
   - variable: config.mysql.integration
-    default: ''
     description: ''
     type: string
     required: false
     label: integration
     group: 'MySQL Config'
   - variable: config.mysql.host
-    default: ''
     description: ''
     type: string
     required: true
@@ -128,14 +143,12 @@ questions:
     show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.database
-    default: wordpress
     description: ''
     type: string
     required: true
     label: database
     group: 'MySQL Config'
   - variable: config.mysql.password
-    default: P@ssw0rd
     description: ''
     type: password
     required: true
@@ -143,7 +156,6 @@ questions:
     show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.port
-    default: 3306
     description: ''
     type: int
     min: 0
@@ -153,7 +165,6 @@ questions:
     show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.url
-    default: ''
     description: ''
     type: string
     required: false
@@ -161,7 +172,6 @@ questions:
     show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.username
-    default: root
     description: ''
     type: string
     required: true
@@ -171,7 +181,6 @@ questions:
 
 # Persistence
   - variable: persistence.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -180,13 +189,11 @@ questions:
     group: Persistence
     subquestions:
       - variable: persistence.storageClass
-        default: ''
         description: ''
         type: storageclass
         required: false
         label: 'storage class'
       - variable: persistence.accessMode
-        default: ReadWriteOnce
         description: ''
         type: enum
         options:
@@ -196,26 +203,22 @@ questions:
         required: false
         label: 'access mode'
       - variable: persistence.existingClaim.wordpress
-        default: ''
         description: ''
         type: string
         required: false
         label: 'wordpress existing claim'
       - variable: persistence.size.wordpress
-        default: 1Gi
         description: ''
         type: string
         required: true
         label: 'wordpress size'
       - variable: persistence.velero.enabled
-        default: false
         description: ''
         type: boolean
         required: true
         label: 'velero enabled'
         group: Persistence
       - variable: persistence.velero.schedule
-        default: '@midnight'
         description: ''
         type: string
         show_if: persistence.velero.enabled=true
@@ -223,7 +226,6 @@ questions:
         label: 'velero schedule'
         group: Persistence
       - variable: persistence.velero.restic
-        default: true
         description: ''
         type: boolean
         show_if: persistence.velero.enabled=true
@@ -231,7 +233,6 @@ questions:
         label: 'velero restic'
         group: Persistence
       - variable: persistence.velero.ttl
-        default: '2160h0m00s'
         description: ''
         type: string
         show_if: persistence.velero.enabled=true
@@ -241,7 +242,6 @@ questions:
 
 # Services and Load Balancing
   - variable: ingress.wordpress.enabled
-    default: true
     description: ''
     type: boolean
     label: 'wordpress ingress enabled'
@@ -249,7 +249,6 @@ questions:
     group: 'Services and Load Balancing'
     subquestions:
       - variable: ingress.wordpress.tls
-        default: false
         description: ''
         type: boolean
         required: true
@@ -261,7 +260,6 @@ questions:
         required: true
         label: 'wordpress ingress hostname'
       - variable: ingress.wordpress.issuer.name
-        default: letsencrypt-staging
         description: ''
         type: enum
         show_if: ingress.wordpress.tls=true
@@ -274,14 +272,12 @@ questions:
         required: true
         label: 'wordpress ingress issuer name'
       - variable: ingress.wordpress.certificate
-        default: ''
         description: ''
         type: string
         show_if: ingress.wordpress.tls=true&&ingress.wordpress.issuer.name=none
         required: false
         label: 'wordpress ingress certificate'
   # - variable: service.wordpress.type
-  #   default: ClusterIP
   #   description: ''
   #   type: enum
   #   show_if: ingress.wordpress.enabled=false
@@ -293,7 +289,6 @@ questions:
   #   label: 'wordpress service type'
   #   group: 'Services and Load Balancing'
   # - variable: service.wordpress.nodePorts.http
-  #   default:
   #   description: ''
   #   type: int
   #   required: false
@@ -303,7 +298,6 @@ questions:
   #   label: 'wordpress http node port'
   #   group: 'Services and Load Balancing'
   # - variable: service.wordpress.lbPorts.http
-  #   default: 80
   #   description: ''
   #   type: int
   #   min: 0

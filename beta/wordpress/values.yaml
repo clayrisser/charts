@@ -12,6 +12,11 @@ config:
     baseUrl: ''
     hostname: ''
     debug: false
+    username: admin
+    email: admin@example.com
+    password: P@ssw0rd
+    title: WordPress
+    enableFileMods: false
     resources:
       enabled: false
       requests:
