@@ -1,7 +1,7 @@
 images:
   wordpress:
-    repository: quay.io/presslabs/wordpress-runtime
-    tag: 5.2.7-php-7.4
+    repository: codejamninja/presslabs-example
+    tag: 0.0.1
 
 config:
   clusterProvider: rke

@@ -85,7 +85,7 @@ questions:
 # Git
   - variable: config.git.enabled
     default: false
-    description: ''
+    description: unstable
     type: boolean
     required: true
     label: enabled
@@ -94,19 +94,19 @@ questions:
     subquestions:
       - variable: config.git.repo
         default: ''
-        description: ''
+        description: unstable
         type: string
         required: true
         label: repo
       - variable: config.git.branch
         default: main
-        description: ''
+        description: unstable
         type: string
         required: true
         label: branch
       - variable: config.git.privateKey
         default: ''
-        description: ''
+        description: unstable
         type: string
         required: false
         label: 'private key'
@@ -315,14 +315,12 @@ questions:
 
 # Images
   - variable: images.wordpress.repository
-    default: wordpress
     description: ''
     type: string
     required: true
     label: 'wordpress repository'
     group: Images
   - variable: images.wordpress.tag
-    default: latest
     description: ''
     type: string
     required: true
