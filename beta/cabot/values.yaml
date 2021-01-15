@@ -70,6 +70,6 @@ probes:
     successThreshold: 1
 
 rabbitmq:
-  rabbitmq:
+  auth:
     password: cabot
     username: cabot
