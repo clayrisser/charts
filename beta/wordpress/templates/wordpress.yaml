@@ -38,14 +38,15 @@ spec:
     # {{- end }}
   {{- end }}
   media:
+    emptyDir: {}
     # persistentVolumeClaim: {}
     # hostPath: {}
-    {{- if .Values.persistence.enabled }}
-    persistentVolumeClaim:
-      claimName: {{ .Values.persistence.existingClaim.wordpress | default (include "wordpress.fullname" . ) }}
-    {{- else }}
-    emptyDir: {}
-    {{- end }}
+    # {{- if .Values.persistence.enabled }}
+    # persistentVolumeClaim:
+    #   claimName: {{ .Values.persistence.existingClaim.wordpress | default (include "wordpress.fullname" . ) }}
+    # {{- else }}
+    # emptyDir: {}
+    # {{- end }}
     # TODO
     # s3:
     #   bucket: string
@@ -72,8 +73,28 @@ spec:
           secretKeyRef:
             name: {{ template "wordpress.fullname" . }}
             key: password
-  volumes: []
-  volumeMounts: []
+  volumeMounts:
+    - name: data
+      mountPath: /_data
+    - name: data
+      mountPath: /app/web/app/uploads
+      subPath: uploads
+    {{- if .Values.config.wordpress.enableFileMods }}
+    - name: data
+      mountPath: /app/web/app/plugins
+      subPath: plugins
+    - name: data
+      mountPath: /app/web/app/themes
+      subPath: themes
+    {{- end }}
+  volumes:
+    - name: data
+      {{- if .Values.persistence.enabled }}
+      persistentVolumeClaim:
+        claimName: {{ .Values.persistence.existingClaim.wordpress | default (printf "%s-wordpress" (include "wordpress.fullname" . )) }}
+      {{- else }}
+      emptyDir: {}
+      {{- end }}
   env:
     # - name: NGINX_PING_PATH
     #   value: '/-/php-ping'
@@ -82,10 +103,7 @@ spec:
     - name: STATS_WHITELIST_CIDR
       value: all
     - name: DISALLOW_FILE_MODS
-      valueFrom:
-        configMapKeyRef:
-          name: {{ template "wordpress.fullname" . }}
-          key: disallow_file_mods
+      value: {{ .Values.config.wordpress.enableFileMods | ternary "false" "true" | quote }}
     {{- if .Values.config.wordpress.debug }}
     - name: WP_ENV
       value: development

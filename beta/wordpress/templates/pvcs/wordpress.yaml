@@ -2,9 +2,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "wordpress.fullname" . }}-media
+  name: {{ template "wordpress.fullname" . }}-wordpress
   labels:
-    app: {{ template "wordpress.name" . }}-media
+    app: {{ template "wordpress.name" . }}-wordpress
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
