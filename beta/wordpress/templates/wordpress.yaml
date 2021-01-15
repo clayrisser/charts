@@ -81,16 +81,16 @@ spec:
     #   value: '/-/_php-ping'
     - name: STATS_WHITELIST_CIDR
       value: all
-    {{- if .Values.config.wordpress.debug }}
-    - name: WP_ENV
-      value: development
-    {{- end }}
-    {{- if (not .Values.config.mysql.integration) }}
     - name: DISALLOW_FILE_MODS
       valueFrom:
         configMapKeyRef:
           name: {{ template "wordpress.fullname" . }}
           key: disallow_file_mods
+    {{- if .Values.config.wordpress.debug }}
+    - name: WP_ENV
+      value: development
+    {{- end }}
+    {{- if (not .Values.config.mysql.integration) }}
     - name: DB_HOST
       valueFrom:
         configMapKeyRef:
