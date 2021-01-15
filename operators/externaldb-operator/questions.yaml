@@ -176,7 +176,7 @@ questions:
     label: 'externaldb operator repository'
     group: Images
   - variable: images.externaldbOperator.tag
-    default: 0.0.11
+    default: 0.0.12
     description: ''
     type: string
     required: true
