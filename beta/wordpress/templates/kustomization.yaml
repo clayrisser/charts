@@ -12,7 +12,7 @@ spec:
     - version: v1
       group: apps
       kind: Deployment
-      name: {{ template "wordpress.fullname" . }}-wordpress
+      name: {{ template "wordpress.fullname" . }}
       namespace: {{ .Release.Namespace }}
   patches:
     - patch: |
