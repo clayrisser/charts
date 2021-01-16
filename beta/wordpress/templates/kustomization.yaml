@@ -15,16 +15,15 @@ spec:
       name: {{ template "wordpress.fullname" . }}
       namespace: {{ .Release.Namespace }}
   patches:
-    - patch: |
-        apiVersion: apps/v1
+    - target:
+        version: v1
+        group: apps
         kind: Deployment
-        metadata:
-          name: {{ template "wordpress.fullname" . }}
-          namespace: {{ .Release.Namespace }}
-        spec:
-          template:
-            spec:
-              containers:
-                - securityContext:
-                    fsUser: 33
-                    fsGroup: 33
+        name: {{ template "wordpress.fullname" . }}
+        namespace: {{ .Release.Namespace }}
+      patch: |
+        - op: replace
+          path: /spec/template/spec/containers/0/securityContext
+          value:
+            fsUser: 33
+            fsGroup: 33
