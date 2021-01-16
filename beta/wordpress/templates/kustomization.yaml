@@ -26,3 +26,5 @@ spec:
             spec:
               securityContext:
                 fsGroup: 33
+                procMount: Default
+                runAsUser: 33
