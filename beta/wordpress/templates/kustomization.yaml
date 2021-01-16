@@ -1,29 +1,29 @@
-apiVersion: kustomize.siliconhills.dev/v1alpha1
-kind: Kustomization
-metadata:
-  name: {{ template "wordpress.fullname" . }}-wordpress
-  labels:
-    app: {{ template "wordpress.name" . }}-wordpress
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  resources:
-    - version: v1
-      group: apps
-      kind: Deployment
-      name: {{ template "wordpress.fullname" . }}
-      namespace: {{ .Release.Namespace }}
-  patches:
-    - patch: |
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: {{ template "wordpress.fullname" . }}
-          namespace: {{ .Release.Namespace }}
-        spec:
-          template:
-            spec:
-              securityContext:
-                fsGroup: 33
-                runAsUser: 33
+# apiVersion: kustomize.siliconhills.dev/v1alpha1
+# kind: Kustomization
+# metadata:
+#   name: {{ template "wordpress.fullname" . }}-wordpress
+#   labels:
+#     app: {{ template "wordpress.name" . }}-wordpress
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+# spec:
+#   resources:
+#     - version: v1
+#       group: apps
+#       kind: Deployment
+#       name: {{ template "wordpress.fullname" . }}
+#       namespace: {{ .Release.Namespace }}
+#   patches:
+#     - patch: |
+#         apiVersion: apps/v1
+#         kind: Deployment
+#         metadata:
+#           name: {{ template "wordpress.fullname" . }}
+#           namespace: {{ .Release.Namespace }}
+#         spec:
+#           template:
+#             spec:
+#               securityContext:
+#                 fsGroup: 33
+#                 runAsUser: 33
