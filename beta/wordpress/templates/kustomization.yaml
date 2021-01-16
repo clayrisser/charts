@@ -25,5 +25,4 @@ spec:
           template:
             spec:
               securityContext:
-                fsUser: 33
                 fsGroup: 33
