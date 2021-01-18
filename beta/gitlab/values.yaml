@@ -1,13 +1,14 @@
 images:
-  cabot:
-    repository: cabotapp/cabot
-    tag: 0.11.12
+  gitlab:
+    repository: gitlab/gitlab-ce
+    tag: 13.7.4-ce.0
 
 config:
   clusterProvider: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
-  cabot:
+  password: P@ssw0rd
+  gitlab:
     baseUrl: ''
     hostname: ''
     resources:
@@ -18,19 +19,9 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
-  smtp:
-    from: ''
-    hostname: ''
-    password: ''
-    port: 587
-    tls: true
-    user: ''
-  admin:
-    email: admin@example.com
-  calendarIcalUrl: ''
   postgres:
     integration:
-    database: cabot
+    database: gitlab
     host: ''
     password: P@ssw0rd
     port: 5432
@@ -38,7 +29,7 @@ config:
     username: postgres
 
 service:
-  cabot:
+  gitlab:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -47,13 +38,27 @@ service:
       http: 80
 
 ingress:
-  cabot:
+  gitlab:
     certificate: ''
     enabled: false
     hostname: ''
     tls: false
     issuer:
       name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  existingClaim:
+    gitlab: ''
+  size:
+    gitlab: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
 
 probes:
   liveness:
@@ -68,9 +73,3 @@ probes:
     timeoutSeconds: 5
     failureThreshold: 6
     successThreshold: 1
-
-rabbitmq:
-  auth:
-    password: cabot
-    username: cabot
-    erlangCookie: V1f9HR0BZuuaKsNbf9vp5UxrW0Z2AyXR
