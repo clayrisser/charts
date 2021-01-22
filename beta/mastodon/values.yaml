@@ -4,7 +4,7 @@ images:
     tag: v3.3.0
 
 config:
-  clusterProvider: rke
+  clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
   redis:

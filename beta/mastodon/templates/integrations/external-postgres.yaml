@@ -18,21 +18,46 @@ spec:
     configuration:
       varReference:
         - version: v1
-          kind: Secret
-          path: stringData
-        - version: v1
-          kind: Secret
-          path: data
+          group: helm.fluxcd.io
+          kind: HelmRelease
+          path: spec
     resources:
       - version: v1
         kind: ConfigMap
         name: {{ template "mastodon.fullname" . }}-externaldb
         namespace: {{ .Release.Namespace }}
       - version: v1
+        group: helm.fluxcd.io
+        kind: HelmRelease
+        name: {{ .Release.Name }}
+        namespace: {{ .Release.Namespace }}
+      - version: v1
         kind: Secret
         name: {{ template "mastodon.fullname" . }}-externaldb
         namespace: {{ .Release.Namespace }}
-    patches: []
+    patches:
+      - patch: |
+          apiVersion: helm.fluxcd.io/v1
+          kind: HelmRelease
+          metadata:
+            name: {{ template "mastodon.fullname" . }}
+            namespace: {{ .Release.Namespace }}
+          spec:
+            values:
+              postgresql:
+                postgresqlDatabase: "$(POSTGRES_DATABASE)"
+                postgresqlUsername: "$(POSTGRES_USERNAME)"
+                postgresqlHost: "$(POSTGRES_HOSTNAME)"
+                postgresqlPort: "$(POSTGRES_PORT)"
+      - patch: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: {{ .Release.Name }}-postgresql
+            namespace: {{ .Release.Namespace }}
+          type: Opaque
+          data:
+            postgresql-password: "$(POSTGRES_PASSWORD)"
     vars:
       - name: POSTGRES_DATABASE
         fieldref:

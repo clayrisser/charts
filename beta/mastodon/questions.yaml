@@ -1,8 +1,7 @@
 categories:
   - Server
 questions:
-
-# Config
+  # Config
   - variable: config.clusterType
     description: ''
     type: enum
@@ -67,7 +66,7 @@ questions:
         required: true
         label: 'mastodon resources limits memory'
 
-# Postgres Config
+  # Postgres Config
   - variable: config.postgres.integration
     description: ''
     type: string
@@ -86,7 +85,6 @@ questions:
     type: string
     required: true
     label: database
-    show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.password
     description: ''
@@ -119,7 +117,7 @@ questions:
     show_if: config.postgres.integration=
     group: 'Postgres Config'
 
-# Persistence
+  # Persistence
   - variable: persistence.enabled
     description: ''
     type: boolean
@@ -180,7 +178,7 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+  # Services and Load Balancing
   - variable: ingress.mastodon.enabled
     description: ''
     type: boolean
@@ -247,7 +245,7 @@ questions:
     label: 'mastodon http lb port'
     group: 'Services and Load Balancing'
 
-# Images
+  # Images
   - variable: images.mastodon.repository
     description: ''
     type: string

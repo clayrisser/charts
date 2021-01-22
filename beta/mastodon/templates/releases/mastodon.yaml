@@ -11,7 +11,7 @@ spec:
   forceUpgrade: true
   helmVersion: v3
   chart:
-    git: https://github.com/tootsuite/mastodon/tree/
+    git: https://github.com/tootsuite/mastodon.git
     ref: v3.3.0
     path: chart
   values:
