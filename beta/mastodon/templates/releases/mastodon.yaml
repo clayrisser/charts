@@ -11,8 +11,8 @@ spec:
   forceUpgrade: true
   helmVersion: v3
   chart:
-    git: https://github.com/tootsuite/mastodon.git
-    ref: v3.3.0
+    git: https://github.com/nuevesolutions/mastodon.git
+    ref: main
     path: chart
   values:
     replicaCount: 1
