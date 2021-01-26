@@ -327,7 +327,12 @@ spec:
         labels: {}
         annotations: {}
       deployment:
+        {{- if .Values.persistence.velero.enabled }}
+        annotations:
+          backup.velero.io/backup-volumes: data
+        {{- else }}
         annotations: {}
+        {{- end }}
       antiAffinity: soft
       workhorse:
         serviceName: webservice-default
