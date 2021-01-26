@@ -71,3 +71,10 @@ Calculate postgres url
 {{- printf "postgresql://%s%s:%d/%s" $credentials $postgres.host $postgres.port $postgres.database }}
 {{- end }}
 {{- end }}
+
+{{/*
+Calculate postgres storage name
+*/}}
+{{- define "gitlab.postgres-storage" }}
+{{- printf "%s%s" (include "gitlab.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
+{{- end }}

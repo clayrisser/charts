@@ -71,22 +71,19 @@ spec:
       initialRootPassword: {}
         secret: {{ template "gitlab.fullname" . }}
         key: password
-
-      ## doc/charts/globals.md#configure-postgresql-settings
       psql:
         connectTimeout:
-        password: {}
-          # useSecret:
-          # secret:
-          # key:
-          # file:
-        # host: postgresql.hostedsomewhere.else
-        # port: 123
-        # username: gitlab
-        # database: gitlabhq_production
-        # applicationName:
-        # preparedStatements: false
-
+        password:
+          useSecret: true
+          secret: {{ include "gitlab.postgres-storage" . }}
+          key: POSTGRES_PASSWORD
+          file:
+        host: {{ .Values.config.postgres.host | quote }}
+        port: {{ .Values.config.postgres.port }}
+        username: {{ .Values.config.postgres.username | quote }}
+        database: {{ .Values.config.postgres.database | quote }}
+        applicationName:
+        preparedStatements: false
       redis:
         password:
           enabled: true
