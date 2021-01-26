@@ -68,7 +68,7 @@ spec:
         {{- end }}
       gitlab:
         license: {}
-      initialRootPassword: {}
+      initialRootPassword:
         secret: {{ template "gitlab.fullname" . }}
         key: password
       psql:
