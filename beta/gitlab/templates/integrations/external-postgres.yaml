@@ -17,12 +17,6 @@ spec:
   kustomization:
     configuration:
       varReference:
-        - version: v1
-          kind: Secret
-          path: stringData
-        - version: v1
-          kind: Secret
-          path: data
         - group: helm.fluxcd.io
           version: v1
           kind: HelmRelease
