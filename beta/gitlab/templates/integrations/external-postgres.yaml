@@ -42,7 +42,7 @@ spec:
         name: {{ .Release.Name }}
         namespace: {{ .Release.Namespace }}
     patches:
-      - |
+      - patch: |
           apiVersion: helm.fluxcd.io/v1
           kind: HelmRelease
           metadata:
