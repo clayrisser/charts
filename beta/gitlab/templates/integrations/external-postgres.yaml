@@ -26,7 +26,7 @@ spec:
         - group: helm.fluxcd.io
           version: v1
           kind: HelmRelease
-          path: spec.values
+          path: spec
     resources:
       - version: v1
         kind: ConfigMap
