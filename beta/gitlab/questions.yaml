@@ -34,6 +34,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.password
+    description: ''
+    type: password
+    required: true
+    label: 'gitlab password'
+    group: Config
   - variable: config.gitlab.resources.enabled
     description: ''
     type: enum
@@ -86,7 +92,6 @@ questions:
     type: string
     required: true
     label: database
-    show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.password
     description: ''
