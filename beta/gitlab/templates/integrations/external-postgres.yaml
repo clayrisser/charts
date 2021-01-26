@@ -20,7 +20,7 @@ spec:
         - group: helm.fluxcd.io
           version: v1
           kind: HelmRelease
-          path: spec
+          path: spec/values/global/psql
     resources:
       - version: v1
         kind: ConfigMap
