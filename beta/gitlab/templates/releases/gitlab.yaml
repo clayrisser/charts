@@ -125,7 +125,7 @@ spec:
         tls:
           enabled: false
       minio:
-        enabled: true
+        enabled: false
         credentials: {}
       grafana:
         enabled: false
