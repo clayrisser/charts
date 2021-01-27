@@ -125,7 +125,7 @@ spec:
         tls:
           enabled: false
       minio:
-        enabled: false
+        enabled: true
         credentials: {}
       grafana:
         enabled: false
@@ -638,6 +638,9 @@ spec:
         antiAffinityLabels:
           matchLabels:
             app: 'gitaly'
+      minio:
+        persistence:
+          enabled: false
       # webservice:
       #   deployments:
       #     default:
