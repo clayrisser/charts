@@ -125,7 +125,7 @@ spec:
         tls:
           enabled: false
       minio:
-        enabled: true
+        enabled: false
         credentials: {}
       grafana:
         enabled: false
@@ -157,51 +157,53 @@ spec:
           matomoUrl:
           matomoSiteId:
         object_store:
-          enabled: false
+          enabled: true
           proxy_download: true
           storage_options: {}
-          connection: {}
+          connection:
+            secret: {{ template "gitlab.fullname" . }}-gitlab
+            key: objectStoreConnection
         lfs:
           enabled: true
           proxy_download: true
-          bucket: git-lfs
+          bucket: {{ .Values.config.storage.s3.namespace }}-lfs
           connection: {}
         artifacts:
           enabled: true
           proxy_download: true
-          bucket: gitlab-artifacts
+          bucket: {{ .Values.config.storage.s3.namespace }}-artifacts
           connection: {}
         uploads:
           enabled: true
           proxy_download: true
-          bucket: gitlab-uploads
+          bucket: {{ .Values.config.storage.s3.namespace }}-uploads
           connection: {}
         packages:
           enabled: true
           proxy_download: true
-          bucket: gitlab-packages
+          bucket: {{ .Values.config.storage.s3.namespace }}-packages
           connection: {}
         externalDiffs:
           enabled: false
           when:
           proxy_download: true
-          bucket: gitlab-mr-diffs
+          bucket: {{ .Values.config.storage.s3.namespace }}-mr-diffs
           connection: {}
         terraformState:
           enabled: false
-          bucket: gitlab-terraform-state
+          bucket: {{ .Values.config.storage.s3.namespace }}-terraform-state
           connection: {}
         dependencyProxy:
           enabled: false
           proxy_download: true
-          bucket: gitlab-dependency-proxy
+          bucket: {{ .Values.config.storage.s3.namespace }}-dependency-proxy
           connection: {}
         pseudonymizer:
           configMap:
-          bucket: gitlab-pseudo
+          bucket: {{ .Values.config.storage.s3.namespace }}-pseudo
           connection: {}
         backups:
-          bucket: gitlab-backups
+          bucket: {{ .Values.config.storage.s3.namespace }}-backups
           tmpBucket: tmp
         incomingEmail:
           enabled: false
@@ -280,7 +282,7 @@ spec:
         bootsnap:
           enabled: true
       registry:
-        bucket: registry
+        bucket: {{ .Values.config.storage.s3.namespace }}-registry
         certificate: {}
         httpSecret: {}
         notifications: {}
@@ -296,7 +298,7 @@ spec:
         artifactsServer: true
         objectStore:
           enabled: true
-          bucket: gitlab-pages
+          bucket: {{ .Values.config.storage.s3.namespace }}-pages
           connection: {}
         apiSecret: {}
       runner:
@@ -593,7 +595,7 @@ spec:
         locked: false
         cache:
           cacheType: s3
-          s3BucketName: runner-cache
+          s3BucketName: {{ .Values.config.storage.s3.namespace }}-runner-cache
           cacheShared: true
           s3BucketLocation: us-east-1
           s3CachePath: gitlab-runner
@@ -638,9 +640,6 @@ spec:
         antiAffinityLabels:
           matchLabels:
             app: 'gitaly'
-      minio:
-        persistence:
-          enabled: false
       # webservice:
       #   deployments:
       #     default:

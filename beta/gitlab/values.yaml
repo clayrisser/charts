@@ -8,6 +8,13 @@ config:
   imagePullPolicy: Always
   updateStrategy: Recreate
   password: P@ssw0rd
+  storage:
+    s3:
+      accessKey:
+      endpoint: https://sfo2.digitaloceanspaces.com
+      namespace: gitlab
+      region: us-east-1
+      secretKey:
   gitlab:
     baseUrl: ''
     hostname: ''

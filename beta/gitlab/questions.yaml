@@ -73,6 +73,38 @@ questions:
         required: true
         label: 'gitlab resources limits memory'
 
+# Storage
+  - variable: config.storage.s3.namespace
+    description: ''
+    type: string
+    required: true
+    label: 's3 namespace'
+    group: Storage
+  - variable: config.storage.s3.endpoint
+    description: ''
+    type: string
+    required: true
+    label: 's3 endpoint'
+    group: Storage
+  - variable: config.storage.s3.region
+    description: ''
+    type: string
+    required: true
+    label: 's3 region'
+    group: Storage
+  - variable: config.storage.s3.accessKey
+    description: ''
+    type: string
+    required: true
+    label: 's3 access key'
+    group: Storage
+  - variable: config.storage.s3.secretKey
+    description: ''
+    type: password
+    required: true
+    label: 's3 secret key'
+    group: Storage
+
 # Postgres Config
   - variable: config.postgres.integration
     description: ''
