@@ -632,11 +632,11 @@ spec:
       testFramework:
         enabled: false
     gitlab:
-      task-runner:
-        replicas: 1
-        antiAffinityLabels:
-          matchLabels:
-            app: 'gitaly'
+      # task-runner:
+      #   replicas: 1
+      #   antiAffinityLabels:
+      #     matchLabels:
+      #       app: 'gitaly'
       # webservice:
       #   deployments:
       #     default:
