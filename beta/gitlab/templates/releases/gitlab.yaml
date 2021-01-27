@@ -637,9 +637,9 @@ spec:
         antiAffinityLabels:
           matchLabels:
             app: 'gitaly'
-      webservice:
-        deployments:
-          default:
-            hpa:
-              minReplicas: 1
-              maxReplicas: 1
+      # webservice:
+      #   deployments:
+      #     default:
+      #       hpa:
+      #         minReplicas: 1
+      #         maxReplicas: 1
