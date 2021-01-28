@@ -47,27 +47,8 @@ spec:
         pages: {}
       ingress:
         configureCertmanager: false
-        annotations:
-          {{- if (eq .Values.config.clusterType "aks") }}
-          kubernetes.io/ingress.class: addon-http-application-routing
-          {{- else }}
-          kubernetes.io/ingress.class: nginx
-          {{- end }}
-          {{- if .Values.ingress.gitlab.tls }}
-          {{- if (empty .Values.ingress.gitlab.certificate) }}
-          cert-manager.io/cluster-issuer: {{ .Values.ingress.gitlab.issuer.name }}
-          kubernetes.io/tls-acme: 'true'
-          {{- end }}
-          nginx.ingress.kubernetes.io/ssl-redirect: 'true'
-          {{- end }}
-        enabled: {{ .Values.ingress.gitlab.enabled }}
-        {{- if .Values.ingress.gitlab.tls }}
-        tls:
-          enabled: true
-          secretName: {{ template "gitlab.gitlab-certificate" . }}
-        {{- else }}
+        enabled: false
         tls: {}
-        {{- end }}
       gitlab:
         license: {}
       initialRootPassword:
@@ -642,9 +623,31 @@ spec:
         antiAffinityLabels:
           matchLabels:
             app: 'gitaly'
-      # webservice:
-      #   deployments:
-      #     default:
-      #       hpa:
-      #         minReplicas: 1
-      #         maxReplicas: 1
+      webservice:
+        deployments:
+          ingress:
+            enabled: {{ .Values.ingress.gitlab.enabled }}
+            annotations:
+              {{- if (eq .Values.config.clusterType "aks") }}
+              kubernetes.io/ingress.class: addon-http-application-routing
+              {{- else }}
+              kubernetes.io/ingress.class: nginx
+              {{- end }}
+              {{- if .Values.ingress.gitlab.tls }}
+              {{- if (empty .Values.ingress.gitlab.certificate) }}
+              cert-manager.io/cluster-issuer: {{ .Values.ingress.gitlab.issuer.name }}
+              kubernetes.io/tls-acme: 'true'
+              {{- end }}
+              nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+              {{- end }}
+            {{- if .Values.ingress.gitlab.tls }}
+            tls:
+              enabled: true
+              secretName: {{ template "gitlab.gitlab-certificate" . }}
+            {{- else }}
+            tls: {}
+            {{- end }}
+          # default:
+          #   hpa:
+          #     minReplicas: 1
+          #     maxReplicas: 1
