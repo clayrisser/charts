@@ -36,7 +36,9 @@ spec:
         https: {{ .Values.ingress.gitlab.tls }}
         externalIP:
         ssh: ~
-        gitlab: {}
+        gitlab:
+          name: {{ template "gitlab.gitlab-hostname" . }}
+          https: {{ .Values.ingress.gitlab.tls }}
         minio: {}
         registry: {}
         tls: {}
