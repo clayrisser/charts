@@ -125,7 +125,7 @@ spec:
         tls:
           enabled: false
       minio:
-        enabled: true
+        enabled: {{ (not .Values.config.storage.s3.enabled) }}
         credentials: {}
       grafana:
         enabled: false
@@ -157,7 +157,7 @@ spec:
           matomoUrl:
           matomoSiteId:
         object_store:
-          enabled: false
+          enabled: {{ .Values.config.storage.s3.enabled }}
           proxy_download: true
           storage_options: {}
           connection:

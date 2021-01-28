@@ -10,6 +10,7 @@ config:
   password: P@ssw0rd
   storage:
     s3:
+      enabled: false
       accessKey:
       endpoint: https://sfo2.digitaloceanspaces.com
       namespace: gitlab
