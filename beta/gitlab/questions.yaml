@@ -76,7 +76,7 @@ questions:
 # Storage
   - variable: config.storage.s3.enabled
     description: ''
-    type: string
+    type: boolean
     required: true
     label: 's3 enabled'
     show_subquestion_if: true
