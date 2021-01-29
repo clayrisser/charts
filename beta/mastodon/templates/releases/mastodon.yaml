@@ -14,10 +14,7 @@ spec:
     git: https://github.com/nuevesolutions/mastodon.git
     ref: main
     path: chart
-  values:
-    replicaCount: 1
-    image:
-      repository: tootsuite/mastodon
+  valtory: tootsuite/mastodon
       pullPolicy: Always
       tag: v3.3.0
     ingress:
@@ -63,8 +60,8 @@ spec:
       secret_key_base: {{ .Values.config.secret | quote }}
       otp_secret: {{ .Values.config.secret | quote }}
       vapid:
-        private_key: {{ .Values.config.vapid.privateKey | quote }}
-        public_key: {{ .Values.config.vapid.publicKey | quote }}
+        private_key: {{ .Values.config.privateKey | quote }}
+        public_key: {{ .Values.config.publicKey | quote }}
     smtp:
       auth_method: plain
       ca_file:

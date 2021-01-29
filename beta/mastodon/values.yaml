@@ -22,10 +22,9 @@ config:
       limits:
         cpu: 100m
         memory: 128Mi
-  secret: 'shhh'
-  vapid:
-    privateKey: 'shhh'
-    publicKey: 'shhh'
+  privateKey: ''
+  publicKey: ''
+  secret: shhh
   admin:
     email: admin@example.com
     username: admin

@@ -1,6 +1,7 @@
 categories:
   - Server
 questions:
+
   # Config
   - variable: config.clusterType
     description: ''
@@ -39,17 +40,17 @@ questions:
     required: true
     label: 'mastodon secret'
     group: Config
-  - variable: config.vapid.privateKey
+  - variable: config.privateKey
     description: ''
     type: multiline
     required: true
-    label: 'mastodon private key'
+    label: 'private key'
     group: Config
-  - variable: config.vapid.publicKey
+  - variable: config.publicKey
     description: ''
     type: multiline
     required: true
-    label: 'mastodon public key'
+    label: 'public key'
     group: Config
   - variable: config.mastodon.resources.enabled
     description: ''
