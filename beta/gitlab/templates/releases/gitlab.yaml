@@ -646,14 +646,3 @@ spec:
           {{- else }}
           tls: {}
           {{- end }}
-        deployments:
-          default:
-            ingress:
-              path: /
-          api:
-            ingress:
-              path: /api
-          # default:
-          #   hpa:
-          #     minReplicas: 1
-          #     maxReplicas: 1
