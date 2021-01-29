@@ -624,29 +624,35 @@ spec:
           matchLabels:
             app: 'gitaly'
       webservice:
-        deployments:
-          ingress:
-            enabled: {{ .Values.ingress.gitlab.enabled }}
-            annotations:
-              {{- if (eq .Values.config.clusterType "aks") }}
-              kubernetes.io/ingress.class: addon-http-application-routing
-              {{- else }}
-              kubernetes.io/ingress.class: nginx
-              {{- end }}
-              {{- if .Values.ingress.gitlab.tls }}
-              {{- if (empty .Values.ingress.gitlab.certificate) }}
-              cert-manager.io/cluster-issuer: {{ .Values.ingress.gitlab.issuer.name }}
-              kubernetes.io/tls-acme: 'true'
-              {{- end }}
-              nginx.ingress.kubernetes.io/ssl-redirect: 'true'
-              {{- end }}
-            {{- if .Values.ingress.gitlab.tls }}
-            tls:
-              enabled: true
-              secretName: {{ template "gitlab.gitlab-certificate" . }}
+        ingress:
+          enabled: {{ .Values.ingress.gitlab.enabled }}
+          annotations:
+            {{- if (eq .Values.config.clusterType "aks") }}
+            kubernetes.io/ingress.class: addon-http-application-routing
             {{- else }}
-            tls: {}
+            kubernetes.io/ingress.class: nginx
             {{- end }}
+            {{- if .Values.ingress.gitlab.tls }}
+            {{- if (empty .Values.ingress.gitlab.certificate) }}
+            cert-manager.io/cluster-issuer: {{ .Values.ingress.gitlab.issuer.name }}
+            kubernetes.io/tls-acme: 'true'
+            {{- end }}
+            nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+            {{- end }}
+          {{- if .Values.ingress.gitlab.tls }}
+          tls:
+            enabled: true
+            secretName: {{ template "gitlab.gitlab-certificate" . }}
+          {{- else }}
+          tls: {}
+          {{- end }}
+        deployments:
+          default:
+            ingress:
+              path: /
+          api:
+            ingress:
+              path: /api
           # default:
           #   hpa:
           #     minReplicas: 1
