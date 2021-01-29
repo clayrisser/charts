@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  forceUpgrade: true
+  forceUpgrade: false
   helmVersion: v3
   chart:
     git: https://github.com/nuevesolutions/mastodon.git
@@ -63,8 +63,8 @@ spec:
       secret_key_base: {{ .Values.config.secret | quote }}
       otp_secret: {{ .Values.config.secret | quote }}
       vapid:
-        private_key: ''
-        public_key: ''
+        private_key: {{ .Values.config.vapid.privateKey | quote }}
+        public_key: {{ .Values.config.vapid.publicKey | quote }}
     smtp:
       auth_method: plain
       ca_file:

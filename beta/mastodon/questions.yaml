@@ -33,6 +33,24 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.secret
+    description: ''
+    type: password
+    required: true
+    label: 'mastodon secret'
+    group: Config
+  - variable: config.vapid.privateKey
+    description: ''
+    type: multiline
+    required: true
+    label: 'mastodon private key'
+    group: Config
+  - variable: config.vapid.publicKey
+    description: ''
+    type: multiline
+    required: true
+    label: 'mastodon public key'
+    group: Config
   - variable: config.mastodon.resources.enabled
     description: ''
     type: enum
