@@ -17,12 +17,10 @@ spec:
   kustomization:
     configuration:
       varReference:
-        - version: v1
-          kind: Secret
-          path: stringData
-        - version: v1
-          kind: Secret
-          path: data
+        - group: helm.fluxcd.io
+          version: v1
+          kind: HelmRelease
+          path: spec/values/global/psql
     resources:
       - version: v1
         kind: ConfigMap
@@ -32,7 +30,26 @@ spec:
         kind: Secret
         name: {{ template "gitlab.fullname" . }}-externaldb
         namespace: {{ .Release.Namespace }}
-    patches: []
+      - group: helm.fluxcd.io
+        version: v1
+        kind: HelmRelease
+        name: {{ .Release.Name }}
+        namespace: {{ .Release.Namespace }}
+    patches:
+      - patch: |
+          apiVersion: helm.fluxcd.io/v1
+          kind: HelmRelease
+          metadata:
+            name: {{ .Release.Name }}
+            namespace: {{ .Release.Namespace }}
+          spec:
+            values:
+              global:
+                psql:
+                  host: "$(POSTGRES_HOSTNAME)"
+                  port: $(POSTGRES_PORT)
+                  username: "$(POSTGRES_USERNAME)"
+                  database: "$(POSTGRES_DATABASE)"
     vars:
       - name: POSTGRES_DATABASE
         fieldref:
@@ -48,14 +65,6 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ template "gitlab.fullname" . }}-externaldb
-          namespace: {{ .Release.Namespace }}
-      - name: POSTGRES_PASSWORD
-        fieldref:
-          fieldPath: data.POSTGRES_PASSWORD
-        objref:
-          apiVersion: v1
-          kind: Secret
           name: {{ template "gitlab.fullname" . }}-externaldb
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PORT

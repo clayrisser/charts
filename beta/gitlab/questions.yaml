@@ -34,6 +34,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.password
+    description: ''
+    type: password
+    required: true
+    label: 'gitlab password'
+    group: Config
   - variable: config.gitlab.resources.enabled
     description: ''
     type: enum
@@ -67,6 +73,41 @@ questions:
         required: true
         label: 'gitlab resources limits memory'
 
+# Storage
+  - variable: config.storage.s3.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 's3 enabled'
+    show_subquestion_if: true
+    group: Storage
+    subquestions:
+      - variable: config.storage.s3.namespace
+        description: ''
+        type: string
+        required: true
+        label: 's3 namespace'
+      - variable: config.storage.s3.endpoint
+        description: ''
+        type: string
+        required: true
+        label: 's3 endpoint'
+      - variable: config.storage.s3.region
+        description: ''
+        type: string
+        required: true
+        label: 's3 region'
+      - variable: config.storage.s3.accessKey
+        description: ''
+        type: string
+        required: true
+        label: 's3 access key'
+      - variable: config.storage.s3.secretKey
+        description: ''
+        type: password
+        required: true
+        label: 's3 secret key'
+
 # Postgres Config
   - variable: config.postgres.integration
     description: ''
@@ -86,7 +127,6 @@ questions:
     type: string
     required: true
     label: database
-    show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.password
     description: ''

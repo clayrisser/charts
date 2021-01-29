@@ -4,10 +4,18 @@ images:
     tag: 13.7.4-ce.0
 
 config:
-  clusterProvider: rke
+  clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
   password: P@ssw0rd
+  storage:
+    s3:
+      enabled: false
+      accessKey:
+      endpoint: https://sfo2.digitaloceanspaces.com
+      namespace: gitlab
+      region: us-east-1
+      secretKey:
   gitlab:
     baseUrl: ''
     hostname: ''

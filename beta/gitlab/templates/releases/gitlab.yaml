@@ -8,12 +8,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  forceUpgrade: true
+  forceUpgrade: false
   helmVersion: v3
   chart:
     repository: https://charts.gitlab.io
     name: gitlab
-    version: 4.7.4
+    version: 4.8.1
   values:
     global:
       common:
@@ -36,7 +36,9 @@ spec:
         https: {{ .Values.ingress.gitlab.tls }}
         externalIP:
         ssh: ~
-        gitlab: {}
+        gitlab:
+          name: {{ template "gitlab.gitlab-hostname" . }}
+          https: {{ .Values.ingress.gitlab.tls }}
         minio: {}
         registry: {}
         tls: {}
@@ -45,48 +47,26 @@ spec:
         pages: {}
       ingress:
         configureCertmanager: false
-        annotations:
-          {{- if (eq .Values.config.clusterType "aks") }}
-          kubernetes.io/ingress.class: addon-http-application-routing
-          {{- else }}
-          kubernetes.io/ingress.class: nginx
-          {{- end }}
-          {{- if .Values.ingress.gitlab.tls }}
-          {{- if (empty .Values.ingress.gitlab.certificate) }}
-          cert-manager.io/cluster-issuer: {{ .Values.ingress.gitlab.issuer.name }}
-          kubernetes.io/tls-acme: 'true'
-          {{- end }}
-          nginx.ingress.kubernetes.io/ssl-redirect: 'true'
-          {{- end }}
-        enabled: {{ .Values.ingress.gitlab.enabled }}
-        {{- if .Values.ingress.gitlab.tls }}
-        tls:
-          enabled: true
-          secretName: {{ template "gitlab.gitlab-certificate" . }}
-        {{- else }}
+        enabled: false
         tls: {}
-        {{- end }}
       gitlab:
         license: {}
-      initialRootPassword: {}
+      initialRootPassword:
         secret: {{ template "gitlab.fullname" . }}
         key: password
-
-      ## doc/charts/globals.md#configure-postgresql-settings
       psql:
         connectTimeout:
-        password: {}
-          # useSecret:
-          # secret:
-          # key:
-          # file:
-        # host: postgresql.hostedsomewhere.else
-        # port: 123
-        # username: gitlab
-        # database: gitlabhq_production
-        # applicationName:
-        # preparedStatements: false
-
+        password:
+          useSecret: true
+          secret: {{ include "gitlab.postgres-storage" . }}
+          key: POSTGRES_PASSWORD
+          file:
+        host: {{ .Values.config.postgres.host | quote }}
+        port: {{ .Values.config.postgres.port }}
+        username: {{ .Values.config.postgres.username | quote }}
+        database: {{ .Values.config.postgres.database | quote }}
+        applicationName:
+        preparedStatements: false
       redis:
         password:
           enabled: true
@@ -117,7 +97,6 @@ spec:
             maxUnavailable: 1
         psql:
           sslMode: 'disable'
-        # serviceName:
         service:
           name: praefect
           type: ClusterIP
@@ -128,22 +107,12 @@ spec:
             internalPort: 8076
         tls:
           enabled: false
-          # secretName:
-
-      ## doc/charts/globals.md#configure-minio-settings
       minio:
-        enabled: true
+        enabled: {{ (not .Values.config.storage.s3.enabled) }}
         credentials: {}
-          # secret:
-
-      ## doc/charts/globals.md#configure-grafana-integration
       grafana:
         enabled: false
-
-      ## doc/charts/globals.md#configure-appconfig-settings
-      ## Rails based portions of this chart share many settings
       appConfig:
-        ## doc/charts/globals.md#general-application-settings
         enableUsagePing: true
         enableSeatLink: true
         enableImpersonation:
@@ -159,145 +128,66 @@ spec:
           builds: true
         webhookTimeout:
         maxRequestDurationSeconds:
-
-        ## doc/charts/globals.md#cron-jobs-related-settings
         cron_jobs: {}
-          ## Flag stuck CI builds as failed
-          # stuck_ci_jobs_worker:
-          #   cron: "0 * * * *"
-          ## Schedule pipelines in the near future
-          # pipeline_schedule_worker:
-          #   cron: "19 * * * *"
-          ## Remove expired build artifacts
-          # expire_build_artifacts_worker:
-          #   cron: "*/7 * * * *"
-          ## Periodically run 'git fsck' on all repositories.
-          # repository_check_worker:
-          #   cron: "20 * * * *"
-          ## Send admin emails once a week
-          # admin_email_worker:
-          #   cron: "0 0 * * 0"
-          ## Remove outdated repository archives
-          # repository_archive_cache_worker:
-          #   cron: "0 * * * *"
-          ## Verify custom GitLab Pages domains
-          # pages_domain_verification_cron_worker:
-          #   cron: "*/15 * * * *"
-          ## Export pseudonymized data
-          # pseudonymizer_worker:
-          #   cron: "0 * * * *"
-          # schedule_migrate_external_diffs_worker:
-          #   cron: "15 * * * *"
-          ### GitLab Geo
-          # Geo Primary only!
-          # geo_prune_event_log_worker:
-          #   cron: "*/5 * * * *"
-          ## GitLab Geo repository sync worker
-          # geo_repository_sync_worker:
-          #   cron: "*/5 * * * *"
-          ## GitLab Geo file download dispatch worker
-          # geo_file_download_dispatch_worker:
-          #  cron: "*/10 * * * *"
-          ## GitLab Geo repository verification primary batch worker
-          # geo_repository_verification_primary_batch_worker:
-          #   cron: "*/5 * * * *"
-          ## GitLab Geo repository verification secondary scheduler worker
-          # geo_repository_verification_secondary_scheduler_worker:
-          #   cron: "*/5 * * * *"
-          ## GitLab Geo migrated local files clean up worker
-          # geo_migrated_local_files_clean_up_worker:
-          #   cron: "15 */6 * * *"
-          ### LDAP
-          # ldap_sync_worker:
-          #   cron: "30 1 * * *"
-          # ldap_group_sync_worker:
-          #   cron: "0 * * * *"
-          ### Snapshot active user statistics
-          # historical_data_worker:
-          #   cron: "0 12 * * *"
-
-        ## doc/charts/globals.md#content-security-policy
         contentSecurityPolicy:
           enabled: false
           report_only: true
-          # directives: {}
-
-        ## doc/charts/globals.md#gravatarlibravatar-settings
         gravatar:
           plainUrl:
           sslUrl:
-
-        ## doc/charts/globals.md#hooking-analytics-services-to-the-gitlab-instance
         extra:
           googleAnalyticsId:
           matomoUrl:
           matomoSiteId:
-
-        ## doc/charts/globals.md#lfs-artifacts-uploads-packages-external-mr-diffs
         object_store:
-          enabled: false
+          enabled: {{ .Values.config.storage.s3.enabled }}
           proxy_download: true
           storage_options: {}
-            # server_side_encryption:
-            # server_side_encryption_kms_key_id
-          connection: {}
-            # secret:
-            # key:
+          connection:
+            secret: {{ template "gitlab.fullname" . }}-gitlab
+            key: objectStoreConnection
         lfs:
           enabled: true
           proxy_download: true
-          bucket: git-lfs
+          bucket: {{ .Values.config.storage.s3.namespace }}-lfs
           connection: {}
-            # secret:
-            # key:
         artifacts:
           enabled: true
           proxy_download: true
-          bucket: gitlab-artifacts
+          bucket: {{ .Values.config.storage.s3.namespace }}-artifacts
           connection: {}
-            # secret:
-            # key:
         uploads:
           enabled: true
           proxy_download: true
-          bucket: gitlab-uploads
+          bucket: {{ .Values.config.storage.s3.namespace }}-uploads
           connection: {}
-            # secret:
-            # key:
         packages:
           enabled: true
           proxy_download: true
-          bucket: gitlab-packages
+          bucket: {{ .Values.config.storage.s3.namespace }}-packages
           connection: {}
         externalDiffs:
           enabled: false
           when:
           proxy_download: true
-          bucket: gitlab-mr-diffs
+          bucket: {{ .Values.config.storage.s3.namespace }}-mr-diffs
           connection: {}
         terraformState:
           enabled: false
-          bucket: gitlab-terraform-state
+          bucket: {{ .Values.config.storage.s3.namespace }}-terraform-state
           connection: {}
         dependencyProxy:
           enabled: false
           proxy_download: true
-          bucket: gitlab-dependency-proxy
+          bucket: {{ .Values.config.storage.s3.namespace }}-dependency-proxy
           connection: {}
-
-        ## doc/charts/globals.md#pseudonymizer-settings
         pseudonymizer:
           configMap:
-          bucket: gitlab-pseudo
+          bucket: {{ .Values.config.storage.s3.namespace }}-pseudo
           connection: {}
-            # secret:
-            # key:
         backups:
-          bucket: gitlab-backups
+          bucket: {{ .Values.config.storage.s3.namespace }}-backups
           tmpBucket: tmp
-
-        ## doc/charts/globals.md#incoming-email-settings
-        ## doc/installation/deployment.md#incoming-email
         incomingEmail:
           enabled: false
           address: ""
@@ -314,9 +204,6 @@ spec:
             logPath: "/dev/stdout"
           mailbox: inbox
           idleTimeout: 60
-
-        ## doc/charts/globals.md#service-desk-email-settings
-        ## doc/installation/deployment.md#service-desk-email
         serviceDeskEmail:
           enabled: false
           address: ""
@@ -333,30 +220,10 @@ spec:
             logPath: "/dev/stdout"
           mailbox: inbox
           idleTimeout: 60
-
-        ## doc/charts/globals.md#ldap
         ldap:
-          # prevent the use of LDAP for sign-in via web.
           preventSignin: false
           servers: {}
-          ## 'main' is the GitLab 'provider ID' of this LDAP server
-          # main:
-          #   label: 'LDAP'
-          #   host: '_your_ldap_server'
-          #   port: 636
-          #   uid: 'sAMAccountName'
-          #   bind_dn: '_the_full_dn_of_the_user_you_will_bind_with'
-          #   password:
-          #     secret: _the_secret_containing_your_ldap_password
-          #     key: _the_key_which_holds_your_ldap_password
-          #   encryption: 'plain'
-
-        ## doc/charts/globals.md#kas
         gitlab_kas: {}
-          # secret:
-          # key:
-
-        ## doc/charts/globals.md#omniauth
         omniauth:
           enabled: false
           autoSignInWithProvider:
@@ -370,144 +237,66 @@ spec:
           externalProviders: []
           allowBypassTwoFactor: []
           providers: []
-          # - secret: gitlab-google-oauth2
-          #   key: provider
-        ## doc/charts/globals.md#configure-appconfig-settings
         sentry:
           enabled: false
           dsn:
           clientside_dsn:
           environment:
-
         smartcard:
           enabled: false
           CASecret:
           clientCertificateRequiredHost:
           sanExtensions: false
           requiredForGitAccess: false
-
-        # Config that only applies to the defaults on initial install
         initialDefaults: {}
-          # signupEnabled:
-      ## End of global.appConfig
-
-      ## doc/charts/geo.md
       geo:
         enabled: false
-        # Valid values: primary, secondary
         role: primary
-        ## Geo Secondary only
-        # nodeName allows multiple instances behind a load balancer.
-        nodeName: # defaults to `gitlab.gitlab.host`
-        # PostgreSQL connection details only needed for `secondary`
+        nodeName: gitlab.gitlab.host
         psql:
           password: {}
-            # secret:
-            # key:
-          # host: postgresql.hostedsomewhere.else
-          # port: 123
-          # username: gitlab_replicator
-          # database: gitlabhq_geo_production
-          # ssl:
-            # secret:
-            # clientKey:
-            # clientCertificate:
-            # serverCA:
-
-      ## doc/charts/gitlab/kas/index.md
       kas:
         enabled: false
-
-      ## doc/charts/globals.md#configure-gitlab-shell-settings
       shell:
         authToken: {}
-          # secret:
-          # key:
         hostKeys: {}
-          # secret:
-
-      ## Rails application secrets
-      ## Secret created according to doc/installation/secrets.md#gitlab-rails-secret
-      ## If allowing shared-secrets generation, this is OPTIONAL.
       railsSecrets: {}
-        # secret:
-
-      ## Rails generic setting, applicable to all Rails-based containers
       rails:
-        bootsnap: # Enable / disable Shopify/Bootsnap cache
+        bootsnap:
           enabled: true
-
-      ## doc/charts/globals.md#configure-registry-settings
       registry:
-        bucket: registry
+        bucket: {{ .Values.config.storage.s3.namespace }}-registry
         certificate: {}
-          # secret:
         httpSecret: {}
-          # secret:
-          # key:
-        # https://docs.docker.com/registry/notifications/#configuration
         notifications: {}
-          # endpoints:
-          #   - name: FooListener
-          #     url: https://foolistener.com/event
-          #     timeout: 500ms
-          #     threshold: 10
-          #     backoff: 1s
-          #     headers:
-          #       FooBar: ['1', '2']
-          #       Authorization:
-          #         secret: gitlab-registry-authorization-header
-          #       SpecificPassword:
-          #         secret: gitlab-registry-specific-password
-          #         key: password
-          # events: {}
-
       pages:
         enabled: false
         accessControl: false
         path:
         host:
         port:
-        https: # default true
+        https:
         externalHttp: []
         externalHttps: []
         artifactsServer: true
         objectStore:
           enabled: true
-          bucket: gitlab-pages
-          # proxy_download: true
+          bucket: {{ .Values.config.storage.s3.namespace }}-pages
           connection: {}
-            # secret:
-            # key:
         apiSecret: {}
-          # secret:
-          # key:
-
-      ## GitLab Runner
-      ## Secret created according to doc/installation/secrets.md#gitlab-runner-secret
-      ## If allowing shared-secrets generation, this is OPTIONAL.
       runner:
         registrationToken: {}
-          # secret:
-
-      ## doc/installation/deployment.md#outgoing-email
-      ## Outgoing email server settings
       smtp:
         enabled: false
         address: smtp.mailgun.org
         port: 2525
         user_name: ""
-        ## doc/installation/secrets.md#smtp-password
         password:
           secret: ""
           key: password
-        # domain:
         authentication: "plain"
         starttls_auto: false
         openssl_verify_mode: "peer"
-
-      ## doc/installation/deployment.md#outgoing-email
-      ## Email persona used in email sent by GitLab
       email:
         from: ''
         display_name: GitLab
@@ -518,122 +307,68 @@ spec:
           secretName: ""
           keyName: "tls.key"
           certName: "tls.crt"
-
-      ## Timezone for containers.
       time_zone: UTC
-
-      ## Global Service Annotations and Labels
       service:
         labels: {}
         annotations: {}
-
-      ## Global Deployment Annotations
       deployment:
+        {{- if .Values.persistence.velero.enabled }}
+        annotations:
+          backup.velero.io/backup-volumes: data
+        {{- else }}
         annotations: {}
-
+        {{- end }}
       antiAffinity: soft
-
-      ## doc/charts/globals.md#workhorse
-      ## Global settings related to Workhorse
       workhorse:
         serviceName: webservice-default
-        # scheme:
-        # host:
-        # port:
-        ## doc/installation/secrets.md#gitlab-workhorse-secret
-        # secret:
-        # key:
-
-      ## doc/charts/globals.md#configure-webservice
       webservice:
         workerTimeout: 60
-
-      ## doc/charts/globals.md#custom-certificate-authorities
-      # configuration of certificates container & custom CA injection
       certificates:
         image:
           repository: registry.gitlab.com/gitlab-org/build/cng/alpine-certificates
           tag: 20191127-r2
         customCAs: []
-        # - secret: custom-CA
-        # - secret: more-custom-CAs
-
-      ## kubectl image used by hooks to carry out specific jobs
       kubectl:
         image:
           repository: registry.gitlab.com/gitlab-org/build/cng/kubectl
           tag: 1.13.12
           pullSecrets: []
         securityContext:
-          # in most base images, this is `nobody:nogroup`
           runAsUser: 65534
           fsGroup: 65534
       busybox:
         image:
           repository: busybox
           tag: latest
-
-      ## docs/charts/globals.md#service-accounts
       serviceAccount:
         enabled: false
         create: true
         annotations: {}
-        ## Name to be used for serviceAccount, otherwise defaults to chart fullname
-        # name:
-
-      ## docs/charts/globals/tracing.md#tracing
       tracing:
         connection:
           string: ""
         urlTemplate: ""
-
-      ## docs/charts/globals.md
       extraEnv: {}
-       # SOME_KEY: some_value
-       # SOME_OTHER_KEY: some_other_value
-
-    ## End of global
-
     upgradeCheck:
       enabled: true
       image: {}
-        # repository:
-        # tag:
       securityContext:
-        # in alpine/debian/busybox based images, this is `nobody:nogroup`
         runAsUser: 65534
         fsGroup: 65534
       tolerations: []
       resources:
         requests:
           cpu: 50m
-
-    ## Settings to for the Let's Encrypt ACME Issuer
-    # certmanager-issuer:
-    #   # The email address to register certificates requested from Let's Encrypt.
-    #   # Required if using Let's Encrypt.
-    #   email: email@example.com
-
-    ## Installation & configuration of jetstack/cert-manager
-    ## See requirements.yaml for current version
     certmanager:
       createCustomResource: true
       nameOverride: cert-manager
-      # Install cert-manager chart. Set to false if you already have cert-manager
-      # installed or if you are not using cert-manager.
-      install: true
-      # Other cert-manager configurations from upstream
-      # See https://github.com/jetstack/cert-manager/blob/master/deploy/charts/cert-manager/README.md#configuration
+      install: false
       rbac:
         create: true
       webhook:
         enabled: false
-
-    ## doc/charts/nginx/index.md
-    ## doc/architecture/decisions.md#nginx-ingress
-    ## Installation & configuration of charts/ingress-nginx:
     nginx-ingress:
-      enabled: true
+      enabled: false
       tcpExternalConfig: "true"
       controller:
         addHeaders:
@@ -681,11 +416,8 @@ spec:
         scope: true
       serviceAccount:
         create: true
-
-    ## Installation & configuration of stable/prometheus
-    ## See requirements.yaml for current version
     prometheus:
-      install: true
+      install: false
       rbac:
         create: true
       alertmanager:
@@ -700,7 +432,6 @@ spec:
         enabled: false
       server:
         retention: 15d
-      #
       serverFiles:
         prometheus.yml:
           scrape_configs:
@@ -805,10 +536,6 @@ spec:
                   target_label: kubernetes_namespace
                 - source_labels: [__meta_kubernetes_service_name]
                   target_label: kubernetes_name
-
-    ## Configuration of Redis
-    ## doc/architecture/decisions.md#redis
-    ## doc/charts/redis
     redis:
       install: true
       existingSecret: gitlab-redis-secret
@@ -818,14 +545,10 @@ spec:
         enabled: false
       metrics:
         enabled: true
-
-    ## Installation & configuration of stable/prostgresql
-    ## See requirements.yaml for current version
     postgresql:
       postgresqlUsername: gitlab
-      # This just needs to be set. It will use a second entry in existingSecret for postgresql-postgres-password
       postgresqlPostgresPassword: bogus
-      install: true
+      install: false
       postgresqlDatabase: gitlabhq_production
       image:
         tag: 11.9.0
@@ -841,35 +564,21 @@ spec:
           postgresql.gitlab/init-revision: "1"
       metrics:
         enabled: true
-        ## Optionally define additional custom metrics
-        ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
-
-    ## Installation & configuration charts/registry
-    ## doc/architecture/decisions.md#registry
-    ## doc/charts/registry/
-    # registry:
-    #   enabled: false
-
-
-    ## Automatic shared secret generation
-    ## doc/installation/secrets.md
-    ## doc/charts/shared-secrets
+    registry:
+      enabled: false
     shared-secrets:
       enabled: true
       rbac:
         create: true
-
-    ## Installation & configuration of gitlab/gitlab-runner
-    ## See requirements.yaml for current version
     gitlab-runner:
-      install: true
+      install: false
       rbac:
         create: true
       runners:
         locked: false
         cache:
           cacheType: s3
-          s3BucketName: runner-cache
+          s3BucketName: {{ .Values.config.storage.s3.namespace }}-runner-cache
           cacheShared: true
           s3BucketLocation: us-east-1
           s3CachePath: gitlab-runner
@@ -877,24 +586,13 @@ spec:
       podAnnotations:
         gitlab.com/prometheus_scrape: "true"
         gitlab.com/prometheus_port: 9252
-
-    ## Installation & configuration of stable/grafana
-    ## See requirements.yaml for current version
-    ## Controlled by `global.grafana.enabled`
     grafana:
-      ## Override and provide "bogus" administation secrets
-      ## gitlab/gitlab-grafana provides overrides via shared-secrets
       admin:
         existingSecret: bogus
       env:
         GF_SECURITY_ADMIN_USER: bogus
         GF_SECURITY_ADMIN_PASSWORD: bogus
-      ## This override allows gitlab/gitlab-grafana to completely override the secret
-      ##   handling behavior of the upstream chart in combination with the above.
       command: [ "sh", "-x", "/tmp/scripts/import-secret.sh" ]
-      ## The following settings allow Grafana to dynamically create
-      ## dashboards and datasources from configmaps. See
-      ## https://github.com/helm/charts/tree/master/stable/grafana#sidecar-for-dashboards
       sidecar:
         dashboards:
           enabled: true
@@ -902,12 +600,9 @@ spec:
         datasources:
           enabled: true
           label: gitlab_grafana_datasource
-      ## We host Grafana as a sub-url of GitLab
       grafana.ini:
         server:
           root_url: http://localhost/-/grafana/
-      ## We generate and provide random passwords
-      ## NOTE: the Secret & ConfigMap names are hard coded!
       extraSecretMounts:
         - name: initial-password
           mountPath: /tmp/initial
@@ -921,29 +616,38 @@ spec:
           readOnly: true
       testFramework:
         enabled: false
-
-    ## Settings for individual sub-charts under GitLab
-    ## Note: Many of these settings are configurable via globals
     gitlab:
-      ## doc/charts/gitlab/task-runner
       task-runner:
+        enabled: false
         replicas: 1
         antiAffinityLabels:
           matchLabels:
             app: 'gitaly'
-    ## doc/charts/gitlab/migrations
-    #   migrations:
-    #     enabled: false
-    ## doc/charts/gitlab/webservice
-    #   webservice:
-    #     enabled: false
-    ## doc/charts/gitlab/sidekiq
-    #   sidekiq:
-    #     enabled: false
-    ## doc/charts/gitlab/gitaly
-    #   gitaly:
-    ## doc/charts/gitlab/gitlab-shell
-    #   gitlab-shell:
-    #     enabled: false
-    ## doc/charts/gitlab/gitlab-grafana
-    #   gitlab-grafana:
+      webservice:
+        deployments:
+          ingress:
+            enabled: {{ .Values.ingress.gitlab.enabled }}
+            annotations:
+              {{- if (eq .Values.config.clusterType "aks") }}
+              kubernetes.io/ingress.class: addon-http-application-routing
+              {{- else }}
+              kubernetes.io/ingress.class: nginx
+              {{- end }}
+              {{- if .Values.ingress.gitlab.tls }}
+              {{- if (empty .Values.ingress.gitlab.certificate) }}
+              cert-manager.io/cluster-issuer: {{ .Values.ingress.gitlab.issuer.name }}
+              kubernetes.io/tls-acme: 'true'
+              {{- end }}
+              nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+              {{- end }}
+            {{- if .Values.ingress.gitlab.tls }}
+            tls:
+              enabled: true
+              secretName: {{ template "gitlab.gitlab-certificate" . }}
+            {{- else }}
+            tls: {}
+            {{- end }}
+          # default:
+          #   hpa:
+          #     minReplicas: 1
+          #     maxReplicas: 1
