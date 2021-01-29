@@ -14,7 +14,10 @@ spec:
     git: https://github.com/nuevesolutions/mastodon.git
     ref: main
     path: chart
-  valtory: tootsuite/mastodon
+  values:
+    replicaCount: 1
+    image:
+      repository: tootsuite/mastodon
       pullPolicy: Always
       tag: v3.3.0
     ingress:
