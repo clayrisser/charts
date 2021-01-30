@@ -28,6 +28,9 @@ spec:
         - version: v1
           kind: Secret
           path: data
+        - version: v1
+          kind: ConfigMap
+          path: data
     resources:
       - version: v1
         kind: ConfigMap
@@ -46,6 +49,10 @@ spec:
         kind: Secret
         name: {{ .Release.Name }}-{{ .Release.Name }}-postgresql
         namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: ConfigMap
+        name: {{ .Release.Name }}-{{ .Release.Name }}-mastodon-env
+        namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: helm.fluxcd.io/v1
@@ -60,6 +67,17 @@ spec:
                 postgresqlUsername: "$(POSTGRES_USERNAME)"
                 postgresqlHost: "$(POSTGRES_HOSTNAME)"
                 postgresqlPort: "$(POSTGRES_PORT)"
+      - patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: {{ .Release.Name }}-{{ .Release.Name }}-mastodon-env
+            namespace: {{ .Release.Namespace }}
+          data:
+            DB_HOST: "$(POSTGRES_HOSTNAME)"
+            DB_NAME: "$(POSTGRES_DATABASE)"
+            DB_PORT: "$(POSTGRES_PORT)"
+            DB_USER: "$(POSTGRES_USERNAME)"
       - patch: |
           apiVersion: v1
           kind: Secret
