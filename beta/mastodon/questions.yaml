@@ -52,6 +52,18 @@ questions:
     required: true
     label: 'public key'
     group: Config
+  - variable: config.admin.email
+    description: ''
+    type: string
+    required: true
+    label: 'admin email'
+    group: Config
+  - variable: config.admin.username
+    description: ''
+    type: string
+    required: true
+    label: 'admin username'
+    group: Config
   - variable: config.mastodon.resources.enabled
     description: ''
     type: enum
