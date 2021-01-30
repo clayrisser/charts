@@ -84,6 +84,7 @@ spec:
       image:
         tag: 6
     postgresql:
+      enabled: false
       postgresqlDatabase: {{ .Values.config.postgres.database | quote }}
       postgresqlPassword: {{ .Values.config.postgres.password | quote }}
       postgresqlUsername: {{ .Values.config.postgres.username | quote }}
