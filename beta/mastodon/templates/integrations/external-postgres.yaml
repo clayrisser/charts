@@ -40,7 +40,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ .Release.Name }}-{{ .Release.Namespace }}-postgresql
+        name: {{ .Release.Name }}-{{ .Release.Name }}-postgresql
         namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
@@ -60,7 +60,7 @@ spec:
           apiVersion: v1
           kind: Secret
           metadata:
-            name: {{ .Release.Name }}-{{ .Release.Namespace }}-postgresql
+            name: {{ .Release.Name }}-{{ .Release.Name }}-postgresql
             namespace: {{ .Release.Namespace }}
           type: Opaque
           data:
