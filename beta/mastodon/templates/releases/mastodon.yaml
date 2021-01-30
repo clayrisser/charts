@@ -86,7 +86,8 @@ spec:
     postgresql:
       enabled: false
       postgresqlDatabase: {{ .Values.config.postgres.database | quote }}
-      postgresqlPassword: {{ .Values.config.postgres.password | quote }}
+      postgresqlHost: {{ .Values.config.postgres.host | quote }}
+      postgresqlPort: {{ .Values.config.postgres.port | quote }}
       postgresqlUsername: {{ .Values.config.postgres.username | quote }}
     redis:
       password: {{ .Values.config.redis.password | quote }}
