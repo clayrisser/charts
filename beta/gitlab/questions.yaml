@@ -73,6 +73,52 @@ questions:
         required: true
         label: 'gitlab resources limits memory'
 
+# Keycloak Config
+  - variable: config.keycloak.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: 'KeyCloak Config'
+    subquestions:
+      - variable: config.keycloak.baseUrl
+        description: ''
+        type: string
+        required: false
+        label: 'base url'
+        show_if: config.keycloak.enabled=true
+      - variable: config.keycloak.company
+        description: ''
+        type: string
+        required: false
+        label: company
+        show_if: config.keycloak.enabled=true
+      - variable: config.keycloak.clientId
+        description: ''
+        type: string
+        required: false
+        label: 'client id'
+        show_if: config.keycloak.enabled=true
+      - variable: config.keycloak.realmName
+        description: ''
+        type: string
+        required: false
+        label: 'realm name'
+        show_if: config.keycloak.enabled=true
+      - variable: config.keycloak.certificate
+        description: ''
+        type: string
+        required: false
+        label: certificate
+        show_if: config.keycloak.enabled=true
+      - variable: config.keycloak.autoSignIn
+        description: ''
+        type: boolean
+        required: true
+        label: 'auto sign in'
+        show_if: config.keycloak.enabled=true
+
 # Storage
   - variable: config.storage.s3.enabled
     description: ''

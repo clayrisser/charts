@@ -225,18 +225,21 @@ spec:
           servers: {}
         gitlab_kas: {}
         omniauth:
-          enabled: false
-          autoSignInWithProvider:
-          syncProfileFromProvider: []
-          syncProfileAttributes: ['email']
-          allowSingleSignOn: ['saml']
-          blockAutoCreatedUsers: true
-          autoLinkLdapUser: false
-          autoLinkSamlUser: false
-          autoLinkUser: []
-          externalProviders: []
+          enabled: {{ .Values.config.keycloak.enabled }}
           allowBypassTwoFactor: []
-          providers: []
+          allowSingleSignOn: ['saml']
+          autoLinkLdapUser: false
+          autoLinkSamlUser: true
+          autoLinkUser: ['saml']
+          autoSignInWithProvider: {{ .Values.config.keycloak.autoSignIn | ternary "saml" "" }}
+          blockAutoCreatedUsers: false
+          externalProviders: []
+          syncProfileAttributes: ['email']
+          syncProfileFromProvider: ['saml']
+          providers:
+            {{- if .Values.config.keycloak.enabled }}
+            - secret: {{ template "gitlab.fullname" . }}-omniauth
+            {{- end }}
         sentry:
           enabled: false
           dsn:

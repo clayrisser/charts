@@ -16,6 +16,14 @@ config:
       namespace: gitlab
       region: us-east-1
       secretKey:
+  keycloak:
+    baseUrl: ''
+    clientId: ''
+    companyName: KeyCloak
+    enabled: false
+    realmName: master
+    certificate: ''
+    autoSignIn: false
   gitlab:
     baseUrl: ''
     hostname: ''
