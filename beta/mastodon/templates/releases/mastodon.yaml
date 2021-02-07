@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  forceUpgrade: false
+  forceUpgrade: true
   helmVersion: v3
   chart:
     git: https://github.com/nuevesolutions/mastodon.git
