@@ -1,0 +1,71 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: keycloak-gitlab-client
+  namespace: { { .Values.config.keycloak.integration } }
+  annotations:
+    key: sso
+  labels:
+    key: sso
+spec:
+  client:
+    # access:
+    #   key: boolean
+    # adminUrl: string
+    # attributes:
+    #   key: string
+    baseUrl: /
+    # bearerOnly: boolean
+    # clientAuthenticatorType: string
+    clientId: gitlab
+    consentRequired: false
+    # defaultClientScopes:
+    #   - string
+    # defaultRoles:
+    #   - string
+    description: client for gitlab
+    # directAccessGrantsEnabled: boolean
+    enabled: true
+    frontchannelLogout: true
+    # fullScopeAllowed: boolean
+    # implicitFlowEnabled: boolean
+    name: gitlab
+    # nodeReRegistrationTimeout: int
+    # notBefore: int
+    # optionalClientScopes:
+    #   - string
+    protocol: saml
+    protocolMappers:
+      # - _id: string
+      #     config:
+      #       key: string
+      #     consentRequired: boolean
+      #     consentText: string
+      - name: last_name
+        protocol: saml
+    #     protocolMapper: string
+    # publicClient: boolean
+    redirectUris:
+      - {
+          {
+            printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote,
+          },
+        }
+    rootUrl: { { - include "gitlab.gitlab-base-url" } }
+    # secret: string
+    # serviceAccountsEnabled: boolean
+    # standardFlowEnabled: boolean
+    # surrogateAuthRequired: boolean
+    # useTemplateConfig: boolean
+    # useTemplateMappers: boolean
+    # useTemplateScope: boolean
+    # webOrigins:
+    #   - string
+  realmSelector:
+    matchExpressions:
+      - key: string
+        operator: string
+        values:
+          - string
+    matchLabels:
+      key: string
