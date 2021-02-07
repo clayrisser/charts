@@ -44,15 +44,15 @@ spec:
                         - {{ template "kustomize-operator.name" . }}-kustomize-operator
       containers:
         - name: {{ template "kustomize-operator.fullname" . }}-kustomize-operator
-          image: {{ .Values.images.siliconOperator.repository }}:{{ .Values.images.siliconOperator.tag }}
+          image: {{ .Values.images.kustomizeOperator.repository }}:{{ .Values.images.kustomizeOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           # resources:
           #   requests:
-          #     cpu: {{ .Values.config.siliconOperator.resources.requests.cpu }}
-          #     memory: {{ .Values.config.siliconOperator.resources.requests.memory }}
+          #     cpu: {{ .Values.config.kustomizeOperator.resources.requests.cpu }}
+          #     memory: {{ .Values.config.kustomizeOperator.resources.requests.memory }}
           #   limits:
-          #     cpu: {{ .Values.config.siliconOperator.resources.limits.cpu }}
-          #     memory: {{ .Values.config.siliconOperator.resources.limits.memory }}
+          #     cpu: {{ .Values.config.kustomizeOperator.resources.limits.cpu }}
+          #     memory: {{ .Values.config.kustomizeOperator.resources.limits.memory }}
           env: []
         - name: {{ template "kustomize-operator.fullname" . }}-kubectl
           image: bitnami/kubectl:1.17.12

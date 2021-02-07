@@ -7,7 +7,7 @@ config:
   clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
-  siliconOperator:
+  kustomizeOperator:
     baseUrl: ''
     hostname: ''
     resources:
