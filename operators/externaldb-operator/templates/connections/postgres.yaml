@@ -10,8 +10,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   hostname: {{ .Values.connections.postgres.hostname | quote }}
+  password: {{ .Values.connections.postgres.password | quote }}
   port: {{ .Values.connections.postgres.port }}
-  secretName: {{ template "externaldb-operator.fullname" . }}-connection
   sslMode: {{ .Values.connections.postgres.sslMode | quote }}
   username: {{ .Values.connections.postgres.username | quote }}
   # url: {{ .Values.connections.postgres.url | quote }}

@@ -4,7 +4,6 @@ questions:
 
 # Config
   - variable: config.imagePullPolicy
-    default: IfNotPresent
     description: ''
     type: enum
     options:
@@ -14,7 +13,6 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: RollingUpdate
     description: ''
     type: enum
     options:
@@ -25,7 +23,6 @@ questions:
     label: 'update strategy'
     group: Config
   # - variable: config.kustomizeOperator.resources.defaults
-  #   default: true
   #   description: ''
   #   type: boolean
   #   required: true
@@ -34,25 +31,21 @@ questions:
   #   group: Config
   #   subquestions:
   #     - variable: config.kustomizeOperator.resources.requests.cpu
-  #       default: 100m
   #       description: ''
   #       type: string
   #       required: true
   #       label: 'kustomize operator resources requests cpu'
   #     - variable: config.kustomizeOperator.resources.requests.memory
-  #       default: 128Mi
   #       description: ''
   #       type: string
   #       required: true
   #       label: 'kustomize operator resources requests memory'
   #     - variable: config.kustomizeOperator.resources.limits.cpu
-  #       default: 500m
   #       description: ''
   #       type: string
   #       required: true
   #       label: 'kustomize operator resources limits cpu'
   #     - variable: config.kustomizeOperator.resources.limits.memory
-  #       default: 256Mi
   #       description: ''
   #       type: string
   #       required: true
@@ -60,14 +53,12 @@ questions:
 
 # Images
   - variable: images.kustomizeOperator.repository
-    default: codejamninja/kustomize-operator
     description: ''
     type: string
     required: true
     label: 'kustomize operator repository'
     group: Images
   - variable: images.kustomizeOperator.tag
-    default: 0.0.6
     description: ''
     type: string
     required: true
