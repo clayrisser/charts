@@ -58,7 +58,7 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   # enabled: false
-  # storageClass: ''
+  storageClass: ''
   # existingClaim:
   #   mastodon: ''
   size:
