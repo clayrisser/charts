@@ -10,120 +10,129 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    git: https://github.com/zalando/postgres-operator.git
-    ref: v1.5.0
-    path: charts/postgres-operator
+    git: https://github.com/CrunchyData/postgres-operator.git
+    ref: v4.6.0
+    path: installers/helm
   values:
-    image:
-      registry: registry.opensource.zalan.do
-      repository: acid/postgres-operator
-      tag: v1.5.0
-      pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
-    podAnnotations: {}
-    podLabels: {}
-    configTarget: "ConfigMap"
-    configGeneral:
-      enable_crd_validation: "true"
-      enable_lazy_spilo_upgrade: "false"
-      enable_shm_volume: "true"
-      etcd_host: ""
-      docker_image: registry.opensource.zalan.do/acid/spilo-12:1.6-p3
-      min_instances: "-1"
-      max_instances: "-1"
-      repair_period: 5m
-      resync_period: 30m
-      workers: "4"
-    configUsers:
-      replication_username: standby
-      super_username: postgres
-    configKubernetes:
-      cluster_domain: cluster.local
-      cluster_labels: application:spilo
-      cluster_name_label: cluster-name
-      enable_init_containers: "true"
-      enable_pod_antiaffinity: {{ .Values.config.enableAntiaffinity | quote }}
-      enable_pod_disruption_budget: "true"
-      enable_sidecars: "true"
-      inherited_labels: application,environment,io.cattle.field/appId
-      pdb_name_format: "postgres-{cluster}-pdb"
-      pod_antiaffinity_topology_key: "kubernetes.io/hostname"
-      pod_management_policy: "ordered_ready"
-      pod_role_label: spilo-role
-      pod_terminate_grace_period: 5m
-      secret_name_template: "{username}.{cluster}.credentials.{tprkind}.{tprgroup}"
-      spilo_privileged: "false"
-      watched_namespace: "*"  # listen to all namespaces
-    configPostgresPodResources:
-      default_cpu_limit: "1"
-      default_cpu_request: 100m
-      default_memory_limit: 500Mi
-      default_memory_request: 100Mi
-      min_cpu_limit: 250m
-      min_memory_limit: 250Mi
-    configTimeouts:
-      pod_deletion_wait_timeout: 10m
-      pod_label_wait_timeout: 10m
-      ready_wait_interval: 3s
-      ready_wait_timeout: 30s
-      resource_check_interval: 3s
-      resource_check_timeout: 10m
-    configLoadBalancer:
-      db_hosted_zone: db.example.com
-      enable_master_load_balancer: "false"
-      enable_replica_load_balancer: "false"
-      master_dns_name_format: '{cluster}.{team}.{hostedzone}'
-      replica_dns_name_format: '{cluster}-repl.{team}.{hostedzone}'
-    configDebug:
-      debug_logging: "true"
-      enable_database_access: "true"
-    configLoggingRestApi:
-      api_port: "8080"
-      cluster_history_entries: "1000"
-      ring_log_lines: "100"
-    configAwsOrGcp:
-      aws_region: eu-central-1
-    configLogicalBackup:
-      logical_backup_docker_image: "registry.opensource.zalan.do/acid/logical-backup:master-58"
-      logical_backup_s3_access_key_id: ""
-      logical_backup_s3_bucket: "my-bucket-url"
-      logical_backup_s3_region: ""
-      logical_backup_s3_endpoint: ""
-      logical_backup_s3_secret_access_key: ""
-      logical_backup_s3_sse: "AES256"
-      logical_backup_schedule: "30 00 * * *"
-    configTeamsApi:
-      enable_teams_api: "false"
-    configConnectionPooler:
-      connection_pooler_schema: "pooler"
-      connection_pooler_user: "pooler"
-      connection_pooler_image: "registry.opensource.zalan.do/acid/pgbouncer:master-7"
-      connection_pooler_max_db_connections: "60"
-      connection_pooler_mode: "transaction"
-      connection_pooler_number_of_instances: "2"
-      connection_pooler_default_cpu_request: 500m
-      connection_pooler_default_memory_request: 100Mi
-      connection_pooler_default_cpu_limit: "1"
-      connection_pooler_default_memory_limit: 100Mi
+    fullnameOverride: ''
     rbac:
-      create: true
-    crd:
-      create: true
+        create: true
+        useClusterAdmin: false
     serviceAccount:
-      create: true
-      name:
-    podServiceAccount:
-      name: "postgres-pod"
-    priorityClassName: ""
-{{- if .Values.config.postgresOperator.resources.enabled }}
-    resources:
-      requests:
-{{ toYaml .Values.config.postgresOperator.resources.requests | indent 8 }}
-      limits:
-{{ toYaml .Values.config.postgresOperator.resources.limits | indent 8 }}
-{{- end }}
-    affinity: {}
-    tolerations: []
-    nodeSelector: {}
-    controllerID:
-      create: false
-      name:
+        create: true
+        name: ''
+    archive_mode: 'true'
+    archive_timeout: '60'
+    backrest_aws_s3_bucket: ''
+    backrest_aws_s3_endpoint: ''
+    backrest_aws_s3_key: ''
+    backrest_aws_s3_region: ''
+    backrest_aws_s3_secret: ''
+    backrest_aws_s3_uri_style: ''
+    backrest_aws_s3_verify_tls: 'true'
+    backrest_port: '2022'
+    badger: 'false'
+    ccp_image_prefix: registry.developers.crunchydata.com/crunchydata
+    ccp_image_pull_secret: ''
+    ccp_image_pull_secret_manifest: ''
+    ccp_image_tag: centos8-13.1-4.6.0
+    create_rbac: 'true'
+    crunchy_debug: 'false'
+    db_name: ''
+    db_password_age_days: '0'
+    db_password_length: '24'
+    db_port: '5432'
+    db_replicas: '0'
+    db_user: testuser
+    default_instance_memory: '128Mi'
+    default_pgbackrest_memory: '48Mi'
+    default_pgbouncer_memory: '24Mi'
+    default_exporter_memory: '24Mi'
+    delete_operator_namespace: 'false'
+    delete_watched_namespaces: 'false'
+    disable_auto_failover: 'false'
+    disable_fsgroup: 'false'
+    reconcile_rbac: 'true'
+    exporterport: '9187'
+    metrics: 'false'
+    namespace: pgo
+    namespace_mode: dynamic
+    pgbadgerport: '10000'
+    pgo_add_os_ca_store: 'false'
+    pgo_admin_password: examplepassword
+    pgo_admin_perms: '*'
+    pgo_admin_role_name: pgoadmin
+    pgo_admin_username: admin
+    pgo_apiserver_port: '8443'
+    pgo_apiserver_url: https://postgres-operator
+    pgo_client_cert_secret: pgo.tls
+    pgo_client_container_install: 'false'
+    pgo_client_install: 'true'
+    pgo_client_version: '4.6.0'
+    pgo_cluster_admin: 'false'
+    pgo_disable_eventing: 'false'
+    pgo_disable_tls: 'false'
+    pgo_image_prefix: registry.developers.crunchydata.com/crunchydata
+    pgo_image_pull_secret: ''
+    pgo_image_pull_secret_manifest: ''
+    pgo_image_tag: centos8-4.6.0
+    pgo_installation_name: devtest
+    pgo_noauth_routes: ''
+    pgo_operator_namespace: pgo
+    pgo_tls_ca_store: ''
+    pgo_tls_no_verify: 'false'
+    pod_anti_affinity: preferred
+    pod_anti_affinity_pgbackrest: ''
+    pod_anti_affinity_pgbouncer: ''
+    scheduler_timeout: '3600'
+    service_type: ClusterIP
+    sync_replication: 'false'
+    backrest_storage: default
+    backup_storage: default
+    primary_storage: default
+    replica_storage: default
+    wal_storage: ''
+    storage1_name: default
+    storage1_access_mode: ReadWriteOnce
+    storage1_size: '1G'
+    storage1_type: dynamic
+    storage2_name: hostpathstorage
+    storage2_access_mode: ReadWriteMany
+    storage2_size: '1G'
+    storage2_type: create
+    storage3_name: nfsstorage
+    storage3_access_mode: ReadWriteMany
+    storage3_size: '1G'
+    storage3_type: create
+    storage3_supplemental_groups: '65534'
+    storage4_name: nfsstoragered
+    storage4_access_mode: ReadWriteMany
+    storage4_size: '1G'
+    storage4_match_labels: crunchyzone=red
+    storage4_type: create
+    storage4_supplemental_groups: '65534'
+    storage5_name: storageos
+    storage5_access_mode: ReadWriteOnce
+    storage5_size: '5Gi'
+    storage5_type: dynamic
+    storage5_class: fast'
+    storage6_name: primarysite
+    storage6_access_mode: ReadWriteOnce
+    storage6_size: '4G'
+    storage6_type: dynamic
+    storage6_class: primarysite
+    storage7_name: alternatesite
+    storage7_access_mode: ReadWriteOnce
+    storage7_size: '4G'
+    storage7_type: dynamic
+    storage7_class: alternatesite
+    storage8_name: gce
+    storage8_access_mode: ReadWriteOnce
+    storage8_size: '300M'
+    storage8_type: dynamic
+    storage8_class: standard
+    storage9_name: rook
+    storage9_access_mode: ReadWriteOnce
+    storage9_size: '1Gi'
+    storage9_type: dynamic
+    storage9_class: rook-ceph-block
