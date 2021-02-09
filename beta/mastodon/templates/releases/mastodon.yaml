@@ -94,11 +94,13 @@ spec:
     persistence:
       assets:
         accessMode: {{ .Values.persistence.accessMode | quote }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
         resources:
           requests:
             storage: {{ .Values.persistence.size.assets | quote }}
       system:
         accessMode: {{ .Values.persistence.accessMode | quote }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
         resources:
           requests:
             storage: {{ .Values.persistence.size.system | quote }}

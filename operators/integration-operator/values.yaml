@@ -1,13 +1,13 @@
 images:
-  kustomizeOperator:
-    repository: codejamninja/kustomize-operator
-    tag: 0.0.7
+  integrationOperator:
+    repository: codejamninja/integration-operator
+    tag: 0.0.1
 
 config:
   clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
-  kustomizeOperator:
+  integrationOperator:
     baseUrl: ''
     hostname: ''
     resources:

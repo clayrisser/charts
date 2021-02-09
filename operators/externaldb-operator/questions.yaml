@@ -4,7 +4,6 @@ questions:
 
 # Config
   - variable: config.imagePullPolicy
-    default: IfNotPresent
     description: ''
     type: enum
     options:
@@ -14,7 +13,6 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: RollingUpdate
     description: ''
     type: enum
     options:
@@ -25,14 +23,12 @@ questions:
     label: 'update strategy'
     group: Config
   - variable: config.debug
-    default: false
     description: ''
     type: boolean
     required: true
     label: debug
     group: Config
   - variable: config.externaldbOperator.resources.enabled
-    default: false
     description: ''
     type: enum
     options:
@@ -45,25 +41,21 @@ questions:
     group: Config
     subquestions:
       - variable: config.externaldbOperator.resources.requests.cpu
-        default: 100m
         description: ''
         type: string
         required: true
         label: 'externaldb operator resources requests cpu'
       - variable: config.externaldbOperator.resources.requests.memory
-        default: 128Mi
         description: ''
         type: string
         required: true
         label: 'externaldb operator resources requests memory'
       - variable: config.externaldbOperator.resources.limits.cpu
-        default: 500m
         description: ''
         type: string
         required: true
         label: 'externaldb operator resources limits cpu'
       - variable: config.externaldbOperator.resources.limits.memory
-        default: 256Mi
         description: ''
         type: string
         required: true
@@ -71,7 +63,6 @@ questions:
 
 # Connections
   - variable: connections.postgres.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -80,25 +71,21 @@ questions:
     group: Connections
     subquestions:
       - variable: connections.postgres.hostname
-        default: ''
         description: ''
         type: string
         required: false
         label: 'postgres hostname'
       - variable: connections.postgres.username
-        default: postgres
         description: ''
         type: string
         required: false
         label: 'postgres username'
       - variable: connections.postgres.password
-        default: ''
         description: ''
         type: password
         required: false
         label: 'postgres password'
       - variable: connections.postgres.port
-        default: 5432
         description: ''
         type: int
         min: 0
@@ -106,7 +93,6 @@ questions:
         required: false
         label: 'postgres port'
       - variable: connections.postgres.sslMode
-        default: allow-unauthorized
         description: ''
         type: enum
         options:
@@ -120,13 +106,11 @@ questions:
         required: false
         label: 'postgres port'
       # - variable: connections.postgres.url
-      #   default: ''
       #   description: ''
       #   type: string
       #   required: false
       #   label: 'postgres url'
   - variable: connections.mysql.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -135,25 +119,21 @@ questions:
     group: Connections
     subquestions:
       - variable: connections.mysql.hostname
-        default: ''
         description: ''
         type: string
         required: false
         label: 'mysql hostname'
       - variable: connections.mysql.username
-        default: mysql
         description: ''
         type: string
         required: false
         label: 'mysql username'
       - variable: connections.mysql.password
-        default: ''
         description: ''
         type: password
         required: false
         label: 'mysql password'
       - variable: connections.mysql.port
-        default: 3306
         description: ''
         type: int
         min: 0
@@ -161,7 +141,6 @@ questions:
         required: false
         label: 'mysql port'
       # - variable: connections.mysql.url
-      #   default: ''
       #   description: ''
       #   type: string
       #   required: false
@@ -169,14 +148,12 @@ questions:
 
 # Images
   - variable: images.externaldbOperator.repository
-    default: codejamninja/externaldb-operator
     description: ''
     type: string
     required: true
     label: 'externaldb operator repository'
     group: Images
   - variable: images.externaldbOperator.tag
-    default: 0.0.12
     description: ''
     type: string
     required: true
