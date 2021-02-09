@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "checkmk.fullname" . }}-checkmk
+  labels:
+    app: {{ template "checkmk.name" . }}-checkmk
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "checkmk.name" . }}-checkmk
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "checkmk.name" . }}-checkmk
+        release: {{ .Release.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "checkmk.name" . }}-checkmk
+      containers:
+        - name: {{ template "checkmk.fullname" . }}-checkmk
+          image: {{ .Values.images.checkmk.repository }}:{{ .Values.images.checkmk.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: {{ .Values.config.checkmk.resources.requests.cpu }}
+              memory: {{ .Values.config.checkmk.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.config.checkmk.resources.limits.cpu }}
+              memory: {{ .Values.config.checkmk.resources.limits.memory }}
+          ports:
+            - name: container
+              containerPort: 5000
+          env: []
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
