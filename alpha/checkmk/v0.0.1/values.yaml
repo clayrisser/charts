@@ -1,6 +1,6 @@
 images:
   checkmk:
-    repository: nlmacamp/check_mk
+    repository: checkmk/check-mk-raw
     tag: 1.6.0-latest
 
 config:
