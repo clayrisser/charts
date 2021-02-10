@@ -1,0 +1,236 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterType
+    default: rke
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: Always
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.checkmk.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'checkmk resources defaults'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.checkmk.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'checkmk resources requests cpu'
+      - variable: config.checkmk.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'checkmk resources requests memory'
+      - variable: config.checkmk.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'checkmk resources limits cpu'
+      - variable: config.checkmk.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'checkmk resources limits memory'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim.checkmk
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'checkmk existing claim'
+      - variable: persistence.size.checkmk
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: 'checkmk size'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        default: '@midnight'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        default: '2160h0m00s'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
+        group: Persistence
+
+# Services and Load Balancing
+  - variable: ingress.checkmk.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'checkmk ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.checkmk.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'checkmk ingress tls'
+      - variable: ingress.checkmk.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'checkmk ingress hostname'
+      - variable: ingress.checkmk.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.checkmk.tls=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'checkmk ingress issuer name'
+      - variable: ingress.checkmk.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.checkmk.tls=true&&ingress.checkmk.issuer.name=none
+        required: false
+        label: 'checkmk ingress certificate'
+  - variable: service.checkmk.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    show_if: ingress.checkmk.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'checkmk service type'
+    group: 'Services and Load Balancing'
+  - variable: service.checkmk.nodePorts.http
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.checkmk.type=NodePort&&ingress.checkmk.enabled=false
+    label: 'checkmk http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.checkmk.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.checkmk.type=LoadBalancer&&ingress.checkmk.enabled=false
+    label: 'checkmk http lb port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.checkmk.repository
+    default: 
+    description: ''
+    type: string
+    required: true
+    label: 'checkmk repository'
+    group: Images
+  - variable: images.checkmk.tag
+    default: checkmk/check-mk-raw
+    description: ''
+    type: string
+    required: true
+    label: 'checkmk tag'
+    group: Images

@@ -1,0 +1,66 @@
+images:
+  checkmk:
+    repository: checkmk/check-mk-raw
+    tag: 2.0.0-latest
+
+config:
+  clusterProvider: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  checkmk:
+    baseUrl: ''
+    hostname: ''
+    resources:
+      enabled: false
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+service:
+  checkmk:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  checkmk:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  existingClaim:
+    checkmk: ''
+  size:
+    checkmk: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
