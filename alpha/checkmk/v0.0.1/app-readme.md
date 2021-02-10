@@ -1,3 +1,3 @@
 # checkmk
 
-> checkmk
+> A project for checkmk
