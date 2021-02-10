@@ -61,10 +61,7 @@ spec:
               containerPort: 5000
           volumeMounts:
             - name: data
-              mountPath: /_data
-            - name: data
-              mountPath: '/data'
-              subPath: data
+              mountPath: /omd/sites
           env: []
           livenessProbe:
             httpGet:
