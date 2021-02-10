@@ -13,11 +13,11 @@ config:
     resources:
       enabled: false
       requests:
-        cpu: 100m
-        memory: 512Mi
+        cpu: 500m
+        memory: 1024Mi
       limits:
         cpu: 500m
-        memory: 512Mi
+        memory: 1024Mi
 
 service:
   checkmk:
