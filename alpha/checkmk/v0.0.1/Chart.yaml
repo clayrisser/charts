@@ -1,0 +1,16 @@
+apiVersion: v1
+name: checkmk
+home: https://github.com/codejamninja/checkmk
+icon: https://checkmk.com/application/files/6915/9834/3137/checkmk_logo_main_vertical.png
+version: 0.0.1
+type: application
+appVersion: latest
+description: 'checkmk'
+keywords:
+  - checkmk
+  - checkmk
+sources:
+  - https://github.com/codejamninja/checkmk
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

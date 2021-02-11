@@ -1,12 +1,13 @@
+{{- if (not .Values.config.keycloak.enabled) }}
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
-  name: keycloak-gitlab-client
-  namespace: { { .Values.config.keycloak.integration } }
-  annotations:
-    key: sso
+  name: {{ template "gitlab.fullname" . }}
   labels:
-    key: sso
+    app: {{ template "gitlab.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   client:
     # access:
@@ -14,22 +15,22 @@ spec:
     # adminUrl: string
     # attributes:
     #   key: string
-    baseUrl: /
+    baseUrl: {{ .Values.config.keycloak.baseUrl }}
     # bearerOnly: boolean
     # clientAuthenticatorType: string
-    clientId: gitlab
+    clientId: {{ .Values.config.keycloak.clientId }}
     consentRequired: false
     # defaultClientScopes:
     #   - string
     # defaultRoles:
     #   - string
-    description: client for gitlab
+    description: {{ .Values.config.keycloak.clientId }} for gitlab
     # directAccessGrantsEnabled: boolean
     enabled: true
     frontchannelLogout: true
     # fullScopeAllowed: boolean
     # implicitFlowEnabled: boolean
-    name: gitlab
+    name: {{ .Values.config.keycloak.clientId }}
     # nodeReRegistrationTimeout: int
     # notBefore: int
     # optionalClientScopes:
@@ -46,12 +47,8 @@ spec:
     #     protocolMapper: string
     # publicClient: boolean
     redirectUris:
-      - {
-          {
-            printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote,
-          },
-        }
-    rootUrl: { { - include "gitlab.gitlab-base-url" } }
+      - {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
+    rootUrl: {{ - include "gitlab.gitlab-base-url" }}
     # secret: string
     # serviceAccountsEnabled: boolean
     # standardFlowEnabled: boolean
@@ -69,3 +66,4 @@ spec:
           - string
     matchLabels:
       key: string
+{{- end }}
