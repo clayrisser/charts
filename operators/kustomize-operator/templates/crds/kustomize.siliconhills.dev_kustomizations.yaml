@@ -567,6 +567,11 @@ spec:
                     type: string
                 type: object
               type: array
+            retryTimeout:
+              description:
+                keep retrying when fails until timeout in milliseconds
+                expires
+              type: integer
             secretGenerator:
               description:
                 SecretGenerator is a list of secrets to generate from local
