@@ -1,0 +1,389 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterType
+    default: rke
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - OnDelete
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.version
+    default: '12'
+    description: ''
+    type: enum
+    options:
+      - '12'
+    required: true
+    label: version
+    group: Config
+  - variable: config.connection.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'connection enabled'
+    group: Config
+  - variable: config.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Config
+  - variable: config.metrics
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: metrics
+    group: Config
+  - variable: config.walE.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'walE enabled'
+    show_subquestion_if: true
+    group: Config
+    subquestions:
+      - variable: config.walE.retainBackups
+        default: 2
+        description: ''
+        type: int
+        required: false
+        label: 'walE retain backups'
+      - variable: config.walE.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: false
+        label: 'walE schedule'
+      - variable: config.walE.s3Bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'walE s3 bucket'
+  - variable: config.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.resources.requests.memory
+        default: 1.5Gi
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.resources.limits.memory
+        default: 1.7Gi
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+# PGAdmin
+  - variable: config.pgadmin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: pgadmin
+    show_subquestion_if: true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.email
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin email'
+      - variable: config.pgadmin.password
+        default: pass
+        description: ''
+        type: password
+        required: true
+        label: 'pgadmin password'
+  - variable: config.pgadmin.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'pgadmin resources enabled'
+    show_subquestion_if: custom
+    show_if: config.pgadmin.enabled=true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgadmin.enabled=true
+        label: 'pgadmin resources requests cpu'
+      - variable: config.pgadmin.resources.requests.memory
+        default: 1.5Gi
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgadmin.enabled=true
+        label: 'pgadmin resources requests memory'
+      - variable: config.pgadmin.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgadmin.enabled=true
+        label: 'pgadmin resources limits cpu'
+      - variable: config.pgadmin.resources.limits.memory
+        default: 1.7Gi
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgadmin.enabled=true
+        label: 'pgadmin resources limits memory'
+
+# Persistence
+  - variable: persistence.size
+    default: 1Gi
+    description: ''
+    type: string
+    required: true
+    label: size
+    group: Persistence
+  - variable: persistence.storageClass
+    default: ''
+    description: ''
+    type: storageclass
+    required: false
+    label: 'storage class'
+    group: Persistence
+  - variable: persistence.accessMode
+    default: ReadWriteOnce
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadWriteMany
+      - ReadOnlyMany
+    required: false
+    label: 'access mode'
+    group: Persistence
+  - variable: persistence.existingClaim
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'existing claim'
+    group: Persistence
+  - variable: persistence.velero.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'velero enabled'
+    group: Persistence
+  - variable: persistence.velero.schedule
+    default: ''
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: false
+    label: 'velero schedule'
+    group: Persistence
+  - variable: persistence.velero.restic
+    default: true
+    description: ''
+    type: boolean
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero restic'
+    group: Persistence
+  - variable: persistence.velero.ttl
+    default: '2160h0m00s'
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero ttl'
+    group: Persistence
+
+# Services and Load Balancing
+  - variable: ingress.pgadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'pgadmin ingress enabled'
+    show_if: config.pgadmin.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.pgadmin.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress tls'
+      - variable: ingress.pgadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress hostname'
+      - variable: ingress.pgadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.pgadmin.tls=true&&config.pgadmin.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'pgadmin ingress issuer name'
+      - variable: ingress.pgadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none&&config.pgadmin.enabled=true
+        required: false
+        label: 'pgadmin ingress certificate'
+  - variable: service.pgadmin.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'pgadmin service type'
+    group: 'Services and Load Balancing'
+  - variable: service.pgadmin.nodePorts.http
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.pgadmin.type=NodePort&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    label: 'pgadmin http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.pgadmin.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.pgadmin.type=LoadBalancer&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    label: 'pgadmin http lb port'
+    group: 'Services and Load Balancing'
+  - variable: service.postgres.type
+    default: NodePort
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'postgres service type'
+    group: 'Services and Load Balancing'
+  - variable: service.postgres.nodePorts.postgres
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.postgres.type=NodePort
+    label: 'postgres node port'
+    group: 'Services and Load Balancing'
+  - variable: service.postgres.lbPorts.postgres
+    default: 5432
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.postgres.type=LoadBalancer
+    label: 'postgres lb port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.pgadmin.repository
+    default: dpage/pgadmin4
+    description: ''
+    type: string
+    required: true
+    label: repository
+    show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.pgadmin.tag
+    default: 4.17
+    description: ''
+    type: string
+    required: true
+    label: tag
+    show_if: config.pgadmin.enabled=true
+    group: Images
