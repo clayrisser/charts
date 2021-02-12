@@ -1,0 +1,86 @@
+images:
+  drupal:
+    repository: drupalwxt/site-wxt
+    tag: latest
+
+config:
+  clusterType: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  drupal:
+    replicas: 1
+    baseUrl: ''
+    hostname: ''
+    debug: false
+    username: admin
+    email: admin@example.com
+    password: P@ssw0rd
+    title: drupal
+    enableFileMods: false
+    resources:
+      enabled: false
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  git:
+    enabled: false
+    repo: ''
+    branch: main
+    privateKey:
+  mysql:
+    integration:
+    database: drupal
+    host: ''
+    password: P@ssw0rd
+    port: 3306
+    url: ''
+    username: root
+
+service:
+  drupal:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  drupal:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  existingClaim:
+    drupal: ''
+  size:
+    drupal: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
