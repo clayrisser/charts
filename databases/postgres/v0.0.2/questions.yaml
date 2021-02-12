@@ -1,8 +1,7 @@
 categories:
   - Server
 questions:
-
-# Config
+  # Config
   - variable: config.clusterType
     default: rke
     description: ''
@@ -60,6 +59,12 @@ questions:
     required: true
     label: replicas
     group: Config
+  - variable: config.databaseRootPassword
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: 'Database root password'
   - variable: config.metrics
     default: false
     description: ''
@@ -132,7 +137,7 @@ questions:
         required: true
         label: 'resources limits memory'
 
-# PGAdmin
+  # PGAdmin
   - variable: config.pgadmin.enabled
     default: false
     description: ''
@@ -197,7 +202,7 @@ questions:
         show_if: config.pgadmin.enabled=true
         label: 'pgadmin resources limits memory'
 
-# Persistence
+  # Persistence
   - variable: persistence.size
     default: 1Gi
     description: ''
@@ -262,7 +267,7 @@ questions:
     label: 'velero ttl'
     group: Persistence
 
-# Services and Load Balancing
+  # Services and Load Balancing
   - variable: ingress.pgadmin.enabled
     default: true
     description: ''
@@ -370,7 +375,7 @@ questions:
     label: 'postgres lb port'
     group: 'Services and Load Balancing'
 
-# Images
+  # Images
   - variable: images.pgadmin.repository
     default: dpage/pgadmin4
     description: ''

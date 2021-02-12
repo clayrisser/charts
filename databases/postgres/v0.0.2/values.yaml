@@ -6,6 +6,7 @@ images:
 config:
   clusterType: rke
   imagePullPolicy: IfNotPresent
+  databaseRootPassword: pass
   metrics: false
   replicas: 1
   updateStrategy: Recreate
