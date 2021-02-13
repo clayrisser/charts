@@ -1,0 +1,213 @@
+apiVersion: drupal.presslabs.org/v1alpha1
+kind: drupal
+metadata:
+  name: {{ template "drupal.fullname" . }}
+  labels:
+    app: {{ template "drupal.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.config.drupal.replicas }}
+  routes:
+    - domain: {{ template "drupal.drupal-hostname" . }}
+      path: /
+  image: '{{ .Values.images.drupal.repository }}:{{ .Values.images.drupal.tag }}'
+  imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+  {{- if (and .Values.config.git.enabled .Values.config.git.repo) }}
+  code:
+    # readOnly: true
+    contentSubpath: wp-content/
+    git:
+      repository: {{ .Values.config.git.repo | quote }}
+      reference: {{ .Values.config.git.branch | default "main" }}
+      {{- if (not (empty .Values.config.git.privateKey)) }}
+      env:
+        - name: SSH_RSA_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "drupal.fullname" . }}-ssh
+              key: id_rsa
+      {{- end }}
+    # hostPath: {}
+    # {{- if .Values.persistence.enabled }}
+    # persistentVolumeClaim:
+    #   claimName: {{ .Values.persistence.existingClaim | default (include "drupal.fullname" . ) }}
+    # {{- else }}
+    # emptyDir: {}
+    # {{- end }}
+  {{- end }}
+  media:
+    emptyDir: {}
+    # persistentVolumeClaim: {}
+    # hostPath: {}
+    # {{- if .Values.persistence.enabled }}
+    # persistentVolumeClaim:
+    #   claimName: {{ .Values.persistence.existingClaim.drupal | default (include "drupal.fullname" . ) }}
+    # {{- else }}
+    # emptyDir: {}
+    # {{- end }}
+    # TODO
+    # s3:
+    #   bucket: string
+    #   prefix: string
+  bootstrap:
+    env:
+      - name: drupal_BOOTSTRAP_USER
+        valueFrom:
+          configMapKeyRef:
+            name: {{ template "drupal.fullname" . }}
+            key: username
+      - name: drupal_BOOTSTRAP_EMAIL
+        valueFrom:
+          configMapKeyRef:
+            name: {{ template "drupal.fullname" . }}
+            key: email
+      - name: drupal_BOOTSTRAP_TITLE
+        valueFrom:
+          configMapKeyRef:
+            name: {{ template "drupal.fullname" . }}
+            key: title
+      - name: drupal_BOOTSTRAP_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ template "drupal.fullname" . }}
+            key: password
+  volumeMounts:
+    - name: data
+      mountPath: /_data
+    - name: data
+      mountPath: /app/web/app/uploads
+      subPath: uploads
+    {{- if .Values.config.drupal.enableFileMods }}
+    - name: data
+      mountPath: /app/web/app/plugins
+      subPath: plugins
+    - name: data
+      mountPath: /app/web/app/themes
+      subPath: themes
+    {{- end }}
+  volumes:
+    - name: data
+      {{- if .Values.persistence.enabled }}
+      persistentVolumeClaim:
+        claimName: {{ .Values.persistence.existingClaim.drupal | default (printf "%s-drupal" (include "drupal.fullname" . )) }}
+      {{- else }}
+      emptyDir: {}
+      {{- end }}
+  env:
+    # - name: NGINX_PING_PATH
+    #   value: '/-/php-ping'
+    # - name: PHP_PING_PATH
+    #   value: '/-/_php-ping'
+    - name: STATS_WHITELIST_CIDR
+      value: all
+    - name: DISALLOW_FILE_MODS
+      value: {{ .Values.config.drupal.enableFileMods | ternary "false" "true" | quote }}
+    {{- if .Values.config.drupal.debug }}
+    - name: WP_ENV
+      value: development
+    {{- end }}
+    {{- if (not .Values.config.mysql.integration) }}
+    - name: DB_HOST
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "drupal.fullname" . }}
+          key: mysql_host
+    - name: DB_USER
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "drupal.fullname" . }}
+          key: mysql_username
+    - name: DB_PORT
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "drupal.fullname" . }}
+          key: mysql_port
+    - name: DB_NAME
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "drupal.fullname" . }}
+          key: mysql_database
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: {{ template "drupal.fullname" . }}
+          key: mysql_password
+    {{- else }}
+    - name: DB_HOST
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "drupal.fullname" . }}-externaldb
+          key: MYSQL_HOSTNAME
+    - name: DB_USER
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "drupal.fullname" . }}-externaldb
+          key: MYSQL_USERNAME
+    - name: DB_PORT
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "drupal.fullname" . }}-externaldb
+          key: MYSQL_PORT
+    - name: DB_NAME
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "drupal.fullname" . }}-externaldb
+          key: MYSQL_DATABASE
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: {{ template "drupal.fullname" . }}-externaldb
+          key: MYSQL_PASSWORD
+    {{- end }}
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+          preference:
+            matchExpressions:
+              - key: application/state
+                operator: In
+                values:
+                  - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 90
+          podAffinityTerm:
+            topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                    - {{ template "drupal.name" . }}
+{{- if .Values.config.drupal.resources.enabled }}
+  resources:
+{{ toYaml .Values.config.drupal.resources | indent 4 }}
+{{- end }}
+  deploymentStrategy:
+    type: {{ .Values.config.updateStrategy | quote }}
+  podMetadata:
+    {{- if .Values.persistence.velero.restic }}
+    annotations:
+      backup.velero.io/backup-volumes: data
+    {{- end }}
+  ingressAnnotations:
+    {{- if (eq .Values.config.clusterType "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
+    kubernetes.io/ingress.class: nginx
+    {{- end }}
+    {{- if .Values.ingress.drupal.tls }}
+    {{- if (empty .Values.ingress.drupal.certificate) }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.drupal.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  drupalPathPrefix: /wp
+  {{- if .Values.ingress.drupal.tls }}
+  tlsSecretRef: {{ template "drupal.drupal-certificate" . }}
+  {{- end }}
+  # priorityClassName:

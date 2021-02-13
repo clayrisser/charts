@@ -1,0 +1,21 @@
+{{- if (not (empty .Values.config.mysql.integration)) }}
+apiVersion: externaldb.databases.land/v1alpha1
+kind: ExternalMysql
+metadata:
+  name: {{ template "drupal.fullname" . }}
+  labels:
+    app: {{ template "drupal.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: '3'
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  cleanup: false
+  name: {{ .Values.config.mysql.database }}
+  connection:
+    name: {{ (split "." .Values.config.mysql.integration)._0 }}
+    namespace: {{ (split "." (printf "%s." .Values.config.mysql.integration))._1 | default "kube-system" }}
+{{- end }}

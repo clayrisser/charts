@@ -1,0 +1,28 @@
+apiVersion: kustomize.siliconhills.dev/v1alpha1
+kind: Kustomization
+metadata:
+  name: {{ template "drupal.fullname" . }}-drupal
+  labels:
+    app: {{ template "drupal.name" . }}-drupal
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  resources:
+    - version: v1
+      group: apps
+      kind: Deployment
+      name: {{ template "drupal.fullname" . }}
+      namespace: {{ .Release.Namespace }}
+  patches:
+    - patch: |
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: {{ template "drupal.fullname" . }}
+          namespace: {{ .Release.Namespace }}
+        spec:
+          template:
+            spec:
+              securityContext:
+                fsGroup: 33

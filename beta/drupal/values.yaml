@@ -1,55 +1,46 @@
 images:
-  pgadmin:
-    repository: dpage/pgadmin4
-    tag: 4.17
+  drupal:
+    repository: drupalwxt/site-wxt
+    tag: latest
 
 config:
   clusterType: rke
-  imagePullPolicy: IfNotPresent
-  databaseRootPassword: pass
-  metrics: false
-  replicas: 1
+  imagePullPolicy: Always
   updateStrategy: Recreate
-  version: '12'
-  connection:
-    enabled: true
-  walE:
-    enabled: false
-    backupThresholdMegabytes: 1024
-    backupThresholdPercentage: 30
-    retainBackups: 2
-    s3Bucket: ''
-    schedule: '0 0 * * *'
-  resources:
-    enabled: false
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 250m
-      memory: 512Mi
-  pgadmin:
-    email: admin
-    enabled: false
-    password: pass
+  drupal:
+    replicas: 1
+    baseUrl: ''
+    hostname: ''
+    debug: false
+    username: admin
+    email: admin@example.com
+    password: P@ssw0rd
+    title: drupal
+    enableFileMods: false
     resources:
       enabled: false
       requests:
         cpu: 100m
         memory: 128Mi
       limits:
-        cpu: 200m
+        cpu: 500m
         memory: 256Mi
+  git:
+    enabled: false
+    repo: ''
+    branch: main
+    privateKey:
+  mysql:
+    integration:
+    database: drupal
+    host: ''
+    password: P@ssw0rd
+    port: 3306
+    url: ''
+    username: root
 
 service:
-  postgres:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      postgres:
-    lbPorts:
-      postgres: 5432
-  pgadmin:
+  drupal:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -58,7 +49,7 @@ service:
       http: 80
 
 ingress:
-  pgadmin:
+  drupal:
     certificate: ''
     enabled: false
     hostname: ''
@@ -68,14 +59,16 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  enabled: true
-  existingClaim: ''
-  size: 1Gi
+  enabled: false
   storageClass: ''
+  existingClaim:
+    drupal: ''
+  size:
+    drupal: 1Gi
   velero:
     enabled: false
     restic: true
-    schedule: ''
+    schedule: '@midnight'
     ttl: 2160h0m00s
 
 probes:
