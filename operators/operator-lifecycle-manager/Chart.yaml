@@ -15,6 +15,7 @@ maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
 annotations:
-  catalog.cattle.io/auto-install: operator-lifecycle-manager-crds=match
+  catalog.cattle.io/auto-install: operator-lifecycle-manager-crd=match
   catalog.cattle.io/namespace: olm
+  catalog.cattle.io/os: linux
   catalog.cattle.io/release-name: operator-lifecycle-manager
