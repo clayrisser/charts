@@ -1,7 +1,7 @@
 images:
   kustomizeOperator:
     repository: codejamninja/kustomize-operator
-    tag: 0.0.8
+    tag: 0.0.10
 
 config:
   clusterProvider: infrastructure
