@@ -1,21 +1,18 @@
 name: postgres-operator
 apiVersion: v1
-home: https://github.com/zalando/postgres-operator
-icon: https://raw.githubusercontent.com/zalando/postgres-operator/master/docs/diagrams/logo.png
-version: 4.6.0
-appVersion: 4.6.0
-description: 'postgres operator creates and manages postgresql clusters running in kubernetes'
+home: https://www.crunchydata.com
+icon: https://avatars.githubusercontent.com/u/8248870?s=200&v=4
+version: 4.5.1
+appVersion: 4.5.1
+description: 'enterprise open source postgresql-as-a-service'
 keywords:
   - postgres
   - operator
-  - cloud-native
-  - patroni
-  - spilo
 sources:
-  - https://github.com/zalando/postgres-operator
+  - https://github.com/CrunchyData/postgres-operator
 maintainers:
-  - name: 'Jam Risser'
-    email: jam@codejam.ninja
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
 annotations:
   catalog.cattle.io/namespace: postgres-operator
   catalog.cattle.io/release-name: postgres-operator
