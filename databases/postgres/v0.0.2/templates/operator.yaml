@@ -22,6 +22,6 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   channel: stable
-  name: minio-operator
+  name: postgresql
   source: operatorhubio-catalog
   sourceNamespace: olm
