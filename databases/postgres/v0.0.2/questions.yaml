@@ -36,13 +36,13 @@ questions:
     group: Config
   - variable: config.backrest.privateKey
     description: ''
-    type: string
+    type: multiline
     required: true
     label: 'backrest private key'
     group: Config
   - variable: config.backrest.publicKey
     description: ''
-    type: string
+    type: multiline
     required: true
     label: 'backrest public key'
     group: Config
