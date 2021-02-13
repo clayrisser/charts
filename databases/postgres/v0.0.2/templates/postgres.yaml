@@ -1,66 +1,101 @@
 apiVersion: crunchydata.com/v1
 kind: Pgcluster
 metadata:
-  name: {{ template "postgres.fullname" . }}-postgresql
+  name: {{ template "postgres.fullname" . }}
   labels:
-    app: {{ template "postgres.name" . }}-postgresql
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    crunchy-pgha-scope: {{ template "postgres.fullname" . }}-cluster
-    deployment-name: {{ template "postgres.fullname" . }}-cluster
-    name: {{ template "postgres.fullname" . }}-cluster
-    pg-cluster: {{ template "postgres.fullname" . }}-cluster
-    pgo-version: 4.6.0
+    autofail: 'true'
+    crunchy-pgbadger: 'false'
+    crunchy-pgha-scope: {{ template "postgres.fullname" . }}
+    crunchy-postgres-exporter: 'false'
+    deployment-name: {{ template "postgres.fullname" . }}
+    name: {{ template "postgres.fullname" . }}
+    pg-cluster: {{ template "postgres.fullname" . }}
+    pg-pod-anti-affinity: ''
+    pgo-backrest: 'true'
+    pgo-version: 4.5.1
     pgouser: admin
   annotations:
-    current-primary: {{ template "postgres.fullname" . }}-cluster
+    current-primary: {{ template "postgres.fullname" . }}
 spec:
   BackrestStorage:
     accessmode: ReadWriteMany
-    matchLabels: ""
-    name: ""
+    matchLabels: ''
+    name: ''
     size: 1G
-    storageclass: ""
-    storagetype: dynamic
-    supplementalgroups: ""
+    storageclass: ''
+    storagetype: create
+    supplementalgroups: ''
   PrimaryStorage:
     accessmode: ReadWriteMany
-    matchLabels: ""
-    name: {{ template "postgres.fullname" . }}-cluster
+    matchLabels: ''
+    name: {{ template "postgres.fullname" . }}
     size: 1G
-    storageclass: ""
-    storagetype: dynamic
-    supplementalgroups: ""
+    storageclass: ''
+    storagetype: create
+    supplementalgroups: ''
   ReplicaStorage:
     accessmode: ReadWriteMany
-    matchLabels: ""
-    name: ""
+    matchLabels: ''
+    name: ''
     size: 1G
-    storageclass: ""
-    storagetype: dynamic
-    supplementalgroups: ""
+    storageclass: ''
+    storagetype: create
+    supplementalgroups: ''
   annotations: {}
+  backrestLimits: {}
+  backrestRepoPath: ''
+  backrestResources:
+    memory: 48Mi
+  backrestS3Bucket: ''
+  backrestS3Endpoint: ''
+  backrestS3Region: ''
+  backrestS3URIStyle: ''
+  backrestS3VerifyTLS: ''
   ccpimage: crunchy-postgres-ha
   ccpimageprefix: registry.developers.crunchydata.com/crunchydata
-  ccpimagetag: centos8-13.1-4.6.0
-  clustername: {{ template "postgres.fullname" . }}-cluster
+  ccpimagetag: centos7-12.4-4.5.1
+  clustername: ${pgo_cluster_name}
+  clustername: {{ template "postgres.fullname" . }}
+  customconfig: ''
   database: postgres
-  exporterport: "9187"
+  exporterport: '9187'
   limits: {}
-  name: {{ template "postgres.fullname" . }}-cluster
+  name: {{ template "postgres.fullname" . }}
   namespace: {{ .Release.Namespace }}
+  pgBouncer:
+    limits: {}
+    replicas: 0
   pgDataSource:
-    restoreFrom: ""
-    restoreOpts: ""
-  pgbadgerport: "10000"
+    restoreFrom: ''
+    restoreOpts: ''
+  pgbadgerport: '10000'
   pgoimageprefix: registry.developers.crunchydata.com/crunchydata
   podAntiAffinity:
     default: preferred
     pgBackRest: preferred
     pgBouncer: preferred
-  port: "5432"
-  tolerations: []
+  policies: ''
+  port: '5432'
+  primarysecretname: {{ template "postgres.fullname" . }}-replication-user
+  replicas: "0"
+  rootsecretname: {{ template "postgres.fullname" . }}-super-user
+  shutdown: false
+  standby: false
+  tablespaceMounts: {}
+  tls:
+    caSecret: ''
+    replicationTLSSecret: ''
+    tlsSecret: ''
+  tlsOnly: false
   user: hippo
   userlabels:
-    pgo-version: 4.6.0
+    crunchy-postgres-exporter: 'false'
+    pg-pod-anti-affinity: ''
+    pgo-version: 4.5.1
+  usersecretname: {{ template "postgres.fullname" . }}-standard-user
+  tolerations: []
+  user: hippo

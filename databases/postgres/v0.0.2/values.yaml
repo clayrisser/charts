@@ -4,6 +4,11 @@ images:
     tag: 4.17
 
 config:
+
+  backrest:
+    publicKey: ''
+    privateKey: ''
+
   clusterType: rke
   imagePullPolicy: IfNotPresent
   databaseRootPassword: pass
