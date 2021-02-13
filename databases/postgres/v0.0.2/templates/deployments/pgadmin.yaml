@@ -63,10 +63,7 @@ spec:
             - name: PGADMIN_SERVER_JSON_FILE
               value: /config/servers.json
             - name: PGADMIN_DEFAULT_EMAIL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "postgres.fullname" . }}
-                  key: pgadmin_email
+              value: {{ .Values.config.pgadmin.email | quote }}
             - name: PGADMIN_DEFAULT_PASSWORD
               valueFrom:
                 secretKeyRef:
