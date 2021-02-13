@@ -3,9 +3,7 @@ kind: OperatorGroup
 metadata:
   name: operatorgroup
   namespace: postgres-operator
-spec:
-  targetNamespaces:
-    - postgres-operator
+spec: {}
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
