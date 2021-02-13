@@ -4,27 +4,12 @@ images:
     tag: 4.17
 
 config:
-
+  clusterType: rke
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
   backrest:
     publicKey: ''
     privateKey: ''
-
-  clusterType: rke
-  imagePullPolicy: IfNotPresent
-  databaseRootPassword: pass
-  metrics: false
-  replicas: 1
-  updateStrategy: Recreate
-  version: '12'
-  connection:
-    enabled: true
-  walE:
-    enabled: false
-    backupThresholdMegabytes: 1024
-    backupThresholdPercentage: 30
-    retainBackups: 2
-    s3Bucket: ''
-    schedule: '0 0 * * *'
   resources:
     enabled: false
     requests:
