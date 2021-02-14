@@ -113,7 +113,7 @@ spec:
     pgBouncer: preferred
   policies: ''
   port: '5432'
-  # primarysecretname: {{ template "postgres.fullname" . }}-primaryuser-secret
+  primarysecretname: {{ template "postgres.fullname" . }}-primaryuser-secret
   replicas: '0'
   rootsecretname: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
 {{- if (and .Values.config.resources.enabled (not (eq .Values.config.resources.enabled "false"))) }}
@@ -138,5 +138,5 @@ spec:
     crunchy-postgres-exporter: 'false'
     pg-pod-anti-affinity: ''
     pgo-version: {{ .Chart.AppVersion | quote }}
-  # usersecretname: {{ template "postgres.fullname" . }}-user-secret
+  usersecretname: {{ template "postgres.fullname" . }}-user-secret
   tolerations: []
