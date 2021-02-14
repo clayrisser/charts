@@ -12,11 +12,12 @@ config:
   imagePullPolicy: IfNotPresent
   allowIntegration: true
   updateStrategy: Recreate
+  metrics: true
   username: postgres
   password:
   shutdown: false
   resources:
-    enabled: false
+    enabled: 'false'
     requests:
       cpu: 100m
       memory: 128Mi
@@ -28,7 +29,7 @@ config:
     enabled: false
     password: pass
     resources:
-      enabled: false
+      enabled: 'false'
       requests:
         cpu: 100m
         memory: 128Mi
@@ -63,7 +64,6 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  enabled: true
   size:
     archive: 2Gb
     backrest: 2Gb

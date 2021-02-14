@@ -46,7 +46,7 @@ spec:
         - name: {{ template "postgres.fullname" . }}-pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-{{- if .Values.config.pgadmin.resources.enabled }}
+{{- if (and .Values.config.pgadmin.resources.enabled (not (eq .Values.config.pgadmin.resources.enabled "false"))) }}
           resources:
             requests:
 {{ toYaml .Values.config.pgadmin.resources.requests | indent 14 }}

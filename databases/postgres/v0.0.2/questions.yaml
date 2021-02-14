@@ -40,6 +40,12 @@ questions:
     required: true
     label: 'allow integration'
     group: Config
+  - variable: config.metrics
+    description: ''
+    type: boolean
+    required: true
+    label: metrics
+    group: Config
   - variable: config.username
     description: ''
     type: string
@@ -116,7 +122,7 @@ questions:
     options:
       - defaults
       - custom
-      - false
+      - 'false'
     required: true
     label: 'pgadmin resources enabled'
     show_subquestion_if: custom
@@ -149,11 +155,23 @@ questions:
         label: 'pgadmin resources limits memory'
 
   # Persistence
-  - variable: persistence.size
+  - variable: persistence.size.primary
     description: ''
     type: string
     required: true
-    label: size
+    label: 'primary size'
+    group: Persistence
+  - variable: persistence.size.replica
+    description: ''
+    type: string
+    required: true
+    label: 'replica size'
+    group: Persistence
+  - variable: persistence.size.backrest
+    description: ''
+    type: string
+    required: true
+    label: 'backrest size'
     group: Persistence
   - variable: persistence.storageClass
     description: ''
@@ -170,12 +188,6 @@ questions:
       - ReadOnlyMany
     required: false
     label: 'access mode'
-    group: Persistence
-  - variable: persistence.existingClaim
-    description: ''
-    type: string
-    required: false
-    label: 'existing claim'
     group: Persistence
   - variable: persistence.velero.enabled
     description: ''

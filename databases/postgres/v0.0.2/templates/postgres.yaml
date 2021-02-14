@@ -90,7 +90,7 @@ spec:
   # collectSecretName: hippo-exporter-secret
   customconfig: ''
   database: postgres
-  exporter: true
+  exporter: {{ .Values.config.metrics }}
   exporterLimits: {}
   exporterResources:
     memory: '0'
@@ -116,7 +116,7 @@ spec:
   # primarysecretname: {{ template "postgres.fullname" . }}-primaryuser-secret
   replicas: '0'
   rootsecretname: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
-{{- if .Values.config.postgres.resources.enabled }}
+{{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
   resources:
 {{ toYaml .Values.config.postgres.resources.requests | indent 4 }}
   limits:
