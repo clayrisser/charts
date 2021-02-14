@@ -34,7 +34,7 @@ spec:
     accessmode: ReadWriteOnce
     matchLabels: ''
     name: ''
-    size: 1G
+    size: 2G
     storageclass: ''
     storagetype: dynamic
     supplementalgroups: ''
@@ -42,7 +42,7 @@ spec:
     accessmode: ReadWriteOnce
     matchLabels: ''
     name: {{ template "postgres.fullname" . }}
-    size: 1G
+    size: 2G
     storageclass: ''
     storagetype: dynamic
     supplementalgroups: ''
@@ -50,7 +50,7 @@ spec:
     accessmode: ReadWriteOnce
     matchLabels: ''
     name: ''
-    size: 1G
+    size: 2G
     storageclass: ''
     storagetype: dynamic
     supplementalgroups: ''
