@@ -36,7 +36,7 @@ spec:
     name: ''
     size: 1G
     storageclass: ''
-    storagetype: static
+    storagetype: dynamic
     supplementalgroups: ''
   PrimaryStorage:
     accessmode: ReadWriteOnce
@@ -44,7 +44,7 @@ spec:
     name: {{ template "postgres.fullname" . }}
     size: 1G
     storageclass: ''
-    storagetype: static
+    storagetype: dynamic
     supplementalgroups: ''
   ReplicaStorage:
     accessmode: ReadWriteOnce
@@ -52,7 +52,7 @@ spec:
     name: ''
     size: 1G
     storageclass: ''
-    storagetype: static
+    storagetype: dynamic
     supplementalgroups: ''
   WALStorage:
     accessmode: ''
