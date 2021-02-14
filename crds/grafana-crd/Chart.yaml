@@ -4,6 +4,6 @@ description: installs the crds for grafana
 name: grafana-crd
 type: application
 annotations:
-  catalog.cattle.io/hidden: 'true'
+  # catalog.cattle.io/hidden: 'true'
   catalog.cattle.io/release-name: grafana-crd
   catalog.cattle.io/namespace: kube-system
