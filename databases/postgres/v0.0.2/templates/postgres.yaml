@@ -23,12 +23,12 @@ metadata:
     primary-deployment: {{ template "postgres.fullname" . }}
 spec:
   ArchiveStorage:
-    accessmode: ''
+    accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
     name: ''
     size: {{ .Values.persistence.size.archive | quote }}
     storageclass: {{ .Values.persistence.storageClass | quote }}
-    storagetype: ''
+    storagetype: dynamic
     supplementalgroups: ''
   BackrestStorage:
     accessmode: {{ .Values.persistence.accessMode | quote }}
@@ -47,32 +47,32 @@ spec:
     storagetype: dynamic
     supplementalgroups: ''
   ReplicaStorage:
-    accessmode: ''
+    accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
     name: ''
     size: {{ .Values.persistence.size.replica | quote }}
     storageclass: {{ .Values.persistence.storageClass | quote }}
-    storagetype: ''
+    storagetype: dynamic
     supplementalgroups: ''
   WALStorage:
-    accessmode: ''
+    accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
     name: ''
     size: {{ .Values.persistence.size.wal | quote }}
     storageclass: {{ .Values.persistence.storageClass | quote }}
-    storagetype: ''
+    storagetype: dynamic
     supplementalgroups: ''
   annotations:
     global: {}
     pgBouncer: {}
-    postgres: {}
-      # {{- if .Values.persistence.velero.enabled }}
-      # backup.velero.io/backup-volumes: pgdata
-      # {{- end }}
-    backrest: {}
-      # {{- if .Values.persistence.velero.enabled }}
-      # backup.velero.io/backup-volumes: backrestrepo
-      # {{- end }}
+    postgres:
+      {{- if .Values.persistence.velero.enabled }}
+      backup.velero.io/backup-volumes: pgdata
+      {{- end }}
+    backrest:
+      {{- if .Values.persistence.velero.enabled }}
+      backup.velero.io/backup-volumes: backrestrepo
+      {{- end }}
   backrestConfig: null
   backrestLimits: {}
   backrestRepoPath: ''
