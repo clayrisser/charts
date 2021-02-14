@@ -20,6 +20,7 @@ metadata:
     pgouser: admin
   annotations:
     current-primary: {{ template "postgres.fullname" . }}
+    primary-deployment: {{ template "postgres.fullname" . }}
 spec:
   ArchiveStorage:
     accessmode: ''
