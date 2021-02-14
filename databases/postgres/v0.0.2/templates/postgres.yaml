@@ -16,57 +16,63 @@ metadata:
     pg-cluster: {{ template "postgres.fullname" . }}
     pg-pod-anti-affinity: ''
     pgo-backrest: 'true'
-    pgo-version: 4.5.1
+    pgo-version: {{ .Chart.AppVersion | quote }}
     pgouser: admin
   annotations:
     current-primary: {{ template "postgres.fullname" . }}
     primary-deployment: {{ template "postgres.fullname" . }}
 spec:
   ArchiveStorage:
-    accessmode: ''
+    accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
     name: ''
-    size: ''
-    storageclass: ''
-    storagetype: ''
+    size: {{ .Values.persistence.size.archive | quote }}
+    storageclass: {{ .Values.persistence.storageClass | quote }}
+    storagetype: dynamic
     supplementalgroups: ''
   BackrestStorage:
-    accessmode: ReadWriteOnce
+    accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
     name: ''
-    size: 2G
-    storageclass: ''
+    size: {{ .Values.persistence.size.backrest | quote }}
+    storageclass: {{ .Values.persistence.storageClass | quote }}
     storagetype: dynamic
     supplementalgroups: ''
   PrimaryStorage:
-    accessmode: ReadWriteOnce
+    accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
     name: {{ template "postgres.fullname" . }}
-    size: 2G
-    storageclass: ''
+    size: {{ .Values.persistence.size.primary | quote }}
+    storageclass: {{ .Values.persistence.storageClass | quote }}
     storagetype: dynamic
     supplementalgroups: ''
   ReplicaStorage:
-    accessmode: ReadWriteOnce
+    accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
     name: ''
-    size: 2G
-    storageclass: ''
+    size: {{ .Values.persistence.size.replica | quote }}
+    storageclass: {{ .Values.persistence.storageClass | quote }}
     storagetype: dynamic
     supplementalgroups: ''
   WALStorage:
-    accessmode: ''
+    accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
     name: ''
-    size: ''
-    storageclass: ''
-    storagetype: ''
+    size: {{ .Values.persistence.size.wal | quote }}
+    storageclass: {{ .Values.persistence.storageClass | quote }}
+    storagetype: dynamic
     supplementalgroups: ''
   annotations:
-    backrest: {}
     global: {}
     pgBouncer: {}
-    postgres: {}
+    postgres:
+      {{- if .Values.persistence.velero.enabled }}
+      backup.velero.io/backup-volumes: pgdata
+      {{- end }}
+    backrest:
+      {{- if .Values.persistence.velero.enabled }}
+      backup.velero.io/backup-volumes: backrestrepo
+      {{- end }}
   backrestConfig: null
   backrestLimits: {}
   backrestRepoPath: ''
@@ -77,9 +83,9 @@ spec:
   backrestS3Region: ''
   backrestS3URIStyle: ''
   backrestS3VerifyTLS: 'true'
-  ccpimage: crunchy-postgres-ha
-  ccpimageprefix: registry.developers.crunchydata.com/crunchydata
-  ccpimagetag: centos7-12.4-4.5.1
+  ccpimage: {{ .Values.images.postgres.repository | quote }}
+  ccpimageprefix: {{ .Values.images.postgres.registry | quote }}
+  ccpimagetag: {{ .Values.images.postgres.tag | quote }}
   clustername: {{ template "postgres.fullname" . }}
   # collectSecretName: hippo-exporter-secret
   customconfig: ''
@@ -89,7 +95,6 @@ spec:
   exporterResources:
     memory: '0'
   exporterport: '9187'
-  limits: {}
   name: {{ template "postgres.fullname" . }}
   namespace: {{ .Release.Namespace }}
   pgBouncer:
@@ -108,12 +113,19 @@ spec:
     pgBouncer: preferred
   policies: ''
   port: '5432'
-  primarysecretname: {{ template "postgres.fullname" . }}-primaryuser-secret
+  # primarysecretname: {{ template "postgres.fullname" . }}-primaryuser-secret
   replicas: '0'
-  rootsecretname: {{ template "postgres.fullname" . }}-postgres-secret
+  rootsecretname: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
+{{- if .Values.config.postgres.resources.enabled }}
   resources:
-    memory: 128Mi
-  shutdown: false
+{{ toYaml .Values.config.postgres.resources.requests | indent 4 }}
+  limits:
+{{ toYaml .Values.config.postgres.resources.limits | indent 4 }}
+{{- else }}
+  resources: {}
+  limits: {}
+{{- end }}
+  shutdown: {{ .Values.config.shutdown }}
   standby: false
   tablespaceMounts: {}
   tls:
@@ -121,10 +133,10 @@ spec:
     replicationTLSSecret: ''
     tlsSecret: ''
   tlsOnly: false
-  user: {{ .Values.config.username }}
+  user: user
   userlabels:
     crunchy-postgres-exporter: 'false'
     pg-pod-anti-affinity: ''
-    pgo-version: 4.5.1
-  usersecretname: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
+    pgo-version: {{ .Chart.AppVersion | quote }}
+  # usersecretname: {{ template "postgres.fullname" . }}-user-secret
   tolerations: []

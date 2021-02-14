@@ -2,21 +2,24 @@ images:
   pgadmin:
     repository: dpage/pgadmin4
     tag: 4.17
+  postgres:
+    registry: registry.developers.crunchydata.com/crunchydata
+    repository: crunchy-postgres-ha
+    tag: centos7-12.5-4.5.1
 
 config:
   clusterType: rke
   imagePullPolicy: IfNotPresent
+  allowIntegration: true
   updateStrategy: Recreate
-  username: hello
-  password: world
-  backrest:
-    publicKey: ''
-    privateKey: ''
+  username: postgres
+  password:
+  shutdown: false
   resources:
     enabled: false
     requests:
       cpu: 100m
-      memory: 256Mi
+      memory: 128Mi
     limits:
       cpu: 250m
       memory: 512Mi
@@ -35,7 +38,7 @@ config:
 
 service:
   postgres:
-    type: NodePort
+    type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
       postgres:
@@ -61,25 +64,15 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: true
-  existingClaim: ''
-  size: 1Gi
+  size:
+    archive: 2Gb
+    backrest: 2Gb
+    primary: 2Gb
+    replica: 2Gb
+    wal: 2Gb
   storageClass: ''
   velero:
     enabled: false
     restic: true
     schedule: ''
     ttl: 2160h0m00s
-
-probes:
-  liveness:
-    initialDelaySeconds: 120
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1

@@ -34,6 +34,30 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.allowIntegration
+    description: ''
+    type: boolean
+    required: true
+    label: 'allow integration'
+    group: Config
+  - variable: config.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: Config
+  - variable: config.password
+    description: ''
+    type: password
+    required: false
+    label: password
+    group: Config
+  - variable: config.shutdown
+    description: ''
+    type: boolean
+    required: true
+    label: shutdown
+    group: Config
   - variable: config.resources.enabled
     description: ''
     type: enum
@@ -284,13 +308,31 @@ questions:
     description: ''
     type: string
     required: true
-    label: repository
+    label: 'pgadmin repository'
     show_if: config.pgadmin.enabled=true
     group: Images
   - variable: images.pgadmin.tag
     description: ''
     type: string
     required: true
-    label: tag
+    label: 'pgadmin tag'
     show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.postgres.registry
+    description: ''
+    type: string
+    required: true
+    label: 'postgres registry'
+    group: Images
+  - variable: images.postgres.repository
+    description: ''
+    type: string
+    required: true
+    label: 'postgres repository'
+    group: Images
+  - variable: images.postgres.tag
+    description: ''
+    type: string
+    required: true
+    label: 'postgres tag'
     group: Images

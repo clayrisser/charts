@@ -1,0 +1,12 @@
+{{- if .Values.config.allowIntegration }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "postgres.fullname" . }}-connection
+  labels:
+    app: {{ template "postgres.name" . }}-connection
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data: {}
+{{- end }}
