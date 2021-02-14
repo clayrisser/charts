@@ -1,0 +1,223 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.clusterType
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - OnDelete
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.allowIntegration
+    description: ''
+    type: boolean
+    required: true
+    label: 'allow integration'
+    group: Config
+  - variable: config.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+  # Persistence
+  - variable: persistence.size.primary
+    description: ''
+    type: string
+    required: true
+    label: 'primary size'
+    group: Persistence
+  - variable: persistence.size.replica
+    description: ''
+    type: string
+    required: true
+    label: 'replica size'
+    group: Persistence
+  - variable: persistence.size.backrest
+    description: ''
+    type: string
+    required: true
+    label: 'backrest size'
+    group: Persistence
+  - variable: persistence.storageClass
+    description: ''
+    type: storageclass
+    required: false
+    label: 'storage class'
+    group: Persistence
+  - variable: persistence.accessMode
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadWriteMany
+      - ReadOnlyMany
+    required: false
+    label: 'access mode'
+    group: Persistence
+  - variable: persistence.velero.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'velero enabled'
+    group: Persistence
+  - variable: persistence.velero.schedule
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: false
+    label: 'velero schedule'
+    group: Persistence
+  - variable: persistence.velero.restic
+    description: ''
+    type: boolean
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero restic'
+    group: Persistence
+  - variable: persistence.velero.ttl
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero ttl'
+    group: Persistence
+
+  # Services and Load Balancing
+  - variable: ingress.grafana.enabled
+    description: ''
+    type: boolean
+    label: 'grafana ingress enabled'
+    show_if: config.grafana.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.grafana.tls
+        description: ''
+        type: boolean
+        show_if: config.grafana.enabled=true
+        required: true
+        label: 'grafana ingress tls'
+      - variable: ingress.grafana.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.grafana.enabled=true
+        required: true
+        label: 'grafana ingress hostname'
+      - variable: ingress.grafana.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.grafana.tls=true&&config.grafana.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'grafana ingress issuer name'
+      - variable: ingress.grafana.certificate
+        description: ''
+        type: string
+        show_if: ingress.grafana.tls=true&&ingress.grafana.issuer.name=none&&config.grafana.enabled=true
+        required: false
+        label: 'grafana ingress certificate'
+  - variable: service.grafana.type
+    description: ''
+    type: enum
+    show_if: ingress.grafana.enabled=false&&config.grafana.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'grafana service type'
+    group: 'Services and Load Balancing'
+  - variable: service.grafana.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.grafana.type=NodePort&&ingress.grafana.enabled=false&&config.grafana.enabled=true
+    label: 'grafana http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.grafana.lbPorts.http
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.grafana.type=LoadBalancer&&ingress.grafana.enabled=false&&config.grafana.enabled=true
+    label: 'grafana http lb port'
+    group: 'Services and Load Balancing'
+
+  # Images
+  - variable: images.grafana.repository
+    description: ''
+    type: string
+    required: true
+    label: 'grafana repository'
+    show_if: config.grafana.enabled=true
+    group: Images
+  - variable: images.grafana.tag
+    description: ''
+    type: string
+    required: true
+    label: 'grafana tag'
+    show_if: config.grafana.enabled=true
+    group: Images
