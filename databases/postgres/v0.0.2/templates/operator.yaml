@@ -25,3 +25,4 @@ spec:
   name: postgresql
   source: operatorhubio-catalog
   sourceNamespace: olm
+  installPlanApproval: Manual
