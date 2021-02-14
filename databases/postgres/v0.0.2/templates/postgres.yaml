@@ -116,11 +116,11 @@ spec:
   # primarysecretname: {{ template "postgres.fullname" . }}-primaryuser-secret
   replicas: '0'
   rootsecretname: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
-{{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
+{{- if (and .Values.config.resources.enabled (not (eq .Values.config.resources.enabled "false"))) }}
   resources:
-{{ toYaml .Values.config.postgres.resources.requests | indent 4 }}
+{{ toYaml .Values.config.resources.requests | indent 4 }}
   limits:
-{{ toYaml .Values.config.postgres.resources.limits | indent 4 }}
+{{ toYaml .Values.config.resources.limits | indent 4 }}
 {{- else }}
   resources: {}
   limits: {}
