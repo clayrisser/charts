@@ -8,5 +8,8 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-data: {}
+data:
+  POSTGRES_HOSTNAME: {{ template "postgres.fullname" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
+  POSTGRES_PORT: 5432
+  POSTGRES_USERNAME: postgres
 {{- end }}

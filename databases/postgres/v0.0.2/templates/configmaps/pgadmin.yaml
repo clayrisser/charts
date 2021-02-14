@@ -17,7 +17,7 @@ data:
           "Group": "Servers",
           "Port": 5432,
           "Username": "{{ .Values.config.username }}",
-          "Host": "{{ template "postgres.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local",
+          "Host": "{{ template "postgres.fullname" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local",
           "SSLMode": "prefer",
           "MaintenanceDB": "postgres"
         }
