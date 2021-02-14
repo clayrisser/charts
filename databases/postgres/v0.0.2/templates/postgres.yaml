@@ -127,4 +127,3 @@ spec:
     pgo-version: 4.5.1
   usersecretname: {{ template "postgres.fullname" . }}-standard-user
   tolerations: []
-  user: hippo
