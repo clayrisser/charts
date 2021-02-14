@@ -13,11 +13,11 @@ data:
     {
       "Servers": {
         "1": {
-          "Name": "{{ template "postgres.fullname" . }}-postgres",
+          "Name": "{{ template "postgres.fullname" . }}",
           "Group": "Servers",
           "Port": 5432,
-          "Username": "postgres",
-          "Host": "{{ template "postgres.fullname" . }}-postgres",
+          "Username": "{{ .Values.config.username }}",
+          "Host": "{{ template "postgres.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local",
           "SSLMode": "prefer",
           "MaintenanceDB": "postgres"
         }
