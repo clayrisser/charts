@@ -23,5 +23,5 @@ spec:
       nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
       {{- end }}
   selector:
-    pg-cluster: {{ template "postgres.name" . }}
+    pg-cluster: {{ template "postgres.fullname" . }}
     role: master
