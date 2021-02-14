@@ -12,7 +12,7 @@ config:
   imagePullPolicy: IfNotPresent
   allowIntegration: true
   updateStrategy: Recreate
-  metrics: true
+  metrics: false
   username: postgres
   password:
   shutdown: false
@@ -68,7 +68,7 @@ persistence:
     archive: ''
     backrest: 2Gb
     primary: 2Gb
-    replica: 2Gb
+    replica: ''
     wal: ''
   storageClass: ''
   velero:
