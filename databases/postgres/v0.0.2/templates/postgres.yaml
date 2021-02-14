@@ -21,31 +21,52 @@ metadata:
   annotations:
     current-primary: {{ template "postgres.fullname" . }}
 spec:
+  ArchiveStorage:
+    accessmode: ''
+    matchLabels: ''
+    name: ''
+    size: ''
+    storageclass: ''
+    storagetype: ''
+    supplementalgroups: ''
   BackrestStorage:
-    accessmode: ReadWriteMany
+    accessmode: ReadWriteOnce
     matchLabels: ''
     name: ''
     size: 1G
     storageclass: ''
-    storagetype: create
+    storagetype: dynamic
     supplementalgroups: ''
   PrimaryStorage:
-    accessmode: ReadWriteMany
+    accessmode: ReadWriteOnce
     matchLabels: ''
     name: {{ template "postgres.fullname" . }}
     size: 1G
     storageclass: ''
-    storagetype: create
+    storagetype: dynamic
     supplementalgroups: ''
   ReplicaStorage:
-    accessmode: ReadWriteMany
+    accessmode: ReadWriteOnce
     matchLabels: ''
     name: ''
     size: 1G
     storageclass: ''
-    storagetype: create
+    storagetype: dynamic
     supplementalgroups: ''
-  annotations: {}
+  WALStorage:
+    accessmode: ''
+    matchLabels: ''
+    name: ''
+    size: ''
+    storageclass: ''
+    storagetype: ''
+    supplementalgroups: ''
+  annotations:
+    backrest: {}
+    global: {}
+    pgBouncer: {}
+    postgres: {}
+  backrestConfig: null
   backrestLimits: {}
   backrestRepoPath: ''
   backrestResources:
@@ -54,14 +75,17 @@ spec:
   backrestS3Endpoint: ''
   backrestS3Region: ''
   backrestS3URIStyle: ''
-  backrestS3VerifyTLS: ''
+  backrestS3VerifyTLS: 'true'
   ccpimage: crunchy-postgres-ha
   ccpimageprefix: registry.developers.crunchydata.com/crunchydata
   ccpimagetag: centos7-12.4-4.5.1
-  clustername: ${pgo_cluster_name}
   clustername: {{ template "postgres.fullname" . }}
+  # collectSecretName: hippo-exporter-secret
   customconfig: ''
   database: postgres
+  exporterLimits: {}
+  exporterResources:
+    memory: '0'
   exporterport: '9187'
   limits: {}
   name: {{ template "postgres.fullname" . }}
@@ -69,6 +93,8 @@ spec:
   pgBouncer:
     limits: {}
     replicas: 0
+    resources:
+      memory: 24Mi
   pgDataSource:
     restoreFrom: ''
     restoreOpts: ''
@@ -81,8 +107,10 @@ spec:
   policies: ''
   port: '5432'
   primarysecretname: {{ template "postgres.fullname" . }}-replication-user
-  replicas: "0"
+  replicas: '0'
   rootsecretname: {{ template "postgres.fullname" . }}-super-user
+  resources:
+    memory: 128Mi
   shutdown: false
   standby: false
   tablespaceMounts: {}
