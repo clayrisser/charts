@@ -65,11 +65,11 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   size:
-    archive: 2Gb
+    archive: ''
     backrest: 2Gb
     primary: 2Gb
     replica: 2Gb
-    wal: 2Gb
+    wal: ''
   storageClass: ''
   velero:
     enabled: false
