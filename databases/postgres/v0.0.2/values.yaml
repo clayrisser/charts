@@ -66,8 +66,8 @@ persistence:
   accessMode: ReadWriteOnce
   size:
     archive: ''
-    backrest: 2Gb
-    primary: 2Gb
+    backrest: 2Gi
+    primary: 2Gi
     replica: ''
     wal: ''
   storageClass: ''
