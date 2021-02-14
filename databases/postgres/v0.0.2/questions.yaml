@@ -34,18 +34,18 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.backrest.privateKey
-    description: ''
-    type: multiline
-    required: true
-    label: 'backrest private key'
-    group: Config
-  - variable: config.backrest.publicKey
-    description: ''
-    type: multiline
-    required: true
-    label: 'backrest public key'
-    group: Config
+  # - variable: config.backrest.privateKey
+  #   description: ''
+  #   type: multiline
+  #   required: true
+  #   label: 'backrest private key'
+  #   group: Config
+  # - variable: config.backrest.publicKey
+  #   description: ''
+  #   type: multiline
+  #   required: true
+  #   label: 'backrest public key'
+  #   group: Config
   - variable: config.resources.enabled
     description: ''
     type: enum
