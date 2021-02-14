@@ -14,4 +14,4 @@ maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
 annotations:
-  catalog.cattle.io/auto-install: grafana-crd=match
+  catalog.cattle.io/auto-install: grafana-crd
