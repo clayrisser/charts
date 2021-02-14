@@ -7,6 +7,8 @@ config:
   clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
+  username: hello
+  password: world
   backrest:
     publicKey: ''
     privateKey: ''
