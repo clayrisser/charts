@@ -44,6 +44,11 @@ spec:
                     value: {{ template "postgres.fullname" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
                   - name: USERNAME
                     value: {{ .Values.config.username }}
+                  - name: PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
+                        key: password
                   - name: DATABASE
                     valueFrom:
                       configMapKeyRef:
