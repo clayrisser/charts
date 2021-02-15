@@ -31,6 +31,7 @@ spec:
                   - -c
                   - |
                     echo "*:*:*:*:$PASSWORD" > .pgpass
+                    chmod 600 .pgpass
                     createdb -h $HOSTNAME -U $USERNAME -p $PORT -w $DATABASE || true
                     echo "created database $DATABASE"
                 env:
