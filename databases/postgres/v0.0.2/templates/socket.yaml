@@ -19,22 +19,36 @@ spec:
       name: {{ template "postgres.fullname" . }}-connection
   hooks:
     - job:
+        backoffLimit: 1
         template:
           spec:
             restartPolicy: Never
             containers:
-              - name: some-job
-                image: busybox
-                command: ['cat', '/tmp/config/foo']
-                volumeMounts:
-                  - name: config
-                    mountPath: /tmp/config
-            volumes:
-              - name: config
-                configMap:
-                  name: some-socket-socket
-        backoffLimit: 1
-      messageRegex: '/3\.14/g'
+              - name: create-database
+                image: postgres:12.5-alpine
+                entrypoint: []
+                command:
+                  - sh
+                  - -c
+                  - |
+                    echo "*:*:*:*:$PASSWORD" > .pgpass
+                    createdb -h $HOSTNAME -U $USERNAME -p $PORT -w $DATABASE || true
+                    echo "created database $DATABASE"
+                env:
+                  - name: PGPASSFILE
+                    value: .pgpass
+                  - name: HOSTNAME
+                    value: {{ template "postgres.fullname" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
+                  - name: USERNAME
+                    value: {{ .Values.config.username }}
+                  - name: DATABASE
+                    valueFrom:
+                      configMapKeyRef:
+                        name: {{ template "postgres.fullname" . }}-socket-plug
+                        key: database
+                  - name: PORT
+                    value: '5432'
+      messageRegex: '/created\sdatabase/g'
       name: create-or-update
       timeout: 60000
 {{- end }}
