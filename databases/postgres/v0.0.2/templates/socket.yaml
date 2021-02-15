@@ -26,7 +26,6 @@ spec:
             containers:
               - name: create-database
                 image: postgres:12.5-alpine
-                entrypoint: []
                 command:
                   - sh
                   - -c
