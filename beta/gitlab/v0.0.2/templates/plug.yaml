@@ -23,11 +23,11 @@ spec:
     resources:
       - version: v1
         kind: ConfigMap
-        name: {{ $namespace }}-{{ $name }}-connection-{{ $namespace }}
+        name: {{ $namespace }}-postgres-connection-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ $namespace }}-{{ $name }}-secret-{{ $namespace }}
+        name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - group: helm.fluxcd.io
         version: v1
@@ -56,7 +56,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-{{ $name }}-connection-{{ $namespace }}
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_HOSTNAME
         fieldref:
@@ -64,7 +64,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-{{ $name }}-connection-{{ $namespace }}
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PORT
         fieldref:
@@ -72,7 +72,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-{{ $name }}-connection-{{ $namespace }}
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_USERNAME
         fieldref:
@@ -80,13 +80,13 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-{{ $name }}-connection-{{ $namespace }}
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $namespace }}-{{ $name }}-socket
+  name: {{ $namespace }}-postgres-socket
   namespace: {{ $namespace }}
 data:
   database: {{ .Values.config.postgres.database }}
