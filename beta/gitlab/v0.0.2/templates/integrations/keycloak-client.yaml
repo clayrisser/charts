@@ -48,7 +48,7 @@ spec:
     # publicClient: boolean
     redirectUris:
       - {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
-    rootUrl: {{ - include "gitlab.gitlab-base-url" }}
+    rootUrl: {{ include "gitlab.gitlab-base-url" }}
     # secret: string
     # serviceAccountsEnabled: boolean
     # standardFlowEnabled: boolean
