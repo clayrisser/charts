@@ -6,6 +6,9 @@ images:
     registry: registry.developers.crunchydata.com/crunchydata
     repository: crunchy-postgres-ha
     tag: centos7-12.5-4.5.1
+  metrics:
+    repository: registry.developers.crunchydata.com/crunchydata
+    tag: centos7-4.5.1
 
 config:
   clusterType: rke
@@ -36,6 +39,53 @@ config:
       limits:
         cpu: 200m
         memory: 256Mi
+  fullnameOverride: ''
+  rbac:
+    create: true
+    useClusterAdmin: false
+  serviceAccount:
+    create: true
+    name: ''
+  alertmanagerCustomConfig: ''
+  alertmanagerCustomRulesConfig: ''
+  alertmanagerInstall: 'true'
+  alertmanagerLogLevel: 'info'
+  alertmanagerPort: '9093'
+  alertmanagerServiceName: 'crunchy-alertmanager'
+  alertmanagerServiceType: 'ClusterIP'
+  alertmanagerStorageAccessMode: 'ReadWriteOnce'
+  alertmanagerStorageClassName: ''
+  alertmanagerSupplementalGroups: ''
+  alertmanagerVolumeSize: '1Gi'
+  createRbac: 'true'
+  dbPort: '5432'
+  deleteMetricsNamespace: 'false'
+  disableFsgroup: 'false'
+  grafanaAdminPassword: 'admin'
+  grafanaAdminUsername: 'admin'
+  grafanaDashboardsCustomConfig: ''
+  grafanaDatasourcesCustomConfig: ''
+  grafanaInstall: 'true'
+  grafanaPort: '3000'
+  grafanaServiceName: 'crunchy-grafana'
+  grafanaServiceType: 'ClusterIP'
+  grafanaStorageAccessMode: 'ReadWriteOnce'
+  grafanaStorageClassName: ''
+  grafanaSupplementalGroups: ''
+  grafanaVolumeSize: '1Gi'
+  metricsImagePullSecret: ''
+  metricsImagePullSecretManifest: ''
+  metricsNamespace: 'pgo'
+  pgbadgerport: '10000'
+  prometheusCustomConfig: ''
+  prometheusInstall: 'true'
+  prometheusPort: '9090'
+  prometheusServiceName: 'crunchy-prometheus'
+  prometheusServiceType: 'ClusterIP'
+  prometheusStorageAccessMode: 'ReadWriteOnce'
+  prometheusStorageClassPame: ''
+  prometheusSupplementalGroups: ''
+  prometheusVolumeSize: '1Gi'
 
 service:
   postgres:
@@ -52,9 +102,23 @@ service:
       http:
     lbPorts:
       http: 80
+  metrics:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
 
 ingress:
   pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  metrics:
     certificate: ''
     enabled: false
     hostname: ''

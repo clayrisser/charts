@@ -1,7 +1,6 @@
 categories:
   - Server
 questions:
-
   # Config
   - variable: config.clusterType
     description: ''
@@ -154,6 +153,323 @@ questions:
         show_if: config.pgadmin.enabled=true
         label: 'pgadmin resources limits memory'
 
+  # Metrics
+  - variable: config.fullnameOverride
+    description: ''
+    type: string
+    required: false
+    show_if: config.metrics=true
+    label: fullname override
+    group: Metrics
+  - variable: config.rbac.create
+    description: ''
+    type: boolean
+    required: false
+    label: rbac create
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.rbac.useClusterAdmin
+    description: ''
+    type: boolean
+    required: false
+    label: rbac use cluster admin
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.serviceAccount.create
+    description: ''
+    type: boolean
+    required: false
+    label: service account create
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.serviceAccount.name
+    description: ''
+    type: string
+    required: false
+    label: service account name
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerCustomConfig
+    description: ''
+    type: string
+    required: false
+    label: alert manager custom config
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerCustomRulesConfig
+    description: ''
+    type: string
+    required: false
+    label: alert manager custom rules config
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerInstall
+    description: ''
+    type: string
+    required: false
+    label: alert manager install
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerLogLevel
+    description: ''
+    type: string
+    required: false
+    label: alert manager log level
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerPort
+    description: ''
+    type: string
+    required: false
+    label: alert manager port
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerServiceName
+    description: ''
+    type: string
+    required: false
+    label: alert manager service name
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerServiceType
+    description: ''
+    type: string
+    required: false
+    label: alert manager service type
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerStorageAccessMode
+    description: ''
+    type: string
+    required: false
+    label: alert manager storage access mode
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerStorageClassName
+    description: ''
+    type: string
+    required: false
+    label: alert manager storage class name
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerSupplementalGroups
+    description: ''
+    type: string
+    required: false
+    label: alert manager supplemental groups
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.alertmanagerVolumeSize
+    description: ''
+    type: string
+    required: false
+    label: alert manager volume size
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.createRbac
+    description: ''
+    type: string
+    required: false
+    label: create rbac
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.dbPort
+    description: ''
+    type: string
+    required: false
+    label: db port
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.deleteMetricsNamespace
+    description: ''
+    type: string
+    required: false
+    label: delete metrics namespace
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.disableFsgroup
+    description: ''
+    type: string
+    required: false
+    label: disable fs group
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaAdminPassword
+    description: ''
+    type: string
+    required: false
+    label: grafana admin password
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaAdminUsername
+    description: ''
+    type: string
+    required: false
+    label: grafana admin username
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaDashboardsCustomConfig
+    description: ''
+    type: string
+    required: false
+    label: grafana dashboards custom config
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaDatasourcesCustomConfig
+    description: ''
+    type: string
+    required: false
+    label: grafana datasources custom config
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaInstall
+    description: ''
+    type: string
+    required: false
+    label: grafana install
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaPort
+    description: ''
+    type: string
+    required: false
+    label: grafana port
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaServiceName
+    description: ''
+    type: string
+    required: false
+    label: grafana service name
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaServiceType
+    description: ''
+    type: string
+    required: false
+    label: grafana service type
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaStorageAccessMode
+    description: ''
+    type: string
+    required: false
+    label: grafana storage access mode
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaStorageClassName
+    description: ''
+    type: string
+    required: false
+    label: grafana storage class name
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaSupplementalGroups
+    description: ''
+    type: string
+    required: false
+    label: grafana supplemental groups
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaVolumeSize
+    description: ''
+    type: string
+    required: false
+    label: grafana volume size
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.metricsImagePullSecret
+    description: ''
+    type: string
+    required: false
+    label: metrics image pull secret
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.metricsImagePullSecretManifest
+    description: ''
+    type: string
+    required: false
+    label: metrics image pull secret manifest
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.metricsNamespace
+    description: ''
+    type: string
+    required: false
+    label: metrics namespace
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.pgbadgerport
+    description: ''
+    type: string
+    required: false
+    label: pgbadgerport
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusCustomConfig
+    description: ''
+    type: string
+    required: false
+    label: prometheus custom config
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusInstall
+    description: ''
+    type: string
+    required: false
+    label: prometheus install
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusPort
+    description: ''
+    type: string
+    required: false
+    label: prometheus port
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusServiceName
+    description: ''
+    type: string
+    required: false
+    label: prometheus service name
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusServiceType
+    description: ''
+    type: string
+    required: false
+    label: prometheus service type
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusStorageAccessMode
+    description: ''
+    type: string
+    required: false
+    label: prometheus storage access mode
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusStorageClassName
+    description: ''
+    type: string
+    required: false
+    label: prometheus storage class name
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusSupplementalGroups
+    description: ''
+    type: string
+    required: false
+    label: prometheus supplemental groups
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.prometheusVolumeSize
+    description: ''
+    type: string
+    required: false
+    label: prometheus volume size
+    show_if: config.metrics=true
+    group: Metrics
+
   # Persistence
   - variable: persistence.size.primary
     description: ''
@@ -277,6 +593,56 @@ questions:
     show_if: service.pgadmin.type=NodePort&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin http node port'
     group: 'Services and Load Balancing'
+  - variable: ingress.metrics.enabled
+    description: ''
+    type: boolean
+    label: 'metrics ingress enabled'
+    show_if: config.metrics=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.metrics.tls
+        description: ''
+        type: boolean
+        required: true
+        show_if: config.metrics=true
+        label: 'metrics ingress tls'
+      - variable: ingress.metrics.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        show_if: config.metrics=true
+        label: 'metrics ingress hostname'
+      - variable: ingress.metrics.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.metrics.tls=true&&config.metrics=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'metrics ingress issuer name'
+      - variable: ingress.metrics.certificate
+        description: ''
+        type: string
+        show_if: ingress.metrics.tls=true&&ingress.metrics.issuer.name=none&&config.metrics=true
+        required: false
+        label: 'metrics ingress certificate'
+  - variable: service.metrics.type
+    description: ''
+    type: enum
+    show_if: ingress.metrics.enabled=false&&config.metrics=true
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'metrics service type'
+    group: 'Services and Load Balancing'
   - variable: service.pgadmin.lbPorts.http
     description: ''
     type: int
@@ -314,6 +680,35 @@ questions:
     show_if: service.postgres.type=LoadBalancer
     label: 'postgres lb port'
     group: 'Services and Load Balancing'
+  - variable: service.metrics.type
+    description: ''
+    type: enum
+    show_if: ingress.metrics.enabled=false&&config.metrics=true
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'metrics service type'
+    group: 'Services and Load Balancing'
+  - variable: service.metrics.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.metrics.type=NodePort&&ingress.metrics.enabled=false&&config.metrics=true
+    label: 'metrics http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.metrics.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.metrics.type=LoadBalancer&&ingress.metrics.enabled=false&&config.metrics=true
+    label: 'metrics http lb port'
+    group: 'Services and Load Balancing'
 
   # Images
   - variable: images.pgadmin.repository
@@ -347,4 +742,18 @@ questions:
     type: string
     required: true
     label: 'postgres tag'
+    group: Images
+  - variable: images.metrics.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.metrics=true
+    label: 'metrics repository'
+    group: Images
+  - variable: images.metrics.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.metrics=true
+    label: 'metrics tag'
     group: Images
