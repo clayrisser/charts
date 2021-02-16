@@ -1,0 +1,92 @@
+images:
+  gitlab:
+    repository: gitlab/gitlab-ce
+    tag: 13.7.4-ce.0
+
+config:
+  clusterType: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  password: P@ssw0rd
+  storage:
+    s3:
+      enabled: false
+      accessKey:
+      endpoint: https://sfo2.digitaloceanspaces.com
+      namespace: gitlab
+      region: us-east-1
+      secretKey:
+  keycloak:
+    integration: ''
+    baseUrl: ''
+    clientId: ''
+    companyName: KeyCloak
+    enabled: false
+    realmName: master
+    certificate: ''
+    autoSignIn: false
+  gitlab:
+    baseUrl: ''
+    hostname: ''
+    resources:
+      enabled: false
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  postgres:
+    integration:
+    database: gitlab
+    host: ''
+    password: P@ssw0rd
+    port: 5432
+    url: ''
+    username: postgres
+
+service:
+  gitlab:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  gitlab:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  existingClaim:
+    gitlab: ''
+  size:
+    gitlab: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

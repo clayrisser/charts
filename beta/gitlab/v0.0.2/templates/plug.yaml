@@ -1,0 +1,92 @@
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationPlug
+metadata:
+  name: {{ template "gitlab.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- $name := (split "." .Values.config.postgres.integration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._1 | default "kube-system" }}
+  socket:
+    name: {{ $name }}-postgres
+    namespace: {{ $namespace }}
+  replications:
+    - version: v1
+      kind: ConfigMap
+      name: {{ template "gitlab.fullname" . }}
+  kustomization:
+    configuration:
+      varReference:
+        - group: helm.fluxcd.io
+          version: v1
+          kind: HelmRelease
+          path: spec/values/global/psql
+    resources:
+      - version: v1
+        kind: ConfigMap
+        name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+        namespace: {{ .Release.Namespace }}
+      - group: helm.fluxcd.io
+        version: v1
+        kind: HelmRelease
+        name: {{ .Release.Name }}
+        namespace: {{ .Release.Namespace }}
+    patches:
+      - patch: |
+          apiVersion: helm.fluxcd.io/v1
+          kind: HelmRelease
+          metadata:
+            name: {{ .Release.Name }}
+            namespace: {{ .Release.Namespace }}
+          spec:
+            values:
+              global:
+                psql:
+                  host: "$(POSTGRES_HOSTNAME)"
+                  port: $(POSTGRES_PORT)
+                  username: "$(POSTGRES_USERNAME)"
+                  database: "$(POSTGRES_DATABASE)"
+    vars:
+      - name: POSTGRES_DATABASE
+        fieldref:
+          fieldPath: data.POSTGRES_DATABASE
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_HOSTNAME
+        fieldref:
+          fieldPath: data.POSTGRES_HOSTNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_PORT
+        fieldref:
+          fieldPath: data.POSTGRES_PORT
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_USERNAME
+        fieldref:
+          fieldPath: data.POSTGRES_USERNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $namespace }}-postgres-socket
+  namespace: {{ $namespace }}
+data:
+  database: {{ .Values.config.postgres.database }}

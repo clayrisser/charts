@@ -1,0 +1,14 @@
+apiVersion: v1
+name: gitlab
+home: https://gitlab.com/gitlab-org/gitlab-ce
+icon: https://about.gitlab.com/images/default-blog-image.png
+version: 0.6.0
+appVersion: latest
+description: 'version 2 - a full devops toolchain'
+keywords:
+  - gitlab
+sources:
+  - https://gitlab.com/gitlab-org/gitlab-ce
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
