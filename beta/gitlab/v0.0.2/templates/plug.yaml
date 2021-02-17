@@ -86,20 +86,12 @@ spec:
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_USERNAME
         fieldref:
-          fieldPath: data.username
+          fieldPath: data.POSTGRES_USERNAME
         objref:
           apiVersion: v1
-          kind: Secret
-          name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
-      # - name: POSTGRES_PASSWORD
-      #   fieldref:
-      #     fieldPath: data.password
-      #   objref:
-      #     apiVersion: v1
-      #     kind: Secret
-      #     name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
-      #     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ConfigMap
