@@ -39,53 +39,46 @@ config:
       limits:
         cpu: 200m
         memory: 256Mi
-  fullnameOverride: ''
-  rbac:
-    create: true
-    useClusterAdmin: false
-  serviceAccount:
-    create: true
-    name: ''
   alertmanagerCustomConfig: ''
   alertmanagerCustomRulesConfig: ''
-  alertmanagerInstall: 'true'
+  alertmanagerInstall: true
   alertmanagerLogLevel: 'info'
   alertmanagerPort: '9093'
   alertmanagerServiceName: 'crunchy-alertmanager'
   alertmanagerServiceType: 'ClusterIP'
-  alertmanagerStorageAccessMode: 'ReadWriteOnce'
-  alertmanagerStorageClassName: ''
-  alertmanagerSupplementalGroups: ''
-  alertmanagerVolumeSize: '1Gi'
-  createRbac: 'true'
+  # alertmanagerStorageAccessMode: 'ReadWriteOnce'
+  # alertmanagerStorageClassName: ''
+  # alertmanagerSupplementalGroups: ''
+  # alertmanagerVolumeSize: '1Gi'
+  # createRbac: 'true'
   dbPort: '5432'
-  deleteMetricsNamespace: 'false'
-  disableFsgroup: 'false'
+  # deleteMetricsNamespace: 'false'
+  # disableFsgroup: 'false'
   grafanaAdminPassword: 'admin'
   grafanaAdminUsername: 'admin'
   grafanaDashboardsCustomConfig: ''
   grafanaDatasourcesCustomConfig: ''
-  grafanaInstall: 'true'
+  grafanaInstall: true
   grafanaPort: '3000'
   grafanaServiceName: 'crunchy-grafana'
   grafanaServiceType: 'ClusterIP'
-  grafanaStorageAccessMode: 'ReadWriteOnce'
-  grafanaStorageClassName: ''
-  grafanaSupplementalGroups: ''
-  grafanaVolumeSize: '1Gi'
+  # grafanaStorageAccessMode: 'ReadWriteOnce'
+  # grafanaStorageClassName: ''
+  # grafanaSupplementalGroups: ''
+  # grafanaVolumeSize: '1Gi'
   metricsImagePullSecret: ''
   metricsImagePullSecretManifest: ''
   metricsNamespace: 'pgo'
   pgbadgerport: '10000'
   prometheusCustomConfig: ''
-  prometheusInstall: 'true'
+  prometheusInstall: true
   prometheusPort: '9090'
   prometheusServiceName: 'crunchy-prometheus'
   prometheusServiceType: 'ClusterIP'
-  prometheusStorageAccessMode: 'ReadWriteOnce'
-  prometheusStorageClassPame: ''
-  prometheusSupplementalGroups: ''
-  prometheusVolumeSize: '1Gi'
+  # prometheusStorageAccessMode: 'ReadWriteOnce'
+  # prometheusStorageClassPame: ''
+  # prometheusSupplementalGroups: ''
+  # prometheusVolumeSize: '1Gi'
 
 service:
   postgres:

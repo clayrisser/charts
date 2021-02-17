@@ -1,3 +1,4 @@
+{{- if (not (empty .Values.config.postgres.integration)) }}
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
@@ -9,10 +10,10 @@ spec:
   socket:
     name: {{ $name }}-postgres
     namespace: {{ $namespace }}
-  replications:
-    - version: v1
-      kind: ConfigMap
-      name: {{ template "gitlab.fullname" . }}
+  # replications:
+  #   - version: v1
+  #     kind: ConfigMap
+  #     name: {{ template "gitlab.fullname" . }}
   kustomization:
     configuration:
       varReference:
@@ -90,3 +91,4 @@ metadata:
   namespace: {{ $namespace }}
 data:
   database: {{ .Values.config.postgres.database }}
+{{- end }}

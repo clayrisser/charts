@@ -1,11 +1,10 @@
 {{- if .Values.config.metrics }}
-
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   name: {{ .Release.Name }}
   labels:
-    app: {{ template "metrics.name" . }}
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -14,14 +13,14 @@ spec:
   helmVersion: v3
   chart:
     git: https://github.com/CrunchyData/postgres-operator/tree/v4.5.1/installers/metrics
-    ref: v4.5.1
+    ref: v{{ .Chart.AppVersion }}
     path: helm
   values:
     replicaCount: 1
     image:
       repository: registry.developers.crunchydata.com/crunchydata
       pullPolicy: Always
-      tag: centos7-4.5.1
+      tag: centos7-{{ .Chart.AppVersion }}
     ingress:
       enabled: {{ .Values.ingress.metrics.enabled }}
       annotations:
@@ -40,57 +39,50 @@ spec:
       hostname: {{ .Values.ingress.metrics.hostname }}
       {{- if .Values.ingress.metrics.tls }}
       tls:
-        - secretName: {{ template "metrics.metrics-certificate" . }}
+        - secretName: {{ template "postgres.postgres-certificate" . }}
           hosts:
             - {{ .Values.ingress.metrics.hostname }}
       {{- end }}
-    fullnameOverride: {{ .Values.config.fullnameOverride | quote }}
-    rbac: 
-      create: {{ .Values.config.rbac.create | quote }}
-      useClusterAdmin: {{ .Values.config.rbac.useClusterAdmin | quote }}
-    serviceAccount:
-      create: {{ .Values.config.serviceAccount.create | quote }}
-      name: {{ .Values.config.serviceAccount.name | quote }}
     alertmanager_custom_config: {{ .Values.config.alertmanagerCustomConfig | quote }}
     alertmanager_custom_rules_config: {{ .Values.config.alertmanagerCustomRulesConfig | quote }}
     alertmanager_install: {{ .Values.config.alertmanagerInstall | quote }}
     alertmanager_log_level: {{ .Values.config.alertmanagerLogLevel | quote }}
-    alertmanager_port: {{ .Values.config.alertmanagerPort | quote }}
+    alertmanager_port: 9093
     alertmanager_service_name: {{ .Values.config.alertmanagerServiceName | quote }}
     alertmanager_service_type: {{ .Values.config.alertmanagerServiceType | quote }}
-    alertmanager_storage_access_mode: {{ .Values.config.alertmanagerStorageAccessMode | quote }}
-    alertmanager_storage_class_name: {{ .Values.config.alertmanagerStorageClassName | quote }}
-    alertmanager_supplemental_groups: {{ .Values.config.alertmanagerSupplementalGroups | quote }}
-    alertmanager_volume_size: {{ .Values.config.alertmanagerVolumeSize | quote }}
-    create_rbac: {{ .Values.config.createRbac | quote }}
+    # alertmanager_storage_access_mode: {{ .Values.config.alertmanagerStorageAccessMode | quote }}
+    # alertmanager_storage_class_name: {{ .Values.config.alertmanagerStorageClassName | quote }}
+    # alertmanager_supplemental_groups: {{ .Values.config.alertmanagerSupplementalGroups | quote }}
+    # alertmanager_volume_size: {{ .Values.config.alertmanagerVolumeSize | quote }}
+    # create_rbac: {{ .Values.config.createRbac | quote }}
     db_port: {{ .Values.config.dbPort | quote }}
-    delete_metrics_namespace: {{ .Values.config.deleteMetricsNamespace | quote }}
-    disable_fsgroup: {{ .Values.config.disableFsgroup | quote }}
+    # delete_metrics_namespace: {{ .Values.config.deleteMetricsNamespace | quote }}
+    # disable_fsgroup: {{ .Values.config.disableFsgroup | quote }}
     grafana_admin_password: {{ .Values.config.grafanaAdminPassword | quote }}
     grafana_admin_username: {{ .Values.config.grafanaAdminUsername | quote }}
     grafana_dashboards_custom_config: {{ .Values.config.grafanaDashboardsCustomConfig | quote }}
     grafana_datasources_custom_config: {{ .Values.config.grafanaDatasourcesCustomConfig | quote }}
     grafana_install: {{ .Values.config.grafanaInstall | quote }}
-    grafana_port: {{ .Values.config.grafanaPort | quote }}
+    grafana_port: 3000
     grafana_service_name: {{ .Values.config.grafanaServiceName | quote }}
     grafana_service_type: {{ .Values.config.grafanaServiceType | quote }}
-    grafana_storage_access_mode: {{ .Values.config.grafanaStorageAccessMode | quote }}
-    grafana_storage_class_name: {{ .Values.config.grafanaStorageClassName | quote }}
-    grafana_supplemental_groups: {{ .Values.config.grafanaSupplementalGroups | quote }}
-    grafana_volume_size: {{ .Values.config.grafanaVolumeSize | quote }}
-    metrics_image_pull_secret: {{ .Values.config.metricsImagePullSecret | quote }}
-    metrics_image_pull_secret_manifest: {{ .Values.config.metricsImagePullSecretManifest | quote }}
-    metrics_namespace: {{ .Values.config.metricsNamespace | quote }}
-    pgbadgerport: {{ .Values.config.pgbadgerport | quote }}
+    # grafana_storage_access_mode: {{ .Values.config.grafanaStorageAccessMode | quote }}
+    # grafana_storage_class_name: {{ .Values.config.grafanaStorageClassName | quote }}
+    # grafana_supplemental_groups: {{ .Values.config.grafanaSupplementalGroups | quote }}
+    # grafana_volume_size: {{ .Values.config.grafanaVolumeSize | quote }}
+    # metrics_image_pull_secret: {{ .Values.config.metricsImagePullSecret | quote }}
+    # metrics_image_pull_secret_manifest: {{ .Values.config.metricsImagePullSecretManifest | quote }}
+    metrics_namespace: {{ .Release.Namespace }}
+    pgbadgerport: 10000
     prometheus_custom_config: {{ .Values.config.prometheusCustomConfig | quote }}
     prometheus_install: {{ .Values.config.prometheusInstall | quote }}
     prometheus_port: {{ .Values.config.prometheusPort | quote }}
     prometheus_service_name: {{ .Values.config.prometheusServiceName | quote }}
     prometheus_service_type: {{ .Values.config.prometheusServiceType | quote }}
-    prometheus_storage_access_mode: {{ .Values.config.prometheusStorageAccessMode | quote }}
-    prometheus_storage_class_name: {{ .Values.config.prometheusStorageClassName | quote }}
-    prometheus_supplemental_groups: {{ .Values.config.prometheusSupplementalGroups | quote }}
-    prometheus_volume_size: {{ .Values.config.prometheusVolumeSize | quote }}
+    # prometheus_storage_access_mode: {{ .Values.config.prometheusStorageAccessMode | quote }}
+    # prometheus_storage_class_name: {{ .Values.config.prometheusStorageClassName | quote }}
+    # prometheus_supplemental_groups: {{ .Values.config.prometheusSupplementalGroups | quote }}
+    # prometheus_volume_size: {{ .Values.config.prometheusVolumeSize | quote }}
     persistence:
       assets:
         accessMode: {{ .Values.persistence.accessMode | quote }}
@@ -123,12 +115,12 @@ spec:
     {{- else }}
     podAnnotations: {}
     {{- end }}
-# {{- if .Values.config.metrics.resources.enabled }}
-#     resources:
-# {{ toYaml .Values.config.metrics.resources | indent 6 }}
-# {{- else }}
-#     resources: {}
-# {{- end }}
+{{- if .Values.config.resources.enabled }}
+    resources:
+{{ toYaml .Values.config.resources | indent 6 }}
+{{- else }}
+    resources: {}
+{{- end }}
     autoscaling:
       enabled: false
       minReplicas: 1
