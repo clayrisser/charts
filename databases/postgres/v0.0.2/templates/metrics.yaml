@@ -12,9 +12,9 @@ spec:
   forceUpgrade: false
   helmVersion: v3
   chart:
-    git: https://github.com/nuevesolutions/postgres-operator.git
-    ref: v{{ .Chart.AppVersion }}
-    path: installers/metrics/helm
+    git: https://github.com/nuevesolutions/metrics-chart.git
+    ref: master
+    path: charts
   values:
     replicaCount: 1
     image:
