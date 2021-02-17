@@ -88,7 +88,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $namespace }}-postgres-socket
-  namespace: {{ $namespace }}
+  namespace: {{ .Release.Namespace }}
 data:
   database: {{ .Values.config.postgres.database }}
 {{- end }}
