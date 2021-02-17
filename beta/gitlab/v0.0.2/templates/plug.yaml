@@ -27,6 +27,10 @@ spec:
         name: {{ $namespace }}-postgres-connection-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
+        kind: ConfigMap
+        name: {{ $namespace }}-postgres-socket
+        namespace: {{ .Release.Namespace }}
+      - version: v1
         kind: Secret
         name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
