@@ -50,7 +50,11 @@ spec:
                   port: $(POSTGRES_PORT)
                   username: "$(POSTGRES_USERNAME)"
                   database: "$(POSTGRES_DATABASE)"
-                  password: "$(POSTGRES_PASSWORD)"
+                  password:
+                    useSecret: true
+                    secret: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+                    key: password
+                    file:
     vars:
       - name: POSTGRES_DATABASE
         fieldref:
@@ -84,14 +88,14 @@ spec:
           kind: Secret
           name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
-      - name: POSTGRES_PASSWORD
-        fieldref:
-          fieldPath: data.password
-        objref:
-          apiVersion: v1
-          kind: Secret
-          name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
-          namespace: {{ .Release.Namespace }}
+      # - name: POSTGRES_PASSWORD
+      #   fieldref:
+      #     fieldPath: data.password
+      #   objref:
+      #     apiVersion: v1
+      #     kind: Secret
+      #     name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+      #     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ConfigMap
