@@ -182,13 +182,6 @@ questions:
     label: alert manager log level
     show_if: config.metrics=true
     group: Metrics
-  - variable: config.alertmanagerPort
-    description: ''
-    type: string
-    required: false
-    label: alert manager port
-    show_if: config.metrics=true
-    group: Metrics
   - variable: config.alertmanagerServiceName
     description: ''
     type: string
@@ -201,13 +194,6 @@ questions:
     type: string
     required: false
     label: alert manager service type
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.dbPort
-    description: ''
-    type: string
-    required: false
-    label: db port
     show_if: config.metrics=true
     group: Metrics
   - variable: config.grafanaAdminPassword
@@ -245,13 +231,6 @@ questions:
     label: grafana install
     show_if: config.metrics=true
     group: Metrics
-  - variable: config.grafanaPort
-    description: ''
-    type: string
-    required: false
-    label: grafana port
-    show_if: config.metrics=true
-    group: Metrics
   - variable: config.grafanaServiceName
     description: ''
     type: string
@@ -264,13 +243,6 @@ questions:
     type: string
     required: false
     label: grafana service type
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.pgbadgerport
-    description: ''
-    type: string
-    required: false
-    label: pgbadgerport
     show_if: config.metrics=true
     group: Metrics
   - variable: config.prometheusCustomConfig
