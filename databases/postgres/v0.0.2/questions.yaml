@@ -154,41 +154,6 @@ questions:
         label: 'pgadmin resources limits memory'
 
   # Metrics
-  # - variable: config.fullnameOverride
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   show_if: config.metrics=true
-  #   label: fullname override
-  #   group: Metrics
-  # - variable: config.rbac.create
-  #   description: ''
-  #   type: boolean
-  #   required: false
-  #   label: rbac create
-  #   show_if: config.metrics=true
-  #   group: Metrics
-  # - variable: config.rbac.useClusterAdmin
-  #   description: ''
-  #   type: boolean
-  #   required: false
-  #   label: rbac use cluster admin
-  #   show_if: config.metrics=true
-  #   group: Metrics
-  # - variable: config.serviceAccount.create
-  #   description: ''
-  #   type: boolean
-  #   required: false
-  #   label: service account create
-  #   show_if: config.metrics=true
-  #   group: Metrics
-  # - variable: config.serviceAccount.name
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: service account name
-  #   show_if: config.metrics=true
-  #   group: Metrics
   - variable: config.alertmanagerCustomConfig
     description: ''
     type: string
@@ -204,7 +169,7 @@ questions:
     show_if: config.metrics=true
     group: Metrics
   - variable: config.alertmanagerInstall
-    description: ''
+    description: true
     type: boolean
     required: false
     label: alert manager install
@@ -238,41 +203,6 @@ questions:
     label: alert manager service type
     show_if: config.metrics=true
     group: Metrics
-  - variable: config.alertmanagerStorageAccessMode
-    description: ''
-    type: string
-    required: false
-    label: alert manager storage access mode
-    show_if: config.metrics=true
-    group: Metrics
-  # - variable: config.alertmanagerStorageClassName
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: alert manager storage class name
-  #   show_if: config.metrics=true
-  #   group: Metrics
-  # - variable: config.alertmanagerSupplementalGroups
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: alert manager supplemental groups
-  #   show_if: config.metrics=true
-  #   group: Metrics
-  # - variable: config.alertmanagerVolumeSize
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: alert manager volume size
-  #   show_if: config.metrics=true
-  #   group: Metrics
-  # - variable: config.createRbac
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: create rbac
-  #   show_if: config.metrics=true
-  #   group: Metrics
   - variable: config.dbPort
     description: ''
     type: string
@@ -280,20 +210,6 @@ questions:
     label: db port
     show_if: config.metrics=true
     group: Metrics
-  # - variable: config.deleteMetricsNamespace
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: delete metrics namespace
-  #   show_if: config.metrics=true
-  #   group: Metrics
-  # - variable: config.disableFsgroup
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: disable fs group
-  #   show_if: config.metrics=true
-  #   group: Metrics
   - variable: config.grafanaAdminPassword
     description: ''
     type: string
@@ -308,20 +224,20 @@ questions:
     label: grafana admin username
     show_if: config.metrics=true
     group: Metrics
-  # - variable: config.grafanaDashboardsCustomConfig
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: grafana dashboards custom config
-  #   show_if: config.metrics=true
-  #   group: Metrics
-  # - variable: config.grafanaDatasourcesCustomConfig
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: grafana datasources custom config
-  #   show_if: config.metrics=true
-  #   group: Metrics
+  - variable: config.grafanaDashboardsCustomConfig
+    description: ''
+    type: string
+    required: false
+    label: grafana dashboards custom config
+    show_if: config.metrics=true
+    group: Metrics
+  - variable: config.grafanaDatasourcesCustomConfig
+    description: ''
+    type: string
+    required: false
+    label: grafana datasources custom config
+    show_if: config.metrics=true
+    group: Metrics
   - variable: config.grafanaInstall
     description: ''
     type: boolean
@@ -329,13 +245,13 @@ questions:
     label: grafana install
     show_if: config.metrics=true
     group: Metrics
-  # - variable: config.grafanaPort
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: grafana port
-  #   show_if: config.metrics=true
-  #   group: Metrics
+  - variable: config.grafanaPort
+    description: ''
+    type: string
+    required: false
+    label: grafana port
+    show_if: config.metrics=true
+    group: Metrics
   - variable: config.grafanaServiceName
     description: ''
     type: string
@@ -348,27 +264,6 @@ questions:
     type: string
     required: false
     label: grafana service type
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.metricsImagePullSecret
-    description: ''
-    type: string
-    required: false
-    label: metrics image pull secret
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.metricsImagePullSecretManifest
-    description: ''
-    type: string
-    required: false
-    label: metrics image pull secret manifest
-    show_if: config.metrics=true
-    group: Metrics    group: Metrics
-  - variable: config.metricsNamespace
-    description: ''
-    type: string
-    required: false
-    label: metrics namespace
     show_if: config.metrics=true
     group: Metrics
   - variable: config.pgbadgerport
@@ -413,7 +308,6 @@ questions:
     label: prometheus service type
     show_if: config.metrics=true
     group: Metrics
-
 
   # Persistence
   - variable: persistence.size.primary
