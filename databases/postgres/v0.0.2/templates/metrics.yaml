@@ -4,7 +4,7 @@ kind: HelmRelease
 metadata:
   name: {{ .Release.Name }}
   labels:
-    app: {{ template "metrics.name" . }}
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,14 +13,14 @@ spec:
   helmVersion: v3
   chart:
     git: https://github.com/CrunchyData/postgres-operator/tree/v4.5.1/installers/metrics
-    ref: v4.5.1
+    ref: v{{ .Chart.AppVersion }}
     path: helm
   values:
     replicaCount: 1
     image:
       repository: registry.developers.crunchydata.com/crunchydata
       pullPolicy: Always
-      tag: centos7-4.5.1
+      tag: centos7-{{ .Chart.AppVersion }}
     ingress:
       enabled: {{ .Values.ingress.metrics.enabled }}
       annotations:
@@ -39,7 +39,7 @@ spec:
       hostname: {{ .Values.ingress.metrics.hostname }}
       {{- if .Values.ingress.metrics.tls }}
       tls:
-        - secretName: {{ template "metrics.metrics-certificate" . }}
+        - secretName: {{ template "postgres.postgres-certificate" . }}
           hosts:
             - {{ .Values.ingress.metrics.hostname }}
       {{- end }}
