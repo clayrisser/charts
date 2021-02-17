@@ -10,10 +10,10 @@ spec:
   socket:
     name: {{ $name }}-postgres
     namespace: {{ $namespace }}
-  # replications:
-  #   - version: v1
-  #     kind: ConfigMap
-  #     name: {{ template "gitlab.fullname" . }}
+  replications:
+    - version: v1
+      kind: ConfigMap
+      name: {{ $namespace }}-postgres-socket
   kustomization:
     configuration:
       varReference:
