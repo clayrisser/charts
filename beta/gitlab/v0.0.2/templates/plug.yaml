@@ -50,14 +50,15 @@ spec:
                   port: $(POSTGRES_PORT)
                   username: "$(POSTGRES_USERNAME)"
                   database: "$(POSTGRES_DATABASE)"
+                  password: "$(POSTGRES_PASSWORD)"
     vars:
       - name: POSTGRES_DATABASE
         fieldref:
-          fieldPath: data.POSTGRES_DATABASE
+          fieldPath: data.database
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          name: {{ $namespace }}-postgres-socket
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_HOSTNAME
         fieldref:
@@ -77,11 +78,19 @@ spec:
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_USERNAME
         fieldref:
-          fieldPath: data.POSTGRES_USERNAME
+          fieldPath: data.username
         objref:
           apiVersion: v1
-          kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          kind: Secret
+          name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_PASSWORD
+        fieldref:
+          fieldPath: data.password
+        objref:
+          apiVersion: v1
+          kind: Secret
+          name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
