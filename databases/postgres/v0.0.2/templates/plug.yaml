@@ -11,11 +11,11 @@ spec:
     name: {{ $name }}-grafana
     namespace: {{ $namespace }}
   replications:
-    - version: v1alpha1
+    - version: integreatly.org/v1alpha1
       kind: GrafanaDashboard
-      name: {{ .Release.Namespace }}
-    - version: v1alpha1
+      name: {{ .Release.Name }}
+    - version: integreatly.org/v1alpha1
       kind: GrafanaDataSource
-      name: {{ .Release.Namespace }}
+      name: {{ .Release.Name }}
   kustomization: {}
 {{- end }}
