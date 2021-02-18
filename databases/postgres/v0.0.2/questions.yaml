@@ -189,6 +189,13 @@ questions:
     label: grafana install
     show_if: config.metrics=true
     group: Metrics
+  - variable: config.grafanaIntegration
+    description: ''
+    type: string
+    required: true
+    label: grafana integration (name.namespace)
+    show_if: config.metrics=true
+    group: Metrics
   - variable: config.prometheusInstall
     description: ''
     type: boolean

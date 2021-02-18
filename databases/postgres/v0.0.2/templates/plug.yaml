@@ -1,0 +1,21 @@
+{{- if (not (empty .Values.config.integration)) }}
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationPlug
+metadata:
+  name: {{ template "gitlab.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- $name := (split "." .Values.config.grafana.integration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.grafana.integration))._1 | default "kube-system" }}
+  socket:
+    name: {{ $name }}-grafana
+    namespace: {{ $namespace }}
+  replications:
+    - version: v1
+      kind: GrafanaDashboard
+      name: {{ .Release.Namespace }}
+    - version: v1
+      kind: GrafanaDataSource
+      name: {{ .Release.Namespace }}
+  kustomization: {}
+{{- end }}

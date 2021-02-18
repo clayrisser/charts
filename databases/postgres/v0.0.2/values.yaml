@@ -46,6 +46,7 @@ config:
   grafanaAdminPassword: 'admin'
   grafanaAdminUsername: 'admin'
   grafanaInstall: true
+  grafanaIntegration: ''
   grafanaPort: '3000'
   pgbadgerport: '10000'
   prometheusInstall: true
