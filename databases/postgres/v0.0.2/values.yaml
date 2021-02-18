@@ -40,7 +40,6 @@ config:
         memory: 256Mi
   metrics: true
   alertmanagerInstall: true
-  alertmanagerLogLevel: 'info'
   alertmanagerPort: '9093'
   dbPort: '5432'
   grafanaAdminPassword: 'admin'
@@ -77,13 +76,6 @@ service:
 
 ingress:
   pgadmin:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    tls: false
-    issuer:
-      name: letsencrypt-staging
-  metrics:
     certificate: ''
     enabled: false
     hostname: ''
