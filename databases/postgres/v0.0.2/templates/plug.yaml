@@ -1,4 +1,4 @@
-{{- if (not (empty .Values.config.integration)) }}
+{{- if (not (empty .Values.config.grafanaIntegration)) }}
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
