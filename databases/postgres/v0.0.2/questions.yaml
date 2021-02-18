@@ -155,17 +155,10 @@ questions:
     label: enable
     group: Metrics
   - variable: config.alertmanagerInstall
-    description: true
+    description: ''
     type: boolean
     required: false
     label: alert manager install
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.alertmanagerLogLevel
-    description: ''
-    type: string
-    required: false
-    label: alert manager log level
     show_if: config.metrics=true
     group: Metrics
   - variable: config.grafanaAdminUsername
