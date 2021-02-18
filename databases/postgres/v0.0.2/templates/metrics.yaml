@@ -13,7 +13,7 @@ spec:
   helmVersion: v3
   chart:
     git: https://github.com/CrunchyData/postgres-operator.git
-    ref: v{{ .Chart.Version }}
+    ref: v{{ .Chart.AppVersion }}
     path: installers/metrics/helm
   git:
     timeout: 60s
