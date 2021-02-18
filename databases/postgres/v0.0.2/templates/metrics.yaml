@@ -12,7 +12,7 @@ spec:
   forceUpgrade: false
   helmVersion: v3
   chart:
-    git: ssh://git@github.com/nuevesolutions/metrics-chart.git
+    git: https://github.com/nuevesolutions/metrics-chart.git
     ref: master
     path: charts
   values:
