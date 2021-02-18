@@ -12,7 +12,7 @@ spec:
   forceUpgrade: false
   helmVersion: v3
   chart:
-    git: https://github.com/nuevesolutions/metrics-chart.git
+    git: git@github.com:nuevesolutions/metrics-chart.git
     ref: master
     path: charts
   values:
@@ -22,7 +22,7 @@ spec:
       pullPolicy: Always
       tag: centos7-{{ .Chart.AppVersion }}
     ingress:
-      enabled: {{ .Values.ingress.metrics.enabled }}
+      enabled: {{ .Values.ingress.metrics.enabled }}                    
       annotations:
         {{- if (eq .Values.config.clusterType "aks") }}
         kubernetes.io/ingress.class: addon-http-application-routing
