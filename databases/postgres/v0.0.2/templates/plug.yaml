@@ -5,8 +5,8 @@ metadata:
   name: {{ template "postgres.fullname" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- $name := (split "." .Values.config.grafana.integration)._0 -}}
-  {{- $namespace := (split "." (printf "%s." .Values.config.grafana.integration))._1 | default "kube-system" }}
+  {{- $name := (split "." .Values.config.grafanaintegration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.grafanaintegration))._1 | default "kube-system" }}
   socket:
     name: {{ $name }}-grafana
     namespace: {{ $namespace }}
