@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "gitlab.fullname" . }}
+  name: {{ template "postgres.fullname" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   {{- $name := (split "." .Values.config.grafana.integration)._0 -}}
