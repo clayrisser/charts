@@ -13,7 +13,7 @@ spec:
   datasources:
     - access: proxy
       editable: true
-      isDefault: true
+      # isDefault: true
       jsonData:
         timeInterval: 5s
       name: Prometheus
