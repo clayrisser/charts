@@ -1,0 +1,11 @@
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationSocket
+metadata:
+  name: {{ template "grafana.fullname" . }}
+  labels:
+    app: {{ template "grafana.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  appendName: {{ .Release.Name }}

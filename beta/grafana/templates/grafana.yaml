@@ -23,7 +23,7 @@ spec:
       admin_user: {{ .Values.config.adminUser }}
   dashboardLabelSelector:
     - matchExpressions:
-        - key: app
+        - key: metrics
           operator: In
           values:
             - grafana
