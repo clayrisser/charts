@@ -1,0 +1,24 @@
+{{- if .Values.config.prometheusInstall }}
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    metrics: grafana
+spec:
+  datasources:
+    - access: proxy
+      editable: true
+      isDefault: true
+      jsonData:
+        timeInterval: 5s
+      name: Prometheus
+      type: prometheus
+      url: {{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local
+      version: 1
+  name: {{ .Release.Name }}
+{{- end }}
