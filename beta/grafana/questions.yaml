@@ -1,7 +1,6 @@
 categories:
   - Server
 questions:
-
   # Config
   - variable: config.clusterType
     description: ''
@@ -39,6 +38,18 @@ questions:
     type: boolean
     required: true
     label: 'allow integration'
+    group: Config
+  - variable: config.adminUser
+    description: ''
+    type: string
+    required: true
+    label: 'admin username'
+    group: Config
+  - variable: config.adminPassword
+    description: ''
+    type: password
+    required: true
+    label: 'admin password'
     group: Config
   - variable: config.resources.enabled
     description: ''
