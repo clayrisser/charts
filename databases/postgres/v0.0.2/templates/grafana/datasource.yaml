@@ -18,7 +18,7 @@ spec:
         timeInterval: 5s
       name: Prometheus
       type: prometheus
-      url: {{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local
+      url: {{ template "postgres.fullname" . }}-crunchy-prometheus.{{ .Release.Namespace }}.svc.cluster.local
       version: 1
   name: {{ .Release.Name }}
 {{- end }}
