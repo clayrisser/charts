@@ -12,9 +12,11 @@ spec:
   forceUpgrade: false
   helmVersion: v3
   chart:
-    git: ssh://git@github.com/nuevesolutions/metrics-chart.git
-    ref: master
-    path: charts
+    git: https://github.com/CrunchyData/postgres-operator.git
+    ref: v{{ .Chart.Version }}
+    path: installers/metrics/helm
+  git:
+    timeout: 60s
   values:
     replicaCount: 1
     image:
