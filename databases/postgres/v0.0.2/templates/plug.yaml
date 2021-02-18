@@ -11,10 +11,10 @@ spec:
     name: {{ $name }}-grafana
     namespace: {{ $namespace }}
   replications:
-    - version: v1
+    - version: v1alpha1
       kind: GrafanaDashboard
       name: {{ .Release.Namespace }}
-    - version: v1
+    - version: v1alpha1
       kind: GrafanaDataSource
       name: {{ .Release.Namespace }}
   kustomization: {}
