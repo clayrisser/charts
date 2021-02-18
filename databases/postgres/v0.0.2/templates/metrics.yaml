@@ -45,29 +45,29 @@ spec:
           hosts:
             - {{ .Values.ingress.metrics.hostname }}
       {{- end }}
-    alertmanager_custom_config: {{ .Values.config.alertmanagerCustomConfig | quote }}
-    alertmanager_custom_rules_config: {{ .Values.config.alertmanagerCustomRulesConfig | quote }}
+    # alertmanager_custom_config: {{ .Values.config.alertmanagerCustomConfig | quote }}
+    # alertmanager_custom_rules_config: {{ .Values.config.alertmanagerCustomRulesConfig | quote }}
     alertmanager_install: {{ .Values.config.alertmanagerInstall | quote }}
     alertmanager_log_level: {{ .Values.config.alertmanagerLogLevel | quote }}
     alertmanager_port: 9093
-    alertmanager_service_name: {{ .Values.config.alertmanagerServiceName | quote }}
-    alertmanager_service_type: {{ .Values.config.alertmanagerServiceType | quote }}
+    alertmanager_service_name: {{ template "postgres.fullname" . }}-crunchy-alertmanager
+    alertmanager_service_type: ClusterIP
     db_port: 5432
     grafana_admin_password: {{ .Values.config.grafanaAdminPassword | quote }}
     grafana_admin_username: {{ .Values.config.grafanaAdminUsername | quote }}
-    grafana_dashboards_custom_config: {{ .Values.config.grafanaDashboardsCustomConfig | quote }}
-    grafana_datasources_custom_config: {{ .Values.config.grafanaDatasourcesCustomConfig | quote }}
+    # grafana_dashboards_custom_config: {{ .Values.config.grafanaDashboardsCustomConfig | quote }}
+    # grafana_datasources_custom_config: {{ .Values.config.grafanaDatasourcesCustomConfig | quote }}
     grafana_install: {{ .Values.config.grafanaInstall | quote }}
     grafana_port: 3000
-    grafana_service_name: {{ .Values.config.grafanaServiceName | quote }}
-    grafana_service_type: {{ .Values.config.grafanaServiceType | quote }}
+    grafana_service_name: {{ template "postgres.fullname" . }}-crunchy-grafana
+    grafana_service_type: ClusterIP
     metrics_namespace: {{ .Release.Namespace }}
     pgbadgerport: 10000
-    prometheus_custom_config: {{ .Values.config.prometheusCustomConfig | quote }}
+    # prometheus_custom_config: {{ .Values.config.prometheusCustomConfig | quote }}
     prometheus_install: {{ .Values.config.prometheusInstall | quote }}
     prometheus_port: 9090
-    prometheus_service_name: {{ .Values.config.prometheusServiceName | quote }}
-    prometheus_service_type: {{ .Values.config.prometheusServiceType | quote }}
+    prometheus_service_name: {{ template "postgres.fullname" . }}-crunchy-prometheus
+    prometheus_service_type: ClusterIP
     persistence:
       assets:
         accessMode: {{ .Values.persistence.accessMode | quote }}

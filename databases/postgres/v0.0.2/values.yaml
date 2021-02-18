@@ -15,7 +15,6 @@ config:
   imagePullPolicy: IfNotPresent
   allowIntegration: true
   updateStrategy: Recreate
-  metrics: true
   username: postgres
   password:
   shutdown: false
@@ -39,28 +38,18 @@ config:
       limits:
         cpu: 200m
         memory: 256Mi
-  alertmanagerCustomConfig: ''
-  alertmanagerCustomRulesConfig: ''
+  metrics: true
   alertmanagerInstall: true
   alertmanagerLogLevel: 'info'
   alertmanagerPort: '9093'
-  alertmanagerServiceName: 'crunchy-alertmanager'
-  alertmanagerServiceType: 'ClusterIP'
   dbPort: '5432'
   grafanaAdminPassword: 'admin'
   grafanaAdminUsername: 'admin'
-  grafanaDashboardsCustomConfig: ''
-  grafanaDatasourcesCustomConfig: ''
   grafanaInstall: true
   grafanaPort: '3000'
-  grafanaServiceName: 'crunchy-grafana'
-  grafanaServiceType: 'ClusterIP'
   pgbadgerport: '10000'
-  prometheusCustomConfig: ''
   prometheusInstall: true
   prometheusPort: '9090'
-  prometheusServiceName: 'crunchy-prometheus'
-  prometheusServiceType: 'ClusterIP'
 
 service:
   postgres:

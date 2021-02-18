@@ -39,12 +39,6 @@ questions:
     required: true
     label: 'allow integration'
     group: Config
-  - variable: config.metrics
-    description: ''
-    type: boolean
-    required: true
-    label: metrics
-    group: Config
   - variable: config.username
     description: ''
     type: string
@@ -154,19 +148,11 @@ questions:
         label: 'pgadmin resources limits memory'
 
   # Metrics
-  - variable: config.alertmanagerCustomConfig
+  - variable: config.metrics
     description: ''
-    type: string
-    required: false
-    label: alert manager custom config
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.alertmanagerCustomRulesConfig
-    description: ''
-    type: string
-    required: false
-    label: alert manager custom rules config
-    show_if: config.metrics=true
+    type: boolean
+    required: true
+    label: enable
     group: Metrics
   - variable: config.alertmanagerInstall
     description: true
@@ -182,27 +168,6 @@ questions:
     label: alert manager log level
     show_if: config.metrics=true
     group: Metrics
-  - variable: config.alertmanagerServiceName
-    description: ''
-    type: string
-    required: false
-    label: alert manager service name
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.alertmanagerServiceType
-    description: ''
-    type: string
-    required: false
-    label: alert manager service type
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.grafanaAdminPassword
-    description: ''
-    type: string
-    required: false
-    label: grafana admin password
-    show_if: config.metrics=true
-    group: Metrics
   - variable: config.grafanaAdminUsername
     description: ''
     type: string
@@ -210,18 +175,11 @@ questions:
     label: grafana admin username
     show_if: config.metrics=true
     group: Metrics
-  - variable: config.grafanaDashboardsCustomConfig
+  - variable: config.grafanaAdminPassword
     description: ''
-    type: string
+    type: password
     required: false
-    label: grafana dashboards custom config
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.grafanaDatasourcesCustomConfig
-    description: ''
-    type: string
-    required: false
-    label: grafana datasources custom config
+    label: grafana admin password
     show_if: config.metrics=true
     group: Metrics
   - variable: config.grafanaInstall
@@ -231,53 +189,11 @@ questions:
     label: grafana install
     show_if: config.metrics=true
     group: Metrics
-  - variable: config.grafanaServiceName
-    description: ''
-    type: string
-    required: false
-    label: grafana service name
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.grafanaServiceType
-    description: ''
-    type: string
-    required: false
-    label: grafana service type
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.prometheusCustomConfig
-    description: ''
-    type: string
-    required: false
-    label: prometheus custom config
-    show_if: config.metrics=true
-    group: Metrics
   - variable: config.prometheusInstall
     description: ''
     type: boolean
     required: false
     label: prometheus install
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.prometheusPort
-    description: ''
-    type: string
-    required: false
-    label: prometheus port
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.prometheusServiceName
-    description: ''
-    type: string
-    required: false
-    label: prometheus service name
-    show_if: config.metrics=true
-    group: Metrics
-  - variable: config.prometheusServiceType
-    description: ''
-    type: string
-    required: false
-    label: prometheus service type
     show_if: config.metrics=true
     group: Metrics
 
