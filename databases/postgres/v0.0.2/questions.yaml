@@ -95,7 +95,7 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: pgadmin
+    label: enabled
     show_subquestion_if: true
     group: PGAdmin
     subquestions:
