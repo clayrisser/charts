@@ -63,7 +63,7 @@ spec:
                         key: database
                   - name: PORT
                     value: '5432'
-      messageRegex: '/(?<=STATUS_MESSAGE:\s).+/g'
+      messageRegex: '/(?<=STATUS_MESSAGE:\\s).+/g'
       name: create-or-update
       timeout: 60000
 {{- end }}
