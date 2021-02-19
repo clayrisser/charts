@@ -18,68 +18,53 @@ spec:
   git:
     timeout: 60s
   values:
-    replicaCount: 1
-    image:
-      repository: registry.developers.crunchydata.com/crunchydata
-      pullPolicy: Always
-      tag: centos7-{{ .Chart.AppVersion }}
-    alertmanager_install: {{ .Values.config.alertmanagerInstall | quote }}
-    alertmanager_log_level: info
-    alertmanager_port: 9093
-    alertmanager_service_name: {{ template "postgres.fullname" . }}-crunchy-alertmanager
-    alertmanager_service_type: ClusterIP
-    db_port: 5432
-    grafana_admin_password: {{ .Values.config.grafanaAdminPassword | quote }}
-    grafana_admin_username: {{ .Values.config.grafanaAdminUsername | quote }}
-    grafana_install: {{ .Values.config.grafanaInstall | quote }}
-    grafana_port: 3000
-    grafana_service_name: {{ template "postgres.fullname" . }}-crunchy-grafana
-    grafana_service_type: ClusterIP
-    metrics_namespace: {{ .Release.Namespace }}
-    pgbadgerport: 10000
-    prometheus_install: {{ .Values.config.prometheusInstall | quote }}
-    prometheus_port: 9090
-    prometheus_service_name: {{ template "postgres.fullname" . }}-crunchy-prometheus
-    prometheus_service_type: ClusterIP
-    persistence:
-      assets:
-        accessMode: {{ .Values.persistence.accessMode | quote }}
-        storageClassName: {{ .Values.persistence.storageClass | quote }}
-        resources:
-          requests:
-            storage: {{ .Values.persistence.size.assets | quote }}
-      system:
-        accessMode: {{ .Values.persistence.accessMode | quote }}
-        storageClassName: {{ .Values.persistence.storageClass | quote }}
-        resources:
-          requests:
-            storage: {{ .Values.persistence.size.system | quote }}
-    service:
-      type: ClusterIP
-      port: {{ (eq .Values.service.metrics.type "LoadBalancer") | ternary .Values.service.metrics.lbPorts.http  ((and (eq .Values.service.metrics.type "NodePort") (not (empty .Values.service.metrics.nodePorts.http))) | ternary .Values.service.metrics.nodePorts.http "80") }}
-    podSecurityContext:
-      runAsUser: 991
-      runAsGroup: 991
-      fsGroup: 991
-    securityContext: {}
+    fullnameOverride: ''
+    rbac:
+        create: true
+        useClusterAdmin: false
     serviceAccount:
-      create: true
-      annotations: {}
-      name: ''
-    podAnnotations: {}
-{{- if .Values.config.resources.enabled }}
-    resources:
-{{ toYaml .Values.config.resources | indent 6 }}
-{{- else }}
-    resources: {}
-{{- end }}
-    autoscaling:
-      enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
-      # targetMemoryUtilizationPercentage: 80
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
+        create: true
+        name: ''
+    pgo_image_prefix: registry.developers.crunchydata.com/crunchydata
+    pgo_image_tag: centos7-{{ .Chart.AppVersion }}
+    alertmanager_custom_config: ''
+    alertmanager_custom_rules_config: ''
+    alertmanager_install: {{ .Values.config.metrics.alertmanager.enabled | quote }}
+    alertmanager_log_level: info
+    alertmanager_port: '9093'
+    alertmanager_service_name: {{ template "postgres.fullname" . }}-alertmanager
+    alertmanager_service_type: ClusterIP
+    alertmanager_storage_access_mode: {{ .Values.persistence.accessMode | quote }}
+    alertmanager_storage_class_name: {{ .Values.persistence.storageClass | quote }}
+    alertmanager_supplemental_groups: ''
+    alertmanager_volume_size: {{ .Values.persistence.size.alertmanager | quote }}
+    create_rbac: 'true'
+    db_port: '5432'
+    delete_metrics_namespace: 'false'
+    disable_fsgroup: 'false'
+    grafana_admin_password: {{ .Values.config.metrics.grafana.password | quote }}
+    grafana_admin_username: {{ .Values.config.metrics.grafana.username | quote }}
+    grafana_dashboards_custom_config: ''
+    grafana_datasources_custom_config: ''
+    grafana_install: {{ .Values.config.metrics.grafana.enabled | quote }}
+    grafana_port: '3000'
+    grafana_service_name: {{ template "postgres.fullname" . }}-grafana
+    grafana_service_type: ClusterIP
+    grafana_storage_access_mode: {{ .Values.persistence.accessMode | quote }}
+    grafana_storage_class_name: {{ .Values.persistence.storageClass | quote }}
+    grafana_supplemental_groups: ''
+    grafana_volume_size: {{ .Values.persistence.size.grafana | quote }}
+    metrics_image_pull_secret: ''
+    metrics_image_pull_secret_manifest: ''
+    metrics_namespace: {{ .Release.Namespace }}
+    pgbadgerport: '10000'
+    prometheus_custom_config: ''
+    prometheus_install: 'true'
+    prometheus_port: '9090'
+    prometheus_service_name: {{ template "postgres.fullname" . }}-prometheus
+    prometheus_service_type: ClusterIP
+    prometheus_storage_access_mode: {{ .Values.persistence.accessMode | quote }}
+    prometheus_storage_class_name: {{ .Values.persistence.storageClass | quote }}
+    prometheus_supplemental_groups: ''
+    prometheus_volume_size: {{ .Values.persistence.size.prometheus | quote }}
 {{- end }}

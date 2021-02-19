@@ -27,9 +27,9 @@ config:
       cpu: 250m
       memory: 512Mi
   pgadmin:
-    email: admin
     enabled: false
-    password: pass
+    email: admin
+    password: P@ssw0rd
     resources:
       enabled: 'false'
       requests:
@@ -38,18 +38,14 @@ config:
       limits:
         cpu: 200m
         memory: 256Mi
-  metrics: true
-  alertmanagerInstall: true
-  alertmanagerPort: '9093'
-  dbPort: '5432'
-  grafanaAdminPassword: 'admin'
-  grafanaAdminUsername: 'admin'
-  grafanaInstall: true
-  grafanaIntegration: ''
-  grafanaPort: '3000'
-  pgbadgerport: '10000'
-  prometheusInstall: true
-  prometheusPort: '9090'
+  metrics:
+    enabled: true
+    grafana:
+      enabled: false
+      username: admin
+      password: P@ssw0rd
+    alertmanager:
+      enabled: false
 
 service:
   postgres:
@@ -60,13 +56,6 @@ service:
     lbPorts:
       postgres: 5432
   pgadmin:
-    type: ClusterIP
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http:
-    lbPorts:
-      http: 80
-  metrics:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -86,9 +75,12 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   size:
+    alertmanager: 2Gi
     archive: 2Gi
     backrest: 2Gi
+    grafana: 2Gi
     primary: 2Gi
+    prometheus: 2Gi
     replica: 2Gi
     wal: 2Gi
   storageClass: ''
