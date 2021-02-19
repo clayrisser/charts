@@ -10,15 +10,15 @@ metadata:
     heritage: {{ .Release.Service }}
     metrics: grafana
 spec:
+  name: {{ .Release.Name }}.yaml
   datasources:
     - access: proxy
       editable: true
       # isDefault: true
       jsonData:
         timeInterval: 5s
-      name: Prometheus
+      name: {{ .Release.Name }}-prometheus
       type: prometheus
       url: {{ template "postgres.fullname" . }}-crunchy-prometheus.{{ .Release.Namespace }}.svc.cluster.local
       version: 1
-  name: {{ .Release.Name }}
 {{- end }}

@@ -21,6 +21,67 @@ spec:
     security:
       admin_password: {{ .Values.config.adminPassword }}
       admin_user: {{ .Values.config.adminUser }}
+  containers: []
+  initResources:
+  secrets: []
+  configMaps: []
+  service:
+    name:
+    annotations: []
+    labels: []
+    type:
+    ports: []
+    clusterIP:
+  deployment:
+    annotations: []
+    labels: []
+    replicas:
+    nodeSelector: []
+    tolerations:
+    affinity:
+    securityContext:
+    containerSecurityContext:
+    terminationGracePeriodSeconds:
+    envFrom: []
+    skipCreateAdminAccount: false
+    priorityClassName:
+  resources:
+  serviceAccount:
+    skip: false
+    annotations: []
+    labels: []
+    imagePullSecrets: []
+  client:
+    timeout: 600
+    preferService: false
+  dataStorage:
+    annotations: []
+    labels: []
+    accessModes: []
+    size:
+    class:
+  jsonnet:
+    libraryLabelSelector:
+  baseImage:
+  initImage:
+  livenessProbeSpec:
+    initialDelaySeconds:
+    timeoutSeconds:
+    periodSeconds:
+    successThreshold:
+    failureThreshold:
+  readinessProbeSpec:
+    initialDelaySeconds:
+    timeoutSeconds:
+    periodSeconds:
+    successThreshold:
+    failureThreshold:
+  dashboardNamespaceSelector:
+    - matchExpressions:
+        - key: metrics
+          operator: In
+          values:
+            - grafana
   dashboardLabelSelector:
     - matchExpressions:
         - key: metrics
