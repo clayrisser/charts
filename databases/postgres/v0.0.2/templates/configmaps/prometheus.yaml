@@ -26,6 +26,6 @@ data:
           replacement: ""
         static_configs:
           - targets:
-            - {{ template "postgres.fullname" . }}-postgres:9187 # grafana
+            - {{ template "postgres.fullname" . }}:9187 # grafana
     rule_files:
       - /etc/prometheus/alert-rules.d/*.yml
