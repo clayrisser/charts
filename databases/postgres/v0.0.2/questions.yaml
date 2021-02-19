@@ -166,17 +166,23 @@ questions:
         type: boolean
         required: true
         label: 'grafana enabled'
+      - variable: config.metrics.grafana.integration
+        description: ''
+        type: string
+        required: false
+        show_if: config.metrics.grafana.enabled=true
+        label: 'grafana username'
       - variable: config.metrics.grafana.username
         description: ''
         type: string
         required: true
-        show_if: config.metrics.grafana.enabled=true
+        show_if: config.metrics.grafana.enabled=true&&config.metrics.grafana.integration=
         label: 'grafana username'
       - variable: config.metrics.grafana.password
         description: ''
         type: password
         required: true
-        show_if: config.metrics.grafana.enabled=true
+        show_if: config.metrics.grafana.enabled=true&&config.metrics.grafana.integration=
         label: 'grafana password'
 
   # Persistence

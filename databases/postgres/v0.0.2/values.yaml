@@ -42,6 +42,7 @@ config:
     enabled: true
     grafana:
       enabled: false
+      integration:
       username: admin
       password: P@ssw0rd
     alertmanager:

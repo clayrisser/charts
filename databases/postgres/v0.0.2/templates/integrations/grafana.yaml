@@ -1,25 +1,25 @@
-{{- if (not (empty .Values.config.grafanaIntegration)) }}
-apiVersion: integration.siliconhills.dev/v1alpha1
-kind: IntegrationPlug
-metadata:
-  name: {{ template "postgres.fullname" . }}-grafana
-  labels:
-    app: {{ template "postgres.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  {{- $name := (split "." .Values.config.grafanaIntegration)._0 -}}
-  {{- $namespace := (split "." (printf "%s." .Values.config.grafanaIntegration))._1 | default "kube-system" }}
-  socket:
-    name: {{ $name }}-grafana
-    namespace: {{ $namespace }}
-  replications:
-    - version: integreatly.org/v1alpha1
-      kind: GrafanaDashboard
-      name: {{ .Release.Name }}
-    - version: integreatly.org/v1alpha1
-      kind: GrafanaDataSource
-      name: {{ .Release.Name }}
-  kustomization: {}
-{{- end }}
+# {{- if (not (empty .Values.config.grafana.integration)) }}
+# apiVersion: integration.siliconhills.dev/v1alpha1
+# kind: IntegrationPlug
+# metadata:
+#   name: {{ template "postgres.fullname" . }}-grafana
+#   labels:
+#     app: {{ template "postgres.name" . }}
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+# spec:
+#   {{- $name := (split "." .Values.config.grafanaIntegration)._0 -}}
+#   {{- $namespace := (split "." (printf "%s." .Values.config.grafanaIntegration))._1 | default "kube-system" }}
+#   socket:
+#     name: {{ $name }}-grafana
+#     namespace: {{ $namespace }}
+#   replications:
+#     - version: integreatly.org/v1alpha1
+#       kind: GrafanaDashboard
+#       name: {{ .Release.Name }}
+#     - version: integreatly.org/v1alpha1
+#       kind: GrafanaDataSource
+#       name: {{ .Release.Name }}
+#   kustomization: {}
+# {{- end }}
