@@ -41,7 +41,7 @@ spec:
     prometheus_port: 9090
     prometheus_service_name: {{ template "postgres.fullname" . }}-crunchy-prometheus
     prometheus_service_type: ClusterIP
-    prometheus_custom_config: {{ template "postgres.fullname" . }}-prometheus
+    # prometheus_custom_config: {{ template "postgres.fullname" . }}-prometheus
     persistence:
       assets:
         accessMode: {{ .Values.persistence.accessMode | quote }}
@@ -67,13 +67,7 @@ spec:
       create: true
       annotations: {}
       name: ''
-
-    {{- if .Values.persistence.velero.enabled }}
-    podAnnotations:
-      backup.velero.io/backup-volumes: data
-    {{- else }}
     podAnnotations: {}
-    {{- end }}
 {{- if .Values.config.resources.enabled }}
     resources:
 {{ toYaml .Values.config.resources | indent 6 }}
@@ -89,6 +83,4 @@ spec:
     nodeSelector: {}
     tolerations: []
     affinity: {}
-
-
 {{- end }}
