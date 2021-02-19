@@ -30,13 +30,20 @@ spec:
                   - sh
                   - -c
                   - |
+                    export STDOUT="/tmp/createdb.out"
                     echo "*:*:*:*:$PASSWORD" > .pgpass
                     chmod 600 .pgpass
-                    env
-                    cat .pgpass
-                    echo createdb -h $HOSTNAME -U $USERNAME -p $PORT -w $DATABASE
-                    createdb -h $HOSTNAME -U $USERNAME -p $PORT -w $DATABASE || true
-                    echo "created database $DATABASE"
+                    createdb -h $HOSTNAME -U $USERNAME -p $PORT -w $DATABASE 2>&1 | tee $STDOUT
+                    if cat $STDOUT | grep -qE "database .+ already exists"; then
+                      echo "STATUS_MESSAGE: database $DATABASE already exists"
+                    elif cat $STDOUT | grep -qE "[^ \t\n]"; then
+                      echo "STATUS_MESSAGE: $STDOUT"
+                      rm $STDOUT
+                      exit 1
+                    else
+                      echo "STATUS_MESSAGE: created database $DATABASE"
+                    fi
+                    rm $STDOUT
                 env:
                   - name: PGPASSFILE
                     value: .pgpass
@@ -56,7 +63,7 @@ spec:
                         key: database
                   - name: PORT
                     value: '5432'
-      messageRegex: '/created\sdatabase/g'
+      messageRegex: '/(?<=STATUS_MESSAGE:\s).+/g'
       name: create-or-update
       timeout: 60000
 {{- end }}
