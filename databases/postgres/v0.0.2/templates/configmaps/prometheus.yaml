@@ -26,6 +26,8 @@ data:
           replacement: ""
         static_configs:
           - targets:
-            - {{ template "postgres.fullname" . }}:9187 # grafana
+            - {{ template "postgres.fullname" . }}:9187 # postgres-operator
+            - {{ .Release.Name }}.{{ .Release.Namespace}}.svc.cluster.local
+            - {{ template "postgres.fullname" . }}:5432 #postgres
     rule_files:
       - /etc/prometheus/alert-rules.d/*.yml
