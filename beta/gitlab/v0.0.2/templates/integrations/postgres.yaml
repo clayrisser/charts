@@ -12,7 +12,7 @@ spec:
   {{- $name := (split "." .Values.config.postgres.integration)._0 -}}
   {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._1 | default "kube-system" }}
   socket:
-    name: {{ $name }}-postgres
+    name: {{ $name }}
     namespace: {{ $namespace }}
   replications:
     - version: v1
