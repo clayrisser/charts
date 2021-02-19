@@ -10,7 +10,7 @@ metadata:
     autofail: 'true'
     crunchy-pgbadger: 'false'
     crunchy-pgha-scope: {{ template "postgres.fullname" . }}
-    crunchy-postgres-exporter: 'false'
+    crunchy-postgres-exporter: {{ .Values.config.metrics | quote }}
     deployment-name: {{ template "postgres.fullname" . }}
     name: {{ template "postgres.fullname" . }}
     pg-cluster: {{ template "postgres.fullname" . }}
@@ -135,7 +135,7 @@ spec:
   tlsOnly: false
   user: user
   userlabels:
-    crunchy-postgres-exporter: 'false'
+    crunchy-postgres-exporter: {{ .Values.config.metrics | quote }}
     pg-pod-anti-affinity: ''
     pgo-version: {{ .Chart.AppVersion | quote }}
   usersecretname: {{ template "postgres.fullname" . }}-user-secret
