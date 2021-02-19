@@ -10,7 +10,7 @@ metadata:
     autofail: 'true'
     crunchy-pgbadger: 'false'
     crunchy-pgha-scope: {{ template "postgres.fullname" . }}
-    crunchy-postgres-exporter: {{ .Values.config.metrics | quote }}
+    # crunchy-postgres-exporter: {{ .Values.config.metrics | quote }}
     deployment-name: {{ template "postgres.fullname" . }}
     name: {{ template "postgres.fullname" . }}
     pg-cluster: {{ template "postgres.fullname" . }}
