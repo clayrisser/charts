@@ -3,7 +3,11 @@ apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
   name: {{ template "postgres.fullname" . }}-grafana
-  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   {{- $name := (split "." .Values.config.grafanaIntegration)._0 -}}
   {{- $namespace := (split "." (printf "%s." .Values.config.grafanaIntegration))._1 | default "kube-system" }}
