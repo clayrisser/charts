@@ -87,7 +87,9 @@ spec:
   ccpimageprefix: {{ .Values.images.postgres.registry | quote }}
   ccpimagetag: {{ .Values.images.postgres.tag | quote }}
   clustername: {{ template "postgres.fullname" . }}
-  # collectSecretName: hippo-exporter-secret
+  {{- .Values.config.metrics }}
+  collectSecretName: {{ template "postgres.fullname" . }}-collect-secret
+  {{- end }}
   customconfig: ''
   database: postgres
   exporter: {{ .Values.config.metrics }}
@@ -135,7 +137,7 @@ spec:
   tlsOnly: false
   user: user
   userlabels:
-    # crunchy-postgres-exporter: {{ .Values.config.metrics | quote }}
+    crunchy-postgres-exporter: {{ .Values.config.metrics | quote }}
     pg-pod-anti-affinity: ''
     pgo-version: {{ .Chart.AppVersion | quote }}
   usersecretname: {{ template "postgres.fullname" . }}-user-secret
