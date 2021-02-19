@@ -10,7 +10,7 @@ metadata:
     autofail: 'true'
     crunchy-pgbadger: 'false'
     crunchy-pgha-scope: {{ template "postgres.fullname" . }}
-    crunchy-postgres-exporter: {{ .Values.config.metrics | quote }}
+    crunchy-postgres-exporter: {{ .Values.config.metrics.enabled | quote }}
     deployment-name: {{ template "postgres.fullname" . }}
     name: {{ template "postgres.fullname" . }}
     pg-cluster: {{ template "postgres.fullname" . }}
@@ -87,12 +87,12 @@ spec:
   ccpimageprefix: {{ .Values.images.postgres.registry | quote }}
   ccpimagetag: {{ .Values.images.postgres.tag | quote }}
   clustername: {{ template "postgres.fullname" . }}
-  {{- if .Values.config.metrics }}
+  {{- if .Values.config.metrics.enabled }}
   collectSecretName: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
   {{- end }}
   customconfig: ''
   database: postgres
-  exporter: {{ .Values.config.metrics }}
+  exporter: {{ .Values.config.metrics.enabled }}
   exporterLimits: {}
   exporterResources:
     memory: '0'
@@ -137,7 +137,7 @@ spec:
   tlsOnly: false
   user: user
   userlabels:
-    crunchy-postgres-exporter: {{ .Values.config.metrics | quote }}
+    crunchy-postgres-exporter: {{ .Values.config.metrics.enabled | quote }}
     pg-pod-anti-affinity: ''
     pgo-version: {{ .Chart.AppVersion | quote }}
   usersecretname: {{ template "postgres.fullname" . }}-user-secret
