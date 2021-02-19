@@ -87,7 +87,7 @@ spec:
   ccpimageprefix: {{ .Values.images.postgres.registry | quote }}
   ccpimagetag: {{ .Values.images.postgres.tag | quote }}
   clustername: {{ template "postgres.fullname" . }}
-  {{- .Values.config.metrics }}
+  {{- if .Values.config.metrics }}
   collectSecretName: {{ template "postgres.fullname" . }}-collect-secret
   {{- end }}
   customconfig: ''
