@@ -88,7 +88,7 @@ spec:
   ccpimagetag: {{ .Values.images.postgres.tag | quote }}
   clustername: {{ template "postgres.fullname" . }}
   {{- if .Values.config.metrics }}
-  collectSecretName: {{ template "postgres.fullname" . }}-collect-secret
+  collectSecretName: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
   {{- end }}
   customconfig: ''
   database: postgres
