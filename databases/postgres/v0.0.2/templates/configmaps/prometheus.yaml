@@ -17,8 +17,8 @@ data:
         scrape_interval: 30s
         metric_relabel_configs:
         - source_labels: [__name__]
-        regex: "(pg_locks_count.*|pg_settings.*|pg_stat_activity.*|pg_stat_bgwriter.*|pg_stat_database.*)"
-        action: drop
+          regex: "(pg_locks_count.*|pg_settings.*|pg_stat_activity.*|pg_stat_bgwriter.*|pg_stat_database.*)"
+          action: drop
         - source_labels: [__name__, server]
           regex: "ccp_.*;.+"
           action: replace
