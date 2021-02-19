@@ -1,3 +1,4 @@
+{{- if .Values.config.metrics }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -29,3 +30,4 @@ data:
             - {{ template "postgres.fullname" . }}.{{ .Release.Namespace}}.svc.cluster.local:9187
     rule_files:
       - /etc/prometheus/alert-rules.d/*.yml
+{{- end }}
