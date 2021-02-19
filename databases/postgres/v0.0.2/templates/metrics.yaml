@@ -41,7 +41,7 @@ spec:
     prometheus_port: 9090
     prometheus_service_name: {{ template "postgres.fullname" . }}-crunchy-prometheus
     prometheus_service_type: ClusterIP
-    prometheus_custom_configmap: {{ template "postgres.fullname" . }}-prometheus
+    prometheus_custom_config: {{ template "postgres.fullname" . }}-prometheus
     persistence:
       assets:
         accessMode: {{ .Values.persistence.accessMode | quote }}
