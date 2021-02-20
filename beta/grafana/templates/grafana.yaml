@@ -53,8 +53,6 @@ spec:
   {{- if .Values.persistence.velero.enabled }}
     annotations:
       backup.velero.io/backup-volumes: grafana-data
-  {{- else }}
-  deployment: {}
   {{- end }}
   # dashboardNamespaceSelector:
   #   - matchExpressions:
