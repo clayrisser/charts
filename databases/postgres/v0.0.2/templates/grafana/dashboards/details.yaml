@@ -301,7 +301,7 @@ spec:
               "expr": "ccp_database_size_bytes{job=~\"[[pgnodes]]\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{dbname}}",
+              "legendFormat": "{{ "{{" }}dbname}}",
               "refId": "B"
             }
           ],
@@ -483,7 +483,7 @@ spec:
               "format": "time_series",
               "instant": false,
               "intervalFactor": 1,
-              "legendFormat": "{{replica_hostname}} ({{replica}}:{{replica_port}})",
+              "legendFormat": "{{ "{{" }}replica_hostname}} ({{ "{{" }}replica}}:{{ "{{" }}replica_port}})",
               "refId": "A"
             }
           ],
@@ -663,7 +663,7 @@ spec:
               "expr": "ccp_stat_database_blks_hit{ job=~\"[[pgnodes]]\"}  / ( ccp_stat_database_blks_hit{job=~\"[[pgnodes]]\"} + ccp_stat_database_blks_read{ job=~\"[[pgnodes]]\"} ) * 100",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{dbname}}",
+              "legendFormat": "{{ "{{" }}dbname}}",
               "metric": "pg_stat_database_",
               "refId": "A",
               "step": 120
