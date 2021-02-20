@@ -141,27 +141,24 @@ questions:
     description: ''
     type: boolean
     label: 'grafana ingress enabled'
-    show_if: config.grafana.enabled=true
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
       - variable: ingress.grafana.tls
         description: ''
         type: boolean
-        show_if: config.grafana.enabled=true
         required: true
         label: 'grafana ingress tls'
       - variable: ingress.grafana.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.grafana.enabled=true
         required: true
         label: 'grafana ingress hostname'
       - variable: ingress.grafana.issuer.name
         description: ''
         type: enum
-        show_if: ingress.grafana.tls=true&&config.grafana.enabled=true
+        show_if: ingress.grafana.tls=true
         options:
           - none
           - letsencrypt-cloudflare-staging
@@ -173,13 +170,13 @@ questions:
       - variable: ingress.grafana.certificate
         description: ''
         type: string
-        show_if: ingress.grafana.tls=true&&ingress.grafana.issuer.name=none&&config.grafana.enabled=true
+        show_if: ingress.grafana.tls=true&&ingress.grafana.issuer.name=none
         required: false
         label: 'grafana ingress certificate'
   - variable: service.grafana.type
     description: ''
     type: enum
-    show_if: ingress.grafana.enabled=false&&config.grafana.enabled=true
+    show_if: ingress.grafana.enabled=false
     options:
       - ClusterIP
       - NodePort
@@ -193,7 +190,7 @@ questions:
     required: false
     min: 30000
     max: 32767
-    show_if: service.grafana.type=NodePort&&ingress.grafana.enabled=false&&config.grafana.enabled=true
+    show_if: service.grafana.type=NodePort&&ingress.grafana.enabled=false
     label: 'grafana http node port'
     group: 'Services and Load Balancing'
   - variable: service.grafana.lbPorts.http
@@ -202,7 +199,7 @@ questions:
     required: true
     min: 0
     max: 65535
-    show_if: service.grafana.type=LoadBalancer&&ingress.grafana.enabled=false&&config.grafana.enabled=true
+    show_if: service.grafana.type=LoadBalancer&&ingress.grafana.enabled=false
     label: 'grafana http lb port'
     group: 'Services and Load Balancing'
 
@@ -212,12 +209,10 @@ questions:
   #   type: string
   #   required: true
   #   label: 'grafana repository'
-  #   show_if: config.grafana.enabled=true
   #   group: Images
   # - variable: images.grafana.tag
   #   description: ''
   #   type: string
   #   required: true
   #   label: 'grafana tag'
-  #   show_if: config.grafana.enabled=true
   #   group: Images
