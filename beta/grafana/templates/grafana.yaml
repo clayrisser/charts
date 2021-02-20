@@ -54,14 +54,14 @@ spec:
     annotations:
       backup.velero.io/backup-volumes: grafana-data
   {{- end }}
-  {{- if .Values.config.projectId }}
-  dashboardNamespaceSelector:
-    - matchExpressions:
-        - key: field.cattle.io/projectId
-          operator: In
-          values:
-            - {{ .Values.config.projectId }}
-  {{- end }}
+  # {{- if .Values.config.projectId }}
+  # dashboardNamespaceSelector:
+  #   - matchExpressions:
+  #       - key: field.cattle.io/projectId
+  #         operator: In
+  #         values:
+  #           - {{ .Values.config.projectId }}
+  # {{- end }}
   dashboardLabelSelector:
     - matchExpressions:
         - key: metrics
