@@ -160,7 +160,6 @@ questions:
         description: ''
         type: string
         required: false
-        show_if: config.metrics.grafana.enabled=true
         label: 'grafana integration'
       - variable: config.metrics.grafana.username
         description: ''
