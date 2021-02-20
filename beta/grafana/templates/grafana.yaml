@@ -46,8 +46,11 @@ spec:
     {{- else }}
     type: {{ .Values.service.grafana.type }}
     {{- end }}
-  {{- if .Values.persistence.velero.enabled }}
   deployment:
+    securityContext:
+      runAsUser: 472
+      fsGroup: 472
+  {{- if .Values.persistence.velero.enabled }}
     annotations:
       backup.velero.io/backup-volumes: grafana-data
   {{- else }}
