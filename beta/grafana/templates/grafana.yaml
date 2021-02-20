@@ -51,18 +51,18 @@ spec:
   {{- else }}
   deployment: {}
   {{- end }}
-  dashboardNamespaceSelector:
-    - matchExpressions:
-        - key: metrics
-          operator: In
-          values:
-            - grafana
-  dashboardLabelSelector:
-    - matchExpressions:
-        - key: metrics
-          operator: In
-          values:
-            - grafana
+  # dashboardNamespaceSelector:
+  #   - matchExpressions:
+  #       - key: metrics
+  #         operator: In
+  #         values:
+  #           - grafana
+  # dashboardLabelSelector:
+  #   - matchExpressions:
+  #       - key: metrics
+  #         operator: In
+  #         values:
+  #           - grafana
   dataStorage:
     accessModes:
       - {{ .Values.persistence.accessMode }}
@@ -81,8 +81,8 @@ spec:
 {{- end }}
   config:
     auth:
-      disable_login_form: true
-      disable_signout_menu: true
+      disable_login_form: false
+      disable_signout_menu: false
       oauth_auto_login: true
       # login_cookie_name: ''
       # login_maximum_inactive_lifetime_days: 0
@@ -112,20 +112,20 @@ spec:
       # strict_transport_security_subdomains: true
       # x_content_type_options: true
       # x_xss_protection: true
-    server:
-      domain: ''
-      # cert_file: ''
-      # cert_key: ''
-      # enable_gzip: true
-      # enforce_domain: true
-      # http_addr: ''
-      # http_port: ''
-      # protocol: ''
-      # root_url: ''
-      # router_logging: true
-      # serve_from_sub_path: true
-      # socket: ''
-      # static_root_path: ''
+    # server:
+    #   domain: ''
+    #   cert_file: ''
+    #   cert_key: ''
+    #   enable_gzip: true
+    #   enforce_domain: true
+    #   http_addr: ''
+    #   http_port: ''
+    #   protocol: ''
+    #   root_url: ''
+    #   router_logging: true
+    #   serve_from_sub_path: true
+    #   socket: ''
+    #   static_root_path: ''
     # alerting:
     #   concurrent_render_limit: 0
     #   enabled: true
