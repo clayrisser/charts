@@ -63,7 +63,7 @@ spec:
   #         operator: In
   #         values:
   #           - grafana
-  {{- .Values.persistence.enabled }}
+  {{- if .Values.persistence.enabled }}
   dataStorage:
     accessModes:
       - {{ .Values.persistence.accessMode }}
