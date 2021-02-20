@@ -14,10 +14,10 @@ spec:
     - access: proxy
       editable: true
       isDefault: false
-      jsonData:
-        timeInterval: 5s
-      name: {{ template "postgres.fullname" . }}.{{ .Release.Namespace }}
+      name: {{ template "postgres.fullname" . }}-prometheus.{{ .Release.Namespace }}
       type: prometheus
-      url: {{ template "postgres.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+      url: http://{{ template "postgres.fullname" . }}-prometheus.{{ .Release.Namespace }}.svc.cluster.local:9090
       version: 1
+      jsonData:
+        timeInterval:
 {{- end }}
