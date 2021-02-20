@@ -8,8 +8,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  {{- if .Values.ingress.grafana.enabled }}
   ingress:
-    enabled: {{ .Values.ingress.grafana.enabled }}
+    enabled: true
     annotations:
       {{- if (eq .Values.config.clusterType "aks") }}
       kubernetes.io/ingress.class: addon-http-application-routing
@@ -27,6 +28,7 @@ spec:
     path: /
     tlsEnabled: {{ .Values.ingress.grafana.tls }}
     tlsSecretName: {{ template "grafana.grafana-certificate" . }}
+  {{- end }}
   service:
     {{- if (eq .Values.service.grafana.type "ClusterIP") }}
     labels:
