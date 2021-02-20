@@ -39,6 +39,7 @@ ingress:
       name: letsencrypt-staging
 
 persistence:
+  enabled: false
   accessMode: ReadWriteOnce
   size:
     grafana: 2Gi
