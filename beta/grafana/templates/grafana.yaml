@@ -49,7 +49,7 @@ spec:
   {{- if .Values.persistence.velero.enabled }}
   deployment:
     annotations:
-      backup.velero.io/backup-volumes: data
+      backup.velero.io/backup-volumes: grafana-data
   {{- else }}
   deployment: {}
   {{- end }}
@@ -59,12 +59,12 @@ spec:
   #         operator: In
   #         values:
   #           - grafana
-  # dashboardLabelSelector:
-  #   - matchExpressions:
-  #       - key: metrics
-  #         operator: In
-  #         values:
-  #           - grafana
+  dashboardLabelSelector:
+    - matchExpressions:
+        - key: metrics
+          operator: In
+          values:
+            - grafana
   {{- if .Values.persistence.enabled }}
   dataStorage:
     accessModes:
