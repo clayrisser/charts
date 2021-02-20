@@ -4,7 +4,7 @@ kind: IntegrationPlug
 metadata:
   name: {{ template "postgres.fullname" . }}-grafana
   labels:
-    app: {{ template "postgres.name" . }}
+    app: {{ template "postgres.name" . }}-grafana
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,14 +12,14 @@ spec:
   {{- $name := (split "." .Values.config.metrics.grafana.integration)._0 -}}
   {{- $namespace := (split "." (printf "%s." .Values.config.metrics.grafana.integration))._1 | default "kube-system" }}
   socket:
-    name: {{ $name }}-grafana
+    name: {{ $name }}
     namespace: {{ $namespace }}
   replications:
     - version: integreatly.org/v1alpha1
       kind: GrafanaDashboard
-      name: {{ .Release.Name }}
+      name: {{ template "postgres.fullname" . }}
     - version: integreatly.org/v1alpha1
       kind: GrafanaDataSource
-      name: {{ .Release.Name }}
+      name: {{ template "postgres.fullname" . }}
   kustomization: {}
 {{- end }}
