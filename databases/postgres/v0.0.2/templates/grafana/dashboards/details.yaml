@@ -1769,8 +1769,6 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "PostgreSQL Details",
-      "uid": "6jtN_vfiz",
-      "version": 2
+      "title": "{{ template "postgres.fullname" . }}.{{ .Release.Namespace }} Details"
     }
 {{- end }}
