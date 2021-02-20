@@ -83,7 +83,7 @@ persistence:
     prometheus: 2Gi
     replica: 2Gi
     wal: 2Gi
-  storageClass: do-block-storage
+  storageClass: ''
   velero:
     enabled: false
     restic: true
