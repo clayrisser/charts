@@ -67,7 +67,9 @@ spec:
     accessModes:
       - {{ .Values.persistence.accessMode }}
     size: {{ .Values.persistence.size.grafana }}
+    {{- if (or (not (empty .Values.persistence.storageClass)) (eq .Values.persistence.storageClass "-")) }}
     class: {{ .Values.persistence.storageClass }}
+    {{- end }}
 {{- if (and .Values.config.resources.enabled (not (eq .Values.config.resources.enabled "false"))) }}
   resources:
     requests:

@@ -42,7 +42,7 @@ persistence:
   accessMode: ReadWriteOnce
   size:
     grafana: 2Gi
-  storageClass: do-block-storage
+  storageClass: ''
   velero:
     enabled: false
     restic: true
