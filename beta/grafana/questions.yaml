@@ -40,18 +40,6 @@ questions:
     required: true
     label: 'allow integration'
     group: Config
-  - variable: config.global
-    description: ''
-    type: boolean
-    required: true
-    label: global
-    group: Config
-  # - variable: config.projectId
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: 'project id'
-  #   group: Config
   - variable: config.admin.username
     description: ''
     type: string

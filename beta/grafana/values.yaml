@@ -6,9 +6,7 @@ images:
 config:
   allowIntegration: true
   clusterType: rke
-  global: false
   imagePullPolicy: IfNotPresent
-  projectId: ''
   updateStrategy: Recreate
   resources:
     enabled: 'false'

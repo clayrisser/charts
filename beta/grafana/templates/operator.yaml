@@ -8,10 +8,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if (not .Values.config.global) }}
   targetNamespaces:
     - {{ .Release.Namespace }}
-  {{- end }}
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
