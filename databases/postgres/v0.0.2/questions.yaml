@@ -156,16 +156,6 @@ questions:
     show_subquestion_if: true
     group: Metrics
     subquestions:
-      - variable: config.metrics.alertmanager.enabled
-        description: ''
-        type: boolean
-        required: true
-        label: 'alertmanager enabled'
-      - variable: config.metrics.grafana.enabled
-        description: ''
-        type: boolean
-        required: true
-        label: 'grafana enabled'
       - variable: config.metrics.grafana.integration
         description: ''
         type: string
@@ -176,14 +166,19 @@ questions:
         description: ''
         type: string
         required: true
-        show_if: config.metrics.grafana.enabled=true&&config.metrics.grafana.integration=
+        show_if: config.metrics.grafana.integration=
         label: 'grafana username'
       - variable: config.metrics.grafana.password
         description: ''
         type: password
         required: true
-        show_if: config.metrics.grafana.enabled=true&&config.metrics.grafana.integration=
+        show_if: config.metrics.grafana.integration=
         label: 'grafana password'
+      - variable: config.metrics.alertmanager.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'alertmanager enabled'
 
   # Persistence
   - variable: persistence.size.primary

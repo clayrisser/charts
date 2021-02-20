@@ -46,7 +46,7 @@ spec:
     grafana_admin_username: {{ .Values.config.metrics.grafana.username | quote }}
     grafana_dashboards_custom_config: ''
     grafana_datasources_custom_config: ''
-    grafana_install: {{ (and .Values.config.metrics.grafana.enabled (empty .Values.config.metrics.grafana.integration)) | quote }}
+    grafana_install: {{ (empty .Values.config.metrics.grafana.integration) | quote }}
     grafana_port: '3000'
     grafana_service_name: {{ template "postgres.fullname" . }}-grafana
     grafana_service_type: ClusterIP
