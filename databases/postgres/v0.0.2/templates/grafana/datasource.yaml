@@ -9,12 +9,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}.yaml
+  name: {{ template "postgres.grafana-datasource" . }}.yaml
   datasources:
     - access: proxy
-      editable: true
+      editable: false
       isDefault: false
-      name: {{ template "postgres.fullname" . }}-prometheus.{{ .Release.Namespace }}
+      name: {{ template "postgres.grafana-datasource" . }}
       type: prometheus
       url: http://{{ template "postgres.fullname" . }}-prometheus.{{ .Release.Namespace }}.svc.cluster.local:9090
       version: 1

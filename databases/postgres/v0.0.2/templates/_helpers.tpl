@@ -58,3 +58,11 @@ Calculate postgres base url
 {{- end }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+Grafana datasource name
+*/}}
+{{- define "postgres.grafana-datasource" }}
+{{- printf "%s-prometheus-%s" (include "postgres.fullname" .) .Release.Namespace }}
+{{- end }}
