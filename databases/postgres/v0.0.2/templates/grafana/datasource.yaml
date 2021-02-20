@@ -2,23 +2,22 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDataSource
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ template "postgres.fullname" . }}
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    metrics: grafana
 spec:
-  name: {{ .Release.Name }}.yaml
+  name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}.yaml
   datasources:
     - access: proxy
       editable: true
-      # isDefault: true
+      isDefault: false
       jsonData:
         timeInterval: 5s
-      name: {{ .Release.Name }}-prometheus
+      name: {{ template "postgres.fullname" . }}.{{ .Release.Namespace }}
       type: prometheus
-      url: {{ template "postgres.fullname" . }}-crunchy-prometheus.{{ .Release.Namespace }}.svc.cluster.local
+      url: {{ template "postgres.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
       version: 1
 {{- end }}

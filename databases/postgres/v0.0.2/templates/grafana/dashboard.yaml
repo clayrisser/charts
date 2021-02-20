@@ -2,15 +2,14 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ template "postgres.fullname" . }}
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    metrics: grafana
 spec:
-  name: {{ .Release.Name }}.json
+  name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}.json
   json: |
     {
       "id": null,
