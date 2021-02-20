@@ -1,6 +1,7 @@
 categories:
   - Server
 questions:
+
   # Config
   - variable: config.clusterType
     description: ''
@@ -39,13 +40,13 @@ questions:
     required: true
     label: 'allow integration'
     group: Config
-  - variable: config.adminUser
+  - variable: config.admin.username
     description: ''
     type: string
     required: true
     label: 'admin username'
     group: Config
-  - variable: config.adminPassword
+  - variable: config.admin.password
     description: ''
     type: password
     required: true
@@ -85,23 +86,11 @@ questions:
         label: 'resources limits memory'
 
   # Persistence
-  - variable: persistence.size.primary
+  - variable: persistence.size.grafana
     description: ''
     type: string
     required: true
-    label: 'primary size'
-    group: Persistence
-  - variable: persistence.size.replica
-    description: ''
-    type: string
-    required: true
-    label: 'replica size'
-    group: Persistence
-  - variable: persistence.size.backrest
-    description: ''
-    type: string
-    required: true
-    label: 'backrest size'
+    label: 'grafana size'
     group: Persistence
   - variable: persistence.storageClass
     description: ''
@@ -218,17 +207,17 @@ questions:
     group: 'Services and Load Balancing'
 
   # Images
-  - variable: images.grafana.repository
-    description: ''
-    type: string
-    required: true
-    label: 'grafana repository'
-    show_if: config.grafana.enabled=true
-    group: Images
-  - variable: images.grafana.tag
-    description: ''
-    type: string
-    required: true
-    label: 'grafana tag'
-    show_if: config.grafana.enabled=true
-    group: Images
+  # - variable: images.grafana.repository
+  #   description: ''
+  #   type: string
+  #   required: true
+  #   label: 'grafana repository'
+  #   show_if: config.grafana.enabled=true
+  #   group: Images
+  # - variable: images.grafana.tag
+  #   description: ''
+  #   type: string
+  #   required: true
+  #   label: 'grafana tag'
+  #   show_if: config.grafana.enabled=true
+  #   group: Images

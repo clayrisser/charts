@@ -9,73 +9,48 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   ingress:
-    enabled: {{ .Values.ingress.grafana.enabled}}
-  config:
-    auth:
-      disable_signout_menu: true
-    auth.anonymous:
-      enabled: true
-    log:
-      level: warn
-      mode: console
-    security:
-      admin_password: {{ .Values.config.adminPassword }}
-      admin_user: {{ .Values.config.adminUser }}
-  containers: []
-  initResources:
-  secrets: []
-  configMaps: []
+    enabled: {{ .Values.ingress.grafana.enabled }}
+    annotations:
+      {{- if (eq .Values.config.clusterType "aks") }}
+      kubernetes.io/ingress.class: addon-http-application-routing
+      {{- else }}
+      kubernetes.io/ingress.class: nginx
+      {{- end }}
+      {{- if .Values.ingress.grafana.tls }}
+      {{- if (empty .Values.ingress.grafana.certificate) }}
+      cert-manager.io/cluster-issuer: {{ .Values.ingress.grafana.issuer.name }}
+      kubernetes.io/tls-acme: 'true'
+      {{- end }}
+      nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+      {{- end }}
+    hostname: {{ .Values.ingress.grafana.hostname }}
+    path: /
+    tlsEnabled: {{ .Values.ingress.grafana.tls }}
+    tlsSecretName: {{ template "grafana.grafana-certificate" . }}
   service:
-    name:
-    annotations: []
-    labels: []
-    type:
-    ports: []
-    clusterIP:
+    {{- if (eq .Values.service.grafana.type "ClusterIP") }}
+    labels:
+      kubernetes.io/cluster-service: 'true'
+    {{- end }}
+    ports:
+      - name: http
+        port: {{ (eq .Values.service.grafana.type "LoadBalancer") | ternary .Values.service.grafana.lbPorts.http "3000" }}
+        targetPort: container
+        {{- if (and (eq .Values.service.grafana.type "NodePort") (not (empty .Values.service.grafana.nodePorts.http))) }}
+        nodePort: {{ .Values.service.grafana.nodePorts.http }}
+        {{- end }}
+    {{- if .Values.ingress.grafana.enabled }}
+    type: ClusterIP
+    {{- else }}
+    type: {{ .Values.service.grafana.type }}
+    {{- end }}
+  {{- if .Values.persistence.velero.enabled }}
   deployment:
-    annotations: []
-    labels: []
-    replicas:
-    nodeSelector: []
-    tolerations:
-    affinity:
-    securityContext:
-    containerSecurityContext:
-    terminationGracePeriodSeconds:
-    envFrom: []
-    skipCreateAdminAccount: false
-    priorityClassName:
-  resources:
-  serviceAccount:
-    skip: false
-    annotations: []
-    labels: []
-    imagePullSecrets: []
-  client:
-    timeout: 600
-    preferService: false
-  dataStorage:
-    annotations: []
-    labels: []
-    accessModes: []
-    size:
-    class:
-  jsonnet:
-    libraryLabelSelector:
-  baseImage:
-  initImage:
-  livenessProbeSpec:
-    initialDelaySeconds:
-    timeoutSeconds:
-    periodSeconds:
-    successThreshold:
-    failureThreshold:
-  readinessProbeSpec:
-    initialDelaySeconds:
-    timeoutSeconds:
-    periodSeconds:
-    successThreshold:
-    failureThreshold:
+    annotations:
+      backup.velero.io/backup-volumes: data
+  {{- else }}
+  deployment: {}
+  {{- end }}
   dashboardNamespaceSelector:
     - matchExpressions:
         - key: metrics
@@ -88,3 +63,314 @@ spec:
           operator: In
           values:
             - grafana
+  dataStorage:
+    accessModes:
+      - {{ .Values.persistence.accessMode }}
+    size: {{ .Values.persistence.size.grafana }}
+    class: {{ .Values.persistence.storageClass }}
+{{- if (and .Values.config.resources.enabled (not (eq .Values.config.resources.enabled "false"))) }}
+  resources:
+    requests:
+{{ toYaml .Values.config.resources.requests | indent 6 }}
+    limits:
+{{ toYaml .Values.config.resources.limits | indent 6 }}
+{{- else }}
+  resources:
+    requests: {}
+    limits: {}
+{{- end }}
+  config:
+    auth:
+      disable_login_form: true
+      disable_signout_menu: true
+      oauth_auto_login: true
+      # login_cookie_name: ''
+      # login_maximum_inactive_lifetime_days: 0
+      # login_maximum_inactive_lifetime_duration: ''
+      # login_maximum_lifetime_days: 0
+      # login_maximum_lifetime_duration: ''
+      # signout_redirect_url: ''
+      # sigv4_auth_enabled: true
+      # token_rotation_interval_minutes: 0
+    log:
+      level: warn
+      mode: console
+      # filters: ''
+    security:
+      admin_password: {{ .Values.config.admin.password | quote }}
+      admin_user: {{ .Values.config.admin.username | quote }}
+      # allow_embedding: true
+      # cookie_samesite: ''
+      # cookie_secure: true
+      # data_source_proxy_whitelist: ''
+      # disable_gravatar: true
+      # login_remember_days: 0
+      # secret_key: ''
+      # strict_transport_security: true
+      # strict_transport_security_max_age_seconds: 0
+      # strict_transport_security_preload: true
+      # strict_transport_security_subdomains: true
+      # x_content_type_options: true
+      # x_xss_protection: true
+    server:
+      domain: ''
+      # cert_file: ''
+      # cert_key: ''
+      # enable_gzip: true
+      # enforce_domain: true
+      # http_addr: ''
+      # http_port: ''
+      # protocol: ''
+      # root_url: ''
+      # router_logging: true
+      # serve_from_sub_path: true
+      # socket: ''
+      # static_root_path: ''
+    # alerting:
+    #   concurrent_render_limit: 0
+    #   enabled: true
+    #   error_or_timeout: ''
+    #   evaluation_timeout_seconds: 0
+    #   execute_alerts: true
+    #   max_attempts: 0
+    #   nodata_or_nullvalues: ''
+    #   notification_timeout_seconds: 0
+    # analytics:
+    #   check_for_updates: true
+    #   google_analytics_ua_id: ''
+    #   reporting_enabled: true
+    # auth.anonymous:
+    #   enabled: true
+    # auth.anonymous:
+    #   enabled: true
+    #   org_name: ''
+    #   org_role: ''
+    # auth.azuread:
+    #   allow_sign_up: true
+    #   allowed_domains: ''
+    #   allowed_groups: ''
+    #   auth_url: ''
+    #   client_id: ''
+    #   client_secret: ''
+    #   enabled: true
+    #   scopes: ''
+    #   token_url: ''
+    # auth.basic:
+    #   enabled: true
+    # auth.generic_oauth:
+    #   allow_sign_up: true
+    #   allowed_domains: ''
+    #   api_url: ''
+    #   auth_url: ''
+    #   client_id: ''
+    #   client_secret: ''
+    #   email_attribute_path: ''
+    #   enabled: true
+    #   role_attribute_path: ''
+    #   scopes: ''
+    #   tls_auth_ca: ''
+    #   tls_client_cert: ''
+    #   tls_client_key: ''
+    #   tls_skip_verify_insecure: true
+    #   token_url: ''
+    # auth.github:
+    #   allow_sign_up: true
+    #   allowed_organizations: ''
+    #   api_url: ''
+    #   auth_url: ''
+    #   client_id: ''
+    #   client_secret: ''
+    #   enabled: true
+    #   scopes: ''
+    #   team_ids: ''
+    #   token_url: ''
+    # auth.gitlab:
+    #   allow_sign_up: true
+    #   allowed_groups: ''
+    #   api_url: ''
+    #   auth_url: ''
+    #   client_id: ''
+    #   client_secret: ''
+    #   enabled: true
+    #   scopes: ''
+    #   token_url: ''
+    # auth.google:
+    #   allow_sign_up: true
+    #   allowed_domains: ''
+    #   auth_url: ''
+    #   client_id: true
+    #   client_secret: ''
+    #   enabled: true
+    #   scopes: ''
+    #   token_url: ''
+    # auth.ldap:
+    #   allow_sign_up: true
+    #   config_file: true
+    #   enabled: true
+    # auth.proxy:
+    #   auto_sign_up: true
+    #   enable_login_token: true
+    #   enabled: true
+    #   header_name: true
+    #   header_property: ''
+    #   headers: ''
+    #   ldap_sync_ttl: true
+    #   whitelist: ''
+    # auth.saml:
+    #   allow_idp_initiated: true
+    #   allowed_organizations: ''
+    #   assertion_attribute_email: ''
+    #   assertion_attribute_groups: ''
+    #   assertion_attribute_login: ''
+    #   assertion_attribute_name: ''
+    #   assertion_attribute_org: ''
+    #   assertion_attribute_role: ''
+    #   certificate_path: ''
+    #   enabled: true
+    #   idp_metadata_url: ''
+    #   max_issue_delay: ''
+    #   metadata_valid_duration: ''
+    #   org_mapping: ''
+    #   private_key_path: ''
+    #   relay_state: ''
+    #   role_values_admin: ''
+    #   role_values_editor: ''
+    #   role_values_grafana_admin: ''
+    #   signature_algorithm: ''
+    #   single_logout: true
+    # dashboards:
+    #   versions_to_keep: 0
+    # database:
+    #   ca_cert_path: ''
+    #   cache_mode: ''
+    #   client_cert_path: ''
+    #   client_key_path: ''
+    #   conn_max_lifetime: 0
+    #   host: ''
+    #   log_queries: true
+    #   max_idle_conn: 0
+    #   max_open_conn: 0
+    #   name: ''
+    #   password: ''
+    #   path: ''
+    #   server_cert_name: ''
+    #   ssl_mode: ''
+    #   type: ''
+    #   url: ''
+    #   user: ''
+    # dataproxy:
+    #   logging: true
+    #   send_user_header: true
+    #   timeout: 0
+    # external_image_storage.azure_blob:
+    #   account_key: ''
+    #   account_name: ''
+    #   container_name: ''
+    # external_image_storage.gcs:
+    #   bucket: ''
+    #   key_file: ''
+    #   path: ''
+    # external_image_storage.s3:
+    #   access_key: ''
+    #   bucket: ''
+    #   bucket_url: ''
+    #   path: ''
+    #   region: ''
+    #   secret_key: ''
+    # external_image_storage.webdav:
+    #   password: ''
+    #   public_url: ''
+    #   url: ''
+    #   username: ''
+    # external_image_storage:
+    #   provider: ''
+    # log.console:
+    #   format: ''
+    #   level: ''
+    # metrics.graphite:
+    #   address: ''
+    #   prefix: ''
+    # metrics:
+    #   basic_auth_password: ''
+    #   basic_auth_username: ''
+    #   enabled: true
+    #   interval_seconds: true
+    # panels:
+    #   disable_sanitize_html: false
+    # paths:
+    #   temp_data_lifetime: ''
+    # plugins:
+    #   enable_alpha: true
+    # remote_cache:
+    #   type: ''
+    #   connstr: ''
+    # security:
+    #   admin_password: ''
+    #   admin_user: ''
+    #   allow_embedding: true
+    #   cookie_samesite: ''
+    #   cookie_secure: true
+    #   data_source_proxy_whitelist: ''
+    #   disable_gravatar: true
+    #   login_remember_days: 0
+    #   secret_key: ''
+    #   strict_transport_security: true
+    #   strict_transport_security_max_age_seconds: 0
+    #   strict_transport_security_preload: true
+    #   strict_transport_security_subdomains: true
+    #   x_content_type_options: true
+    #   x_xss_protection: true
+    # smtp:
+    #   cert_file: ''
+    #   ehlo_identity: ''
+    #   enabled: true
+    #   from_address: ''
+    #   from_name: ''
+    #   host: ''
+    #   key_file: ''
+    #   password: ''
+    #   skip_verify: true
+    #   user: ''
+    # snapshots:
+    #   external_enabled: true
+    #   external_snapshot_name: ''
+    #   external_snapshot_url: ''
+    #   snapshot_remove_expired: true
+    # users:
+    #   allow_org_create: true
+    #   allow_sign_up: true
+    #   auto_assign_org: true
+    #   auto_assign_org_id: ''
+    #   auto_assign_org_role: ''
+    #   editors_can_admin: true
+    #   login_hint: ''
+    #   password_hint: ''
+    #   viewers_can_edit: true
+  # containers: []
+  # initResources: {}
+  # secrets: []
+  # configMaps: []
+  # serviceAccount:
+  #   skip: false
+  #   annotations: {}
+  #   labels: {}
+  #   imagePullSecrets: []
+  # client:
+  #   timeout: 600
+  #   preferService: false
+  # jsonnet:
+  #   libraryLabelSelector: {}
+  # baseImage: ''
+  # initImage: ''
+  # livenessProbeSpec:
+  #   initialDelaySeconds: 0
+  #   timeoutSeconds: 0
+  #   periodSeconds: 0
+  #   successThreshold: 0
+  #   failureThreshold: 0
+  # readinessProbeSpec:
+  #   initialDelaySeconds: 0
+  #   timeoutSeconds: 0
+  #   periodSeconds: 0
+  #   successThreshold: 0
+  #   failureThreshold: 0

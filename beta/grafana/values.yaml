@@ -16,8 +16,9 @@ config:
     limits:
       cpu: 250m
       memory: 512Mi
-  adminUser: 'admin'
-  adminPassword: 'pass'
+  admin:
+    username: admin
+    passsword: P@ssw0rd
 
 service:
   grafana:
