@@ -1,0 +1,19 @@
+{{- if (not (empty .Values.config.metrics.grafana.integration)) }}
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: {{ template "postgres.fullname" . }}-backrest
+  labels:
+    app: {{ template "postgres.name" . }}-backrest
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    metrics: grafana
+spec:
+  name: {{ template "postgres.fullname" . }}-backrest
+  customFolderName: {{ template "postgres.fullname" . }}.{{ .Release.Namespace }}
+  url: https://raw.githubusercontent.com/silicon-hills/grafana-dashboards/main/postgres/PGBackrest.json
+  datasources:
+    - inputName: PROMETHEUS
+      datasourceName: {{ template "postgres.grafana-datasource" . }}
+{{- end }}
