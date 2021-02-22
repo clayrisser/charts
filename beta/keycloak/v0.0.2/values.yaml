@@ -1,0 +1,91 @@
+images:
+  keycloak:
+    repository: jboss/keycloak
+    tag: 9.0.0
+  keycloakOperator:
+    repository: quay.io/keycloak/keycloak-operator
+    tag: 11.0.3
+
+config:
+  clusterProvider: infrastructure
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  keycloak:
+    baseUrl: ''
+    defaultTheme: keycloak
+    hostname: ''
+    password: pass
+    themeZip: keycloak
+    username: admin
+    welcomeTheme: ''
+    migrationStrategy: IGNORE_EXISTING
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  keycloakOperator:
+    baseUrl: ''
+    hostname: ''
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  postgres:
+    integration: ''
+    database: keycloak
+    host: ''
+    password: P@ssw0rd
+    port: 5432
+    username: postgres
+    # url: ''
+
+service:
+  keycloak:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+    lbPorts:
+      http: 80
+
+ingress:
+  keycloak:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+    restic: true
+    schedule: ''
+    ttl: 2160h0m00s
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

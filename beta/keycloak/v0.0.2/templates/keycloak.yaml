@@ -1,0 +1,82 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: {{ template "keycloak.fullname" . }}
+  labels:
+    app: {{ template "keycloak.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  instances: 1
+  extensions: []
+  externalAccess:
+    enabled: true
+    host: {{ template "keycloak.keycloak-hostname" . }}
+    tlsTermination: reencrypt
+  keycloakDeploymentSpec:
+    experimental:
+      # command:
+      #   - sh
+      #   - -c
+      #   - |
+      #       {{- if (not (empty .Values.config.keycloak.themeZip)) }}
+      #       export CWD=$(pwd)
+      #       mkdir -p /opt/jboss/keycloak/injected-themes
+      #       cd /opt/jboss/keycloak/injected-themes
+      #       wget -qO- {{ .Values.config.keycloak.themeZip }} | unzip -
+      #       cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
+      #       cd $CWD
+      #       {{- end }}
+      #       exec /opt/jboss/tools/docker-entrypoint.sh
+      # args: []
+      env:
+        - name: PROXY_ADDRESS_FORWARDING
+          value: 'true'
+        {{- if .Values.config.debug }}
+        - name: KEYCLOAK_LOGLEVEL
+          value: ALL
+        - name: ROOT_LOGLEVEL
+          value: ALL
+        {{- end }}
+        - name: KEYCLOAK_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "keycloak.fullname" . }}
+              key: keycloak_hostname
+        - name: KEYCLOAK_WELCOME_THEME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "keycloak.fullname" . }}
+              key: keycloak_welcome_theme
+        - name: KEYCLOAK_WELCOME_THEME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "keycloak.fullname" . }}
+              key: keycloak_default_theme
+        - name: KEYCLOAK_USER
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "keycloak.fullname" . }}
+              key: keycloak_username
+        - name: KEYCLOAK_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "keycloak.fullname" . }}
+              key: keycloak_password
+      volumes:
+        items: []
+{{- if .Values.config.keycloak.resources.enabled }}
+    resources:
+      requests:
+{{ toYaml .Values.config.keycloak.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.keycloak.resources.limits | indent 8 }}
+{{- end }}
+  migration:
+    backups:
+      enabled: false
+      strategy: IGNORE_EXISTING
+  podDisruptionBudget:
+    enabled: false
+  unmanaged: false
