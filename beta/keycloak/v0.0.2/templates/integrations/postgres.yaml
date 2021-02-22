@@ -43,11 +43,11 @@ spec:
         kind: Secret
         name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
-      - group: helm.fluxcd.io
-        version: v1
-        kind: HelmRelease
-        name: {{ .Release.Name }}
-        namespace: {{ .Release.Namespace }}
+      # - group: helm.fluxcd.io
+      #   version: v1
+      #   kind: HelmRelease
+      #   name: {{ .Release.Name }}
+      #   namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
