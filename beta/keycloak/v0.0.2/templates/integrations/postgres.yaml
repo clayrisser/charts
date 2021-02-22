@@ -21,7 +21,15 @@ spec:
       name: {{ $namespace }}-postgres-socket
   kustomization:
     configuration:
-      varReference: []
+      varReference:
+        - group: ''
+          version: v1
+          kind: Secret
+          path: data
+        - group: keycloak.org
+          version: v1alpha1
+          kind: Secret
+          path: spec/externalDatabase/enabled
     resources:
       - version: v1
         kind: ConfigMap
@@ -47,18 +55,11 @@ spec:
           metadata:
             name: keycloak-db-secret
             namespace: {{ .Release.Namespace }}
-          stringData:
+          data:
             POSTGRES_DATABASE: "$(POSTGRES_DATABASE)"
             POSTGRES_EXTERNAL_ADDRESS: "$(POSTGRES_HOSTNAME)"
             POSTGRES_EXTERNAL_PORT: "$(POSTGRES_PORT)"
             POSTGRES_USERNAME: "$(POSTGRES_USERNAME)"
-      - patch: |
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: keycloak-db-secret
-            namespace: {{ .Release.Namespace }}
-          data:
             POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
       - patch: |
           apiVersion: keycloak.org/v1alpha1
@@ -104,11 +105,11 @@ spec:
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PASSWORD
         fieldref:
-          fieldPath: data.POSTGRES_PASSWORD
+          fieldPath: data.password
         objref:
           apiVersion: v1
-          kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          kind: Secret
+          name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
