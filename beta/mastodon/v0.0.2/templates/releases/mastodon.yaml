@@ -14,6 +14,8 @@ spec:
     git: https://github.com/nuevesolutions/mastodon.git
     ref: 0.1.2-silicon
     path: chart
+  git:
+    timeout: 60s
   values:
     replicaCount: 1
     image:
