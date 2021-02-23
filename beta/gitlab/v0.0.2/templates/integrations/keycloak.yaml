@@ -11,9 +11,9 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   client:
-    name: {{ .Values.config.keycloak.clientId }}
+    name: {{ template "gitlab.keycloak-client-id" . }}
     baseUrl: {{ template "gitlab.gitlab-base-url" . }}
-    clientId: {{ .Values.config.keycloak.clientId }}
+    clientId: {{ template "gitlab.keycloak-client-id" . }}
   realmSelector:
     matchLabels:
       app: sso

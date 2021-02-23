@@ -78,3 +78,10 @@ Calculate postgres storage name
 {{- define "gitlab.postgres-storage" }}
 {{- printf "%s%s" (include "gitlab.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
 {{- end }}
+
+{{/*
+Calculate keycloak client id
+*/}}
+{{- define "gitlab.keycloak-client-id" }}
+{{- printf "%s" (.Values.config.keycloak.clientId | default (include "gitlab.gitlab-hostname" .)) }}
+{{- end }}

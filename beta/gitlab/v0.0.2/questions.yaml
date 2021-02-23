@@ -96,6 +96,7 @@ questions:
         type: string
         required: false
         label: 'client id'
+        show_if: config.keycloak.integration=
       - variable: config.keycloak.realmName
         description: ''
         type: string
