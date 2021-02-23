@@ -49,7 +49,7 @@ service:
 ingress:
   mastodon:
     certificate: ''
-    enabled: false
+    enabled: true
     hostname: ''
     tls: false
     issuer:

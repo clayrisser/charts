@@ -32,5 +32,11 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-spec: {}
+spec:
+  client:
+    name: {{ .Values.config.keycloak.clientId }}
+    baseUrl: {{ .Values.config.keycloak.baseUrl }}
+  realmSelector:
+    matchLabels:
+      app: sso
 {{- end }}
