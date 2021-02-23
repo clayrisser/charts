@@ -21,9 +21,9 @@ spec:
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "gitlab.fullname" . }}-kc-client
+  name: {{ template "gitlab.fullname" . }}-keycloak
   labels:
-    app: {{ template "gitlab.name" . }}-kc-client
+    app: {{ template "gitlab.name" . }}-keycloak
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -37,5 +37,5 @@ spec:
     - group: keycloak.org
       version: v1alpha1
       kind: KeycloakClient
-      name: {{ $name }}
+      name: {{ template "gitlab.fullname" . }}
 {{- end }}
