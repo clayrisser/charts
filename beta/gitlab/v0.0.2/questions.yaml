@@ -91,31 +91,31 @@ questions:
         type: string
         required: false
         label: 'base url'
-        show_if: config.keycloak.enabled=true
+        show_if: config.keycloak.integration=
       - variable: config.keycloak.company
         description: ''
         type: string
         required: false
         label: company
-        show_if: config.keycloak.enabled=true
+        show_if: config.keycloak.integration=
       - variable: config.keycloak.clientId
         description: ''
         type: string
         required: false
         label: 'client id'
-        show_if: config.keycloak.enabled=true
+        show_if: config.keycloak.integration=
       - variable: config.keycloak.realmName
         description: ''
         type: string
         required: false
         label: 'realm name'
-        show_if: config.keycloak.enabled=true
+        show_if: config.keycloak.integration=
       - variable: config.keycloak.certificate
         description: ''
         type: string
         required: false
         label: certificate
-        show_if: config.keycloak.enabled=true
+        show_if: config.keycloak.integration=
       - variable: config.keycloak.autoSignIn
         description: ''
         type: boolean
