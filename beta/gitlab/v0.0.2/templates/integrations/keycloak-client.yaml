@@ -1,5 +1,5 @@
 
-{{- if (not (empty .Values.config.keycloak.integration)) }}
+{{- if (and (not (empty .Values.config.keycloak.integration)) .Values.config.keycloak.enabled) }}
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
@@ -36,6 +36,7 @@ spec:
   client:
     name: {{ .Values.config.keycloak.clientId }}
     baseUrl: {{ .Values.config.keycloak.baseUrl }}
+    clientId: {{ .Values.config.keycloak.baseUrl }}
   realmSelector:
     matchLabels:
       app: sso
