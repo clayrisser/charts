@@ -1,5 +1,23 @@
-
 {{- if (and (not (empty .Values.config.keycloak.integration)) .Values.config.keycloak.enabled) }}
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: {{ template "gitlab.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "gitlab.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  client:
+    name: {{ .Values.config.keycloak.clientId }}
+    baseUrl: {{ .Values.config.keycloak.baseUrl }}
+    clientId: {{ .Values.config.keycloak.baseUrl }}
+  realmSelector:
+    matchLabels:
+      app: sso
+---
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
@@ -19,25 +37,5 @@ spec:
     - group: keycloak.org
       version: v1alpha1
       kind: KeycloakClient
-      name: {{ $name }}-kc-client
-  kustomization: {}
----
-apiVersion: keycloak.org/v1alpha1
-kind: KeycloakClient
-metadata:
-  name: {{ template "gitlab.fullname" . }}-kc-client
-  namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ template "gitlab.name" . }}-kc-client
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  client:
-    name: {{ .Values.config.keycloak.clientId }}
-    baseUrl: {{ .Values.config.keycloak.baseUrl }}
-    clientId: {{ .Values.config.keycloak.baseUrl }}
-  realmSelector:
-    matchLabels:
-      app: sso
+      name: {{ $name }}
 {{- end }}
