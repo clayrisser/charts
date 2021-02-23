@@ -1,0 +1,15 @@
+{{- if .Values.config.allowIntegration }}
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationSocket
+metadata:
+  name: {{ template "keycloak.fullname" . }}
+  labels:
+    app: {{ template "keycloak.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  appendName: {{ .Release.Name }}
+  replications: {}
+  hooks: []
+{{- end }}

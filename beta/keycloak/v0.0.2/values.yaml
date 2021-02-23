@@ -12,6 +12,7 @@ config:
   updateStrategy: RollingUpdate
   debug: false
   keycloak:
+    allowIntegration: true
     baseUrl: ''
     defaultTheme: keycloak
     hostname: ''

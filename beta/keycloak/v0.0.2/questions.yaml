@@ -1,8 +1,7 @@
 categories:
   - Server
 questions:
-
-# Config
+  # Config
   - variable: config.clusterProvider
     default: infrastructure
     description: ''
@@ -24,6 +23,13 @@ questions:
       - Always
     required: true
     label: 'pull policy'
+    group: Config
+  - variable: config.allowIntegration
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'allow integration'
     group: Config
   - variable: config.updateStrategy
     default: Recreate
@@ -95,7 +101,7 @@ questions:
     label: 'keycloak migration strategy'
     group: Config
 
-# Postgres Config
+  # Postgres Config
   - variable: config.postgres.integration
     default: ''
     description: ''
@@ -152,7 +158,7 @@ questions:
   #   label: url
   #   group: 'Postgres Config'
 
-# Persistence
+  # Persistence
   - variable: persistence.enabled
     default: false
     description: ''
@@ -222,7 +228,7 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+  # Services and Load Balancing
   - variable: ingress.keycloak.enabled
     default: true
     description: ''
@@ -296,7 +302,7 @@ questions:
     label: 'keycloak http lb port'
     group: 'Services and Load Balancing'
 
-# Images
+  # Images
   - variable: images.keycloak.repository
     default: jboss/keycloak
     description: ''
