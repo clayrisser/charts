@@ -16,7 +16,7 @@ spec:
     clientId: {{ template "gitlab.keycloak-client-id" . }}
   realmSelector:
     matchLabels:
-      app: sso
+      app: {{ (split "." .Values.config.keycloak.integration)._0 }}
 ---
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug

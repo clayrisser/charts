@@ -80,3 +80,22 @@ spec:
   podDisruptionBudget:
     enabled: false
   unmanaged: false
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: {{ template "keycloak.fullname" . }}
+  labels:
+    app: {{ template "keycloak.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  realm:
+    id: basic
+    realm: basic
+    enabled: true
+    displayName: 'Basic Realm'
+  instanceSelector:
+    matchLabels:
+      app: {{ template "keycloak.fullname" . }}
