@@ -1,0 +1,136 @@
+{{- if (not (empty .Values.config.postgres.integration)) }}
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationPlug
+metadata:
+  name: {{ template "mastodon.fullname" . }}-postgres
+  labels:
+    app: {{ template "mastodon.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  cleanup: false
+  {{- $name := (split "." .Values.config.postgres.integration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._1 | default "kube-system" }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  replications:
+    - version: v1
+      kind: ConfigMap
+      name: {{ $namespace }}-postgres-socket
+  kustomization:
+    configuration:
+      varReference:
+        - group: helm.fluxcd.io
+          version: v1
+          kind: HelmRelease
+          path: spec/values/postgresql
+        - version: v1
+          kind: Secret
+          path: data
+        - version: v1
+          kind: ConfigMap
+          path: data
+    resources:
+      - version: v1
+        kind: ConfigMap
+        name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: ConfigMap
+        name: {{ $namespace }}-postgres-socket
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+        namespace: {{ .Release.Namespace }}
+      - group: helm.fluxcd.io
+        version: v1
+        kind: HelmRelease
+        name: {{ .Release.Name }}
+        namespace: {{ .Release.Namespace }}
+    patches:
+      - patch: |
+          apiVersion: helm.fluxcd.io/v1
+          kind: HelmRelease
+          metadata:
+            name: {{ .Release.Name }}
+            namespace: {{ .Release.Namespace }}
+          spec:
+            values:
+              postgresql:
+                postgresqlDatabase: "$(POSTGRES_DATABASE)"
+                postgresqlUsername: "$(POSTGRES_USERNAME)"
+                postgresqlHost: "$(POSTGRES_HOSTNAME)"
+                postgresqlPort: "$(POSTGRES_PORT)"
+      - patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: {{ .Release.Name }}-{{ .Release.Name }}-mastodon-env
+            namespace: {{ .Release.Namespace }}
+          data:
+            DB_HOST: "$(POSTGRES_HOSTNAME)"
+            DB_NAME: "$(POSTGRES_DATABASE)"
+            DB_PORT: "$(POSTGRES_PORT)"
+            DB_USER: "$(POSTGRES_USERNAME)"
+      - patch: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: {{ .Release.Name }}-{{ .Release.Name }}-postgresql
+            namespace: {{ .Release.Namespace }}
+          type: Opaque
+          data:
+            postgresql-password: "$(POSTGRES_PASSWORD)"
+    vars:
+      - name: POSTGRES_DATABASE
+        fieldref:
+          fieldPath: data.database
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-socket
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_HOSTNAME
+        fieldref:
+          fieldPath: data.POSTGRES_HOSTNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_PORT
+        fieldref:
+          fieldPath: data.POSTGRES_PORT
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_USERNAME
+        fieldref:
+          fieldPath: data.POSTGRES_USERNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_PASSWORD
+        fieldref:
+          fieldPath: data.password
+        objref:
+          apiVersion: v1
+          kind: Secret
+          name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $namespace }}-postgres-socket
+  namespace: {{ .Release.Namespace }}
+data:
+  database: {{ .Values.config.postgres.database }}
+{{- end }}
