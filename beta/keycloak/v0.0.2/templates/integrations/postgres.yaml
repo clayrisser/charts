@@ -22,7 +22,7 @@ spec:
   kustomization:
     configuration:
       varReference:
-        - group: ''
+        - group: pg-details
           version: v1
           kind: Secret
           path: data
@@ -43,14 +43,9 @@ spec:
         kind: Secret
         name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
-      # - group: helm.fluxcd.io
-      #   version: v1
-      #   kind: HelmRelease
-      #   name: {{ .Release.Name }}
-      #   namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
-          apiVersion: v1
+          apiVersion: pg-details/v1
           kind: Secret
           metadata:
             name: keycloak-db-secret
