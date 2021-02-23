@@ -22,7 +22,7 @@ spec:
   kustomization:
     configuration:
       varReference:
-        - group: pg-details
+        - group: ''
           version: v1
           kind: Secret
           path: data
@@ -45,7 +45,7 @@ spec:
         namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
-          apiVersion: pg-details/v1
+          apiVersion: v1
           kind: Secret
           metadata:
             name: keycloak-db-secret
