@@ -10,6 +10,6 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   appendName: {{ .Release.Name }}
-  replications: {}
+  replications: []u
   hooks: []
 {{- end }}
