@@ -17,11 +17,10 @@ config:
       region: us-east-1
       secretKey:
   keycloak:
+    enabled: false
     integration: ''
-    baseUrl: ''
     clientId: ''
     companyName: KeyCloak
-    enabled: false
     realmName: master
     certificate: ''
     autoSignIn: false

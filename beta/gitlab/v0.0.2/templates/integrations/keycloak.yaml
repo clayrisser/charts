@@ -12,7 +12,7 @@ metadata:
 spec:
   client:
     name: {{ .Values.config.keycloak.clientId }}
-    baseUrl: {{ .Values.config.keycloak.baseUrl }}
+    baseUrl: {{ template "gitlab.gitlab-base-url" . }}
     clientId: {{ .Values.config.keycloak.clientId }}
   realmSelector:
     matchLabels:

@@ -86,11 +86,6 @@ questions:
         type: string
         required: false
         label: integration
-      - variable: config.keycloak.baseUrl
-        description: ''
-        type: string
-        required: false
-        label: 'base url'
       - variable: config.keycloak.company
         description: ''
         type: string
