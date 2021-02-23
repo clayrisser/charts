@@ -42,6 +42,15 @@ spec:
         kind: Secret
         name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: keycloak-db-secret
+        namespace: {{ .Release.Namespace }}
+      - group: keycloak.org
+        version: v1alpha1
+        kind: Keycloak
+        name: {{ template "keycloak.fullname" . }}
+        namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
