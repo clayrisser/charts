@@ -1,0 +1,36 @@
+
+{{- if (not (empty .Values.config.keycloak.integration)) }}
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationPlug
+metadata:
+  name: {{ template "gitlab.fullname" . }}-kc-client
+  labels:
+    app: {{ template "gitlab.name" . }}-kc-client
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- $name := (split "." .Values.config.keycloak.integration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.integration))._1 | default "kube-system" }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  replications:
+    - group: keycloak.org
+      version: v1alpha1
+      kind: KeycloakClient
+      name: {{ $name }}-kc-client
+  kustomization: {}
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: {{ template "gitlab.fullname" . }}-kc-client
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "gitlab.name" . }}-kc-client
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec: {}
+{{- end }}
