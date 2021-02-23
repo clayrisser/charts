@@ -13,7 +13,7 @@ spec:
   client:
     name: {{ .Values.config.keycloak.clientId }}
     baseUrl: {{ .Values.config.keycloak.baseUrl }}
-    clientId: {{ .Values.config.keycloak.baseUrl }}
+    clientId: {{ .Values.config.keycloak.clientId }}
   realmSelector:
     matchLabels:
       app: sso
