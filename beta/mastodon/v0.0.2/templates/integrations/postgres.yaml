@@ -32,6 +32,7 @@ spec:
         - version: v1
           kind: ConfigMap
           path: data
+    retryTimeout: 9000
     resources:
       - version: v1
         kind: ConfigMap
