@@ -50,6 +50,14 @@ spec:
         kind: HelmRelease
         name: {{ .Release.Name }}
         namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: ConfigMap
+        name: {{ .Release.Name }}-{{ .Release.Name }}-mastodon-env
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: {{ .Release.Name }}-{{ .Release.Name }}-postgresql
+        namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: helm.fluxcd.io/v1
