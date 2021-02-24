@@ -39,7 +39,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: ConfigMap
-        name: {{ $namespace }}-postgres-socket-{{ $namespace }}
+        name: {{ $namespace }}-postgres-socket
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
