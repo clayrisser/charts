@@ -13,7 +13,7 @@ config:
     baseUrl: ''
     defaultTheme: keycloak
     hostname: ''
-    password: pass
+    password: P@ssw0rd
     themeZip: keycloak
     username: admin
     welcomeTheme: ''
