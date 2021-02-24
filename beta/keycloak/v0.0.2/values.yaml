@@ -2,9 +2,6 @@ images:
   keycloak:
     repository: jboss/keycloak
     tag: 9.0.0
-  keycloakOperator:
-    repository: quay.io/keycloak/keycloak-operator
-    tag: 11.0.3
 
 config:
   clusterProvider: infrastructure
@@ -21,16 +18,6 @@ config:
     username: admin
     welcomeTheme: ''
     migrationStrategy: IGNORE_EXISTING
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 256Mi
-  keycloakOperator:
-    baseUrl: ''
-    hostname: ''
     resources:
       requests:
         cpu: 100m

@@ -317,17 +317,3 @@ questions:
     required: true
     label: 'keycloak tag'
     group: Images
-  - variable: images.keycloakOperator.repository
-    default: quay.io/keycloak/keycloak-operator
-    description: ''
-    type: string
-    required: true
-    label: 'keycloak operator repository'
-    group: Images
-  - variable: images.keycloakOperator.tag
-    default: 11.0.3
-    description: ''
-    type: string
-    required: true
-    label: 'keycloak operator tag'
-    group: Images
