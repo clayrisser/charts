@@ -35,7 +35,7 @@ spec:
     resources:
       - version: v1
         kind: ConfigMap
-        name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+        name: {{ $namespace }}-postgres-connection
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: ConfigMap
@@ -43,21 +43,21 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+        name: {{ $namespace }}-postgres-postgres-secret
         namespace: {{ .Release.Namespace }}
       - group: helm.fluxcd.io
         version: v1
         kind: HelmRelease
         name: {{ .Release.Name }}
         namespace: {{ .Release.Namespace }}
-      - version: v1
-        kind: ConfigMap
-        name: {{ .Release.Name }}-{{ .Release.Name }}-mastodon-env
-        namespace: {{ .Release.Namespace }}
-      - version: v1
-        kind: Secret
-        name: {{ .Release.Name }}-{{ .Release.Name }}-postgresql
-        namespace: {{ .Release.Namespace }}
+      # - version: v1
+      #   kind: ConfigMap
+      #   name: {{ .Release.Name }}-{{ .Release.Name }}-mastodon-env
+      #   namespace: {{ .Release.Namespace }}
+      # - version: v1
+      #   kind: Secret
+      #   name: {{ .Release.Name }}-{{ .Release.Name }}-postgresql
+      #   namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: helm.fluxcd.io/v1
