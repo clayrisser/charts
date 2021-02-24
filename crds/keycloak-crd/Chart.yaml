@@ -4,5 +4,6 @@ description: Installs the CRDs for keycloak.
 name: keycloak-crd
 type: application
 annotations:
-  catalog.cattle.io/release-name: keycloak-crd
+  catalog.cattle.io/hidden: 'true'
   catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/release-name: keycloak-crd
