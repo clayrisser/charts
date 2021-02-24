@@ -15,8 +15,7 @@ spec:
     host: {{ template "keycloak.keycloak-hostname" . }}
     tlsTermination: reencrypt
   external:
-    enabled: true
-    url: https://{{ template "keycloak.keycloak-hostname" . }}
+    enabled: false
   keycloakDeploymentSpec:
     experimental:
       # command:
