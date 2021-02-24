@@ -43,7 +43,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ $namespace }}-postgres-postgres-secret
+        name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - group: helm.fluxcd.io
         version: v1
@@ -71,7 +71,7 @@ spec:
                 postgresqlDatabase: "$(POSTGRES_DATABASE)"
                 postgresqlUsername: "$(POSTGRES_USERNAME)"
                 postgresqlHost: "$(POSTGRES_HOSTNAME)"
-                postgresqlPort: "$(POSTGRES_PORT)"
+                postgresqlPort: "$(POSTGRES_PORT)                                  "
       - patch: |
           apiVersion: v1
           kind: ConfigMap
