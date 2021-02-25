@@ -1,3 +1,0 @@
-# mastodon
-
-> social network server
