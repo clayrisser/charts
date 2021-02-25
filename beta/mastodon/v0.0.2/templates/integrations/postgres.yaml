@@ -72,7 +72,7 @@ spec:
                 postgresqlDatabase: "$(POSTGRES_DATABASE)"
                 postgresqlUsername: "$(POSTGRES_USERNAME)"
                 postgresqlHost: "$(POSTGRES_HOSTNAME)"
-                postgresqlPort: "$(POSTGRES_PORT)                                  "
+                postgresqlPort: "$(POSTGRES_PORT)"
       - patch: |
           apiVersion: v1
           kind: ConfigMap
