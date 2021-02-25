@@ -27,7 +27,7 @@ config:
   secret: shhh
   admin:
     email: admin@example.com
-    username: root
+    username: mastodon
   postgres:
     integration:
     database: mastodon

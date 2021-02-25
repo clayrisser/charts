@@ -73,13 +73,13 @@ spec:
       delivery_method: smtp
       domain:
       enable_starttls_auto: true
-      from_address: notifications@example.com
+      from_address: promanager1111@gmail.com
       login:
       openssl_verify_mode: peer
-      password:
+      password: +E!g9L8W]e>u^FE+
       port: 587
       reply_to:
-      server: smtp.mailgun.org
+      server: smtp.gmail.com
       tls: false
     elasticsearch:
       enabled: {{ .Values.config.elasticsearch.enabled }}
