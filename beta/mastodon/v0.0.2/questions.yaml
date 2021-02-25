@@ -172,12 +172,12 @@ questions:
     required: false
     label: 'access mode'
     group: Persistence
-  - variable: persistence.existingClaim.mastodon
-    description: ''
-    type: string
-    required: false
-    label: 'mastodon existing claim'
-    group: Persistence
+  # - variable: persistence.existingClaim.mastodon
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: 'mastodon existing claim'
+  #   group: Persistence
   - variable: persistence.size.assets
     description: ''
     type: string

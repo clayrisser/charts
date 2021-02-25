@@ -62,7 +62,7 @@ persistence:
   # existingClaim:
   #   mastodon: ''
   size:
-    assets: Gi
+    assets: 2Gi
     system: 2Gi
   velero:
     enabled: false
