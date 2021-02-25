@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "minio-operator.fullname" . }}-install
+  labels:
+    app: {{ template "minio-operator.name" . }}-install
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: '3'
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "minio-operator.name" . }}-install
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: {{ template "minio-operator.fullname" . }}-kubectl
+          image: bitnami/kubectl:1.17.12
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+                (
+                  set -x; cd "$(mktemp -d)" &&
+                  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+                  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+                  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" &&
+                  tar zxvf krew.tar.gz &&
+                  KREW=./krew-"${OS}_${ARCH}" &&
+                  "$KREW" install krew
+                )
+                export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+                kubectl krew update
+                kubectl krew install minio
+                kubectl minio init
