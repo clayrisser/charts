@@ -10,7 +10,7 @@ config:
   redis:
     password: ''
   elasticsearch:
-    enabled: true
+    enabled: false
   mastodon:
     baseUrl: ''
     hostname: ''
