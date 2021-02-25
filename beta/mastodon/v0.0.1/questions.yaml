@@ -34,6 +34,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.elasticsearch.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'elasticsearch enabled'
+    group: Config
   - variable: config.secret
     description: ''
     type: password
@@ -97,33 +103,33 @@ questions:
         required: true
         label: 'mastodon resources limits memory'
 
-  # Postgres Config
+  # Postgres
   - variable: config.postgres.integration
     description: ''
     type: string
     required: false
     label: integration
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.host
     description: ''
     type: string
     required: false
     label: host
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.database
     description: ''
     type: string
     required: true
     label: database
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.password
     description: ''
     type: password
     required: true
     label: password
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.port
     description: ''
     type: int
@@ -132,21 +138,21 @@ questions:
     required: true
     label: port
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.url
     description: ''
     type: string
     required: false
     label: url
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.username
     description: ''
     type: string
     required: true
     label: username
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
 
   # Persistence
   - variable: persistence.enabled
