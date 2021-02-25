@@ -11,7 +11,7 @@ spec:
   forceUpgrade: false
   helmVersion: v3
   chart:
-    git: https://github.com/nuevesolutions/mastodon.git
+    git: https://github.com/silicon-hills/mastodon
     ref: 0.1.2-silicon
     path: chart
   git:
@@ -19,9 +19,9 @@ spec:
   values:
     replicaCount: 1
     image:
-      repository: tootsuite/mastodon
-      pullPolicy: Always
-      tag: v3.3.0
+      repository: {{ .Values.images.mastodon.repository }}
+      pullPolicy: {{ .Values.config.imagePullPolicy }}
+      tag: {{ .Values.images.mastodon.tag }}
     ingress:
       enabled: {{ .Values.ingress.mastodon.enabled }}
       annotations:
@@ -73,13 +73,13 @@ spec:
       delivery_method: smtp
       domain:
       enable_starttls_auto: true
-      from_address: notifications@example.com
+      from_address: email@example.com
       login:
       openssl_verify_mode: peer
-      password:
+      password: ''
       port: 587
       reply_to:
-      server: smtp.mailgun.org
+      server: smtp.gmail.com
       tls: false
     elasticsearch:
       enabled: {{ .Values.config.elasticsearch.enabled }}
