@@ -57,12 +57,12 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  enabled: true
+  # enabled: true
   storageClass: ''
   # existingClaim:
   #   mastodon: ''
   size:
-    assets: 1Gi
+    assets: Gi
     system: 2Gi
   velero:
     enabled: false
