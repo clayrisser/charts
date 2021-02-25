@@ -27,7 +27,7 @@ config:
   secret: shhh
   admin:
     email: admin@example.com
-    username: admin
+    username: root
   postgres:
     integration:
     database: mastodon
@@ -57,7 +57,7 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  # enabled: false
+  enabled: true
   storageClass: ''
   # existingClaim:
   #   mastodon: ''
