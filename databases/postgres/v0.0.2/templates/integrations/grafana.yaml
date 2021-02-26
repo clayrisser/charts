@@ -19,6 +19,18 @@ spec:
       kind: GrafanaDashboard
       name: {{ template "postgres.fullname" . }}-details
     - version: integreatly.org/v1alpha1
+      kind: GrafanaDashboard
+      name: {{ template "postgres.fullname" . }}-backrest
+    - version: integreatly.org/v1alpha1
+      kind: GrafanaDashboard
+      name: {{ template "postgres.fullname" . }}-crud-details
+    - version: integreatly.org/v1alpha1
+      kind: GrafanaDashboard
+      name: {{ template "postgres.fullname" . }}-overview
+    - version: integreatly.org/v1alpha1
+      kind: GrafanaDashboard
+      name: {{ template "postgres.fullname" . }}-prometheus-alerts
+    - version: integreatly.org/v1alpha1
       kind: GrafanaDataSource
       name: {{ template "postgres.fullname" . }}
   kustomization: {}
