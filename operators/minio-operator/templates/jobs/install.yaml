@@ -18,6 +18,9 @@ spec:
         app: {{ template "minio-operator.name" . }}-install
         release: {{ .Release.Name }}
     spec:
+      securityContext:
+        runAsGroup: 0
+        runAsUser: 0
       restartPolicy: OnFailure
       containers:
         - name: {{ template "minio-operator.fullname" . }}-kubectl
