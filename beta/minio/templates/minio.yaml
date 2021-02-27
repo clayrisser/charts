@@ -82,7 +82,7 @@ spec:
       label: console-svc
     consoleServiceAnnotations:
       v2.min.io: console-svc
-  env: {}
+  env: []
   # priorityClassName: high-priority
   console:
     image: {{ .Values.images.console.repository }}:{{ .Values.images.console.tag }}

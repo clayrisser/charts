@@ -40,6 +40,18 @@ questions:
     required: true
     label: 'console replicas'
     group: Config
+  - variable: config.console.user.accessKey
+    description: ''
+    type: string
+    required: true
+    label: 'console user access key'
+    group: Config
+  - variable: config.console.user.secretKey
+    description: ''
+    type: password
+    required: false
+    label: 'console user secret key'
+    group: Config
   - variable: config.minio.servers
     description: ''
     type: int
@@ -63,6 +75,18 @@ questions:
     type: int
     required: true
     label: 'minio volumes per server'
+    group: Config
+  - variable: config.minio.accessKey
+    description: ''
+    type: string
+    required: true
+    label: 'minio access key'
+    group: Config
+  - variable: config.minio.secretKey
+    description: ''
+    type: password
+    required: false
+    label: 'minio secret key'
     group: Config
   - variable: config.minio.resources.enabled
     description: ''
