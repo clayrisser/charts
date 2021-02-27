@@ -28,4 +28,4 @@ spec:
             - -c
             - |
                 kubectl krew install minio
-                kubectl minio init
+                kubectl minio init -n kube-system
