@@ -1,0 +1,95 @@
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: {{ template "minio.fullname" . }}
+  labels:
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    prometheus.io/path: /minio/prometheus/metrics
+    prometheus.io/port: '9000'
+    prometheus.io/scrape: 'true'
+spec:
+  image: {{ .Values.images.minio.repository }}:{{ .Values.images.minio.tag }}
+  imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+  credsSecret:
+    name: {{ template "minio.fullname" . }}-minio
+  pools:
+    - servers: {{ .Values.config.minio.servers }}
+      volumesPerServer: {{ .Values.config.minio.volumesPerServer }}
+      volumeClaimTemplate:
+        metadata:
+          name: data
+        spec:
+          accessModes:
+            - {{ .Values.persistence.accessMode | quote }}
+          resources:
+            requests:
+              storage: {{ .Values.persistence.size.minio | quote }}
+      # tolerations:
+      #  - effect: NoSchedule
+      #    key: dedicated
+      #    operator: Equal
+      #    value: storage
+      # nodeSelector:
+      #   disktype: ssd
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       - matchExpressions:
+      #         - key: kubernetes.io/hostname
+      #           operator: In
+      #           values:
+      #           - hostname1
+      #           - hostname2
+{{- if (and .Values.config.minio.resources.enabled (not (eq .Values.config.minio.resources.enabled "false"))) }}
+      resources:
+        requests:
+{{ toYaml .Values.config.minio.resources.requests | indent 6 }}
+        limits:
+{{ toYaml .Values.config.minio.resources.limits | indent 10 }}
+{{- else }}
+      resources:
+        requests: {}
+        limits: {}
+{{- end }}
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+  mountPath: /export
+  # subPath: /data
+  # externalCertSecret:
+  #   - name: tls-ssl-minio
+  #     type: kubernetes.io/tls
+  requestAutoCert: {{ .Values.config.minio.requestAutoCert }}
+  certConfig:
+    commonName: ''
+    organizationName: []
+    dnsNames: []
+  s3:
+    bucketDNS: {{ .Values.config.minio.bucketDNS }}
+  podManagementPolicy: Parallel
+  serviceMetadata:
+    minioServiceLabels:
+      label: minio-svc
+    minioServiceAnnotations:
+      v2.min.io: minio-svc
+    consoleServiceLabels:
+      label: console-svc
+    consoleServiceAnnotations:
+      v2.min.io: console-svc
+  env: {}
+  # priorityClassName: high-priority
+  console:
+    image: {{ .Values.images.console.repository }}:{{ .Values.images.console.tag }}
+    replicas: {{ .Values.config.console.replicas }}
+    consoleSecret:
+      name: {{ template "minio.fullname" . }}-console
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 2000
+      runAsNonRoot: true

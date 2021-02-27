@@ -1,0 +1,81 @@
+images:
+  minio:
+    repository: minio/minio
+    tag: RELEASE.2021-02-24T18-44-45Z
+  console:
+    repository: minio/console
+    tag: v0.6.2
+
+config:
+  clusterType: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  console:
+    replicas: 1
+  minio:
+    servers: 1
+    bucketDNS: false
+    requestAutoCert: true
+    volumesPerServer: 1
+    baseUrl: ''
+    hostname: ''
+    debug: false
+    username: admin
+    email: admin@example.com
+    password: P@ssw0rd
+    title: Minio
+    enableFileMods: false
+    resources:
+      enabled: false
+      requests:
+        cpu: 250m
+        memory: 16Gi
+      limits:
+        cpu: 500m
+         memory: 16Gi
+
+service:
+  minio:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  minio:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  existingClaim:
+    minio: ''
+  size:
+    minio: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
