@@ -18,6 +18,7 @@ spec:
         app: {{ template "minio-operator.name" . }}-install
         release: {{ .Release.Name }}
     spec:
+      serviceAccountName: {{ template "kustomize-operator.fullname" . }}
       restartPolicy: OnFailure
       containers:
         - name: {{ template "minio-operator.fullname" . }}-kubectl
