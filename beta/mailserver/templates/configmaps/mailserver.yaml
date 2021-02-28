@@ -112,7 +112,7 @@ data:
     *@{{ template "mailserver.mailserver-domain" . }} mail._domainkey.{{ template "mailserver.mailserver-domain" . }}
 
   KeyTable: |
-    mail._domainkey.{{ template "mailserver.mailserver-domain" . }} {{ template "mailserver.mailserver-domain" . }}:mail:/etc/opendkim/keys/{{ template "mailserver.mailserver-domain" . }}/mail.private
+    mail._domainkey.{{ template "mailserver.mailserver-domain" . }} {{ template "mailserver.mailserver-domain" . }}:mail:/etc/opendkim/keys/{{ template "mailserver.mailserver-domain" . }}-mail.private
 
   TrustedHosts: |
     127.0.0.1
