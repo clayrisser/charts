@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "postgres.fullname" . }}-connection
   labels:
-    app: {{ template "postgres.name" . }}-connection
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

@@ -4,7 +4,7 @@ kind: GrafanaDashboard
 metadata:
   name: {{ template "postgres.fullname" . }}-details
   labels:
-    app: {{ template "postgres.name" . }}-details
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
