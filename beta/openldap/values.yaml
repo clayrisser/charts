@@ -14,6 +14,9 @@ config:
     hashPassword: true
     organization: 'Example Inc.'
     schema: default
+    passwords:
+      admin: P@ssw0rd
+      config: P@ssw0rd
     resources:
       enabled: 'false'
       requests:
@@ -26,11 +29,14 @@ config:
 service:
   openldap:
     type: ClusterIP
+    tls: true
     externalTrafficPolicy: Cluster
     nodePorts:
-      http:
+      ldap:
+      sslLdap:
     lbPorts:
-      http: 80
+      ldap: 389
+      sslLdap: 636
 
 ingress:
   openldap:

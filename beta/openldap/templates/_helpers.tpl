@@ -60,14 +60,51 @@ Calculate openldap base url
 {{- end }}
 
 {{/*
-Calculate mysql url
+Calculate openldap dc
 */}}
-{{- define "openldap.mysql-url" }}
-{{- $mysql := .Values.config.mysql }}
-{{- if $mysql.url }}
-{{- printf $mysql.url }}
+{{- define "openldap.openldap-dc" }}
+{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.domain -1) 0) (index (regexSplit "\\." .Values.config.domain -1) 1) }}
+{{- end }}
+
+{{/*
+Calculate phpldapadmin certificate
+*/}}
+{{- define "openldap.phpldapadming-certificate" }}
+{{- if (not (empty .Values.ingress.phpldapadmin.certificate)) }}
+{{- printf .Values.ingress.phpldapadmin.certificate }}
 {{- else }}
-{{- $credentials := ((or (empty $mysql.username) (empty $mysql.password)) | ternary "" (printf "%s:%s@" $mysql.username $mysql.password)) }}
-{{- printf "jdbc:mysql://%s%s:%d/%s" $credentials $mysql.host $mysql.port $mysql.database }}
+{{- printf "%s-phpldapadming-letsencrypt" (include "openldap.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate phpldapadmin hostname
+*/}}
+{{- define "openldap.phpldapadming-hostname" }}
+{{- if (and .Values.config.phpldapadmin.hostname (not (empty .Values.config.phpldapadmin.hostname))) }}
+{{- printf .Values.config.phpldapadmin.hostname }}
+{{- else }}
+{{- if .Values.ingress.phpldapadmin.enabled }}
+{{- printf .Values.ingress.phpldapadmin.hostname }}
+{{- else }}
+{{- printf "%s-openldap" (include "openldap.fullname" .) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate phpldapadmin base url
+*/}}
+{{- define "openldap.phpldapadming-base-url" }}
+{{- if (and .Values.config.phpldapadmin.baseUrl (not (empty .Values.config.phpldapadmin.baseUrl))) }}
+{{- printf .Values.config.phpldapadmin.baseUrl }}
+{{- else }}
+{{- if .Values.ingress.phpldapadmin.enabled }}
+{{- $hostname := ((empty (include "openldap.phpldapadming-hostname" .)) | ternary .Values.ingress.phpldapadmin.hostname (include "openldap.phpldapadming-hostname" .)) }}
+{{- $protocol := (.Values.ingress.phpldapadmin.tls | ternary "https" "http") }}
+{{- printf "%s://%s" $protocol $hostname }}
+{{- else }}
+{{- printf "http://%s" (include "openldap.phpldapadming-hostname" .) }}
+{{- end }}
 {{- end }}
 {{- end }}

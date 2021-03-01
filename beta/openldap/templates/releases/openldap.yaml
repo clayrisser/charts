@@ -22,12 +22,10 @@ spec:
       repository: {{ .Values.images.openldap.repository | quote }}
       tag: {{ .Values.images.openldap.tag | quote }}
       pullPolicy: {{ .Values.config.imagePullPolicy }}
-      # pullSecret: harbor
-    logLevel: info
+    logLevel: {{ .Values.config.debug | ternary "debug" "info" }}
     existingSecret: {{ template "openldap.fullname" . }}-openldap
-    # settings for enabling TLS with custom certificate
     tls:
-      enabled: true
+      enabled: {{ .Values.service.openldap.tls }}
       secret: {{ template "openldap.openldap-certificate" . }}
       CA:
         enabled: false
@@ -40,28 +38,26 @@ spec:
     {{- end }}
     service:
       annotations: {}
-      ldapPort: 389
-      sslLdapPort: 636
-      ## If service type NodePort, define the value here
-      #ldapPortNodePort:
-      #sslLdapPortNodePort:
-      ## List of IP addresses at which the service is available
-      ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
-      ##
+      ldapPort: {{ .Values.service.openldap.nodePorts.ldap | default "389" }}
+      sslLdapPort: {{ .Values.service.openldap.nodePorts.sslLdap | default "636" }}
+      {{- if (eq .Values.service.openldap.type "LoadBalancer") }}
+      ldapPortNodePort: {{ .Values.service.openldap.lbPorts.ldap }}
+      sslLdapPortNodePort: {{ .Values.service.openldap.lbPorts.sslLdap }}
+      {{- end }}
       externalIPs: []
-      #loadBalancerIP:
-      #loadBalancerSourceRanges: []
-      type: ClusterIP
+      # loadBalancerIP:
+      # loadBalancerSourceRanges: []
+      type: {{ .Values.service.openldap.type | quote }}
     env:
-     LDAP_LOG_LEVEL: '256'
-     LDAP_ORGANISATION: 'Example Inc.'
-     LDAP_DOMAIN: 'example.org'
+     LDAP_LOG_LEVEL: {{ .Values.config.debug | ternary "-1" "256" }}
+     LDAP_ORGANISATION: {{ .Values.config.openldap.organization | quote }}
+     LDAP_DOMAIN: {{ .Values.config.openldap.domain | quote }}
      LDAP_READONLY_USER: 'false'
      LDAP_READONLY_USER_USERNAME: 'readonly'
      LDAP_READONLY_USER_PASSWORD: 'readonly'
      LDAP_RFC2307BIS_SCHEMA: 'false'
      LDAP_BACKEND: 'mdb'
-     LDAP_TLS: 'true'
+     LDAP_TLS: {{ .Values.service.openldap.tls | quote }}
      LDAP_TLS_CRT_FILENAME: 'tls.crt'
      LDAP_TLS_KEY_FILENAME: 'tls.key'
      LDAP_TLS_DH_PARAM_FILENAME: 'dhparam.pem'
@@ -75,8 +71,8 @@ spec:
      LDAP_TLS_VERIFY_CLIENT: 'never'
      LDAP_TLS_PROTOCOL_MIN: '3.0'
      LDAP_TLS_CIPHER_SUITE: 'NORMAL'
-    adminPassword: Not@SecurePassw0rd
-    configPassword: Not@SecurePassw0rd
+    adminPassword: {{ .Values.config.openldap.passwords.admin | quote }}
+    configPassword: {{  .Values.config.openldap.passwords.config | quote }}
     customLdifFiles:
       01-organization.ldif: |
         version: 1
@@ -86,72 +82,6 @@ spec:
         objectClass: organization
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.domain -1) 0 }}
-      {{- if .Values.config.hashPassword }}
-      ppolicy.ldif: |
-        dn: cn=module{0},cn=config
-        changetype: modify
-        add: olcModuleLoad
-        olcModuleLoad: ppolicy
-        dn: olcOverlay={2}ppolicy,olcDatabase={1}mdb,cn=config
-        objectClass: olcOverlayConfig
-        objectClass: olcPPolicyConfig
-        olcOverlay: {2}ppolicy
-        olcPPolicyHashCleartext: TRUE
-      ppolicy.sh: |
-        #!/bin/sh
-        sleep 60
-        if [ ! -f /etc/ldap/slapd.d/_loaded_ppolicy ]; then
-          ldapadd -Y EXTERNAL -H ldapi:/// -f /config/ppolicy.ldif
-          touch /etc/ldap/slapd.d/_loaded_ppolicy
-        fi
-      {{- end }}
-      {{- if (eq .Values.config.schema "postfix-book") }}
-      postfix-book.schema: |
-        attributetype ( 1.3.6.1.4.1.29426.1.10.1 NAME 'mailHomeDirectory'
-          DESC 'The absolute path to the mail user home directory'
-                EQUALITY caseExactIA5Match
-                SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
-        attributetype ( 1.3.6.1.4.1.29426.1.10.2 NAME 'mailAlias'
-                DESC 'RFC822 Mailbox - mail alias'
-                EQUALITY caseIgnoreIA5Match
-                SUBSTR caseIgnoreIA5SubstringsMatch
-                SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
-        attributetype ( 1.3.6.1.4.1.29426.1.10.3 NAME 'mailUidNumber'
-                DESC 'UID required to access the mailbox'
-                EQUALITY integerMatch
-                SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )
-        attributetype ( 1.3.6.1.4.1.29426.1.10.4 NAME 'mailGidNumber'
-                DESC 'GID required to access the mailbox'
-                EQUALITY integerMatch
-                SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )
-        attributetype ( 1.3.6.1.4.1.29426.1.10.5 NAME 'mailEnabled'
-          DESC 'TRUE to enable, FALSE to disable account'
-                EQUALITY booleanMatch
-                SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE )
-        attributetype ( 1.3.6.1.4.1.29426.1.10.6 NAME 'mailGroupMember'
-          DESC 'Name of a mail distribution list'
-                EQUALITY caseExactIA5Match
-                SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-        attributetype ( 1.3.6.1.4.1.29426.1.10.7 NAME 'mailQuota'
-          DESC 'Mail quota limit in kilobytes'
-                EQUALITY caseExactIA5Match
-                SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-        attributetype ( 1.3.6.1.4.1.29426.1.10.8 NAME 'mailStorageDirectory'
-          DESC 'The absolute path to the mail users mailbox'
-                EQUALITY caseExactIA5Match
-                SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
-        objectclass ( 1.3.6.1.4.1.29426.1.2.2.1 NAME 'PostfixBookMailAccount'
-                SUP top AUXILIARY
-          DESC 'Mail account used in Postfix Book'
-          MUST ( mail )
-                MAY ( mailHomeDirectory $ mailAlias $ mailGroupMember
-            $ mailUidNumber $ mailGidNumber $ mailEnabled
-            $ mailQuota $mailStorageDirectory ) )
-        objectclass ( 1.3.6.1.4.1.29426.1.2.2.2 NAME 'PostfixBookMailForward'
-                SUP top AUXILIARY
-          DESC 'Mail forward used in Postfix Book'
-          MUST ( mail $ mailAlias ))
-      {{- end }}
     replication:
       enabled: true
       clusterName: 'cluster.local'
@@ -187,9 +117,9 @@ spec:
         repository: dduportal/bats
         tag: 0.4.0
     ltb-passwd:
-      enabled : true
+      enabled : false
       ingress:
-        enabled: true
+        enabled: false
         annotations: {}
         path: /
         ## Ingress Host
@@ -197,9 +127,9 @@ spec:
           - 'ssl-ldap2.example'
       ldap:
         server: ldap://openldap-stack-ha
-        searchBase: dc=example,dc=org
+        searchBase: dc={{ template "openldap.openldap-dc" . }}
         # existingSecret: openldaptest
-        bindDN: cn=admin,dc=example,dc=org
+        bindDN: cn=admin,{{ template "openldap.openldap-dc" . }}
         bindPWKey: LDAP_ADMIN_PASSWORD
     phpldapadmin:
       enabled: {{ .Values.config.phpldapadmin.enabled }}
@@ -211,15 +141,17 @@ spec:
         hosts:
           - phpldapadmin.example
       env:
+        PHPLDAPADMIN_HTTPS: 'false'
+        PHPLDAPADMIN_LDAP_CLIENT_TLS: 'false'
+        PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
         PHPLDAPADMIN_LDAP_HOSTS: openldap-stack-ha
-     # TODO make it works
-     #     '#PYTHON2BASH:
-     #       [{'openldap.openldap':
-     #         [{'server': [
-     #           {'tls': False},
-     #           {'port':636}
-     #         ]},
-     #           {'login':
-     #             [{'bind_id': 'cn=admin,dc=example,dc=org'}]
-     #           }]
-     #       }]'
+          # '#PYTHON2BASH:
+          #   [{'openldap.openldap':
+          #     [{'server': [
+          #       {'tls': False},
+          #       {'port':636}
+          #     ]},
+          #       {'login':
+          #         [{'bind_id': 'cn=admin,dc=example,dc=org'}]
+          #       }]
+          #   }]'
