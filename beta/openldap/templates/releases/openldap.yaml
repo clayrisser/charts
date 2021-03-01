@@ -1,0 +1,151 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ template "openldap.name" . }}
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  forceUpgrade: false
+  helmVersion: v3
+  chart:
+    git: https://github.com/jp-gouin/helm-openldap
+    ref: v2.0.5
+    # path: .
+  values:
+    replicaCount: {{ .Values.config.openldap.replicas }}
+    strategy:
+      type: {{ .Values.config.updateStrategy | quote }}
+    image:
+      repository: {{ .Values.images.openldap.repository | quote }}
+      tag: {{ .Values.images.openldap.tag | quote }}
+      pullPolicy: {{ .Values.config.imagePullPolicy }}
+      # pullSecret: harbor
+    logLevel: info
+    existingSecret: {{ template "openldap.fullname" . }}-openldap
+    # settings for enabling TLS with custom certificate
+    tls:
+      enabled: true
+      secret: {{ template "openldap.openldap-certificate" . }}
+      CA:
+        enabled: false
+    extraLabels: {}
+    {{- if .Values.persistence.velero.enabled }}
+    podAnnotations:
+      backup.velero.io/backup-volumes: data
+    {{- else }}
+    podAnnotations: {}
+    {{- end }}
+    service:
+      annotations: {}
+      ldapPort: 389
+      sslLdapPort: 636
+      ## If service type NodePort, define the value here
+      #ldapPortNodePort:
+      #sslLdapPortNodePort:
+      ## List of IP addresses at which the service is available
+      ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+      ##
+      externalIPs: []
+      #loadBalancerIP:
+      #loadBalancerSourceRanges: []
+      type: ClusterIP
+    env:
+     LDAP_LOG_LEVEL: '256'
+     LDAP_ORGANISATION: 'Example Inc.'
+     LDAP_DOMAIN: 'example.org'
+     LDAP_READONLY_USER: 'false'
+     LDAP_READONLY_USER_USERNAME: 'readonly'
+     LDAP_READONLY_USER_PASSWORD: 'readonly'
+     LDAP_RFC2307BIS_SCHEMA: 'false'
+     LDAP_BACKEND: 'mdb'
+     LDAP_TLS: 'true'
+     LDAP_TLS_CRT_FILENAME: 'tls.crt'
+     LDAP_TLS_KEY_FILENAME: 'tls.key'
+     LDAP_TLS_DH_PARAM_FILENAME: 'dhparam.pem'
+     LDAP_TLS_CA_CRT_FILENAME: 'ca.crt'
+     LDAP_TLS_ENFORCE: 'false'
+     CONTAINER_LOG_LEVEL: '4'
+     LDAP_TLS_REQCERT: 'never'
+     KEEP_EXISTING_CONFIG: 'false'
+     LDAP_REMOVE_CONFIG_AFTER_SETUP: 'true'
+     LDAP_SSL_HELPER_PREFIX: 'ldap'
+     LDAP_TLS_VERIFY_CLIENT: 'never'
+     LDAP_TLS_PROTOCOL_MIN: '3.0'
+     LDAP_TLS_CIPHER_SUITE: 'NORMAL'
+    adminPassword: Not@SecurePassw0rd
+    configPassword: Not@SecurePassw0rd
+    customLdifFiles: {}
+    replication:
+      enabled: true
+      clusterName: 'cluster.local'
+      retry: 60
+      timeout: 1
+      interval: 00:00:00:10
+      starttls: 'critical'
+      tls_reqcert: 'never'
+    persistence:
+      enabled: {{ .Values.persistence.enabled }}
+      {{- if .Values.persistence.storageClass }}
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClass: ''
+      {{- else }}
+      storageClass: {{ .Values.persistence.storageClass | quote }}
+      {{- end }}
+      {{- end }}
+      accessModes:
+        - {{ .Values.persistence.accessMode | quote }}
+      size: {{ .Values.persistence.size.openldap | quote }}
+    resources: {}
+     # requests:
+     #   cpu: '100m'
+     #   memory: '256Mi'
+     # limits:
+     #   cpu: '500m'
+     #   memory: '512Mi'
+    nodeSelector: {}
+    tolerations: []
+    test:
+      enabled: false
+      image:
+        repository: dduportal/bats
+        tag: 0.4.0
+    ltb-passwd:
+      enabled : true
+      ingress:
+        enabled: true
+        annotations: {}
+        path: /
+        ## Ingress Host
+        hosts:
+          - 'ssl-ldap2.example'
+      ldap:
+        server: ldap://openldap-stack-ha
+        searchBase: dc=example,dc=org
+        # existingSecret: openldaptest
+        bindDN: cn=admin,dc=example,dc=org
+        bindPWKey: LDAP_ADMIN_PASSWORD
+    phpldapadmin:
+      enabled: {{ .Values.config.phpldapadmin.enabled }}
+      ingress:
+        enabled: true
+        annotations: {}
+        path: /
+        ## Ingress Host
+        hosts:
+          - phpldapadmin.example
+      env:
+        PHPLDAPADMIN_LDAP_HOSTS: openldap-stack-ha
+     # TODO make it works
+     #     '#PYTHON2BASH:
+     #       [{'openldap.openldap':
+     #         [{'server': [
+     #           {'tls': False},
+     #           {'port':636}
+     #         ]},
+     #           {'login':
+     #             [{'bind_id': 'cn=admin,dc=example,dc=org'}]
+     #           }]
+     #       }]'

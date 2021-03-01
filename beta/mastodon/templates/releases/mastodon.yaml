@@ -118,7 +118,6 @@ spec:
       create: true
       annotations: {}
       name: ''
-
     {{- if .Values.persistence.velero.enabled }}
     podAnnotations:
       backup.velero.io/backup-volumes: data
