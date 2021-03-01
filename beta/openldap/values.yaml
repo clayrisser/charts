@@ -7,10 +7,13 @@ config:
   clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
+  debug: false
   openldap:
     replicas: 1
-    baseUrl: ''
-    hostname: ''
+    domain: example.org
+    hashPassword: true
+    organization: 'Example Inc.'
+    schema: default
     resources:
       enabled: 'false'
       requests:

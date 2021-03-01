@@ -1,0 +1,24 @@
+apiVersion: kustomize.siliconhills.dev/v1alpha1
+kind: Kustomization
+metadata:
+  name: {{ template "openldap.fullname" . }}
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  resources:
+    - group: helm.fluxcd.io
+      version: v1
+      kind: HelmRelease
+      name: {{ template "openldap.name" . }}
+      namespace: {{ .Release.Namespace }}
+  patches:
+    - patch: |
+        apiVersion: helm.fluxcd.io/v1
+        kind: HelmRelease
+        metadata:
+          name: {{ template "openldap.name" . }}
+          namespace: {{ .Release.Namespace }}
+        spec: {}
