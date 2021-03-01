@@ -10,7 +10,7 @@ config:
   redis:
     password: ''
   elasticsearch:
-    enabled: true
+    enabled: false
   mastodon:
     baseUrl: ''
     hostname: ''
@@ -27,7 +27,7 @@ config:
   secret: shhh
   admin:
     email: admin@example.com
-    username: admin
+    username: mastodon
   postgres:
     integration:
     database: mastodon
@@ -49,7 +49,7 @@ service:
 ingress:
   mastodon:
     certificate: ''
-    enabled: false
+    enabled: true
     hostname: ''
     tls: false
     issuer:
@@ -57,12 +57,12 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  # enabled: false
+  # enabled: true
   storageClass: ''
   # existingClaim:
   #   mastodon: ''
   size:
-    assets: 1Gi
+    assets: 2Gi
     system: 2Gi
   velero:
     enabled: false

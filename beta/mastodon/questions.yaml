@@ -1,7 +1,6 @@
 categories:
   - Server
 questions:
-
   # Config
   - variable: config.clusterType
     description: ''
@@ -33,6 +32,12 @@ questions:
       - OnDelete
     required: true
     label: 'update strategy'
+    group: Config
+  - variable: config.elasticsearch.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'elasticsearch enabled'
     group: Config
   - variable: config.secret
     description: ''
@@ -97,33 +102,33 @@ questions:
         required: true
         label: 'mastodon resources limits memory'
 
-  # Postgres Config
+  # Postgres
   - variable: config.postgres.integration
     description: ''
     type: string
     required: false
     label: integration
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.host
     description: ''
     type: string
     required: false
     label: host
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.database
     description: ''
     type: string
     required: true
     label: database
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.password
     description: ''
     type: password
     required: true
     label: password
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.port
     description: ''
     type: int
@@ -132,82 +137,92 @@ questions:
     required: true
     label: port
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.url
     description: ''
     type: string
     required: false
     label: url
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.username
     description: ''
     type: string
     required: true
     label: username
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
 
   # Persistence
-  - variable: persistence.enabled
+  # - variable: persistence.enabled
+  #   description: ''
+  #   type: boolean
+  #   required: true
+  #   label: enabled
+  #   show_subquestion_if: true
+  #   group: Persistence
+  #   subquestions:
+  - variable: persistence.storageClass
+    description: ''
+    type: storageclass
+    required: false
+    label: 'storage class'
+    group: Persistence
+  - variable: persistence.accessMode
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadWriteMany
+      - ReadOnlyMany
+    required: false
+    label: 'access mode'
+    group: Persistence
+  # - variable: persistence.existingClaim.mastodon
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: 'mastodon existing claim'
+  #   group: Persistence
+  - variable: persistence.size.assets
+    description: ''
+    type: string
+    required: true
+    label: 'size assets'
+    group: Persistence
+  - variable: persistence.size.system
+    description: ''
+    type: string
+    required: true
+    label: 'size system'
+    group: Persistence
+  - variable: persistence.velero.enabled
     description: ''
     type: boolean
     required: true
-    label: enabled
-    show_subquestion_if: true
+    label: 'velero enabled'
     group: Persistence
-    subquestions:
-      - variable: persistence.storageClass
-        description: ''
-        type: storageclass
-        required: false
-        label: 'storage class'
-      - variable: persistence.accessMode
-        description: ''
-        type: enum
-        options:
-          - ReadWriteOnce
-          - ReadWriteMany
-          - ReadOnlyMany
-        required: false
-        label: 'access mode'
-      - variable: persistence.existingClaim.mastodon
-        description: ''
-        type: string
-        required: false
-        label: 'mastodon existing claim'
-      - variable: persistence.size.mastodon
-        description: ''
-        type: string
-        required: true
-        label: 'mastodon size'
-      - variable: persistence.velero.enabled
-        description: ''
-        type: boolean
-        required: true
-        label: 'velero enabled'
-        group: Persistence
-      - variable: persistence.velero.schedule
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: false
-        label: 'velero schedule'
-        group: Persistence
-      - variable: persistence.velero.restic
-        description: ''
-        type: boolean
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero restic'
-        group: Persistence
-      - variable: persistence.velero.ttl
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero ttl'
-        group: Persistence
+  - variable: persistence.velero.schedule
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: false
+    label: 'velero schedule'
+    group: Persistence
+  - variable: persistence.velero.restic
+    description: ''
+    type: boolean
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero restic'
+    group: Persistence
+  - variable: persistence.velero.ttl
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero ttl'
+    group: Persistence
 
   # Services and Load Balancing
   - variable: ingress.mastodon.enabled
