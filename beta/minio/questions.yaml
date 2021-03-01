@@ -1,0 +1,276 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterType
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.console.replicas
+    description: ''
+    type: int
+    required: true
+    label: 'console replicas'
+    group: Config
+  - variable: config.console.user.accessKey
+    description: ''
+    type: string
+    required: true
+    label: 'console user access key'
+    group: Config
+  - variable: config.console.user.secretKey
+    description: ''
+    type: password
+    required: false
+    label: 'console user secret key'
+    group: Config
+  - variable: config.minio.servers
+    description: ''
+    type: int
+    required: true
+    label: 'minio servers'
+    group: Config
+  - variable: config.minio.bucketDNS
+    description: ''
+    type: boolean
+    required: true
+    label: 'minio bucket dns'
+    group: Config
+  - variable: config.minio.requestAutoCert
+    description: ''
+    type: boolean
+    required: true
+    label: 'minio request auto cert'
+    group: Config
+  - variable: config.minio.volumesPerServer
+    description: ''
+    type: int
+    required: true
+    label: 'minio volumes per server'
+    group: Config
+  - variable: config.minio.accessKey
+    description: ''
+    type: string
+    required: true
+    label: 'minio access key'
+    group: Config
+  - variable: config.minio.secretKey
+    description: ''
+    type: password
+    required: false
+    label: 'minio secret key'
+    group: Config
+  - variable: config.minio.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'minio resources defaults'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.minio.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'minio resources requests cpu'
+      - variable: config.minio.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'minio resources requests memory'
+      - variable: config.minio.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'minio resources limits cpu'
+      - variable: config.minio.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'minio resources limits memory'
+
+# Persistence
+  - variable: persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim.minio
+        description: ''
+        type: string
+        required: false
+        label: 'minio existing claim'
+      - variable: persistence.size.minio
+        description: ''
+        type: string
+        required: true
+        label: 'minio size'
+      - variable: persistence.velero.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
+        group: Persistence
+
+# Services and Load Balancing
+  - variable: ingress.minio.enabled
+    description: ''
+    type: boolean
+    label: 'minio ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.minio.tls
+        description: ''
+        type: boolean
+        required: true
+        label: 'minio ingress tls'
+      - variable: ingress.minio.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'minio ingress hostname'
+      - variable: ingress.minio.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.minio.tls=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'minio ingress issuer name'
+      - variable: ingress.minio.certificate
+        description: ''
+        type: string
+        show_if: ingress.minio.tls=true&&ingress.minio.issuer.name=none
+        required: false
+        label: 'minio ingress certificate'
+  # - variable: service.minio.type
+  #   description: ''
+  #   type: enum
+  #   show_if: ingress.minio.enabled=false
+  #   options:
+  #     - ClusterIP
+  #     - LoadBalancer
+  #     - NodePort
+  #   required: true
+  #   label: 'minio service type'
+  #   group: 'Services and Load Balancing'
+  # - variable: service.minio.nodePorts.http
+  #   description: ''
+  #   type: int
+  #   required: false
+  #   min: 30000
+  #   max: 32767
+  #   show_if: service.minio.type=NodePort&&ingress.minio.enabled=false
+  #   label: 'minio http node port'
+  #   group: 'Services and Load Balancing'
+  # - variable: service.minio.lbPorts.http
+  #   description: ''
+  #   type: int
+  #   min: 0
+  #   max: 65535
+  #   required: true
+  #   show_if: service.minio.type=LoadBalancer&&ingress.minio.enabled=false
+  #   label: 'minio http lb port'
+  #   group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.minio.repository
+    description: ''
+    type: string
+    required: true
+    label: 'minio repository'
+    group: Images
+  - variable: images.minio.tag
+    description: ''
+    type: string
+    required: true
+    label: 'minio tag'
+    group: Images
+  - variable: images.console.repository
+    description: ''
+    type: string
+    required: true
+    label: 'console repository'
+    group: Images
+  - variable: images.console.tag
+    description: ''
+    type: string
+    required: true
+    label: 'console tag'
+    group: Images

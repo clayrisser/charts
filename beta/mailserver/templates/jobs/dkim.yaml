@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "mailserver.fullname" . }}-dkim
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: '3'
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "mailserver.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ template "mailserver.fullname" . }}
+      restartPolicy: OnFailure
+      containers:
+        - name: {{ template "mailserver.fullname" . }}-kubectl
+          image: codejamninja/kube-commands:0.0.2
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+              apk add --no-cache opendkim-utils
+              export SECRET_NAME={{ .Release.Name }}-{{ .Release.Name }}-docker-mailserver-secrets
+              opendkim-genkey -t -s mail -d $DOMAIN
+              kubectl create secret generic $SECRET_NAME \
+                --from-file={{ template "mailserver.mailserver-domain" . }}-mail.private=./mail.private \
+                --from-file={{ template "mailserver.mailserver-domain" . }}-mail.txt=./mail.txt
+              kubectl label secret $SECRET_NAME \
+                app={{ template "mailserver.name" . }} \
+                chart={{ .Chart.Name }}-{{ .Chart.Version }} \
+                release={{ .Release.Name }} \
+                heritage={{ .Release.Service }}
+          env:
+            - name: DOMAIN
+              value: {{ template "mailserver.mailserver-domain" . }}

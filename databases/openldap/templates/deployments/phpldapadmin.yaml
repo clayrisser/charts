@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: {{ template "openldap.fullname" . }}-phpldapadmin
   labels:
-    app: {{ template "openldap.name" . }}-phpldapadmin
+    app: {{ .Release.Name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

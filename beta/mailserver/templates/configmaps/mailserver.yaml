@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-{{ .Release.Name }}-docker-mailserver-configs
   labels:
-    app: {{ .Release.Name }}-{{ .Release.Name }}-docker-mailserver-configs
+    app: {{ template "mailserver.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -112,7 +112,7 @@ data:
     *@{{ template "mailserver.mailserver-domain" . }} mail._domainkey.{{ template "mailserver.mailserver-domain" . }}
 
   KeyTable: |
-    mail._domainkey.{{ template "mailserver.mailserver-domain" . }} {{ template "mailserver.mailserver-domain" . }}:mail:/etc/opendkim/keys/{{ template "mailserver.mailserver-domain" . }}/mail.private
+    mail._domainkey.{{ template "mailserver.mailserver-domain" . }} {{ template "mailserver.mailserver-domain" . }}:mail:/etc/opendkim/keys/{{ template "mailserver.mailserver-domain" . }}-mail.private
 
   TrustedHosts: |
     127.0.0.1

@@ -18,25 +18,15 @@ spec:
         app: {{ template "minio-operator.name" . }}-install
         release: {{ .Release.Name }}
     spec:
+      serviceAccountName: {{ template "minio-operator.fullname" . }}
       restartPolicy: OnFailure
       containers:
         - name: {{ template "minio-operator.fullname" . }}-kubectl
-          image: bitnami/kubectl:1.17.12
+          image: codejamninja/kube-commands:0.0.2
           imagePullPolicy: Always
           command:
             - /bin/sh
             - -c
             - |
-                (
-                  set -x; cd "$(mktemp -d)" &&
-                  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
-                  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-                  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" &&
-                  tar zxvf krew.tar.gz &&
-                  KREW=./krew-"${OS}_${ARCH}" &&
-                  "$KREW" install krew
-                )
-                export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-                kubectl krew update
                 kubectl krew install minio
-                kubectl minio init
+                kubectl minio init -n {{ .Release.Namespace }}
