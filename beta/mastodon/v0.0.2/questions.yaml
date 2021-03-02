@@ -1,0 +1,300 @@
+categories:
+  - Server
+questions:
+  # Config
+  - variable: config.clusterType
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.secret
+    description: ''
+    type: password
+    required: true
+    label: 'mastodon secret'
+    group: Config
+  - variable: config.privateKey
+    description: ''
+    type: multiline
+    required: true
+    label: 'private key'
+    group: Config
+  - variable: config.publicKey
+    description: ''
+    type: multiline
+    required: true
+    label: 'public key'
+    group: Config
+  - variable: config.admin.email
+    description: ''
+    type: string
+    required: true
+    label: 'admin email'
+    group: Config
+  - variable: config.admin.username
+    description: ''
+    type: string
+    required: true
+    label: 'admin username'
+    group: Config
+  - variable: config.mastodon.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'mastodon resources defaults'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.mastodon.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'mastodon resources requests cpu'
+      - variable: config.mastodon.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'mastodon resources requests memory'
+      - variable: config.mastodon.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'mastodon resources limits cpu'
+      - variable: config.mastodon.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'mastodon resources limits memory'
+
+  # Postgres Config
+  - variable: config.postgres.integration
+    description: ''
+    type: string
+    required: false
+    label: integration
+    group: 'Postgres Config'
+  - variable: config.postgres.host
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    description: ''
+    type: string
+    required: true
+    label: database
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.url
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+
+  # Persistence
+  # - variable: persistence.enabled
+  #   description: ''
+  #   type: boolean
+  #   required: true
+  #   label: enabled
+  #   show_subquestion_if: true
+  #   group: Persistence
+  #   subquestions:
+  - variable: persistence.storageClass
+    description: ''
+    type: storageclass
+    required: false
+    label: 'storage class'
+    group: Persistence
+  - variable: persistence.accessMode
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadWriteMany
+      - ReadOnlyMany
+    required: false
+    label: 'access mode'
+    group: Persistence
+  # - variable: persistence.existingClaim.mastodon
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: 'mastodon existing claim'
+  #   group: Persistence
+  - variable: persistence.size.assets
+    description: ''
+    type: string
+    required: true
+    label: 'size assets'
+    group: Persistence
+  - variable: persistence.size.system
+    description: ''
+    type: string
+    required: true
+    label: 'size system'
+    group: Persistence
+  - variable: persistence.velero.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'velero enabled'
+    group: Persistence
+  - variable: persistence.velero.schedule
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: false
+    label: 'velero schedule'
+    group: Persistence
+  - variable: persistence.velero.restic
+    description: ''
+    type: boolean
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero restic'
+    group: Persistence
+  - variable: persistence.velero.ttl
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero ttl'
+    group: Persistence
+
+  # Services and Load Balancing
+  - variable: ingress.mastodon.enabled
+    description: ''
+    type: boolean
+    label: 'mastodon ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.mastodon.tls
+        description: ''
+        type: boolean
+        required: true
+        label: 'mastodon ingress tls'
+      - variable: ingress.mastodon.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'mastodon ingress hostname'
+      - variable: ingress.mastodon.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.mastodon.tls=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'mastodon ingress issuer name'
+      - variable: ingress.mastodon.certificate
+        description: ''
+        type: string
+        show_if: ingress.mastodon.tls=true&&ingress.mastodon.issuer.name=none
+        required: false
+        label: 'mastodon ingress certificate'
+  - variable: service.mastodon.type
+    description: ''
+    type: enum
+    show_if: ingress.mastodon.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'mastodon service type'
+    group: 'Services and Load Balancing'
+  - variable: service.mastodon.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.mastodon.type=NodePort&&ingress.mastodon.enabled=false
+    label: 'mastodon http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.mastodon.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.mastodon.type=LoadBalancer&&ingress.mastodon.enabled=false
+    label: 'mastodon http lb port'
+    group: 'Services and Load Balancing'
+
+  # Images
+  - variable: images.mastodon.repository
+    description: ''
+    type: string
+    required: true
+    label: 'mastodon repository'
+    group: Images
+  - variable: images.mastodon.tag
+    description: ''
+    type: string
+    required: true
+    label: 'mastodon tag'
+    group: Images
