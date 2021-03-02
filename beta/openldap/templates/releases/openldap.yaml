@@ -23,7 +23,7 @@ spec:
       tag: {{ .Values.images.openldap.tag | quote }}
       pullPolicy: {{ .Values.config.imagePullPolicy }}
     logLevel: {{ .Values.config.debug | ternary "debug" "info" }}
-    existingSecret: {{ template "openldap.fullname" . }}-openldap
+    # existingSecret: {{ template "openldap.fullname" . }}-openldap
     tls:
       enabled: {{ .Values.service.openldap.tls }}
       secret: {{ template "openldap.openldap-certificate" . }}
@@ -38,11 +38,16 @@ spec:
     {{- end }}
     service:
       annotations: {}
-      ldapPort: {{ .Values.service.openldap.nodePorts.ldap | default "389" }}
-      sslLdapPort: {{ .Values.service.openldap.nodePorts.sslLdap | default "636" }}
       {{- if (eq .Values.service.openldap.type "LoadBalancer") }}
-      ldapPortNodePort: {{ .Values.service.openldap.lbPorts.ldap }}
-      sslLdapPortNodePort: {{ .Values.service.openldap.lbPorts.sslLdap }}
+      ldapPort: {{ .Values.service.openldap.lbPorts.openldap }}
+      sslLdapPort: {{ .Values.service.openldap.lbPorts.sslLdap }}
+      {{- else }}
+      ldapPort: 389
+      sslLdapPort: 636
+      {{- end }}
+      {{- if (eq .Values.service.openldap.type "NodePort") }}
+      ldapPortNodePort: {{ .Values.service.openldap.nodePorts.ldap }}
+      sslLdapPortNodePort: {{ .Values.service.openldap.nodePorts.ldaps }}
       {{- end }}
       externalIPs: []
       # loadBalancerIP:
@@ -81,7 +86,7 @@ spec:
         objectClass: dcObject
         objectClass: organization
         o: {{ .Values.config.organization }}
-        dc: {{ index (regexSplit "\\." .Values.config.domain -1) 0 }}
+        dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
     replication:
       enabled: true
       clusterName: 'cluster.local'
@@ -102,13 +107,15 @@ spec:
       accessModes:
         - {{ .Values.persistence.accessMode | quote }}
       size: {{ .Values.persistence.size.openldap | quote }}
+    {{- if (and .Values.config.resources.enabled (not (eq .Values.config.resources.enabled "false"))) }}
+    resources:
+      requests:
+      {{ toYaml .Values.config.resources.requests | indent 6 }}
+      limits:
+      {{ toYaml .Values.config.resources.limits | indent 6 }}
+    {{- else }}
     resources: {}
-     # requests:
-     #   cpu: '100m'
-     #   memory: '256Mi'
-     # limits:
-     #   cpu: '500m'
-     #   memory: '512Mi'
+    {{- end }}
     nodeSelector: {}
     tolerations: []
     test:
@@ -127,7 +134,7 @@ spec:
           - 'ssl-ldap2.example'
       ldap:
         server: ldap://openldap-stack-ha
-        searchBase: dc={{ template "openldap.openldap-dc" . }}
+        searchBase: {{ template "openldap.openldap-dc" . }}
         # existingSecret: openldaptest
         bindDN: cn=admin,{{ template "openldap.openldap-dc" . }}
         bindPWKey: LDAP_ADMIN_PASSWORD

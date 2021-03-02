@@ -25,11 +25,12 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
-
+  phpldapadmin:
+    enabled: false
 service:
   openldap:
     type: ClusterIP
-    tls: true
+    tls: false
     externalTrafficPolicy: Cluster
     nodePorts:
       ldap:
