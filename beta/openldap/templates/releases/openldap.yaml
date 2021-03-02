@@ -107,12 +107,12 @@ spec:
       accessModes:
         - {{ .Values.persistence.accessMode | quote }}
       size: {{ .Values.persistence.size.openldap | quote }}
-    {{- if (and .Values.config.resources.enabled (not (eq .Values.config.resources.enabled "false"))) }}
+    {{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) }}
     resources:
       requests:
-      {{ toYaml .Values.config.resources.requests | indent 6 }}
+      {{ toYaml .Values.config.openldap.resources.requests | indent 6 }}
       limits:
-      {{ toYaml .Values.config.resources.limits | indent 6 }}
+      {{ toYaml .Values.config.openldap.resources.limits | indent 6 }}
     {{- else }}
     resources: {}
     {{- end }}
