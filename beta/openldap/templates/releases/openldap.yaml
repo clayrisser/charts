@@ -10,6 +10,8 @@ metadata:
 spec:
   forceUpgrade: false
   helmVersion: v3
+  git:
+    timeout: 120s
   chart:
     git: https://github.com/jp-gouin/helm-openldap
     ref: v2.0.5

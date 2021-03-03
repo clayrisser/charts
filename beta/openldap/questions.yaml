@@ -127,57 +127,6 @@ questions:
         required: false
         label: 'private key'
 
-  # MySQL Config
-  - variable: config.mysql.integration
-    description: ''
-    type: string
-    required: false
-    label: integration
-    group: 'MySQL Config'
-  - variable: config.mysql.host
-    description: ''
-    type: string
-    required: true
-    label: host
-    show_if: config.mysql.integration=
-    group: 'MySQL Config'
-  - variable: config.mysql.database
-    description: ''
-    type: string
-    required: true
-    label: database
-    group: 'MySQL Config'
-  - variable: config.mysql.password
-    description: ''
-    type: password
-    required: true
-    label: password
-    show_if: config.mysql.integration=
-    group: 'MySQL Config'
-  - variable: config.mysql.port
-    description: ''
-    type: int
-    min: 0
-    max: 65535
-    required: true
-    label: port
-    show_if: config.mysql.integration=
-    group: 'MySQL Config'
-  - variable: config.mysql.url
-    description: ''
-    type: string
-    required: false
-    label: url
-    show_if: config.mysql.integration=
-    group: 'MySQL Config'
-  - variable: config.mysql.username
-    description: ''
-    type: string
-    required: true
-    label: username
-    show_if: config.mysql.integration=
-    group: 'MySQL Config'
-
   # Persistence
   - variable: persistence.enabled
     description: ''
