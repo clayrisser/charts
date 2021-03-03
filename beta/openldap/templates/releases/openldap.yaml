@@ -18,7 +18,7 @@ spec:
     path: .
   values:
     replicaCount: {{ .Values.config.openldap.replicas }}
-    strategy:
+    updateStrategy:
       type: {{ .Values.config.updateStrategy | quote }}
     image:
       repository: {{ .Values.images.openldap.repository | quote }}
