@@ -15,7 +15,7 @@ spec:
   chart:
     git: https://github.com/jp-gouin/helm-openldap
     ref: v2.0.5
-    # path: .
+    path: .
   values:
     replicaCount: {{ .Values.config.openldap.replicas }}
     strategy:
