@@ -13,8 +13,8 @@ spec:
   git:
     timeout: 120s
   chart:
-    git: https://github.com/jp-gouin/helm-openldap
-    ref: v2.0.5
+    git: https://github.com/nuevesolutions/helm-openldap
+    ref: new-master
     path: .
   values:
     replicaCount: {{ .Values.config.openldap.replicas }}
