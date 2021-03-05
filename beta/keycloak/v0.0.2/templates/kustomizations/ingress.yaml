@@ -36,7 +36,7 @@ spec:
             nginx.ingress.kubernetes.io/ssl-redirect: 'true'
             {{- end }}
         spec:
-          {{- if (eq .Values.service.keycloak.type "clusterType") }}
+          {{- if (eq .Values.service.keycloak.type "ClusterIP") }}
           rules:
             - host: tmp-keycloak2-keycloak-keycloak
               http:
