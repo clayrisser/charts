@@ -101,3 +101,24 @@ spec:
   instanceSelector:
     matchLabels:
       app: {{ template "keycloak.fullname" . }}
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: {{ template "keycloak.fullname" . }}
+  labels:
+    app: {{ template "keycloak.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  user:
+    username: realm_user
+    firstName: realm
+    lastName: user
+    email: user@example.com
+    enabled: true
+    emailVerified: false
+  realmSelector:
+    matchLabels:
+      app: {{ template "keycloak.fullname" . }}
