@@ -41,7 +41,9 @@ spec:
             - host: tmp-keycloak2-keycloak-keycloak
               http:
                 paths:
-                - backend:
+                - pathType: Prefix
+                  path: "/"
+                  backend:
                     service:
                       name: keycloak-discover
                       port:
