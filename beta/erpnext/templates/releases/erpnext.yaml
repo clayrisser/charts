@@ -1,0 +1,60 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ template "erpnext.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  forceUpgrade: false
+  helmVersion: v3
+  chart:
+    git: https://github.com/frappe/helm.git
+    ref: 2.1.2
+    path: erpnext
+  git:
+    timeout: 60s
+  values:
+    replicaCount: 1
+    pythonImage:
+      repository: frappe/erpnext-worker
+      tag: v12.18.0
+      pullPolicy: IfNotPresent
+
+    socketIOImage:
+      repository: frappe/frappe-socketio
+      tag: v12.15.0
+      pullPolicy: IfNotPresent
+    frappePyPort: "8000"
+    socketIOPort: "9000"
+    postgresHost: {{ .Values.config.postgres_host }}
+    postgresPort: {{ .Values.config.postgres_port }}
+    serviceAccount:
+      create: true
+    service:
+      type: ClusterIP
+      port: {{ (eq .Values.service.erpnext.type "LoadBalancer") | ternary .Values.service.erpnext.lbPorts.http  ((and (eq .Values.service.erpnext.type "NodePort") (not (empty .Values.service.erpnext.nodePorts.http))) | ternary .Values.service.erpnext.nodePorts.http "80") }}
+    persistence:
+      enabled: true
+      size: 8Gi
+    podSecurityContext:
+      runAsUser: 991
+      runAsGroup: 991
+      fsGroup: 991
+    securityContext: {}
+    serviceAccount:
+      create: true
+      annotations: {}
+      name: ''
+    podAnnotations: {}
+    resources: {}
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
