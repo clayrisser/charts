@@ -56,16 +56,16 @@ spec:
             configMapKeyRef:
               name: {{ template "keycloak.fullname" . }}
               key: keycloak_default_theme
-        - name: KEYCLOAK_USER
-          valueFrom:
-            configMapKeyRef:
-              name: {{ template "keycloak.fullname" . }}
-              key: keycloak_username
-        - name: KEYCLOAK_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "keycloak.fullname" . }}
-              key: keycloak_password
+        # - name: KEYCLOAK_USER
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: {{ template "keycloak.fullname" . }}
+        #       key: keycloak_username
+        # - name: KEYCLOAK_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: {{ template "keycloak.fullname" . }}
+        #       key: keycloak_password
       volumes:
         items: []
 {{- if .Values.config.keycloak.resources.enabled }}
