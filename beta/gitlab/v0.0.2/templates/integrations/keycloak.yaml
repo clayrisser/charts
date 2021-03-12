@@ -24,14 +24,14 @@ spec:
     #Force POST Binding: on
     frontchannelLogout: true
     #Name ID Format: persistant
-    rootUrl: {{ template "gitlab.gitlab-base-url" }}
+    rootUrl: {{ template "gitlab.gitlab-base-url" .}}
     baseUrl: {{ template "gitlab.gitlab-base-url" . }}
     redirectUris:
       - {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
     # IDP Initiated SSO URL
   roles:
     items:
-      name: {{ template "gitlab.gitlab-base-url" }}
+      name: {{ template "gitlab.gitlab-base-url" .}}
   realmSelector:
     matchLabels:
       app: {{ (split "." .Values.config.keycloak.integration)._0 }}
