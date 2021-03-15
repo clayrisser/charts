@@ -130,6 +130,7 @@ questions:
     type: storageclass
     required: false
     label: 'storage class'
+    default: do-block-storage
     group: Persistence
   - variable: persistence.accessMode
     description: ''

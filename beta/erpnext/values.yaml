@@ -41,7 +41,7 @@ service:
 ingress:
   erpnext:
     certificate: ''
-    enabled: true
+    enabled: false
     hostname: ''
     tls: false
     issuer:
@@ -50,7 +50,7 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: true
-  storageClass: ''
+  storageClass: do-block-storage
   existingClaim:
     erpnext: ''
   size:
