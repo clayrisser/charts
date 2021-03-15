@@ -22,7 +22,6 @@ spec:
       repository: frappe/erpnext-worker
       tag: v12.18.0
       pullPolicy: IfNotPresent
-
     socketIOImage:
       repository: frappe/frappe-socketio
       tag: v12.15.0
@@ -37,7 +36,7 @@ spec:
       type: ClusterIP
       port: {{ (eq .Values.service.erpnext.type "LoadBalancer") | ternary .Values.service.erpnext.lbPorts.http  ((and (eq .Values.service.erpnext.type "NodePort") (not (empty .Values.service.erpnext.nodePorts.http))) | ternary .Values.service.erpnext.nodePorts.http "80") }}
     persistence:
-      work:
+      worker:
         enabled: {{ .Values.persistence.enabled }}
         size: {{ .Values.persistence.size.system }}
         storageClass: {{ .Values.persistence.storageClass }}
