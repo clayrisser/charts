@@ -28,8 +28,8 @@ spec:
       pullPolicy: IfNotPresent
     frappePyPort: "8000"
     socketIOPort: "9000"
-    postgresHost: {{ .Values.config.postgres_host }}
-    postgresPort: {{ .Values.config.postgres_port }}
+    postgresHost: {{ .Values.config.postgres.host }}
+    postgresPort: {{ .Values.config.postgres.port }}
     serviceAccount:
       create: true
     service:
