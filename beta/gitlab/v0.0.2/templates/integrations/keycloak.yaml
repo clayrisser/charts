@@ -87,6 +87,13 @@ spec:
             - /bin/sh
             - -c
             - |
+                curl --location --request POST 'https://$BASE_URL/auth/realms/basic/protocol/openid-connect/token' \
+                --header 'Content-Type: application/x-www-form-urlencoded' \
+                --data-urlencode 'client_id=admin-cli' \
+                --data-urlencode 'grant_type=password' \
+                --data-urlencode 'username=$USERNAME' \
+                --data-urlencode 'password=$PASSWORD' \
+                --data-urlencode 'client_secret=$ADMIN_CLI_SECRET'
                 curl --location --request PUT 'https://$BASE_URL/auth/admin/realms/basic/clients/$CLIENT_ID' \
                 --header 'Authorization: Bearer $access_token' \
                 --header 'Content-Type: application/json' \
@@ -108,12 +115,12 @@ spec:
             - name: USERNAME
               valueFrom:
                 secret:
-                  name: credentials-{{ template "gitlab.name" . }}
-                  key: ADMIN_USERNAME
+                  name: credentials-basic-realm-user-{{ template "gitlab.name" . }}
+                  key: username
             - name: PASSWORD
               valueFrom:
                 secret:
-                  name: credentials-{{ template "gitlab.name" . }}
-                  key: ADMIN_PASSWORD
+                  name: credentials-basic-realm-user-{{ template "gitlab.name" . }}
+                  key: password
 
 

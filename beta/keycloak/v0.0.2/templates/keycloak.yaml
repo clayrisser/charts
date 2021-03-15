@@ -119,6 +119,11 @@ spec:
     email: user@example.com
     enabled: true
     emailVerified: false
+    credentials:
+      items:
+        - temporary: false
+          type: password
+          value: {{ randAlphaNum 24 | quote }}
   realmSelector:
     matchLabels:
       app: {{ template "keycloak.fullname" . }}
