@@ -9,8 +9,6 @@ config:
   updateStrategy: Recreate
   redis:
     password: ''
-  # elasticsearch:
-  #   enabled: false
   erpnext:
     baseUrl: ''
     hostname: ''
@@ -22,12 +20,6 @@ config:
       limits:
         cpu: 100m
         memory: 128Mi
-  # privateKey: ''
-  # publicKey: ''
-  # secret: shhh
-  # admin:
-  #   email: admin@example.com
-  #   username: erpnext
   postgres:
     integration:
     database: erpnext
@@ -57,10 +49,10 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  # enabled: true
+  enabled: true
   storageClass: ''
-  # existingClaim:
-  #   erpnext: ''
+  existingClaim:
+    erpnext: ''
   size:
     assets: 2Gi
     system: 2Gi
