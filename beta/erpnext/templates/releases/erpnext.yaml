@@ -11,8 +11,8 @@ spec:
   forceUpgrade: false
   helmVersion: v3
   chart:
-    git: https://github.com/frappe/helm.git
-    ref: 2.1.2
+    git: https://github.com/nuevesolutions/helm.git
+    ref: master
     path: erpnext
   git:
     timeout: 60s
@@ -38,6 +38,10 @@ spec:
       port: {{ (eq .Values.service.erpnext.type "LoadBalancer") | ternary .Values.service.erpnext.lbPorts.http  ((and (eq .Values.service.erpnext.type "NodePort") (not (empty .Values.service.erpnext.nodePorts.http))) | ternary .Values.service.erpnext.nodePorts.http "80") }}
     persistence:
       work:
+        enabled: {{ .Values.persistence.enabled }}
+        size: {{ .Values.persistence.size.system }}
+        storageClass: {{ .Values.persistence.storageClass }}
+      logs:
         enabled: {{ .Values.persistence.enabled }}
         size: {{ .Values.persistence.size.system }}
         storageClass: {{ .Values.persistence.storageClass }}
