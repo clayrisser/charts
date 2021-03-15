@@ -15,7 +15,7 @@ spec:
     # adminUrl: string
     # attributes:
     #   key: string
-    baseUrl: {{ .Values.config.keycloak.baseUrl }}
+    baseUrl: {{ .Values.coKeycloakClientnfig.keycloak.baseUrl }}
     # bearerOnly: boolean
     # clientAuthenticatorType: string
     clientId: {{ .Values.config.keycloak.clientId }}

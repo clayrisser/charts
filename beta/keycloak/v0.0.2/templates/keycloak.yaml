@@ -56,16 +56,16 @@ spec:
             configMapKeyRef:
               name: {{ template "keycloak.fullname" . }}
               key: keycloak_default_theme
-        - name: KEYCLOAK_USER
-          valueFrom:
-            configMapKeyRef:
-              name: {{ template "keycloak.fullname" . }}
-              key: keycloak_username
-        - name: KEYCLOAK_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "keycloak.fullname" . }}
-              key: keycloak_password
+        # - name: KEYCLOAK_USER
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: {{ template "keycloak.fullname" . }}
+        #       key: keycloak_username
+        # - name: KEYCLOAK_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: {{ template "keycloak.fullname" . }}
+        #       key: keycloak_password
       volumes:
         items: []
 {{- if .Values.config.keycloak.resources.enabled }}
@@ -99,5 +99,31 @@ spec:
     enabled: true
     displayName: 'Basic Realm'
   instanceSelector:
+    matchLabels:
+      app: {{ template "keycloak.fullname" . }}
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: {{ template "keycloak.fullname" . }}
+  labels:
+    app: {{ template "keycloak.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  user:
+    username: realm_user
+    firstName: realm
+    lastName: user
+    email: user@example.com
+    enabled: true
+    emailVerified: false
+    credentials:
+      items:
+        - temporary: false
+          type: password
+          value: {{ randAlphaNum 24 | quote }}
+  realmSelector:
     matchLabels:
       app: {{ template "keycloak.fullname" . }}
