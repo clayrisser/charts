@@ -25,8 +25,11 @@ spec:
           kind: ConfigMap
           path: data
         - version: v1
-          kind: Secret
+          kind: Secretqq
           path: data
+        - version: v1
+          kind: HelmRelease
+          path: spec/values
     resources:
       - version: v1
         kind: ConfigMap
@@ -48,7 +51,21 @@ spec:
         kind: Secret
         name: {{ .Release.Name }}-erpnext
         namespace: {{ .Release.Namespace }}
+      - version: v1
+        group: helm.fluxcd.io
+        kind: HelmRelease
+        name: {{ template "erpnext.fullname" . }}
     patches:
+      - patch: |
+          apiVersion: helm.fluxcd.io/v1
+          kind: HelmRelease
+          metadata:
+            name: {{ .Release.Name }}
+            namespace: {{ .Release.Namespace }}
+          spec:
+            values:
+              postgresHost: "$(POSTGRES_HOSTNAME)"
+              postgresPort: "$(POSTGRES_PORT)"
       - patch: |
           apiVersion: v1
           kind: ConfigMap
