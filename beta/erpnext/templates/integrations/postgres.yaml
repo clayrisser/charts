@@ -25,7 +25,7 @@ spec:
           kind: ConfigMap
           path: data
         - version: v1
-          kind: Secretqq
+          kind: Secret
           path: data
         - version: v1
           kind: HelmRelease
@@ -54,7 +54,7 @@ spec:
       - version: v1
         group: helm.fluxcd.io
         kind: HelmRelease
-        name: {{ template "erpnext.fullname" . }}
+        name: {{ template "erpnext.Name" . }}
     patches:
       - patch: |
           apiVersion: helm.fluxcd.io/v1
