@@ -54,7 +54,7 @@ spec:
       - version: v1
         group: helm.fluxcd.io
         kind: HelmRelease
-        name: {{ template "erpnext.Name" . }}
+        name: {{ .Release.Name }}
     patches:
       - patch: |
           apiVersion: helm.fluxcd.io/v1
