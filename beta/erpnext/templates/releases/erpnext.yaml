@@ -65,13 +65,11 @@ spec:
     affinity:
       podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - weight: 90
-              podAffinityTerm:
-                topologyKey: kubernetes.io/hostname
-                labelSelector:
-                  matchExpressions:
-                    - key: app.kubernetes.io/name
-                      operator: In
-                      values:
-                        - {{ template "erpnext.fullname" . }}-backend
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                    - {{ template "erpnext.fullname" . }}-backend
 
