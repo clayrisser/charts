@@ -62,4 +62,16 @@ spec:
       targetCPUUtilizationPercentage: 80
     nodeSelector: {}
     tolerations: []
-    affinity: {}
+    affinity:
+      podAffinity:
+          requiredDuringScheduling:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - {{ template "erpnext.fullname" . }}-backend
+
