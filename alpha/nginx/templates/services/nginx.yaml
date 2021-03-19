@@ -8,9 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if (and (eq .Values.config.clusterProvider "eks") (.Values.ingress.nginx.enabled)) }}
-  type: NodePort
-  {{- else if .Values.ingress.nginx.enabled }}
+  {{- if .Values.ingress.nginx.enabled }}
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.nginx.type }}
