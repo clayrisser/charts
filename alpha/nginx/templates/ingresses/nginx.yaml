@@ -6,6 +6,10 @@ metadata:
   annotations:
     {{- if (eq .Values.config.clusterProvider "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else if (eq .Values.config.clusterProvider "eks") }}
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.ingress.api.hostname }}
+    kubernetes.io/ingress.class: alb
     {{- else }}
     kubernetes.io/ingress.class: nginx
     {{- end }}
