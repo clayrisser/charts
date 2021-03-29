@@ -17,7 +17,7 @@ config:
       region: us-east-1
       secretKey:
   keycloak:
-    enabled: false
+    enabled: true
     integration: ''
     clientId: ''
     companyName: KeyCloak
