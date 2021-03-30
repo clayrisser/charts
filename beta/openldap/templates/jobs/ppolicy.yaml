@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "openldap-operator.fullname" . }}-ppolicy
+  name: {{ template "openldap.fullname" . }}-ppolicy
   labels:
-    app: {{ template "openldap-operator.name" . }}-ppolicy
+    app: {{ template "openldap.name" . }}-ppolicy
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,12 +15,12 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "openldap-operator.name" . }}-ppolicy
+        app: {{ template "openldap.name" . }}-ppolicy
         release: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure
       containers:
-        - name: {{ template "openldap-operator.fullname" . }}-kubectl
+        - name: {{ template "openldap.fullname" . }}-kubectl
           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
           command:
