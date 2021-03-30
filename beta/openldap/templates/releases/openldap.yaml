@@ -56,7 +56,7 @@ spec:
       # loadBalancerSourceRanges: []
       type: {{ .Values.service.openldap.type | quote }}
     env:
-      LDAP_LOG_LEVEL: {{ .Values.config.debug | ternary "-1" "256" }}
+      LDAP_LOG_LEVEL: {{ .Values.config.debug | ternary "-1" "256" | quote }}
       LDAP_ORGANISATION: {{ .Values.config.openldap.organization | quote }}
       LDAP_DOMAIN: {{ .Values.config.openldap.domain | quote }}
       LDAP_READONLY_USER: 'false'
