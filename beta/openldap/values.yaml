@@ -27,20 +27,27 @@ config:
         memory: 256Mi
   phpldapadmin:
     enabled: false
+
 service:
   openldap:
     type: ClusterIP
-    tls: false
     externalTrafficPolicy: Cluster
     nodePorts:
       ldap:
-      sslLdap:
+      ldaps:
     lbPorts:
       ldap: 389
-      sslLdap: 636
+      ldaps: 636
+  phpldapadmin:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
 
 ingress:
-  openldap:
+  phpldapadmin:
     certificate: ''
     enabled: false
     hostname: ''

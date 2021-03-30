@@ -155,12 +155,23 @@ spec:
     phpldapadmin:
       enabled: {{ .Values.config.phpldapadmin.enabled }}
       ingress:
-        enabled: true
-        annotations: {}
+        enabled: {{ .Values.ingress.phpldapadmin.enabled }}
+        annotations:
+          {{- if (eq .Values.config.clusterType "aks") }}
+          kubernetes.io/ingress.class: addon-http-application-routing
+          {{- else }}
+          kubernetes.io/ingress.class: nginx
+          {{- end }}
+          {{- if .Values.ingress.phpldapadmin.tls }}
+          {{- if (empty .Values.ingress.phpldapadmin.certificate) }}
+          cert-manager.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
+          kubernetes.io/tls-acme: 'true'
+          {{- end }}
+          nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+          {{- end }}
         path: /
-        ## Ingress Host
         hosts:
-          - phpldapadmin.example
+          - {{ .Values.ingress.phpldapadmin.hostname }}
       env:
         PHPLDAPADMIN_HTTPS: 'false'
         PHPLDAPADMIN_LDAP_CLIENT_TLS: 'false'
