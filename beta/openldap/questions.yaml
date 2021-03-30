@@ -34,41 +34,41 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.openldap.debug
+  - variable: config.openldap.replicas
+    description: ''
+    type: int
+    required: true
+    label: 'openldap replicas'
+    group: Config
+  - variable: config.openldap.domain
+    description: ''
+    type: string
+    required: true
+    label: 'openldap domain'
+    group: Config
+  - variable: config.openldap.hashPassword
     description: ''
     type: boolean
     required: true
-    label: 'openldap debug'
+    label: 'openldap hash password'
     group: Config
-  - variable: config.openldap.title
+  - variable: config.openldap.organization
     description: ''
     type: string
     required: true
-    label: 'openldap title'
+    label: 'openldap organization'
     group: Config
-  - variable: config.openldap.email
-    description: ''
-    type: string
-    required: true
-    label: 'openldap email'
-    group: Config
-  - variable: config.openldap.username
-    description: ''
-    type: string
-    required: true
-    label: 'openldap username'
-    group: Config
-  - variable: config.openldap.password
+  - variable: config.openldap.passwords.admin
     description: ''
     type: password
     required: true
-    label: 'openldap password'
+    label: 'openldap admin password'
     group: Config
-  - variable: config.openldap.enableFileMods
+  - variable: config.openldap.passwords.config
     description: ''
-    type: boolean
+    type: password
     required: true
-    label: 'openldap enable file mods'
+    label: 'openldap config password'
     group: Config
   - variable: config.openldap.resources.enabled
     description: ''
@@ -102,6 +102,12 @@ questions:
         type: string
         required: true
         label: 'openldap resources limits memory'
+  - variable: config.openldap.phpldapadmin.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'phpldapadmin enabled'
+    group: Config
 
   # Persistence
   - variable: persistence.enabled
