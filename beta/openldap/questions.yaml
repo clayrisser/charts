@@ -101,7 +101,7 @@ questions:
         type: string
         required: true
         label: 'openldap resources limits memory'
-  - variable: config.openldap.phpldapadmin.enabled
+  - variable: config.phpldapadmin.enabled
     description: ''
     type: boolean
     required: true
