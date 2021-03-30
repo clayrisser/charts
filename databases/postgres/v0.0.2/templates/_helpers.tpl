@@ -17,17 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate postgres certificate
-*/}}
-{{- define "postgres.postgres-certificate" }}
-{{- if (not (empty .Values.ingress.postgres.certificate)) }}
-{{- printf .Values.ingress.postgres.certificate }}
-{{- else }}
-{{- printf "%s-postgres-letsencrypt" (include "postgres.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate postgres hostname
 */}}
 {{- define "postgres.postgres-hostname" }}
@@ -43,22 +32,47 @@ Calculate postgres hostname
 {{- end }}
 
 {{/*
-Calculate postgres base url
+Calculate pgadmin certificate
 */}}
-{{- define "postgres.postgres-base-url" }}
-{{- if (and .Values.config.postgres.baseUrl (not (empty .Values.config.postgres.baseUrl))) }}
-{{- printf .Values.config.postgres.baseUrl }}
+{{- define "postgres.pgadmin-certificate" }}
+{{- if (not (empty .Values.ingress.postgres.certificate)) }}
+{{- printf .Values.ingress.postgres.certificate }}
+{{- else }}
+{{- printf "%s-pgadmin-letsencrypt" (include "postgres.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Calculate pgadmin hostname
+*/}}
+{{- define "postgres.pgadmin-hostname" }}
+{{- if (and .Values.config.postgres.hostname (not (empty .Values.config.postgres.hostname))) }}
+{{- printf .Values.config.postgres.hostname }}
 {{- else }}
 {{- if .Values.ingress.postgres.enabled }}
-{{- $hostname := ((empty (include "postgres.postgres-hostname" .)) | ternary .Values.ingress.postgres.hostname (include "postgres.postgres-hostname" .)) }}
-{{- $protocol := (.Values.ingress.postgres.tls | ternary "https" "http") }}
-{{- printf "%s://%s" $protocol $hostname }}
+{{- printf .Values.ingress.postgres.hostname }}
 {{- else }}
-{{- printf "http://%s" (include "postgres.postgres-hostname" .) }}
+{{- printf "%s-pgadmin" (include "postgres.fullname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
 
+{{/*
+Calculate pgadmin base url
+*/}}
+{{- define "postgres.pgadmin-base-url" }}
+{{- if (and .Values.config.postgres.baseUrl (not (empty .Values.config.postgres.baseUrl))) }}
+{{- printf .Values.config.postgres.baseUrl }}
+{{- else }}
+{{- if .Values.ingress.postgres.enabled }}
+{{- $hostname := ((empty (include "postgres.pgadmin-hostname" .)) | ternary .Values.ingress.postgres.hostname (include "postgres.pgadmin-hostname" .)) }}
+{{- $protocol := (.Values.ingress.postgres.tls | ternary "https" "http") }}
+{{- printf "%s://%s" $protocol $hostname }}
+{{- else }}
+{{- printf "http://%s" (include "postgres.pgadmin-hostname" .) }}
+{{- end }}
+{{- end }}
+{{- end }}
 
 {{/*
 Grafana datasource name
