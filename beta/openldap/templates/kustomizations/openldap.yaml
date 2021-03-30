@@ -48,4 +48,6 @@ spec:
                   - |
                     echo $PPOLICY
                     echo ldapadd -Y EXTERNAL -H ldapi:///
+                    echo waiting a minute . . .
+                    sleep 60
                     echo $PPOLICY | ldapadd -Y EXTERNAL -H ldapi:///
