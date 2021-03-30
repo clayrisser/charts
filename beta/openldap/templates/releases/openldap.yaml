@@ -90,21 +90,44 @@ spec:
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
       {{- if .Values.config.openldap.hashPassword }}
-      ppolicy.ldif: |
+      02-ppolicy.ldif: |
         dn: cn=module{0},cn=config
         changetype: modify
         add: olcModuleLoad
-        olcModuleLoad: ppolicy
-        # ---
-        dn: olcOverlay={2}ppolicy,olcDatabase={1}mdb,cn=config
-        # changetype: add
-        objectClass: olcOverlayConfig
+        olcModuleLoad: {0}ppolicy
+
+        dn: olcOverlay=ppolicy,olcDatabase={1}{{ LDAP_BACKEND }},cn=config
+        changetype: add
         objectClass: olcPPolicyConfig
-        olcOverlay: {2}ppolicy
-        # olcPPolicyDefault: cn=default,ou=pwpolicies,dc=example,dc=com
+        objectClass: olcOverlayConfig
+        olcOverlay: ppolicy
+        olcPPolicyDefault: cn=default,ou=pwpolicies,{{ LDAP_BASE_DN }}
         olcPPolicyHashCleartext: TRUE
-        # olcPPolicyForwardUpdates: FALSE
-        # olcPPolicyUseLockout: TRUE
+        olcPPolicyUseLockout: FALSE
+      03-pwpolicies.ldif: |
+        dn: ou=pwpolicies,{{ LDAP_BASE_DN }}
+        objectClass: organizationalUnit
+        objectClass: top
+        ou: pwpolicies
+
+        dn: cn=default,ou=pwpolicies,{{ LDAP_BASE_DN }}
+        objectClass: top
+        objectClass: device
+        objectClass: pwdPolicy
+        cn: default
+        pwdAttribute: userPassword
+        pwdAllowUserChange: TRUE
+        pwdCheckQuality: 1
+        pwdExpireWarning: 3600
+        pwdFailureCountInterval: 3600
+        pwdInHistory: 3
+        pwdLockout: FALSE
+        pwdLockoutDuration: 300
+        pwdMaxAge: 0
+        pwdMaxFailure: 99
+        pwdMinLength: 3
+        pwdMustChange: FALSE
+        pwdSafeModify: FALSE
       {{- end }}
     replication:
       enabled: true
