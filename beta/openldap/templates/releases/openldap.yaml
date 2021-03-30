@@ -104,30 +104,30 @@ spec:
         olcPPolicyDefault: cn=default,ou=pwpolicies,{{ "{{" }} LDAP_BASE_DN }}
         olcPPolicyHashCleartext: TRUE
         olcPPolicyUseLockout: FALSE
-      03-pwpolicies.ldif: |
-        dn: ou=pwpolicies,{{ "{{" }} LDAP_BASE_DN }}
-        objectClass: organizationalUnit
-        objectClass: top
-        ou: pwpolicies
+      # 03-pwpolicies.ldif: |
+      #   dn: ou=pwpolicies,{{ "{{" }} LDAP_BASE_DN }}
+      #   objectClass: organizationalUnit
+      #   objectClass: top
+      #   ou: pwpolicies
 
-        dn: cn=default,ou=pwpolicies,{{ "{{" }} LDAP_BASE_DN }}
-        objectClass: top
-        objectClass: device
-        objectClass: pwdPolicy
-        cn: default
-        pwdAttribute: userPassword
-        pwdAllowUserChange: TRUE
-        pwdCheckQuality: 1
-        pwdExpireWarning: 3600
-        pwdFailureCountInterval: 3600
-        pwdInHistory: 3
-        pwdLockout: FALSE
-        pwdLockoutDuration: 300
-        pwdMaxAge: 0
-        pwdMaxFailure: 99
-        pwdMinLength: 3
-        pwdMustChange: FALSE
-        pwdSafeModify: FALSE
+      #   dn: cn=default,ou=pwpolicies,{{ "{{" }} LDAP_BASE_DN }}
+      #   objectClass: top
+      #   objectClass: device
+      #   objectClass: pwdPolicy
+      #   cn: default
+      #   pwdAttribute: userPassword
+      #   pwdAllowUserChange: TRUE
+      #   pwdCheckQuality: 1
+      #   pwdExpireWarning: 3600
+      #   pwdFailureCountInterval: 3600
+      #   pwdInHistory: 3
+      #   pwdLockout: FALSE
+      #   pwdLockoutDuration: 300
+      #   pwdMaxAge: 0
+      #   pwdMaxFailure: 99
+      #   pwdMinLength: 3
+      #   pwdMustChange: FALSE
+      #   pwdSafeModify: FALSE
       {{- end }}
     replication:
       enabled: true
