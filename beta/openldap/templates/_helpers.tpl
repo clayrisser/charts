@@ -20,10 +20,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate openldap certificate
 */}}
 {{- define "openldap.openldap-certificate" }}
-{{- if (not (empty .Values.ingress.openldap.certificate)) }}
-{{- printf .Values.ingress.openldap.certificate }}
+{{- if (not (empty .Values.service.openldap.certificate)) }}
+{{- printf .Values.service.openldap.certificate }}
 {{- else }}
-{{- printf "%s-openldap-letsencrypt" (include "openldap.fullname" .) }}
+{{- printf (include "openldap.phpldapadmin-certificate" .) }}
 {{- end }}
 {{- end }}
 
@@ -69,18 +69,18 @@ Calculate openldap dc
 {{/*
 Calculate phpldapadmin certificate
 */}}
-{{- define "openldap.phpldapadming-certificate" }}
+{{- define "openldap.phpldapadmin-certificate" }}
 {{- if (not (empty .Values.ingress.phpldapadmin.certificate)) }}
 {{- printf .Values.ingress.phpldapadmin.certificate }}
 {{- else }}
-{{- printf "%s-phpldapadming-letsencrypt" (include "openldap.fullname" .) }}
+{{- printf "%s-phpldapadmin-letsencrypt" (include "openldap.fullname" .) }}
 {{- end }}
 {{- end }}
 
 {{/*
 Calculate phpldapadmin hostname
 */}}
-{{- define "openldap.phpldapadming-hostname" }}
+{{- define "openldap.phpldapadmin-hostname" }}
 {{- if (and .Values.config.phpldapadmin.hostname (not (empty .Values.config.phpldapadmin.hostname))) }}
 {{- printf .Values.config.phpldapadmin.hostname }}
 {{- else }}
@@ -95,16 +95,16 @@ Calculate phpldapadmin hostname
 {{/*
 Calculate phpldapadmin base url
 */}}
-{{- define "openldap.phpldapadming-base-url" }}
+{{- define "openldap.phpldapadmin-base-url" }}
 {{- if (and .Values.config.phpldapadmin.baseUrl (not (empty .Values.config.phpldapadmin.baseUrl))) }}
 {{- printf .Values.config.phpldapadmin.baseUrl }}
 {{- else }}
 {{- if .Values.ingress.phpldapadmin.enabled }}
-{{- $hostname := ((empty (include "openldap.phpldapadming-hostname" .)) | ternary .Values.ingress.phpldapadmin.hostname (include "openldap.phpldapadming-hostname" .)) }}
+{{- $hostname := ((empty (include "openldap.phpldapadmin-hostname" .)) | ternary .Values.ingress.phpldapadmin.hostname (include "openldap.phpldapadmin-hostname" .)) }}
 {{- $protocol := (.Values.ingress.phpldapadmin.tls | ternary "https" "http") }}
 {{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
-{{- printf "http://%s" (include "openldap.phpldapadming-hostname" .) }}
+{{- printf "http://%s" (include "openldap.phpldapadmin-hostname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}

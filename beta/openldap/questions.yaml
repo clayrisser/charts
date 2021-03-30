@@ -317,4 +317,3 @@ questions:
     show_if: config.phpldapadmin.enabled=true
     label: 'phpldapadmin tag'
     group: Images
-
