@@ -21,7 +21,7 @@ Calculate pgadmin certificate
 */}}
 {{- define "postgres.pgadmin-certificate" }}
 {{- if (not (empty .Values.ingress.postgres.certificate)) }}
-{{- printf .Values.ingress.postgres.certificate }}
+{{- printf .Values.ingress.pgadmin.certificate }}
 {{- else }}
 {{- printf "%s-pgadmin-letsencrypt" (include "postgres.fullname" .) }}
 {{- end }}
@@ -31,8 +31,8 @@ Calculate pgadmin certificate
 Calculate pgadmin hostname
 */}}
 {{- define "postgres.pgadmin-hostname" }}
-{{- if (and .Values.config.postgres.hostname (not (empty .Values.config.postgres.hostname))) }}
-{{- printf .Values.config.postgres.hostname }}
+{{- if (and .Values.config.pgadmin.hostname (not (empty .Values.config.pgadmin.hostname))) }}
+{{- printf .Values.config.pgadmin.hostname }}
 {{- else }}
 {{- if .Values.ingress.postgres.enabled }}
 {{- printf .Values.ingress.postgres.hostname }}
@@ -46,8 +46,8 @@ Calculate pgadmin hostname
 Calculate pgadmin base url
 */}}
 {{- define "postgres.pgadmin-base-url" }}
-{{- if (and .Values.config.postgres.baseUrl (not (empty .Values.config.postgres.baseUrl))) }}
-{{- printf .Values.config.postgres.baseUrl }}
+{{- if (and .Values.config.pgadmin.baseUrl (not (empty .Values.config.pgadmin.baseUrl))) }}
+{{- printf .Values.config.pgadmin.baseUrl }}
 {{- else }}
 {{- if .Values.ingress.postgres.enabled }}
 {{- $hostname := ((empty (include "postgres.pgadmin-hostname" .)) | ternary .Values.ingress.postgres.hostname (include "postgres.pgadmin-hostname" .)) }}
