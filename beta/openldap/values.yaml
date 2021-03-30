@@ -9,7 +9,7 @@ images:
 config:
   clusterType: rke
   imagePullPolicy: Always
-  updateStrategy: Recreate
+  updateStrategy: RollingUpdate
   debug: false
   openldap:
     replicas: 1
