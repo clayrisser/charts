@@ -46,8 +46,8 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    echo $PPOLICY
-                    echo ldapadd -Y EXTERNAL -H ldapi:///
-                    echo waiting a minute . . .
-                    sleep 60
-                    echo $PPOLICY | ldapadd -Y EXTERNAL -H ldapi:///
+                    if [ ! -f /etc/ldap/slap.d/ppolicy.ldif ]; then
+                      echo $PPOLICY > /etc/ldap/slap.d/ppolicy.ldif
+                      echo waiting a minute . . .
+                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/slap.d/ppolicy.ldif" &
+                    fi
