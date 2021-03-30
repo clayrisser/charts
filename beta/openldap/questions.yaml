@@ -102,31 +102,6 @@ questions:
         required: true
         label: 'openldap resources limits memory'
 
-  # Git
-  - variable: config.git.enabled
-    description: unstable
-    type: boolean
-    required: true
-    label: enabled
-    show_subquestion_if: true
-    group: Git
-    subquestions:
-      - variable: config.git.repo
-        description: unstable
-        type: string
-        required: true
-        label: repo
-      - variable: config.git.branch
-        description: unstable
-        type: string
-        required: true
-        label: branch
-      - variable: config.git.privateKey
-        description: unstable
-        type: string
-        required: false
-        label: 'private key'
-
   # Persistence
   - variable: persistence.enabled
     description: ''
