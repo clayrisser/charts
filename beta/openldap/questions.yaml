@@ -33,6 +33,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
   - variable: config.openldap.replicas
     description: ''
     type: int
@@ -309,7 +315,6 @@ questions:
     label: 'openldap tag'
     group: Images
   - variable: images.phpldapadmin.repository
-    default: osixia/phpldapadmin
     description: ''
     type: string
     required: true
@@ -317,7 +322,6 @@ questions:
     label: 'phpldapadmin repository'
     group: Images
   - variable: images.phpldapadmin.tag
-    default: 0.9.0
     description: ''
     type: string
     required: true
