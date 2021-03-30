@@ -13,7 +13,7 @@ spec:
   git:
     timeout: 120s
   chart:
-    git: https://github.com/jp-gouin/helm-openldap
+    git: https://github.com/jp-gouin/helm-openldap.git
     ref: v2.1.3
     path: .
   values:
