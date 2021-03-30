@@ -49,5 +49,5 @@ spec:
                     echo $PPOLICY
                     echo ldapadd -Y EXTERNAL -H ldapi:/// \
                       -f /config/ppolicy.ldif
-                    # ldapadd -Y EXTERNAL -H ldapi:/// \
+                    ldapadd -Y EXTERNAL -H ldapi:/// \
                       -f /config/ppolicy.ldif
