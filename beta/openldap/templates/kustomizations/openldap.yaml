@@ -27,16 +27,16 @@ spec:
           value:
             - name: PPOLICY
               value: |
-                dn: cn=module{0},cn=config
-                changetype: modify
-                add: olcModuleLoad
-                olcModuleLoad: ppolicy
-
-                dn: olcOverlay={2}ppolicy,olcDatabase={1}mdb,cn=config
-                objectClass: olcOverlayConfig
-                objectClass: olcPPolicyConfig
-                olcOverlay: {2}ppolicy
-                olcPPolicyHashCleartext: TRUE
+                dn: cn=module{0},cn=config\n
+                changetype: modify\n
+                add: olcModuleLoad\n
+                olcModuleLoad: ppolicy\n
+                \n
+                dn: olcOverlay={2}ppolicy,olcDatabase={1}mdb,cn=config\n
+                objectClass: olcOverlayConfig\n
+                objectClass: olcPPolicyConfig\n
+                olcOverlay: {2}ppolicy\n
+                olcPPolicyHashCleartext: TRUE\n
         - op: replace
           path: /spec/template/spec/containers/0/lifecycle
           value:
@@ -46,8 +46,6 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    if [ ! -f /etc/ldap/slap.d/ppolicy.ldif ]; then
-                      echo $PPOLICY > /etc/ldap/slap.d/ppolicy.ldif
-                      echo waiting a minute . . .
-                      # sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/slap.d/ppolicy.ldif" &
-                    fi
+                    echo $PPOLICY > /tmp/ppolicy.ldif
+                    echo waiting a minute . . .
+                    sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/ppolicy.ldif" &
