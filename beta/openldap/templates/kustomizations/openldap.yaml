@@ -49,5 +49,5 @@ spec:
                     if [ ! -f /etc/ldap/slap.d/ppolicy.ldif ]; then
                       echo $PPOLICY > /etc/ldap/slap.d/ppolicy.ldif
                       echo waiting a minute . . .
-                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/slap.d/ppolicy.ldif" &
+                      # sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/slap.d/ppolicy.ldif" &
                     fi
