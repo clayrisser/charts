@@ -1,7 +1,7 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ template "openldap.name" . }}
+  name: {{ .Release.Name }}
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -13,8 +13,8 @@ spec:
   git:
     timeout: 120s
   chart:
-    git: https://github.com/nuevesolutions/helm-openldap
-    ref: new-master
+    git: https://github.com/jp-gouin/helm-openldap
+    ref: master
     path: .
   values:
     replicaCount: {{ .Values.config.openldap.replicas }}
@@ -89,6 +89,18 @@ spec:
         objectClass: organization
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
+      {{- if .Values.openldap.config.hashPassword }}
+      ppolicy.ldif: |
+        dn: cn=module{0},cn=config
+        changetype: modify
+        add: olcModuleLoad
+        olcModuleLoad: ppolicy
+        dn: olcOverlay={2}ppolicy,olcDatabase={1}mdb,cn=config
+        objectClass: olcOverlayConfig
+        objectClass: olcPPolicyConfig
+        olcOverlay: {2}ppolicy
+        olcPPolicyHashCleartext: TRUE
+      {{- end }}
     replication:
       enabled: true
       clusterName: 'cluster.local'
