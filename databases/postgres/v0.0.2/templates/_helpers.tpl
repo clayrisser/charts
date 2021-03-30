@@ -17,21 +17,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate postgres hostname
-*/}}
-{{- define "postgres.postgres-hostname" }}
-{{- if (and .Values.config.postgres.hostname (not (empty .Values.config.postgres.hostname))) }}
-{{- printf .Values.config.postgres.hostname }}
-{{- else }}
-{{- if .Values.ingress.postgres.enabled }}
-{{- printf .Values.ingress.postgres.hostname }}
-{{- else }}
-{{- printf "%s-postgres" (include "postgres.fullname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
 Calculate pgadmin certificate
 */}}
 {{- define "postgres.pgadmin-certificate" }}

@@ -27,6 +27,8 @@ config:
       cpu: 250m
       memory: 512Mi
   pgadmin:
+    hostname: ''
+    baseUrl: ''
     enabled: false
     email: admin
     password: P@ssw0rd
