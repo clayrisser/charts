@@ -172,6 +172,13 @@ spec:
         path: /
         hosts:
           - {{ .Values.ingress.phpldapadmin.hostname }}
+
+        {{- if .Values.ingress.phpldapadmin.tls }}
+        tls:
+          - secretName: {{ template "openldap.phpldapadmin-certificate" . }}
+            hosts:
+              - {{ .Values.ingress.phpldapadmin.hostname }}
+        {{- end }}
       env:
         PHPLDAPADMIN_HTTPS: 'false'
         PHPLDAPADMIN_LDAP_CLIENT_TLS: 'false'
