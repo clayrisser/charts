@@ -1,8 +1,7 @@
 categories:
   - Server
 questions:
-
-# Config
+  # Config
   - variable: config.clusterProvider
     default: infrastructure
     description: ''
@@ -70,7 +69,7 @@ questions:
         required: true
         label: 'nginx resources limits memory'
 
-# Persistence
+  # Persistence
   - variable: persistence.enabled
     default: false
     description: ''
@@ -133,7 +132,7 @@ questions:
         label: 'velero restic'
         group: Persistence
 
-# Services and Load Balancing
+  # Services and Load Balancing
   - variable: ingress.nginx.enabled
     default: true
     description: ''
@@ -154,6 +153,18 @@ questions:
         type: hostname
         required: true
         label: 'nginx ingress hostname'
+      - variable: ingress.nginx.godaddy.key
+        default:
+        description: ''
+        type: string
+        required: true
+        label: 'nginx ingress godaddy key'
+      - variable: ingress.nginx.godaddy.secret
+        default:
+        description: ''
+        type: password
+        required: true
+        label: 'nginx ingress godaddy secret'
       - variable: ingress.nginx.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -205,7 +216,7 @@ questions:
     label: 'nginx http lb port'
     group: 'Services and Load Balancing'
 
-# Images
+  # Images
   - variable: images.nginx.repository
     default: nginx
     description: ''

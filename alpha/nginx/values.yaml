@@ -35,6 +35,9 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
+    godaddy:
+      key:
+      secret:
 
 persistence:
   accessMode: ReadWriteOnce

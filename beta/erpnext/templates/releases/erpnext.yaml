@@ -63,3 +63,13 @@ spec:
     nodeSelector: {}
     tolerations: []
     affinity: {}
+      # podAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - topologyKey: kubernetes.io/hostname
+      #       labelSelector:
+      #         matchExpressions:
+      #           - key: app.kubernetes.io/instance
+      #             operator: In
+      #             values:
+      #               - {{ template "erpnext.fullname" . }}-backend
+
