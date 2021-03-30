@@ -27,7 +27,7 @@ spec:
           value:
             - name: ppolicy
               configMap:
-                name: {{ .Release.Name }}-{{ .Release.Name }}-ppolicy
+                name: {{ template "openldap.fullname" . }}-ppolicy
         - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:
