@@ -42,33 +42,14 @@ spec:
           value: ALL
         {{- end }}
         - name: KEYCLOAK_HOSTNAME
-          valueFrom:
-            configMapKeyRef:
-              name: {{ template "keycloak.fullname" . }}
-              key: keycloak_hostname
+          value: {{ template "keycloak.keycloak-hostname" . }}
+        - name: KEYCLOAK_DEFAULT_THEME
+          value: {{ .Values.config.keycloak.defaultTheme | quote }}
         - name: KEYCLOAK_WELCOME_THEME
-          valueFrom:
-            configMapKeyRef:
-              name: {{ template "keycloak.fullname" . }}
-              key: keycloak_welcome_theme
-        - name: KEYCLOAK_WELCOME_THEME
-          valueFrom:
-            configMapKeyRef:
-              name: {{ template "keycloak.fullname" . }}
-              key: keycloak_default_theme
-        # - name: KEYCLOAK_USER
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: {{ template "keycloak.fullname" . }}
-        #       key: keycloak_username
-        # - name: KEYCLOAK_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: {{ template "keycloak.fullname" . }}
-        #       key: keycloak_password
+          value: {{ .Values.config.keycloak.welcomeTheme | quote }}
       volumes:
         items: []
-{{- if .Values.config.keycloak.resources.enabled }}
+{{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:
       requests:
 {{ toYaml .Values.config.keycloak.resources.requests | indent 8 }}
@@ -113,17 +94,16 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   user:
-    username: realm_user
-    firstName: realm
-    lastName: user
-    email: user@example.com
+    username: {{ .Values.config.keycloak.username | quote }}
+    firstName: {{ .Values.config.keycloak.username | quote }}
+    lastName: {{ .Values.config.keycloak.username | quote }}
+    email: {{ .Values.config.keycloak.username }}@{{ template "keycloak.keycloak-hostname" . }}
     enabled: true
-    emailVerified: false
+    emailVerified: true
     credentials:
-      items:
-        - temporary: false
-          type: password
-          value: {{ randAlphaNum 24 | quote }}
+      - temporary: false
+        type: password
+        value: {{ .Values.config.keycloak.password | default (randAlphaNum 24) | quote }}
   realmSelector:
     matchLabels:
       app: {{ template "keycloak.fullname" . }}

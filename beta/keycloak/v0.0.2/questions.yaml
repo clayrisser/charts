@@ -3,7 +3,6 @@ categories:
 questions:
   # Config
   - variable: config.clusterProvider
-    default: infrastructure
     description: ''
     type: enum
     options:
@@ -15,7 +14,6 @@ questions:
     label: 'cluster provider'
     group: Config
   - variable: config.imagePullPolicy
-    default: IfNotPresent
     description: ''
     type: enum
     options:
@@ -25,14 +23,12 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.allowIntegration
-    default: true
     description: ''
     type: boolean
     required: true
     label: 'allow integration'
     group: Config
   - variable: config.updateStrategy
-    default: Recreate
     description: ''
     type: enum
     options:
@@ -42,56 +38,48 @@ questions:
     label: 'update strategy'
     group: Config
   - variable: config.debug
-    default: false
     description: ''
     type: boolean
     required: true
     label: debug
     group: Config
   - variable: config.keycloak.hostname
-    default: ''
     description: ''
     type: string
     required: false
     label: 'keycloak hostname'
     group: Config
   - variable: config.keycloak.username
-    default: admin
     description: ''
     type: string
     required: true
     label: 'keycloak username'
     group: Config
   - variable: config.keycloak.password
-    default: pass
     description: ''
     type: password
     required: true
     label: 'keycloak password'
     group: Config
   - variable: config.keycloak.themeZip
-    default: ''
     description: ''
     type: string
     required: false
     label: 'keycloak theme zip'
     group: Config
   - variable: config.keycloak.defaultTheme
-    default: keycloak
     description: ''
     type: string
     required: false
     label: 'keycloak default theme'
     group: Config
   - variable: config.keycloak.welcomeTheme
-    default: keycloak
     description: ''
     type: string
     required: false
     label: 'keycloak welcome theme'
     group: Config
   - variable: config.keycloak.migrationStrategy
-    default: IGNORE_EXISTING
     description: ''
     type: enum
     options:
@@ -100,17 +88,47 @@ questions:
     required: true
     label: 'keycloak migration strategy'
     group: Config
+  - variable: config.keycloak.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'keycloak resources defaults'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.keycloak.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak resources requests cpu'
+      - variable: config.keycloak.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak resources requests memory'
+      - variable: config.keycloak.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak resources limits cpu'
+      - variable: config.keycloak.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak resources limits memory'
 
   # Postgres Config
   - variable: config.postgres.integration
-    default: ''
     description: ''
     type: string
     required: false
     label: integration
     group: 'Postgres Config'
   - variable: config.postgres.host
-    default: ''
     description: ''
     type: string
     required: true
@@ -118,14 +136,12 @@ questions:
     show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.database
-    default: keycloak
     description: ''
     type: string
     required: true
     label: database
     group: 'Postgres Config'
   - variable: config.postgres.username
-    default: postgres
     description: ''
     type: string
     required: true
@@ -133,7 +149,6 @@ questions:
     show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.password
-    default: P@ssw0rd
     description: ''
     type: password
     required: true
@@ -141,7 +156,6 @@ questions:
     show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.port
-    default: 5432
     description: ''
     type: int
     min: 0
@@ -151,7 +165,6 @@ questions:
     show_if: config.postgres.integration=
     group: 'Postgres Config'
   # - variable: config.postgres.url
-  #   default: ''
   #   description: ''
   #   type: string
   #   required: false
@@ -160,7 +173,6 @@ questions:
 
   # Persistence
   - variable: persistence.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -169,19 +181,16 @@ questions:
     group: Persistence
     subquestions:
       - variable: persistence.size
-        default: 1Gi
         description: ''
         type: string
         required: true
         label: size
       - variable: persistence.storageClass
-        default: ''
         description: ''
         type: storageclass
         required: false
         label: 'storage class'
       - variable: persistence.accessMode
-        default: ReadWriteOnce
         description: ''
         type: enum
         options:
@@ -191,20 +200,17 @@ questions:
         required: false
         label: 'access mode'
       - variable: persistence.existingClaim
-        default: ''
         description: ''
         type: string
         required: false
         label: 'existing claim'
       - variable: persistence.velero.enabled
-        default: false
         description: ''
         type: boolean
         required: true
         label: 'velero enabled'
         group: Persistence
       - variable: persistence.velero.schedule
-        default: ''
         description: ''
         type: string
         show_if: persistence.velero.enabled=true
@@ -212,7 +218,6 @@ questions:
         label: 'velero schedule'
         group: Persistence
       - variable: persistence.velero.restic
-        default: true
         description: ''
         type: boolean
         show_if: persistence.velero.enabled=true
@@ -220,7 +225,6 @@ questions:
         label: 'velero restic'
         group: Persistence
       - variable: persistence.velero.ttl
-        default: '2160h0m00s'
         description: ''
         type: string
         show_if: persistence.velero.enabled=true
@@ -230,7 +234,6 @@ questions:
 
   # Services and Load Balancing
   - variable: ingress.keycloak.enabled
-    default: true
     description: ''
     type: boolean
     label: 'keycloak ingress enabled'
@@ -238,7 +241,6 @@ questions:
     group: 'Services and Load Balancing'
     subquestions:
       - variable: ingress.keycloak.tls
-        default: false
         description: ''
         type: boolean
         required: true
@@ -250,7 +252,6 @@ questions:
         required: true
         label: 'keycloak ingress hostname'
       - variable: ingress.keycloak.issuer.name
-        default: letsencrypt-staging
         description: ''
         type: enum
         show_if: ingress.keycloak.tls=true
@@ -263,14 +264,12 @@ questions:
         required: true
         label: 'keycloak ingress issuer name'
       - variable: ingress.keycloak.certificate
-        default: ''
         description: ''
         type: string
         show_if: ingress.keycloak.tls=true&&ingress.keycloak.issuer.name=none
         required: false
         label: 'keycloak ingress certificate'
   - variable: service.keycloak.type
-    default: ClusterIP
     description: ''
     type: enum
     show_if: ingress.keycloak.enabled=false
@@ -282,7 +281,6 @@ questions:
     label: 'keycloak service type'
     group: 'Services and Load Balancing'
   - variable: service.keycloak.nodePorts.http
-    default: ''
     description: ''
     type: int
     required: false
@@ -292,7 +290,6 @@ questions:
     label: 'keycloak http node port'
     group: 'Services and Load Balancing'
   - variable: service.keycloak.lbPorts.http
-    default: 80
     description: ''
     type: int
     min: 0
@@ -304,14 +301,12 @@ questions:
 
   # Images
   - variable: images.keycloak.repository
-    default: jboss/keycloak
     description: ''
     type: string
     required: true
     label: 'keycloak repository'
     group: Images
   - variable: images.keycloak.tag
-    default: 9.0.0
     description: ''
     type: string
     required: true

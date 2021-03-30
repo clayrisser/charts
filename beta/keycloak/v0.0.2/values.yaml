@@ -13,12 +13,13 @@ config:
     baseUrl: ''
     defaultTheme: keycloak
     hostname: ''
-    password: P@ssw0rd
+    password: ''
     themeZip: keycloak
     username: admin
     welcomeTheme: ''
     migrationStrategy: IGNORE_EXISTING
     resources:
+      enabled: 'false'
       requests:
         cpu: 100m
         memory: 128Mi
