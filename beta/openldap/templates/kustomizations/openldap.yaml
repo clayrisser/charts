@@ -36,7 +36,7 @@ spec:
                 objectClass: olcOverlayConfig\n
                 objectClass: olcPPolicyConfig\n
                 olcOverlay: {2}ppolicy\n
-                olcPPolicyHashCleartext: TRUE\n
+                olcPPolicyHashCleartext: TRUE
         - op: replace
           path: /spec/template/spec/containers/0/lifecycle
           value:
@@ -46,6 +46,6 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    echo $PPOLICY > /tmp/ppolicy.ldif
+                    echo $PPOLICY | sed "s|\\\\n *|\\n|g" > /tmp/ppolicy.ldif
                     echo waiting a minute . . .
-                    sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/ppolicy.ldif" &
+                    sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/ppolicy.ldif 2>&1 || true" &
