@@ -4,7 +4,7 @@ images:
     tag: 12.0.3
 
 config:
-  clusterProvider: infrastructure
+  clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   debug: false

@@ -1,17 +1,19 @@
 categories:
   - Server
 questions:
+
   # Config
-  - variable: config.clusterProvider
+  - variable: config.clusterType
     description: ''
     type: enum
     options:
-      - infrastructure
-      - eks
       - aks
+      - eks
       - gke
+      - k3s
+      - rke
     required: true
-    label: 'cluster provider'
+    label: 'cluster type'
     group: Config
   - variable: config.imagePullPolicy
     description: ''
@@ -58,7 +60,7 @@ questions:
   - variable: config.keycloak.password
     description: ''
     type: password
-    required: true
+    required: false
     label: 'keycloak password'
     group: Config
   - variable: config.keycloak.themeZip
