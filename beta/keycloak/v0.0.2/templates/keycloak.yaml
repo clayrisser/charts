@@ -75,10 +75,10 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   realm:
-    id: basic
-    realm: basic
+    id: main
+    realm: main
     enabled: true
-    displayName: 'Basic Realm'
+    displayName: 'Main Realm'
   instanceSelector:
     matchLabels:
       app: {{ template "keycloak.fullname" . }}
