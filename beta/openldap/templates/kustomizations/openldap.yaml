@@ -24,4 +24,8 @@ spec:
       patch: |
         - op: replace
           path: /spec/template/spec/containers/0/command
-          value: echo hello world
+          value:
+            - sh
+            - -c
+            - |
+              echo hello world
