@@ -15,13 +15,13 @@ spec:
       name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
       namespace: {{ .Release.Namespace }}
   patches:
-    - patch: |
-        - target:
-            group: apps
-            version: v1
-            kind: StatefulSet
-            name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
-            namespace: {{ .Release.Namespace }}
+    - target:
+        group: apps
+        version: v1
+        kind: StatefulSet
+        name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
+        namespace: {{ .Release.Namespace }}
+      patch: |
           op: replace
           path: /spec/template/spec/containers/0/command
           value: |
