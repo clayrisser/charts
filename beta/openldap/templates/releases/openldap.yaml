@@ -95,11 +95,16 @@ spec:
         changetype: modify
         add: olcModuleLoad
         olcModuleLoad: ppolicy
+        # ---
         dn: olcOverlay={2}ppolicy,olcDatabase={1}mdb,cn=config
+        # changetype: add
         objectClass: olcOverlayConfig
         objectClass: olcPPolicyConfig
         olcOverlay: {2}ppolicy
+        # olcPPolicyDefault: cn=default,ou=pwpolicies,dc=example,dc=com
         olcPPolicyHashCleartext: TRUE
+        # olcPPolicyForwardUpdates: FALSE
+        # olcPPolicyUseLockout: TRUE
       {{- end }}
     replication:
       enabled: true
@@ -143,13 +148,11 @@ spec:
         enabled: false
         annotations: {}
         path: /
-        ## Ingress Host
         hosts:
           - 'ssl-ldap2.example'
       ldap:
         server: ldap://openldap-stack-ha
         searchBase: {{ template "openldap.openldap-dc" . }}
-        # existingSecret: openldaptest
         bindDN: cn=admin,{{ template "openldap.openldap-dc" . }}
         bindPWKey: LDAP_ADMIN_PASSWORD
     phpldapadmin:
@@ -172,7 +175,6 @@ spec:
         path: /
         hosts:
           - {{ .Values.ingress.phpldapadmin.hostname }}
-
         {{- if .Values.ingress.phpldapadmin.tls }}
         tls:
           - secretName: {{ template "openldap.phpldapadmin-certificate" . }}
@@ -183,4 +185,4 @@ spec:
         PHPLDAPADMIN_HTTPS: 'false'
         PHPLDAPADMIN_LDAP_CLIENT_TLS: 'false'
         PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
-        PHPLDAPADMIN_LDAP_HOSTS: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha.{{ .Release.Namespace }}.svc.cluster.local
+        PHPLDAPADMIN_LDAP_HOSTS: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
