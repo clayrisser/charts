@@ -1,57 +1,57 @@
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: {{ template "openldap.fullname" . }}-ppolicy
-  labels:
-    app: {{ template "openldap.name" . }}-ppolicy
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-  # annotations:
-  #   helm.sh/hook: post-install
-  #   helm.sh/hook-weight: '3'
-  #   helm.sh/hook-delete-policy: before-hook-creation
-spec:
-  template:
-    metadata:
-      labels:
-        app: {{ template "openldap.name" . }}-ppolicy
-        release: {{ .Release.Name }}
-    spec:
-      restartPolicy: OnFailure
-      containers:
-        - name: {{ template "openldap.fullname" . }}-kubectl
-          image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
-          imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
-          command:
-            - /bin/sh
-            - -c
-            - |
-                echo ldapadd -x -D "$LDAP_ADMIN" -H "$LDAP_PROTOCOL://$LDAP_HOST:$LDAP_PORT" \
-                  -w "$LDAP_PASSWORD" -f /config/ppolicy.ldif
-                echo "waiting a minute . . ."
-                sleep 60
-                ldapadd -x -D "$LDAP_ADMIN" -H "$LDAP_PROTOCOL://$LDAP_HOST:$LDAP_PORT" \
-                  -w "$LDAP_PASSWORD" -f /config/ppolicy.ldif
-          volumeMounts:
-            - name: config
-              mountPath: /config/ppolicy.ldif
-              subPath: ppolicy.ldif
-          env:
-            - name: LDAP_ADMIN
-              value: cn=admin,{{ template "openldap.openldap-dc" . }}
-            - name: LDAP_HOST
-              value: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
-            - name: LDAP_PORT
-              value: '389'
-            - name: LDAP_PROTOCOL
-              value: ldap
-            - name: LDAP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-{{ .Release.Name }}-ltb-passwd
-                  key: LDAP_ADMIN_PASSWORD
-      volumes:
-        - name: config
-          configMap:
-            name: {{ template "openldap.fullname" . }}-ppolicy
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: {{ template "openldap.fullname" . }}-ppolicy
+#   labels:
+#     app: {{ template "openldap.name" . }}
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+#   # annotations:
+#   #   helm.sh/hook: post-install
+#   #   helm.sh/hook-weight: '3'
+#   #   helm.sh/hook-delete-policy: before-hook-creation
+# spec:
+#   template:
+#     metadata:
+#       labels:
+#         app: {{ template "openldap.name" . }}-ppolicy
+#         release: {{ .Release.Name }}
+#     spec:
+#       restartPolicy: OnFailure
+#       containers:
+#         - name: {{ template "openldap.fullname" . }}-kubectl
+#           image: {{ .Values.images.openldap.repository }}:{{ .Values.images.openldap.tag }}
+#           imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+#           command:
+#             - /bin/sh
+#             - -c
+#             - |
+#                 echo ldapadd -x -D "$LDAP_ADMIN" -H "$LDAP_PROTOCOL://$LDAP_HOST:$LDAP_PORT" \
+#                   -w "$LDAP_PASSWORD" -f /config/ppolicy.ldif
+#                 echo "waiting a minute . . ."
+#                 sleep 60
+#                 ldapadd -x -D "$LDAP_ADMIN" -H "$LDAP_PROTOCOL://$LDAP_HOST:$LDAP_PORT" \
+#                   -w "$LDAP_PASSWORD" -f /config/ppolicy.ldif
+#           volumeMounts:
+#             - name: config
+#               mountPath: /config/ppolicy.ldif
+#               subPath: ppolicy.ldif
+#           env:
+#             - name: LDAP_ADMIN
+#               value: cn=admin,{{ template "openldap.openldap-dc" . }}
+#             - name: LDAP_HOST
+#               value: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
+#             - name: LDAP_PORT
+#               value: '389'
+#             - name: LDAP_PROTOCOL
+#               value: ldap
+#             - name: LDAP_PASSWORD
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: {{ .Release.Name }}-{{ .Release.Name }}-ltb-passwd
+#                   key: LDAP_ADMIN_PASSWORD
+#       volumes:
+#         - name: config
+#           configMap:
+#             name: {{ template "openldap.fullname" . }}-ppolicy

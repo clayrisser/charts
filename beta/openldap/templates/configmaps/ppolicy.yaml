@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "openldap.fullname" . }}-ppolicy
   labels:
-    app: {{ template "openldap.name" . }}-ppolicy
+    app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
