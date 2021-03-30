@@ -20,7 +20,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate pgadmin certificate
 */}}
 {{- define "postgres.pgadmin-certificate" }}
-{{- if (not (empty .Values.ingress.postgres.certificate)) }}
+{{- if (not (empty .Values.ingress.pgadmin.certificate)) }}
 {{- printf .Values.ingress.pgadmin.certificate }}
 {{- else }}
 {{- printf "%s-pgadmin-letsencrypt" (include "postgres.fullname" .) }}
@@ -34,8 +34,8 @@ Calculate pgadmin hostname
 {{- if (and .Values.config.pgadmin.hostname (not (empty .Values.config.pgadmin.hostname))) }}
 {{- printf .Values.config.pgadmin.hostname }}
 {{- else }}
-{{- if .Values.ingress.postgres.enabled }}
-{{- printf .Values.ingress.postgres.hostname }}
+{{- if .Values.ingress.pgadmin.enabled }}
+{{- printf .Values.ingress.pgadmin.hostname }}
 {{- else }}
 {{- printf "%s-pgadmin" (include "postgres.fullname" .) }}
 {{- end }}
@@ -49,9 +49,9 @@ Calculate pgadmin base url
 {{- if (and .Values.config.pgadmin.baseUrl (not (empty .Values.config.pgadmin.baseUrl))) }}
 {{- printf .Values.config.pgadmin.baseUrl }}
 {{- else }}
-{{- if .Values.ingress.postgres.enabled }}
-{{- $hostname := ((empty (include "postgres.pgadmin-hostname" .)) | ternary .Values.ingress.postgres.hostname (include "postgres.pgadmin-hostname" .)) }}
-{{- $protocol := (.Values.ingress.postgres.tls | ternary "https" "http") }}
+{{- if .Values.ingress.pgadmin.enabled }}
+{{- $hostname := ((empty (include "postgres.pgadmin-hostname" .)) | ternary .Values.ingress.pgadmin.hostname (include "postgres.pgadmin-hostname" .)) }}
+{{- $protocol := (.Values.ingress.pgadmin.tls | ternary "https" "http") }}
 {{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "postgres.pgadmin-hostname" .) }}
