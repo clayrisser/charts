@@ -82,28 +82,3 @@ spec:
   instanceSelector:
     matchLabels:
       app: {{ template "keycloak.fullname" . }}
----
-apiVersion: keycloak.org/v1alpha1
-kind: KeycloakUser
-metadata:
-  name: {{ template "keycloak.fullname" . }}
-  labels:
-    app: {{ template "keycloak.fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  user:
-    username: {{ .Values.config.keycloak.username | quote }}
-    firstName: {{ .Values.config.keycloak.username | quote }}
-    lastName: {{ .Values.config.keycloak.username | quote }}
-    email: {{ .Values.config.keycloak.username }}@{{ template "keycloak.keycloak-hostname" . }}
-    enabled: true
-    emailVerified: true
-    credentials:
-      - temporary: false
-        type: password
-        value: {{ .Values.config.keycloak.password | default (randAlphaNum 24) | quote }}
-  realmSelector:
-    matchLabels:
-      app: {{ template "keycloak.fullname" . }}
