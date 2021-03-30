@@ -1,7 +1,7 @@
 images:
   keycloak:
     repository: jboss/keycloak
-    tag: 9.0.0
+    tag: 12.0.3
 
 config:
   clusterProvider: infrastructure
