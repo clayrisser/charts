@@ -21,8 +21,8 @@ spec:
         kind: StatefulSet
         name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
         namespace: {{ .Release.Namespace }}
-      patch: |
-          op: replace
-          path: /spec/template/spec/containers/0/command
-          value: |
-            echo hello world
+      patch:
+        op: replace
+        path: /spec/template/spec/containers/0/command
+        value: |
+          echo hello world
