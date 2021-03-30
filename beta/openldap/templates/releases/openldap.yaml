@@ -183,14 +183,4 @@ spec:
         PHPLDAPADMIN_HTTPS: 'false'
         PHPLDAPADMIN_LDAP_CLIENT_TLS: 'false'
         PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
-        PHPLDAPADMIN_LDAP_HOSTS: openldap-stack-ha
-          # '#PYTHON2BASH:
-          #   [{'openldap.openldap':
-          #     [{'server': [
-          #       {'tls': False},
-          #       {'port':636}
-          #     ]},
-          #       {'login':
-          #         [{'bind_id': 'cn=admin,dc=example,dc=org'}]
-          #       }]
-          #   }]'
+        PHPLDAPADMIN_LDAP_HOSTS: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha.{{ .Release.Namespace }}.svc.cluster.local
