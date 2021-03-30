@@ -89,7 +89,7 @@ spec:
         objectClass: organization
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
-      {{- if .Values.openldap.config.hashPassword }}
+      {{- if .Values.config.openldap.hashPassword }}
       ppolicy.ldif: |
         dn: cn=module{0},cn=config
         changetype: modify
