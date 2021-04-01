@@ -73,7 +73,7 @@ spec:
           value:
             - name: cert
               secret:
-                name: {{ template "openldap.fullname" . }}-cert
+                secretName: {{ template "openldap.fullname" . }}-cert
         - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:
