@@ -89,46 +89,16 @@ spec:
         objectClass: organization
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
-      {{- if .Values.config.openldap.hashPassword }}
-      02-ppolicy.ldif: |
-        dn: cn=module{0},cn=config
-        changetype: modify
-        add: olcModuleLoad
-        olcModuleLoad: {0}ppolicy
-
-        dn: olcOverlay=ppolicy,olcDatabase={1}{{ "{{" }} LDAP_BACKEND }},cn=config
-        changetype: add
-        objectClass: olcPPolicyConfig
-        objectClass: olcOverlayConfig
-        olcOverlay: ppolicy
-        olcPPolicyDefault: cn=default,ou=pwpolicies,{{ "{{" }} LDAP_BASE_DN }}
-        olcPPolicyHashCleartext: TRUE
-        olcPPolicyUseLockout: FALSE
-      # 03-pwpolicies.ldif: |
-      #   dn: ou=pwpolicies,{{ "{{" }} LDAP_BASE_DN }}
-      #   objectClass: organizationalUnit
-      #   objectClass: top
-      #   ou: pwpolicies
-
-      #   dn: cn=default,ou=pwpolicies,{{ "{{" }} LDAP_BASE_DN }}
-      #   objectClass: top
-      #   objectClass: device
-      #   objectClass: pwdPolicy
-      #   cn: default
-      #   pwdAttribute: userPassword
-      #   pwdAllowUserChange: TRUE
-      #   pwdCheckQuality: 1
-      #   pwdExpireWarning: 3600
-      #   pwdFailureCountInterval: 3600
-      #   pwdInHistory: 3
-      #   pwdLockout: FALSE
-      #   pwdLockoutDuration: 300
-      #   pwdMaxAge: 0
-      #   pwdMaxFailure: 99
-      #   pwdMinLength: 3
-      #   pwdMustChange: FALSE
-      #   pwdSafeModify: FALSE
-      {{- end }}
+      02-people.ldif: |
+        dn: ou=people,{{ template "openldap.openldap-dc" . }}
+        objectclass: organizationalUnit
+        objectclass: top
+        ou: people
+      03-groups.ldif: |
+        dn: ou=groups,{{ template "openldap.openldap-dc" . }}
+        objectclass: organizationalUnit
+        objectclass: top
+        ou: groups
     replication:
       enabled: true
       clusterName: 'cluster.local'
@@ -206,6 +176,6 @@ spec:
         {{- end }}
       env:
         PHPLDAPADMIN_HTTPS: 'false'
-        PHPLDAPADMIN_LDAP_CLIENT_TLS: 'false'
+        PHPLDAPADMIN_LDAP_CLIENT_TLS: {{ .Values.service.openldap.tls | ternary "true" "false" | quote }}
         PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
         PHPLDAPADMIN_LDAP_HOSTS: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
