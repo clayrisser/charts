@@ -89,12 +89,12 @@ spec:
         objectClass: organization
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
-      02-people.ldif: |
+
         dn: ou=people,{{ template "openldap.openldap-dc" . }}
         objectclass: organizationalUnit
         objectclass: top
         ou: people
-      03-groups.ldif: |
+
         dn: ou=groups,{{ template "openldap.openldap-dc" . }}
         objectclass: organizationalUnit
         objectclass: top
