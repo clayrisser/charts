@@ -30,7 +30,7 @@ spec:
       enabled: {{ .Values.service.openldap.tls.enabled }}
       secret: {{ template "openldap.openldap-certificate" . }}
       CA:
-        enabled: false
+        enabled: true
     extraLabels: {}
     {{- if .Values.persistence.velero.enabled }}
     podAnnotations:
