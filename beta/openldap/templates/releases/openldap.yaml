@@ -30,7 +30,7 @@ spec:
       enabled: {{ .Values.service.openldap.tls.enabled }}
       secret: {{ template "openldap.openldap-certificate" . }}
       CA:
-        enabled: false
+        enabled: true
     extraLabels: {}
     {{- if .Values.persistence.velero.enabled }}
     podAnnotations:
@@ -168,8 +168,15 @@ spec:
         PHPLDAPADMIN_HTTPS: 'false'
         # PHPLDAPADMIN_LDAP_CLIENT_TLS: {{ .Values.service.openldap.tls.enabled | ternary "true" "false" | quote }}
         PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
-        PHPLDAPADMIN_LDAP_HOSTS: |
-          #PYTHON2BASH:[{'{{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha': [{'server': [{'tls': {{ .Values.service.openldap.tls.enabled | ternary "True" "False" }}},{'port':{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}}]},{'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-dc" . }}'}]}]}]
         PHPLDAPADMIN_LDAP_CLIENT_TLS_CA_CRT_FILENAME: ca.crt
         PHPLDAPADMIN_LDAP_CLIENT_TLS_CRT_FILENAME: tls.crt
         PHPLDAPADMIN_LDAP_CLIENT_TLS_KEY_FILENAME: tls.key
+        PHPLDAPADMIN_LDAP_HOSTS: |
+          #PYTHON2BASH:[
+            {'{{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha': [
+              {'server': [
+                {'tls': {{ .Values.service.openldap.tls.enabled | ternary "True" "False" }}},
+                {'port':{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}}]},
+                {'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-dc" . }}'}]}
+            ]}
+          ]
