@@ -77,7 +77,7 @@ spec:
         - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:
-            - name: secret
+            - name: cert
               mountPath: /container/service/ldap-client/assets/certs
 {{- end }}
 {{- end }}
