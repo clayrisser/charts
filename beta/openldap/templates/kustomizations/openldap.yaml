@@ -44,21 +44,21 @@ spec:
           value:
             - name: ldif
               mountPath: /ldif
-        - op: replace
-          path: /spec/template/spec/containers/0/lifecycle
-          value:
-            postStart:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    if [ -f /ldif/ppolicy.ldif ]; then
-                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
-                    fi
-                    if [ -f /ldif/organizational-units.ldif ]; then
-                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
-                    fi
+        # - op: replace
+        #   path: /spec/template/spec/containers/0/lifecycle
+        #   value:
+        #     postStart:
+        #       exec:
+        #         command:
+        #           - /bin/sh
+        #           - -c
+        #           - |
+        #             if [ -f /ldif/ppolicy.ldif ]; then
+        #               sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
+        #             fi
+        #             if [ -f /ldif/organizational-units.ldif ]; then
+        #               sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
+        #             fi
 {{- end }}
 {{- if (and .Values.config.phpldapadmin.enabled .Values.service.openldap.tls.enabled) }}
     - target:
