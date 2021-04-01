@@ -64,7 +64,7 @@ spec:
       LDAP_READONLY_USER_PASSWORD: 'readonly'
       LDAP_RFC2307BIS_SCHEMA: 'false'
       LDAP_BACKEND: 'mdb'
-      LDAP_TLS: {{ .Values.service.openldap.tls | quote }}
+      LDAP_TLS: {{ .Values.service.openldap.tls.enabled | quote }}
       LDAP_TLS_CRT_FILENAME: 'tls.crt'
       LDAP_TLS_KEY_FILENAME: 'tls.key'
       LDAP_TLS_DH_PARAM_FILENAME: 'dhparam.pem'
