@@ -27,7 +27,7 @@ spec:
     logLevel: {{ .Values.config.debug | ternary "debug" "info" }}
     # existingSecret: {{ template "openldap.fullname" . }}-openldap
     tls:
-      enabled: {{ .Values.service.openldap.tls }}
+      enabled: {{ .Values.service.openldap.tls.enabled }}
       secret: {{ template "openldap.openldap-certificate" . }}
       CA:
         enabled: false
@@ -176,6 +176,6 @@ spec:
         {{- end }}
       env:
         PHPLDAPADMIN_HTTPS: 'false'
-        PHPLDAPADMIN_LDAP_CLIENT_TLS: {{ .Values.service.openldap.tls | ternary "true" "false" | quote }}
+        PHPLDAPADMIN_LDAP_CLIENT_TLS: {{ .Values.service.openldap.tls.enabled | ternary "true" "false" | quote }}
         PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
         PHPLDAPADMIN_LDAP_HOSTS: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha

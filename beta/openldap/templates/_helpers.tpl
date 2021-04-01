@@ -20,10 +20,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate openldap certificate
 */}}
 {{- define "openldap.openldap-certificate" }}
-{{- if (empty .Values.service.openldap.certificate) }}
+{{- if (empty .Values.service.openldap.tls.certificate) }}
 {{- printf "%s-cert" (include "openldap.fullname" .) }}
 {{- else }}
-{{- printf .Values.service.openldap.certificate }}
+{{- printf .Values.service.openldap.tls.certificate }}
 {{- end }}
 {{- end }}
 

@@ -280,6 +280,27 @@ questions:
     show_if: service.openldap.type=LoadBalancer
     label: 'openldap ldap lb port'
     group: 'Services and Load Balancing'
+  - variable: service.openldap.tls.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'openldap tls enabled'
+    show_subquestion_if: true
+    subquestions:
+      - variable: service.openldap.tls.certificate
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'openldap tls certificate'
+      - variable: service.openldap.tls.altNames
+        default: ''
+        description: ''
+        type: string
+        show_if: service.openldap.tls.certificate!=
+        required: false
+        label: 'openldap tls alt names'
   - variable: service.openldap.nodePorts.ldaps
     default: ''
     description: ''
@@ -287,7 +308,7 @@ questions:
     required: false
     min: 30000
     max: 32767
-    show_if: service.openldap.type=NodePort&&config.openldap.tls=true
+    show_if: service.openldap.type=NodePort&&service.openldap.tls.enabled=true
     label: 'openldap ldaps node port'
     group: 'Services and Load Balancing'
   - variable: service.openldap.lbPorts.ldaps
@@ -297,7 +318,7 @@ questions:
     required: true
     min: 0
     max: 65535
-    show_if: service.openldap.type=LoadBalancer&&config.openldap.tls=true
+    show_if: service.openldap.type=LoadBalancer&&service.openldap.tls.enabled=true
     label: 'openldap ldaps lb port'
     group: 'Services and Load Balancing'
 

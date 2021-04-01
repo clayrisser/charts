@@ -35,8 +35,10 @@ service:
   openldap:
     type: ClusterIP
     externalTrafficPolicy: Cluster
-    tls: false
-    certificate: ''
+    tls:
+      altNames: ''
+      certificate: ''
+      enabled: false
     nodePorts:
       ldap:
       ldaps:
