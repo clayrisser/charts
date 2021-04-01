@@ -16,6 +16,7 @@ config:
     domain: example.org
     hashPassword: true
     organization: 'Example Inc.'
+    organizationalUnits: people,groups
     schema: default
     passwords:
       admin: P@ssw0rd

@@ -1,3 +1,4 @@
+{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword)  }}
 apiVersion: kustomize.siliconhills.dev/v1alpha1
 kind: Kustomization
 metadata:
@@ -27,13 +28,12 @@ spec:
           value:
             - name: ppolicy
               configMap:
-                name: {{ template "openldap.fullname" . }}-ppolicy
+                name: {{ template "openldap.fullname" . }}-ldif
         - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:
-            - name: ppolicy
-              mountPath: /config/ppolicy.ldif
-              subPath: ppolicy.ldif
+            - name: ldif
+              mountPath: /ldif
         - op: replace
           path: /spec/template/spec/containers/0/lifecycle
           value:
@@ -43,6 +43,10 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    if [ -f /config/ppolicy.ldif ]; then
-                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /config/ppolicy.ldif 2>&1 || true" &
+                    if [ -f /ldif/ppolicy.ldif ]; then
+                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
                     fi
+                    if [ -f /ldif/organizational-units.ldif ]; then
+                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
+                    fi
+{{- end }}

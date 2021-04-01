@@ -89,16 +89,6 @@ spec:
         objectClass: organization
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
-
-        dn: ou=people,{{ template "openldap.openldap-dc" . }}
-        objectclass: organizationalUnit
-        objectclass: top
-        ou: people
-
-        dn: ou=groups,{{ template "openldap.openldap-dc" . }}
-        objectclass: organizationalUnit
-        objectclass: top
-        ou: groups
     replication:
       enabled: true
       clusterName: 'cluster.local'

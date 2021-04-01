@@ -63,6 +63,12 @@ questions:
     required: true
     label: 'openldap organization'
     group: Config
+  - variable: config.openldap.organizationalUnits
+    description: ''
+    type: string
+    required: false
+    label: 'openldap origanizational units'
+    group: Config
   - variable: config.openldap.passwords.admin
     description: ''
     type: password
