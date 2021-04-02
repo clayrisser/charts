@@ -70,7 +70,7 @@ spec:
       LDAP_TLS_KEY_FILENAME: 'tls.key'
       LDAP_TLS_DH_PARAM_FILENAME: 'dhparam.pem'
       LDAP_TLS_CA_CRT_FILENAME: 'ca.crt'
-      LDAP_TLS_ENFORCE: 'false'
+      LDAP_TLS_ENFORCE: 'true'
       CONTAINER_LOG_LEVEL: '4'
       LDAP_TLS_REQCERT: 'never'
       KEEP_EXISTING_CONFIG: 'false'
