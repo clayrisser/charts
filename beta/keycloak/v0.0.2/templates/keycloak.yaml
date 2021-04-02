@@ -20,20 +20,34 @@ spec:
   #   enabled: true
   keycloakDeploymentSpec:
     experimental:
-      # command:
-      #   - sh
-      #   - -c
-      #   - |
-      #       {{- if (not (empty .Values.config.keycloak.themeZip)) }}
-      #       export CWD=$(pwd)
-      #       mkdir -p /opt/jboss/keycloak/injected-themes
-      #       cd /opt/jboss/keycloak/injected-themes
-      #       wget -qO- {{ .Values.config.keycloak.themeZip }} | unzip -
-      #       cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
-      #       cd $CWD
-      #       {{- end }}
-      #       exec /opt/jboss/tools/docker-entrypoint.sh
-      # args: []
+      command:
+        - sh
+        - -c
+        - |
+            if [ "$LDAP_TLS_CRT" != "" ]; then
+              STOREPASS="P@ssw0rd"
+              KEYSTORES_PATH="/opt/jboss/keycloak/standalone/configuration/keystores"
+              mkdir -p $KEYSTORES_PATH/ldap-ca
+              chmod 744 $KEYSTORES_PATH
+              cd $KEYSTORES_PATH
+              echo "-----BEGIN CERTIFICATE-----" > ./ldap-ca/ldap-ca.crt
+              echo $LDAP_TLS_CRT | sed 's/ \?-\{5\}[A-Z]\+ [A-Z]\+-\{5\} \?//g' | sed 's/ /\n/g' >> ./ldap-ca/ldap-ca.crt
+              echo "-----END CERTIFICATE-----" >> ./ldap-ca/ldap-ca.crt
+              echo >> ./ldap-ca/ldap-ca.crt
+              keytool -keystore truststore -storepass $STOREPASS -noprompt -trustcacerts -importcert -alias ldap-ca -file ./ldap-ca/ldap-ca.crt
+              chmod 444 $KEYSTORES_PATH
+            fi
+            # {{- if (not (empty .Values.config.keycloak.themeZip)) }}
+            # export CWD=$(pwd)
+            # mkdir -p /opt/jboss/keycloak/injected-themes
+            # cd /opt/jboss/keycloak/injected-themes
+            # wget -qO- {{ .Values.config.keycloak.themeZip }} | unzip -
+            # cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
+            # cd $CWD
+            # {{- end }}
+            exec /opt/jboss/tools/docker-entrypoint.sh $@
+      args:
+        - ['-b', '0.0.0.0']
       env:
         - name: PROXY_ADDRESS_FORWARDING
           value: 'true'
