@@ -50,10 +50,9 @@ spec:
       {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
       volumes:
         items:
-          - name: sconfig
-            mountPath: /tmp/sconfig
-            secrets:
-              - keycloak-db-secret
+          - secret:
+              name: keycloak-db-secret
+              mountPath: /tmp/sconfig
       {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:
