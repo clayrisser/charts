@@ -9,4 +9,4 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   type: ExternalName
-  externalName: {{ .Values.config.postgres.host | quote }}
+  externalName: {{ .Values.config.postgres.host | default "localhost" | quote }}
