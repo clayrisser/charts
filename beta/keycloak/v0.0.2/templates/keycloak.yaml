@@ -50,20 +50,15 @@ spec:
         - name: KEYCLOAK_WELCOME_THEME
           value: {{ .Values.config.keycloak.welcomeTheme | quote }}
       {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
-        - name: LDAP_CA_CRT
-          valueFrom:
-            secretKeyRef:
-              name: keycloak-db-secret
-              key: ca.crt
         - name: LDAP_TLS_CRT
           valueFrom:
             secretKeyRef:
-              name: keycloak-db-secret
+              name: cluster-issuer-cluster-issuer-selfsigned-ca-cluster-issuer
               key: tls.crt
         - name: LDAP_TLS_KEY
           valueFrom:
             secretKeyRef:
-              name: keycloak-db-secret
+              name: cluster-issuer-cluster-issuer-selfsigned-ca-cluster-issuer
               key: tls.key
       {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
