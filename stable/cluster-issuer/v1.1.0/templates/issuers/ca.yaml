@@ -10,5 +10,5 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   ca:
-    secretName: {{ template "cluster-issuer.fullname" . }}-{{ .Values.config.ca.name }}
+    secretName: {{ template "cluster-issuer.fullname" . }}-{{ .Values.config.ca.name }}-ca
 {{- end }}
