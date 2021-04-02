@@ -47,8 +47,13 @@ spec:
           value: {{ .Values.config.keycloak.defaultTheme | quote }}
         - name: KEYCLOAK_WELCOME_THEME
           value: {{ .Values.config.keycloak.welcomeTheme | quote }}
+#      {{- if .Values.config.ldap.tls }}
       volumes:
-        items: []
+        items:
+          - secret:
+              mountPath: /tmp/config
+              name: keycloak-db-secret
+#      {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:
       requests:
