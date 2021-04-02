@@ -81,14 +81,14 @@ spec:
             namespace: {{ .Release.Namespace }}
           data:
             POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
-      # - patch: |
-      #     apiVersion: v1
-      #     kind: Service
-      #     metadata:
-      #       name: keycloak-db-secret
-      #       namespace: {{ .Release.Namespace }}
-      #     spec:
-      #       externalName: "$(POSTGRES_HOSTNAME)"
+      - patch: |
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: keycloak-db-secret
+            namespace: {{ .Release.Namespace }}
+          spec:
+            externalName: "$(POSTGRES_HOSTNAME)"
       - target:
           version: v1
           kind: Service
