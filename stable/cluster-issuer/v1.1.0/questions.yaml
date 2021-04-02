@@ -13,6 +13,12 @@ questions:
     required: true
     label: 'cluster type'
     group: Config
+  - variable: config.ca.allowIntegration
+    required: true
+    type: boolean
+    description: ''
+    label: 'allow integration'
+    group: Config
   - variable: config.ca.enabled
     required: true
     type: boolean

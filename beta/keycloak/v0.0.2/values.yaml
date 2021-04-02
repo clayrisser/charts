@@ -20,7 +20,9 @@ config:
     migrationStrategy: IGNORE_EXISTING
     ldap:
       enabled: false
-      tls: false
+      tls:
+        enabled: false
+        integration: cluster-issuer-cluster-issuer.kube-system
     resources:
       enabled: 'false'
       requests:

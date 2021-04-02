@@ -50,11 +50,21 @@ spec:
         - name: KEYCLOAK_WELCOME_THEME
           value: {{ .Values.config.keycloak.welcomeTheme | quote }}
       {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
-      volumes:
-        items:
-          - secret:
+        - name: LDAP_CA_CRT
+          valueFrom:
+            secretKeyRef:
               name: keycloak-db-secret
-              mountPath: /tmp/sconfig
+              key: ca.crt
+        - name: LDAP_TLS_CRT
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-db-secret
+              key: tls.crt
+        - name: LDAP_TLS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-db-secret
+              key: tls.key
       {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:

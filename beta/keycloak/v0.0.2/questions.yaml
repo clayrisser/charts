@@ -98,11 +98,17 @@ questions:
     show_subquestion_if: true
     group: Config
     subquestions:
-      - variable: config.keycloak.ldap.tls
+      - variable: config.keycloak.ldap.tls.enabled
         description: ''
         type: boolean
         required: true
-        label: 'keycloak ldap tls'
+        label: 'keycloak ldap tls enabled'
+      - variable: config.keycloak.ldap.integration
+        description: ''
+        type: string
+        required: false
+        show_if: config.keycloak.ldap.tls.integration=true
+        label: 'keycloak ldap tls integration'
   - variable: config.keycloak.resources.enabled
     description: ''
     type: enum

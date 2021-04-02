@@ -1,0 +1,17 @@
+{{- if (not (empty .Values.config.keycloak.ldap.tls.integration)) }}
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationPlug
+metadata:
+  name: {{ template "keycloak.fullname" . }}-grafana
+  labels:
+    app: {{ template "keycloak.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- $name := (split "." .Values.config.keycloak.ldap.tls.integration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.tls.integration))._1 | default "kube-system" }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+{{- end }}

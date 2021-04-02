@@ -1,7 +1,8 @@
 config:
-  ca:
-    enabled: true
-    name: selfsigned
+  allowIntegration: true
   cloudflareApiKey: ''
   clusterType: rke
   email: ''
+  ca:
+    enabled: true
+    name: selfsigned
