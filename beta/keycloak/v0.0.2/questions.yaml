@@ -90,6 +90,19 @@ questions:
     required: true
     label: 'keycloak migration strategy'
     group: Config
+  - variable: config.keycloak.ldap.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'keycloak ldap enabled'
+    show_subquestion_if: true
+    group: Config
+    subquestions:
+      - variable: config.keycloak.ldap.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'keycloak ldap tls'
   - variable: config.keycloak.resources.enabled
     description: ''
     type: enum

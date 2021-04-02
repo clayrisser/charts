@@ -18,6 +18,9 @@ config:
     username: admin
     welcomeTheme: ''
     migrationStrategy: IGNORE_EXISTING
+    ldap:
+      enabled: false
+      tls: false
     resources:
       enabled: 'false'
       requests:
