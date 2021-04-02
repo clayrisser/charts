@@ -34,8 +34,6 @@ spec:
           path: spec/externalDatabase/enabled
         - version: v1
           kind: Service
-          name: keycloak-db-secret
-          namespace: {{ .Release.Namespace }}
           path: spec/externalName
     resources:
       - version: v1
