@@ -32,6 +32,11 @@ spec:
           version: v1alpha1
           kind: Secret
           path: spec/externalDatabase/enabled
+        - version: v1
+          kind: Service
+          name: keycloak-db-secret
+          namespace: {{ .Release.Namespace }}
+          path: spec/externalName
     resources:
       - version: v1
         kind: ConfigMap
@@ -54,6 +59,10 @@ spec:
         kind: Keycloak
         name: {{ template "keycloak.fullname" . }}
         namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Service
+        name: keycloak-db-secret
+        namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
@@ -74,6 +83,14 @@ spec:
             namespace: {{ .Release.Namespace }}
           data:
             POSTGRES_PASSWORD: "$(POSTGRES_PASSWORD)"
+      - patch: |
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: keycloak-db-secret
+          namespace: {{ .Release.Namespace }}
+        spec:
+          externalName: "$(POSTGRES_HOSTNAME)"
       # - patch: |
       #     apiVersion: keycloak.org/v1alpha1
       #     kind: Keycloak
