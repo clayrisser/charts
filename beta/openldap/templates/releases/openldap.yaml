@@ -73,7 +73,7 @@ spec:
       LDAP_TLS_ENFORCE: 'false'
       CONTAINER_LOG_LEVEL: '4'
       LDAP_TLS_REQCERT: 'never'
-      KEEP_EXISTING_CONFIG: 'true'
+      KEEP_EXISTING_CONFIG: 'false'
       LDAP_REMOVE_CONFIG_AFTER_SETUP: 'true'
       LDAP_SSL_HELPER_PREFIX: 'ldap'
       LDAP_TLS_VERIFY_CLIENT: 'never'
