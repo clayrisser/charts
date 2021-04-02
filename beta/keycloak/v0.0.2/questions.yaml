@@ -98,7 +98,7 @@ questions:
     show_subquestion_if: true
     group: Config
     subquestions:
-      - variable: config.keycloak.ldap.enabled
+      - variable: config.keycloak.ldap.tls
         description: ''
         type: boolean
         required: true
