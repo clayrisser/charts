@@ -286,8 +286,10 @@ questions:
     show_if: service.openldap.type=LoadBalancer
     label: 'openldap ldap lb port'
     group: 'Services and Load Balancing'
+
+
+
   - variable: service.openldap.tls.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -296,18 +298,24 @@ questions:
     group: 'Services and Load Balancing'
     subquestions:
       - variable: service.openldap.tls.certificate
-        default: ''
         description: ''
         type: string
         required: false
         label: 'openldap tls certificate'
-      - variable: service.openldap.tls.altNames
-        default: ''
+      - variable: service.openldap.tls.issuer.name
+        description: ''
+        type: enum
+        options:
+          - selfsigned
+        show_if: service.openldap.tls.certificate!=""
+        required: false
+        label: 'openldap tls issuer name'
+      - variable: service.openldap.tls.issuer.dnsNames
         description: ''
         type: string
-        show_if: service.openldap.tls.certificate!=
+        show_if: service.openldap.tls.certificate!=""
         required: false
-        label: 'openldap tls alt names'
+        label: 'openldap tls issuer dns names'
   - variable: service.openldap.nodePorts.ldaps
     default: ''
     description: ''
