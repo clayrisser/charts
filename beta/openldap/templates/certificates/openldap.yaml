@@ -2,7 +2,7 @@
 {{- $serviceName := (printf "%s-%s-openldap-stack-ha" .Release.Name .Release.Name) }}
 {{- $customDnsNames := list }}
 {{- if .Values.service.openldap.tls.issuer.dnsNames }}
-{{- $customDnsNames := (splitList " " .Values.service.openldap.tls.issuer.dnsNames) }}
+{{- $customDnsNames = (splitList " " .Values.service.openldap.tls.issuer.dnsNames) }}
 {{- end }}
 {{- $dnsNames := (concat $customDnsNames (list (printf "%s.%s" $serviceName .Release.Namespace) (printf "%s.%s.svc" $serviceName .Release.Namespace) (printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace))) }}
 apiVersion: cert-manager.io/v1
