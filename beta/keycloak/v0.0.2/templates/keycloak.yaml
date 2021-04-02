@@ -16,6 +16,8 @@ spec:
     tlsTermination: reencrypt
   external:
     enabled: false
+  externalDatabase:
+    enabled: true
   keycloakDeploymentSpec:
     experimental:
       # command:
