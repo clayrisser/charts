@@ -1,4 +1,7 @@
 config:
+  ca:
+    enabled: true
+    name: custom
   cloudflareApiKey: ''
   clusterType: rke
   email: ''

@@ -1,0 +1,14 @@
+{{- if .Values.config.ca.enabled }}
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .Values.config.ca.name }}
+  labels:
+    app: {{ template "cluster-issuer.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  ca:
+    secretName: {{ template "cluster-issuer.fullname" . }}-{{ .Values.config.ca.name }}
+{{- end }}
