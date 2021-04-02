@@ -103,11 +103,11 @@ questions:
         type: boolean
         required: true
         label: 'keycloak ldap tls enabled'
-      - variable: config.keycloak.ldap.integration
+      - variable: config.keycloak.ldap.tls.integration
         description: ''
         type: string
         required: false
-        show_if: config.keycloak.ldap.tls.integration=true
+        show_if: config.keycloak.ldap.tls.enabled=true
         label: 'keycloak ldap tls integration'
   - variable: config.keycloak.resources.enabled
     description: ''
