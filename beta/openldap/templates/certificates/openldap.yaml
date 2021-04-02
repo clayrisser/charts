@@ -17,6 +17,10 @@ metadata:
 spec:
   secretName: {{ template "openldap.fullname" . }}-openldap-cert
   isCA: false
+  commonName: {{ $serviceName | quote }}
+  subject:
+    organizations:
+      - {{ .Values.service.openldap.tls.issuer.name | quote }}
   privateKey:
     algorithm: RSA
     encoding: PKCS1
