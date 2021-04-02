@@ -27,7 +27,7 @@ spec:
     logLevel: {{ .Values.config.debug | ternary "debug" "info" }}
     existingSecret: {{ template "openldap.fullname" . }}-openldap
     customTLS:
-      enabled: {{ .Values.service.openldap.tls.enabled }}
+      enabled: false # {{ .Values.service.openldap.tls.enabled }}
       secret: {{ template "openldap.openldap-certificate" . }}
       CA:
         enabled: true

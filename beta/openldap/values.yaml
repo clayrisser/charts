@@ -37,9 +37,11 @@ service:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     tls:
-      altNames: ''
-      certificate: ''
       enabled: false
+      certificate: ''
+      issuer:
+        name: selfsigned
+        dnsNames: ''
     nodePorts:
       ldap:
       ldaps:

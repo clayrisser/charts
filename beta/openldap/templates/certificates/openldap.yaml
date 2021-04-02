@@ -1,0 +1,29 @@
+{{- if (and .Values.service.openldap.tls.enabled (empty .Values.service.openldap.certificate)) }}
+{{- $serviceName := (printf "%s-%s-openldap-stack-ha" .Release.Name .Release.Name) }}
+{{- $customDnsNames := (splitList " " .Values.service.openldap.tls.issuer.dnsNames) }}
+{{- $dnsNames := (concat $customDnsNames (list (printf "%s.%s" $serviceName .Release.Namespace) (printf "%s.%s.svc" $serviceName .Release.Namespace) (printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace))) }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "openldap.fullname" . }}-openldap
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  secretName: {{ template "openldap.fullname" . }}-openldap
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  dnsNames:
+  {{- range $dnsNames }}
+    - {{ . }}
+  {{- end  }}
+  issuerRef:
+    name: {{ .Values.service.openldap.tls.issuer.name | quote }}
+    kind: ClusterIssuer
+    group: cert-manager.io
+{{- end }}
