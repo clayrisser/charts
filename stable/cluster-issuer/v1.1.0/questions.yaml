@@ -2,7 +2,6 @@ categories:
   - Certificates
 questions:
   - variable: config.clusterType
-    default: rke
     description: ''
     type: enum
     options:
@@ -14,15 +13,26 @@ questions:
     required: true
     label: 'cluster type'
     group: Config
+  - variable: config.ca.enabled
+    required: true
+    type: boolean
+    description: ''
+    label: 'ca enabled'
+    group: Config
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.ca.name
+        required: true
+        type: string
+        description: ''
+        label: 'ca name'
   - variable: config.email
-    default: ''
     required: true
     type: string
     description: ''
     label: email
     group: Config
   - variable: config.cloudflareApiKey
-    default: ''
     required: false
     type: password
     description: ''
