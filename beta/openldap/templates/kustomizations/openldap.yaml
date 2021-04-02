@@ -1,4 +1,4 @@
-{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword (and .Values.config.phpldapadmin.enabled .Values.service.openldap.tls.enabled))  }}
+{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword)  }}
 apiVersion: kustomize.siliconhills.dev/v1alpha1
 kind: Kustomization
 metadata:
@@ -10,22 +10,12 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   resources:
-{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword .Values.service.openldap.tls.enabled)  }}
     - group: apps
       version: v1
       kind: StatefulSet
       name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
       namespace: {{ .Release.Namespace }}
-{{- end }}
-{{- if (and .Values.config.phpldapadmin.enabled .Values.service.openldap.tls.enabled) }}
-    - group: apps
-      version: v1
-      kind: Deployment
-      name: {{ .Release.Name }}-{{ .Release.Name }}-phpldapadmin
-      namespace: {{ .Release.Namespace }}
-{{- end }}
   patches:
-{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword .Values.service.openldap.tls.enabled)  }}
     - target:
         group: apps
         version: v1
@@ -59,34 +49,4 @@ spec:
                     if [ -f /ldif/organizational-units.ldif ]; then
                       sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
                     fi
-{{- end }}
-{{- if (and .Values.config.phpldapadmin.enabled .Values.service.openldap.tls.enabled) }}
-    # - target:
-    #     group: apps
-    #     version: v1
-    #     kind: Deployment
-    #     name: {{ .Release.Name }}-{{ .Release.Name }}-phpldapadmin
-    #     namespace: {{ .Release.Namespace }}
-    #   patch: |
-    #     - op: add
-    #       path: /spec/template/spec/volumes
-    #       value:
-    #         - name: cert
-    #           secret:
-    #             secretName: {{ template "openldap.fullname" . }}-cert
-    #     - op: add
-    #       path: /spec/template/spec/containers/0/volumeMounts
-    #       value:
-    #         - name: cert
-    #           mountPath: /certs
-    #     - op: replace
-    #       path: /spec/template/spec/containers/0/command
-    #       value:
-    #         - /bin/sh
-    #         - -c
-    #         - |
-    #           mkdir -p /container/service/ldap-client/assets/certs
-    #           cp -r /certs/* /container/service/ldap-client/assets/certs
-    #           exec /container/tool/run
-{{- end }}
 {{- end }}
