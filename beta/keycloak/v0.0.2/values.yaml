@@ -20,7 +20,7 @@ config:
     migrationStrategy: IGNORE_EXISTING
     ldap:
       enabled: false
-      host: ''
+      hostname: ''
       domain: example.org
       username: admin
       password: ''

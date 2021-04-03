@@ -98,6 +98,31 @@ questions:
     show_subquestion_if: true
     group: Config
     subquestions:
+      - variable: config.keycloak.ldap.hostname
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak ldap host'
+      - variable: config.keycloak.ldap.domain
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak ldap domain'
+      - variable: config.keycloak.ldap.username
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak ldap username'
+      - variable: config.keycloak.ldap.password
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak ldap password'
+      - variable: config.keycloak.ldap.userObjectClasses
+        description: ''
+        type: string
+        required: true
+        label: 'keycloak ldap user object classes'
       - variable: config.keycloak.ldap.tls.enabled
         description: ''
         type: boolean
