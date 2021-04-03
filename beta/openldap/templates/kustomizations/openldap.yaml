@@ -1,4 +1,4 @@
-{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword (and .Values.config.phpldapadmin.enabled .Values.service.openldap.tls.enabled))  }}
+{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword (and .Values.config.phpldapadmin.enabled .Values.service.openldap.tls.enabled)) }}
 apiVersion: kustomize.siliconhills.dev/v1alpha1
 kind: Kustomization
 metadata:
@@ -73,7 +73,7 @@ spec:
           value:
             - name: cert
               secret:
-                secretName: cluster-issuer-cluster-issuer-selfsigned-ca-cluster-issuer
+                secretName: {{ .Values.config.phpldapadmin.ca.secret | default "cluster-issuer-cluster-issuer-selfsigned-ca-cluster-issuer" }}
         - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:

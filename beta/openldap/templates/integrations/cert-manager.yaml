@@ -1,4 +1,4 @@
-{{- if (not (empty .Values.config.openldap.ldap.tls.integration)) }}
+{{- if (and .Values.service.openldap.tls.enabled (not .Values.config.phpldapadmin.ca.secret) .Values.config.phpldapadmin.enabled) }}
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
@@ -9,9 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- $name := (split "." .Values.config.openldap.ldap.tls.integration)._0 -}}
-  {{- $namespace := (split "." (printf "%s." .Values.config.openldap.ldap.tls.integration))._1 | default "kube-system" }}
   socket:
-    name: {{ $name }}
-    namespace: {{ $namespace }}
+    name: cluster-issuer-cluster-issuer
+    namespace: kube-system
 {{- end }}

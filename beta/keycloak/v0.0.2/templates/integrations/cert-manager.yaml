@@ -1,4 +1,4 @@
-{{- if (not (empty .Values.config.keycloak.ldap.tls.integration)) }}
+{{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.enabled (not (empty .Values.config.keycloak.ldap.tls.integration))) }}
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
