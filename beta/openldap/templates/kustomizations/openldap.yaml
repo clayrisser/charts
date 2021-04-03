@@ -10,19 +10,12 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   resources:
+{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword .Values.service.openldap.tls.enabled)  }}
     - group: apps
       version: v1
       kind: StatefulSet
       name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
       namespace: {{ .Release.Namespace }}
-  patches:
-{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword .Values.service.openldap.tls.enabled)  }}
-    - target:
-        group: apps
-        version: v1
-        kind: StatefulSet
-        name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
-        namespace: {{ .Release.Namespace }}
 {{- end }}
 {{- if (and .Values.config.phpldapadmin.enabled .Values.service.openldap.tls.enabled) }}
     - group: apps
@@ -31,7 +24,14 @@ spec:
       name: {{ .Release.Name }}-{{ .Release.Name }}-phpldapadmin
       namespace: {{ .Release.Namespace }}
 {{- end }}
+  patches:
 {{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword .Values.service.openldap.tls.enabled)  }}
+    - target:
+        group: apps
+        version: v1
+        kind: StatefulSet
+        name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
+        namespace: {{ .Release.Namespace }}
       patch: |
         - op: add
           path: /spec/template/spec/volumes
