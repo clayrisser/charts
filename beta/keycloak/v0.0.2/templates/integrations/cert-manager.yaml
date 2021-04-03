@@ -1,4 +1,4 @@
-{{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.enabled (not (empty .Values.config.keycloak.ldap.tls.integration))) }}
+{{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.enabled (not (empty .Values.config.keycloak.ldap.tls.ca.integration))) }}
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
@@ -9,8 +9,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- $name := (split "." .Values.config.keycloak.ldap.tls.integration)._0 -}}
-  {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.tls.integration))._1 | default "kube-system" }}
+  {{- $name := (split "." .Values.config.keycloak.ldap.tls.ca.integration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.tls.ca.integration))._1 | default "kube-system" }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}

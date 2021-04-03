@@ -90,50 +90,6 @@ questions:
     required: true
     label: 'keycloak migration strategy'
     group: Config
-  - variable: config.keycloak.ldap.enabled
-    description: ''
-    type: boolean
-    required: true
-    label: 'keycloak ldap enabled'
-    show_subquestion_if: true
-    group: Config
-    subquestions:
-      - variable: config.keycloak.ldap.hostname
-        description: ''
-        type: string
-        required: true
-        label: 'keycloak ldap host'
-      - variable: config.keycloak.ldap.domain
-        description: ''
-        type: string
-        required: true
-        label: 'keycloak ldap domain'
-      - variable: config.keycloak.ldap.username
-        description: ''
-        type: string
-        required: true
-        label: 'keycloak ldap username'
-      - variable: config.keycloak.ldap.password
-        description: ''
-        type: password
-        required: true
-        label: 'keycloak ldap password'
-      - variable: config.keycloak.ldap.userObjectClasses
-        description: ''
-        type: string
-        required: true
-        label: 'keycloak ldap user object classes'
-      - variable: config.keycloak.ldap.tls.enabled
-        description: ''
-        type: boolean
-        required: true
-        label: 'keycloak ldap tls enabled'
-      - variable: config.keycloak.ldap.tls.integration
-        description: ''
-        type: string
-        required: false
-        show_if: config.keycloak.ldap.tls.enabled=true
-        label: 'keycloak ldap tls integration'
   - variable: config.keycloak.resources.enabled
     description: ''
     type: enum
@@ -166,6 +122,64 @@ questions:
         type: string
         required: true
         label: 'keycloak resources limits memory'
+
+  # Ldap Config
+  - variable: config.keycloak.ldap.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: 'Ldap Config'
+    subquestions:
+      - variable: config.keycloak.ldap.hostname
+        description: ''
+        type: string
+        required: true
+        label: hostname
+      - variable: config.keycloak.ldap.domain
+        description: ''
+        type: string
+        required: true
+        label: domain
+      - variable: config.keycloak.ldap.username
+        description: ''
+        type: string
+        required: true
+        label: username
+      - variable: config.keycloak.ldap.password
+        description: ''
+        type: password
+        required: true
+        label: password
+      - variable: config.keycloak.ldap.userObjectClasses
+        description: ''
+        type: string
+        required: true
+        label: 'user object classes'
+      - variable: config.keycloak.ldap.tls.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'tls enabled'
+      - variable: config.keycloak.ldap.tls.ca.integration
+        description: ''
+        type: string
+        required: false
+        show_if: config.keycloak.ldap.tls.enabled=true
+        label: 'tls ca integration'
+      - variable: config.keycloak.ldap.tls.ca.secret
+        description: ''
+        type: string
+        required: false
+        show_if: config.keycloak.ldap.tls.enabled=true
+        label: 'tls ca secret'
+      - variable: config.keycloak.ldap.tls.ca.key
+        description: ''
+        type: string
+        required: false
+        show_if: config.keycloak.ldap.tls.enabled=true
+        label: 'tls ca key'
 
   # Postgres Config
   - variable: config.postgres.integration

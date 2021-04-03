@@ -65,13 +65,8 @@ spec:
         - name: LDAP_TLS_CRT
           valueFrom:
             secretKeyRef:
-              name: cluster-issuer-cluster-issuer-selfsigned-ca-cluster-issuer
-              key: tls.crt
-        - name: LDAP_TLS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: cluster-issuer-cluster-issuer-selfsigned-ca-cluster-issuer
-              key: tls.key
+              name: {{ .Values.config.keycloak.ldap.tls.ca.secret | quote }}
+              key: {{ .Values.config.keycloak.ldap.tls.ca.key | quote }}
         {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:
