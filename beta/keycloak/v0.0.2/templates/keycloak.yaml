@@ -30,7 +30,6 @@ spec:
               echo $LDAP_TLS_CRT | sed 's/ \?-\{5\}[A-Z]\+ [A-Z]\+-\{5\} \?//g' | sed 's/ /\n/g' >> /opt/jboss/certs/ldap-ca.crt
               echo "-----END CERTIFICATE-----" >> /opt/jboss/certs/ldap-ca.crt
               echo >> /opt/jboss/certs/ldap-ca.crt
-              export X509_CA_BUNDLE="$X509_CA_BUNDLE /opt/jboss/certs/ldap-ca.crt"
             fi
             # {{- if (not (empty .Values.config.keycloak.themeZip)) }}
             # export CWD=$(pwd)
@@ -45,6 +44,8 @@ spec:
       env:
         - name: PROXY_ADDRESS_FORWARDING
           value: 'true'
+        - name: X509_CA_BUNDLE
+          value: '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt /opt/jboss/certs/ldap-ca.crt'
         {{- if .Values.config.debug }}
         - name: KEYCLOAK_LOGLEVEL
           value: ALL
