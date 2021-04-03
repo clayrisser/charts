@@ -27,7 +27,7 @@ config:
       password: ''
       userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson'
       tls:
-        enabled: false
+        enabled: true
         ca:
           integration: cluster-issuer-cluster-issuer.kube-system
           key: tls.crt
