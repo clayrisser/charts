@@ -1,0 +1,100 @@
+{{- if (and .Values.config.keycloak.ldap.enabled (not (empty .Values.config.keycloak.ldap.integration))) }}
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationPlug
+metadata:
+  name: {{ template "keycloak.fullname" . }}-openldap
+  labels:
+    app: {{ template "keycloak.name" . }}-openldap
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  cleanup: false
+  {{- $name := (split "." .Values.config.keycloak.ldap.integration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.integration))._1 | default "kube-system" }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  kustomization:
+    configuration:
+      varReference:
+        - group: keycloak.org
+          version: v1alpha1
+          kind: KeycloakRealm
+          path: spec/realm
+    resources:
+      - group: keycloak.org
+        version: v1alpha1
+        kind: KeycloakRealm
+        name: {{ template "keycloak.fullname" . }}
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: ConfigMap
+        name: {{ $name }}-openldap-{{ $namespace }}
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: {{ $name }}-openldap-{{ $namespace }}
+        namespace: {{ .Release.Namespace }}
+    patches:
+      - target:
+          group: keycloak.org
+          version: v1alpha1
+          kind: KeycloakRealm
+          name: {{ template "keycloak.fullname" . }}
+          namespace: {{ .Release.Namespace }}
+        patch: |
+          - op: replace
+            path: /spec/realm/userFederationProviders/0/config/bindCredential
+            value: $(LDAP_PASSWORD)
+          - op: replace
+            path: /spec/realm/userFederationProviders/0/config/bindDn
+            value: cn=$(LDAP_USERNAME),$(LDAP_DOMAIN)
+          - op: replace
+            path: /spec/realm/userFederationProviders/0/config/connectionUrl
+            value: $(LDAP_PROTOCOL)://$(LDAP_HOSTNAME)
+          - op: replace
+            path: /spec/realm/userFederationProviders/0/config/usersDn
+            value: ou=people,$(LDAP_DOMAIN)
+    vars:
+      - name: LDAP_HOSTNAME
+        fieldref:
+          fieldPath: data.LDAP_HOSTNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $name }}-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: LDAP_PROTOCOL
+        fieldref:
+          fieldPath: data.LDAP_PROTOCOL
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $name }}-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: LDAP_DOMAIN
+        fieldref:
+          fieldPath: data.LDAP_DOMAIN
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $name }}-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: LDAP_USERNAME
+        fieldref:
+          fieldPath: data.LDAP_USERNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $name }}-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: LDAP_PASSWORD
+        fieldref:
+          fieldPath: data.LDAP_ADMIN_PASSWORD
+        objref:
+          apiVersion: v1
+          kind: Secret
+          name: {{ $name }}-openldap-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+{{- end }}

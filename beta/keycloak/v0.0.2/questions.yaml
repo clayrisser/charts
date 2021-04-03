@@ -132,26 +132,35 @@ questions:
     show_subquestion_if: true
     group: 'Ldap Config'
     subquestions:
+      - variable: config.keycloak.ldap.integration
+        description: ''
+        type: string
+        required: true
+        label: hostname
       - variable: config.keycloak.ldap.hostname
         description: ''
         type: string
         required: true
         label: hostname
+        show_if: config.keycloak.ldap.integration=
       - variable: config.keycloak.ldap.domain
         description: ''
         type: string
         required: true
         label: domain
+        show_if: config.keycloak.ldap.integration=
       - variable: config.keycloak.ldap.username
         description: ''
         type: string
         required: true
         label: username
+        show_if: config.keycloak.ldap.integration=
       - variable: config.keycloak.ldap.password
         description: ''
         type: password
         required: true
         label: password
+        show_if: config.keycloak.ldap.integration=
       - variable: config.keycloak.ldap.userObjectClasses
         description: ''
         type: string

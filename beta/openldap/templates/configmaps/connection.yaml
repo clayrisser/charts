@@ -1,0 +1,18 @@
+{{- if .Values.config.allowIntegration }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "openldap.fullname" . }}-connection
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  LDAP_DOMAIN: {{ template "openldap.openldap-dc" . }}
+  LDAP_HOSTNAME: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha.{{ .Release.Namespace }}.svc.cluster.local
+  LDAP_PORT: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
+  LDAP_PROTOCOL: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
+  LDAP_TLS: {{ .Values.service.openldap.tls.enabled | quote }}
+  LDAP_USERNAME: admin
+{{- end }}

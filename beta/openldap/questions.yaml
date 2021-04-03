@@ -304,13 +304,13 @@ questions:
         type: enum
         options:
           - selfsigned
-        show_if: service.openldap.tls.certificate!=
+        show_if: service.openldap.tls.certificate=
         required: false
         label: 'openldap tls issuer name'
       - variable: service.openldap.tls.issuer.dnsNames
         description: ''
         type: string
-        show_if: service.openldap.tls.certificate!=
+        show_if: service.openldap.tls.certificate=
         required: false
         label: 'openldap tls issuer dns names'
   - variable: service.openldap.nodePorts.ldaps
