@@ -16,6 +16,7 @@ spec:
     tlsTermination: reencrypt
   external:
     enabled: false
+  # externalDatabase is set from kustomization
   # externalDatabase:
   #   enabled: true
   keycloakDeploymentSpec:
@@ -24,6 +25,7 @@ spec:
         - sh
         - -c
         - |
+            {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
             if [ "$LDAP_TLS_CRT" != "" ]; then
               mkdir -p /opt/jboss/certs
               echo "-----BEGIN CERTIFICATE-----" > /opt/jboss/certs/ldap-ca.crt
@@ -31,6 +33,8 @@ spec:
               echo "-----END CERTIFICATE-----" >> /opt/jboss/certs/ldap-ca.crt
               echo >> /opt/jboss/certs/ldap-ca.crt
             fi
+            {{- end }}
+            # TODO: support custom themes
             # {{- if (not (empty .Values.config.keycloak.themeZip)) }}
             # export CWD=$(pwd)
             # mkdir -p /opt/jboss/keycloak/injected-themes
@@ -44,8 +48,6 @@ spec:
       env:
         - name: PROXY_ADDRESS_FORWARDING
           value: 'true'
-        - name: X509_CA_BUNDLE
-          value: '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt /opt/jboss/certs/ldap-ca.crt'
         {{- if .Values.config.debug }}
         - name: KEYCLOAK_LOGLEVEL
           value: ALL
@@ -58,7 +60,9 @@ spec:
           value: {{ .Values.config.keycloak.defaultTheme | quote }}
         - name: KEYCLOAK_WELCOME_THEME
           value: {{ .Values.config.keycloak.welcomeTheme | quote }}
-      {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
+        {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
+        - name: X509_CA_BUNDLE
+          value: '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt /opt/jboss/certs/ldap-ca.crt'
         - name: LDAP_TLS_CRT
           valueFrom:
             secretKeyRef:
@@ -69,7 +73,7 @@ spec:
             secretKeyRef:
               name: cluster-issuer-cluster-issuer-selfsigned-ca-cluster-issuer
               key: tls.key
-      {{- end }}
+        {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:
       requests:
@@ -100,6 +104,103 @@ spec:
     realm: main
     enabled: true
     displayName: 'Main Realm'
+    {{- if .Values.config.keycloak.ldap.enabled }}
+    userFederationProviders:
+      - displayName: ldap
+        providerName: ldap
+        config:
+          allowKerberosAuthentication: 'false'
+          authType: simple
+          batchSizeForSync: '1000'
+          bindCredential: {{ .Values.config.keycloak.ldap.password | quote }}
+          bindDn: cn={{ .Values.config.keycloak.ldap.username }},{{ template "keycloak.ldap-dc" . }}
+          cachePolicy: DEFAULT
+          changedSyncPeriod: '-1'
+          connectionPooling: 'true'
+          connectionUrl: ldap{{ .Values.config.keycloak.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.keycloak.ldap.hostname }}
+          debug: 'false'
+          editMode: WRITABLE
+          enabled: 'true'
+          fullSyncPeriod: '-1'
+          importEnabled: 'false'
+          pagination: 'true'
+          priority: '0'
+          rdnLDAPAttribute: uid
+          searchScope: '1'
+          searchScope: '1'
+          startTls: 'false'
+          syncRegistrations: 'false'
+          trustEmail: 'true'
+          useKerberosForPasswordAuthentication: 'false'
+          useTruststoreSpi: ldapsOnly
+          userObjectClasses: {{ .Values.config.keycloak.ldap.userObjectClasses | quote }}
+          usernameLDAPAttribute: uid
+          usersDn: ou=people,{{ template "keycloak.ldap-dc" . }}
+          uuidLDAPAttribute: entryUUID
+          validatePasswordPolicy: 'false'
+          vendor: 'rhds'
+    userFederationMappers:
+      - name: username
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'false'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'true'
+          ldap.attribute: uid
+          read.only: 'false'
+          user.model.attribute: username
+      - name: email
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'false'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'true'
+          ldap.attribute: mail
+          read.only: 'false'
+          user.model.attribute: email
+      - name: 'first name'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'true'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'true'
+          ldap.attribute: cn
+          read.only: 'false'
+          user.model.attribute: firstName
+      - name: 'last name'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'true'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'true'
+          ldap.attribute: sn
+          read.only: 'false'
+          user.model.attribute: lastName
+      - name: 'creation date'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'true'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: createTimestamp
+          read.only: 'true'
+          user.model.attribute: createTimestamp
+      - name: 'modify date'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'true'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: modifyTimestamp
+          read.only: 'true'
+          user.model.attribute: modifyTimestamp
+    {{- end }}
   instanceSelector:
     matchLabels:
       app: {{ template "keycloak.fullname" . }}

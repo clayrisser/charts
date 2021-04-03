@@ -20,6 +20,11 @@ config:
     migrationStrategy: IGNORE_EXISTING
     ldap:
       enabled: false
+      host: ''
+      domain: example.org
+      username: admin
+      password: ''
+      userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson'
       tls:
         enabled: false
         integration: cluster-issuer-cluster-issuer.kube-system

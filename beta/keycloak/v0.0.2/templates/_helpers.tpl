@@ -62,7 +62,7 @@ Calculate keycloak base url
 {{/*
 Calculate postgres url
 */}}
-{{- define "gitlab.postgres-url" }}
+{{- define "keycloak.postgres-url" }}
 {{- $postgres := .Values.config.postgres }}
 {{- if $postgres.url }}
 {{- printf $postgres.url }}
@@ -70,4 +70,11 @@ Calculate postgres url
 {{- $credentials := ((or (empty $postgres.username) (empty $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) }}
 {{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
 {{- end }}
+{{- end }}
+
+{{/*
+Calculate ldap dc
+*/}}
+{{- define "keycloak.ldap-dc" }}
+{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.keycloak.ldap.domain -1) 0) (index (regexSplit "\\." .Values.config.keycloak.ldap.domain -1) 1) }}
 {{- end }}

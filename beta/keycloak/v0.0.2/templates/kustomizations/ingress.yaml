@@ -44,4 +44,3 @@ spec:
                 - {{ .Values.ingress.keycloak.hostname }}
           {{- end }}
 {{- end }}
-
