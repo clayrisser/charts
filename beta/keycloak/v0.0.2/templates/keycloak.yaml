@@ -44,7 +44,6 @@ spec:
             # cd $CWD
             # {{- end }}
             exec /opt/jboss/tools/docker-entrypoint.sh
-      # args: ['-b', '0.0.0.0']
       env:
         - name: PROXY_ADDRESS_FORWARDING
           value: 'true'
@@ -62,7 +61,7 @@ spec:
           value: {{ .Values.config.keycloak.welcomeTheme | quote }}
         {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
         - name: X509_CA_BUNDLE
-          value: '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt /opt/jboss/certs/ldap-ca.crt'
+          value: '/var/run/secrets/kubernetes.io/serviceaccount/*.crt /opt/jboss/certs/ldap-ca.crt'
         - name: LDAP_TLS_CRT
           valueFrom:
             secretKeyRef:
@@ -129,7 +128,7 @@ spec:
           searchScope: '1'
           searchScope: '1'
           startTls: 'false'
-          syncRegistrations: 'false'
+          syncRegistrations: 'true'
           trustEmail: 'true'
           useKerberosForPasswordAuthentication: 'false'
           useTruststoreSpi: ldapsOnly

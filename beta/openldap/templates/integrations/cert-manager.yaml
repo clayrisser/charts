@@ -1,0 +1,17 @@
+{{- if (not (empty .Values.config.openldap.ldap.tls.integration)) }}
+apiVersion: integration.siliconhills.dev/v1alpha1
+kind: IntegrationPlug
+metadata:
+  name: {{ template "openldap.fullname" . }}-cert-manager
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- $name := (split "." .Values.config.openldap.ldap.tls.integration)._0 -}}
+  {{- $namespace := (split "." (printf "%s." .Values.config.openldap.ldap.tls.integration))._1 | default "kube-system" }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+{{- end }}
