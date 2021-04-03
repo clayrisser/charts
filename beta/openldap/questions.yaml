@@ -33,6 +33,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.allowIntegration
+    description: ''
+    type: boolean
+    required: true
+    label: 'allow integration'
+    group: Config
   - variable: config.debug
     description: ''
     type: boolean

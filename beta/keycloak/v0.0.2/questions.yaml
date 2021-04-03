@@ -24,7 +24,7 @@ questions:
     required: true
     label: 'pull policy'
     group: Config
-  - variable: config.keycloak.allowIntegration
+  - variable: config.allowIntegration
     description: ''
     type: boolean
     required: true
