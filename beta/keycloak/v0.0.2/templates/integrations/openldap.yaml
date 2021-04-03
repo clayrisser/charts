@@ -21,15 +21,7 @@ spec:
         - group: keycloak.org
           version: v1alpha1
           kind: KeycloakRealm
-          path: spec
-        - group: keycloak.org
-          version: v1alpha1
-          kind: KeycloakRealm
-          path: spec/realm
-        - group: keycloak.org
-          version: v1alpha1
-          kind: KeycloakRealm
-          path: spec/realm/userFederationProviders/0/config
+          path: spec/realm/userFederationProviders
     resources:
       - group: keycloak.org
         version: v1alpha1
