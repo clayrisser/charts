@@ -30,7 +30,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: ConfigMap
-        name: {{ $name }}-openldap-{{ $namespace }}
+        name: {{ $name }}-connection-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
