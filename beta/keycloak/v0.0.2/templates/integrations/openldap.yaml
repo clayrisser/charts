@@ -21,11 +21,15 @@ spec:
         - group: keycloak.org
           version: v1alpha1
           kind: KeycloakRealm
-          path: spec/realm/userFederationProviders/0/config
+          path: spec
         - group: keycloak.org
           version: v1alpha1
           kind: KeycloakRealm
-          path: spec/realm/userFederationProviders/0/config/bindDn
+          path: spec/realm
+        - group: keycloak.org
+          version: v1alpha1
+          kind: KeycloakRealm
+          path: spec/realm/userFederationProviders/0/config
     resources:
       - group: keycloak.org
         version: v1alpha1
@@ -41,25 +45,48 @@ spec:
         name: {{ $name }}-openldap-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
     patches:
-      - target:
-          group: keycloak.org
-          version: v1alpha1
+      - patch: |
+          apiVersion: keycloak.org/v1alpha1
           kind: KeycloakRealm
-          name: {{ template "keycloak.fullname" . }}
-          namespace: {{ .Release.Namespace }}
-        patch: |
-          - op: replace
-            path: /spec/realm/userFederationProviders/0/config/bindCredential
-            value: $(LDAP_PASSWORD)
-          - op: replace
-            path: /spec/realm/userFederationProviders/0/config/bindDn
-            value: cn=$(LDAP_USERNAME),$(LDAP_DOMAIN)
-          - op: replace
-            path: /spec/realm/userFederationProviders/0/config/connectionUrl
-            value: $(LDAP_PROTOCOL)://$(LDAP_HOSTNAME)
-          - op: replace
-            path: /spec/realm/userFederationProviders/0/config/usersDn
-            value: ou=people,$(LDAP_DOMAIN)
+          metadata:
+            name: {{ template "keycloak.fullname" . }}
+            namespace: {{ .Release.Namespace }}
+          spec:
+            realm:
+              userFederationProviders:
+                - displayName: ldap
+                  providerName: ldap
+                  config:
+                    allowKerberosAuthentication: 'false'
+                    authType: simple
+                    batchSizeForSync: '1000'
+                    bindCredential: '$(LDAP_PASSWORD)'
+                    bindDn: 'cn=$(LDAP_USERNAME),$(LDAP_DOMAIN)'
+                    cachePolicy: DEFAULT
+                    changedSyncPeriod: '-1'
+                    connectionPooling: 'true'
+                    connectionUrl: '$(LDAP_PROTOCOL)://$(LDAP_HOSTNAME)'
+                    debug: 'false'
+                    editMode: WRITABLE
+                    enabled: 'true'
+                    fullSyncPeriod: '-1'
+                    importEnabled: 'false'
+                    pagination: 'true'
+                    priority: '0'
+                    rdnLDAPAttribute: uid
+                    searchScope: '1'
+                    searchScope: '1'
+                    startTls: 'false'
+                    syncRegistrations: 'true'
+                    trustEmail: 'true'
+                    useKerberosForPasswordAuthentication: 'false'
+                    useTruststoreSpi: ldapsOnly
+                    userObjectClasses: {{ .Values.config.keycloak.ldap.userObjectClasses | quote }}
+                    usernameLDAPAttribute: uid
+                    usersDn: 'ou=people,$(LDAP_DOMAIN)'
+                    uuidLDAPAttribute: entryUUID
+                    validatePasswordPolicy: 'false'
+                    vendor: 'rhds'
     vars:
       - name: LDAP_HOSTNAME
         fieldref:
