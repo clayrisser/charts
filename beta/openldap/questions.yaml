@@ -119,18 +119,6 @@ questions:
     required: true
     label: 'phpldapadmin enabled'
     group: Config
-    show_subquestion_if: true
-    subquestions:
-      - variable: config.phpldapadmin.ca.name
-        description: ''
-        type: string
-        required: true
-        label: 'phpldapadmin ca name'
-      - variable: config.phpldapadmin.ca.secret
-        description: ''
-        type: string
-        required: false
-        label: 'phpldapadmin ca secret'
 
   # Persistence
   - variable: persistence.enabled

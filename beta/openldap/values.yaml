@@ -31,9 +31,6 @@ config:
         memory: 256Mi
   phpldapadmin:
     enabled: false
-    ca:
-      secret:
-      name: tls.crt
 
 service:
   openldap:
