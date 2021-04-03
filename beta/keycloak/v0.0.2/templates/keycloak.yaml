@@ -41,8 +41,7 @@ spec:
             # cd $CWD
             # {{- end }}
             exec /opt/jboss/tools/docker-entrypoint.sh $@
-      args:
-        - ['-b', '0.0.0.0']
+      args: ['-b', '0.0.0.0']
       env:
         - name: PROXY_ADDRESS_FORWARDING
           value: 'true'
