@@ -14,9 +14,9 @@ config:
   allowIntegration: true
   openldap:
     replicas: 1
-    domain: example.org
+    domain:
     hashPassword: true
-    organization: 'Example Inc.'
+    organization:
     organizationalUnits: people,groups
     schema: default
     passwords:

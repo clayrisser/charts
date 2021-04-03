@@ -52,7 +52,7 @@ questions:
     label: 'openldap replicas'
     group: Config
   - variable: config.openldap.domain
-    description: ''
+    description: 'use example.org instead of dc=example,dc=org'
     type: string
     required: true
     label: 'openldap domain'

@@ -144,7 +144,7 @@ questions:
         label: hostname
         show_if: config.keycloak.ldap.integration=
       - variable: config.keycloak.ldap.domain
-        description: ''
+        description: 'use example.org instead of dc=example,dc=org'
         type: string
         required: true
         label: domain
@@ -205,7 +205,7 @@ questions:
     show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.database
-    description: ''
+    description: 'only letters, digits and _ allowed'
     type: string
     required: true
     label: database

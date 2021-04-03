@@ -22,7 +22,7 @@ config:
       enabled: false
       integration: ''
       hostname: ''
-      domain: example.org
+      domain: ''
       username: admin
       password: ''
       userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson'
