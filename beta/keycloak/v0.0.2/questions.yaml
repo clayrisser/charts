@@ -135,7 +135,7 @@ questions:
       - variable: config.keycloak.ldap.integration
         description: ''
         type: string
-        required: true
+        required: false
         label: integration
       - variable: config.keycloak.ldap.hostname
         description: ''
