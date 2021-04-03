@@ -168,7 +168,7 @@ spec:
       env:
         PHPLDAPADMIN_HTTPS: 'false'
         PHPLDAPADMIN_LDAP_CLIENT_TLS: {{ .Values.service.openldap.tls.enabled | ternary "true" "false" | quote }}
-        PHPLDAPADMIN_LDAP_CLIENT_TLS_CA_CRT_FILENAME: {{ .Values.config.phpldapadmin.ca.name | quote }}
+        # PHPLDAPADMIN_LDAP_CLIENT_TLS_CA_CRT_FILENAME: {{ .Values.config.phpldapadmin.ca.name | quote }}
         # PHPLDAPADMIN_LDAP_CLIENT_TLS_CRT_FILENAME: tls.crt
         # PHPLDAPADMIN_LDAP_CLIENT_TLS_KEY_FILENAME: tls.key
         PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
@@ -176,8 +176,10 @@ spec:
           #PYTHON2BASH:[
             {'{{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha': [
               {'server': [
-                {'tls': {{ .Values.service.openldap.tls.enabled | ternary "True" "False" }}},
-                {'port':{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}}]},
-                {'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-dc" . }}'}]}
+                {'host': 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha:{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}'},
+                {'tls': False},
+                {'port': 0}
+              ]},
+              {'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-dc" . }}'}]}
             ]}
           ]
