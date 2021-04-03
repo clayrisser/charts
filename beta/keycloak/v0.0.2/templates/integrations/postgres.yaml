@@ -38,15 +38,15 @@ spec:
     resources:
       - version: v1
         kind: ConfigMap
-        name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+        name: {{ $name }}-connection-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: ConfigMap
-        name: {{ $namespace }}-postgres-socket
+        name: {{ $name }}-socket
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+        name: {{ $name }}-postgres-secret-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
@@ -93,7 +93,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-socket
+          name: {{ $name }}-socket
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_HOSTNAME
         fieldref:
@@ -101,7 +101,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          name: {{ $name }}-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PORT
         fieldref:
@@ -109,7 +109,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          name: {{ $name }}-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_USERNAME
         fieldref:
@@ -117,7 +117,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          name: {{ $name }}-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PASSWORD
         fieldref:
@@ -125,13 +125,13 @@ spec:
         objref:
           apiVersion: v1
           kind: Secret
-          name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+          name: {{ $name }}-postgres-secret-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $namespace }}-postgres-socket
+  name: {{ $name }}-socket
   namespace: {{ .Release.Namespace }}
 data:
   database: {{ .Values.config.postgres.database }}
