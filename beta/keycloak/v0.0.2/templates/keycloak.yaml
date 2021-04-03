@@ -39,7 +39,7 @@ spec:
             # cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
             # cd $CWD
             # {{- end }}
-            exec /opt/jboss/tools/docker-entrypoint.sh $@
+            exec /opt/jboss/tools/docker-entrypoint.sh
       args: ['-b', '0.0.0.0']
       env:
         - name: PROXY_ADDRESS_FORWARDING
