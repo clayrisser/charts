@@ -21,7 +21,11 @@ spec:
         - group: keycloak.org
           version: v1alpha1
           kind: KeycloakRealm
-          path: spec/realm
+          path: spec/realm/userFederationProviders/0/config
+        - group: keycloak.org
+          version: v1alpha1
+          kind: KeycloakRealm
+          path: spec/realm/userFederationProviders/0/config/bindDn
     resources:
       - group: keycloak.org
         version: v1alpha1
