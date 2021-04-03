@@ -115,7 +115,7 @@ questions:
         label: 'keycloak ldap username'
       - variable: config.keycloak.ldap.password
         description: ''
-        type: string
+        type: password
         required: true
         label: 'keycloak ldap password'
       - variable: config.keycloak.ldap.userObjectClasses
