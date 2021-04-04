@@ -4,7 +4,7 @@ kind: IntegrationPlug
 metadata:
   name: {{ template "keycloak.fullname" . }}-openldap
   labels:
-    app: {{ template "keycloak.name" . }}-openldap
+    app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -21,10 +21,6 @@ spec:
         - group: keycloak.org
           version: v1alpha1
           kind: KeycloakRealm
-          path: spec/realm/userFederationProviders/config/bindCredential
-        - group: keycloak.org
-          version: v1alpha1
-          kind: KeycloakRealm
           path: spec/realm/userFederationProviders/config/bindDn
         - group: keycloak.org
           version: v1alpha1
@@ -34,6 +30,9 @@ spec:
           version: v1alpha1
           kind: KeycloakRealm
           path: spec/realm/userFederationProviders/config/usersDn
+        - version: v1
+          kind: Secret
+          path: data
     resources:
       - group: keycloak.org
         version: v1alpha1
@@ -48,7 +47,19 @@ spec:
         kind: Secret
         name: {{ $name }}-openldap-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: keycloak-vault
+        namespace: {{ .Release.Namespace }}
     patches:
+      - patch: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: keycloak-vault
+            namespace: {{ .Release.Namespace }}
+          stringData:
+            ldap-realm_bindCredential: $(LDAP_PASSWORD)
       - target:
           group: keycloak.org
           version: v1alpha1
@@ -56,9 +67,6 @@ spec:
           name: {{ template "keycloak.fullname" . }}
           namespace: {{ .Release.Namespace }}
         patch: |
-          - op: replace
-            path: /spec/realm/userFederationProviders/0/config/bindCredential
-            value: $(LDAP_PASSWORD)
           - op: replace
             path: /spec/realm/userFederationProviders/0/config/bindDn
             value: cn=$(LDAP_USERNAME),$(LDAP_DOMAIN)
@@ -103,19 +111,10 @@ spec:
           namespace: {{ .Release.Namespace }}
       - name: LDAP_PASSWORD
         fieldref:
-          fieldPath: data.LDAP_PASSWORD
+          fieldPath: data.LDAP_ADMIN_PASSWORD
         objref:
           apiVersion: v1
-          kind: ConfigMap
-          name: {{ $name }}-connection-{{ $namespace }}
+          kind: Secret
+          name: {{ $name }}-openldap-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
-      # TODO: use password from secret when keycloak supports ldap password as secret
-      # - name: LDAP_PASSWORD
-      #   fieldref:
-      #     fieldPath: data.LDAP_ADMIN_PASSWORD
-      #   objref:
-      #     apiVersion: v1
-      #     kind: Secret
-      #     name: {{ $name }}-openldap-{{ $namespace }}
-      #     namespace: {{ .Release.Namespace }}
 {{- end }}

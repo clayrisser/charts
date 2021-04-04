@@ -15,6 +15,4 @@ data:
   LDAP_PROTOCOL: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
   LDAP_TLS: {{ .Values.service.openldap.tls.enabled | quote }}
   LDAP_USERNAME: admin
-  # TODO: put this in secret when keycloak supports ldap password as secret
-  LDAP_PASSWORD: {{ .Values.config.openldap.passwords.admin | quote }}
 {{- end }}

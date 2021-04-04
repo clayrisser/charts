@@ -4,7 +4,7 @@ kind: IntegrationPlug
 metadata:
   name: {{ template "keycloak.fullname" . }}-postgres
   labels:
-    app: {{ template "keycloak.name" . }}-postgres
+    app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

@@ -4,7 +4,7 @@ kind: Kustomization
 metadata:
   name: {{ template "keycloak.fullname" . }}-ingress
   labels:
-    app: {{ template "keycloak.name" . }}-ingress
+    app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

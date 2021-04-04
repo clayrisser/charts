@@ -68,6 +68,14 @@ spec:
               name: {{ .Values.config.keycloak.ldap.tls.ca.secret | quote }}
               key: {{ .Values.config.keycloak.ldap.tls.ca.key | quote }}
         {{- end }}
+      {{- if .Values.config.keycloak.ldap.enabled }}
+      volumes:
+        defaultMode: 0777
+        items:
+          - secret:
+              name: {{ template "keycloak.fullname" . }}-keycloak-vault
+              mountPath: /opt/jboss/keycloak/secrets
+      {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:
       requests:
@@ -106,7 +114,7 @@ spec:
           allowKerberosAuthentication: 'false'
           authType: simple
           batchSizeForSync: '1000'
-          bindCredential: {{ .Values.config.keycloak.ldap.password | quote }}
+          bindCredential: '${vault.bindCredential}'
           bindDn: cn={{ .Values.config.keycloak.ldap.username }},{{ template "keycloak.ldap-dc" . }}
           cachePolicy: DEFAULT
           changedSyncPeriod: '-1'

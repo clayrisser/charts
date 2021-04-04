@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: keycloak-postgresql
   labels:
-    app: keycloak-postgresql
+    app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
