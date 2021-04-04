@@ -49,14 +49,14 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: keycloak-vault
+        name: {{ template "keycloak.fullname" . }}-keycloak-vault
         namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
           kind: Secret
           metadata:
-            name: keycloak-vault
+            name: {{ template "keycloak.fullname" . }}-keycloak-vault
             namespace: {{ .Release.Namespace }}
           stringData:
             ldap-realm_bindCredential: $(LDAP_PASSWORD)
