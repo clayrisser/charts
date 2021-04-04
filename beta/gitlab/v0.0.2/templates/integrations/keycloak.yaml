@@ -55,72 +55,70 @@ spec:
       version: v1alpha1
       kind: KeycloakClient
       name: {{ template "gitlab.fullname" . }}
+# ---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: {{ template "gitlab.fullname" . }}-put-client
+#   labels:
+#     app: {{ template "gitlab.name" . }}
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+#   annotations:
+#     helm.sh/hook: post-install
+#     helm.sh/hook-weight: '3'
+#     helm.sh/hook-delete-policy: before-hook-creation
+# spec:
+#   template:
+#     metadata:
+#       labels:
+#         app: {{ template "gitlab.name" . }}
+#         release: {{ .Release.Name }}
+#     spec:
+#       serviceAccountName: {{ template "gitlab.fullname" . }}
+#       restartPolicy: OnFailure
+#       containers:
+#         - name: {{ template "gitlab.fullname" . }}-kubectl
+#           image: codejamninja/kube-commands:0.0.2
+#           imagePullPolicy: Always
+#           command:
+#             - /bin/sh
+#             - -c
+#             - |
+#                 curl --location --request POST 'https://$BASE_URL/auth/realms/basic/protocol/openid-connect/token' \
+#                 --header 'Content-Type: application/x-www-form-urlencoded' \
+#                 --data-urlencode 'client_id=admin-cli' \
+#                 --data-urlencode 'grant_type=password' \
+#                 --data-urlencode 'username=$USERNAME' \
+#                 --data-urlencode 'password=$PASSWORD' \
+#                 --data-urlencode 'client_secret=$ADMIN_CLI_SECRET'
+#                 curl --location --request PUT 'https://$BASE_URL/auth/admin/realms/basic/clients/$CLIENT_ID' \
+#                 --header 'Authorization: Bearer $access_token' \
+#                 --header 'Content-Type: application/json' \
+#                 --data-raw '{
+#                     "id": $CLIENT_ID,
+#                     "clientId": $BASE_URL,
+#                     "adminUrl": "http://$BASE_URL/users/auth/saml/callback",
+#                     "attributes" : {
+#                         "saml.assertion.signature": "true",
+#                         "saml_idp_initiated_sso_url_name": $BASE_URL,
+#                         "saml_name_id_format": "persistent"
+#                     }
+#                   }'
+#           env:
+#             - name: CLIENT_ID
+#               value: ''
+#             - name: BASE_URL
+#               value: {{ template "gitlab.gitlab-base-url" .}}
+#             - name: USERNAME
+#               valueFrom:
+#                 secret:
+#                   name: credentials-basic-realm-user-{{ template "gitlab.name" . }}
+#                   key: username
+#             - name: PASSWORD
+#               valueFrom:
+#                 secret:
+#                   name: credentials-basic-realm-user-{{ template "gitlab.name" . }}
+#                   key: password
 {{- end }}
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: {{ template "gitlab.fullname" . }}-put-client
-  labels:
-    app: {{ template "gitlab.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: post-install
-    helm.sh/hook-weight: '3'
-    helm.sh/hook-delete-policy: before-hook-creation
-spec:
-  template:
-    metadata:
-      labels:
-        app: {{ template "gitlab.name" . }}
-        release: {{ .Release.Name }}
-    spec:
-      serviceAccountName: {{ template "gitlab.fullname" . }}
-      restartPolicy: OnFailure
-      containers:
-        - name: {{ template "gitlab.fullname" . }}-kubectl
-          image: codejamninja/kube-commands:0.0.2
-          imagePullPolicy: Always
-          command:
-            - /bin/sh
-            - -c
-            - |
-                curl --location --request POST 'https://$BASE_URL/auth/realms/basic/protocol/openid-connect/token' \
-                --header 'Content-Type: application/x-www-form-urlencoded' \
-                --data-urlencode 'client_id=admin-cli' \
-                --data-urlencode 'grant_type=password' \
-                --data-urlencode 'username=$USERNAME' \
-                --data-urlencode 'password=$PASSWORD' \
-                --data-urlencode 'client_secret=$ADMIN_CLI_SECRET'
-                curl --location --request PUT 'https://$BASE_URL/auth/admin/realms/basic/clients/$CLIENT_ID' \
-                --header 'Authorization: Bearer $access_token' \
-                --header 'Content-Type: application/json' \
-                --data-raw '{
-                    "id": $CLIENT_ID,
-                    "clientId": $BASE_URL,
-                    "adminUrl": "http://$BASE_URL/users/auth/saml/callback",
-                    "attributes" : {
-                        "saml.assertion.signature": "true",
-                        "saml_idp_initiated_sso_url_name": $BASE_URL,
-                        "saml_name_id_format": "persistent"
-                    }
-                  }'
-          env:
-            - name: CLIENT_ID
-              value: ''
-            - name: BASE_URL
-              value: {{ template "gitlab.gitlab-base-url" .}}
-            - name: USERNAME
-              valueFrom:
-                secret:
-                  name: credentials-basic-realm-user-{{ template "gitlab.name" . }}
-                  key: username
-            - name: PASSWORD
-              valueFrom:
-                secret:
-                  name: credentials-basic-realm-user-{{ template "gitlab.name" . }}
-                  key: password
-
-

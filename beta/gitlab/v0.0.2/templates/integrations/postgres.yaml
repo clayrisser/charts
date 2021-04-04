@@ -17,7 +17,7 @@ spec:
   replications:
     - version: v1
       kind: ConfigMap
-      name: {{ $namespace }}-postgres-socket
+      name: {{ $name }}-socket
   kustomization:
     configuration:
       varReference:
@@ -28,15 +28,15 @@ spec:
     resources:
       - version: v1
         kind: ConfigMap
-        name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+        name: {{ $name }}-connection-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: ConfigMap
-        name: {{ $namespace }}-postgres-socket
+        name: {{ $name }}-socket
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+        name: {{ $name }}-postgres-secret-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - group: helm.fluxcd.io
         version: v1
@@ -60,7 +60,7 @@ spec:
                   database: "$(POSTGRES_DATABASE)"
                   password:
                     useSecret: true
-                    secret: {{ $namespace }}-postgres-postgres-secret-{{ $namespace }}
+                    secret: {{ $name }}-postgres-secret-{{ $namespace }}
                     key: password
                     file:
     vars:
@@ -70,7 +70,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-socket
+          name: {{ $name }}-socket
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_HOSTNAME
         fieldref:
@@ -78,7 +78,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          name: {{ $name }}-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_PORT
         fieldref:
@@ -86,7 +86,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          name: {{ $name }}-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
       - name: POSTGRES_USERNAME
         fieldref:
@@ -94,7 +94,7 @@ spec:
         objref:
           apiVersion: v1
           kind: ConfigMap
-          name: {{ $namespace }}-postgres-connection-{{ $namespace }}
+          name: {{ $name }}-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1

@@ -144,7 +144,7 @@ spec:
           proxy_download: true
           storage_options: {}
           connection:
-            secret: {{ template "gitlab.fullname" . }}-gitlab
+            secret: {{ template "gitlab.fullname" . }}-store
             key: objectStoreConnection
         lfs:
           enabled: true
