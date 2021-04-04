@@ -20,7 +20,7 @@ config:
     organizationalUnits: people,groups
     schema: default
     passwords:
-      admin: P@ssw0rd
+      admin:
       config:
     resources:
       enabled: 'false'
