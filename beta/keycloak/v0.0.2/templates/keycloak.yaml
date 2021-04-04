@@ -34,6 +34,12 @@ spec:
               echo >> /opt/jboss/certs/ldap-ca.crt
             fi
             {{- end }}
+            {{- if .Values.config.keycloak.ldap.enabled }}
+            if [ "$KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL" != "" ]; then
+              mkdir -p /opt/jboss/keycloak/secrets
+              echo $KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL > /opt/jboss/keycloak/secrets/main_bindCredential
+            fi
+            {{- end }}
             # TODO: support custom themes
             # {{- if (not (empty .Values.config.keycloak.themeZip)) }}
             # export CWD=$(pwd)
@@ -68,14 +74,13 @@ spec:
               name: {{ .Values.config.keycloak.ldap.tls.ca.secret | quote }}
               key: {{ .Values.config.keycloak.ldap.tls.ca.key | quote }}
         {{- end }}
-      {{- if .Values.config.keycloak.ldap.enabled }}
-      volumes:
-        defaultMode: 0777
-        items:
-          - secret:
+        {{- if .Values.config.keycloak.ldap.enabled }}
+        - name: KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL
+          valueFrom:
+            secretKeyRef:
               name: {{ template "keycloak.fullname" . }}-keycloak-vault
-              mountPath: /opt/jboss/keycloak/secrets
-      {{- end }}
+              key: main_bindCredential
+        {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:
       requests:
