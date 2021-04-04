@@ -1,6 +1,7 @@
 categories:
   - Server
 questions:
+
   # Config
   - variable: config.clusterType
     description: ''
@@ -72,53 +73,49 @@ questions:
         required: true
         label: 'gitlab resources limits memory'
 
-      # Keycloak Config
-      # - variable: config.keycloak.enabled
-      #   description: ''
-      #   type: boolean
-      #   required: true
-      #   label: enabled
-      #   group: 'KeyCloak Config'
-  - variable: config.keycloak.integration
-    description: ''
-    type: string
-    required: false
-    label: integration
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.company
-    description: ''
-    type: string
-    required: false
-    label: company
-    group: 'KeyCloak Config'
-  - variable: config.keycloak.clientId
-    description: ''
-    type: string
-    required: false
-    label: 'client id'
-    group: 'KeyCloak Config'
-    show_if: config.keycloak.integration=
-  - variable: config.keycloak.realmName
-    description: ''
-    type: string
-    required: false
-    label: 'realm name'
-    group: 'KeyCloak Config'
-    show_if: config.keycloak.integration=
-  - variable: config.keycloak.certificate
-    description: ''
-    type: string
-    required: false
-    label: certificate
-    group: 'KeyCloak Config'
-    show_if: config.keycloak.integration=
-  - variable: config.keycloak.autoSignIn
+  # Keycloak Config
+  - variable: config.keycloak.enabled
     description: ''
     type: boolean
     required: true
-    label: 'auto sign in'
+    label: enabled
     group: 'KeyCloak Config'
-    show_if: config.keycloak.enabled=true
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.keycloak.autoSignIn
+        description: ''
+        type: boolean
+        required: true
+        label: 'auto sign in'
+      - variable: config.keycloak.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.keycloak.company
+        description: ''
+        type: string
+        required: false
+        label: company
+        show_if: config.keycloak.integration=
+      - variable: config.keycloak.clientId
+        description: ''
+        type: string
+        required: false
+        label: 'client id'
+        show_if: config.keycloak.integration=
+      - variable: config.keycloak.realmName
+        description: ''
+        type: string
+        required: false
+        label: 'realm name'
+        show_if: config.keycloak.integration=
+      - variable: config.keycloak.certificate
+        description: ''
+        type: string
+        required: false
+        label: certificate
+        show_if: config.keycloak.integration=
 
   # Storage
   - variable: config.storage.s3.enabled
@@ -170,7 +167,7 @@ questions:
     show_if: config.postgres.integration=
     group: 'Postgres Config'
   - variable: config.postgres.database
-    description: ''
+    description: 'only letters, digits and _ allowed'
     type: string
     required: true
     label: database
