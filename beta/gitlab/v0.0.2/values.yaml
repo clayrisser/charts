@@ -23,7 +23,7 @@ config:
     companyName: KeyCloak
     realmName: master
     certificate: ''
-    autoSignIn: false
+    autoSignIn: true
   gitlab:
     baseUrl: ''
     hostname: ''

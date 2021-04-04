@@ -62,7 +62,6 @@ spec:
                     useSecret: true
                     secret: {{ $name }}-postgres-secret-{{ $namespace }}
                     key: password
-                    file:
     vars:
       - name: POSTGRES_DATABASE
         fieldref:

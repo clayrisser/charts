@@ -68,7 +68,7 @@ Calculate postgres url
 {{- printf $postgres.url }}
 {{- else }}
 {{- $credentials := ((or (empty $postgres.username) (empty $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) }}
-{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
+{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host ($postgres.port | toString) $postgres.database }}
 {{- end }}
 {{- end }}
 

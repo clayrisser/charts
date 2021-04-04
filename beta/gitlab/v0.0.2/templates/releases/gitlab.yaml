@@ -52,15 +52,14 @@ spec:
       gitlab:
         license: {}
       initialRootPassword:
-        secret: {{ template "gitlab.fullname" . }}
+        secret: {{ template "gitlab.fullname" . }}-gitlab
         key: password
       psql:
         connectTimeout:
         password:
           useSecret: true
-          secret: {{ include "gitlab.postgres-storage" . }}
+          secret: {{ include "gitlab.fullname" . }}-postgres
           key: POSTGRES_PASSWORD
-          file:
         host: {{ .Values.config.postgres.host | quote }}
         port: {{ .Values.config.postgres.port }}
         username: {{ .Values.config.postgres.username | quote }}
