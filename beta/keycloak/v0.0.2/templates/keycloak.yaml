@@ -37,7 +37,7 @@ spec:
             {{- if .Values.config.keycloak.ldap.enabled }}
             if [ "$KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL" != "" ]; then
               mkdir -p /opt/jboss/keycloak/secrets
-              echo $KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL > /opt/jboss/keycloak/secrets/main_bindCredential
+              echo -n $KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL > /opt/jboss/keycloak/secrets/main_bindCredential
             fi
             {{- end }}
             # TODO: support custom themes
