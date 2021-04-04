@@ -103,10 +103,19 @@ spec:
           namespace: {{ .Release.Namespace }}
       - name: LDAP_PASSWORD
         fieldref:
-          fieldPath: data.LDAP_ADMIN_PASSWORD
+          fieldPath: data.LDAP_PASSWORD
         objref:
           apiVersion: v1
-          kind: Secret
-          name: {{ $name }}-openldap-{{ $namespace }}
+          kind: ConfigMap
+          name: {{ $name }}-connection-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
+      # TODO: use password from secret when keycloak supports ldap password as secret
+      # - name: LDAP_PASSWORD
+      #   fieldref:
+      #     fieldPath: data.LDAP_ADMIN_PASSWORD
+      #   objref:
+      #     apiVersion: v1
+      #     kind: Secret
+      #     name: {{ $name }}-openldap-{{ $namespace }}
+      #     namespace: {{ .Release.Namespace }}
 {{- end }}

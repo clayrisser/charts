@@ -78,7 +78,7 @@ questions:
   - variable: config.openldap.passwords.admin
     description: ''
     type: password
-    required: false
+    required: true
     label: 'openldap admin password'
     group: Config
   - variable: config.openldap.passwords.config
