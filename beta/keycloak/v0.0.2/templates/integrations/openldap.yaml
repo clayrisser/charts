@@ -58,7 +58,7 @@ spec:
           metadata:
             name: {{ template "keycloak.fullname" . }}-keycloak-vault
             namespace: {{ .Release.Namespace }}
-          stringData:
+          data:
             ldap-realm_bindCredential: $(LDAP_PASSWORD)
       - target:
           group: keycloak.org
