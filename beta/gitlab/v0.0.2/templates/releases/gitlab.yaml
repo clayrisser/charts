@@ -573,18 +573,72 @@ spec:
       rbac:
         create: true
     gitlab-runner:
-      install: false
+      install: true
+      unregisterRunners: true
+      preEntrypointScript: |
+        {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+        mkdir -p /tmp/gitlab/cache  /tmp/gitlab/build
+        {{- end }}
+        cat >> /home/gitlab-runner/.gitlab-runner/config.toml << EOF
+        {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+            [[runners.kubernetes.volumes.pvc]]
+              name = '{{ .Values.persistence.existingClaim.gitlabRunner | default (printf "%s-gitlab-runner" (include "gitlab.fullname" . )) }}'
+              mount_path = "/tmp/gitlab"
+        {{- end }}
+        {{- if .Values.config.gitlabRunner.docker.sock }}
+            [[runners.kubernetes.volumes.host_path]]
+              name = "docker-sock"
+              mount_path = "/var/run/docker.sock"
+        {{- end }}
+        EOF
       rbac:
         create: true
+      metrics:
+        enabled: false
       runners:
         locked: false
-        cache:
-          cacheType: s3
-          s3BucketName: {{ .Values.config.storage.s3.namespace }}-runner-cache
-          cacheShared: true
-          s3BucketLocation: us-east-1
-          s3CachePath: gitlab-runner
-          s3CacheInsecure: false
+        cache: {}
+        image: ubuntu:18.04
+        imagePullSecrets: []
+        imagePullPolicy: {{ (eq .Values.config.imagePullPolicy "Always") | ternary "always" "if-not-present" }}
+        requestConcurrency: 1
+        tags: ''
+        runUntagged: true
+        protected: false
+        privileged: true
+        # secret: gitlab-runner
+        # namespace:
+        pollTimeout: 180
+        outputLimit: 4096
+        builds: {}
+        services: {}
+        helpers: {}
+        # serviceAccountName:
+        # cloneUrl:
+        nodeSelector: {}
+        nodeTolerations: {}
+        podLabels: {}
+        podAnnotations: {}
+        env: {}
+      securityContext:
+        fsGroup: 65533
+        runAsUser: 100
+{{- if .Values.config.gitlabRunner.resources.enabled }}
+      resources:
+        limits:
+{{ toYaml .Values.config.gitlabRunner.resources.limits | indent 10 }}
+        requests:
+{{ toYaml .Values.config.gitlabRunner.resources.requests | indent 10 }}
+{{- else }}
+      resources: {}
+{{- end }}
+      {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+      envVars:
+        - name: RUNNER_CACHE_DIR
+          value: /tmp/gitlab/cache
+        - name: RUNNER_BUILDS_DIR
+          value: /tmp/gitlab/builds
+      {{- end }}
       podAnnotations:
         gitlab.com/prometheus_scrape: "true"
         gitlab.com/prometheus_port: 9252

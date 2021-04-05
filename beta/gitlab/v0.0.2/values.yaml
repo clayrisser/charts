@@ -35,6 +35,20 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
+  gitlabRunner:
+    docker:
+      sock: false
+    cache:
+      enabled: true
+      type: pvc
+    resources:
+      enabled: false
+      limits:
+        memory: 256Mi
+        cpu: 200m
+      requests:
+        memory: 128Mi
+        cpu: 100m
   postgres:
     integration:
     database: gitlab
