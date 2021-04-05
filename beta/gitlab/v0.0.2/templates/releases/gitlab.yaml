@@ -573,8 +573,9 @@ spec:
       rbac:
         create: true
     gitlab-runner:
-      install: true
+      install: .Values.config.runner.enable
       unregisterRunners: true
+      runnerRegistrationToken: 'qwerty'
       preEntrypointScript: |
         {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
         mkdir -p /tmp/gitlab/cache  /tmp/gitlab/build
