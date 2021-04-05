@@ -575,7 +575,6 @@ spec:
     gitlab-runner:
       install: {{ .Values.config.gitlabRunner.enable }}
       unregisterRunners: true
-      runnerRegistrationToken: 'qwerty'
       preEntrypointScript: |
         {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
         mkdir -p /tmp/gitlab/cache  /tmp/gitlab/build
