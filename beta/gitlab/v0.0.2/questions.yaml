@@ -1,7 +1,6 @@
 categories:
   - Server
 questions:
-
   # Config
   - variable: config.clusterType
     description: ''
@@ -151,6 +150,14 @@ questions:
         type: password
         required: true
         label: 's3 secret key'
+
+  #gitlab runner config
+  - variable: config.gitlabRunner.enable
+    description: ''
+    type: boolean
+    required: true
+    label: enable
+    group: 'Runner Config'
 
   # Postgres Config
   - variable: config.postgres.integration
