@@ -573,7 +573,7 @@ spec:
       rbac:
         create: true
     gitlab-runner:
-      install: {{ .Values.config.runner.enable }}
+      install: {{ .Values.config.gitlabRunner.enable }}
       unregisterRunners: true
       runnerRegistrationToken: 'qwerty'
       preEntrypointScript: |

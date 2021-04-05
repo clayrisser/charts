@@ -36,6 +36,7 @@ config:
         cpu: 500m
         memory: 256Mi
   gitlabRunner:
+    enable: false
     docker:
       sock: false
     cache:

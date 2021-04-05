@@ -152,10 +152,10 @@ questions:
         label: 's3 secret key'
 
   #gitlab runner config
-  - variable: config.runner.enable
+  - variable: config.gitlabRunner.enable
     description: ''
     type: boolean
-    required: trut
+    required: true
     label: enable
     group: 'Runner Config'
 
