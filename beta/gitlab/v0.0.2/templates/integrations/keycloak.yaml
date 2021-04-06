@@ -11,25 +11,74 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   client:
-    clientId: {{ template "gitlab.keycloak-client-id" . }}
-    name: {{ template "gitlab.keycloak-client-id" . }}
-    description: {{ .Values.config.keycloak.clientId }} for gitlab
-    protocol: saml
-    frontchannelLogout: true
-    rootUrl: {{ template "gitlab.gitlab-base-url" .}}
+    adminUrl: {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
+    alwaysDisplayInConsole: false
+    authenticationFlowBindingOverrides: {}
     baseUrl: /
+    bearerOnly: false
+    clientAuthenticatorType: client-secret
+    clientId: {{ template "gitlab.keycloak-client-id" . }}
+    consentRequired: false
+    description: {{ .Values.config.keycloak.clientId }} for gitlab
+    directAccessGrantsEnabled: false
+    enabled: true
+    frontchannelLogout: true
+    fullScopeAllowed: true
+    fullScopeAllowed: true
+    implicitFlowEnabled: false
+    name: {{ template "gitlab.keycloak-client-id" . }}
+    nodeReRegistrationTimeout: -1
+    notBefore: 0
+    protocol: saml
+    publicClient: false
+    rootUrl: {{ template "gitlab.gitlab-base-url" .}}
+    serviceAccountsEnabled: false
+    standardFlowEnabled: true
+    surrogateAuthRequired: false
+    webOrigins: []
     redirectUris:
       - {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
-    adminUrl: {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
-    fullScopeAllowed: true
+    defaultClientScopes:
+      - web-origins
+      - role_list
+      - profile
+      - roles
+      - email
+    optionalClientScopes:
+      - address
+      - phone
+      - offline_access
+      - microprofile-jwt
+    access:
+      view: true
+      configure: true
+      manage: true
     attributes:
+      display.on.consent.screen: 'false'
+      exclude.session.state.from.auth.response: 'false'
       saml.assertion.signature: 'true'
-      saml_idp_initiated_sso_url_name: SOME_CLIENT_ID
-      saml_name_id_format: 'persistent'
+      saml.authnstatement: 'true'
+      saml.client.signature: 'true'
+      saml.encrypt: 'false'
+      saml.force.post.binding: 'true'
+      saml.multivalued.roles: 'false'
+      saml.onetimeuse.condition: 'false'
+      saml.server.signature.keyinfo.ext: 'false'
+      saml.server.signature: 'true'
+      saml.signature.algorithm: RSA_SHA256
+      saml_assertion_consumer_url_post: {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
+      saml_force_name_id_format: 'false'
+      saml_idp_initiated_sso_url_name: {{ template "gitlab.gitlab-hostname" . }}
+      saml_name_id_format: persistent
+      saml_signature_canonicalization_method: 'http://www.w3.org/2001/10/xml-exc-c14n#'
+      tls.client.certificate.bound.access.tokens: 'false'
+      # saml.signing.certificate:
+      # saml.signing.private.key:
     protocolMappers:
       - protocol: 'saml'
         name: 'email'
         protocolMapper: 'saml-user-property-mapper'
+        consentRequired: false
         config:
           attribute.name: 'email'
           friendly.name: 'Email'
@@ -38,6 +87,7 @@ spec:
       - protocol: 'saml'
         name: 'name'
         protocolMapper: 'saml-user-property-mapper'
+        consentRequired: false
         config:
           attribute.name: 'name'
           friendly.name: 'Username'
@@ -46,6 +96,7 @@ spec:
       - protocol: 'saml'
         name: 'first_name'
         protocolMapper: 'saml-user-property-mapper'
+        consentRequired: false
         config:
           attribute.name: 'first_name'
           friendly.name: 'First Name: '
@@ -54,6 +105,7 @@ spec:
       - protocol: 'saml'
         name: 'last_name'
         protocolMapper: 'saml-user-property-mapper'
+        consentRequired: false
         config:
           attribute.name: 'last_name'
           friendly.name: 'Last Name: '
@@ -62,6 +114,7 @@ spec:
       - protocol: 'saml'
         name: 'roles'
         protocolMapper: 'saml-role-list-mapper'
+        consentRequired: false
         config:
           attribute.name: 'roles'
           single: 'true'
