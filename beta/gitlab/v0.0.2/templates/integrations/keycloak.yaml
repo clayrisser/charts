@@ -164,19 +164,18 @@ spec:
         name: {{ template "gitlab.fullname" . }}-keycloak-client
         namespace: {{ .Release.Namespace }}
     patches:
-      - patch: |
+      - target:
+          group: batch
+          version: v1
+          kind: Job
+          name: {{ template "gitlab.fullname" . }}-keycloak-client
+          namespace: {{ .Release.Namespace }}
+        patch: |
           - op: add
             path: /spec/template/spec/containers/0/env
             value:
               - name: AUTH_URL
                 value: $(KEYCLOAK_BASE_URL)/auth
-      - patch: |
-          apiVersion: batch/v1
-          kind: Job
-          metadata:
-            name: {{ template "gitlab.fullname" . }}-keycloak-client
-            namespace: {{ .Release.Namespace }}
-          spec:
     vars:
       - name: KEYCLOAK_BASE_URL
         fieldref:
