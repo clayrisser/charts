@@ -163,21 +163,21 @@ spec:
         kind: Job
         name: {{ template "gitlab.fullname" . }}-keycloak-client
         namespace: {{ .Release.Namespace }}
-    patches: []
-      # - patch: |
-      #     apiVersion: batch/v1
-      #     kind: Job
-      #     metadata:
-      #       name: {{ template "gitlab.fullname" . }}-keycloak-client
-      #       namespace: {{ .Release.Namespace }}
-      #     spec:
-      #       template:
-      #         spec:
-      #           containers:
-      #             - name: {{ template "gitlab.fullname" . }}-keycloak-client
-      #               env:
-      #                 - name: AUTH_URL
-      #                   value: "$(KEYCLOAK_BASE_URL)/auth"
+    patches:
+      - patch: |
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: {{ template "gitlab.fullname" . }}-keycloak-client
+            namespace: {{ .Release.Namespace }}
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: {{ template "gitlab.fullname" . }}-keycloak-client
+                    env:
+                      - name: AUTH_URL
+                        value: "$(KEYCLOAK_BASE_URL)/auth"
       # - target:
       #     group: batch
       #     version: v1
@@ -227,8 +227,8 @@ spec:
           image: atxwebdesigner/keycloak-gitlab-client:0.0.1
           imagePullPolicy: Always
           env:
-            - name: AUTH_URL
-              value: {{ .Values.config.keycloak.baseUrl }}/auth
+            # - name: AUTH_URL
+            #   value: {{ .Values.config.keycloak.baseUrl }}/auth
             - name: REALM
               value: main
             - name: ADMIN_CLI_SECRET
