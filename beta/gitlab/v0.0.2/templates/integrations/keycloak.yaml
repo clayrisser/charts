@@ -19,7 +19,7 @@ spec:
     clientAuthenticatorType: client-secret
     clientId: {{ template "gitlab.keycloak-client-id" . }}
     consentRequired: false
-    description: {{ .Values.config.keycloak.clientId }} for gitlab
+    description: ''
     directAccessGrantsEnabled: false
     enabled: true
     frontchannelLogout: true
@@ -146,48 +146,89 @@ spec:
       version: v1alpha1
       kind: KeycloakClient
       name: {{ template "gitlab.fullname" . }}
-# ---
-# apiVersion: batch/v1
-# kind: Job
-# metadata:
-#   name: {{ template "gitlab.fullname" . }}-put-client
-#   labels:
-#     app: {{ template "gitlab.name" . }}
-#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-#     release: {{ .Release.Name }}
-#     heritage: {{ .Release.Service }}
-#   annotations:
-#     helm.sh/hook: post-install
-#     helm.sh/hook-weight: '3'
-#     helm.sh/hook-delete-policy: before-hook-creation
-# spec:
-#   template:
-#     metadata:
-#       labels:
-#         app: {{ template "gitlab.name" . }}
-#         release: {{ .Release.Name }}
-#     spec:
-#       serviceAccountName: {{ template "gitlab.fullname" . }}
-#       restartPolicy: OnFailure
-#       containers:
-#         - name: {{ template "gitlab.fullname" . }}-job
-#           image: atxwebdesigner/keycloak-gitlab-client
-#           imagePullPolicy: Always
-#           env:
-#             - name: AUTH_URL
-#               value: {{ template "gitlab.gitlab-base-url" .}}/auth
-#             - name: REALM
-#               value: 'basic'
-#             - name: ADMIN_CLI_SECRET
-#               value: ''
-#             - name: CLIENT_ID
-#               value: {{ template "gitlab.keycloak-client-id" . }}
-#         - name: keycloak-gitlab-client-kubectl
-#           image: bitnami/kubectl:1.17.12
-#           imagePullPolicy: Always
-#           command:
-#             - /bin/sh
-#             - -c
-#             - |
-#               kubectl proxy
+  kustomization:
+    configuration:
+      varReference:
+        - group: batch
+          version: v1
+          kind: Job
+          path: spec/template/spec/containers/env
+    resources:
+      - version: v1
+        kind: ConfigMap
+        name: {{ $name }}-connection-{{ $namespace }}
+        namespace: {{ .Release.Namespace }}
+      - group: batch
+        version: v1
+        kind: Job
+        name: {{ template "gitlab.fullname" . }}-keycloak-client
+        namespace: {{ .Release.Namespace }}
+    patches:
+      - patch: |
+          - op: add
+            path: /spec/template/spec/containers/0/env
+            value:
+              - name: AUTH_URL
+                value: $(KEYCLOAK_BASE_URL)/auth
+      - patch: |
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: {{ template "gitlab.fullname" . }}-keycloak-client
+            namespace: {{ .Release.Namespace }}
+          spec:
+    vars:
+      - name: KEYCLOAK_BASE_URL
+        fieldref:
+          fieldPath: data.KEYCLOAK_BASE_URL
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ $name }}-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "gitlab.fullname" . }}-keycloak-client
+  labels:
+    app: {{ template "gitlab.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: '3'
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "gitlab.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ template "gitlab.fullname" . }}
+      restartPolicy: OnFailure
+      containers:
+        - name: {{ template "gitlab.fullname" . }}-job
+          image: atxwebdesigner/keycloak-gitlab-client:0.0.1
+          imagePullPolicy: Always
+          env:
+            - name: REALM
+              value: main
+            - name: ADMIN_CLI_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "gitlab.fullname" . }}-keycloak
+                  key: adminClientSecret
+            - name: CLIENT_ID
+              value: {{ template "gitlab.keycloak-client-id" . }}
+        - name: keycloak-gitlab-client-kubectl
+          image: bitnami/kubectl:1.17.12
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+              kubectl proxy
 {{- end }}

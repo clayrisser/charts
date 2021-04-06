@@ -18,12 +18,13 @@ config:
       secretKey:
   keycloak:
     enabled: false
-    integration: ''
+    adminCliSecret:
+    autoSignIn: true
+    certificate: ''
     clientId: ''
     companyName: KeyCloak
+    integration: ''
     realmName: master
-    certificate: ''
-    autoSignIn: true
   gitlab:
     baseUrl: ''
     hostname: ''

@@ -10,6 +10,9 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   appendName: {{ .Release.Name }}
-  replications: []
   hooks: []
+  replications:
+    - version: v1
+      kind: ConfigMap
+      name: {{ template "keycloak.fullname" . }}-connection
 {{- end }}

@@ -91,6 +91,12 @@ questions:
         type: string
         required: false
         label: integration
+      - variable: config.keycloak.adminCliSecret
+        description: ''
+        type: password
+        show_if: config.keycloak.integration!=
+        required: true
+        label: 'admin client secret'
       - variable: config.keycloak.company
         description: ''
         type: string
@@ -151,7 +157,7 @@ questions:
         required: true
         label: 's3 secret key'
 
-  #gitlab runner config
+  # Runner Config
   - variable: config.gitlabRunner.enable
     description: ''
     type: boolean

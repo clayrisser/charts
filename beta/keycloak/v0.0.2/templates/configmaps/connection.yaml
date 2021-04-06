@@ -1,0 +1,13 @@
+{{- if .Values.config.allowIntegration }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "keycloak.fullname" . }}-connection
+  labels:
+    app: {{ template "keycloak.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  KEYCLOAK_BASE_URL: {{ template "keycloak.keycloak-base-url" . }}
+{{- end }}
