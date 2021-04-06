@@ -154,10 +154,10 @@ spec:
           kind: Job
           path: spec/template/spec/containers/env/value
     resources:
-      - version: v1
-        kind: ConfigMap
-        name: {{ $name }}-connection-{{ $namespace }}
-        namespace: {{ .Release.Namespace }}
+      # - version: v1
+      #   kind: ConfigMap
+      #   name: {{ $name }}-connection-{{ $namespace }}
+      #   namespace: {{ .Release.Namespace }}
       - group: batch
         version: v1
         kind: Job
