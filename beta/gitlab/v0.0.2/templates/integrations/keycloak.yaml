@@ -195,10 +195,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: post-install
-    helm.sh/hook-weight: '3'
-    helm.sh/hook-delete-policy: before-hook-creation
+  # annotations:
+  #   helm.sh/hook: post-install
+  #   helm.sh/hook-weight: '3'
+  #   helm.sh/hook-delete-policy: before-hook-creation
 spec:
   template:
     metadata:
