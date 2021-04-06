@@ -10,6 +10,7 @@ metadata:
 spec:
   forceUpgrade: false
   helmVersion: v3
+  timeout: 1200
   chart:
     repository: https://charts.gitlab.io
     name: gitlab
