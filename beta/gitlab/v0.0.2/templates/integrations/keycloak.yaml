@@ -175,9 +175,9 @@ spec:
               spec:
                 containers:
                   - name: {{ template "gitlab.fullname" . }}-keycloak-client
-                    env:
-                      - name: AUTH_URL
-                        value: "$(KEYCLOAK_BASE_URL)/auth"
+                    # env:
+                    #   - name: AUTH_URL
+                    #     value: "$(KEYCLOAK_BASE_URL)/auth"
       # - target:
       #     group: batch
       #     version: v1
