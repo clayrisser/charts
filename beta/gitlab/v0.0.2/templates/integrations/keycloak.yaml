@@ -15,20 +15,17 @@ spec:
     name: {{ template "gitlab.keycloak-client-id" . }}
     description: {{ .Values.config.keycloak.clientId }} for gitlab
     protocol: saml
-    #Include authnstatemnet: on
-    #Sign Documents: on
-    #sign assertions: on
-    #Signature Algorithm: RSA_SHA256
-    #Canonicalization Method: exclusive
-    #Client Signature Required: on
-    #Force POST Binding: on
     frontchannelLogout: true
-    #Name ID Format: persistant
     rootUrl: {{ template "gitlab.gitlab-base-url" .}}
     baseUrl: /
     redirectUris:
       - {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
-    # IDP Initiated SSO URL
+    adminUrl: {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
+    fullScopeAllowed: 'true'
+    attributes:
+        saml.assertion.signature: 'true',
+        saml_idp_initiated_sso_url_name: this.clientId,
+        saml_name_id_format: 'persistent'
     protocolMappers":
       - protocol: 'saml'
         config:
