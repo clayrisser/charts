@@ -152,7 +152,7 @@ spec:
         - group: batch
           version: v1
           kind: Job
-          path: spec/template/spec/containers/env
+          path: spec/template/spec/containers/env/value
     resources:
       - version: v1
         kind: ConfigMap
