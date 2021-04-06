@@ -121,7 +121,7 @@ questions:
         show_if: config.keycloak.integration=
       - variable: config.keycloak.certificate
         description: ''
-        type: string
+        type: password
         required: false
         label: certificate
         show_if: config.keycloak.integration=

@@ -174,10 +174,10 @@ spec:
             template:
               spec:
                 containers:
-                  - name: {{ template "gitlab.fullname" . }}-job
+                  - name: {{ template "gitlab.fullname" . }}-keycloak-client
                     env:
                       - name: AUTH_URL
-                        value: $(KEYCLOAK_BASE_URL)/auth
+                        value: "$(KEYCLOAK_BASE_URL)/auth"
       # - target:
       #     group: batch
       #     version: v1
