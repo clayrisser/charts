@@ -20,11 +20,12 @@ config:
     enabled: false
     adminCliSecret:
     autoSignIn: true
+    baseUrl: ''
     certificate: ''
     clientId: ''
     companyName: KeyCloak
     integration: ''
-    realmName: master
+    realmName: main
   gitlab:
     baseUrl: ''
     hostname: ''

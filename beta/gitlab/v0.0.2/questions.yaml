@@ -97,23 +97,27 @@ questions:
         show_if: config.keycloak.integration!=
         required: true
         label: 'admin client secret'
-      - variable: config.keycloak.company
+      - variable: config.keycloak.companyName
         description: ''
         type: string
         required: false
-        label: company
+        label: 'company name'
+      - variable: config.keycloak.realmName
+        description: ''
+        type: string
+        required: false
+        label: 'realm name'
+      - variable: config.keycloak.baseUrl
+        description: ''
+        type: string
+        required: false
+        label: 'base url'
         show_if: config.keycloak.integration=
       - variable: config.keycloak.clientId
         description: ''
         type: string
         required: false
         label: 'client id'
-        show_if: config.keycloak.integration=
-      - variable: config.keycloak.realmName
-        description: ''
-        type: string
-        required: false
-        label: 'realm name'
         show_if: config.keycloak.integration=
       - variable: config.keycloak.certificate
         description: ''
