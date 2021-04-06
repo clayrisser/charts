@@ -23,7 +23,7 @@ spec:
     adminUrl: {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
     fullScopeAllowed: 'true'
     attributes:
-      saml.assertion.signature: 'true',
+      saml.assertion.signature: 'true'
       saml_idp_initiated_sso_url_name: this.clientId,
       saml_name_id_format: 'persistent'
     protocolMappers:
