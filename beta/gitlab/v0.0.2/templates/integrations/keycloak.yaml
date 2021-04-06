@@ -22,51 +22,51 @@ spec:
       - {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
     adminUrl: {{ printf "%s/users/auth/saml/callback" (include "gitlab.gitlab-base-url" .) | quote }}
     fullScopeAllowed: 'true'
-    attributes:
-      saml.assertion.signature: 'true'
-      saml_idp_initiated_sso_url_name: SOME_CLIENT_ID
-      saml_name_id_format: 'persistent'
-    protocolMappers:
-      - protocol: 'saml'
-        name: 'email'
-        protocolMapper: 'saml-user-property-mapper'
-        config:
-          attribute.name: 'email'
-          friendly.name: 'Email'
-          user.attribute: 'Email'
-          attribute.nameformat: 'Basic'
-      - protocol: 'saml'
-        name: 'name'
-        protocolMapper: 'saml-user-property-mapper'
-        config:
-          attribute.name: 'name'
-          friendly.name: 'Username'
-          user.attribute: 'Username'
-          attribute.nameformat: 'Basic'
-      - protocol: 'saml'
-        name: 'first_name'
-        protocolMapper: 'saml-user-property-mapper'
-        config:
-          attribute.name: 'first_name'
-          friendly.name: 'First Name: '
-          user.attribute: 'FirstName'
-          attribute.nameformat: 'Basic'
-      - protocol: 'saml'
-        name: 'last_name'
-        protocolMapper: 'saml-user-property-mapper'
-        config:
-          attribute.name: 'last_name'
-          friendly.name: 'Last Name: '
-          user.attribute: 'LastName'
-          attribute.nameformat: 'Basic'
-      - protocol: 'saml'
-        name: 'roles'
-        protocolMapper: 'saml-role-list-mapper'
-        config:
-          attribute.name: 'roles'
-          single: 'true'
-          attribute.nameformat: 'Basic'
-          friendly.name: 'Roles'
+    # attributes:
+    #   saml.assertion.signature: 'true'
+    #   saml_idp_initiated_sso_url_name: SOME_CLIENT_ID
+    #   saml_name_id_format: 'persistent'
+    # protocolMappers:
+    #   - protocol: 'saml'
+    #     name: 'email'
+    #     protocolMapper: 'saml-user-property-mapper'
+    #     config:
+    #       attribute.name: 'email'
+    #       friendly.name: 'Email'
+    #       user.attribute: 'Email'
+    #       attribute.nameformat: 'Basic'
+    #   - protocol: 'saml'
+    #     name: 'name'
+    #     protocolMapper: 'saml-user-property-mapper'
+    #     config:
+    #       attribute.name: 'name'
+    #       friendly.name: 'Username'
+    #       user.attribute: 'Username'
+    #       attribute.nameformat: 'Basic'
+    #   - protocol: 'saml'
+    #     name: 'first_name'
+    #     protocolMapper: 'saml-user-property-mapper'
+    #     config:
+    #       attribute.name: 'first_name'
+    #       friendly.name: 'First Name: '
+    #       user.attribute: 'FirstName'
+    #       attribute.nameformat: 'Basic'
+    #   - protocol: 'saml'
+    #     name: 'last_name'
+    #     protocolMapper: 'saml-user-property-mapper'
+    #     config:
+    #       attribute.name: 'last_name'
+    #       friendly.name: 'Last Name: '
+    #       user.attribute: 'LastName'
+    #       attribute.nameformat: 'Basic'
+    #   - protocol: 'saml'
+    #     name: 'roles'
+    #     protocolMapper: 'saml-role-list-mapper'
+    #     config:
+    #       attribute.name: 'roles'
+    #       single: 'true'
+    #       attribute.nameformat: 'Basic'
+    #       friendly.name: 'Roles'
   roles:
     - name: {{ template "gitlab.keycloak-client-id" . }}:external
   realmSelector:
