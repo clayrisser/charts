@@ -3,7 +3,7 @@ name: postgres
 home: https://github.com/codejamninja/charts/tree/master/databases/postgres
 icon: https://www.postgresql.org/media/img/about/press/elephant.png
 version: 0.2.0
-appVersion: 4.5.1
+appVersion: 4.6.2
 description: 'Crunchy - create and manage postgresql clusters running in kubernetes'
 keywords:
   - database

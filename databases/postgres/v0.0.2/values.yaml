@@ -5,10 +5,10 @@ images:
   postgres:
     registry: registry.developers.crunchydata.com/crunchydata
     repository: crunchy-postgres-ha
-    tag: centos7-12.5-4.5.1
+    tag: centos8-13.2-4.6.2
   metrics:
     repository: registry.developers.crunchydata.com/crunchydata
-    tag: centos7-4.5.1
+    tag: centos8-4.6.2
 
 config:
   clusterType: rke

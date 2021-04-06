@@ -25,8 +25,8 @@ spec:
     serviceAccount:
         create: true
         name: ''
-    pgo_image_prefix: registry.developers.crunchydata.com/crunchydata
-    pgo_image_tag: centos7-{{ .Chart.AppVersion }}
+    pgo_image_prefix: {{ .Values.images.metrics.repository | quote }}
+    pgo_image_tag: {{ .Values.images.metrics.tag | quote }}
     alertmanager_custom_config: ''
     alertmanager_custom_rules_config: ''
     alertmanager_install: {{ .Values.config.metrics.alertmanager.enabled | quote }}
