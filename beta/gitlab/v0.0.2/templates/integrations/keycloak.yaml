@@ -175,9 +175,9 @@ spec:
               spec:
                 containers:
                   - name: {{ template "gitlab.fullname" . }}-keycloak-client
-                    # env:
-                    #   - name: AUTH_URL
-                    #     value: "$(KEYCLOAK_BASE_URL)/auth"
+                    env:
+                      - name: AUTH_URL
+                        value: "hello"
       # - target:
       #     group: batch
       #     version: v1
@@ -190,15 +190,15 @@ spec:
       #       value:
       #         - name: AUTH_URL
       #           value: $(KEYCLOAK_BASE_URL)/auth
-    vars:
-      - name: KEYCLOAK_BASE_URL
-        fieldref:
-          fieldPath: data.KEYCLOAK_BASE_URL
-        objref:
-          apiVersion: v1
-          kind: ConfigMap
-          name: {{ $name }}-connection-{{ $namespace }}
-          namespace: {{ .Release.Namespace }}
+    # vars:
+    #   - name: KEYCLOAK_BASE_URL
+    #     fieldref:
+    #       fieldPath: data.KEYCLOAK_BASE_URL
+    #     objref:
+    #       apiVersion: v1
+    #       kind: ConfigMap
+    #       name: {{ $name }}-connection-{{ $namespace }}
+    #       namespace: {{ .Release.Namespace }}
 ---
 apiVersion: batch/v1
 kind: Job
