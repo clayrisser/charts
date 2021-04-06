@@ -24,7 +24,7 @@ spec:
     fullScopeAllowed: 'true'
     attributes:
       saml.assertion.signature: 'true'
-      saml_idp_initiated_sso_url_name: this.clientId,
+      saml_idp_initiated_sso_url_name: SOME_CLIENT_ID
       saml_name_id_format: 'persistent'
     protocolMappers:
       - protocol: 'saml'
