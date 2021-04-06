@@ -36,7 +36,7 @@ questions:
   - variable: config.password
     description: ''
     type: password
-    required: true
+    required: false
     label: 'gitlab password'
     group: Config
   - variable: config.gitlab.resources.enabled

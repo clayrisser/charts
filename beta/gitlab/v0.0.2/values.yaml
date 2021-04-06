@@ -7,7 +7,7 @@ config:
   clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate
-  password: P@ssw0rd
+  password:
   storage:
     s3:
       enabled: false
