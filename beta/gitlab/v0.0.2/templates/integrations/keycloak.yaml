@@ -214,8 +214,10 @@ spec:
                       - |
                         kubectl proxy &
                         while ! test -f /usr/share/pod/done; do
+                          echo sleeping
                           sleep 5
                         done
+                        echo exiting . . .
                         exit 0
                 volumes:
                   - emptyDir: {}
