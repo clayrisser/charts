@@ -238,6 +238,8 @@ spec:
                   key: adminClientSecret
             - name: CLIENT_ID
               value: {{ template "gitlab.keycloak-client-id" . }}
+            - name: GITLAB_NAMESPACE
+              value: {{ .Release.Namespace }}
         - name: keycloak-gitlab-client-kubectl
           image: bitnami/kubectl:1.17.12
           imagePullPolicy: Always
