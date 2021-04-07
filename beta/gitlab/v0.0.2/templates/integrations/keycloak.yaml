@@ -99,7 +99,7 @@ spec:
         consentRequired: false
         config:
           attribute.name: 'first_name'
-          friendly.name: 'First Name: '
+          friendly.name: 'First Name'
           user.attribute: 'FirstName'
           attribute.nameformat: 'Basic'
       - protocol: 'saml'
@@ -108,7 +108,7 @@ spec:
         consentRequired: false
         config:
           attribute.name: 'last_name'
-          friendly.name: 'Last Name: '
+          friendly.name: 'Last Name'
           user.attribute: 'LastName'
           attribute.nameformat: 'Basic'
       - protocol: 'saml'
@@ -228,7 +228,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: AUTH_URL
-              value: {{ printf "%s/auth" (include "gitlab.gitlab-base-url" .) | quote }}
+              value: {{.Values.config.keycloak.baseUrl}}/auth
             - name: REALM
               value: main
             - name: ADMIN_CLI_SECRET

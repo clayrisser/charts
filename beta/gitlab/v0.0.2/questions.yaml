@@ -112,7 +112,7 @@ questions:
         type: string
         required: false
         label: 'base url'
-        show_if: config.keycloak.integration=
+        # show_if: config.keycloak.integration=
       - variable: config.keycloak.clientId
         description: ''
         type: string
