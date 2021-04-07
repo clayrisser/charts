@@ -194,15 +194,6 @@ spec:
                   - name: {{ template "gitlab.fullname" . }}-job
                     image: atxwebdesigner/keycloak-gitlab-client:0.0.1
                     imagePullPolicy: Always
-                    volumeMounts:
-                      - mountPath: /usr/share/pod
-                        name: share-pod
-                    command:
-                      - sh
-                      - -c
-                      - |
-                        trap 'touch /usr/share/pod/done' EXIT
-                        exec /usr/local/sbin/entrypoint
                     env:
                       - name: AUTH_URL
                         value: $(KEYCLOAK_BASE_URL)/auth
@@ -224,24 +215,13 @@ spec:
                   - name: keycloak-gitlab-client-kubectl
                     image: bitnami/kubectl:1.17.12
                     imagePullPolicy: Always
-                    volumeMounts:
-                      - mountPath: /usr/share/pod
-                        name: share-pod
-                        readOnly: true
                     command:
                       - /bin/sh
                       - -c
                       - |
                         kubectl proxy &
-                        while ! test -f /usr/share/pod/done; do
-                          echo sleeping
-                          sleep 5
-                        done
-                        echo exiting . . .
+                        sleep 60
                         exit 0
-                volumes:
-                  - emptyDir: {}
-                    name: share-pod
     vars:
       - name: KEYCLOAK_BASE_URL
         fieldref:
