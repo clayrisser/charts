@@ -148,7 +148,10 @@ spec:
       name: {{ template "gitlab.fullname" . }}
   kustomization:
     configuration:
-      varReference: []
+      varReference:
+        - version: v1
+          kind: Secret
+          path: data
     resources:
       - version: v1
         kind: ConfigMap
