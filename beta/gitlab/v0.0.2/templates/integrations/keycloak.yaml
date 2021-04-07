@@ -199,7 +199,9 @@ spec:
                       - /bin/sh
                       - -c
                       - |
-                        kubectl proxy
+                        kubectl proxy &
+                        sleep 60
+                        exit
     vars:
       - name: KEYCLOAK_BASE_URL
         fieldref:
