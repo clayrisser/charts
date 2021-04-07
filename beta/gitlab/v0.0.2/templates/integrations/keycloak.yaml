@@ -179,14 +179,18 @@ spec:
                         value: $(KEYCLOAK_BASE_URL)/auth
                       - name: REALM
                         value: main
-                      - name: ADMIN_CLI_SECRET
+                      - name: ADMIN_USERNAME
+                        value: admin
+                      - name: ADMIN_PASSWORD
                         valueFrom:
                           secretKeyRef:
                             name: {{ template "gitlab.fullname" . }}-keycloak
-                            key: adminClientSecret
+                            key: adminPassword
                       - name: CLIENT_ID
                         value: {{ template "gitlab.keycloak-client-id" . }}
-                      - name: GITLAB_NAMESPACE
+                      - name: OMNIAUTH_SECRET
+                        value: {{ template "gitlab.fullname" . }}-omniauth
+                      - name: NAMESPACE
                         value: {{ .Release.Namespace }}
                   - name: keycloak-gitlab-client-kubectl
                     image: bitnami/kubectl:1.17.12

@@ -91,12 +91,12 @@ questions:
         type: string
         required: false
         label: integration
-      - variable: config.keycloak.adminCliSecret
+      - variable: config.keycloak.adminPassword
         description: ''
         type: password
-        show_if: config.keycloak.integration!=
+        # show_if: config.keycloak.integration!=
         required: true
-        label: 'admin client secret'
+        label: 'admin password'
       - variable: config.keycloak.companyName
         description: ''
         type: string
@@ -112,7 +112,7 @@ questions:
         type: string
         required: false
         label: 'base url'
-        # show_if: config.keycloak.integration=
+        show_if: config.keycloak.integration=
       - variable: config.keycloak.clientId
         description: ''
         type: string
