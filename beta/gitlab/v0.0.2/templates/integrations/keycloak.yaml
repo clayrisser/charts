@@ -156,7 +156,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: credential-{{ $namespace }}-keycloak
+        name: credential-{{ $namespace }}-keycloak-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
@@ -254,7 +254,7 @@ spec:
         objref:
           apiVersion: v1
           kind: Secret
-          name: credential-{{ $namespace }}-keycloak
+          name: credential-{{ $namespace }}-keycloak-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
