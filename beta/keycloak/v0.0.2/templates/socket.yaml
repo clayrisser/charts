@@ -15,4 +15,7 @@ spec:
     - version: v1
       kind: ConfigMap
       name: {{ template "keycloak.fullname" . }}-connection
+    - version: v1
+      kind: Secret
+      name: credential-{{ .Release.Name }}-keycloak
 {{- end }}

@@ -154,6 +154,23 @@ spec:
         kind: ConfigMap
         name: {{ $name }}-connection-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: credential-{{ $namespace }}-keycloak
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: {{ template "gitlab.fullname" . }}-keycloak
+        namespace: {{ .Release.Namespace }}
+    patches:
+      - patch: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: {{ template "gitlab.fullname" . }}-keycloak
+            namespace: {{ .Release.Namespace }}
+          data:
+            adminPassword: "$(KEYCLOAK_ADMIN_PASSWORD)"
     create:
       - |
           apiVersion: batch/v1
@@ -230,6 +247,14 @@ spec:
           apiVersion: v1
           kind: ConfigMap
           name: {{ $name }}-connection-{{ $namespace }}
+          namespace: {{ .Release.Namespace }}
+      - name: KEYCLOAK_ADMIN_PASSWORD
+        fieldref:
+          fieldPath: data.ADMIN_PASSWORD
+        objref:
+          apiVersion: v1
+          kind: Secret
+          name: credential-{{ $namespace }}-keycloak
           namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1

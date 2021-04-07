@@ -94,7 +94,7 @@ questions:
       - variable: config.keycloak.adminPassword
         description: ''
         type: password
-        # show_if: config.keycloak.integration!=
+        show_if: config.keycloak.integration!=
         required: true
         label: 'admin password'
       - variable: config.keycloak.companyName
