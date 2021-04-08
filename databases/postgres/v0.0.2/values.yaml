@@ -8,7 +8,7 @@ images:
     tag: centos8-13.2-4.6.2
   metrics:
     repository: registry.developers.crunchydata.com/crunchydata
-    tag: centos8-4.6.2
+    tag: centos8-4.6.1
 
 config:
   clusterType: rke
