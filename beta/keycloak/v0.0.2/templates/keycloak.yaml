@@ -29,7 +29,8 @@ spec:
             if [ "$LDAP_TLS_CRT" != "" ]; then
               mkdir -p /opt/jboss/certs
               echo "-----BEGIN CERTIFICATE-----" > /opt/jboss/certs/ldap-ca.crt
-              echo $LDAP_TLS_CRT | sed 's/ \?-\{5\}[A-Z]\+ [A-Z]\+-\{5\} \?//g' | sed 's/ /\n/g' >> /opt/jboss/certs/ldap-ca.crt
+              echo $LDAP_TLS_CRT | sed 's/ \?-\{5\}[A-Z]\+ [A-Z]\+-\{5\} \?//g' | \
+                sed 's/ /\\n/g' >> /opt/jboss/certs/ldap-ca.crt
               echo "-----END CERTIFICATE-----" >> /opt/jboss/certs/ldap-ca.crt
               echo >> /opt/jboss/certs/ldap-ca.crt
             fi
