@@ -188,7 +188,6 @@ spec:
                   app: {{ template "gitlab.name" . }}
                   release: {{ .Release.Name }}
               spec:
-                serviceAccountName: keycloak-gitlab-client
                 restartPolicy: OnFailure
                 containers:
                   - name: {{ template "gitlab.fullname" . }}-job
