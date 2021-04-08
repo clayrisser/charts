@@ -238,10 +238,4 @@ spec:
           kind: Secret
           name: credential-{{ $namespace }}-keycloak-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: keycloak-gitlab-client
-  namespace: {{ .Release.Namespace }}
 {{- end }}
