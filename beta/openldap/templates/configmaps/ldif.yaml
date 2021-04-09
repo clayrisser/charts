@@ -10,7 +10,7 @@ metadata:
 data:
   {{- if .Values.config.openldap.arbitrarySlotsSchema }}
   arbitrary-slots-schema.ldif: |
-    dn: cn=schema
+    dn: cn=schema,cn=config
     changetype: modify
     add: olcAttributeTypes
     olcAttributeTypes: ( 1.3.6.1.4.1.57257.1.1.10
