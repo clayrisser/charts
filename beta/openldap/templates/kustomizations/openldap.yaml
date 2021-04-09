@@ -44,17 +44,22 @@ spec:
               mountPath: /container/service/slapd/assets/config/bootstrap/schema/arbitrary-slots.schema
             {{- end }}
         - op: replace
-          path: /spec/template/spec/containers/0/lifecycle
+          path: /spec/template/spec/containers/0/args
+          value: []
+        - op: replace
+          path: /spec/template/spec/containers/0/command
           value:
-            postStart:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    if [ -f /ldif/ppolicy.ldif ]; then
-                      sh -c "sleep 70 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
-                    fi
-                    if [ -f /ldif/organizational-units.ldif ]; then
-                      sh -c "sleep 72 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
-                    fi
+            - /bin/sh
+            - -c
+            - |
+              if [ -f /ldif/ppolicy.ldif ]; then
+                ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif &
+              fi
+              if [ -f /ldif/organizational-units.ldif ]; then
+                ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif &
+              fi
+              {{- if .Values.config.debug }}
+              exec /container/tool/run -l debug --copy-service
+              {{- else }}
+              exec /container/tool/run -l info --copy-service
+              {{- end }}
