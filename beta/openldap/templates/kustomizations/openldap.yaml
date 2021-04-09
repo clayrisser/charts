@@ -28,14 +28,11 @@ spec:
             - name: ldif
               configMap:
                 name: {{ template "openldap.fullname" . }}-ldif
-        {{- if .Values.config.openldap.arbitrarySlotsSchema }}
-        - op: add
-          path: /spec/template/spec/volumes
-          value:
+            {{- if .Values.config.openldap.arbitrarySlotsSchema }}
             - name: schema
               configMap:
                 name: {{ template "openldap.fullname" . }}-schema
-        {{- end }}
+            {{- end }}
         - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:
