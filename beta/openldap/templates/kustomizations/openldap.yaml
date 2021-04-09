@@ -29,10 +29,18 @@ spec:
               configMap:
                 name: {{ template "openldap.fullname" . }}-ldif
         - op: add
+          path: /spec/template/spec/volumes
+          value:
+            - name: schema
+              configMap:
+                name: {{ template "openldap.fullname" . }}-schema
+        - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:
             - name: ldif
               mountPath: /ldif
+            - name: schema
+              mountPath: /schema
         - op: replace
           path: /spec/template/spec/containers/0/lifecycle
           value:
@@ -42,12 +50,12 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    if [ -f /ldif/schema.ldif ]; then
-                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/schema.ldif 2>&1 || true" &
+                    if [ -f /schema/arbitrarySlots.schema ]; then
+                      sh -c "sleep 60 && service slapd stop && slapadd -l /schema/arbitrarySlots.schema -n 0 2>&1 || true && service slapd start" &
                     fi
                     if [ -f /ldif/ppolicy.ldif ]; then
-                      sh -c "sleep 61 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
+                      sh -c "sleep 70 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
                     fi
                     if [ -f /ldif/organizational-units.ldif ]; then
-                      sh -c "sleep 52 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
+                      sh -c "sleep 72 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
                     fi
