@@ -12,14 +12,23 @@ data:
   arbitrary-slots-schema.ldif: |
     dn: cn=schema
     changetype: modify
-    add: attributetypes
-    attributetypes: ( 1.3.6.1.4.1.57257.1.1.10
+    add: olcAttributeTypes
+    olcAttributeTypes: ( 1.3.6.1.4.1.57257.1.1.10
       NAME 'slot0'
       DESC 'slot 0'
       EQUALITY caseIgnoreMatch
       SUBSTR caseIgnoreSubstringsMatch
       SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024}
       SINGLE-VALUE )
+
+    # dn: cn=schema
+    # changetype: modify
+    # add: olcObjectClasses
+    # olcObjectClasses: ( 1.3.6.1.4.1.57257.1.2.1
+    #   NAME 'arbitrarySlots'
+    #   DESC '10 slots for arbitrary data'
+    #   STRUCTURAL
+    #     MAY ( slot0 ) )
   {{- end }}
   {{- if (not (empty .Values.config.openldap.organizationalUnits)) }}
   organizational-units.ldif: |
