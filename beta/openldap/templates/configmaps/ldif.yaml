@@ -1,4 +1,3 @@
-{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword)  }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,6 +8,30 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  {{- if (not (empty .Values.config.openldap.siliconhillSchema)) }}
+  schema.ldif: |
+    dn: cn=schema
+    changetype: modify
+    add: attributeTypes
+    attributeTypes: ( 1.3.6.1.4.1.999.1.1.1
+    NAME 'key0'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024}
+    X-NDS_PUBLIC_READ '1' )
+
+    dn: cn=schema
+    changetype: modify
+    add: attributeTypes
+    attributeTypes: ( 1.3.6.1.4.1.999.1.1.2
+    NAME 'key1'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024}
+    X-NDS_PUBLIC_READ '1' )
+
+    dn: cn=schema
+    changetype: modify
+    add: objectclasses
+    objectclasses: (1.3.6.1.4.1.999.1.2.1
+    NAME 'siliconHills' MAY ( key0 $ key1 $ key2 $ key3 $ key4 $ key5 ) AUXILIARY)
+  {{- end  }}
   {{- if (not (empty .Values.config.openldap.organizationalUnits)) }}
   organizational-units.ldif: |
     {{- range (splitList "," .Values.config.openldap.organizationalUnits) }}
@@ -32,4 +55,3 @@ data:
     olcOverlay: {2}ppolicy
     olcPPolicyHashCleartext: TRUE
   {{- end }}
-{{- end  }}

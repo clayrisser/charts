@@ -208,16 +208,16 @@ spec:
           ldap.attribute: modifyTimestamp
           read.only: 'true'
           user.model.attribute: modifyTimestamp
-      - name: 'saml.persistent.name.id.for.tmp9.git.siliconhills.dev'
+      - name: 'gitlab uid'
         federationProviderDisplayName: ldap
         federationMapperType: user-attribute-ldap-mapper
         config:
           always.read.value.from.ldap: 'true'
           is.binary.attribute: 'false'
           is.mandatory.in.ldap: 'false'
-          ldap.attribute: displayName
+          ldap.attribute: key0
           read.only: 'true'
-          user.model.attribute: saml.persistent.name.id.for.tmp9.git.siliconhills.dev
+          user.model.attribute: gitlab_uid
     {{- end }}
   instanceSelector:
     matchLabels:

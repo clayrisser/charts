@@ -1,4 +1,3 @@
-{{- if (or (not (empty .Values.config.openldap.organizationalUnits)) .Values.config.openldap.hashPassword) }}
 apiVersion: kustomize.siliconhills.dev/v1alpha1
 kind: Kustomization
 metadata:
@@ -43,10 +42,10 @@ spec:
                   - /bin/sh
                   - -c
                   - |
+                    sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/schema.ldif 2>&1 || true" &
                     if [ -f /ldif/ppolicy.ldif ]; then
-                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
+                      sh -c "sleep 61 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
                     fi
                     if [ -f /ldif/organizational-units.ldif ]; then
-                      sh -c "sleep 60 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
+                      sh -c "sleep 52 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif 2>&1 || true" &
                     fi
-{{- end }}
