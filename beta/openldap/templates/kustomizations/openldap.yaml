@@ -43,13 +43,13 @@ spec:
             - -c
             - |
               if [ -f /ldif/arbitrary-slots-schema.ldif ]; then
-                sh -c "sleep 30 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/arbitrary-slots-schema.ldif" &
+                ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/arbitrary-slots-schema.ldif
               fi
               if [ -f /ldif/ppolicy.ldif ]; then
-                sh -c "sleep 30 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif" &
+                ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif
               fi
               if [ -f /ldif/organizational-units.ldif ]; then
-                sh -c "sleep 30 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif" &
+                ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/organizational-units.ldif
               fi
               {{- if .Values.config.debug }}
               exec /container/tool/run -l debug --copy-service
