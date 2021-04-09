@@ -59,12 +59,13 @@ spec:
     env:
       LDAP_LOG_LEVEL: {{ .Values.config.debug | ternary "-1" "256" | quote }}
       LDAP_ORGANISATION: {{ .Values.config.openldap.organization | quote }}
+      LDAP_BACKEND: 'mdb'
       LDAP_DOMAIN: {{ .Values.config.openldap.domain | quote }}
       LDAP_READONLY_USER: 'false'
-      LDAP_READONLY_USER_USERNAME: 'readonly'
       LDAP_READONLY_USER_PASSWORD: 'readonly'
+      LDAP_READONLY_USER_USERNAME: 'readonly'
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: 'true'
       LDAP_RFC2307BIS_SCHEMA: 'false'
-      LDAP_BACKEND: 'mdb'
       LDAP_TLS: {{ .Values.service.openldap.tls.enabled | quote }}
       LDAP_TLS_CRT_FILENAME: 'tls.crt'
       LDAP_TLS_KEY_FILENAME: 'tls.key'

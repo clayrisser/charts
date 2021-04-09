@@ -41,7 +41,7 @@ spec:
             {{- if .Values.config.openldap.arbitrarySlotsSchema }}
             - name: schema
               subPath: arbitrary-slots.schema
-              mountPath: /container/service/slapd/assets/config/bootstrap/schema/arbitrary-slots.schema
+              mountPath: /container/service/slapd/assets/config/bootstrap/schema/custom/arbitrary-slots.schema
             {{- end }}
         - op: replace
           path: /spec/template/spec/containers/0/args
