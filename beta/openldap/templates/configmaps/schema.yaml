@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  arbitrarySlots.schema: |
+  arbitrary-slots.schema: |
     attributetype ( 1.3.6.1.4.1.57257.1.1.10
       NAME 'slot0'
       DESC 'slot 0'
