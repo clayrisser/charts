@@ -1,6 +1,7 @@
 categories:
   - Server
 questions:
+
   # Config
   - variable: config.clusterType
     description: ''
@@ -68,11 +69,11 @@ questions:
     required: true
     label: 'openldap organization'
     group: Config
-  - variable: config.openldap.siliconhillsSchema
+  - variable: config.openldap.arbitrarySlotsSchema
     description: ''
     type: boolean
     required: true
-    label: 'openldap siliconhills Schema enable'
+    label: 'openldap arbitrary slots schema'
     default: true
     group: Config
   - variable: config.openldap.organizationalUnits

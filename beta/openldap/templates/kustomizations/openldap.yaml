@@ -28,12 +28,14 @@ spec:
             - name: ldif
               configMap:
                 name: {{ template "openldap.fullname" . }}-ldif
+        {{- if .Values.config.openldap.arbitrarySlotsSchema }}
         - op: add
           path: /spec/template/spec/volumes
           value:
             - name: schema
               configMap:
                 name: {{ template "openldap.fullname" . }}-schema
+        {{- end }}
         - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:
@@ -41,6 +43,11 @@ spec:
               mountPath: /ldif
             - name: schema
               mountPath: /schema
+            {{- if .Values.config.openldap.arbitrarySlotsSchema }}
+            - name: schema
+              subPath: arbitrary-slots.schema
+              mountPath: /container/service/slapd/assets/config/bootstrap/schema/arbitrary-slots.schema
+            {{- end }}
         - op: replace
           path: /spec/template/spec/containers/0/lifecycle
           value:
@@ -50,9 +57,6 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    if [ -f /schema/arbitrarySlots.schema ]; then
-                      sh -c "sleep 60 && service slapd stop && slapadd -l /schema/arbitrarySlots.schema -n 0 2>&1 || true && service slapd start" &
-                    fi
                     if [ -f /ldif/ppolicy.ldif ]; then
                       sh -c "sleep 70 && ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/ppolicy.ldif 2>&1 || true" &
                     fi
