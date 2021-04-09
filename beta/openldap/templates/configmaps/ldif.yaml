@@ -13,9 +13,9 @@ data:
     dn: cn=schema,cn=config
     changetype: modify
     add: olcAttributeTypes
-    olcAttributeTypes: ( 1.3.6.1.4.1.57257.1.1.10
-      NAME 'slot0'
-      DESC 'slot 0'
+    olcAttributeTypes: ( 1.3.6.1.4.1.57257.1.1.11
+      NAME 'slot1'
+      DESC 'slot 1'
       EQUALITY caseIgnoreMatch
       SUBSTR caseIgnoreSubstringsMatch
       SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024}

@@ -64,7 +64,7 @@ spec:
       LDAP_READONLY_USER: 'false'
       LDAP_READONLY_USER_PASSWORD: 'readonly'
       LDAP_READONLY_USER_USERNAME: 'readonly'
-      LDAP_REMOVE_CONFIG_AFTER_SETUP: 'true'
+      # LDAP_REMOVE_CONFIG_AFTER_SETUP: 'true'
       LDAP_RFC2307BIS_SCHEMA: 'false'
       LDAP_TLS: {{ .Values.service.openldap.tls.enabled | quote }}
       LDAP_TLS_CRT_FILENAME: 'tls.crt'
