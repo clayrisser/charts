@@ -215,7 +215,7 @@ spec:
           always.read.value.from.ldap: 'true'
           is.binary.attribute: 'false'
           is.mandatory.in.ldap: 'false'
-          ldap.attribute: key0
+          ldap.attribute: slot0
           read.only: 'true'
           user.model.attribute: gitlab_uid
     {{- end }}
