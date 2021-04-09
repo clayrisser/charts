@@ -13,86 +13,86 @@ data:
   schema.ldif: |
     dn: cn=schema
     changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.10
+    add: attributetypes
+    attributetypes: ( 1.3.6.1.4.1.57257.1.1.10
       NAME 'slot0'
       DESC 'slot 0'
       EQUALITY caseIgnoreMatch
       SUBSTR caseIgnoreSubstringsMatch
-      SINGLE-VALUE
-      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024}
+      SINGLE-VALUE )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.11
-      NAME 'slot1'
-      DESC 'slot 1'
-      SUP slot0 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.11
+    #   NAME 'slot1'
+    #   DESC 'slot 1'
+    #   SUP slot0 )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.12
-      NAME 'slot2'
-      DESC 'slot 2'
-      SUP slot0 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.12
+    #   NAME 'slot2'
+    #   DESC 'slot 2'
+    #   SUP slot0 )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.13
-      NAME 'slot3'
-      DESC 'slot 3'
-      SUP slot0 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.13
+    #   NAME 'slot3'
+    #   DESC 'slot 3'
+    #   SUP slot0 )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.14
-      NAME 'slot4'
-      DESC 'slot 4'
-      SUP slot0 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.14
+    #   NAME 'slot4'
+    #   DESC 'slot 4'
+    #   SUP slot0 )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.15
-      NAME 'slot5'
-      DESC 'slot 5'
-      SUP slot0 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.15
+    #   NAME 'slot5'
+    #   DESC 'slot 5'
+    #   SUP slot0 )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.16
-      NAME 'slot6'
-      DESC 'slot 6'
-      SUP slot0 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.16
+    #   NAME 'slot6'
+    #   DESC 'slot 6'
+    #   SUP slot0 )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.17
-      NAME 'slot7'
-      DESC 'slot 7'
-      SUP slot7 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.17
+    #   NAME 'slot7'
+    #   DESC 'slot 7'
+    #   SUP slot7 )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.18
-      NAME 'slot8'
-      DESC 'slot 8'
-      SUP slot0 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.18
+    #   NAME 'slot8'
+    #   DESC 'slot 8'
+    #   SUP slot0 )
 
-    dn: cn=schema
-    changetype: modify
-    add: attributeTypes
-    attributeTypes: ( 1.3.6.1.4.1.57257.1.1.19
-      NAME 'slot9'
-      DESC 'slot 9'
-      SUP slot0 )
+    # dn: cn=schema
+    # changetype: modify
+    # add: attributeTypes
+    # attributeTypes: ( 1.3.6.1.4.1.57257.1.1.19
+    #   NAME 'slot9'
+    #   DESC 'slot 9'
+    #   SUP slot0 )
 
     dn: cn=schema
     changetype: modify
@@ -101,7 +101,7 @@ data:
       NAME 'arbitrarySlots'
       DESC '10 slots for arbitrary data'
       STRUCTURAL
-        MAY ( slot0 $ slot1 $ slot2 $ slot3 $ slot4 $ slot5 $ slot6 $ slot7 $ slot8 $ slot9 ) )
+        MAY ( slot0 ) )
 
   {{- end  }}
   {{- if (not (empty .Values.config.openldap.organizationalUnits)) }}
