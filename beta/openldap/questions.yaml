@@ -1,7 +1,6 @@
 categories:
   - Server
 questions:
-
   # Config
   - variable: config.clusterType
     description: ''
@@ -68,6 +67,13 @@ questions:
     type: string
     required: true
     label: 'openldap organization'
+    group: Config
+  - variable: config.openldap.siliconhillsSchema
+    description: ''
+    type: boolean
+    required: true
+    label: 'openldap siliconhills Schema enable'
+    default: true
     group: Config
   - variable: config.openldap.organizationalUnits
     description: ''
@@ -187,7 +193,7 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+  # Services and Load Balancing
   - variable: ingress.phpldapadmin.enabled
     default: true
     description: ''
