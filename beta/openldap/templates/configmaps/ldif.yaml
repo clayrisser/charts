@@ -9,12 +9,14 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   {{- if .Values.config.openldap.siliconhillsSchema }}
+
   schema.ldif: |
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.10
-      NAME 'key0'
+      NAME 'slot0'
+      DESC 'slot 0'
       EQUALITY caseIgnoreMatch
       SUBSTR caseIgnoreSubstringsMatch
       SINGLE-VALUE
@@ -24,73 +26,82 @@ data:
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.11
-      NAME 'key1'
-      SUP key0 )
+      NAME 'slot1'
+      DESC 'slot 1'
+      SUP slot0 )
 
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.12
-      NAME 'key2'
-      SUP key0 )
+      NAME 'slot2'
+      DESC 'slot 2'
+      SUP slot0 )
 
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.13
-      NAME 'key3'
-      SUP key0 )
+      NAME 'slot3'
+      DESC 'slot 3'
+      SUP slot0 )
 
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.14
-      NAME 'key4'
-      SUP key0 )
+      NAME 'slot4'
+      DESC 'slot 4'
+      SUP slot0 )
 
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.15
-      NAME 'key5'
-      SUP key0 )
+      NAME 'slot5'
+      DESC 'slot 5'
+      SUP slot0 )
 
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.16
-      NAME 'key6'
-      SUP key0 )
+      NAME 'slot6'
+      DESC 'slot 6'
+      SUP slot0 )
 
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.17
-      NAME 'key7'
-      SUP key0 )
+      NAME 'slot7'
+      DESC 'slot 7'
+      SUP slot7 )
 
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.18
-      NAME 'key8'
-      SUP key0 )
+      NAME 'slot8'
+      DESC 'slot 8'
+      SUP slot0 )
 
     dn: cn=schema
     changetype: modify
     add: attributeTypes
     attributeTypes: ( 1.3.6.1.4.1.57257.1.1.19
-      NAME 'key9'
-      SUP key0 )
+      NAME 'slot9'
+      DESC 'slot 9'
+      SUP slot0 )
 
     dn: cn=schema
     changetype: modify
     add: objectclasses
     objectclasses: ( 1.3.6.1.4.1.57257.1.2.1
-      NAME 'arbitraryKeySlots'
+      NAME 'arbitrarySlots'
       DESC '10 slots for arbitrary data'
       STRUCTURAL
-        MAY ( key0 $ key1 $ key2 $ key3 $ key4 $ key5 $ key6 $ key7 $ key8 $ key9 ) )
+        MAY ( slot0 $ slot1 $ slot2 $ slot3 $ slot4 $ slot5 $ slot6 $ slot7 $ slot8 $ slot9 ) )
 
   {{- end  }}
   {{- if (not (empty .Values.config.openldap.organizationalUnits)) }}
