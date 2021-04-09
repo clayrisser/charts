@@ -41,8 +41,6 @@ spec:
           value:
             - name: ldif
               mountPath: /ldif
-            - name: schema
-              mountPath: /schema
             {{- if .Values.config.openldap.arbitrarySlotsSchema }}
             - name: schema
               subPath: arbitrary-slots.schema
