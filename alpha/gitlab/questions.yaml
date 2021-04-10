@@ -71,6 +71,14 @@ questions:
     label: 'gitlab s3 aws region'
     show_if: config.gitlab.s3.enabled=true
     group: Config
+  - variable: config.gitlab.s3.awsHost
+    default: us-west-2
+    description: ''
+    type: string
+    required: false
+    label: 'gitlab s3 aws host'
+    show_if: config.gitlab.s3.enabled=true
+    group: Config
   - variable: config.gitlab.s3.awsAccessKey
     default: ''
     description: ''

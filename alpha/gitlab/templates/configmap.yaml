@@ -57,6 +57,10 @@ data:
     gitlab_rails['uploads_object_store_connection'] = {
       'provider' => 'AWS',
       'region' => '{{ .Values.config.gitlab.s3.awsRegion }}',
+      'aws_signature_version' => 2,
+      {{- if .Values.config.gitlab.s3.awsHost }}
+      'host' => '{{ .Values.config.gitlab.s3.awsHost }}',
+      {{- end }}
       'aws_access_key_id' => '{{ .Values.config.gitlab.s3.awsAccessKey }}',
       'aws_secret_access_key' => '{{ .Values.config.gitlab.s3.awsSecretKey }}'
     };
