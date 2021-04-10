@@ -83,5 +83,5 @@ Calculate keycloak client id
 Calculate bucket name
 */}}
 {{- define "gitlab.bucket-name" }}
-{{ printf "%s" (pluck .bucket .values.config.storage.s3.buckets | first | default (printf "%s-%s" .values.config.storage.s3.namespace .bucket)) }}
+{{- printf "%s" (pluck .bucket .values.config.storage.s3.buckets | first | default (printf "%s-%s" .values.config.storage.s3.namespace .bucket)) }}
 {{- end }}
