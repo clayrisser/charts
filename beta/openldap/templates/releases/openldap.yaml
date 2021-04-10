@@ -113,9 +113,9 @@ spec:
     {{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) }}
     resources:
       requests:
-      {{ toYaml .Values.config.openldap.resources.requests | indent 6 }}
+      {{ toYaml .Values.config.openldap.resources.requests | indent 8 }}
       limits:
-      {{ toYaml .Values.config.openldap.resources.limits | indent 6 }}
+      {{ toYaml .Values.config.openldap.resources.limits | indent 8 }}
     {{- else }}
     resources: {}
     {{- end }}
