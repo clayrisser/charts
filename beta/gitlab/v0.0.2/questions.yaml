@@ -138,7 +138,7 @@ questions:
       - variable: config.storage.s3.namespace
         description: ''
         type: string
-        required: true
+        required: false
         label: 's3 namespace'
       - variable: config.storage.s3.host
         description: ''
