@@ -69,7 +69,7 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  enabled: false
+  enabled: true
   existingClaim: ''
   size: 1Gi
   storageClass: ''

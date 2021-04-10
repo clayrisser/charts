@@ -38,7 +38,7 @@ config:
         cpu: 500m
         memory: 256Mi
   gitlabRunner:
-    enable: false
+    enable: true
     docker:
       sock: false
     cache:
@@ -81,7 +81,7 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  enabled: false
+  enabled: true
   storageClass: ''
   existingClaim:
     gitlab: ''
