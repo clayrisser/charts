@@ -91,12 +91,6 @@ questions:
         type: string
         required: false
         label: integration
-      - variable: config.keycloak.adminPassword
-        description: ''
-        type: password
-        show_if: config.keycloak.integration!=
-        required: false
-        label: 'admin password'
       - variable: config.keycloak.companyName
         description: ''
         type: string
@@ -107,6 +101,12 @@ questions:
         type: string
         required: false
         label: 'realm name'
+      - variable: config.keycloak.adminPassword
+        description: ''
+        type: password
+        show_if: config.keycloak.integration=
+        required: false
+        label: 'admin password'
       - variable: config.keycloak.baseUrl
         description: ''
         type: string

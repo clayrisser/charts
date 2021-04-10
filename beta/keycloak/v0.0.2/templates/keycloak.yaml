@@ -216,7 +216,7 @@ spec:
           is.binary.attribute: 'false'
           is.mandatory.in.ldap: 'false'
           ldap.attribute: slot0
-          read.only: 'true'
+          read.only: 'false'
           user.model.attribute: gitlab_uid
     {{- end }}
   instanceSelector:
