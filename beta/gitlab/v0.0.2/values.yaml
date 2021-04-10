@@ -43,7 +43,7 @@ config:
     baseUrl: ''
     hostname: ''
     resources:
-      enabled: false
+      enabled: defaults
       requests:
         cpu: 100m
         memory: 128Mi
@@ -58,7 +58,7 @@ config:
       enabled: true
       type: pvc
     resources:
-      enabled: false
+      enabled: defaults
       limits:
         memory: 256Mi
         cpu: 200m

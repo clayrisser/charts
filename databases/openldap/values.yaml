@@ -20,7 +20,7 @@ config:
     hostname: ''
     tls: true
     resources:
-      enabled: false
+      enabled: defaults
       requests:
         cpu: 100m
         memory: 128Mi
@@ -31,7 +31,7 @@ config:
     enabled: false
     serverAdmin: email@example.com
     resources:
-      enabled: false
+      enabled: defaults
       requests:
         cpu: 100m
         memory: 128Mi

@@ -624,7 +624,7 @@ spec:
       securityContext:
         fsGroup: 65533
         runAsUser: 100
-{{- if .Values.config.gitlabRunner.resources.enabled }}
+{{- if (and .Values.config.gitlabRunner.resources.enabled (not (eq .Values.config.gitlabRunner.resources.enabled "false"))) }}
       resources:
         limits:
 {{ toYaml .Values.config.gitlabRunner.resources.limits | indent 10 }}

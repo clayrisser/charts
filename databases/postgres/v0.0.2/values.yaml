@@ -19,7 +19,7 @@ config:
   password:
   shutdown: false
   resources:
-    enabled: 'false'
+    enabled: defaults
     requests:
       cpu: 100m
       memory: 128Mi

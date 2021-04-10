@@ -39,38 +39,38 @@ questions:
     required: false
     label: 'gitlab password'
     group: Config
-  - variable: config.gitlab.resources.enabled
-    description: ''
-    type: enum
-    options:
-      - defaults
-      - custom
-      - false
-    required: true
-    label: 'gitlab resources defaults'
-    show_subquestion_if: custom
-    group: Config
-    subquestions:
-      - variable: config.gitlab.resources.requests.cpu
-        description: ''
-        type: string
-        required: true
-        label: 'gitlab resources requests cpu'
-      - variable: config.gitlab.resources.requests.memory
-        description: ''
-        type: string
-        required: true
-        label: 'gitlab resources requests memory'
-      - variable: config.gitlab.resources.limits.cpu
-        description: ''
-        type: string
-        required: true
-        label: 'gitlab resources limits cpu'
-      - variable: config.gitlab.resources.limits.memory
-        description: ''
-        type: string
-        required: true
-        label: 'gitlab resources limits memory'
+  # - variable: config.gitlab.resources.enabled
+  #   description: ''
+  #   type: enum
+  #   options:
+  #     - defaults
+  #     - custom
+  #     - 'false'
+  #   required: true
+  #   label: 'gitlab resources defaults'
+  #   show_subquestion_if: custom
+  #   group: Config
+  #   subquestions:
+  #     - variable: config.gitlab.resources.requests.cpu
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'gitlab resources requests cpu'
+  #     - variable: config.gitlab.resources.requests.memory
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'gitlab resources requests memory'
+  #     - variable: config.gitlab.resources.limits.cpu
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'gitlab resources limits cpu'
+  #     - variable: config.gitlab.resources.limits.memory
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'gitlab resources limits memory'
 
   # Keycloak Config
   - variable: config.keycloak.enabled
@@ -240,6 +240,59 @@ questions:
     required: true
     label: enable
     group: 'Runner Config'
+  - variable: config.gitlabRunner.docker.sock
+    description: ''
+    type: boolean
+    required: true
+    label: 'docker sock'
+    group: 'Runner Config'
+  - variable: config.gitlabRunner.cache.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'cache enabled'
+    show_subquestion_if: true
+    group: 'Runner Config'
+    subquestions:
+      - variable: config.gitlabRunner.cache.type
+        description: ''
+        type: enum
+        options:
+          - pvc
+        required: true
+        label: 'cache type'
+  - variable: config.gitlabRunner.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: 'true'
+    group: Config
+    subquestions:
+      - variable: config.gitlabRunner.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.gitlabRunner.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.gitlabRunner.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.gitlabRunner.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
 
   # Postgres Config
   - variable: config.postgres.integration
