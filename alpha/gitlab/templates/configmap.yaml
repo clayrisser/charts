@@ -52,9 +52,9 @@ data:
     root_pass = ENV['GITLAB_ROOT_PASSWORD'];
     unicorn['worker_processes'] = 2;
     {{- if .Values.config.gitlab.s3.enabled }}
-    gitlab_rails['object_store']['objects']['uploads']['bucket'] = '{{ .Values.config.gitlab.s3.awsBucket }}'
+    gitlab_rails['object_store']['objects']['uploads']['bucket'] = '{{ .Values.config.gitlab.s3.awsUploadsBucket }}'
     gitlab_rails['uploads_object_store_enabled'] = true;
-    gitlab_rails['uploads_object_store_remote_directory'] = '{{ .Values.config.gitlab.s3.awsBucket }}';
+    gitlab_rails['uploads_object_store_remote_directory'] = '{{ .Values.config.gitlab.s3.awsUploadsBucket }}';
     gitlab_rails['uploads_object_store_connection'] = {
       'provider' => 'AWS',
       'region' => '{{ .Values.config.gitlab.s3.awsRegion }}',
@@ -65,6 +65,24 @@ data:
       'aws_access_key_id' => '{{ .Values.config.gitlab.s3.awsAccessKey }}',
       'aws_secret_access_key' => '{{ .Values.config.gitlab.s3.awsSecretKey }}'
     };
+
+    gitlab_rails['artifacts_enabled'] = true;
+    gitlab_rails['artifacts_object_store_enabled'] = true;
+    gitlab_rails['artifacts_object_store_remote_directory'] = '{{ .Values.config.gitlab.s3.awsArtifactsBucket }}';
+    gitlab_rails['artifacts_object_store_connection'] = gitlab_rails['uploads_object_store_connection'];
+
+    gitlab_rails['lfs_object_store_enabled'] = true
+    gitlab_rails['lfs_object_store_remote_directory'] = '{{ .Values.config.gitlab.s3.awsLfsBucket }}';
+    gitlab_rails['lfs_object_store_connection'] = gitlab_rails['uploads_object_store_connection'];
+
+    gitlab_rails['packages_enabled'] = true
+    gitlab_rails['packages_object_store_enabled'] = true
+    gitlab_rails['packages_object_store_remote_directory'] = '{{ .Values.config.gitlab.s3.awsPackagesBucket }}';
+    gitlab_rails['packages_object_store_direct_upload'] = false;
+    gitlab_rails['packages_object_store_background_upload'] = true;
+    gitlab_rails['packages_object_store_proxy_download'] = false;
+    gitlab_rails['packages_object_store_connection'] = gitlab_rails['uploads_object_store_connection'];
+
     {{- end }}
     gitlab_rails['omniauth_providers'] = [
       {

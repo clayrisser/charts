@@ -79,12 +79,36 @@ questions:
     label: 'gitlab s3 aws host'
     show_if: config.gitlab.s3.enabled=true
     group: Config
-  - variable: config.gitlab.s3.awsBucket
+  - variable: config.gitlab.s3.awsUploadsBucket
     default: ''
     description: ''
     type: string
     required: false
-    label: 'gitlab s3 aws bucket'
+    label: 'gitlab s3 aws uploads bucket'
+    show_if: config.gitlab.s3.enabled=true
+    group: Config
+  - variable: config.gitlab.s3.awsPackagesBucket
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'gitlab s3 aws packages bucket'
+    show_if: config.gitlab.s3.enabled=true
+    group: Config
+  - variable: config.gitlab.s3.awsLfsBucket
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'gitlab s3 aws lfs bucket'
+    show_if: config.gitlab.s3.enabled=true
+    group: Config
+  - variable: config.gitlab.s3.awsArtifactsBucket
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'gitlab s3 aws artifacts bucket'
     show_if: config.gitlab.s3.enabled=true
     group: Config
   - variable: config.gitlab.s3.awsAccessKey

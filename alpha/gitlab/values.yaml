@@ -15,7 +15,10 @@ config:
     s3:
       awsAccessKey: ''
       awsHost: ''
-      awsBucket: ''
+      awsUploadsBucket: ''
+      awsPackagesBucket: ''
+      awsLfsBucket: ''
+      awsArtifactsBucket: ''
       awsRegion: us-west-2
       awsSecretKey: ''
       enabled: false
