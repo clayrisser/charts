@@ -9,6 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   ldapadd.sh: |
+    echo waiting 90 seconds to migrate ldif
     sleep 90
     for f in $(ls /ldif | grep -E "\.ldif\$"); do
       ldapadd -c -Y EXTERNAL -H ldapi:/// -f /ldif/$f
