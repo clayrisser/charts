@@ -12,10 +12,23 @@ config:
     s3:
       enabled: false
       accessKey:
-      endpoint: https://sfo2.digitaloceanspaces.com
+      host: sfo2.digitaloceanspaces.com
       namespace: gitlab
       region: us-east-1
       secretKey:
+      buckets:
+        artifacts: ''
+        backups: ''
+        dependency-proxy: ''
+        external-diffs: ''
+        lfs: ''
+        packages: ''
+        pages: ''
+        pseudonymizer: ''
+        registry: ''
+        terraform-state: ''
+        tmp: ''
+        uploads: ''
   keycloak:
     enabled: false
     adminCliSecret:

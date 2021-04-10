@@ -149,45 +149,45 @@ spec:
         lfs:
           enabled: true
           proxy_download: true
-          bucket: {{ .Values.config.storage.s3.namespace }}-lfs
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "lfs") }}
           connection: {}
         artifacts:
           enabled: true
           proxy_download: true
-          bucket: {{ .Values.config.storage.s3.namespace }}-artifacts
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "artifacts") }}
           connection: {}
         uploads:
           enabled: true
           proxy_download: true
-          bucket: {{ .Values.config.storage.s3.namespace }}-uploads
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "uploads") }}
           connection: {}
         packages:
           enabled: true
           proxy_download: true
-          bucket: {{ .Values.config.storage.s3.namespace }}-packages
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "packages") }}
           connection: {}
         externalDiffs:
           enabled: false
           when:
           proxy_download: true
-          bucket: {{ .Values.config.storage.s3.namespace }}-mr-diffs
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "external-diffs") }}
           connection: {}
         terraformState:
           enabled: false
-          bucket: {{ .Values.config.storage.s3.namespace }}-terraform-state
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "terraform-state") }}
           connection: {}
         dependencyProxy:
           enabled: false
           proxy_download: true
-          bucket: {{ .Values.config.storage.s3.namespace }}-dependency-proxy
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "dependency-proxy") }}
           connection: {}
         pseudonymizer:
           configMap:
-          bucket: {{ .Values.config.storage.s3.namespace }}-pseudo
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "pseudonymizer") }}
           connection: {}
         backups:
-          bucket: {{ .Values.config.storage.s3.namespace }}-backups
-          tmpBucket: tmp
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "backups") }}
+          tmpBucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "tmp") }}
         incomingEmail:
           enabled: false
           address: ""
@@ -268,7 +268,7 @@ spec:
         bootsnap:
           enabled: true
       registry:
-        bucket: {{ .Values.config.storage.s3.namespace }}-registry
+        bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "registry") }}
         certificate: {}
         httpSecret: {}
         notifications: {}
@@ -284,7 +284,7 @@ spec:
         artifactsServer: true
         objectStore:
           enabled: true
-          bucket: {{ .Values.config.storage.s3.namespace }}-pages
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "pages") }}
           connection: {}
         apiSecret: {}
       runner:
