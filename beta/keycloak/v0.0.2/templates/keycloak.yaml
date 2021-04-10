@@ -188,7 +188,7 @@ spec:
           ldap.attribute: sn
           read.only: 'false'
           user.model.attribute: lastName
-      - name: 'creation date'
+      - name: 'create timestamp'
         federationProviderDisplayName: ldap
         federationMapperType: user-attribute-ldap-mapper
         config:
@@ -198,26 +198,6 @@ spec:
           ldap.attribute: createTimestamp
           read.only: 'true'
           user.model.attribute: createTimestamp
-      - name: 'modify date'
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          always.read.value.from.ldap: 'true'
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'false'
-          ldap.attribute: modifyTimestamp
-          read.only: 'true'
-          user.model.attribute: modifyTimestamp
-      - name: 'gitlab uid'
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          always.read.value.from.ldap: 'true'
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'false'
-          ldap.attribute: slot0
-          read.only: 'false'
-          user.model.attribute: gitlab_uid
     {{- end }}
   instanceSelector:
     matchLabels:
