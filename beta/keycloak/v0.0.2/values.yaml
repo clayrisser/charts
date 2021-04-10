@@ -25,7 +25,7 @@ config:
       domain: ''
       username: admin
       password: ''
-      userObjectClasses: 'arbitrarySlots, PostfixBookMailAccount, inetOrgPerson, organizationalPerson, siliconHills'
+      userObjectClasses: 'arbitrarySlots, PostfixBookMailAccount, inetOrgPerson, organizationalPerson'
       tls:
         enabled: true
         ca:
