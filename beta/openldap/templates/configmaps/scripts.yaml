@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "openldap.fullname" . }}-scripts
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  ldapadd.sh: |
+    sleep 30
+    for f in $(ls /ldif | grep -E "\.ldif\$"); do
+      ldapadd -c -Y EXTERNAL -H ldapi:/// -f /ldif/$f
+    done

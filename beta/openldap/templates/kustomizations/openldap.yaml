@@ -28,11 +28,16 @@ spec:
             - name: ldif
               configMap:
                 name: {{ template "openldap.fullname" . }}-ldif
+            - name: scripts
+              configMap:
+                name: {{ template "openldap.fullname" . }}-scripts
         - op: add
           path: /spec/template/spec/containers/0/volumeMounts
           value:
             - name: ldif
               mountPath: /ldif
+            - name: scripts
+              mountPath: /scripts
         - op: replace
           path: /spec/template/spec/containers/0/args
           value: []
@@ -42,13 +47,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              sh <<EOF &
-                sleep 30
-                for f in $(ls /ldif | grep -E "\\.ldif\\\$"); do
-                  echo ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/\$f
-                  ldapadd -Y EXTERNAL -H ldapi:/// -f /ldif/\$f
-                done
-              EOF
+              sh /scripts/ldapadd.sh &
               {{- if .Values.config.debug }}
               exec /container/tool/run -l debug --copy-service
               {{- else }}
