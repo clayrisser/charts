@@ -72,7 +72,7 @@ questions:
     show_if: config.gitlab.s3.enabled=true
     group: Config
   - variable: config.gitlab.s3.awsHost
-    default: us-west-2
+    default: ''
     description: ''
     type: string
     required: false
