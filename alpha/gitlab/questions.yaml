@@ -79,6 +79,14 @@ questions:
     label: 'gitlab s3 aws host'
     show_if: config.gitlab.s3.enabled=true
     group: Config
+  - variable: config.gitlab.s3.awsBucket
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'gitlab s3 aws bucket'
+    show_if: config.gitlab.s3.enabled=true
+    group: Config
   - variable: config.gitlab.s3.awsAccessKey
     default: ''
     description: ''

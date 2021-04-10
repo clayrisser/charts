@@ -15,6 +15,7 @@ config:
     s3:
       awsAccessKey: ''
       awsHost: ''
+      awsBucket: ''
       awsRegion: us-west-2
       awsSecretKey: ''
       enabled: false

@@ -52,6 +52,7 @@ data:
     root_pass = ENV['GITLAB_ROOT_PASSWORD'];
     unicorn['worker_processes'] = 2;
     {{- if .Values.config.gitlab.s3.enabled }}
+    gitlab_rails['object_store']['objects']['uploads']['bucket'] = '{{ .Values.config.gitlab.s3.awsBucket }}'
     gitlab_rails['uploads_object_store_enabled'] = true;
     gitlab_rails['uploads_object_store_remote_directory'] = 'uploads';
     gitlab_rails['uploads_object_store_connection'] = {
