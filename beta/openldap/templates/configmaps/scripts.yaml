@@ -9,8 +9,8 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   ldapadd.sh: |
-    echo waiting 90 seconds to migrate ldif . . .
-    timeout 90 sh -c "cat /dev/urandom >/dev/null"
+    echo waiting 120 seconds to migrate ldif . . .
+    sleep 120
     for f in $(ls /ldif | grep -E "\.ldif\$"); do
       ldapadd -c -Y EXTERNAL -H ldapi:/// -f /ldif/$f
     done
