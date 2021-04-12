@@ -41,15 +41,16 @@ spec:
               echo -n $KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL > /opt/jboss/keycloak/secrets/main_bindCredential
             fi
             {{- end }}
-            # TODO: support custom themes
-            # {{- if (not (empty .Values.config.keycloak.themeZip)) }}
-            # export CWD=$(pwd)
-            # mkdir -p /opt/jboss/keycloak/injected-themes
-            # cd /opt/jboss/keycloak/injected-themes
-            # wget -qO- {{ .Values.config.keycloak.themeZip }} | unzip -
-            # cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
-            # cd $CWD
-            # {{- end }}
+            {{- if (not (empty .Values.config.keycloak.themeZip)) }}
+            export CWD=$(pwd)
+            mkdir -p /opt/jboss/keycloak/injected-themes
+            cd /opt/jboss/keycloak/injected-themes
+            curl -O {{ .Values.config.keycloak.themeZip }}
+            tar xf *.tar.gz
+            rm -rf *.tar.gz
+            cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
+            cd $CWD
+            {{- end }}
             exec /opt/jboss/tools/docker-entrypoint.sh
       env:
         - name: PROXY_ADDRESS_FORWARDING

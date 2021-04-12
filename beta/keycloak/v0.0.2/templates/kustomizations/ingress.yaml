@@ -36,6 +36,9 @@ spec:
             {{- end }}
             nginx.ingress.kubernetes.io/ssl-redirect: 'true'
             {{- end }}
+            nginx.ingress.kubernetes.io/proxy-buffer-size: 128K
+            nginx.ingress.kubernetes.io/proxy-buffers: 4 256K
+            nginx.ingress.kubernetes.io/proxy-busy-buffers-size: 256K
         spec:
           {{- if .Values.ingress.keycloak.tls }}
           tls:
