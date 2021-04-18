@@ -47,7 +47,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              sh /scripts/ldapadd.sh &
+              sh /scripts/init.sh &
               {{- if .Values.config.debug }}
               exec /container/tool/run -l debug --copy-service
               {{- else }}
