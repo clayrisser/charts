@@ -12,14 +12,14 @@ spec:
     - group: apps
       version: v1
       kind: StatefulSet
-      name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
+      name: {{ .Release.Name }}-{{ template "openldap.name" . }}-openldap-stack-ha
       namespace: {{ .Release.Namespace }}
   patches:
     - target:
         group: apps
         version: v1
         kind: StatefulSet
-        name: {{ template "openldap.name" . }}-openldap-stack-ha
+        name: {{ .Release.Name }}-{{ template "openldap.name" . }}-openldap-stack-ha
         namespace: {{ .Release.Namespace }}
       patch: |
         - op: add
