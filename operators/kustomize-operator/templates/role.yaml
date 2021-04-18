@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "kustomize-operator.fullname" . }}
+  name: {{ template "kustomize-operator.releasename" . }}
   labels:
     app: {{ template "kustomize-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -17,13 +17,13 @@ roleRef:
   name: cluster-admin
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kustomize-operator.fullname" . }}
+    name: {{ template "kustomize-operator.releasename" . }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ template "kustomize-operator.fullname" . }}
+  name: {{ template "kustomize-operator.releasename" . }}
   labels:
     app: {{ template "kustomize-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

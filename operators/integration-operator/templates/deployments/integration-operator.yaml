@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "integration-operator.fullname" . }}-integration-operator
+  name: {{ template "integration-operator.releasename" . }}-integration-operator
   labels:
     app: {{ template "integration-operator.name" . }}-integration-operator
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -20,7 +20,7 @@ spec:
         app: {{ template "integration-operator.name" . }}-integration-operator
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "integration-operator.fullname" . }}
+      serviceAccountName: {{ template "integration-operator.releasename" . }}
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -45,7 +45,7 @@ spec:
       imagePullSecrets:
         - name: dockerhub
       containers:
-        - name: {{ template "integration-operator.fullname" . }}-integration-operator
+        - name: {{ template "integration-operator.releasename" . }}-integration-operator
           image: {{ .Values.images.integrationOperator.repository }}:{{ .Values.images.integrationOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           # resources:
@@ -62,7 +62,7 @@ spec:
           {{- else }}
           env: []
           {{- end }}
-        - name: {{ template "integration-operator.fullname" . }}-kubectl
+        - name: {{ template "integration-operator.releasename" . }}-kubectl
           image: bitnami/kubectl:1.17.12
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           command:

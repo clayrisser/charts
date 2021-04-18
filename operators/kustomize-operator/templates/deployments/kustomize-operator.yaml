@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "kustomize-operator.fullname" . }}-kustomize-operator
+  name: {{ template "kustomize-operator.releasename" . }}-kustomize-operator
   labels:
     app: {{ template "kustomize-operator.name" . }}-kustomize-operator
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -20,7 +20,7 @@ spec:
         app: {{ template "kustomize-operator.name" . }}-kustomize-operator
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "kustomize-operator.fullname" . }}
+      serviceAccountName: {{ template "kustomize-operator.releasename" . }}
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -43,7 +43,7 @@ spec:
                       values:
                         - {{ template "kustomize-operator.name" . }}-kustomize-operator
       containers:
-        - name: {{ template "kustomize-operator.fullname" . }}-kustomize-operator
+        - name: {{ template "kustomize-operator.releasename" . }}-kustomize-operator
           image: {{ .Values.images.kustomizeOperator.repository }}:{{ .Values.images.kustomizeOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           # resources:
@@ -54,7 +54,7 @@ spec:
           #     cpu: {{ .Values.config.kustomizeOperator.resources.limits.cpu }}
           #     memory: {{ .Values.config.kustomizeOperator.resources.limits.memory }}
           env: []
-        - name: {{ template "kustomize-operator.fullname" . }}-kubectl
+        - name: {{ template "kustomize-operator.releasename" . }}-kubectl
           image: bitnami/kubectl:1.17.12
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           command:
