@@ -1,18 +1,19 @@
-name: openldap
 apiVersion: v1
+name: openldap
 home: https://www.openldap.org
 icon: https://www.openldap.org/images/headers/LDAPworm.gif
-version: 0.0.1
+version: 0.1.1
 appVersion: latest
-description: 'a free, open-source implementation of the lightweight directory access protocol '
+description: 'an open source implementation of the lightweight directory access protocol'
 keywords:
-  - openldap
-  - ldap
   - database
-  - data
+  - db
   - directory
+  - ldap
+  - openldap
 sources:
-  - git://git.openldap.org/openldap.git
+  - https://git.openldap.org/openldap/openldap
+  - https://github.com/jp-gouin/helm-openldap
 maintainers:
-  - name: 'Jam Risser'
-    email: jam@codejam.ninja
+  - name: 'Clay Risser'
+    email: email@clayrisser.com

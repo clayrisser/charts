@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationSocket
 metadata:
-  name: {{ template "openldap.fullname" . }}
+  name: {{ template "openldap.name" . }}
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -13,8 +13,8 @@ spec:
   replications:
     - version: v1
       kind: Secret
-      name: {{ template "openldap.fullname" . }}-openldap
+      name: {{ template "openldap.name" . }}
     - version: v1
       kind: ConfigMap
-      name: {{ template "openldap.fullname" . }}-connection
+      name: {{ template "openldap.name" . }}-connection
 {{- end }}

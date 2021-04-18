@@ -17,14 +17,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
-Calculate openldap certificate
+Calculate openldap dc
 */}}
-{{- define "openldap.openldap-certificate" }}
-{{- if (empty .Values.service.openldap.tls.certificate) }}
-{{- printf "%s-openldap-cert" (include "openldap.fullname" .) }}
-{{- else }}
-{{- printf .Values.service.openldap.tls.certificate }}
-{{- end }}
+{{- define "openldap.openldap-dc" }}
+{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.domain -1) 0) (index (regexSplit "\\." .Values.config.domain -1) 1) }}
 {{- end }}
 
 {{/*
@@ -34,36 +30,8 @@ Calculate openldap hostname
 {{- if (and .Values.config.openldap.hostname (not (empty .Values.config.openldap.hostname))) }}
 {{- printf .Values.config.openldap.hostname }}
 {{- else }}
-{{- if .Values.ingress.openldap.enabled }}
-{{- printf .Values.ingress.openldap.hostname }}
-{{- else }}
-{{- printf "%s.%s.svc.cluster.local" (include "openldap.fullname" .) .Release.Namespace }}
+{{- printf "%s-openldap" (include "openldap.fullname" .) }}
 {{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate openldap base url
-*/}}
-{{- define "openldap.openldap-base-url" }}
-{{- if (and .Values.config.openldap.baseUrl (not (empty .Values.config.openldap.baseUrl))) }}
-{{- printf .Values.config.openldap.baseUrl }}
-{{- else }}
-{{- if .Values.ingress.openldap.enabled }}
-{{- $hostname := ((empty (include "openldap.openldap-hostname" .)) | ternary .Values.ingress.openldap.hostname (include "openldap.openldap-hostname" .)) }}
-{{- $protocol := (.Values.ingress.openldap.tls | ternary "https" "http") }}
-{{- printf "%s://%s" $protocol $hostname }}
-{{- else }}
-{{- printf "http://%s" (include "openldap.openldap-hostname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate openldap dc
-*/}}
-{{- define "openldap.openldap-dc" }}
-{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.openldap.domain -1) 0) (index (regexSplit "\\." .Values.config.openldap.domain -1) 1) }}
 {{- end }}
 
 {{/*

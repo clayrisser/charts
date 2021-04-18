@@ -8,14 +8,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ template "openldap.fullname" . }}-openldap-cert
+  name: openldap-cert
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  secretName: {{ template "openldap.fullname" . }}-openldap-cert
+  secretName: openldap-cert
   isCA: false
   commonName: {{ $serviceName | quote }}
   subject:

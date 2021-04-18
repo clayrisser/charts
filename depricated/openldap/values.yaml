@@ -1,52 +1,51 @@
 images:
   openldap:
     repository: osixia/openldap
-    tag: 1.5.0
+    tag: 1.3.0
   phpldapadmin:
     repository: osixia/phpldapadmin
     tag: 0.9.0
 
 config:
   clusterType: rke
-  imagePullPolicy: Always
-  updateStrategy: RollingUpdate
   debug: false
-  allowIntegration: true
+  domain: example.org
+  hashPassword: true
+  imagePullPolicy: IfNotPresent
+  organization: 'Example Inc.'
+  schema: default
+  updateStrategy: Recreate
   openldap:
-    replicas: 1
-    domain: example.org
-    hashPassword: true
-    organization: 'Example Organization'
-    arbitrarySlotsSchema: true
-    organizationalUnits: people,groups
-    schema: default
-    passwords:
-      admin:
-      config:
+    baseUrl: ''
+    hostname: ''
+    tls: true
     resources:
       enabled: defaults
       requests:
         cpu: 100m
         memory: 128Mi
       limits:
-        cpu: 500m
+        cpu: 200m
         memory: 256Mi
   phpldapadmin:
     enabled: false
+    serverAdmin: email@example.com
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
 
 service:
   openldap:
-    type: ClusterIP
+    type: NodePort
     externalTrafficPolicy: Cluster
-    tls:
-      enabled: true
-      certificate: ''
-      issuer:
-        name: selfsigned
-        dnsNames: ''
     nodePorts:
-      ldap:
-      ldaps:
+      ldap: ''
+      ldaps: ''
     lbPorts:
       ldap: 389
       ldaps: 636
@@ -54,7 +53,7 @@ service:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      http:
+      http: ''
     lbPorts:
       http: 80
 
@@ -69,16 +68,14 @@ ingress:
 
 persistence:
   accessMode: ReadWriteOnce
-  enabled: true
+  enabled: false
+  existingClaim: ''
+  size: 1Gi
   storageClass: ''
-  existingClaim:
-    openldap: ''
-  size:
-    openldap: 1Gi
   velero:
     enabled: false
     restic: true
-    schedule: '@midnight'
+    schedule: ''
     ttl: 2160h0m00s
 
 probes:
