@@ -173,7 +173,7 @@ spec:
           #PYTHON2BASH:[
             {'{{ .Release.Name }}': [
               {'server': [
-                {'host': 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha'},
+                {'host': 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-{{ template "openldap.name" . }}-openldap-stack-ha'},
               ]},
               {'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-dc" . }}'}]}
             ]}
