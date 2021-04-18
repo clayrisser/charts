@@ -21,7 +21,7 @@ Calculate openldap certificate
 */}}
 {{- define "openldap.openldap-certificate" }}
 {{- if (empty .Values.service.openldap.tls.certificate) }}
-{{- printf "%s-openldap-cert" (include "openldap.fullname" .) }}
+{{- printf "%s-cert" (include "openldap.name" .) }}
 {{- else }}
 {{- printf .Values.service.openldap.tls.certificate }}
 {{- end }}
