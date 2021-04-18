@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "kustomize-operator.releasename" . }}-kustomize-operator
+  name: {{ template "kustomize-operator.name" . }}
   labels:
-    app: {{ template "kustomize-operator.name" . }}-kustomize-operator
+    app: {{ template "kustomize-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "kustomize-operator.name" . }}-kustomize-operator
+      app: {{ template "kustomize-operator.name" . }}
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
-        app: {{ template "kustomize-operator.name" . }}-kustomize-operator
+        app: {{ template "kustomize-operator.name" . }}
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "kustomize-operator.releasename" . }}
+      serviceAccountName: {{ template "kustomize-operator.name" . }}
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -41,9 +41,9 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - {{ template "kustomize-operator.name" . }}-kustomize-operator
+                        - {{ template "kustomize-operator.name" . }}
       containers:
-        - name: {{ template "kustomize-operator.releasename" . }}-kustomize-operator
+        - name: main
           image: {{ .Values.images.kustomizeOperator.repository }}:{{ .Values.images.kustomizeOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           # resources:
@@ -54,7 +54,7 @@ spec:
           #     cpu: {{ .Values.config.kustomizeOperator.resources.limits.cpu }}
           #     memory: {{ .Values.config.kustomizeOperator.resources.limits.memory }}
           env: []
-        - name: {{ template "kustomize-operator.releasename" . }}-kubectl
+        - name: kubectl
           image: bitnami/kubectl:1.17.12
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           command:
