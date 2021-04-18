@@ -11,7 +11,7 @@ data:
   init.sh: |
     until sh /scripts/ldapadd.sh
     do
-      trying ldapadd again in 15 seconds . . .
+      echo trying ldapadd again in 15 seconds . . .
       sleep 15
     done
 
