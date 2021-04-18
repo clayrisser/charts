@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationSocket
 metadata:
-  name: {{ template "cluster-issuer.fullname" . }}
+  name: {{ template "cluster-issuer.name" . }}
   labels:
     app: {{ template "cluster-issuer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -13,5 +13,5 @@ spec:
   replications:
     - version: v1
       kind: Secret
-      name: {{ template "cluster-issuer.fullname" . }}-{{ .Values.config.ca.name }}-ca
+      name: {{ .Values.config.ca.name }}-ca
 {{- end }}
