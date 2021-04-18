@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "minio-operator.fullname" . }}-install
+  name: {{ template "minio-operator.name" . }}
   labels:
-    app: {{ template "minio-operator.name" . }}-install
+    app: {{ template "minio-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -18,10 +18,10 @@ spec:
         app: {{ template "minio-operator.name" . }}-install
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "minio-operator.fullname" . }}
+      serviceAccountName: {{ template "minio-operator.name" . }}
       restartPolicy: OnFailure
       containers:
-        - name: {{ template "minio-operator.fullname" . }}-kubectl
+        - name: kubectl
           image: codejamninja/kube-commands:0.0.2
           imagePullPolicy: Always
           command:
