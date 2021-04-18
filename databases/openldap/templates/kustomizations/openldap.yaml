@@ -19,7 +19,7 @@ spec:
         group: apps
         version: v1
         kind: StatefulSet
-        name: {{ .Release.Name }}-{{ .Release.Name }}-openldap-stack-ha
+        name: {{ template "openldap.name" . }}-openldap-stack-ha
         namespace: {{ .Release.Namespace }}
       patch: |
         - op: add
