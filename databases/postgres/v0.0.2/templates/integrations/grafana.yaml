@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "postgres.fullname" . }}-grafana
+  name: {{ template "postgres.name" . }}-grafana
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -17,21 +17,21 @@ spec:
   replications:
     - version: integreatly.org/v1alpha1
       kind: GrafanaDashboard
-      name: {{ template "postgres.fullname" . }}-details
+      name: {{ template "postgres.name" . }}-details
     - version: integreatly.org/v1alpha1
       kind: GrafanaDashboard
-      name: {{ template "postgres.fullname" . }}-backrest
+      name: {{ template "postgres.name" . }}-backrest
     - version: integreatly.org/v1alpha1
       kind: GrafanaDashboard
-      name: {{ template "postgres.fullname" . }}-crud-details
+      name: {{ template "postgres.name" . }}-crud-details
     - version: integreatly.org/v1alpha1
       kind: GrafanaDashboard
-      name: {{ template "postgres.fullname" . }}-overview
+      name: {{ template "postgres.name" . }}-overview
     - version: integreatly.org/v1alpha1
       kind: GrafanaDashboard
-      name: {{ template "postgres.fullname" . }}-prometheus-alerts
+      name: {{ template "postgres.name" . }}-prometheus-alerts
     - version: integreatly.org/v1alpha1
       kind: GrafanaDataSource
-      name: {{ template "postgres.fullname" . }}
+      name: {{ template "postgres.name" . }}
   kustomization: {}
 {{- end }}
