@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "postgres.fullname" . }}-pgadmin
+  name: pgadmin
   annotations:
     {{- if (eq .Values.config.clusterType "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing
@@ -28,7 +28,7 @@ spec:
         paths:
           - path: {{ .Values.ingress.pgadmin.path }}
             backend:
-              serviceName: {{ template "postgres.fullname" . }}-pgadmin
+              serviceName: pgadmin
               servicePort: http
   {{- if .Values.ingress.pgadmin.tls }}
   tls:

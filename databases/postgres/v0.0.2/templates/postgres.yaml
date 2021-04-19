@@ -1,7 +1,7 @@
 apiVersion: crunchydata.com/v1
 kind: Pgcluster
 metadata:
-  name: {{ template "postgres.fullname" . }}
+  name: {{ template "postgres.name" . }}
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

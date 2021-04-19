@@ -2,21 +2,21 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationSocket
 metadata:
-  name: {{ template "postgres.fullname" . }}
+  name: {{ template "postgres.name" . }}
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  appendName: {{ .Release.Name }}
+  appendName: {{ .Release.Namespace }}
   replications:
     - version: v1
       kind: Secret
-      name: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
+      name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
     - version: v1
       kind: ConfigMap
-      name: {{ template "postgres.fullname" . }}-connection
+      name: {{ template "postgres.name" . }}-connection
   hooks:
     - job:
         backoffLimit: 1
@@ -48,18 +48,18 @@ spec:
                   - name: PGPASSFILE
                     value: .pgpass
                   - name: HOSTNAME
-                    value: {{ template "postgres.fullname" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
+                    value: {{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
                   - name: USERNAME
                     value: {{ .Values.config.username }}
                   - name: PASSWORD
                     valueFrom:
                       secretKeyRef:
-                        name: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
+                        name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
                         key: password
                   - name: DATABASE
                     valueFrom:
                       configMapKeyRef:
-                        name: {{ template "postgres.fullname" . }}-socket
+                        name: {{ template "postgres.name" . }}-socket
                         key: database
                   - name: PORT
                     value: '5432'

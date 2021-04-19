@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "gitlab.fullname" . }}-postgres
+  name: {{ template "gitlab.fullname" . }}. }}-postgres
   labels:
     app: {{ template "gitlab.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -99,7 +99,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $namespace }}-postgres-socket
+  name: {{ $name }}-socket
   namespace: {{ .Release.Namespace }}
 data:
   database: {{ .Values.config.postgres.database }}

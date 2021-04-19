@@ -129,7 +129,7 @@ spec:
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "gitlab.fullname" . }}-keycloak
+  name: keycloak
   labels:
     app: {{ template "gitlab.name" . }}-keycloak
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -163,14 +163,14 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ template "gitlab.fullname" . }}-keycloak
+        name: keycloak
         namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
           kind: Secret
           metadata:
-            name: {{ template "gitlab.fullname" . }}-keycloak
+            name: keycloak
             namespace: {{ .Release.Namespace }}
           data:
             adminPassword: "$(KEYCLOAK_ADMIN_PASSWORD)"
@@ -203,7 +203,7 @@ spec:
                       - name: ADMIN_PASSWORD
                         valueFrom:
                           secretKeyRef:
-                            name: {{ template "gitlab.fullname" . }}-keycloak
+                            name: keycloak
                             key: adminPassword
                       - name: CLIENT_ID
                         value: {{ template "gitlab.keycloak-client-id" . }}
