@@ -45,7 +45,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ $name }}-openldap-{{ $namespace }}
+        name: {{ $name }}-openldap
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
