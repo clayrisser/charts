@@ -115,6 +115,6 @@ spec:
         objref:
           apiVersion: v1
           kind: Secret
-          name: {{ $name }}-openldap-{{ $namespace }}
+          name: {{ $name }}-openldap
           namespace: {{ .Release.Namespace }}
 {{- end }}
