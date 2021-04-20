@@ -18,7 +18,7 @@ spec:
   replications:
     - version: v1
       kind: ConfigMap
-      name: {{ $namespace }}-postgres-socket
+      name: {{ $name }}-socket
   kustomization:
     configuration:
       varReference:
