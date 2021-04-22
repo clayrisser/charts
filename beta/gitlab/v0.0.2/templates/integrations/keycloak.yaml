@@ -2,7 +2,7 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
-  name: {{ template "gitlab.fullname" . }}
+  name: {{ template "gitlab.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "gitlab.name" . }}
@@ -145,7 +145,7 @@ spec:
     - group: keycloak.org
       version: v1alpha1
       kind: KeycloakClient
-      name: {{ template "gitlab.fullname" . }}
+      name: {{ template "gitlab.name" . }}
   kustomization:
     configuration:
       varReference:
@@ -179,7 +179,7 @@ spec:
           apiVersion: batch/v1
           kind: Job
           metadata:
-            name: {{ template "gitlab.fullname" . }}-keycloak-client
+            name: {{ template "gitlab.name" . }}-keycloak-client
             namespace: {{ .Release.Namespace }}
           spec:
             template:
@@ -190,7 +190,7 @@ spec:
               spec:
                 restartPolicy: OnFailure
                 containers:
-                  - name: {{ template "gitlab.fullname" . }}-job
+                  - name: job
                     image: atxwebdesigner/keycloak-gitlab-client:0.0.1
                     imagePullPolicy: Always
                     env:
@@ -208,7 +208,7 @@ spec:
                       - name: CLIENT_ID
                         value: {{ template "gitlab.keycloak-client-id" . }}
                       - name: OMNIAUTH_SECRET
-                        value: {{ template "gitlab.fullname" . }}-omniauth
+                        value: {{ template "gitlab.name" . }}-omniauth
                       - name: NAMESPACE
                         value: {{ .Release.Namespace }}
                   - name: keycloak-gitlab-client-kubectl

@@ -2,7 +2,7 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: {{ template "gitlab.fullname" . }}
+  name: {{ template "gitlab.name" . }}
   labels:
     app: {{ template "gitlab.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -18,7 +18,7 @@ spec:
 apiVersion: replicator.siliconhills.dev/v1alpha1
 kind: Replicator
 metadata:
-  name: {{ template "gitlab.fullname" . }}-backup
+  name: backup
   labels:
     app: {{ template "gitlab.name" . }}-backup
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -28,9 +28,9 @@ spec:
  from:
    apiVersion: velero.io/v1
    kind: Schedule
-   name: {{ template "gitlab.fullname" . }}
+   name: {{ template "gitlab.name" . }}
    namespace: {{ .Release.Namespace }}
  to:
-   name: {{ template "gitlab.fullname" . }}.{{ .Release.Namespace }}
+   name: {{ template "gitlab.name" . }}.{{ .Release.Namespace }}
    namespace: velero
 {{- end }}
