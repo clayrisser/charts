@@ -16,7 +16,7 @@ spec:
     ref: v4.6.1
     path: installers/metrics/helm
   git:
-    timeout: 60s
+    timeout: 120s
   values:
     fullnameOverride: ''
     rbac:
