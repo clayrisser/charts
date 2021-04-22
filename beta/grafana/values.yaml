@@ -9,7 +9,7 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   resources:
-    enabled: 'false'
+    enabled: defaults
     requests:
       cpu: 100m
       memory: 128Mi
@@ -39,7 +39,7 @@ ingress:
       name: letsencrypt-staging
 
 persistence:
-  enabled: false
+  enabled: true
   accessMode: ReadWriteOnce
   size:
     grafana: 2Gi
