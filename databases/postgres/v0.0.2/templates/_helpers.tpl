@@ -63,5 +63,5 @@ Calculate pgadmin base url
 Grafana datasource name
 */}}
 {{- define "postgres.grafana-datasource" }}
-{{- printf "%s-prometheus-%s" (include "postgres.fullname" .) .Release.Namespace }}
+{{- printf "%s-prometheus-%s" (include "postgres.name" .) .Release.Namespace }}
 {{- end }}
