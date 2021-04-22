@@ -13,9 +13,9 @@ spec:
   helmVersion: v3
   timeout: 1200
   chart:
-    git: https://github.com/CrunchyData/postgres-operator.git
+    git: https://github.com/clayrisser/crunchydb-metrics-chart.git
     ref: v4.6.1
-    path: installers/metrics/helm
+    path: .
   git:
     timeout: 60s
   values:
