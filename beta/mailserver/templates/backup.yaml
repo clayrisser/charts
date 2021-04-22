@@ -2,7 +2,7 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: {{ template "mailserver.fullname" . }}
+  name: {{ template "mailserver.name" . }}
   labels:
     app: {{ template "mailserver.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -14,23 +14,4 @@ spec:
     includedNamespaces:
       - {{ .Release.Namespace }}
     ttl: {{ .Values.persistence.velero.ttl | quote }}
----
-apiVersion: replicator.siliconhills.dev/v1alpha1
-kind: Replicator
-metadata:
-  name: {{ template "mailserver.fullname" . }}-backup
-  labels:
-    app: {{ template "mailserver.name" . }}-backup
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
- from:
-   apiVersion: velero.io/v1
-   kind: Schedule
-   name: {{ template "mailserver.fullname" . }}
-   namespace: {{ .Release.Namespace }}
- to:
-   name: {{ template "mailserver.fullname" . }}.{{ .Release.Namespace }}
-   namespace: velero
 {{- end }}

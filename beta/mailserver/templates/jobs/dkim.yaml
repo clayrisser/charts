@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "mailserver.fullname" . }}-dkim
+  name: dkim
   labels:
     app: {{ template "mailserver.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -18,10 +18,10 @@ spec:
         app: {{ template "mailserver.name" . }}
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "mailserver.fullname" . }}
+      serviceAccountName: {{ template "mailserver.name" . }}
       restartPolicy: OnFailure
       containers:
-        - name: {{ template "mailserver.fullname" . }}-kubectl
+        - name: kubectl
           image: codejamninja/kube-commands:0.0.2
           imagePullPolicy: Always
           command:
