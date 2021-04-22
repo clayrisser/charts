@@ -11,12 +11,13 @@ metadata:
 spec:
   forceUpgrade: false
   helmVersion: v3
+  timeout: 1200
   chart:
     git: https://github.com/CrunchyData/postgres-operator.git
     ref: v4.6.1
     path: installers/metrics/helm
   git:
-    timeout: 120s
+    timeout: 60s
   values:
     fullnameOverride: ''
     rbac:
