@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "keycloak.fullname" . }}-postgres
+  name: {{ template "keycloak.name" . }}-postgres
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -55,7 +55,7 @@ spec:
       - group: keycloak.org
         version: v1alpha1
         kind: Keycloak
-        name: {{ template "keycloak.fullname" . }}
+        name: {{ template "keycloak.name" . }}
         namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
@@ -81,7 +81,7 @@ spec:
           apiVersion: keycloak.org/v1alpha1
           kind: Keycloak
           metadata:
-            name: {{ template "keycloak.fullname" . }}
+            name: {{ template "keycloak.name" . }}
             namespace: {{ .Release.Namespace }}
           spec:
             externalDatabase:

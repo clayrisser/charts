@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: {{ template "keycloak.fullname" . }}
+  name: {{ template "keycloak.name" . }}
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -14,7 +14,7 @@ spec:
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: {{ template "keycloak.fullname" . }}
+  name: {{ template "keycloak.name" . }}
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

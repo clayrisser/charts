@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationSocket
 metadata:
-  name: {{ template "keycloak.fullname" . }}
+  name: {{ template "keycloak.name" . }}
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -14,7 +14,7 @@ spec:
   replications:
     - version: v1
       kind: ConfigMap
-      name: {{ template "keycloak.fullname" . }}-connection
+      name: {{ template "keycloak.name" . }}-connection
     - version: v1
       kind: Secret
       name: credential-{{ .Release.Name }}-keycloak

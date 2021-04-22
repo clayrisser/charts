@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "keycloak.fullname" . }}-cert-manager
+  name: {{ template "keycloak.name" . }}-cert-manager
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

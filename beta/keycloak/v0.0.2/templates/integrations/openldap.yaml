@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "keycloak.fullname" . }}-openldap
+  name: {{ template "keycloak.name" . }}-openldap
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -37,7 +37,7 @@ spec:
       - group: keycloak.org
         version: v1alpha1
         kind: KeycloakRealm
-        name: {{ template "keycloak.fullname" . }}
+        name: {{ template "keycloak.name" . }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: ConfigMap
@@ -49,14 +49,14 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ template "keycloak.fullname" . }}-keycloak-vault
+        name: {{ template "keycloak.name" . }}-vault
         namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
           kind: Secret
           metadata:
-            name: {{ template "keycloak.fullname" . }}-keycloak-vault
+            name: {{ template "keycloak.name" . }}-vault
             namespace: {{ .Release.Namespace }}
           data:
             main_bindCredential: $(LDAP_PASSWORD)
@@ -64,7 +64,7 @@ spec:
           group: keycloak.org
           version: v1alpha1
           kind: KeycloakRealm
-          name: {{ template "keycloak.fullname" . }}
+          name: {{ template "keycloak.name" . }}
           namespace: {{ .Release.Namespace }}
         patch: |
           - op: replace
