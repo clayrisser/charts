@@ -236,6 +236,6 @@ spec:
         objref:
           apiVersion: v1
           kind: Secret
-          name: credential-{{ $namespace }}-keycloak-{{ $namespace }}
+          name: credential-{{ $name }}
           namespace: {{ .Release.Namespace }}
 {{- end }}
