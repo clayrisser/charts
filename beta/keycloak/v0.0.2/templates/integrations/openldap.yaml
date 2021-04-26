@@ -45,7 +45,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ $name }}-openldap
+        name: openldap-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
@@ -115,6 +115,6 @@ spec:
         objref:
           apiVersion: v1
           kind: Secret
-          name: {{ $name }}-openldap
+          name: openldap-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 {{- end }}
