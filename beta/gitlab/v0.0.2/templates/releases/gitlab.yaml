@@ -260,10 +260,10 @@ spec:
           password: {}
       kas:
         enabled: false
-      # shell:
-      #   port: 22
-      #   authToken: {}
-      #   hostKeys: {}
+      shell:
+        port: 22
+        authToken: {}
+        hostKeys: {}
       railsSecrets: {}
       rails:
         bootsnap:
@@ -685,8 +685,7 @@ spec:
         enabled: true
         service:
           internalPort: 2222
-          type: NodePort
-          nodePort: 22
+          type: ClusterIP
       webservice:
         ingress:
           enabled: {{ .Values.ingress.gitlab.enabled }}
