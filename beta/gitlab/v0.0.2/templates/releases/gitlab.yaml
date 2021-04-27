@@ -261,6 +261,7 @@ spec:
       kas:
         enabled: false
       shell:
+        port: 22
         authToken: {}
         hostKeys: {}
       railsSecrets: {}
@@ -680,6 +681,11 @@ spec:
         antiAffinityLabels:
           matchLabels:
             app: 'gitaly'
+      gitlab-shell:
+        enabled: true
+        service:
+          internalPort: 2222
+          type: ClusterIP
       webservice:
         ingress:
           enabled: {{ .Values.ingress.gitlab.enabled }}
