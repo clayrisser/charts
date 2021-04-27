@@ -684,7 +684,7 @@ spec:
       gitlab-shell:
         enabled: true
         service:
-          internalPort: 22
+          internalPort: 2222
           type: ClusterIP
       webservice:
         ingress:
