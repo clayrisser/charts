@@ -18,7 +18,6 @@ spec:
         app: {{ template "mailserver.name" . }}
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "mailserver.name" . }}
       restartPolicy: OnFailure
       containers:
         - name: kubectl
