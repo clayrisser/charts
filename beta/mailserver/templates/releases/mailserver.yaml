@@ -176,7 +176,7 @@ spec:
       annotations:
         backup.velero.io/backup-volumes: data
       {{- end }}
-{{- if .Values.config.mailserver.resources.enabled }}
+{{- if (and .Values.config.mailserver.resources.enabled (not (eq .Values.config.mailserver.resources.enabled "false"))) }}
     resources:
       requests:
 {{ toYaml .Values.config.mailserver.resources.requests | indent 8 }}
