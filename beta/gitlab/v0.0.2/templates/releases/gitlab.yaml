@@ -261,6 +261,7 @@ spec:
       kas:
         enabled: false
       shell:
+        port: 22
         authToken: {}
         hostKeys: {}
       railsSecrets: {}
