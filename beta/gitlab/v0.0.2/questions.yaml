@@ -378,6 +378,18 @@ questions:
         type: string
         required: true
         label: 'gitlab size'
+      - variable: persistence.existingClaim.runner
+        description: ''
+        type: string
+        required: false
+        label: 'runner existing claim'
+        show_if: config.gitlabRunner.enable=true
+      - variable: persistence.size.runner
+        description: ''
+        type: string
+        required: true
+        label: 'runner size'
+        show_if: config.gitlabRunner.enable=true
       - variable: persistence.velero.enabled
         description: ''
         type: boolean
