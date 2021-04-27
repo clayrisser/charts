@@ -21,7 +21,7 @@ config:
   mailserver:
     replicas: 1
     resources:
-      enabled: 'false'
+      enabled: defaults
       requests:
         cpu: '1'
         memory: 1536Mi
