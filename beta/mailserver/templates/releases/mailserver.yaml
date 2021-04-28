@@ -94,7 +94,7 @@ spec:
         ldap_query_filter_user: {{ .Values.config.ldap.queryFilterUser | quote }}
         ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
         ldap_server_host: ldap{{ .Values.config.ldap.tls | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}:{{ .Values.config.ldap.tls | ternary "636" "389" }}
-        ldap_start_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote }}
+        ldap_start_tls: 'no'
         one_dir: 1
         pflogsumm_recipient:
         pflogsumm_trigger: {{ (eq .Values.config.reports.pflogsummTrigger "none") | ternary "" .Values.config.reports.pflogsummTrigger }}
