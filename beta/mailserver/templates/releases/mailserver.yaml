@@ -71,7 +71,8 @@ spec:
         default_relay_host:
         dms_debug: {{ .Values.config.debug | ternary "1" "0" }}
         dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
-        dovecot_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote }}
+        dovecot_tls: 'no'
+        # dovecot_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote }}
         dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
         enable_clamav: {{ .Values.config.clamav.enabled | ternary "1" "0" }}
         enable_fail2ban: {{ .Values.config.fail2ban.enabled | ternary "1" "0" }}
@@ -122,7 +123,7 @@ spec:
         saslauthd_ldap_filter: {{ .Values.config.ldap.saslFilter | quote }}
         saslauthd_ldap_password: {{ .Values.config.ldap.password | quote }}
         saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
-        saslauthd_ldap_server: {{ .Values.config.ldap.hostname | quote }}
+        saslauthd_ldap_server: ldap{{ .Values.config.ldap.tls | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}:{{ .Values.config.ldap.tls | ternary "636" "389" }}
         saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" }}
         saslauthd_mech_options: ''
         saslauthd_mechanisms: {{ .Values.config.ldap.enabled | ternary "ldap" "" }}
