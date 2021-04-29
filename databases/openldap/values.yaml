@@ -40,7 +40,7 @@ service:
     externalTrafficPolicy: Cluster
     tls:
       enabled: true
-      enforce: true
+      enforce: false
       certificate: ''
       issuer:
         name: selfsigned
