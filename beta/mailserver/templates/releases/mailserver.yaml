@@ -70,7 +70,7 @@ spec:
       dockermailserver:
         default_relay_host:
         dms_debug: {{ .Values.config.debug | ternary "1" "0" }}
-        dovecot_auth_bind: 'yes'
+        dovecot_auth_bind: 'no'
         dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
         dovecot_tls:
         dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
@@ -144,8 +144,8 @@ spec:
         strategy:
           type: {{ .Values.config.updateStrategy | quote }}
         # TODO: possibly incorrect
-        dovecot_pass_attr: {{ .Values.config.dovecot.passAttrs | quote }}
-        dovecot_user_attr: {{ .Values.config.dovecot.userAttrs | quote }}
+        # dovecot_pass_attr: {{ .Values.config.dovecot.passAttrs | quote }}
+        # dovecot_user_attr: {{ .Values.config.dovecot.userAttrs | quote }}
         override_hostname: {{ template "mailserver.mailserver-domain" . }}
         # permit_docker:
         permit_docker: host
