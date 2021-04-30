@@ -75,7 +75,7 @@ spec:
         dovecot_auth_bind: 'yes'
         dovecot_pass_attrs: {{ .Values.config.dovecot.passAttrs | quote }}
         dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
-        dovecot_user_attrs: '=uid=5000,=gid=5000{{ .Values.config.dovecot.userAttrs | ternary (printf ",%s" .Values.config.dovecot.userAttrs) "" }}'
+        dovecot_user_attrs: '=uid=5000,=gid=5000{{ (empty .Values.config.dovecot.userAttrs) | ternary "" (printf ",%s" .Values.config.dovecot.userAttrs) }}'
         dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
         {{- end }}
         enable_clamav: {{ .Values.config.clamav.enabled | ternary "1" "0" }}
