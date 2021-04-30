@@ -71,8 +71,10 @@ spec:
         default_relay_host:
         dms_debug: {{ .Values.config.debug | ternary "1" "0" }}
         dovecot_auth_bind: 'yes'
+        dovecot_pass_attr: {{ .Values.config.dovecot.passAttrs | quote }}
         dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
         dovecot_tls:
+        dovecot_user_attr: {{ .Values.config.dovecot.userAttrs | quote }}
         dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
         enable_clamav: {{ .Values.config.clamav.enabled | ternary "1" "0" }}
         enable_fail2ban: {{ .Values.config.fail2ban.enabled | ternary "1" "0" }}
@@ -144,8 +146,6 @@ spec:
         strategy:
           type: {{ .Values.config.updateStrategy | quote }}
         # TODO: possibly incorrect
-        # dovecot_pass_attr: {{ .Values.config.dovecot.passAttrs | quote }}
-        # dovecot_user_attr: {{ .Values.config.dovecot.userAttrs | quote }}
         override_hostname: {{ template "mailserver.mailserver-domain" . }}
         # permit_docker:
         permit_docker: host

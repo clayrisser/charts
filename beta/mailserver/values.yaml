@@ -49,7 +49,7 @@ config:
     # mailboxFormat: maildir
     passAttrs: ''
     passFilter: '(&(objectClass=PostfixBookMailAccount)(uid=%n))'
-    userAttrs: ''
+    userAttrs: '=uid=5000,=gid=5000'
     userFilter: '(&(objectClass=PostfixBookMailAccount)(uid=%n))'
   proxy:
     trustedNetworks: '10.0.0.0/8 192.168.0.0/16 172.16.0.0/16 127.0.0.0/8'
