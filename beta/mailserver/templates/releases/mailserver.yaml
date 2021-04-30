@@ -84,7 +84,7 @@ spec:
         enable_pop3: {{ .Values.config.pop3.enabled | ternary "1" "0" }}
         enable_postfix_virtual_transport:
         enable_postgrey: {{ .Values.config.postgrey.enabled | ternary "1" "0" }}
-        enable_saslauthd: {{ .Values.config.ldap.enabled | ternary "1" "0" }}
+        enable_saslauthd: '0'
         enable_spamassassin: {{ .Values.config.spamassassin.enabled | ternary "1" "0" }}
         enable_srs: {{ .Values.config.srs.enabled | ternary "1" "0" }}
         fetchmail_poll: {{ .Values.config.fetchmail.poll }}
