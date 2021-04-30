@@ -70,7 +70,7 @@ spec:
       dockermailserver:
         default_relay_host:
         dms_debug: {{ .Values.config.debug | ternary "1" "0" }}
-        dovecot_auth_bind: 'no'
+        dovecot_auth_bind: 'yes'
         dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
         dovecot_tls:
         dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
