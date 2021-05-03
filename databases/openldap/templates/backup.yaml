@@ -2,9 +2,9 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: {{ template "openldap.fullname" . }}
+  name: {{ template "openldap.name" . }}
   labels:
-    app: {{ .Release.Name }}
+    app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

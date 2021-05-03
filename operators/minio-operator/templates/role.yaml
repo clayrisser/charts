@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "minio-operator.fullname" . }}
+  name: {{ template "minio-operator.name" . }}
   labels:
     app: {{ template "minio-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -17,13 +17,13 @@ roleRef:
   name: cluster-admin
 subjects:
   - kind: ServiceAccount
-    name: {{ template "minio-operator.fullname" . }}
+    name: {{ template "minio-operator.name" . }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ template "minio-operator.fullname" . }}
+  name: {{ template "minio-operator.name" . }}
   labels:
     app: {{ template "minio-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

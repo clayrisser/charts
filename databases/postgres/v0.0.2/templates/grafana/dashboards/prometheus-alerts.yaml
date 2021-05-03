@@ -2,7 +2,7 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
-  name: {{ template "postgres.fullname" . }}-prometheus-alerts
+  name: {{ .Release.Namespace }}-prometheus-alerts
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -10,8 +10,8 @@ metadata:
     heritage: {{ .Release.Service }}
     metrics: grafana
 spec:
-  name: {{ template "postgres.fullname" . }}-prometheus-alerts
-  customFolderName: {{ template "postgres.fullname" . }}.{{ .Release.Namespace }}
+  name: {{ .Release.Namespace }}-prometheus-alerts
+  customFolderName: {{ template "postgres.name" . }}.{{ .Release.Namespace }}
   url: https://raw.githubusercontent.com/silicon-hills/grafana-dashboards/main/postgres/Prometheus_Alerts.json
   datasources:
     - inputName: PROMETHEUS

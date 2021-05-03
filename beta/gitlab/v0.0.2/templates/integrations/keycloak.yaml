@@ -2,7 +2,7 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
-  name: {{ template "gitlab.fullname" . }}
+  name: {{ template "gitlab.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "gitlab.name" . }}
@@ -129,7 +129,7 @@ spec:
 apiVersion: integration.siliconhills.dev/v1alpha1
 kind: IntegrationPlug
 metadata:
-  name: {{ template "gitlab.fullname" . }}-keycloak
+  name: keycloak
   labels:
     app: {{ template "gitlab.name" . }}-keycloak
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -145,7 +145,7 @@ spec:
     - group: keycloak.org
       version: v1alpha1
       kind: KeycloakClient
-      name: {{ template "gitlab.fullname" . }}
+      name: {{ template "gitlab.name" . }}
   kustomization:
     configuration:
       varReference:
@@ -159,18 +159,18 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: credential-{{ $namespace }}-keycloak-{{ $namespace }}
+        name: credential-keycloak-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: {{ template "gitlab.fullname" . }}-keycloak
+        name: keycloak
         namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: v1
           kind: Secret
           metadata:
-            name: {{ template "gitlab.fullname" . }}-keycloak
+            name: keycloak
             namespace: {{ .Release.Namespace }}
           data:
             adminPassword: "$(KEYCLOAK_ADMIN_PASSWORD)"
@@ -179,7 +179,7 @@ spec:
           apiVersion: batch/v1
           kind: Job
           metadata:
-            name: {{ template "gitlab.fullname" . }}-keycloak-client
+            name: {{ template "gitlab.name" . }}-keycloak-client
             namespace: {{ .Release.Namespace }}
           spec:
             template:
@@ -190,7 +190,7 @@ spec:
               spec:
                 restartPolicy: OnFailure
                 containers:
-                  - name: {{ template "gitlab.fullname" . }}-job
+                  - name: job
                     image: atxwebdesigner/keycloak-gitlab-client:0.0.1
                     imagePullPolicy: Always
                     env:
@@ -203,12 +203,12 @@ spec:
                       - name: ADMIN_PASSWORD
                         valueFrom:
                           secretKeyRef:
-                            name: {{ template "gitlab.fullname" . }}-keycloak
+                            name: keycloak
                             key: adminPassword
                       - name: CLIENT_ID
                         value: {{ template "gitlab.keycloak-client-id" . }}
                       - name: OMNIAUTH_SECRET
-                        value: {{ template "gitlab.fullname" . }}-omniauth
+                        value: {{ template "gitlab.name" . }}-omniauth
                       - name: NAMESPACE
                         value: {{ .Release.Namespace }}
                   - name: keycloak-gitlab-client-kubectl
@@ -236,6 +236,6 @@ spec:
         objref:
           apiVersion: v1
           kind: Secret
-          name: credential-{{ $namespace }}-keycloak-{{ $namespace }}
+          name: credential-keycloak-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 {{- end }}

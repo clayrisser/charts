@@ -2,7 +2,7 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ .Release.Name }}-metrics
+  name: metrics
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -11,10 +11,11 @@ metadata:
 spec:
   forceUpgrade: false
   helmVersion: v3
+  timeout: 1200
   chart:
-    git: https://github.com/CrunchyData/postgres-operator.git
+    git: https://github.com/clayrisser/crunchydb-metrics-chart.git
     ref: v4.6.1
-    path: installers/metrics/helm
+    path: .
   git:
     timeout: 60s
   values:
@@ -32,7 +33,7 @@ spec:
     alertmanager_install: {{ .Values.config.metrics.alertmanager.enabled | quote }}
     alertmanager_log_level: info
     alertmanager_port: '9093'
-    alertmanager_service_name: {{ template "postgres.fullname" . }}-alertmanager
+    alertmanager_service_name: {{ template "postgres.name" . }}-alertmanager
     alertmanager_service_type: ClusterIP
     alertmanager_storage_access_mode: {{ .Values.persistence.accessMode | quote }}
     alertmanager_storage_class_name: {{ .Values.persistence.storageClass | quote }}
@@ -48,7 +49,7 @@ spec:
     grafana_datasources_custom_config: ''
     grafana_install: {{ (empty .Values.config.metrics.grafana.integration) | quote }}
     grafana_port: '3000'
-    grafana_service_name: {{ template "postgres.fullname" . }}-grafana
+    grafana_service_name: {{ template "postgres.name" . }}-grafana
     grafana_service_type: ClusterIP
     grafana_storage_access_mode: {{ .Values.persistence.accessMode | quote }}
     grafana_storage_class_name: {{ .Values.persistence.storageClass | quote }}
@@ -61,7 +62,7 @@ spec:
     prometheus_custom_config: ''
     prometheus_install: 'true'
     prometheus_port: '9090'
-    prometheus_service_name: {{ template "postgres.fullname" . }}-prometheus
+    prometheus_service_name: {{ template "postgres.name" . }}-prometheus
     prometheus_service_type: ClusterIP
     prometheus_storage_access_mode: {{ .Values.persistence.accessMode | quote }}
     prometheus_storage_class_name: {{ .Values.persistence.storageClass | quote }}

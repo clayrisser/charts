@@ -1,0 +1,422 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterType
+    default: rke
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: Recreate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.hashPassword
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'hash password'
+    group: Config
+  - variable: config.schema
+    default: default
+    description: ''
+    type: enum
+    options:
+      - default
+      - postfix-book
+    required: true
+    label: schema
+    group: Config
+  - variable: config.organization
+    default: 'Example Inc.'
+    description: ''
+    type: string
+    required: true
+    label: organization
+    group: Config
+  - variable: config.domain
+    default: example.org
+    description: ''
+    type: string
+    required: true
+    label: domain
+    group: Config
+  - variable: config.adminPassword
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: 'admin password'
+    group: Config
+  - variable: config.configPassword
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: 'config password'
+    group: Config
+  - variable: config.openldap.tls
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'openldap tls'
+    group: Config
+  - variable: config.openldap.hostname
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'openldap hostname'
+    group: Config
+  - variable: config.openldap.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.openldap.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.openldap.resources.requests.memory
+        default: 1.5Gi
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.openldap.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.openldap.resources.limits.memory
+        default: 1.7Gi
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+# PHPLdapAdmin
+  - variable: config.phpldapadmin.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: PHPLdapAdmin
+    subquestions:
+      - variable: config.phpldapadmin.serverAdmin
+        default: email@example.com
+        description: ''
+        type: string
+        required: false
+        label: 'server admin'
+        group: PHPLdapAdmin
+  - variable: config.phpldapadmin.resources.enabled
+    default: false
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'phpldapadmin resources enabled'
+    show_subquestion_if: custom
+    show_if: config.phpldapadmin.enabled=true
+    group: PHPLdapAdmin
+    subquestions:
+      - variable: config.phpldapadmin.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpldapadmin.enabled=true
+        label: 'phpldapadmin resources requests cpu'
+      - variable: config.phpldapadmin.resources.requests.memory
+        default: 1.5Gi
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpldapadmin.enabled=true
+        label: 'phpldapadmin resources requests memory'
+      - variable: config.phpldapadmin.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpldapadmin.enabled=true
+        label: 'phpldapadmin resources limits cpu'
+      - variable: config.phpldapadmin.resources.limits.memory
+        default: 1.7Gi
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpldapadmin.enabled=true
+        label: 'phpldapadmin resources limits memory'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        default: ''
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        default: '2160h0m00s'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
+        group: Persistence
+
+# Services and Load Balancing
+  - variable: ingress.phpldapadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'phpldapadmin ingress enabled'
+    show_if: config.phpldapadmin.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpldapadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.phpldapadmin.enabled=true
+        required: true
+        label: 'phpldapadmin ingress hostname'
+      - variable: ingress.phpldapadmin.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.phpldapadmin.tls=true&&config.phpldapadmin.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpldapadmin ingress issuer name'
+      - variable: ingress.phpldapadmin.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.phpldapadmin.tls=true&&ingress.phpldapadmin.issuer.name=none&&config.phpldapadmin.enabled=true
+        required: false
+        label: 'phpldapadmin ingress certificate'
+  - variable: service.phpldapadmin.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'phpldapadmin service type'
+    group: 'Services and Load Balancing'
+  - variable: service.phpldapadmin.nodePorts.http
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.phpldapadmin.type=NodePort&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
+    label: 'phpldapadmin http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.phpldapadmin.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    required: true
+    show_if: service.phpldapadmin.type=LoadBalancer&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
+    label: 'phpldapadmin http lb port'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.type
+    default: NodePort
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'openldap service type'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.nodePorts.ldap
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.openldap.type=NodePort
+    label: 'openldap ldap node port'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.lbPorts.ldap
+    default: 389
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.openldap.type=LoadBalancer
+    label: 'openldap ldap lb port'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.nodePorts.ldaps
+    default: ''
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.openldap.type=NodePort&&config.openldap.tls=true
+    label: 'openldap ldaps node port'
+    group: 'Services and Load Balancing'
+  - variable: service.openldap.lbPorts.ldaps
+    default: 636
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.openldap.type=LoadBalancer&&config.openldap.tls=true
+    label: 'openldap ldaps lb port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.openldap.repository
+    default: osixia/openldap
+    description: ''
+    type: string
+    required: true
+    label: 'openldap repository'
+    group: Images
+  - variable: images.openldap.tag
+    default: 1.3.0
+    description: ''
+    type: string
+    required: true
+    label: 'openldap tag'
+    group: Images
+  - variable: images.phpldapadmin.repository
+    default: osixia/phpldapadmin
+    description: ''
+    type: string
+    required: true
+    show_if: config.phpldapadmin.enabled=true
+    label: 'phpldapadmin repository'
+    group: Images
+  - variable: images.phpldapadmin.tag
+    default: 0.9.0
+    description: ''
+    type: string
+    required: true
+    show_if: config.phpldapadmin.enabled=true
+    label: 'phpldapadmin tag'
+    group: Images

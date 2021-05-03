@@ -2,7 +2,7 @@
 apiVersion: kustomize.siliconhills.dev/v1alpha1
 kind: Kustomization
 metadata:
-  name: {{ template "keycloak.fullname" . }}-ingress
+  name: {{ template "keycloak.name" . }}-ingress
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

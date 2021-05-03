@@ -98,8 +98,10 @@ persistence:
   storageClass: ''
   existingClaim:
     gitlab: ''
+    runner: ''
   size:
     gitlab: 1Gi
+    runner: 1Gi
   velero:
     enabled: false
     restic: true

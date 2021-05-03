@@ -1,7 +1,7 @@
 apiVersion: crunchydata.com/v1
 kind: Pgcluster
 metadata:
-  name: {{ template "postgres.fullname" . }}
+  name: {{ template "postgres.name" . }}
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -9,18 +9,18 @@ metadata:
     heritage: {{ .Release.Service }}
     autofail: 'true'
     crunchy-pgbadger: 'false'
-    crunchy-pgha-scope: {{ template "postgres.fullname" . }}
+    crunchy-pgha-scope: {{ template "postgres.name" . }}
     crunchy-postgres-exporter: {{ .Values.config.metrics.enabled | quote }}
-    deployment-name: {{ template "postgres.fullname" . }}
-    name: {{ template "postgres.fullname" . }}
-    pg-cluster: {{ template "postgres.fullname" . }}
+    deployment-name: {{ template "postgres.name" . }}
+    name: {{ template "postgres.name" . }}
+    pg-cluster: {{ template "postgres.name" . }}
     pg-pod-anti-affinity: ''
     pgo-backrest: 'true'
     pgo-version: {{ .Chart.AppVersion | quote }}
     pgouser: admin
   annotations:
-    current-primary: {{ template "postgres.fullname" . }}
-    primary-deployment: {{ template "postgres.fullname" . }}
+    current-primary: {{ template "postgres.name" . }}
+    primary-deployment: {{ template "postgres.name" . }}
 spec:
   ArchiveStorage:
     accessmode: {{ .Values.persistence.accessMode | quote }}
@@ -41,7 +41,7 @@ spec:
   PrimaryStorage:
     accessmode: {{ .Values.persistence.accessMode | quote }}
     matchLabels: ''
-    name: {{ template "postgres.fullname" . }}
+    name: {{ template "postgres.name" . }}
     size: {{ .Values.persistence.size.primary | quote }}
     storageclass: {{ .Values.persistence.storageClass | quote }}
     storagetype: dynamic
@@ -86,9 +86,9 @@ spec:
   ccpimage: {{ .Values.images.postgres.repository | quote }}
   ccpimageprefix: {{ .Values.images.postgres.registry | quote }}
   ccpimagetag: {{ .Values.images.postgres.tag | quote }}
-  clustername: {{ template "postgres.fullname" . }}
+  clustername: {{ template "postgres.name" . }}
   {{- if .Values.config.metrics.enabled }}
-  collectSecretName: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
+  collectSecretName: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
   {{- end }}
   customconfig: ''
   database: postgres
@@ -97,7 +97,7 @@ spec:
   exporterResources:
     memory: '0'
   exporterport: '9187'
-  name: {{ template "postgres.fullname" . }}
+  name: {{ template "postgres.name" . }}
   namespace: {{ .Release.Namespace }}
   pgBouncer:
     limits: {}
@@ -115,9 +115,9 @@ spec:
     pgBouncer: preferred
   policies: ''
   port: '5432'
-  primarysecretname: {{ template "postgres.fullname" . }}-primaryuser-secret
+  primarysecretname: {{ template "postgres.name" . }}-primaryuser-secret
   replicas: '0'
-  rootsecretname: {{ template "postgres.fullname" . }}-{{ .Values.config.username }}-secret
+  rootsecretname: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
 {{- if (and .Values.config.resources.enabled (not (eq .Values.config.resources.enabled "false"))) }}
   resources:
 {{ toYaml .Values.config.resources.requests | indent 4 }}
@@ -140,5 +140,5 @@ spec:
     crunchy-postgres-exporter: {{ .Values.config.metrics.enabled | quote }}
     pg-pod-anti-affinity: ''
     pgo-version: {{ .Chart.AppVersion | quote }}
-  usersecretname: {{ template "postgres.fullname" . }}-user-secret
+  usersecretname: {{ template "postgres.name" . }}-user-secret
   tolerations: []

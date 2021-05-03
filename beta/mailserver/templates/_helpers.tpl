@@ -37,7 +37,7 @@ Calculate rainloop hostname
 {{- if .Values.ingress.rainloop.enabled }}
 {{- printf .Values.ingress.rainloop.hostname }}
 {{- else }}
-{{- printf "%s-rainloop" (include "mailserver.fullname" .) }}
+{{- printf "%s-rainloop" (include "mailserver.name" .) }}
 {{- end }}
 {{- end }}
 {{- end }}

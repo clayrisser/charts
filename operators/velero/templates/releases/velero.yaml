@@ -1,7 +1,7 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ template "velero.name" . }}
   labels:
     app: {{ template "velero.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

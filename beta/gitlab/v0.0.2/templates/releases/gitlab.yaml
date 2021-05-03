@@ -1,7 +1,7 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ .Release.Name }}
+  name:  {{ template "gitlab.name" . }}
   labels:
     app: {{ template "gitlab.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -53,13 +53,13 @@ spec:
       gitlab:
         license: {}
       initialRootPassword:
-        secret: {{ template "gitlab.fullname" . }}-gitlab
+        secret: {{ template "gitlab.name" . }}
         key: password
       psql:
         connectTimeout:
         password:
           useSecret: true
-          secret: {{ include "gitlab.fullname" . }}-postgres
+          secret: {{ include "gitlab.name" . }}-postgres
           key: POSTGRES_PASSWORD
         host: {{ .Values.config.postgres.host | quote }}
         port: {{ .Values.config.postgres.port }}
@@ -144,7 +144,7 @@ spec:
           proxy_download: true
           storage_options: {}
           connection:
-            secret: {{ template "gitlab.fullname" . }}-store
+            secret: store
             key: objectStoreConnection
         lfs:
           enabled: true
@@ -238,7 +238,7 @@ spec:
           syncProfileFromProvider: ['saml']
           providers:
             {{- if .Values.config.keycloak.enabled }}
-            - secret: {{ template "gitlab.fullname" . }}-omniauth
+            - secret: {{ template "gitlab.name" . }}-omniauth
             {{- end }}
         sentry:
           enabled: false
@@ -261,6 +261,7 @@ spec:
       kas:
         enabled: false
       shell:
+        port: 22
         authToken: {}
         hostKeys: {}
       railsSecrets: {}
@@ -583,7 +584,7 @@ spec:
         cat >> /home/gitlab-runner/.gitlab-runner/config.toml << EOF
         {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
             [[runners.kubernetes.volumes.pvc]]
-              name = '{{ .Values.persistence.existingClaim.gitlabRunner | default (printf "%s-gitlab-runner" (include "gitlab.fullname" . )) }}'
+              name = '{{ .Values.persistence.existingClaim.gitlabRunner | default (printf "%s-gitlab-runner" (include "gitlab.name" . )) }}'
               mount_path = "/tmp/gitlab"
         {{- end }}
         {{- if .Values.config.gitlabRunner.docker.sock }}
@@ -680,6 +681,11 @@ spec:
         antiAffinityLabels:
           matchLabels:
             app: 'gitaly'
+      gitlab-shell:
+        enabled: true
+        service:
+          internalPort: 2222
+          type: ClusterIP
       webservice:
         ingress:
           enabled: {{ .Values.ingress.gitlab.enabled }}

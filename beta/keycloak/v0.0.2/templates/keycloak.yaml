@@ -1,9 +1,9 @@
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
-  name: {{ template "keycloak.fullname" . }}
+  name: {{ template "keycloak.name" . }}
   labels:
-    app: {{ template "keycloak.fullname" . }}
+    app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -80,7 +80,7 @@ spec:
         - name: KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL
           valueFrom:
             secretKeyRef:
-              name: {{ template "keycloak.fullname" . }}-keycloak-vault
+              name: {{ template "keycloak.name" . }}-vault
               key: main_bindCredential
         {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
@@ -101,9 +101,9 @@ spec:
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakRealm
 metadata:
-  name: {{ template "keycloak.fullname" . }}
+  name: {{ template "keycloak.name" . }}
   labels:
-    app: {{ template "keycloak.fullname" . }}
+    app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -231,4 +231,4 @@ spec:
     {{- end }}
   instanceSelector:
     matchLabels:
-      app: {{ template "keycloak.fullname" . }}
+      app: {{ template "keycloak.name" . }}

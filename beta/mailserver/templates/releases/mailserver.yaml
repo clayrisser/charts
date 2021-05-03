@@ -1,7 +1,7 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ template "mailserver.name" . }}
   labels:
     app: {{ template "mailserver.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -12,7 +12,7 @@ spec:
   helmVersion: v3
   chart:
     git: https://github.com/funkypenguin/helm-docker-mailserver.git
-    ref: docker-mailserver-0.2.7
+    ref: docker-mailserver-0.3.0
     path: charts/docker-mailserver
   values:
     image:
@@ -70,9 +70,14 @@ spec:
       dockermailserver:
         default_relay_host:
         dms_debug: {{ .Values.config.debug | ternary "1" "0" }}
+        dovecot_tls:
+        {{- if .Values.config.ldap.enabled }}
+        dovecot_auth_bind: 'yes'
+        dovecot_pass_attrs: {{ .Values.config.dovecot.passAttrs | quote }}
         dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
-        dovecot_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote }}
+        dovecot_user_attrs: '=uid=5000,=gid=5000{{ (empty .Values.config.dovecot.userAttrs) | ternary "" (printf ",%s" .Values.config.dovecot.userAttrs) }}'
         dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
+        {{- end }}
         enable_clamav: {{ .Values.config.clamav.enabled | ternary "1" "0" }}
         enable_fail2ban: {{ .Values.config.fail2ban.enabled | ternary "1" "0" }}
         enable_fetchmail: {{ .Values.config.fetchmail.enabled | ternary "1" "0" }}
@@ -81,7 +86,7 @@ spec:
         enable_pop3: {{ .Values.config.pop3.enabled | ternary "1" "0" }}
         enable_postfix_virtual_transport:
         enable_postgrey: {{ .Values.config.postgrey.enabled | ternary "1" "0" }}
-        enable_saslauthd: {{ .Values.config.ldap.enabled | ternary "1" "0" }}
+        enable_saslauthd: '0'
         enable_spamassassin: {{ .Values.config.spamassassin.enabled | ternary "1" "0" }}
         enable_srs: {{ .Values.config.srs.enabled | ternary "1" "0" }}
         fetchmail_poll: {{ .Values.config.fetchmail.poll }}
@@ -92,8 +97,8 @@ spec:
         ldap_query_filter_group: {{ .Values.config.ldap.queryFilterGroup | quote }}
         ldap_query_filter_user: {{ .Values.config.ldap.queryFilterUser | quote }}
         ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
-        ldap_server_host: {{ .Values.config.ldap.hostname | quote }}
-        ldap_start_tls: {{ .Values.config.ldap.tls | ternary "yes" "no" | quote }}
+        ldap_server_host: ldap{{ .Values.config.ldap.tls | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
+        ldap_start_tls:
         one_dir: 1
         pflogsumm_recipient:
         pflogsumm_trigger: {{ (eq .Values.config.reports.pflogsummTrigger "none") | ternary "" .Values.config.reports.pflogsummTrigger }}
@@ -122,7 +127,7 @@ spec:
         saslauthd_ldap_filter: {{ .Values.config.ldap.saslFilter | quote }}
         saslauthd_ldap_password: {{ .Values.config.ldap.password | quote }}
         saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
-        saslauthd_ldap_server: {{ .Values.config.ldap.hostname | quote }}
+        saslauthd_ldap_server: ldap{{ .Values.config.ldap.tls | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
         saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" }}
         saslauthd_mech_options: ''
         saslauthd_mechanisms: {{ .Values.config.ldap.enabled | ternary "ldap" "" }}
@@ -143,8 +148,6 @@ spec:
         strategy:
           type: {{ .Values.config.updateStrategy | quote }}
         # TODO: possibly incorrect
-        dovecot_pass_attr: {{ .Values.config.dovecot.passAttrs | quote }}
-        dovecot_user_attr: {{ .Values.config.dovecot.userAttrs | quote }}
         override_hostname: {{ template "mailserver.mailserver-domain" . }}
         # permit_docker:
         permit_docker: host
@@ -176,7 +179,7 @@ spec:
       annotations:
         backup.velero.io/backup-volumes: data
       {{- end }}
-{{- if .Values.config.mailserver.resources.enabled }}
+{{- if (and .Values.config.mailserver.resources.enabled (not (eq .Values.config.mailserver.resources.enabled "false"))) }}
     resources:
       requests:
 {{ toYaml .Values.config.mailserver.resources.requests | indent 8 }}

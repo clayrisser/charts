@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "integration-operator.fullname" . }}-integration-operator
+  name: {{ template "integration-operator.name" . }}
   labels:
-    app: {{ template "integration-operator.name" . }}-integration-operator
+    app: {{ template "integration-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "integration-operator.name" . }}-integration-operator
+      app: {{ template "integration-operator.name" . }}
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
-        app: {{ template "integration-operator.name" . }}-integration-operator
+        app: {{ template "integration-operator.name" . }}
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "integration-operator.fullname" . }}
+      serviceAccountName: {{ template "integration-operator.name" . }}
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -41,11 +41,11 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - {{ template "integration-operator.name" . }}-integration-operator
+                        - {{ template "integration-operator.name" . }}
       imagePullSecrets:
         - name: dockerhub
       containers:
-        - name: {{ template "integration-operator.fullname" . }}-integration-operator
+        - name: main
           image: {{ .Values.images.integrationOperator.repository }}:{{ .Values.images.integrationOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           # resources:
@@ -62,7 +62,7 @@ spec:
           {{- else }}
           env: []
           {{- end }}
-        - name: {{ template "integration-operator.fullname" . }}-kubectl
+        - name: kubectl
           image: bitnami/kubectl:1.17.12
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           command:

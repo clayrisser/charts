@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "postgres.fullname" . }}-postgres
+  name: {{ template "postgres.name" . }}-postgres
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -23,5 +23,5 @@ spec:
       nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
       {{- end }}
   selector:
-    pg-cluster: {{ template "postgres.fullname" . }}
+    pg-cluster: {{ template "postgres.name" . }}
     role: master

@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "postgres.fullname" . }}-pgadmin
+  name: pgadmin
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -43,7 +43,7 @@ spec:
                       values:
                         - {{ template "postgres.name" . }}-pgadmin
       containers:
-        - name: {{ template "postgres.fullname" . }}-pgadmin
+        - name: pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
 {{- if (and .Values.config.pgadmin.resources.enabled (not (eq .Values.config.pgadmin.resources.enabled "false"))) }}
@@ -67,7 +67,7 @@ spec:
             - name: PGADMIN_DEFAULT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "postgres.fullname" . }}
+                  name: {{ template "postgres.name" . }}
                   key: pgadmin_password
           livenessProbe:
             httpGet:
@@ -82,5 +82,5 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ template "postgres.fullname" . }}-pgadmin
+            name: pgadmin
 {{- end }}
