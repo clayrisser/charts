@@ -48,7 +48,7 @@ spec:
           apiVersion: helm.fluxcd.io/v1
           kind: HelmRelease
           metadata:
-            name: {{ .Release.Name }}
+            name: gitlab
             namespace: {{ .Release.Namespace }}
           spec:
             values:
