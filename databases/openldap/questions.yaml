@@ -307,6 +307,11 @@ questions:
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
+      - variable: service.openldap.tls.enforce
+        description: ''
+        type: boolean
+        required: true
+        label: 'openldap tls enforce'
       - variable: service.openldap.tls.certificate
         description: ''
         type: string

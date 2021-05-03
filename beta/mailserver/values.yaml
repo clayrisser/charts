@@ -3,8 +3,8 @@ images:
     repository: hardware/rainloop
     tag: 1.13.0
   mailserver:
-    repository: tvial/docker-mailserver
-    tag: release-v7.0.0
+    repository: mailserver/docker-mailserver
+    tag: edge
 
 config:
   clusterType: rke
@@ -21,7 +21,7 @@ config:
   mailserver:
     replicas: 1
     resources:
-      enabled: false
+      enabled: defaults
       requests:
         cpu: '1'
         memory: 1536Mi
@@ -33,7 +33,7 @@ config:
     baseUrl: ''
     hostname: ''
     resources:
-      enabled: false
+      enabled: defaults
       requests:
         cpu: 100m
         memory: 128Mi

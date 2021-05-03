@@ -74,7 +74,7 @@ spec:
       LDAP_TLS_CIPHER_SUITE: 'NORMAL'
       LDAP_TLS_CRT_FILENAME: 'tls.crt'
       LDAP_TLS_DH_PARAM_FILENAME: 'dhparam.pem'
-      LDAP_TLS_ENFORCE: 'true'
+      LDAP_TLS_ENFORCE: {{ .Values.service.openldap.tls.enforce | quote }}
       LDAP_TLS_KEY_FILENAME: 'tls.key'
       LDAP_TLS_PROTOCOL_MIN: '3.0'
       LDAP_TLS_REQCERT: 'never'
