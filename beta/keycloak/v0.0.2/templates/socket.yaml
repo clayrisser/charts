@@ -17,5 +17,5 @@ spec:
       name: {{ template "keycloak.name" . }}-connection
     - version: v1
       kind: Secret
-      name: credential-{{ .Release.Name }}
+      name: credential-{{ .Chart.Name }}
 {{- end }}
