@@ -41,14 +41,14 @@ spec:
       - group: helm.fluxcd.io
         version: v1
         kind: HelmRelease
-        name: {{ .Release.Name }}
+        name: gitlab
         namespace: {{ .Release.Namespace }}
     patches:
       - patch: |
           apiVersion: helm.fluxcd.io/v1
           kind: HelmRelease
           metadata:
-            name: {{ .Release.Name }}
+            name: gitlab
             namespace: {{ .Release.Namespace }}
           spec:
             values:
