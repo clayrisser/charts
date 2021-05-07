@@ -61,7 +61,9 @@ spec:
         config:
           profile: default
           region: {{ .Values.velero.configuration.backupStorageLocation.config.region }}
+          {{- if .Values.velero.configuration.backupStorageLocation.config.s3Url }}
           s3Url: {{ .Values.velero.configuration.backupStorageLocation.config.s3Url }}
+          {{- end }}
       volumeSnapshotLocation:
         name: default
         provider: {{ .Values.velero.configuration.volumeSnapshotLocation.provider }}
