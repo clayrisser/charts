@@ -159,7 +159,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
-        name: credential-{{ $name }}-{{ $name }}
+        name: credential-keycloak-{{ $namespace }}
         namespace: {{ .Release.Namespace }}
       - version: v1
         kind: Secret
@@ -236,6 +236,6 @@ spec:
         objref:
           apiVersion: v1
           kind: Secret
-          name: credential-{{ $name }}-{{ $name }}
+          name: credential-keycloak-{{ $namespace }}
           namespace: {{ .Release.Namespace }}
 {{- end }}
