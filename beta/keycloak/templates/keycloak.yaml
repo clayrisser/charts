@@ -113,35 +113,6 @@ spec:
     realm: main
     enabled: true
     displayName: 'Main Realm'
-    roles:
-      - name: admin
-        description: main realm admin role
-        composite: true
-        composites:
-          client:
-            realm-management:
-            - view-clients
-            - view-authorization
-            - manage-identity-providers
-            - manage-users
-            - view-users
-            - view-identity-providers
-            - manage-clients
-            - manage-authorization
-            - manage-realm
-            - manage-events
-            - realm-admin
-            - query-users
-            - create-client
-            - query-groups
-            - query-clients
-            - view-realm
-            - query-realms
-            - impersonation
-            - view-events
-        clientRole: false
-        containerId: main
-        attributes: {}
     {{- if .Values.config.keycloak.ldap.enabled }}
     userFederationProviders:
       - displayName: ldap
