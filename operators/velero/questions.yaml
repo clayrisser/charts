@@ -4,7 +4,6 @@ questions:
 
 # Config
   - variable: velero.metrics.enabled
-    default: true
     description: ''
     type: boolean
     required: true
@@ -13,7 +12,6 @@ questions:
 
 # Backups
   - variable: velero.backupsEnabled
-    default: true
     description: ''
     type: boolean
     required: true
@@ -22,7 +20,6 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: velero.configuration.provider
-        default: aws
         description: ''
         type: enum
         options:
@@ -30,28 +27,24 @@ questions:
         required: true
         label: provider
       - variable: velero.configuration.backupStorageLocation.bucket
-        default: ''
         description: ''
         type: string
         show_if: velero.configuration.provider=aws
         required: true
         label: bucket
       - variable: velero.configuration.backupStorageLocation.prefix
-        default: velero
         description: ''
         type: string
         show_if: velero.configuration.provider=aws
         required: false
         label: prefix
       - variable: velero.configuration.backupStorageLocation.config.s3Url
-        default: https://sfo2.digitaloceanspaces.com
         description: ''
         type: string
         show_if: velero.configuration.provider=aws
         required: true
         label: 's3 url'
       - variable: velero.configuration.backupStorageLocation.config.region
-        default: sfo2
         description: ''
         type: string
         show_if: velero.configuration.provider=aws
@@ -60,7 +53,6 @@ questions:
 
 # Snapshots
   - variable: velero.snapshotsEnabled
-    default: true
     description: ''
     type: boolean
     required: true
@@ -69,13 +61,11 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: velero.deployRestic
-        default: true
         description: ''
         type: boolean
         required: true
         label: 'restic enabled'
       - variable: velero.configuration.volumeSnapshotLocation.provider
-        default: digitalocean.com/velero
         description: ''
         type: enum
         options:
@@ -84,7 +74,6 @@ questions:
         required: true
         label: provider
       - variable: velero.configuration.volumeSnapshotLocation.config.region
-        default: sfo2
         description: ''
         type: string
         required: true
@@ -93,21 +82,18 @@ questions:
 
 # Credentials
   - variable: config.accessKeyId
-    default: ''
     description: ''
     type: string
     required: true
     label: 'access key id'
     group: Credentials
   - variable: config.secretAccessKey
-    default: ''
     description: ''
     type: password
     required: true
     label: 'secret access key'
     group: Credentials
   - variable: config.digitaloceanToken
-    default: ''
     description: ''
     type: password
     required: false
