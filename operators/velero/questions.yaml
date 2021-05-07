@@ -70,7 +70,7 @@ questions:
         type: enum
         options:
           - digitalocean.com/velero
-          - aws
+          - velero.io/aws
         required: true
         label: provider
       - variable: velero.configuration.volumeSnapshotLocation.config.region
@@ -78,7 +78,7 @@ questions:
         type: string
         required: true
         label: region
-        show_if: velero.configuration.volumeSnapshotLocation.provider=aws
+        show_if: velero.configuration.volumeSnapshotLocation.provider=velero.io/aws
 
 # Credentials
   - variable: config.accessKeyId

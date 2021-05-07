@@ -24,18 +24,21 @@ spec:
     resources: {}
     dnsPolicy: ClusterFirst
     initContainers:
+      {{- if (eq .Values.velero.configuration.volumeSnapshotLocation.provider "velero.io/aws") }}
       - name: velero-plugin-for-aws
         image: velero/velero-plugin-for-aws:v1.1.0
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
             name: plugins
-      - name: velero-plugin
+      {{- else if (eq .Values.velero.configuration.volumeSnapshotLocation.provider "digitalocean.com/velero") }}
+      - name: velero-plugin-for-digitalocean
         image: digitalocean/velero-plugin:v1.0.0
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
             name: plugins
+      {{- end }}
     securityContext: {}
     priorityClassName: ""
     tolerations: []
