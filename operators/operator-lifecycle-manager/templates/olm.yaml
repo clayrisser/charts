@@ -52,17 +52,6 @@ spec:
       labels:
         app: olm-operator
     spec:
-      # >>>
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - amd64
-      # <<<
       serviceAccountName: olm-operator-serviceaccount
       containers:
         - name: olm-operator
@@ -73,7 +62,7 @@ spec:
             - $(OPERATOR_NAMESPACE)
             - --writeStatusName
             - ''
-          image: quay.io/operator-framework/olm@sha256:de396b540b82219812061d0d753440d5655250c621c753ed1dc67d6154741607
+          image: {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -123,17 +112,6 @@ spec:
       labels:
         app: catalog-operator
     spec:
-      # >>>
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - amd64
-      # <<<
       serviceAccountName: olm-operator-serviceaccount
       containers:
         - name: catalog-operator
@@ -145,7 +123,7 @@ spec:
             - -configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
             - -util-image
             - quay.io/operator-framework/olm@sha256:de396b540b82219812061d0d753440d5655250c621c753ed1dc67d6154741607
-          image: quay.io/operator-framework/olm@sha256:de396b540b82219812061d0d753440d5655250c621c753ed1dc67d6154741607
+          image: {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -162,12 +140,10 @@ spec:
               port: 8080
           terminationMessagePolicy: FallbackToLogsOnError
           env:
-
           resources:
             requests:
               cpu: 10m
               memory: 80Mi
-
       nodeSelector:
         kubernetes.io/os: linux
 ---
@@ -321,7 +297,7 @@ spec:
                       - '5443'
                       - --global-namespace
                       - olm
-                    image: quay.io/operator-framework/olm@sha256:de396b540b82219812061d0d753440d5655250c621c753ed1dc67d6154741607
+                    image: {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
                     imagePullPolicy: Always
                     ports:
                       - containerPort: 5443
