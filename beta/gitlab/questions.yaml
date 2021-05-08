@@ -466,6 +466,12 @@ questions:
     required: true
     label: 'gitlab service type'
     group: 'Services and Load Balancing'
+  - variable: service.gitlab.proxyIngressPorts
+    description: ''
+    type: boolean
+    required: true
+    label: 'gitlab proxy ingress ports'
+    group: 'Services and Load Balancing'
   - variable: service.gitlab.nodePorts.http
     description: ''
     type: int

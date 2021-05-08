@@ -89,6 +89,7 @@ ingress:
     enabled: false
     hostname: ''
     tls: false
+    proxyIngressPorts: true
     issuer:
       name: letsencrypt-staging
 

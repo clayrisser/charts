@@ -21,6 +21,8 @@ spec:
         release: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ template "kustomize-operator.name" . }}
+      nodeSelector:
+        kubernetes.io/arch: amd64
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
