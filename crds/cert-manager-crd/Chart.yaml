@@ -4,6 +4,6 @@ description: Installs the CRDs for cert-manager.
 name: cert-manager-crd
 type: application
 annotations:
-  catalog.cattle.io/hidden: "true"
+  # catalog.cattle.io/hidden: "true"
   catalog.cattle.io/release-name: cert-manager-crd
   catalog.cattle.io/namespace: kube-system
