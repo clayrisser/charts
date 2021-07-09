@@ -47,9 +47,12 @@ package:
 
 .PHONY: prev-artifacts
 prev-artifacts:
+	@echo ----
+	@echo curl -s -L -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" $(CI_SERVER_URL)/api/v4/projects/$(CI_PROJECT_ID)/jobs | \
+		jq -r '[.[] | select(.name=="$(CI_JOB_NAME)")][0].id'
 	@JOB_ID=$(curl -L --globoff -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" $(CI_SERVER_URL)/api/v4/projects/$(CI_PROJECT_ID)/jobs | \
 		jq -r '[.[] | select(.name=="$(CI_JOB_NAME)")][0].id') && \
-		echo $$JOB_ID && \
+		echo JOBID: $$JOB_ID && \
 		curl -L -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" -o artifacts.zip $(CI_SERVER_URL)/$(CI_PROJECT_NAMESPACE)/$(CI_PROJECT_NAME)/-/jobs/$$JOB_ID/artifacts/download
 	@unzip artifacts.zip
 
