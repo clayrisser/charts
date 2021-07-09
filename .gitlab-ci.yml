@@ -2,6 +2,9 @@ image:
   name: codejamninja/make-helm:latest
   entrypoint: ["/bin/sh", "-c"]
 
+variables:
+  GITLAB_TOKEN: ''
+
 stages:
   - lint
   - publish
