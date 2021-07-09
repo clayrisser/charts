@@ -50,4 +50,5 @@ docker-push:
 
 .PHONY: $(CHARTS)
 $(CHARTS):
-	@$(MAKE) -s debug CHART="$@"
+	-@$(MAKE) -s lint CHART="$@"
+	-@$(MAKE) -s debug CHART="$@"
