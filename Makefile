@@ -36,8 +36,8 @@ ifeq ($(CHART),.)
 else
 	VERSION=$$(cat $(CHART)/Chart.yaml | grep -E "^version: " | sed 's|version: ||g') && \
 	CHART_NAME=$$(echo $(CHART) | sed 's|^[^\/]*\/||g' | sed 's|\/[^\/]*$$||g') && \
-		helm chart save $(CHART) $$CI_REGISTRY/$$CI_PROJECT_NAMESPACE/$$CHART_NAME:$$VERSION-$$CI_COMMIT_TAG && \
-		helm chart push $$CI_REGISTRY/$$CI_PROJECT_NAMESPACE/$$CHART_NAME:$$VERSION-$$CI_COMMIT_TAG
+		helm chart save $(CHART) $$CI_REGISTRY/$$CI_PROJECT_NAMESPACE/$$CI_PROJECT_NAME:$$CHART_NAME-$$VERSION-$$CI_COMMIT_TAG && \
+		helm chart push $$CI_REGISTRY/$$CI_PROJECT_NAMESPACE/$$CI_PROJECT_NAME:$$CHART_NAME-$$VERSION-$$CI_COMMIT_TAG
 endif
 
 .PHONY: docker-build
