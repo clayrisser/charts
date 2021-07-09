@@ -14,7 +14,8 @@ all: $(CHARTS)
 lint:
 ifeq ($(CHART),.)
 	-@for c in $(CHARTS); do \
-			echo "\nLINTING: $$c" && \
+			echo && \
+			echo "LINTING: $$c" && \
 			$(MAKE) -s lint CHART="$$c"; \
 		done
 else
@@ -25,7 +26,8 @@ endif
 debug:
 ifeq ($(CHART),.)
 	@for c in $(CHARTS); do \
-			echo "\nDEBUGGING: $$c" && \
+			echo && \
+			echo "DEBUGGING: $$c" && \
 			$(MAKE) -s debug CHART="$$c"; \
 		done
 else
