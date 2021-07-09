@@ -50,9 +50,12 @@ prev-artifacts:
 	@JOB_ID=$$(curl -s -L -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" \
 			$(CI_SERVER_URL)/api/v4/projects/$(CI_PROJECT_ID)/jobs?scope=success | \
 			jq -r '[.[] | select(.name=="$(CI_JOB_NAME)")][0].id') && \
-		curl -L -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" -o artifacts.zip \
-			$(CI_SERVER_URL)/$(CI_PROJECT_NAMESPACE)/$(CI_PROJECT_NAME)/-/jobs/$$JOB_ID/artifacts/download
-	@unzip artifacts.zip
+		if ! ([ "$$JOB_ID" = "" ] || [ "$$JOB_ID" = "null" ]); then \
+			curl -L -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" -o artifacts.zip \
+				$(CI_SERVER_URL)/$(CI_PROJECT_NAMESPACE)/$(CI_PROJECT_NAME)/-/jobs/$$JOB_ID/artifacts/download && \
+			echo UZIPPING && \
+			unzip artifacts.zip; \
+		fi
 
 .PHONY: docker-build
 docker-build:
