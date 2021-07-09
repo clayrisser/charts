@@ -1,52 +1,52 @@
+HELM := helm
+GIT := git
+SED := sed
+GREP := grep
+DOCKER := docker
+
 CHART := .
-CHARTS := $(shell git ls-files | grep -oE '.+\/Chart\.yaml' | sed 's/\/Chart\.yaml$$//g' | sort -u)
+CHARTS := $(shell $(GIT) ls-files | $(GREP) -oE '.+\/Chart\.yaml' | $(SED) 's/\/Chart\.yaml$$//g' | sort -u)
 
 .PHONY: all
 all: $(CHARTS)
 
-.PHONY: lint ~lint +lint
+.PHONY: lint
 lint:
 ifeq ($(CHART),.)
 	-@for c in $(CHARTS); do \
-			echo LINTING: $$c && \
+			echo "\nLINTING: $$c" && \
 			$(MAKE) -s lint CHART="$$c"; \
 		done
 else
-	@helm lint alertmanager-bot $(CHART)
+	@$(HELM) lint $(CHART)
 endif
 
 .PHONY: debug
 debug:
 ifeq ($(CHART),.)
 	@for c in $(CHARTS); do \
-			echo DEBUGGING: $$c && \
+			echo "\nDEBUGGING: $$c" && \
 			$(MAKE) -s debug CHART="$$c"; \
 		done
 else
-	@helm install --debug --dry-run --generate-name $(CHART)
+	@$(HELM) install --debug --dry-run --generate-name $(CHART)
 endif
 
-.PHONY: publish
-publish:
-ifeq ($(CHART),.)
-	@for c in $(CHARTS); do \
-			echo PUBLISHING: $$c && \
-			$(MAKE) -s publish CHART="$$c"; \
-		done
-else
-	VERSION=$$(cat $(CHART)/Chart.yaml | grep -E "^version: " | sed 's|version: ||g') && \
-	CHART_NAME=$$(echo $(CHART) | sed 's|^[^\/]*\/||g' | sed 's|\/[^\/]*$$||g') && \
-		helm chart save $(CHART) $$CI_REGISTRY/$$CI_PROJECT_NAMESPACE/$$CI_PROJECT_NAME:$$CHART_NAME-$$VERSION-$$CI_COMMIT_TAG && \
-		helm chart push $$CI_REGISTRY/$$CI_PROJECT_NAMESPACE/$$CI_PROJECT_NAME:$$CHART_NAME-$$VERSION-$$CI_COMMIT_TAG
-endif
+.PHONY: package
+package:
+	@mkdir -p ./public
+	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
+	@$(HELM) package $(CHARTS) --destination ./public
+	@$(HELM) repo index --url https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/${CI_PROJECT_NAME} .
+	@mv index.yaml ./public
 
 .PHONY: docker-build
 docker-build:
-	@docker build -f ./Dockerfile -t codejamninja/make-helm:latest .
+	@$(DOCKER) build -f ./Dockerfile -t codejamninja/make-helm:latest .
 
 .PHONY: docker-push
 docker-push:
-	@docker push codejamninja/make-helm:latest
+	@$(DOCKER) push codejamninja/make-helm:latest
 
 .PHONY: $(CHARTS)
 $(CHARTS):
