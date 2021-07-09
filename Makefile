@@ -7,6 +7,8 @@ DOCKER := docker
 CHART := .
 CHARTS := $(shell $(GIT) ls-files | $(GREP) -oE '.+\/Chart\.yaml' | $(SED) 's/\/Chart\.yaml$$//g' | sort -u)
 
+.EXPORT_ALL_VARIABLES:
+
 .PHONY: all
 all: $(CHARTS)
 
@@ -39,9 +41,16 @@ package:
 	@mkdir -p ./public
 	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
 	@$(HELM) package $(CHARTS) --destination .
-	@$(HELM) repo index --url https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/${CI_PROJECT_NAME} .
+	@$(HELM) repo index --url https://$(CI_PROJECT_NAMESPACE).$(CI_PAGES_DOMAIN)/$(CI_PROJECT_NAME) .
 	@mv *.tgz ./public
 	@mv index.yaml ./public
+
+.PHONY: prev-artifacts
+prev-artifacts:
+	@JOB_ID=$(curl -L https://$(CI_SERVER_URL)/api/v4/projects/$(CI_PROJECT_ID)/jobs | \
+		jq -r '[.[] | select(.name=="$(CI_JOB_NAME)")][0].id') && \
+		curl -L -o artifacts.zip https://$(CI_SERVER_URL)/$(CI_PROJECT_NAMESPACE)/$(CI_PROJECT_NAME)/-/jobs/$(JOB_ID)/artifacts/download
+	@unzip artifacts.zip
 
 .PHONY: docker-build
 docker-build:
