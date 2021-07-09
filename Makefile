@@ -47,8 +47,7 @@ package:
 
 .PHONY: prev-artifacts
 prev-artifacts:
-	@echo curl -L -o artifacts.zip https://$(CI_SERVER_URL)/$(CI_PROJECT_NAMESPACE)/$(CI_PROJECT_NAME)/-/jobs/$(JOB_ID)/artifacts/download
-	@JOB_ID=$(curl -L https://$(CI_SERVER_URL)/api/v4/projects/$(CI_PROJECT_ID)/jobs | \
+	@JOB_ID=$(curl -L $(CI_SERVER_URL)/api/v4/projects/$(CI_PROJECT_ID)/jobs | \
 		jq -r '[.[] | select(.name=="$(CI_JOB_NAME)")][0].id') && \
 		curl -L -o artifacts.zip https://$(CI_SERVER_URL)/$(CI_PROJECT_NAMESPACE)/$(CI_PROJECT_NAME)/-/jobs/$(JOB_ID)/artifacts/download
 	@unzip artifacts.zip
