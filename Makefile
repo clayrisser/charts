@@ -53,7 +53,6 @@ prev-artifacts:
 		if ! ([ "$$JOB_ID" = "" ] || [ "$$JOB_ID" = "null" ]); then \
 			curl -L -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" -o artifacts.zip \
 				$(CI_SERVER_URL)/$(CI_PROJECT_NAMESPACE)/$(CI_PROJECT_NAME)/-/jobs/$$JOB_ID/artifacts/download && \
-			echo UZIPPING && \
 			unzip artifacts.zip; \
 		fi
 

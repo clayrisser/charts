@@ -18,7 +18,6 @@ pages:
   stage: publish
   script:
     - make -s prev-artifacts
-    - ls public
     - make -s package
   artifacts:
     paths:
