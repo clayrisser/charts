@@ -7,7 +7,7 @@ all: $(CHARTS)
 .PHONY: lint ~lint +lint
 lint:
 ifeq ($(CHART),.)
-	@for c in $(CHARTS); do \
+	-@for c in $(CHARTS); do \
 			echo LINTING: $$c && \
 			$(MAKE) -s lint CHART="$$c"; \
 		done
