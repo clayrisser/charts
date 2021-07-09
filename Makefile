@@ -36,8 +36,9 @@ endif
 package:
 	@mkdir -p ./public
 	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
-	@$(HELM) package $(CHARTS) --destination ./public
+	@$(HELM) package $(CHARTS) --destination .
 	@$(HELM) repo index --url https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/${CI_PROJECT_NAME} .
+	@mv *.tgz ./public
 	@mv index.yaml ./public
 
 .PHONY: docker-build
