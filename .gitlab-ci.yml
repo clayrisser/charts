@@ -12,13 +12,12 @@ stages:
 lint:
   stage: lint
   script:
-    - helm lint alertmanager-bot
+    - make -s lint
 
 release:
   stage: release
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#    - helm chart save helloworld $CI_REGISTRY/siliconhills/helloworld:$CI_COMMIT_TAG
-#    - helm chart push $CI_REGISTRY/gitlabUser/helloworld:$CI_COMMIT_TAG
+    - make -s publish
   only:
     - tags
