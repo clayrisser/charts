@@ -40,6 +40,14 @@ else
 		helm chart push $$CI_REGISTRY/$$CI_PROJECT_NAMESPACE/$$CHART_NAME:$$VERSION-$$CI_COMMIT_TAG
 endif
 
+.PHONY: docker-build
+docker-build:
+	@docker build -f ./Dockerfile -t codejamninja/make-helm:latest .
+
+.PHONY: docker-push
+docker-push:
+	@docker push codejamninja/make-helm:latest
+
 .PHONY: $(CHARTS)
 $(CHARTS):
 	@$(MAKE) -s debug CHART="$@"

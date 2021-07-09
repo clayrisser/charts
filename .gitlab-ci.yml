@@ -1,5 +1,5 @@
 image:
-  name: alpine/helm:3.2.1
+  name: codejamninja/make-helm:latest
   entrypoint: ["/bin/sh", "-c"]
 
 variables:
