@@ -1,14 +1,28 @@
 {
   "cSpell.words": [
+    "alertmanager",
+    "centos",
     "codejamninja",
+    "crunchydata",
+    "digitalocean",
+    "dpage",
     "entrypoint",
     "gitlab",
+    "grafana",
     "ldap",
     "ldaps",
+    "letsencrypt",
     "mkdir",
     "openldap",
     "osixia",
-    "phpldapadmin"
+    "pgadmin",
+    "phpldapadmin",
+    "postgres",
+    "restic",
+    "storageclass",
+    "subquestion",
+    "subquestions",
+    "velero"
   ],
   "[helm]": {
     "editor.formatOnSave": false

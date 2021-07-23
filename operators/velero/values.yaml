@@ -1,4 +1,5 @@
 velero:
+  allowIntegration: true
   backupsEnabled: true
   deployRestic: true
   snapshotsEnabled: true

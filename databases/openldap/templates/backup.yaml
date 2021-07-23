@@ -14,4 +14,22 @@ spec:
     includedNamespaces:
       - {{ .Release.Namespace }}
     ttl: {{ .Values.persistence.velero.ttl | quote }}
+---
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: plug-sample
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: replicator
+    namespace: velero
+  socket:
+    name: velero
+    namespace: velero
+  config:
+    resources:
+      - apiVersion: velero.io/v1
+        kind: Schedule
+        name: {{ template "openldap.name" . }}
 {{- end }}
