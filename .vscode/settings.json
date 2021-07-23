@@ -9,5 +9,8 @@
     "openldap",
     "osixia",
     "phpldapadmin"
-  ]
+  ],
+  "[helm]": {
+    "editor.formatOnSave": false
+  }
 }

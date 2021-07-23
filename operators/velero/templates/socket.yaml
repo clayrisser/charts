@@ -1,0 +1,23 @@
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
+metadata:
+  name: {{ template "velero.name" . }}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: velero-backup-replicator
+    namespace: {{ .Release.Namespace }}
+  resources:
+    - do: create
+      when: coupled
+      resource: |
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: hello
+        data:
+          hello: world
