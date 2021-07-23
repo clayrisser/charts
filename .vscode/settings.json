@@ -1,7 +1,12 @@
 {
-    "cSpell.words": [
-        "codejamninja",
-        "entrypoint",
-        "mkdir"
-    ]
+  "cSpell.words": [
+    "codejamninja",
+    "entrypoint",
+    "ldap",
+    "ldaps",
+    "mkdir",
+    "openldap",
+    "osixia",
+    "phpldapadmin"
+  ]
 }

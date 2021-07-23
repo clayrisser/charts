@@ -79,6 +79,7 @@ spec:
       LDAP_TLS_PROTOCOL_MIN: '3.0'
       LDAP_TLS_REQCERT: 'never'
       LDAP_TLS_VERIFY_CLIENT: 'never'
+      LDAP_DEBUG: {{ .Values.config.debug | ternary "true" "false" | quote }}
     # adminPassword: {{ .Values.config.openldap.passwords.admin | quote }}
     # configPassword: {{  .Values.config.openldap.passwords.config | quote }}
     customLdifFiles:
