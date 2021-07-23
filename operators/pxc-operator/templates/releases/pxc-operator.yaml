@@ -22,6 +22,23 @@ spec:
     nodeSelector: {}
     replicaCount: 1
     tolerations: []
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 89
+            preference:
+              matchExpressions:
+                - key: application/state
+                  operator: In
+                  values:
+                    - stateless
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                    - amd64
 {{- if .Values.config.pxcOperator.resources.enabled }}
     resources:
       requests:
