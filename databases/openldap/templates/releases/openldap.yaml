@@ -61,6 +61,7 @@ spec:
       KEEP_EXISTING_CONFIG: 'false'
       LDAP_BACKEND: 'mdb'
       LDAP_DOMAIN: {{ .Values.config.openldap.domain | quote }}
+      LDAP_HASH_PASSWORD: {{ .Values.config.openldap.hashPassword | quote }}
       LDAP_LOG_LEVEL: {{ .Values.config.debug | ternary "-1" "256" | quote }}
       LDAP_ORGANISATION: {{ .Values.config.openldap.organization | quote }}
       LDAP_READONLY_USER: 'false'
@@ -79,7 +80,6 @@ spec:
       LDAP_TLS_PROTOCOL_MIN: '3.0'
       LDAP_TLS_REQCERT: 'never'
       LDAP_TLS_VERIFY_CLIENT: 'never'
-      LDAP_DEBUG: {{ .Values.config.debug | ternary "true" "false" | quote }}
     # adminPassword: {{ .Values.config.openldap.passwords.admin | quote }}
     # configPassword: {{  .Values.config.openldap.passwords.config | quote }}
     customLdifFiles:
@@ -91,6 +91,16 @@ spec:
         objectClass: organization
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
+      {{- if (not (empty .Values.config.openldap.organizationalUnits)) }}
+      02-organizational-units.ldif: |
+        {{- range (splitList "," .Values.config.openldap.organizationalUnits) }}
+        dn: ou={{ . }},{{ template "openldap.openldap-dc" $ }}
+        objectclass: organizationalUnit
+        objectclass: top
+        ou: {{ . }}
+        {{- printf "\n" }}
+        {{- end }}
+      {{- end  }}
     replication:
       enabled: true
       clusterName: 'cluster.local'
