@@ -11,16 +11,10 @@ spec:
     - version: v0.0.1
       plugDefinition:
         properties:
-          resources:
+          apiVersion:
             required: true
-            type: array
-            items:
-              type: object
-              properties:
-                apiVersion:
-                  type: string
-                kind:
-                  type: string
-                name:
-                  type: string
+          kind:
+            required: true
+          name:
+            required: true
       socketDefinition: {}
