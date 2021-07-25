@@ -1,49 +1,49 @@
-# {{- if .Values.config.allowIntegration }}
-# apiVersion: integration.siliconhills.dev/v1alpha2
-# kind: Socket
-# metadata:
-#   name: {{ template "velero.name" . }}
-#   labels:
-#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-#     release: {{ .Release.Name }}
-#     heritage: {{ .Release.Service }}
-# spec:
-#   interfaceVersions: '*'
-#   interface:
-#     name: velero-backup-replicator
-#     namespace: {{ .Release.Namespace }}
-#   resources:
-#     - do: create
-#       when: coupled
-#       resource: |
-#         apiVersion: v1
-#         kind: ConfigMap
-#         metadata:
-#           name: hello
-#         data:
-#           hello: world
-#     # - do: create
-#     #   when: coupled
-#     #   resource: |
-#     #     apiVersion: batch/v1
-#     #     kind: Job
-#     #     metadata:
-#     #       name: pi
-#     #     spec:
-#     #       activeDeadlineSeconds: 100
-#     #       backoffLimit: 6
-#     #       ttlSecondsAfterFinished: 100
-#     #       template:
-#     #         spec:
-#     #           restartPolicy: Never
-#     #           containers:
-#     #             - name: pi
-#     #               image: perl
-#     #               command:
-#     #                 - sh
-#     #                 - -c
-#     #                 - |
-#     #                   cat <<EOF | echo
-#     #                   Hello, world!
-#     #                   EOF
-# {{- end }}
+{{- if .Values.config.allowIntegration }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
+metadata:
+  name: {{ template "velero.name" . }}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: velero-backup-replicator
+    namespace: {{ .Release.Namespace }}
+  resources:
+    - do: create
+      when: coupled
+      resource: |
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: hello
+        data:
+          hello: world
+    # - do: create
+    #   when: coupled
+    #   resource: |
+    #     apiVersion: batch/v1
+    #     kind: Job
+    #     metadata:
+    #       name: pi
+    #     spec:
+    #       activeDeadlineSeconds: 100
+    #       backoffLimit: 6
+    #       ttlSecondsAfterFinished: 100
+    #       template:
+    #         spec:
+    #           restartPolicy: Never
+    #           containers:
+    #             - name: pi
+    #               image: perl
+    #               command:
+    #                 - sh
+    #                 - -c
+    #                 - |
+    #                   cat <<EOF | echo
+    #                   Hello, world!
+    #                   EOF
+{{- end }}
