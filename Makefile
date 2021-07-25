@@ -5,7 +5,8 @@ GREP := grep
 DOCKER := docker
 
 CHART := .
-CHARTS := $(shell $(GIT) ls-files | $(GREP) -oE '.+\/Chart\.yaml' | $(SED) 's/\/Chart\.yaml$$//g' | sort -u)
+CHARTS := $(shell $(GIT) ls-files | $(GREP) -Ev "^depricated\/" \
+	| $(GREP) -oE '.+\/Chart\.yaml' | $(SED) 's/\/Chart\.yaml$$//g' | sort -u)
 
 .EXPORT_ALL_VARIABLES:
 
