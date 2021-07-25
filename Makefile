@@ -41,7 +41,7 @@ package:
 	@mkdir -p ./public
 	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
 	@$(HELM) package $(CHARTS) --destination .
-	@$(HELM) repo index --url https://$(CI_PROJECT_NAMESPACE).$(CI_PAGES_DOMAIN)/$(CI_PROJECT_NAME) .
+	@$(HELM) repo index --url $(CI_PAGES_URL) .
 	@mv *.tgz ./public
 	@mv index.yaml ./public
 
