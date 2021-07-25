@@ -1,26 +1,26 @@
-apiVersion: integration.siliconhills.dev/v1alpha2
-kind: Interface
-metadata:
-  name: replicator
-  labels:
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  schemas:
-    - version: v0.0.1
-      plugDefinition:
-        properties:
-          resources:
-            required: true
-            type: array
-            items:
-              type: object
-              properties:
-                apiVersion:
-                  type: string
-                kind:
-                  type: string
-                name:
-                  type: string
-      socketDefinition: {}
+# apiVersion: integration.siliconhills.dev/v1alpha2
+# kind: Interface
+# metadata:
+#   name: replicator
+#   labels:
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+# spec:
+#   schemas:
+#     - version: v0.0.1
+#       plugDefinition:
+#         properties:
+#           resources:
+#             required: true
+#             type: array
+#             items:
+#               type: object
+#               properties:
+#                 apiVersion:
+#                   type: string
+#                 kind:
+#                   type: string
+#                 name:
+#                   type: string
+#       socketDefinition: {}
