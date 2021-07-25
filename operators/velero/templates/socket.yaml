@@ -13,8 +13,8 @@ spec:
     name: replicator
     namespace: {{ .Release.Namespace }}
   resources:
-    - do: create
-      when: coupled
+    - when: updated
+      do: apply
       resource: |
         apiVersion: v1
         kind: ConfigMap
