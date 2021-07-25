@@ -17,7 +17,7 @@ lint:
 pages:
   stage: publish
   script:
-    # - make -s prev-artifacts
+    - make -s prev-artifacts
     - make -s package
   artifacts:
     paths:

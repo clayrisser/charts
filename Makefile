@@ -39,6 +39,7 @@ endif
 .PHONY: package
 package:
 	@mkdir -p ./public
+	@mv ./public/*.tgz ./
 	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
 	@$(HELM) package $(CHARTS) --destination .
 	@$(HELM) repo index --url $(CI_PAGES_URL) .
