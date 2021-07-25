@@ -10,7 +10,7 @@ metadata:
 spec:
   interfaceVersions: '*'
   interface:
-    name: velero-backup-replicator
+    name: replicator
     namespace: {{ .Release.Namespace }}
   resources:
     - do: create
