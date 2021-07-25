@@ -1,5 +1,4 @@
 velero:
-  allowIntegration: true
   backupsEnabled: true
   deployRestic: true
   snapshotsEnabled: true
@@ -20,6 +19,7 @@ velero:
         region: sfo2
 
 config:
+  allowIntegration: true
   accessKeyId: ''
   secretAccessKey: ''
   digitaloceanToken: ''
