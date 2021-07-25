@@ -2,10 +2,10 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 allowVolumeExpansion: {{ .Values.config.allowVolumeExpansion }}
 metadata:
+  name: aws-ebs
   annotations:
     storageclass.beta.kubernetes.io/is-default-class: "true"
     storageclass.kubernetes.io/is-default-class: "true"
-  name: aws-ebs
 parameters:
   encrypted: 'false'
   type: gp2
