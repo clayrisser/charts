@@ -1,0 +1,18 @@
+apiVersion: v1
+name: aws
+home: https://aws.amazon.com
+icon: ''
+version: 0.0.1
+appVersion: 0.0.1
+description: 'setup aws'
+keywords:
+  - aws
+  - cloud
+sources:
+  - https://aws.amazon.com
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
+annotations:
+  catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/release-name: aws

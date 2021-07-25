@@ -1,0 +1,12 @@
+categories:
+  - Cloud
+questions:
+
+# Config
+  - variable: config.allowVolumeExpansion
+    default: ''
+    description: ''
+    type: boolean
+    required: true
+    label: 'allow volume expansion'
+    group: Config
