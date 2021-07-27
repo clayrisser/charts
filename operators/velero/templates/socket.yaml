@@ -43,7 +43,9 @@ spec:
                     - sh
                     - -c
                     - |
-                      cat <<EOF | echo
-                      Hello, world!
+                      cat <<EOF | cat
+                      apiVersion: {{ .plugConfig.apiVersion }}
+                      kind: {{ .plugConfig.kind }}
+                      name: {{ .plugConfig.name }}
                       EOF
 {{- end }}
