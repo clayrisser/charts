@@ -2,7 +2,7 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: {{ template "openldap.name" . }}
+  name: {{ template "openldap.fullname" . }}-{{ .Release.Namespace }}
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -18,18 +18,20 @@ spec:
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
-  name: plug-sample
+  name: {{ template "openldap.fullname" . }}-velero-schedule-replicator
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   interfaceVersions: '*'
   interface:
     name: replicator
     namespace: velero
   socket:
-    name: velero
+    name: velero-schedule-replicator
     namespace: velero
   config:
-    resources:
-      - apiVersion: velero.io/v1
-        kind: Schedule
-        name: {{ template "openldap.name" . }}
+    name: {{ template "openldap.fullname" . }}-{{ .Release.Namespace }}
 {{- end }}
