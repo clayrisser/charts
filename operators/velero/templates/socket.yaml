@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
-  name: {{ template "velero.name" . }}
+  name: {{ template "velero.name" . }}-schedule-replicator
   labels:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
@@ -10,40 +10,31 @@ metadata:
 spec:
   interfaceVersions: '*'
   interface:
-    name: replicator
+    name: {{ template "velero.name" . }}-schedule-replicator
     namespace: {{ .Release.Namespace }}
   resources:
     - when: [coupled, updated]
       do: apply
       resource: |
-        apiVersion: v1
-        kind: ConfigMap
+        apiVersion: batch/v1
+        kind: Job
         metadata:
-          name: hello
-        data:
-          hello: world
-    # - do: create
-    #   when: coupled
-    #   resource: |
-    #     apiVersion: batch/v1
-    #     kind: Job
-    #     metadata:
-    #       name: pi
-    #     spec:
-    #       activeDeadlineSeconds: 100
-    #       backoffLimit: 6
-    #       ttlSecondsAfterFinished: 100
-    #       template:
-    #         spec:
-    #           restartPolicy: Never
-    #           containers:
-    #             - name: pi
-    #               image: perl
-    #               command:
-    #                 - sh
-    #                 - -c
-    #                 - |
-    #                   cat <<EOF | echo
-    #                   Hello, world!
-    #                   EOF
+          name: {{ template "velero.name" . }}-schedule-replicator
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      cat <<EOF | echo
+                      Hello, world!
+                      EOF
 {{- end }}
