@@ -45,7 +45,7 @@ spec:
                     - |
                       cat <<EOF | cat
                       apiVersion: {{ .plugConfig.apiVersion }}
-                      kind: {{ .plugConfig.kind }}
-                      name: {{ .plugConfig.name }}
+                      kind: {{ "{{" }} .plugConfig.kind }}
+                      name: {{ "{{" }} .plugConfig.name }}
                       EOF
 {{- end }}
