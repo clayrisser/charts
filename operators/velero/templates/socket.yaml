@@ -48,7 +48,7 @@ spec:
                       kind: {% .plugConfig.kind %}
                       metadata:
                         name: {% .plugConfig.name %}
-                        namespace: {% plug.metadata.namespace %}
+                        namespace: {% .plug.metadata.namespace %}
                       EOF
 
                       cat <<EOF | kubectl get -f - -o yaml
@@ -56,6 +56,6 @@ spec:
                       kind: {% .plugConfig.kind %}
                       metadata:
                         name: {% .plugConfig.name %}
-                        namespace: {% plug.metadata.namespace %}
+                        namespace: {% .plug.metadata.namespace %}
                       EOF
 {{- end }}
