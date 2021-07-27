@@ -43,17 +43,9 @@ spec:
                     - sh
                     - -c
                     - |
-                      cat <<EOF | cat
-                      apiVersion: {% .plugConfig.apiVersion %}
-                      kind: {% .plugConfig.kind %}
-                      metadata:
-                        name: {% .plugConfig.name %}
-                        namespace: {% .plug.metadata.namespace %}
-                      EOF
-
-                      cat <<EOF | kubectl get -f - -o yaml
-                      apiVersion: {% .plugConfig.apiVersion %}
-                      kind: {% .plugConfig.kind %}
+                      cat <<EOF | kubectl get -f - -o yaml | kubectl apply -f - -n {{ .Release.Namespace }}
+                      apiVersion: velero.io/v1
+                      kind: Schedule
                       metadata:
                         name: {% .plugConfig.name %}
                         namespace: {% .plug.metadata.namespace %}

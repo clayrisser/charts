@@ -11,10 +11,8 @@ spec:
     - version: v0.0.1
       plugDefinition:
         properties:
-          apiVersion:
-            required: true
-          kind:
-            required: true
+          apiVersion: {}
+          kind: {}
           name:
             required: true
       socketDefinition: {}
