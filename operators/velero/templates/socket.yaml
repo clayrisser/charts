@@ -27,6 +27,15 @@ spec:
           template:
             spec:
               restartPolicy: Never
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                        - key: kubernetes.io/arch
+                          operator: In
+                          values:
+                            - amd64
               containers:
                 - name: kubectl
                   image: bitnami/kubectl:1.20.9
