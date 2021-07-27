@@ -13,7 +13,7 @@ spec:
     name: replicator
     namespace: {{ .Release.Namespace }}
   resources:
-    - when: updated
+    - when: [coupled, updated]
       do: apply
       resource: |
         apiVersion: v1
