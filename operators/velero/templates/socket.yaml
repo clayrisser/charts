@@ -43,7 +43,7 @@ spec:
                     - sh
                     - -c
                     - |
-                      cat <<EOF | kubectl get -f - -o yaml | kubectl apply -f - --namespace={{ .Release.Namespace }}
+                      cat <<EOF | kubectl get -f - -o yaml | sed 's|\s*namespace:.*||g' | kubectl apply -f - --namespace={{ .Release.Namespace }}
                       apiVersion: velero.io/v1
                       kind: Schedule
                       metadata:
