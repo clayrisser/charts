@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: {{ template "velero.name" . }}
 subjects:
   - kind: ServiceAccount
@@ -31,3 +31,5 @@ rules:
       - '*'
     verbs:
       - get
+      - list
+      - watch
