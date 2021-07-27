@@ -1,0 +1,6 @@
+images:
+  kubemod:
+    repository: jboss/kubemod
+    tag: 12.0.4
+
+config: {}

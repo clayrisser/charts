@@ -1,0 +1,27 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ template "kubemod.name" . }}
+  labels:
+    app: {{ template "kubemod.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  targetNamespaces:
+    - {{ .Release.Namespace }}
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: {{ template "kubemod.name" . }}
+  labels:
+    app: {{ template "kubemod.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  channel: beta
+  name: kubemod
+  source: operatorhubio-catalog
+  sourceNamespace: olm
