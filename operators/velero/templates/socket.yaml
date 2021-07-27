@@ -50,4 +50,41 @@ spec:
                         name: {% .plugConfig.name %}
                         namespace: {% .plug.metadata.namespace %}
                       EOF
+    - when: [decoupled]
+      do: apply
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ template "velero.name" . }}-schedule-replicator
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl delete -f - --namespace={{ .Release.Namespace }}
+                      apiVersion: velero.io/v1
+                      kind: Schedule
+                      metadata:
+                        name: {% .plugConfig.name %}
+                        namespace: {% .plug.metadata.namespace %}
+                      EOF
 {{- end }}
