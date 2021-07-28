@@ -14,7 +14,7 @@ spec:
     namespace: {{ .Release.Namespace }}
   resources:
     - when: [coupled, updated]
-      do: apply
+      do: recreate
       resource: |
         apiVersion: batch/v1
         kind: Job
@@ -51,7 +51,7 @@ spec:
                         namespace: {% .plug.metadata.namespace %}
                       EOF
     - when: [decoupled]
-      do: apply
+      do: recreate
       resource: |
         apiVersion: batch/v1
         kind: Job
