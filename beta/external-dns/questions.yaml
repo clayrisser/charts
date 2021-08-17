@@ -15,3 +15,29 @@ questions:
     required: true
     label: target
     group: Config
+  - variable: config.cloudflare.email
+    description: ''
+    type: string
+    required: true
+    label: 'cloudflare email'
+    group: Config
+  - variable: config.cloudflare.apiKey
+    description: ''
+    type: string
+    required: true
+    label: 'cloudflare api key'
+    group: Config
+
+  # Images
+  - variable: images.externalDns.repository
+    description: ''
+    type: string
+    required: true
+    label: 'external dns repository'
+    group: Images
+  - variable: images.externalDns.tag
+    description: ''
+    type: string
+    required: true
+    label: 'external dns tag'
+    group: Images
