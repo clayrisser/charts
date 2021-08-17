@@ -1,0 +1,59 @@
+{{- if .Values.config.allowIntegrations }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
+metadata:
+  name: {{ template "external-dns.name" . }}-ingress-target
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: ingress-target
+    namespace: {{ .Release.Namespace }}
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ template "velero.name" . }}-schedule-replicator
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      cat <<EOF > ./kustomization.yaml
+                      apiVersion: kustomize.config.k8s.io/v1beta1
+                      kind: Kustomization
+                      patchesStrategicMerge:
+                        apiVersion: networking.k8s.io/v1
+                        kind: Ingress
+                        metadata:
+                          name: {% .plugConfig.ingressName %}
+                          namespace: {{ Resource.Namespace }}
+                          annotations:
+                            external-dns.alpha.kubernetes.io/target: {% .plugConfig.target %}
+                      EOF
+                      kubectl kustomize ./ | kubectl apply -f -
+{{- end }}

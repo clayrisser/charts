@@ -1,0 +1,11 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.allowIntegrations
+    description: ''
+    type: boolean
+    required: true
+    label: 'allow integrations'
+    group: Config
