@@ -1,0 +1,19 @@
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: ingress-target
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: ingress-target
+    namespace: external-dns
+  socket:
+    name: ingress-target
+    namespace: external-dns
+  config:
+    ingressName: {{ template "openldap.fullname" . }}

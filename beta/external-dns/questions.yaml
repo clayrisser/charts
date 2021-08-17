@@ -9,3 +9,9 @@ questions:
     required: true
     label: 'allow integrations'
     group: Config
+  - variable: config.target
+    description: ''
+    type: string
+    required: true
+    label: target
+    group: Config

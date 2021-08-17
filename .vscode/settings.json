@@ -23,6 +23,7 @@
     "phpldapadmin",
     "postgres",
     "restic",
+    "selfsigned",
     "storageclass",
     "subquestion",
     "subquestions",

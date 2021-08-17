@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
-  name: {{ template "external-dns.name" . }}-ingress-target
+  name: ingress-target
   labels:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
@@ -12,6 +12,8 @@ spec:
   interface:
     name: ingress-target
     namespace: {{ .Release.Namespace }}
+  config:
+    target: {{ .Values.config.target | quote }}
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -53,7 +55,7 @@ spec:
                           name: {% .plugConfig.ingressName %}
                           namespace: {{ Resource.Namespace }}
                           annotations:
-                            external-dns.alpha.kubernetes.io/target: {% .plugConfig.target %}
+                            external-dns.alpha.kubernetes.io/target: {% .socketConfig.target %}
                       EOF
                       kubectl kustomize ./ | kubectl apply -f -
 {{- end }}

@@ -14,7 +14,8 @@ spec:
         properties:
           ingressName:
             required: true
+      socketDefinition:
+        properties:
           target:
             required: true
-      socketDefinition: {}
 {{- end }}
