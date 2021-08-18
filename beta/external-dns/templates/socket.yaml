@@ -67,7 +67,7 @@ spec:
                       kind: Kustomization
                       resources:
                         - ingress.yaml
-                      patches:
+                      patchesStrategicMerge:
                         - patch.yaml
                       EOF
                       kubectl kustomize /tmp/kustomize
