@@ -46,10 +46,19 @@ spec:
                     - -c
                     - |
                       mkdir -p /tmp/kustomize
+                      cat <<EOF > /tmp/kustomize/ingress.yaml
+                      apiVersion: networking.k8s.io/v1
+                      kind: Ingress
+                      metadata:
+                        name: {% .plugConfig.ingressName %}
+                        namespace: {{ .Release.Namespace }}
+                      EOF
                       cat <<EOF > /tmp/kustomize/kustomization.yaml
                       apiVersion: kustomize.config.k8s.io/v1beta1
                       kind: Kustomization
-                      patchesStrategicMerge:
+                      resources:
+                        - ingress.yaml
+                      patches:
                         - |
                           apiVersion: networking.k8s.io/v1
                           kind: Ingress
