@@ -20,8 +20,8 @@ spec:
       tag: {{ .Values.images.externalDns.tag | quote }}
     provider: cloudflare
     cloudflare:
-      apiKey: {{ .Values.cloudflare.apiKey | quote }}
-      email: {{ .Values.cloudflare.email | quote }}
+      apiKey: {{ .Values.config.cloudflare.apiKey | quote }}
+      email: {{ .Values.config.cloudflare.email | quote }}
       proxied: false
       sources:
         - ingress
