@@ -26,8 +26,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 rules:
-  - apiGroups: ['networking.k8s.io']
+  - apiGroups: ['', 'networking.k8s.io']
     resources:
       - ingress
+      - ingresses
     verbs:
       - '*'
