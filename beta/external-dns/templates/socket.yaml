@@ -46,7 +46,7 @@ spec:
                     - -c
                     - |-
                       mkdir -p /tmp/kustomize
-                      cat <<EOF | kubectl get -f - | tee /tmp/kustomize/ingress.yaml
+                      cat <<EOF | kubectl get -o yaml -f - | tee /tmp/kustomize/ingress.yaml
                       apiVersion: networking.k8s.io/v1
                       kind: Ingress
                       metadata:
