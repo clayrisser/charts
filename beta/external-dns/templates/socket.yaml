@@ -53,16 +53,18 @@ spec:
                         name: {% .plugConfig.ingressName %}
                         namespace: {% .plug.metadata.namespace %}
                       EOF
+                      cat <<EOF > patch.yaml
+                      - op: add
+                        path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
+                        value: {% .socketConfig.target %}
+                      EOF
                       cat <<EOF > /tmp/kustomize/kustomization.yaml
                       apiVersion: kustomize.config.k8s.io/v1beta1
                       kind: Kustomization
                       resources:
                         - ingress.yaml
                       patchesJson6902:
-                        - patch: |-
-                            - op: add
-                              path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
-                              value: {% .socketConfig.target %}
+                        - path: patch.yaml
                           target:
                             group: networking.k8s.io
                             version: v1
