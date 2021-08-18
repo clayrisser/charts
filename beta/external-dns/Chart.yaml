@@ -12,3 +12,6 @@ sources:
 maintainers:
   - name: 'Clay Risser'
     email: email@clayrisser.com
+annotations:
+  catalog.cattle.io/namespace: external-dns
+  catalog.cattle.io/release-name: external-dns
