@@ -53,7 +53,7 @@ spec:
                         name: {% .plugConfig.ingressName %}
                         namespace: {% .plug.metadata.namespace %}
                       EOF
-                      cat <<EOF > patch.yaml
+                      cat <<EOF > /tmp/kustomize/patch.yaml
                       - op: add
                         path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
                         value: {% .socketConfig.target %}
