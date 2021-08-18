@@ -58,7 +58,7 @@ spec:
                       kind: Kustomization
                       resources:
                         - ingress.yaml
-                      patches:
+                      patchesJson6902:
                         - patch: |-
                             - op: add
                               path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
