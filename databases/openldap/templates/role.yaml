@@ -26,7 +26,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 rules:
-  - apiGroups: ['']
+  - apiGroups:
+      - '*'
     resources:
       - '*'
     verbs:
