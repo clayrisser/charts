@@ -12,11 +12,11 @@ spec:
   chart:
     repository: https://vmware-tanzu.github.io/helm-charts
     name: velero
-    version: 2.14.1
+    version: 2.23.6
   values:
     image:
       repository: velero/velero
-      tag: v1.5.2
+      tag: v1.6.3
       pullPolicy: IfNotPresent
       imagePullSecrets: []
     podAnnotations: {}
@@ -26,7 +26,7 @@ spec:
     initContainers:
       {{- if (eq .Values.velero.configuration.volumeSnapshotLocation.provider "velero.io/aws") }}
       - name: velero-plugin-for-aws
-        image: velero/velero-plugin-for-aws:v1.1.0
+        image: velero/velero-plugin-for-aws:v1.2.1
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target

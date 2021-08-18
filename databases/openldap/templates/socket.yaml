@@ -1,2 +1,2 @@
-{{- if .Values.config.allowIntegration }}
+{{- if .Values.config.allowIntegrations }}
 {{- end }}

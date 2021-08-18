@@ -11,7 +11,7 @@ config:
   imagePullPolicy: Always
   updateStrategy: RollingUpdate
   debug: false
-  allowIntegration: true
+  allowIntegrations: true
   openldap:
     replicas: 1
     domain: example.org

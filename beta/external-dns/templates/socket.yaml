@@ -53,7 +53,7 @@ spec:
                         kind: Ingress
                         metadata:
                           name: {% .plugConfig.ingressName %}
-                          namespace: {{ .Resource.Namespace }}
+                          namespace: {{ .Release.Namespace }}
                           annotations:
                             external-dns.alpha.kubernetes.io/target: {% .socketConfig.target %}
                       EOF

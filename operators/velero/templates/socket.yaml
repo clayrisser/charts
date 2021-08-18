@@ -1,4 +1,4 @@
-{{- if .Values.config.allowIntegration }}
+{{- if .Values.config.allowIntegrations }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
