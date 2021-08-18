@@ -51,7 +51,7 @@ spec:
                       kind: Ingress
                       metadata:
                         name: {% .plugConfig.ingressName %}
-                        namespace: {{ .Release.Namespace }}
+                        namespace: {% .plug.metadata.namespace %}
                       EOF
                       ls /tmp/kustomize
                       cat <<EOF > /tmp/kustomize/kustomization.yaml
@@ -65,7 +65,7 @@ spec:
                           kind: Ingress
                           metadata:
                             name: {% .plugConfig.ingressName %}
-                            namespace: {{ .Release.Namespace }}
+                            namespace: {% .plug.metadata.namespace %}
                             annotations:
                               external-dns.alpha.kubernetes.io/target: {% .socketConfig.target %}
                       EOF
