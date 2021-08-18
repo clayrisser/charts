@@ -12,7 +12,7 @@ spec:
   helmVersion: v3
   chart:
     repository: https://charts.bitnami.com/bitnami
-    name: bitnami
+    name: external-dns
     version: 5.4.0
   values:
     image:
