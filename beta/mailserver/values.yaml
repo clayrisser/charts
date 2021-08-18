@@ -4,7 +4,7 @@ images:
     tag: 1.13.0
   mailserver:
     repository: mailserver/docker-mailserver
-    tag: edge
+    tag: 10.1.0
 
 config:
   clusterType: rke

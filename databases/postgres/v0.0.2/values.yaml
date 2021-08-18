@@ -1,14 +1,14 @@
 images:
   pgadmin:
     repository: dpage/pgadmin4
-    tag: 4.17
+    tag: 5.6
   postgres:
     registry: registry.developers.crunchydata.com/crunchydata
     repository: crunchy-postgres-ha
-    tag: centos8-13.2-4.6.2
+    tag: centos8-13.3-4.7.0
   metrics:
     repository: registry.developers.crunchydata.com/crunchydata
-    tag: centos8-4.6.1
+    tag: centos8-4.7.0
 
 config:
   clusterType: rke

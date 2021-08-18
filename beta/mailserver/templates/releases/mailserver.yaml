@@ -11,7 +11,7 @@ spec:
   forceUpgrade: true
   helmVersion: v3
   chart:
-    git: https://github.com/funkypenguin/helm-docker-mailserver.git
+    git: https://github.com/docker-mailserver/helm-docker-mailserver
     ref: docker-mailserver-0.3.0
     path: charts/docker-mailserver
   values:
