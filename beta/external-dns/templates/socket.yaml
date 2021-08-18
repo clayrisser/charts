@@ -46,35 +46,30 @@ spec:
                     - -c
                     - |-
                       mkdir -p /tmp/kustomize
-                      cat <<EOF | kubectl get -o yaml -f - | tee /tmp/kustomize/ingress.yaml
+                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/ingress.yaml
                       apiVersion: networking.k8s.io/v1
                       kind: Ingress
                       metadata:
                         name: {% .plugConfig.ingressName %}
                         namespace: {% .plug.metadata.namespace %}
                       EOF
-                      ls /tmp/kustomize
+                      cat <<EOF > /tmp/kustomize/patch.yaml
+                      apiVersion: networking.k8s.io/v1
+                      kind: Ingress
+                      metadata:
+                        name: {% .plugConfig.ingressName %}
+                        namespace: {% .plug.metadata.namespace %}
+                        annotations:
+                          external-dns.alpha.kubernetes.io/target: {% .socketConfig.target %}
+                      EOF
                       cat <<EOF > /tmp/kustomize/kustomization.yaml
                       apiVersion: kustomize.config.k8s.io/v1beta1
                       kind: Kustomization
                       resources:
                         - ingress.yaml
                       patches:
-                        - |
-                          apiVersion: networking.k8s.io/v1
-                          kind: Ingress
-                          metadata:
-                            name: {% .plugConfig.ingressName %}
-                            namespace: {% .plug.metadata.namespace %}
-                            annotations:
-                              external-dns.alpha.kubernetes.io/target: {% .socketConfig.target %}
+                        - patch.yaml
                       EOF
-                      ls /tmp/kustomize
-                      echo ---
-                      cat /tmp/kustomize/*
-                      echo ---
-                      echo ~~~~
                       kubectl kustomize /tmp/kustomize
-                      echo ~~~~
-                      cd /tmp/kustomize && kubectl kustomize ./ | kubectl apply -f -
+                      kubectl kustomize /tmp/kustomize | kubectl apply -f -
 {{- end }}
