@@ -50,13 +50,14 @@ spec:
                       apiVersion: kustomize.config.k8s.io/v1beta1
                       kind: Kustomization
                       patchesStrategicMerge:
-                        apiVersion: networking.k8s.io/v1
-                        kind: Ingress
-                        metadata:
-                          name: {% .plugConfig.ingressName %}
-                          namespace: {{ .Release.Namespace }}
-                          annotations:
-                            external-dns.alpha.kubernetes.io/target: {% .socketConfig.target %}
+                        - |
+                          apiVersion: networking.k8s.io/v1
+                          kind: Ingress
+                          metadata:
+                            name: {% .plugConfig.ingressName %}
+                            namespace: {{ .Release.Namespace }}
+                            annotations:
+                              external-dns.alpha.kubernetes.io/target: {% .socketConfig.target %}
                       EOF
                       kubectl kustomize /tmp/kustomize | kubectl apply -f -
 {{- end }}
