@@ -45,7 +45,8 @@ spec:
                     - sh
                     - -c
                     - |
-                      cat <<EOF > ./kustomization.yaml
+                      mkdir -p /tmp/kustomize
+                      cat <<EOF > /tmp/kustomize/kustomization.yaml
                       apiVersion: kustomize.config.k8s.io/v1beta1
                       kind: Kustomization
                       patchesStrategicMerge:
@@ -57,5 +58,5 @@ spec:
                           annotations:
                             external-dns.alpha.kubernetes.io/target: {% .socketConfig.target %}
                       EOF
-                      kubectl kustomize ./ | kubectl apply -f -
+                      kubectl kustomize /tmp/kustomize | kubectl apply -f -
 {{- end }}
