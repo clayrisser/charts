@@ -19,7 +19,7 @@ spec:
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "389" "636" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
-  secretConfig: {{ template "openldap.name" . }}-socket
+  configSecretName: {{ template "openldap.name" . }}-socket
   resources:
     - when: [coupled, updated]
       do: recreate
