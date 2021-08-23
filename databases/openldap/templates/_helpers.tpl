@@ -34,11 +34,7 @@ Calculate openldap hostname
 {{- if (and .Values.config.openldap.hostname (not (empty .Values.config.openldap.hostname))) -}}
 {{- printf .Values.config.openldap.hostname -}}
 {{- else -}}
-{{- if .Values.ingress.openldap.enabled -}}
-{{- printf .Values.ingress.openldap.hostname -}}
-{{- else -}}
 {{- printf "%s-%s-openldap-stack-ha.%s.svc.cluster.local" .Release.Name (include "openldap.name" .) .Release.Namespace -}}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 
