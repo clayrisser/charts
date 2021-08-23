@@ -48,6 +48,7 @@ service:
     nodePorts:
       ldap:
       ldaps:
+    # TODO: test load balancer
     lbPorts:
       ldap: 389
       ldaps: 636
@@ -56,6 +57,7 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http:
+    # TODO: test load balancer
     lbPorts:
       http: 80
 
