@@ -33,25 +33,25 @@ spec:
         enabled: true
         secret: {{ template "openldap.openldap-certificate" . }}
     extraLabels: {}
-    {{- if .Values.persistence.velero.enabled -}}
+    {{- if .Values.persistence.velero.enabled }}
     podAnnotations:
       backup.velero.io/backup-volumes: data
-    {{- else -}}
+    {{- else }}
     podAnnotations: {}
-    {{- end -}}
+    {{- end }}
     service:
       annotations: {}
-      {{- if (eq .Values.service.openldap.type "LoadBalancer") -}}
+      {{- if (eq .Values.service.openldap.type "LoadBalancer") }}
       ldapPort: {{ .Values.service.openldap.lbPorts.openldap }}
       sslLdapPort: {{ .Values.service.openldap.lbPorts.sslLdap }}
-      {{- else -}}
+      {{- else }}
       ldapPort: 389
       sslLdapPort: 636
-      {{- end -}}
-      {{- if (eq .Values.service.openldap.type "NodePort") -}}
+      {{- end }}
+      {{- if (eq .Values.service.openldap.type "NodePort") }}
       ldapPortNodePort: {{ .Values.service.openldap.nodePorts.ldap }}
       sslLdapPortNodePort: {{ .Values.service.openldap.nodePorts.ldaps }}
-      {{- end -}}
+      {{- end }}
       externalIPs: []
       # loadBalancerIP:
       # loadBalancerSourceRanges: []
@@ -89,16 +89,16 @@ spec:
         objectClass: organization
         o: {{ .Values.config.organization }}
         dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
-      {{- if (not (empty .Values.config.openldap.organizationalUnits)) -}}
+      {{- if (not (empty .Values.config.openldap.organizationalUnits)) }}
       02-organizational-units.ldif: |
         {{- range (splitList "," .Values.config.openldap.organizationalUnits) }}
         dn: ou={{ . }},{{ template "openldap.openldap-dc" $ }}
         objectclass: organizationalUnit
         objectclass: top
         ou: {{ . }}
-        {{- printf "\n" }}
+        {{- printf "\n" -}}
         {{- end }}
-      {{- end -}}
+      {{- end }}
     replication:
       enabled: true
       clusterName: 'cluster.local'
@@ -109,25 +109,25 @@ spec:
       tls_reqcert: 'never'
     persistence:
       enabled: {{ .Values.persistence.enabled }}
-      {{- if .Values.persistence.storageClass -}}
-      {{- if (eq "-" .Values.persistence.storageClass) -}}
+      {{- if .Values.persistence.storageClass }}
+      {{- if (eq "-" .Values.persistence.storageClass) }}
       storageClass: ''
-      {{- else -}}
+      {{- else }}
       storageClass: {{ .Values.persistence.storageClass | quote }}
-      {{- end -}}
-      {{- end -}}
+      {{- end }}
+      {{- end }}
       accessModes:
         - {{ .Values.persistence.accessMode | quote }}
       size: {{ .Values.persistence.size.openldap | quote }}
-    {{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) -}}
+    {{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) }}
     resources:
       requests:
 {{ toYaml .Values.config.openldap.resources.requests | indent 8 }}
       limits:
 {{ toYaml .Values.config.openldap.resources.limits | indent 8 }}
-    {{- else -}}
+    {{- else }}
     resources: {}
-    {{- end -}}
+    {{- end }}
     nodeSelector: {}
     tolerations: []
     test:
@@ -153,27 +153,27 @@ spec:
       ingress:
         enabled: {{ .Values.ingress.phpldapadmin.enabled }}
         annotations:
-          {{- if (eq .Values.config.clusterType "aks") -}}
+          {{- if (eq .Values.config.clusterType "aks") }}
           kubernetes.io/ingress.class: addon-http-application-routing
-          {{- else -}}
+          {{- else }}
           kubernetes.io/ingress.class: nginx
-          {{- end -}}
-          {{- if .Values.ingress.phpldapadmin.tls -}}
-          {{- if (empty .Values.ingress.phpldapadmin.certificate) -}}
+          {{- end }}
+          {{- if .Values.ingress.phpldapadmin.tls }}
+          {{- if (empty .Values.ingress.phpldapadmin.certificate) }}
           cert-manager.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
           kubernetes.io/tls-acme: 'true'
-          {{- end -}}
+          {{- end }}
           nginx.ingress.kubernetes.io/ssl-redirect: 'true'
-          {{- end -}}
+          {{- end }}
         path: /
         hosts:
           - {{ .Values.ingress.phpldapadmin.hostname }}
-        {{- if .Values.ingress.phpldapadmin.tls -}}
+        {{- if .Values.ingress.phpldapadmin.tls }}
         tls:
           - secretName: {{ template "openldap.phpldapadmin-certificate" . }}
             hosts:
               - {{ .Values.ingress.phpldapadmin.hostname }}
-        {{- end -}}
+        {{- end }}
       env:
         PHPLDAPADMIN_HTTPS: 'false'
         PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: allow
