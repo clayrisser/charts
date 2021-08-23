@@ -96,7 +96,7 @@ spec:
         objectclass: organizationalUnit
         objectclass: top
         ou: {{ . }}
-        {{- printf "\n" -}}
+        {{- printf "\n" }}
         {{- end }}
       {{- end }}
     replication:

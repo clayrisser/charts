@@ -1,4 +1,4 @@
-{{- if .Values.config.allowIntegrations -}}
+{{- if .Values.config.allowIntegrations }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Interface
 metadata:
@@ -23,4 +23,4 @@ spec:
             required: true
           protocol:
             required: true
-{{- end -}}
+{{- end }}

@@ -1,4 +1,4 @@
-{{- if .Values.config.allowIntegrations -}}
+{{- if .Values.config.allowIntegrations }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
@@ -51,13 +51,13 @@ spec:
                     - sh
                     - -c
                     - |
-{{- if (and .Values.service.openldap.tls.enabled (empty .Values.service.openldap.tls.certificate)) -}}
+{{- if (and .Values.service.openldap.tls.enabled (empty .Values.service.openldap.tls.certificate)) }}
                       kubectl get secret {{ template "openldap.openldap-certificate" . }} \
                         -n {{ .Release.Namespace }} -o yaml | \
                         sed 's|^\(\s*name:\s*{{ template "openldap.openldap-certificate" . }}\)|\1-{% .plug.metadata.name %}|g' \
                         grep -v '^\s*namespace:\s*{{ .Release.Namespace }}' | \
                         kubectl apply -f - --namespace={% .plug.metadata.namespace %}
-{{- end -}}
+{{- end }}
                       cat <<EOF | kubectl apply -f -
                       apiVersion: v1
                       kind: Secret
@@ -119,4 +119,4 @@ metadata:
 type: Opaque
 stringData:
   bindPassword: {{ .Values.config.openldap.passwords.admin | default (randAlphaNum 24) | quote }}
-{{- end -}}
+{{- end }}
