@@ -8,9 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    helm.sh/hook-delete-policy: before-hook-creation
-    helm.sh/hook-weight: '0'
-    helm.sh/hook: post-install
     integration.siliconhills.dev/epoch: {{ now | unixEpoch | quote }}
 spec:
   interfaceVersions: '*'
