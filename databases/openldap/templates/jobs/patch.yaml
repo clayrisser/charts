@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "openldap.name" . }}-kustomize
+  name: {{ template "openldap.name" . }}-patch
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -71,3 +71,6 @@ spec:
               EOF
               kubectl kustomize /tmp/kustomize
               kubectl kustomize /tmp/kustomize | kubectl apply -f -
+              sleep 30
+              kubectl get pods -l app={{ .Release.Name }}-openldap-stack-ha \
+                -n {{ .Release.Namespace }} -o yaml | kubectl delete -f -
