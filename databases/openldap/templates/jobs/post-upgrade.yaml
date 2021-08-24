@@ -1,14 +1,14 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "openldap.name" . }}-postinstall
+  name: {{ template "openldap.name" . }}-postupgrade
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    helm.sh/hook: post-install
+    helm.sh/hook: post-upgrade
     helm.sh/hook-weight: '0'
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 spec:
