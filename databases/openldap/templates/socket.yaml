@@ -7,8 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    integration.siliconhills.dev/epoch: {{ now | unixEpoch | quote }}
 spec:
   epoch: {{ now | unixEpoch }}
   interfaceVersions: '*'
@@ -20,7 +18,7 @@ spec:
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "389" "636" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
-  configSecretName: {{ template "openldap.name" . }}-socket
+  configSecretName: socket
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -111,7 +109,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ template "openldap.name" . }}-socket
+  name: socket
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

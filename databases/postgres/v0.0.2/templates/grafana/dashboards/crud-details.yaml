@@ -1,19 +1,19 @@
-{{- if (not (empty .Values.config.metrics.grafana.integration)) }}
-apiVersion: integreatly.org/v1alpha1
-kind: GrafanaDashboard
-metadata:
-  name: {{ .Release.Namespace }}-crud-details
-  labels:
-    app: {{ template "postgres.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    metrics: grafana
-spec:
-  name: {{ .Release.Namespace }}-crud-details
-  customFolderName: {{ template "postgres.name" . }}.{{ .Release.Namespace }}
-  url: https://raw.githubusercontent.com/silicon-hills/grafana-dashboards/main/postgres/CRUD_Details.json
-  datasources:
-    - inputName: PROMETHEUS
-      datasourceName: {{ template "postgres.grafana-datasource" . }}
-{{- end }}
+# {{- if (not (empty .Values.config.metrics.grafana.integration)) }}
+# apiVersion: integreatly.org/v1alpha1
+# kind: GrafanaDashboard
+# metadata:
+#   name: {{ .Release.Namespace }}-crud-details
+#   labels:
+#     app: {{ template "postgres.name" . }}
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+#     metrics: grafana
+# spec:
+#   name: {{ .Release.Namespace }}-crud-details
+#   customFolderName: {{ template "postgres.name" . }}.{{ .Release.Namespace }}
+#   url: https://raw.githubusercontent.com/silicon-hills/grafana-dashboards/main/postgres/CRUD_Details.json
+#   datasources:
+#     - inputName: PROMETHEUS
+#       datasourceName: {{ template "postgres.grafana-datasource" . }}
+# {{- end }}

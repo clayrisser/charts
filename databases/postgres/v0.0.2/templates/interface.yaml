@@ -1,0 +1,30 @@
+{{- if .Values.config.allowIntegrations }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Interface
+metadata:
+  name: {{ template "openldap.name" . }}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schemas:
+    - version: v0.0.1
+      plugDefinition:
+        properties:
+          database:
+            required: true
+          cleanup: {}
+      socketDefinition:
+        properties:
+          protocol:
+            required: true
+          username:
+            required: true
+          password:
+            required: true
+          hostname:
+            required: true
+          port:
+            required: true
+{{- end }}

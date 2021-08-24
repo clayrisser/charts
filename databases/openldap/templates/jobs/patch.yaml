@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "openldap.name" . }}-patch
+  name: patch
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

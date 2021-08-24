@@ -1,69 +1,150 @@
-{{- if .Values.config.allowIntegration }}
-apiVersion: integration.siliconhills.dev/v1alpha1
-kind: IntegrationSocket
+{{- if .Values.config.allowIntegrations }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
 metadata:
   name: {{ template "postgres.name" . }}
   labels:
-    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  appendName: {{ .Release.Namespace }}
-  replications:
-    - version: v1
-      kind: Secret
-      name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
-    - version: v1
-      kind: ConfigMap
-      name: {{ template "postgres.name" . }}-connection
-  hooks:
-    - job:
-        backoffLimit: 1
-        template:
-          spec:
-            restartPolicy: Never
-            containers:
-              - name: create-database
-                image: postgres:12.5-alpine
-                command:
-                  - sh
-                  - -c
-                  - |
-                    export STDOUT="/tmp/createdb.out"
-                    echo "*:*:*:*:$PASSWORD" > .pgpass
-                    chmod 600 .pgpass
-                    createdb -h $HOSTNAME -U $USERNAME -p $PORT -w $DATABASE 2>&1 | tee $STDOUT
-                    if cat $STDOUT | grep -qE "database .+ already exists"; then
-                      echo "STATUS_MESSAGE: database $DATABASE already exists"
-                    elif cat $STDOUT | grep -qE "[^ \t\n]"; then
-                      echo "STATUS_MESSAGE: $STDOUT"
+  epoch: {{ now | unixEpoch }}
+  interfaceVersions: '*'
+  interface:
+    name: {{ template "postgres.name" . }}
+    namespace: {{ .Release.Namespace }}
+  config:
+    protocol: psql
+    username: {{ .Values.config.username | quote }}
+    hostname: {{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
+    port: '5432'
+  configSecretName: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ template "postgres.name" . }}-schedule-replicator
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  env:
+                    - name: POSTGRES_PROTOCOL
+                      value: '{% .socketConfig.protocol %}'
+                    - name: POSTGRES_USERNAME
+                      value: '{% .socketConfig.username %}'
+                    - name: POSTGRES_HOSTNAME
+                      value: '{% .socketConfig.hostname %}'
+                    - name: POSTGRES_PORT
+                      value: '{% .socketConfig.port %}'
+                    - name: POSTGRES_DATABASE
+                      value: '{% .plugConfig.database %}'
+                    - name: POSTGRES_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
+                          key: password
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      export STDOUT="/tmp/createdb.out"
+                      echo "*:*:*:*:$POSTGRES_PASSWORD" > .pgpass
+                      chmod 600 .pgpass
+                      createdb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE 2>&1 | tee $STDOUT
+                      if cat $STDOUT | grep -qE "database .+ already exists"; then
+                        echo "STATUS_MESSAGE: database $DATABASE already exists"
+                      elif cat $STDOUT | grep -qE "[^ \t\n]"; then
+                        echo "STATUS_MESSAGE: $STDOUT"
+                        rm $STDOUT
+                        exit 1
+                      else
+                        echo "STATUS_MESSAGE: created database $POSTGRES_DATABASE"
+                      fi
                       rm $STDOUT
-                      exit 1
-                    else
-                      echo "STATUS_MESSAGE: created database $DATABASE"
-                    fi
-                    rm $STDOUT
-                env:
-                  - name: PGPASSFILE
-                    value: .pgpass
-                  - name: HOSTNAME
-                    value: {{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
-                  - name: USERNAME
-                    value: {{ .Values.config.username }}
-                  - name: PASSWORD
-                    valueFrom:
-                      secretKeyRef:
-                        name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
-                        key: password
-                  - name: DATABASE
-                    valueFrom:
-                      configMapKeyRef:
-                        name: {{ template "postgres.name" . }}-socket
-                        key: database
-                  - name: PORT
-                    value: '5432'
-      messageRegex: '/(?<=STATUS_MESSAGE:\s).+/g'
-      name: create-or-update
-      timeout: 60000
+                      cat <<EOF | kubectl apply -f -
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ template "postgres.name" . }}-{% .plug.metadata.name %}
+                        namespace: '{% .plug.metadata.namespace %}'
+                      type: Opaque
+                      stringData:
+                        protocol: '$POSTGRES_PROTOCOL'
+                        username: '$POSTGRES_USERNAME'
+                        hostname: '$POSTGRES_HOSTNAME'
+                        port: '$POSTGRES_PORT'
+                        password: '$POSTGRES_PASSWORD'
+                        database: '$POSTGRES_DATABASE'
+                        url: '${POSTGRES_PROTOCOL}://${POSTGRES_USERNAME}@${POSTGRES_PASSWORD}:${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DATABASE}'
+                      EOF
+    - when: [decoupled]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ template "postgres.name" . }}-schedule-replicator
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  env:
+                    - name: POSTGRES_PROTOCOL
+                      value: '{% .socketConfig.protocol %}'
+                    - name: POSTGRES_USERNAME
+                      value: '{% .socketConfig.username %}'
+                    - name: POSTGRES_HOSTNAME
+                      value: '{% .socketConfig.hostname %}'
+                    - name: POSTGRES_PORT
+                      value: '{% .socketConfig.port %}'
+                    - name: POSTGRES_DATABASE
+                      value: '{% .plugConfig.database %}'
+                    - name: POSTGRES_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
+                          key: password
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      if [ "{% .plugConfig.cleanup %}" == "true" ]; then
+                        # deletedb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE || true
+                      fi
+                      kubectl delete secret {{ template "postgres.name" . }}-{% .plug.metadata.name %} \
+                        -n {% .plug.metadata.namespace %}
 {{- end }}
