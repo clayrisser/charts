@@ -10,6 +10,7 @@ metadata:
   annotations:
     integration.siliconhills.dev/epoch: {{ now | unixEpoch | quote }}
 spec:
+  epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
     name: {{ template "openldap.name" . }}

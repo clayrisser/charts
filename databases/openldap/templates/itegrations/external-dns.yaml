@@ -7,10 +7,8 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    epoch: {{ now | unixEpoch | quote }}
-  annotations:
-    integration.siliconhills.dev/epoch: {{ now | unixEpoch | quote }}
 spec:
+  epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
     name: ingress-target
