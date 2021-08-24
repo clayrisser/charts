@@ -59,7 +59,7 @@ spec:
       type: {{ .Values.service.openldap.type | quote }}
     env:
       CONTAINER_LOG_LEVEL: '4'
-      KEEP_EXISTING_CONFIG: {{ .Values.config.debug | ternary "true" "false" | quote }}
+      KEEP_EXISTING_CONFIG: 'false'
       LDAP_BACKEND: 'mdb'
       LDAP_DOMAIN: {{ .Values.config.openldap.domain | quote }}
       LDAP_HASH_PASSWORD: {{ .Values.config.openldap.hashPassword | quote }}
