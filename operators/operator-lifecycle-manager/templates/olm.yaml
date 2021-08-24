@@ -344,6 +344,7 @@ metadata:
   namespace: olm
 spec:
   sourceType: grpc
-  image: quay.io/operatorhubio/catalog:latest
+  image: rosemay/community-operator:arm
+  # image: quay.io/operatorhubio/catalog:latest
   displayName: Community Operators
   publisher: OperatorHub.io
