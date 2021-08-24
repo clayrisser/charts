@@ -35,5 +35,5 @@ spec:
             - -c
             - |-
               sleep 30
-              kubectl get pods -l app={{ template "openldap.name" . }}-openldap-stack-ha \
+              kubectl get pods -l app={{ .Release.Name }}-openldap-stack-ha \
                 -n {{ .Release.Namespace }} -o yaml | kubectl delete -f -
