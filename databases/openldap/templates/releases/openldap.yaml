@@ -37,6 +37,9 @@ spec:
     {{- if .Values.persistence.velero.enabled }}
     podAnnotations:
       backup.velero.io/backup-volumes: data
+      pre.hook.backup.velero.io/timeout: 3m
+      pre.hook.backup.velero.io/command: |
+        ["/bin/bash", "-c", "cd /var/lib/ldap && rm -rf *.ldif && slapcat -n 0 -l config.ldif && slapcat -n 1 -l data.ldif"]
     {{- else }}
     podAnnotations: {}
     {{- end }}
