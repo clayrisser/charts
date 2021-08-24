@@ -10,6 +10,7 @@ metadata:
 spec:
   forceUpgrade: false
   helmVersion: v3
+  wait: false
   git:
     timeout: 120s
   chart:
