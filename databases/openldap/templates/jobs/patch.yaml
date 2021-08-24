@@ -72,5 +72,5 @@ spec:
               kubectl kustomize /tmp/kustomize
               kubectl kustomize /tmp/kustomize | kubectl apply -f -
               sleep 30
-              kubectl get pods -l app={{ .Release.Name }}-openldap-stack-ha \
+              kubectl get pods -l app={{ .Release.Name }}-openldap-openldap-stack-ha \
                 -n {{ .Release.Namespace }} -o yaml | kubectl delete -f -
