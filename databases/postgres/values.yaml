@@ -40,8 +40,9 @@ config:
       limits:
         cpu: 200m
         memory: 256Mi
+  # TODO: enable metrics
   metrics:
-    enabled: true
+    enabled: false
     grafana:
       integration:
       username: admin
