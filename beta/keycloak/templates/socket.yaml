@@ -1,21 +1,2 @@
-{{- if .Values.config.allowIntegration }}
-apiVersion: integration.siliconhills.dev/v1alpha1
-kind: IntegrationSocket
-metadata:
-  name: {{ template "keycloak.name" . }}
-  labels:
-    app: {{ template "keycloak.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  appendName: {{ .Release.Name }}
-  hooks: []
-  replications:
-    - version: v1
-      kind: ConfigMap
-      name: {{ template "keycloak.name" . }}-connection
-    - version: v1
-      kind: Secret
-      name: credential-{{ .Chart.Name }}
+{{- if .Values.config.allowIntegrations }}
 {{- end }}

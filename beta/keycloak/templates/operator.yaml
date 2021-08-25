@@ -21,7 +21,10 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  # https://olm.operatorframework.io/docs/tasks/install-operator-with-olm/#example-install-a-specific-version-of-an-operator
   channel: alpha
+  installPlanApproval: Automatic
   name: keycloak-operator
   source: operatorhubio-catalog
   sourceNamespace: olm
+  startingCSV: keycloak-operator.v15.0.2

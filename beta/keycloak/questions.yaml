@@ -24,11 +24,11 @@ questions:
     required: true
     label: 'pull policy'
     group: Config
-  - variable: config.allowIntegration
+  - variable: config.allowIntegrations
     description: ''
     type: boolean
     required: true
-    label: 'allow integration'
+    label: 'allow integrations'
     group: Config
   - variable: config.updateStrategy
     description: ''
