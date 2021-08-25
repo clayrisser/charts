@@ -30,7 +30,7 @@ config:
     hostname: ''
     baseUrl: ''
     enabled: false
-    email: admin
+    email: admin@example.com
     password: P@ssw0rd
     resources:
       enabled: 'false'
