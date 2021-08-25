@@ -1,6 +1,6 @@
 images:
   siliconOperator:
-    repository: codejamninja/silicon-operator
+    repository: clayrisser/silicon-operator
     tag: 0.0.5
 
 config:

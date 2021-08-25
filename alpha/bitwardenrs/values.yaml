@@ -1,6 +1,6 @@
 images:
   bitwardenrs:
-    repository: codejamninja/bitwardenrs
+    repository: clayrisser/bitwardenrs
     tag: 1.13.1
 
 config:

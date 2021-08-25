@@ -1,6 +1,6 @@
 images:
   kibana:
-    repository: codejamninja/kibana-logtrail
+    repository: clayrisser/kibana-logtrail
     tag: 6.4.0
     pullPolicy: IfNotPresent
 

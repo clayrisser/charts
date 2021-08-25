@@ -60,11 +60,11 @@ prev-artifacts:
 
 .PHONY: docker-build
 docker-build:
-	@$(DOCKER) build -f ./Dockerfile -t codejamninja/make-helm:latest .
+	@$(DOCKER) build -f ./Dockerfile -t clayrisser/make-helm:latest .
 
 .PHONY: docker-push
 docker-push:
-	@$(DOCKER) push codejamninja/make-helm:latest
+	@$(DOCKER) push clayrisser/make-helm:latest
 
 .PHONY: $(CHARTS)
 $(CHARTS):

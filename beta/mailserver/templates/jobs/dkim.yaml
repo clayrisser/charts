@@ -21,7 +21,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: kubectl
-          image: codejamninja/kube-commands:0.0.2
+          image: clayrisser/kube-commands:0.0.2
           imagePullPolicy: Always
           command:
             - /bin/sh

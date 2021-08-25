@@ -1,4 +1,4 @@
 images:
   olm:
-    repository: codejamninja/olm
+    repository: clayrisser/olm
     tag: multiarch

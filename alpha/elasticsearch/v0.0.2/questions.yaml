@@ -547,7 +547,7 @@ questions:
 
 # Images
   - variable: images.kibana.repository
-    default: codejamninja/kibana-logtrail
+    default: clayrisser/kibana-logtrail
     description: ''
     type: string
     required: true

@@ -478,7 +478,7 @@ questions:
 
 # Images
   - variable: images.flectra.repository
-    default: codejamninja/flectra
+    default: clayrisser/flectra
     description: ''
     type: string
     required: true

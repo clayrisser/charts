@@ -1,6 +1,6 @@
 images:
   integrationOperator:
-    repository: codejamninja/integration-operator
+    repository: clayrisser/integration-operator
     tag: 0.0.12
 
 config:

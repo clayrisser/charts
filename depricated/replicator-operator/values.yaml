@@ -1,6 +1,6 @@
 images:
   replicatorOperator:
-    repository: codejamninja/replicator-operator
+    repository: clayrisser/replicator-operator
     tag: 0.0.2
 
 config:

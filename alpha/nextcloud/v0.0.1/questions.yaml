@@ -514,7 +514,7 @@ questions:
 
 # Images
   - variable: images.nextcloud.repository
-    default: codejamninja/nextcloud
+    default: clayrisser/nextcloud
     description: ''
     type: string
     required: true

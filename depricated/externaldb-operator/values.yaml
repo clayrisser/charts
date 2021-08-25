@@ -1,6 +1,6 @@
 images:
   externaldbOperator:
-    repository: codejamninja/externaldb-operator
+    repository: clayrisser/externaldb-operator
     tag: 0.0.13
 
 config:

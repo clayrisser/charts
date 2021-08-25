@@ -11,8 +11,8 @@ spec:
   forceUpgrade: true
   helmVersion: v3
   chart:
-    git: https://github.com/codejamninja/percona-helm-charts.git
-    ref: codejamninja/psmdb-db-0.1.0
+    git: https://github.com/clayrisser/percona-helm-charts.git
+    ref: clayrisser/psmdb-db-0.1.0
     path: charts/psmdb-db
   values:
     platform: kubernetes

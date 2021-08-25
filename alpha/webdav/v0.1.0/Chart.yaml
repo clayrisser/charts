@@ -1,6 +1,6 @@
 name: webdav
 apiVersion: v1
-home: https://github.com/codejamninja/webdav
+home: https://github.com/clayrisser/webdav
 icon: http://www.pvhc.net/img87/emmugcxybtnqmazbcdxh.png
 version: 0.1.0
 appVersion: latest
@@ -13,7 +13,7 @@ keywords:
   - docker
   - helm
 sources:
-  - https://github.com/codejamninja/webdav
+  - https://github.com/clayrisser/webdav
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja

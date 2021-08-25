@@ -24,7 +24,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: kubectl
-          image: codejamninja/stash-cli:0.0.1
+          image: clayrisser/stash-cli:0.0.1
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh

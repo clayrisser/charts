@@ -1,6 +1,6 @@
 images:
   ejabberd:
-    repository: codejamninja/ejabberd
+    repository: clayrisser/ejabberd
     tag: 20.4.0
   pgadmin:
     repository: dpage/pgadmin4

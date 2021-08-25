@@ -15,7 +15,7 @@ keywords:
   - mongo
   - mongodb
 sources:
-  - https://github.com/codejamninja/charts
+  - https://github.com/clayrisser/charts
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja

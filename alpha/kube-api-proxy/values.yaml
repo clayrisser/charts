@@ -1,6 +1,6 @@
 images:
   kubeApiProxy:
-    repository: codejamninja/kube-api-proxy
+    repository: clayrisser/kube-api-proxy
     tag: 0.1.0
 
 config:

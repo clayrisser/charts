@@ -1,6 +1,6 @@
 name: kube-api-proxy
 apiVersion: v1
-home: https://github.com/codejamninja/kube-api-proxy
+home: https://github.com/clayrisser/kube-api-proxy
 icon:
 version: 0.1.0
 appVersion: latest
@@ -11,7 +11,7 @@ keywords:
   - proxy
   - api
 sources:
-  - https://github.com/codejamninja/kube-api-proxy
+  - https://github.com/clayrisser/kube-api-proxy
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
