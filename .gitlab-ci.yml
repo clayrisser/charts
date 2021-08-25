@@ -1,5 +1,5 @@
 image:
-  name: clayrisser/make-helm:latest
+  name: codejamninja/make-helm:latest
   entrypoint: ["/bin/sh", "-c"]
 
 variables:

@@ -1,6 +1,6 @@
 images:
   wordpress:
-    repository: clayrisser/presslabs-example
+    repository: codejamninja/presslabs-example
     tag: 0.0.1
 
 config:

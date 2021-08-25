@@ -1,6 +1,6 @@
 images:
   flectra:
-    repository: clayrisser/flectra
+    repository: codejamninja/flectra
     tag: 0.0.1
   pgadmin:
     repository: dpage/pgadmin4

@@ -267,7 +267,7 @@ questions:
 
 # Images
   - variable: images.bitwardenrs.repository
-    default: clayrisser/bitwardenrs
+    default: codejamninja/bitwardenrs
     description: ''
     type: string
     required: true

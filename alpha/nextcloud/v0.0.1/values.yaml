@@ -1,6 +1,6 @@
 images:
   nextcloud:
-    repository: clayrisser/nextcloud
+    repository: codejamninja/nextcloud
     tag: 17.0.1
   pgadmin:
     repository: dpage/pgadmin4

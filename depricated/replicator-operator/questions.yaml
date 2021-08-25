@@ -64,7 +64,7 @@ questions:
 
 # Images
   - variable: images.replicatorOperator.repository
-    default: clayrisser/replicator-operator
+    default: codejamninja/replicator-operator
     description: ''
     type: string
     required: true

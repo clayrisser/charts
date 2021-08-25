@@ -1,6 +1,6 @@
 images:
   kustomizeOperator:
-    repository: clayrisser/kustomize-operator
+    repository: codejamninja/kustomize-operator
     tag: 0.0.13
 
 config:

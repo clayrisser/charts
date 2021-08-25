@@ -130,7 +130,7 @@ questions:
 
 # Images
   - variable: images.kubeApiProxy.repository
-    default: clayrisser/kube-api-proxy
+    default: codejamninja/kube-api-proxy
     description: ''
     type: string
     required: true

@@ -60,7 +60,7 @@ questions:
 
 # Images
   - variable: images.siliconOperator.repository
-    default: clayrisser/silicon-operator
+    default: codejamninja/silicon-operator
     description: ''
     type: string
     required: true

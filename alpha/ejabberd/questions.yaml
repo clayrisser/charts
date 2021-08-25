@@ -804,7 +804,7 @@ questions:
 
 # Images
   - variable: images.ejabberd.repository
-    default: clayrisser/ejabberd
+    default: codejamninja/ejabberd
     description: ''
     type: string
     required: true
