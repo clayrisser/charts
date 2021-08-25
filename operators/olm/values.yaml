@@ -1,1 +1,4 @@
-{}
+images:
+  olm:
+    repository: codejamninja/olm
+    tag: multiarch

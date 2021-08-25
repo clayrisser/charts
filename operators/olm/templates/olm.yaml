@@ -54,15 +54,15 @@ spec:
         app: olm-operator
     spec:
       serviceAccountName: olm-operator-serviceaccount
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - amd64
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: kubernetes.io/arch
+      #               operator: In
+      #               values:
+      #                 - amd64
       containers:
         - name: olm-operator
           command:
@@ -72,7 +72,7 @@ spec:
           - $(OPERATOR_NAMESPACE)
           - --writeStatusName
           - ""
-          image: quay.io/operator-framework/olm@sha256:e74b2ac57963c7f3ba19122a8c31c9f2a0deb3c0c5cac9e5323ccffd0ca198ed
+          image: {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -122,15 +122,15 @@ spec:
         app: catalog-operator
     spec:
       serviceAccountName: olm-operator-serviceaccount
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - amd64
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: kubernetes.io/arch
+      #               operator: In
+      #               values:
+      #                 - amd64
       containers:
         - name: catalog-operator
           command:
@@ -140,8 +140,8 @@ spec:
           - olm
           - -configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
           - -util-image
-          -  quay.io/operator-framework/olm@sha256:e74b2ac57963c7f3ba19122a8c31c9f2a0deb3c0c5cac9e5323ccffd0ca198ed
-          image: quay.io/operator-framework/olm@sha256:e74b2ac57963c7f3ba19122a8c31c9f2a0deb3c0c5cac9e5323ccffd0ca198ed
+          - {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
+          image: {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -304,7 +304,7 @@ spec:
                 - "5443"
                 - --global-namespace
                 - olm
-                image: quay.io/operator-framework/olm@sha256:e74b2ac57963c7f3ba19122a8c31c9f2a0deb3c0c5cac9e5323ccffd0ca198ed
+                image: {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
                 imagePullPolicy: Always
                 ports:
                 - containerPort: 5443
