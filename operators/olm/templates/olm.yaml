@@ -60,6 +60,7 @@ spec:
     spec:
       serviceAccountName: olm-operator-serviceaccount
       affinity:
+        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
@@ -127,6 +128,7 @@ spec:
     spec:
       serviceAccountName: olm-operator-serviceaccount
       affinity:
+        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
