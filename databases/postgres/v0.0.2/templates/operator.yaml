@@ -27,4 +27,4 @@ spec:
   name: postgresql
   source: operatorhubio-catalog
   sourceNamespace: olm
-  startingCSV: 4.7.0
+  startingCSV: postgresoperator.v4.7.0
