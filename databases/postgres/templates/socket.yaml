@@ -45,8 +45,8 @@ spec:
                             values:
                               - amd64
               containers:
-                - name: kubectl
-                  image: bitnami/kubectl:1.20.9
+                - name: createdb
+                  image: postgres:12.5-alpine
                   env:
                     - name: POSTGRES_PROTOCOL
                       value: '{% .socketConfig.protocol %}'
@@ -81,7 +81,28 @@ spec:
                       else
                         echo "STATUS_MESSAGE: created database $POSTGRES_DATABASE"
                       fi
-                      rm $STDOUT .pgpass
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  env:
+                    - name: POSTGRES_PROTOCOL
+                      value: '{% .socketConfig.protocol %}'
+                    - name: POSTGRES_USERNAME
+                      value: '{% .socketConfig.username %}'
+                    - name: POSTGRES_HOSTNAME
+                      value: '{% .socketConfig.hostname %}'
+                    - name: POSTGRES_PORT
+                      value: '{% .socketConfig.port %}'
+                    - name: POSTGRES_DATABASE
+                      value: '{% .plugConfig.database %}'
+                    - name: POSTGRES_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
+                          key: password
+                  command:
+                    - sh
+                    - -c
+                    - |
                       cat <<EOF | kubectl apply -f -
                       apiVersion: v1
                       kind: Secret
