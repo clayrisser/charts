@@ -6,7 +6,7 @@ kind: Plug
 metadata:
   name: postgres
   labels:
-    app: {{ .Release.Name }}
+    app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

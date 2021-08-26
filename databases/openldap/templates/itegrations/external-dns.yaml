@@ -4,7 +4,7 @@ kind: Plug
 metadata:
   name: ingress-target
   labels:
-    app: {{ .Release.Name }}
+    app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

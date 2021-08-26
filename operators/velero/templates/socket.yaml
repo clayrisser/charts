@@ -4,6 +4,7 @@ kind: Socket
 metadata:
   name: {{ template "velero.name" . }}-schedule-replicator
   labels:
+    app: {{ template "velero.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

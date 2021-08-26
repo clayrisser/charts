@@ -4,6 +4,7 @@ kind: Interface
 metadata:
   name: replicator
   labels:
+    app: {{ template "velero.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

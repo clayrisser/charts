@@ -4,6 +4,7 @@ kind: Socket
 metadata:
   name: {{ template "postgres.name" . }}
   labels:
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
