@@ -28,8 +28,10 @@ spec:
         paths:
           - path: {{ .Values.ingress.pgadmin.path }}
             backend:
-              serviceName: pgadmin
-              servicePort: http
+              service:
+                name: pgadmin
+                port:
+                  name: http
   {{- if .Values.ingress.pgadmin.tls }}
   tls:
     - secretName: {{ template "postgres.pgadmin-certificate" . }}
