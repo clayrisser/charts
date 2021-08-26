@@ -67,6 +67,7 @@ spec:
                     - sh
                     - -c
                     - |
+                      cd /tmp
                       export STDOUT="/tmp/createdb.out"
                       echo "*:*:*:*:$POSTGRES_PASSWORD" > .pgpass
                       chmod 600 .pgpass
@@ -80,7 +81,7 @@ spec:
                       else
                         echo "STATUS_MESSAGE: created database $POSTGRES_DATABASE"
                       fi
-                      rm $STDOUT
+                      rm $STDOUT .pgpass
                       cat <<EOF | kubectl apply -f -
                       apiVersion: v1
                       kind: Secret
