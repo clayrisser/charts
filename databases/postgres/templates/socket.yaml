@@ -19,7 +19,7 @@ spec:
     username: {{ .Values.config.username | quote }}
     hostname: {{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
     port: '5432'
-  configSecretName: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
+  configSecretName: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -61,7 +61,7 @@ spec:
                     - name: POSTGRES_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
+                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
                           key: password
                   command:
                     - sh
@@ -137,7 +137,7 @@ spec:
                     - name: POSTGRES_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret-{{ .Release.Name }}
+                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
                           key: password
                   command:
                     - sh
