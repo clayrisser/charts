@@ -93,7 +93,6 @@ spec:
   migration:
     backups:
       enabled: false
-      strategy: IGNORE_EXISTING
   podDisruptionBudget:
     enabled: false
   unmanaged: false
