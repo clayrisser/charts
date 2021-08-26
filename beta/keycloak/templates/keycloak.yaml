@@ -17,7 +17,8 @@ spec:
   external:
     enabled: false
   externalDatabase:
-    enabled: false
+    # set to `true` from postgres integration
+    enabled: {{ (and .Values.config.allowIntegrations (not (empty .Values.config.postgres.integration))) | ternary "false" "true" }}
   keycloakDeploymentSpec:
     experimental:
       command:
