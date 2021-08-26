@@ -38,7 +38,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "postgres.name" . }}
+  name: {{ template "postgres.name" . }}-{{ .Release.Namespace }}
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -47,7 +47,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "postgres.name" . }}
+  name: {{ template "postgres.name" . }}-{{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
     name: default
@@ -56,7 +56,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "postgres.name" . }}
+  name: {{ template "postgres.name" . }}-{{ .Release.Namespace }}
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
