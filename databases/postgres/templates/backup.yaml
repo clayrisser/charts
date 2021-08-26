@@ -2,9 +2,9 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: {{ template "openldap.fullname" . }}-{{ .Release.Namespace }}
+  name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}
   labels:
-    app: {{ template "openldap.name" . }}
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -18,7 +18,7 @@ spec:
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
-  name: {{ template "openldap.fullname" . }}-velero-schedule-replicator
+  name: {{ template "postgres.fullname" . }}-velero-schedule-replicator
   labels:
     app: {{ .Release.Name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -33,5 +33,5 @@ spec:
     name: velero-schedule-replicator
     namespace: velero
   config:
-    name: {{ template "openldap.fullname" . }}-{{ .Release.Namespace }}
+    name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}
 {{- end }}
