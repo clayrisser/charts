@@ -18,5 +18,5 @@ spec:
     name: ingress-target
     namespace: external-dns
   config:
-    ingressName: {{ template "keycloak.fullname" . }}-phpldapadmin
+    ingressName: {{ template "keycloak.name" . }}
 {{- end }}

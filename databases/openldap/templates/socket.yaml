@@ -27,7 +27,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "openldap.name" . }}-schedule-replicator
+          name: {{ template "openldap.name" . }}-coupled-or-updated
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -78,7 +78,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "openldap.name" . }}-schedule-replicator
+          name: {{ template "openldap.name" . }}-decoupled
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6

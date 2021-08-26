@@ -29,7 +29,8 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "keycloak.name" . }}-schedule-replicator
+          name: {{ template "keycloak.name" . }}-integration
+          namespace: {{ .Release.Namespace }}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6

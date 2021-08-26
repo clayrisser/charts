@@ -22,7 +22,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: ingress-target
+          name: ingress-target-coupled-or-updated
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
