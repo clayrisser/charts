@@ -67,10 +67,10 @@ spec:
                     - sh
                     - -c
                     - |
-                      cd /tmp
+                      export PGPASSFILE="/tmp/.pgpass"
                       export STDOUT="/tmp/createdb.out"
-                      echo "*:*:*:*:$POSTGRES_PASSWORD" > .pgpass
-                      chmod 600 .pgpass
+                      echo "*:*:*:*:$POSTGRES_PASSWORD" > $PGPASSFILE
+                      chmod 600 $PGPASSFILE
                       createdb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE 2>&1 | tee $STDOUT
                       if cat $STDOUT | grep -qE "database .+ already exists"; then
                         echo "STATUS_MESSAGE: database $DATABASE already exists"
@@ -166,9 +166,9 @@ spec:
                     - -c
                     - |
                       if [ "{% .plugConfig.cleanup %}" == "true" ]; then
-                        cd /tmp
-                        echo "*:*:*:*:$POSTGRES_PASSWORD" > .pgpass
-                        chmod 600 .pgpass
+                        export PGPASSFILE="/tmp/.pgpass"
+                        echo "*:*:*:*:$POSTGRES_PASSWORD" > $PGPASSFILE
+                        chmod 600 $PGPASSFILE
                         dropdb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE || true
                       fi
                 - name: kubectl
