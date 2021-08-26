@@ -68,6 +68,8 @@ rules:
       - secrets
     verbs:
       - create
+      - get
+      - list
       - patch
       - update
 {{- end }}
