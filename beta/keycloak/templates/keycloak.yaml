@@ -16,9 +16,8 @@ spec:
     tlsTermination: reencrypt
   external:
     enabled: false
-  # externalDatabase is set from kustomization
-  # externalDatabase:
-  #   enabled: true
+  externalDatabase:
+    enabled: false
   keycloakDeploymentSpec:
     experimental:
       command:
