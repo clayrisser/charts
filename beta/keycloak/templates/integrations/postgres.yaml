@@ -29,7 +29,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "postgres.name" . }}-schedule-replicator
+          name: {{ template "keycloak.name" . }}-schedule-replicator
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6

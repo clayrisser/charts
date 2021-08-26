@@ -8,7 +8,7 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   debug: false
-  allowIntegration: true
+  allowIntegrations: true
   keycloak:
     baseUrl: ''
     defaultTheme: keycloak
