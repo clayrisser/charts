@@ -44,10 +44,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '0'
-    helm.sh/hook-delete-policy: before-hook-creation
+  # annotations:
+  #   helm.sh/hook: pre-install
+  #   helm.sh/hook-weight: '0'
+  #   helm.sh/hook-delete-policy: before-hook-creation
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -66,10 +66,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '0'
-    helm.sh/hook-delete-policy: before-hook-creation
+  # annotations:
+  #   helm.sh/hook: pre-install
+  #   helm.sh/hook-weight: '0'
+  #   helm.sh/hook-delete-policy: before-hook-creation
 rules:
   - apiGroups: ['']
     resources:
