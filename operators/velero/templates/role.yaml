@@ -23,10 +23,10 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "velero.name" . }}-{{ .Release.Namespace }}
+  name: {{ template "velero.name" . }}-{{ .Release.Namespace }}-default
   labels:
     app: {{ template "velero.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}-default
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   # annotations:
