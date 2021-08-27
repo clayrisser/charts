@@ -16,6 +16,8 @@ spec:
           database:
             required: true
           cleanup: {}
+          replicate: {}
+          createdb: {}
       socketDefinition:
         properties:
           protocol:

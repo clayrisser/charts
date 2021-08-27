@@ -22,6 +22,7 @@ spec:
   config:
     database: {{ .Values.config.postgres.database | quote }}
     cleanup: 'false'
+    replicate: 'false'
   resources:
     - when: [coupled, updated]
       do: recreate

@@ -67,36 +67,40 @@ spec:
                     - sh
                     - -c
                     - |
-                      export PGPASSFILE="/tmp/.pgpass"
-                      export STDOUT="/tmp/createdb.out"
-                      echo "*:*:*:*:$POSTGRES_PASSWORD" > $PGPASSFILE
-                      chmod 600 $PGPASSFILE
-                      createdb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE 2>&1 | tee $STDOUT
-                      if cat $STDOUT | grep -qE "database .+ already exists"; then
-                        echo "STATUS_MESSAGE: database $DATABASE already exists"
-                      elif cat $STDOUT | grep -qE "[^ \t\n]"; then
-                        echo "STATUS_MESSAGE: $STDOUT"
-                        rm $STDOUT
-                        exit 1
-                      else
-                        echo "STATUS_MESSAGE: created database $POSTGRES_DATABASE"
+                      if [ "{% .plugConfig.createdb %}" != "false" ]; then
+                        export PGPASSFILE="/tmp/.pgpass"
+                        export STDOUT="/tmp/createdb.out"
+                        echo "*:*:*:*:$POSTGRES_PASSWORD" > $PGPASSFILE
+                        chmod 600 $PGPASSFILE
+                        createdb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE 2>&1 | tee $STDOUT
+                        if cat $STDOUT | grep -qE "database .+ already exists"; then
+                          echo "STATUS_MESSAGE: database $DATABASE already exists"
+                        elif cat $STDOUT | grep -qE "[^ \t\n]"; then
+                          echo "STATUS_MESSAGE: $STDOUT"
+                          rm $STDOUT
+                          exit 1
+                        else
+                          echo "STATUS_MESSAGE: created database $POSTGRES_DATABASE"
+                        fi
                       fi
-                      cat <<EOF | kubectl apply -f -
-                      apiVersion: v1
-                      kind: Secret
-                      metadata:
-                        name: {{ template "postgres.name" . }}-{% .plug.metadata.name %}
-                        namespace: '{% .plug.metadata.namespace %}'
-                      type: Opaque
-                      stringData:
-                        protocol: '$POSTGRES_PROTOCOL'
-                        username: '$POSTGRES_USERNAME'
-                        hostname: '$POSTGRES_HOSTNAME'
-                        port: '$POSTGRES_PORT'
-                        password: '$POSTGRES_PASSWORD'
-                        database: '$POSTGRES_DATABASE'
-                        url: '${POSTGRES_PROTOCOL}://${POSTGRES_USERNAME}@${POSTGRES_PASSWORD}:${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DATABASE}'
-                      EOF
+                      if [ "{% .plugConfig.replicate %}" != "false" ]; then
+                        cat <<EOF | kubectl apply -f -
+                        apiVersion: v1
+                        kind: Secret
+                        metadata:
+                          name: {{ template "postgres.name" . }}-{% .plug.metadata.name %}
+                          namespace: '{% .plug.metadata.namespace %}'
+                        type: Opaque
+                        stringData:
+                          protocol: '$POSTGRES_PROTOCOL'
+                          username: '$POSTGRES_USERNAME'
+                          hostname: '$POSTGRES_HOSTNAME'
+                          port: '$POSTGRES_PORT'
+                          password: '$POSTGRES_PASSWORD'
+                          database: '$POSTGRES_DATABASE'
+                          url: '${POSTGRES_PROTOCOL}://${POSTGRES_USERNAME}@${POSTGRES_PASSWORD}:${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DATABASE}'
+                        EOF
+                      fi
     - when: [decoupled]
       do: recreate
       resource: |
@@ -143,11 +147,13 @@ spec:
                     - sh
                     - -c
                     - |
-                      if [ "{% .plugConfig.cleanup %}" == "true" ]; then
-                        export PGPASSFILE="/tmp/.pgpass"
-                        echo "*:*:*:*:$POSTGRES_PASSWORD" > $PGPASSFILE
-                        chmod 600 $PGPASSFILE
-                        dropdb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE || true
+                      if [ "{% .plugConfig.createdb %}" != "false" ]; then
+                        if [ "{% .plugConfig.cleanup %}" == "true" ]; then
+                          export PGPASSFILE="/tmp/.pgpass"
+                          echo "*:*:*:*:$POSTGRES_PASSWORD" > $PGPASSFILE
+                          chmod 600 $PGPASSFILE
+                          dropdb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE || true
+                        fi
                       fi
                       kubectl delete secret {{ template "postgres.name" . }}-{% .plug.metadata.name %} \
                         -n {% .plug.metadata.namespace %}
