@@ -51,7 +51,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "openldap.name" . }}
+  name: {{ template "openldap.name" . }}-{{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
     name: default
