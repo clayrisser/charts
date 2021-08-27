@@ -45,6 +45,13 @@ spec:
                     - sh
                     - -c
                     - |
+                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl delete -f - --namespace={{ .Release.Namespace }}
+                      apiVersion: velero.io/v1
+                      kind: Schedule
+                      metadata:
+                        name: {% .plugConfig.name %}
+                        namespace: {% .plug.metadata.namespace %}
+                      EOF
                       cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={{ .Release.Namespace }}
                       apiVersion: velero.io/v1
                       kind: Schedule
