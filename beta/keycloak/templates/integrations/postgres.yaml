@@ -54,6 +54,7 @@ spec:
                     - sh
                     - -c
                     - |
+                      sleep 10
                       mkdir -p /tmp/kustomize
                       cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak.yaml
                       apiVersion: keycloak.org/v1alpha1

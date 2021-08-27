@@ -46,6 +46,7 @@ spec:
                     - sh
                     - -c
                     - |-
+                      sleep 10
                       mkdir -p /tmp/kustomize
                       cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/ingress.yaml
                       apiVersion: networking.k8s.io/v1

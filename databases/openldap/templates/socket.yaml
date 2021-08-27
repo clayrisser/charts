@@ -51,6 +51,7 @@ spec:
                     - sh
                     - -c
                     - |
+                      sleep 10
 {{- if (and .Values.service.openldap.tls.enabled (empty .Values.service.openldap.tls.certificate)) }}
                       kubectl get secret {{ template "openldap.openldap-certificate" . }} \
                         -n {{ .Release.Namespace }} -o yaml | \
