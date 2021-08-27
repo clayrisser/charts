@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  epoch: {{ now | unixEpoch }}
+  epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
     name: ingress-target

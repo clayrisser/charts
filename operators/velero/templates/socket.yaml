@@ -9,6 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
     name: replicator
@@ -20,7 +21,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "velero.name" . }}-coupled-or-updated
+          name: {{ template "velero.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -57,7 +58,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "velero.name" . }}-decoupled
+          name: {{ template "velero.name" . }}-decoupled-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
