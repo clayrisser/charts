@@ -99,7 +99,7 @@ spec:
                           password: '$POSTGRES_PASSWORD'
                           database: '$POSTGRES_DATABASE'
                           url: '${POSTGRES_PROTOCOL}://${POSTGRES_USERNAME}@${POSTGRES_PASSWORD}:${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DATABASE}'
-                        EOF
+                      EOF
                       fi
     - when: [decoupled]
       do: recreate
