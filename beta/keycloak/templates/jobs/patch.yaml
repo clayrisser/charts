@@ -57,6 +57,9 @@ spec:
                 path: /metadata/annotations/nginx.ingress.kubernetes.io~1ssl-redirect
                 value: 'true'
               - op: add
+                path: /metadata/annotations/kubernetes.io~1ingress.class
+                value: nginx
+              - op: add
                 path: /spec/tls
                 value:
                   - secretName: {{ template "keycloak.keycloak-certificate" . }}
