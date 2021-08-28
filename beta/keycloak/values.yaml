@@ -29,7 +29,7 @@ config:
       tls:
         enabled: true
         ca:
-          integration: cluster-issuer
+          integration: kube-system
           key: tls.crt
           secret: selfsigned-ca
     resources:
