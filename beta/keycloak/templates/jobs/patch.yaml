@@ -87,4 +87,3 @@ spec:
               EOF
               kubectl kustomize /tmp/kustomize
               kubectl kustomize /tmp/kustomize | kubectl apply -f -
-{{- end }}
