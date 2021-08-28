@@ -30,7 +30,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "keycloak.name" . }}-integration
+          name: postgres-integration
           namespace: {{ .Release.Namespace }}
         spec:
           activeDeadlineSeconds: 360

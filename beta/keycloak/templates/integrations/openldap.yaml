@@ -1,5 +1,5 @@
 {{- if (and .Values.config.allowIntegrations (not (empty .Values.config.postgres.integration))) }}
-{{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
+{{- $name := (split "." .Values.config.postgres.integration)._1 | default "openldap" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
@@ -22,6 +22,7 @@ spec:
   config:
     database: {{ .Values.config.postgres.database | quote }}
     cleanup: 'false'
+    replicate: 'false'
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -29,7 +30,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "keycloak.name" . }}-integration
+          name: openldap-integration
           namespace: {{ .Release.Namespace }}
         spec:
           activeDeadlineSeconds: 360
@@ -56,29 +57,32 @@ spec:
                     - |
                       sleep 10
                       mkdir -p /tmp/kustomize
-                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak.yaml
+                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-realm.yaml
                       apiVersion: keycloak.org/v1alpha1
-                      kind: Keycloak
+                      kind: KeycloakRealm
                       metadata:
                         name: {{ template "keycloak.name" . }}
                         namespace: {{ .Release.Namespace }}
                       EOF
                       cat <<EOF > /tmp/kustomize/patch-keycloak.yaml
                       - op: replace
-                        path: /spec/externalDatabase/enabled
-                        value: true
+                        path: /spec/realm/userFederationProviders/0/config/bindDn
+                        value: {% .socketConfig.bindDN | quote %}
+                      - op: replace
+                        path: /spec/realm/userFederationProviders/0/config/connectionUrl
+                        value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
                       EOF
                       cat <<EOF > /tmp/kustomize/kustomization.yaml
                       apiVersion: kustomize.config.k8s.io/v1beta1
                       kind: Kustomization
                       resources:
-                        - keycloak.yaml
+                        - keycloak-realm.yaml
                       patchesJson6902:
                         - path: patch-keycloak.yaml
                           target:
                             group: keycloak.org
                             version: v1alpha1
-                            kind: Keycloak
+                            kind: KeycloakRealm
                             name: {{ template "keycloak.name" . }}
                             namespace: {{ .Release.Namespace }}
                       EOF
@@ -90,18 +94,13 @@ spec:
           apiVersion: v1
           kind: Secret
           metadata:
-            name: keycloak-db-secret
-            namespace: {{ .Release.Namespace }}
+            name: {{ template "keycloak.name" . }}-vault
             labels:
               app: {{ template "keycloak.name" . }}
               chart: {{ .Chart.Name }}-{{ .Chart.Version }}
               release: {{ .Release.Name }}
               heritage: {{ .Release.Service }}
+          type: Opaque
           stringData:
-            POSTGRES_DATABASE: '{% .plugConfig.database %}'
-            POSTGRES_EXTERNAL_ADDRESS: '{% .socketConfig.hostname %}'
-            POSTGRES_EXTERNAL_PORT: '{% .socketConfig.port %}'
-            POSTGRES_PASSWORD: '{% .socketConfig.password %}'
-            POSTGRES_SUPERUSER: 'true'
-            POSTGRES_USERNAME: '{% .socketConfig.username %}'
+            main_bindCredential: {% .socketConfig.bindPassword | quote %}
 {{- end }}
