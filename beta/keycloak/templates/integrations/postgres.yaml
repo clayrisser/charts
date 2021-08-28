@@ -21,6 +21,7 @@ spec:
     namespace: {{ $namespace }}
   config:
     database: {{ .Values.config.postgres.database | quote }}
+    createdb: 'true'
     cleanup: 'false'
     replicate: 'false'
   resources:
