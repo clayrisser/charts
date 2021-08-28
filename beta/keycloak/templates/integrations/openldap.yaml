@@ -1,6 +1,6 @@
 {{- if (and .Values.config.allowIntegrations (not (empty .Values.config.keycloak.ldap.integration))) }}
 {{- $name := (split "." .Values.config.keycloak.ldap.integration)._1 | default "openldap" }}
-{{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
+{{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.integration))._0 }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
