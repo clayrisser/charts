@@ -1,4 +1,3 @@
-{{- if .Values.ingress.keycloak.tls }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -45,6 +44,14 @@ spec:
                 namespace: {{ .Release.Namespace }}
               EOF
               cat <<EOF > /tmp/kustomize/patch.yaml
+              - op: add
+                path: /metadata/annotations/kubernetes.io~1ingress.class
+                {{- if (eq .Values.config.clusterType "aks") }}
+                value: addon-http-application-routing
+                {{- else }}
+                value: nginx
+                {{- end }}
+              {{- if .Values.ingress.keycloak.tls }}
               {{- if (empty .Values.ingress.keycloak.certificate) }}
               - op: add
                 path: /metadata/annotations/cert-manager.io~1cluster-issuer
@@ -57,14 +64,12 @@ spec:
                 path: /metadata/annotations/nginx.ingress.kubernetes.io~1ssl-redirect
                 value: 'true'
               - op: add
-                path: /metadata/annotations/kubernetes.io~1ingress.class
-                value: nginx
-              - op: add
                 path: /spec/tls
                 value:
                   - secretName: {{ template "keycloak.keycloak-certificate" . }}
                     hosts:
                       - {{ .Values.ingress.keycloak.hostname }}
+              {{- end }}
               EOF
               cat <<EOF > /tmp/kustomize/kustomization.yaml
               apiVersion: kustomize.config.k8s.io/v1beta1
