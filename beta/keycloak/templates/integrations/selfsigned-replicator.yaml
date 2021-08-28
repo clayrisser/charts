@@ -5,7 +5,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
-  name: {{ template "keycloak.fullname" . }}-velero-schedule-replicator
+  name: selfsigned-replicator
   labels:
     app: {{ .Release.Name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
