@@ -54,7 +54,7 @@ spec:
                 value: 'true'
               {{- end }}
               - op: add
-                path: /metadata/annotations/spec/nginx.ingress.kubernetes.io~1ssl-redirect
+                path: /metadata/annotations/nginx.ingress.kubernetes.io~1ssl-redirect
                 value: 'true'
               - op: add
                 path: /spec/tls
