@@ -51,6 +51,15 @@ spec:
                 {{- else }}
                 value: nginx
                 {{- end }}
+              - op: add
+                path: /metadata/annotations/nginx.ingress.kubernetes.io~1proxy-buffer-size
+                value: 128K
+              - op: add
+                path: /metadata/annotations/nginx.ingress.kubernetes.io~1proxy-buffers
+                value: '4 256K'
+              - op: add
+                path: /metadata/annotations/nginx.ingress.kubernetes.io~1proxy-busy-buffers-size
+                value: 256K
               {{- if .Values.ingress.keycloak.tls }}
               {{- if (empty .Values.ingress.keycloak.certificate) }}
               - op: add

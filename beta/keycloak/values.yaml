@@ -29,9 +29,9 @@ config:
       tls:
         enabled: true
         ca:
-          integration: cluster-issuer.kube-system
+          integration: cluster-issuer
           key: tls.crt
-          secret: selfsigned-ca-cluster-issuer
+          secret: selfsigned-ca
     resources:
       enabled: defaults
       requests:

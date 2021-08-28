@@ -21,7 +21,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "velero.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %}
+          name: {{ template "velero.name" . }}-schedule-coupled-or-updated-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -45,12 +45,12 @@ spec:
                     - sh
                     - -c
                     - |
-                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl delete -f - --namespace={{ .Release.Namespace }}
+                      cat <<EOF | kubectl delete -f -
                       apiVersion: velero.io/v1
                       kind: Schedule
                       metadata:
                         name: {% .plugConfig.name %}
-                        namespace: {% .plug.metadata.namespace %}
+                        namespace: {{ .Release.Namespace }}
                       EOF
                       cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={{ .Release.Namespace }}
                       apiVersion: velero.io/v1
@@ -65,7 +65,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: {{ template "velero.name" . }}-decoupled-{% .plug.metadata.namespace %}
+          name: {{ template "velero.name" . }}-schedule-decoupled-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -89,11 +89,11 @@ spec:
                     - sh
                     - -c
                     - |
-                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl delete -f - --namespace={{ .Release.Namespace }}
+                      cat <<EOF | kubectl delete -f -
                       apiVersion: velero.io/v1
                       kind: Schedule
                       metadata:
                         name: {% .plugConfig.name %}
-                        namespace: {% .plug.metadata.namespace %}
+                        namespace: {{ .Release.Namespace }}
                       EOF
 {{- end }}

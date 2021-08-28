@@ -1,17 +1,99 @@
-{{- if .Values.config.allowIntegration }}
-apiVersion: integration.siliconhills.dev/v1alpha1
-kind: IntegrationSocket
+{{- if .Values.config.allowIntegrations }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
 metadata:
-  name: {{ template "cluster-issuer.name" . }}
+  name: selfsigned-replicator
   labels:
     app: {{ template "cluster-issuer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  appendName: {{ .Release.Name }}
-  replications:
-    - version: v1
-      kind: Secret
-      name: {{ .Values.config.ca.name }}-ca
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: replicator
+    namespace: {{ .Release.Namespace }}
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: selfsigned-replicator-coupled-or-updated-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      cat <<EOF | kubectl delete -f -
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ .Values.config.ca.name }}-ca
+                        namespace: {% .plug.metadata.namespace %}
+                      EOF
+                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namespace %}
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ .Values.config.ca.name }}-ca
+                        namespace: {{ .Release.Namespace }}
+                      EOF
+    - when: [decoupled]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: selfsigned-replicator-decoupled-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      cat <<EOF | kubectl delete -f -
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ .Values.config.ca.name }}-ca
+                        namespace: {% .plug.metadata.namespace %}
+                      EOF
 {{- end }}

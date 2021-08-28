@@ -13,11 +13,11 @@ questions:
     required: true
     label: 'cluster type'
     group: Config
-  - variable: config.allowIntegration
+  - variable: config.allowIntegrations
     required: true
     type: boolean
     description: ''
-    label: 'allow integration'
+    label: 'allow integrations'
     group: Config
   - variable: config.ca.enabled
     required: true
