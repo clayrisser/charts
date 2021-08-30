@@ -1,7 +1,7 @@
 images:
   keycloak:
     repository: jboss/keycloak
-    tag: 12.0.4
+    tag: 15.0.2
 
 config:
   clusterType: rke
