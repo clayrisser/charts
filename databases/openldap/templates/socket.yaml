@@ -2,7 +2,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
-  name: {{ template "openldap.name" . }}
+  name: ldap
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -12,10 +12,11 @@ spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
-    name: {{ template "openldap.name" . }}
+    name: ldap
     namespace: {{ .Release.Namespace }}
   config:
     bindDN: cn=admin,{{ template "openldap.openldap-dc" . }}
+    domain: {{ template "openldap.openldap-dc" . }}
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
@@ -70,6 +71,7 @@ spec:
                       stringData:
                         bindDN: '{% .socketConfig.bindDN %}'
                         bindPassword: '{% .socketConfig.bindPassword %}'
+                        domain: '{% .socketConfig.domain %}'
                         hostname: '{% .socketConfig.hostname %}'
                         port: '{% .socketConfig.port %}'
                         protocol: '{% .socketConfig.protocol %}'

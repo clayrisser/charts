@@ -14,7 +14,7 @@ spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
-    name: {{ $name }}
+    name: postgres
     namespace: {{ $namespace }}
   socket:
     name: {{ $name }}

@@ -1,10 +1,10 @@
 {{- if (and .Values.config.allowIntegrations (not (empty .Values.config.keycloak.ldap.integration))) }}
-{{- $name := (split "." .Values.config.keycloak.ldap.integration)._1 | default "openldap" }}
+{{- $name := (split "." .Values.config.keycloak.ldap.integration)._1 | default "ldap" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.integration))._0 }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
-  name: openldap
+  name: ldap
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -14,7 +14,7 @@ spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
-    name: {{ $name }}
+    name: ldap
     namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
@@ -30,7 +30,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: openldap-integration
+          name: ldap-integration
           namespace: {{ .Release.Namespace }}
         spec:
           activeDeadlineSeconds: 360
@@ -71,6 +71,9 @@ spec:
                       - op: replace
                         path: /spec/realm/userFederationProviders/0/config/connectionUrl
                         value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
+                      - op: replace
+                        path: /spec/realm/userFederationProviders/0/config/usersDn
+                        value: ou=people,{% .socketConfig.domain %}
                       EOF
                       cat <<EOF > /tmp/kustomize/kustomization.yaml
                       apiVersion: kustomize.config.k8s.io/v1beta1
