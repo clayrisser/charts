@@ -29,12 +29,20 @@ spec:
     keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
     keycloakRealm: main
   vars:
-    - name: BASE64_ENCODED_ADMIN_CLI_CLIENT_SECRET
+    - name: BASE64_ENCODED_KEYCLOAK_ADMIN_PASSWORD
       objref:
         version: v1
         kind: Secret
-        name: admin-cli
+        name: credential-keycloak
         namespace: {{ .Release.Namespace }}
       fieldref:
-        fieldPath: data.ADMIN_CLI_CLIENT_CREDENTIAL
+        fieldPath: data.ADMIN_PASSWORD
+    - name: BASE64_ENCODED_KEYCLOAK_ADMIN_USERNAME
+      objref:
+        version: v1
+        kind: Secret
+        name: credential-keycloak
+        namespace: {{ .Release.Namespace }}
+      fieldref:
+        fieldPath: data.ADMIN_USERNAME
 {{- end }}
