@@ -1,2 +1,40 @@
 {{- if .Values.config.allowIntegrations }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
+metadata:
+  name: {{ template "keycloak.name" . }}
+  labels:
+    app: {{ template "keycloak.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: keycloak
+    namespace: {{ .Release.Namespace }}
+  apparatus:
+    endpoint: /socket
+    containers:
+      - image: registry.gitlab.com/bitspur/community/keycloak-socket:0.0.1
+        imagePullPolicy: Always
+        name: apparatus
+        ports:
+          - containerPort: 3000
+            name: container
+            protocol: TCP
+  config:
+    adminCliClientSecret: ''
+    keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
+    keycloakRealm: main
+  vars:
+    - name: BASE64_ENCODED_ADMIN_CLI_CLIENT_SECRET
+      objref:
+        version: v1
+        kind: Secret
+        name: admin-cli
+        namespace: {{ .Release.Namespace }}
+      fieldref:
+        fieldPath: data.ADMIN_CLI_CLIENT_CREDENTIAL
 {{- end }}

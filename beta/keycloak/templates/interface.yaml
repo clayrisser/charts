@@ -1,0 +1,27 @@
+{{- if .Values.config.allowIntegrations }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Interface
+metadata:
+  name: keycloak
+  labels:
+    app: {{ template "keycloak.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schemas:
+    - version: v0.0.1
+      plugDefinition:
+        properties:
+          clientId:
+            required: true
+          clientSecret: {}
+      socketDefinition:
+        properties:
+          adminCliClientSecret:
+            required: true
+          keycloakBaseUrl:
+            required: true
+          keycloakRealm:
+            required: true
+{{- end }}
