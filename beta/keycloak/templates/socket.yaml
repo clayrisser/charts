@@ -25,7 +25,6 @@ spec:
             name: container
             protocol: TCP
   config:
-    adminCliClientSecret: ''
     keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
     keycloakRealm: main
   vars:

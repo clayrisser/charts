@@ -16,12 +16,14 @@ spec:
           clientId:
             required: true
           clientSecret: {}
+          redirectUris: {}
       socketDefinition:
         properties:
-          adminCliClientSecret:
+          keycloakAdminPassword:
             required: true
           keycloakBaseUrl:
             required: true
           keycloakRealm:
             required: true
+          keycloakAdminUsername: {}
 {{- end }}
