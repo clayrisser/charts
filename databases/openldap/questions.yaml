@@ -65,6 +65,7 @@ questions:
       - CRYPT
       - SHA256CRYPT
       - SSHA
+      - NONE
     label: 'openldap hash password'
     group: Config
   - variable: config.openldap.organization
