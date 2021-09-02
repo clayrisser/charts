@@ -147,6 +147,7 @@ spec:
           uuidLDAPAttribute: entryUUID
           validatePasswordPolicy: 'false'
           vendor: 'rhds'
+    # https://aput.net/~jheiss/samba/ldap.shtml
     userFederationMappers:
       - name: username
         federationProviderDisplayName: ldap
@@ -188,6 +189,20 @@ spec:
           ldap.attribute: sn
           read.only: 'false'
           user.model.attribute: lastName
+      - name: cn
+        federationProviderDisplayName: ldap
+        federationMapperType: full-name-ldap-mapper
+        config:
+          read.only: 'false'
+          write.only: 'true'
+          ldap.full.name.attribute: cn
+      - name: 'display name'
+        federationProviderDisplayName: ldap
+        federationMapperType: full-name-ldap-mapper
+        config:
+          read.only: 'false'
+          write.only: 'true'
+          ldap.full.name.attribute: displayName
       - name: 'create timestamp'
         federationProviderDisplayName: ldap
         federationMapperType: user-attribute-ldap-mapper
@@ -198,6 +213,48 @@ spec:
           ldap.attribute: createTimestamp
           read.only: 'true'
           user.model.attribute: createTimestamp
+      - name: 'samba acct flags'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '[U          ]'
+          ldap.attribute.name: sambaAcctFlags
+      - name: 'samba sid'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: 'S-1-0-0-11000'
+          ldap.attribute.name: sambaSID
+      - name: 'home directory'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '/home/user'
+          ldap.attribute.name: homeDirectory
+      - name: 'univention object type'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: 'users/user'
+          ldap.attribute.name: univentionObjectType
+      - name: 'gid number'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '5000'
+          ldap.attribute.name: gidNumber
+      - name: 'uid number'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '5000'
+          ldap.attribute.name: uidNumber
+      - name: 'login shell'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '/bin/bash'
+          ldap.attribute.name: loginShell
     {{- end }}
   instanceSelector:
     matchLabels:
