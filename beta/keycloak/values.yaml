@@ -25,7 +25,7 @@ config:
       domain: ''
       username: admin
       password: ''
-      userObjectClasses: 'arbitrarySlots, PostfixBookMailAccount, univentionMail, organizationalPerson, krb5Principal, top, inetOrgPerson, univentionObject, posixAccount, univentionPWHistory, person, sambaSamAccount, automount, krb5KDCEntry, shadowAccount'
+      userObjectClasses: 'PostfixBookMailAccount, arbitrarySlots, automount, inetOrgPerson, krb5KDCEntry, krb5Principal, organizationalPerson, person, posixAccount, sambaSamAccount, shadowAccount, top, univentionMail, univentionObject, univentionPWHistory'
       tls:
         enabled: true
         ca:
