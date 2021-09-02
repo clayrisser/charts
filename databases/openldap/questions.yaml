@@ -74,13 +74,6 @@ questions:
     required: true
     label: 'openldap organization'
     group: Config
-  - variable: config.openldap.arbitrarySlotsSchema
-    description: ''
-    type: boolean
-    required: true
-    label: 'openldap arbitrary slots schema'
-    default: true
-    group: Config
   - variable: config.openldap.organizationalUnits
     description: ''
     type: string

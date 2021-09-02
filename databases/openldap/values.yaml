@@ -17,7 +17,6 @@ config:
     domain: example.org
     hashPassword: SHA512CRYPT
     organization: 'Example Organization'
-    arbitrarySlotsSchema: true
     organizationalUnits: users,groups
     schema: default
     passwords:
