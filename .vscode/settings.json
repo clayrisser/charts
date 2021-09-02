@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
     "alertmanager",
+    "automount",
     "centos",
     "clayrisser",
     "crunchydata",
@@ -23,13 +24,16 @@
     "osixia",
     "pgadmin",
     "phpldapadmin",
+    "posix",
     "postgres",
     "postgresql",
     "restic",
     "selfsigned",
+    "SSHA",
     "storageclass",
     "subquestion",
     "subquestions",
+    "univention",
     "velero"
   ],
   "[helm]": {

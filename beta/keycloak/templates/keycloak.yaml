@@ -143,7 +143,7 @@ spec:
           useTruststoreSpi: ldapsOnly
           userObjectClasses: {{ .Values.config.keycloak.ldap.userObjectClasses | quote }}
           usernameLDAPAttribute: uid
-          usersDn: ou=people,{{ template "keycloak.ldap-dc" . }}
+          usersDn: ou=users,{{ template "keycloak.ldap-dc" . }}
           uuidLDAPAttribute: entryUUID
           validatePasswordPolicy: 'false'
           vendor: 'rhds'
@@ -175,7 +175,7 @@ spec:
           always.read.value.from.ldap: 'true'
           is.binary.attribute: 'false'
           is.mandatory.in.ldap: 'true'
-          ldap.attribute: cn
+          ldap.attribute: givenName
           read.only: 'false'
           user.model.attribute: firstName
       - name: 'last name'

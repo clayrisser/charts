@@ -59,8 +59,12 @@ questions:
     group: Config
   - variable: config.openldap.hashPassword
     description: ''
-    type: boolean
-    required: true
+    type: enum
+    options:
+      - SHA512CRYPT
+      - CRYPT
+      - SHA256CRYPT
+      - SSHA
     label: 'openldap hash password'
     group: Config
   - variable: config.openldap.organization
@@ -80,7 +84,7 @@ questions:
     description: ''
     type: string
     required: false
-    label: 'openldap origanizational units'
+    label: 'openldap organizational units'
     group: Config
   - variable: config.openldap.passwords.admin
     description: ''

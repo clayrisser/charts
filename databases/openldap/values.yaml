@@ -15,10 +15,10 @@ config:
   openldap:
     replicas: 1
     domain: example.org
-    hashPassword: true
+    hashPassword: SHA512CRYPT
     organization: 'Example Organization'
     arbitrarySlotsSchema: true
-    organizationalUnits: people,groups
+    organizationalUnits: users,groups
     schema: default
     passwords:
       admin:
