@@ -191,3 +191,17 @@ spec:
               {'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-dc" . }}'}]}
             ]}
           ]
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 20
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 10
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 20
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 30
