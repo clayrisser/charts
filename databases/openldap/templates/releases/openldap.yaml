@@ -213,4 +213,4 @@ spec:
       periodSeconds: 10
       timeoutSeconds: 1
       successThreshold: 1
-      failureThreshold: 30
+      failureThreshold: 10
