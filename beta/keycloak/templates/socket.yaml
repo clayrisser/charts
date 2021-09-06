@@ -24,9 +24,6 @@ spec:
           - containerPort: 3000
             name: container
             protocol: TCP
-        env:
-          - name: DEBUG
-            value: '1'
   config:
     keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
     keycloakRealm: main
