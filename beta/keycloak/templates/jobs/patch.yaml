@@ -97,3 +97,7 @@ spec:
               EOF
               kubectl kustomize /tmp/kustomize
               kubectl kustomize /tmp/kustomize | kubectl apply -f -
+              kubectl get pods -n {{ .Release.Namespace }} \
+                -l job-name=patch \
+                --field-selector status.phase=Failed \
+                -o yaml | kubectl delete -f -

@@ -77,6 +77,10 @@ spec:
                         protocol: '{% .socketConfig.protocol %}'
                       EOF
                       {%- end %}
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "openldap.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
     - when: [decoupled]
       do: recreate
       resource: |
@@ -111,6 +115,10 @@ spec:
                         -n {% .plug.metadata.namespace %}
                       kubectl delete secret {{ template "openldap.openldap-certificate" . }}-{% .plug.metadata.name %} \
                         -n {% .plug.metadata.namespace %}
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "openldap.name" . }}-decoupled-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
 ---
 apiVersion: v1
 kind: Secret

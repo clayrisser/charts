@@ -59,6 +59,10 @@ spec:
                         name: {% .plugConfig.name %}
                         namespace: {% .plug.metadata.namespace %}
                       EOF
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "velero.name" . }}-schedule-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
     - when: [decoupled]
       do: recreate
       resource: |
@@ -96,4 +100,8 @@ spec:
                         name: {% .plugConfig.name %}
                         namespace: {{ .Release.Namespace }}
                       EOF
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "velero.name" . }}-schedule-decoupled-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
 {{- end }}

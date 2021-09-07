@@ -101,6 +101,11 @@ spec:
                           url: '${POSTGRES_PROTOCOL}://${POSTGRES_USERNAME}@${POSTGRES_PASSWORD}:${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DATABASE}'
                       EOF
                       fi
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "postgres.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
+
     - when: [decoupled]
       do: recreate
       resource: |
@@ -155,4 +160,8 @@ spec:
                       {%- end %}
                       kubectl delete secret {{ template "postgres.name" . }}-{% .plug.metadata.name %} \
                         -n {% .plug.metadata.namespace %}
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "postgres.name" . }}-decoupled-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
 {{- end }}

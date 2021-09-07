@@ -15,8 +15,10 @@ spec:
         properties:
           clientId:
             required: true
+          cleanup: {}
           clientSecret: {}
           redirectUris: {}
+          replicate: {}
       socketDefinition:
         properties:
           keycloakAdminPassword:
