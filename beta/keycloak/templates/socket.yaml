@@ -24,6 +24,14 @@ spec:
           - containerPort: 3000
             name: container
             protocol: TCP
+      - name: kubectl
+        image: bitnami/kubectl:1.17.12
+        imagePullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - |
+            kubectl proxy
   config:
     keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
     keycloakRealm: main
