@@ -4,21 +4,21 @@ kind: Deployment
 metadata:
   name: pgadmin
   labels:
-    app: {{ template "postgres.name" . }}
+    app: pgadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "postgres.name" . }}-pgadmin
+      app: pgadmin
       release: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
-        app: {{ template "postgres.name" . }}-pgadmin
+        app: pgadmin
         release: {{ .Release.Name }}
     spec:
       affinity:
@@ -41,7 +41,11 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - {{ template "postgres.name" . }}-pgadmin
+                        - pgadmin
+                    - key: release
+                      operator: In
+                      values:
+                        - {{ .Release.Name }}
       containers:
         - name: pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
