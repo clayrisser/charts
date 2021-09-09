@@ -7,9 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    {{- if (eq .Values.service.directus.type "ClusterIP") }}
-    kubernetes.io/cluster-service: 'true'
-    {{- end }}
 spec:
   {{- if .Values.ingress.directus.enabled }}
   type: ClusterIP

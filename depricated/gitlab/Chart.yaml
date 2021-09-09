@@ -1,14 +1,20 @@
-apiVersion: v1
 name: gitlab
-home: https://gitlab.com/gitlab-org/gitlab-ce
+apiVersion: v1
+home: https://about.gitlab.com
 icon: https://about.gitlab.com/images/default-blog-image.png
-version: 0.5.0
+version: 0.4.0
 appVersion: latest
 description: 'a full devops toolchain'
 keywords:
   - gitlab
+  - git
+  - vc
+  - project
+  - management
+  - version
+  - control
 sources:
   - https://gitlab.com/gitlab-org/gitlab-ce
 maintainers:
-  - name: 'Clay Risser'
-    email: email@clayrisser.com
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja

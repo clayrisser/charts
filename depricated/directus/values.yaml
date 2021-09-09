@@ -1,15 +1,19 @@
 images:
-  nginx:
-    repository: nginx
-    tag: 1.21.0
+  directus:
+    repository: directus/directus
+    tag: v8-apache
 
 config:
-  clusterType: rke
-  imagePullPolicy: Always
-  updateStrategy: Recreate
-  nginx:
+  clusterProvider: infrastructure
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  directus:
     baseUrl: ''
+    cors:
+      origin: '*'
+    email: email@example.com
     hostname: ''
+    password: pass
     resources:
       enabled: false
       requests:
@@ -18,10 +22,19 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
+  authPublicKey: 'authSecretKey'
+  authSecretKey: ''
+  mysql:
+    database: directus
+    host: ''
+    password: P@ssw0rd
+    port: 3306
+    url: ''
+    username: root
 
 service:
-  nginx:
-    type: ClusterIP
+  directus:
+    type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http:
@@ -29,7 +42,7 @@ service:
       http: 80
 
 ingress:
-  nginx:
+  directus:
     certificate: ''
     enabled: false
     hostname: ''
@@ -42,9 +55,9 @@ persistence:
   enabled: false
   storageClass: ''
   existingClaim:
-    nginx: ''
+    directus: ''
   size:
-    nginx: 1Gi
+    directus: 1Gi
   velero:
     enabled: false
     restic: true

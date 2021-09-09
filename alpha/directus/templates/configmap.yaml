@@ -8,14 +8,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  auth_public_key: {{ .Values.config.authPublicKey | quote }}
-  cors_origin: {{ .Values.config.cors.origin | quote }}
-  {{- $mysql := .Values.config.mysql }}
-  {{- if $mysql.internal }}
-  mysql_host: {{ template "directus.fullname" . }}-mysql
-  {{- else }}
-  mysql_host: {{ $mysql.host | quote }}
-  {{- end }}
-  mysql_database: {{ $mysql.database | quote }}
-  mysql_port: {{ $mysql.port | quote }}
-  mysql_username: {{ $mysql.username | quote }}
+  admin_email: {{ .Values.config.adminEmail | quote }}
+  {{- $postgres := .Values.config.postgres }}
+  POSTGRES_HOSTNAME: {{ $postgres.host | quote }}
+  POSTGRES_DATABASE: {{ $postgres.database | quote }}
+  POSTGRES_PORT: {{ $postgres.port | quote }}
+  POSTGRES_USERNAME: {{ $postgres.username | quote }}

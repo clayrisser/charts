@@ -51,74 +51,87 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
 {{- if .Values.config.directus.resources.enabled }}
           resources:
-{{ toYaml .Values.config.directus.resources | indent 12 }}
+            requests:
+{{ toYaml .Values.config.directus.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.directus.resources.limits | indent 14 }}
 {{- end }}
           ports:
             - name: container
-              containerPort: 8055
+              containerPort: 80
           volumeMounts:
             - name: data
               mountPath: /_data
             - name: data
-              mountPath: '/directus/uploads'
+              mountPath: /var/directus/public/uploads
               subPath: uploads
           env:
-            - name: DB_CLIENT
-              value: pg
-            - name: LOG_LEVEL
-              value: debug
-            - name: KEY
-              value: shhh
-            - name: SECRET
-              value: shhh
-            - name: ADMIN_EMAIL
+            - name: DIRECTUS_APP_ENV
+              value: production
+            - name: DIRECTUS_CORS_ORIGIN
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "directus.fullname" . }}
-                  key: admin_email
-            - name: ADMIN_PASSWORD
+                  key: cors_origin
+            - name: DIRECTUS_AUTH_PUBLICKEY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: auth_public_key
+            - name: DIRECTUS_AUTH_SECRETKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ template "directus.fullname" . }}
-                  key: admin_password
-            - name: DB_HOST
+                  key: auth_secret_key
+            - name: DIRECTUS_DATABASE_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
-                  key: POSTGRES_HOSTNAME
-            - name: DB_PORT
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_host
+            - name: DIRECTUS_DATABASE_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
-                  key: POSTGRES_PORT
-            - name: DB_DATABASE
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_port
+            - name: DIRECTUS_DATABASE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
-                  key: POSTGRES_DATABASE
-            - name: DB_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
-                  key: POSTGRES_USERNAME
-            - name: DB_PASSWORD
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_database
+            {{- if .Values.config.mysql.internal }}
+            - name: DIRECTUS_DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "" "-externaldb") }}
-                  key: POSTGRES_PASSWORD
-            # - name: DB_CONNECTION_STRING
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: {{ printf "%s%s" (include "directus.fullname" .) ((empty .Values.config.postgres.integration) | ternary "-externaldb" "") }}
-            #       key: POSTGRES_URL
+                  name: {{ template "directus.fullname" . }}-mysql-auth
+                  key: username
+            {{- else }}
+            - name: DIRECTUS_DATABASE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_username
+            {{- end }}
+            {{- if .Values.config.mysql.internal }}
+            - name: DIRECTUS_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "directus.fullname" . }}-mysql-auth
+                  key: password
+            {{- else }}
+            - name: DIRECTUS_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "directus.fullname" . }}
+                  key: mysql_password
+            {{- end }}
           livenessProbe:
             httpGet:
-              path: /
+              path: /server/ping
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /server/ping
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}
       volumes:

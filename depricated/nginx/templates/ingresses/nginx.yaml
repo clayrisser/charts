@@ -2,10 +2,14 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "nginx.name" . }}
+  name: {{ template "nginx.fullname" . }}-nginx
   annotations:
-    {{- if (eq .Values.config.clusterType "aks") }}
+    {{- if (eq .Values.config.clusterProvider "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else if (eq .Values.config.clusterProvider "eks") }}
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.ingress.nginx.hostname }}
+    kubernetes.io/ingress.class: alb
     {{- else }}
     kubernetes.io/ingress.class: nginx
     {{- end }}
@@ -28,7 +32,7 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: {{ template "nginx.name" . }}
+              serviceName: {{ template "nginx.fullname" . }}-nginx
               servicePort: http
   {{- if .Values.ingress.nginx.tls }}
   tls:

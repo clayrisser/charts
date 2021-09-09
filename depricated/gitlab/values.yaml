@@ -4,20 +4,25 @@ images:
     tag: 13.7.4-ce.0
 
 config:
-  clusterType: rke
-  imagePullPolicy: Always
+  clusterProvider: infrastructure
+  imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
-  password: P@ssw0rd
-  storage:
+  gitlab:
+    baseUrl: ''
+    hostname: ''
+    password: password
+    themeId: 2
     s3:
+      awsAccessKey: ''
+      awsHost: ''
+      awsUploadsBucket: ''
+      awsPackagesBucket: ''
+      awsLfsBucket: ''
+      awsArtifactsBucket: ''
+      awsRegion: us-west-2
+      awsSecretKey: ''
       enabled: false
-      accessKey:
-      endpoint: https://sfo2.digitaloceanspaces.com
-      namespace: gitlab
-      region: us-east-1
-      secretKey:
   keycloak:
-    integration: ''
     baseUrl: ''
     clientId: ''
     companyName: KeyCloak
@@ -25,34 +30,24 @@ config:
     realmName: master
     certificate: ''
     autoSignIn: false
-  gitlab:
-    baseUrl: ''
-    hostname: ''
-    resources:
-      enabled: false
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 256Mi
   postgres:
-    integration:
     database: gitlab
     host: ''
     password: P@ssw0rd
     port: 5432
-    url: ''
     username: postgres
+    # url: ''
 
 service:
   gitlab:
-    type: ClusterIP
+    type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http:
+      http: ''
+      ssh: ''
     lbPorts:
       http: 80
+      ssh: 22
 
 ingress:
   gitlab:
@@ -66,15 +61,13 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
+  # existingClaim: ''
+  size: 1Gi
   storageClass: ''
-  existingClaim:
-    gitlab: ''
-  size:
-    gitlab: 1Gi
   velero:
     enabled: false
     restic: true
-    schedule: '@midnight'
+    schedule: ''
     ttl: 2160h0m00s
 
 probes:

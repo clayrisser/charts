@@ -3,39 +3,72 @@ categories:
 questions:
 
 # Config
-  - variable: config.clusterType
-    default: rke
+  - variable: config.clusterProvider
+    default: infrastructure
     description: ''
     type: enum
     options:
-      - aks
+      - infrastructure
       - eks
+      - aks
       - gke
-      - k3s
-      - rke
     required: true
-    label: 'cluster type'
+    label: 'cluster provider'
     group: Config
   - variable: config.imagePullPolicy
-    default: Always
+    default: IfNotPresent
     description: ''
     type: enum
     options:
-      - Always
       - IfNotPresent
+      - Always
     required: true
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: Recreate
+    default: RollingUpdate
     description: ''
     type: enum
     options:
-      - Recreate
       - RollingUpdate
-      - OnDelete
+      - Recreate
     required: true
     label: 'update strategy'
+    group: Config
+  - variable: config.directus.email
+    default: email@example.com
+    description: ''
+    type: string
+    required: true
+    label: 'directus email'
+    group: Config
+  - variable: config.directus.password
+    default: pass
+    description: ''
+    type: password
+    required: true
+    label: 'directus password'
+    group: Config
+  - variable: config.authPublicKey
+    default: public
+    description: ''
+    type: string
+    required: true
+    label: 'auth public key'
+    group: Config
+  - variable: config.authSecretKey
+    default: secret
+    description: ''
+    type: password
+    required: true
+    label: 'auth secret key'
+    group: Config
+  - variable: config.cors.origin
+    default: '*'
+    description: ''
+    type: string
+    required: true
+    label: 'cors origin'
     group: Config
   - variable: config.directus.resources.enabled
     default: false
@@ -43,12 +76,12 @@ questions:
     type: enum
     options:
       - defaults
-      - custom
-      - false
+      - 'true'
+      - 'false'
     required: true
-    label: 'directus resources defaults'
-    show_subquestion_if: custom
-    group: Config
+    label: 'directus resources enabled'
+    show_subquestion_if: 'true'
+    group: 'Directus Config'
     subquestions:
       - variable: config.directus.resources.requests.cpu
         default: 100m
@@ -74,53 +107,37 @@ questions:
         type: string
         required: true
         label: 'directus resources limits memory'
-  - variable: config.adminEmail
-    default: admin@example.com
-    description: ''
-    type: string
-    required: true
-    label: 'admin email'
-    group: Config
-  - variable: config.adminPassword
-    default: P@ssw0rd
-    description: ''
-    type: password
-    required: true
-    label: 'admin password'
-    group: Config
 
-# Postgres Config
-  - variable: config.postgres.integration
+# MySQL Config
+  - variable: config.mysql.host
     default: ''
     description: ''
     type: string
-    required: false
-    label: integration
-    group: 'Postgres Config'
-  - variable: config.postgres.host
-    default: ''
-    description: ''
-    type: string
-    required: false
+    required: true
     label: host
-    show_if: config.postgres.integration=
-    group: 'Postgres Config'
-  - variable: config.postgres.database
-    default: directus
+    group: 'MySQL Config'
+  - variable: config.mysql.database
+    default: gitlab
     description: ''
     type: string
     required: true
     label: database
-    group: 'Postgres Config'
-  - variable: config.postgres.password
+    group: 'MySQL Config'
+  - variable: config.mysql.username
+    default: mysql
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: 'MySQL Config'
+  - variable: config.mysql.password
     default: P@ssw0rd
     description: ''
     type: password
     required: true
     label: password
-    show_if: config.postgres.integration=
-    group: 'Postgres Config'
-  - variable: config.postgres.port
+    group: 'MySQL Config'
+  - variable: config.mysql.port
     default: 5432
     description: ''
     type: int
@@ -128,24 +145,14 @@ questions:
     max: 65535
     required: true
     label: port
-    show_if: config.postgres.integration=
-    group: 'Postgres Config'
-  - variable: config.postgres.url
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: url
-    show_if: config.postgres.integration=
-    group: 'Postgres Config'
-  - variable: config.postgres.username
-    default: postgres
-    description: ''
-    type: string
-    required: true
-    label: username
-    show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: 'MySQL Config'
+  # - variable: config.mysql.url
+  #   default: ''
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: url
+  #   group: 'MySQL Config'
 
 # Persistence
   - variable: persistence.enabled
@@ -188,7 +195,8 @@ questions:
       - variable: persistence.velero.enabled
         default: false
         description: ''
-        type: boolean
+        type: string
+        show_if: persistence.velero.enabled=true
         required: true
         label: 'velero enabled'
         group: Persistence
@@ -245,8 +253,6 @@ questions:
         show_if: ingress.directus.tls=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
@@ -259,14 +265,14 @@ questions:
         required: false
         label: 'directus ingress certificate'
   - variable: service.directus.type
-    default: ClusterIP
+    default: NodePort
     description: ''
     type: enum
     show_if: ingress.directus.enabled=false
     options:
       - ClusterIP
-      - LoadBalancer
       - NodePort
+      - LoadBalancer
     required: true
     label: 'directus service type'
     group: 'Services and Load Balancing'
@@ -300,7 +306,7 @@ questions:
     label: 'directus repository'
     group: Images
   - variable: images.directus.tag
-    default: v9.0.0-rc.28
+    default: v8-apache
     description: ''
     type: string
     required: true

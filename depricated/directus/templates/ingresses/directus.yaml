@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: {{ template "directus.fullname" . }}-directus
   annotations:
-    {{- if (eq .Values.config.clusterType "aks") }}
+    {{- if (eq .Values.config.clusterProvider "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing
     {{- else }}
     kubernetes.io/ingress.class: nginx

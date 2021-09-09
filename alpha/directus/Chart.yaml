@@ -1,17 +1,14 @@
-name: directus
 apiVersion: v1
-home: https://directus.io
+name: directus
+home: https://github.com/clayrisser/charts
 icon: https://avatars1.githubusercontent.com/u/15967950?s=200&v=4
-version: 0.0.1
+version: 0.1.0
 appVersion: latest
-description: 'future-proof headless cms & api for custom databases'
+description: 'open source data platform'
 keywords:
   - directus
-  - headless
-  - cms
-  - mysql
 sources:
-  - https://github.com/directus/directus
+  - https://github.com/clayrisser/charts
 maintainers:
-  - name: 'Jam Risser'
-    email: jam@codejam.ninja
+  - name: 'Clay Risser'
+    email: email@clayrisser.com

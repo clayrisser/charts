@@ -1,15 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "nginx.name" . }}
+  name: {{ template "nginx.fullname" . }}-nginx
   labels:
-    app: {{ template "nginx.name" . }}
+    app: {{ template "nginx.name" . }}-nginx
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    {{- if (eq .Values.service.nginx.type "ClusterIP") }}
-    kubernetes.io/cluster-service: 'true'
-    {{- end }}
 spec:
   {{- if .Values.ingress.nginx.enabled }}
   type: ClusterIP

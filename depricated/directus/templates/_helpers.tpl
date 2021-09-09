@@ -60,14 +60,14 @@ Calculate directus base url
 {{- end }}
 
 {{/*
-Calculate postgres url
+Calculate mysql url
 */}}
-{{- define "directus.postgres-url" }}
-{{- $postgres := .Values.config.postgres }}
-{{- if $postgres.url }}
-{{- printf $postgres.url }}
+{{- define "directus.mysql-url" }}
+{{- $mysql := .Values.config.mysql }}
+{{- if $mysql.url }}
+{{- printf $mysql.url }}
 {{- else }}
-{{- $credentials := ((or (empty $postgres.username) (empty $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) }}
-{{- printf "postgresql://%s%s:%d/%s" $credentials $postgres.host $postgres.port $postgres.database }}
+{{- $credentials := ((or (empty $mysql.username) (empty $mysql.password)) | ternary "" (printf "%s:%s@" $mysql.username $mysql.password)) }}
+{{- printf "mysqlql://%s%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
 {{- end }}
 {{- end }}

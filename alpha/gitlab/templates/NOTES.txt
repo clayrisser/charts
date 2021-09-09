@@ -1,1 +1,9 @@
 Thank you for installing
+
+{{- if .Values.config.keycloak.enabled }}
+## KeyCloak
+If you are using LDAP, make sure you create a mapper for
+the `saml.persistent.name.id.for.{{ template "gitlab.keycloak-client-id" . }}` user attribute
+{{- end }}
+Thank you for installing
+

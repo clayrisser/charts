@@ -1,3 +1,3 @@
 # nginx
 
-> A project for charts
+> a simple web server

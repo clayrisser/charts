@@ -1,19 +1,15 @@
 images:
   directus:
     repository: directus/directus
-    tag: v8-apache
+    tag: v9.0.0-rc.28
 
 config:
-  clusterProvider: infrastructure
-  imagePullPolicy: IfNotPresent
-  updateStrategy: RollingUpdate
+  clusterProvider: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
   directus:
     baseUrl: ''
-    cors:
-      origin: '*'
-    email: email@example.com
     hostname: ''
-    password: pass
     resources:
       enabled: false
       requests:
@@ -22,19 +18,20 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
-  authPublicKey: 'authSecretKey'
-  authSecretKey: ''
-  mysql:
+  adminEmail: 'admin@example.com'
+  adminPassword: 'P@ssw0rd'
+  postgres:
+    integration:
     database: directus
     host: ''
     password: P@ssw0rd
-    port: 3306
+    port: 5432
     url: ''
-    username: root
+    username: postgres
 
 service:
   directus:
-    type: NodePort
+    type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
       http:

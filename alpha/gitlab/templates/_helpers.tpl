@@ -68,6 +68,20 @@ Calculate postgres url
 {{- printf $postgres.url }}
 {{- else }}
 {{- $credentials := ((or (empty $postgres.username) (empty $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) }}
-{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
+{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host ($postgres.port | toString) $postgres.database }}
 {{- end }}
+{{- end }}
+
+{{/*
+Calculate keycloak client id
+*/}}
+{{- define "gitlab.keycloak-client-id" }}
+{{- printf "%s" (.Values.config.keycloak.clientId | default (include "gitlab.gitlab-hostname" .)) }}
+{{- end }}
+
+{{/*
+Calculate bucket name
+*/}}
+{{- define "gitlab.bucket-name" }}
+{{- printf "%s" (pluck .bucket .values.config.storage.s3.buckets | first | default (printf "%s-%s" .values.config.storage.s3.namespace .bucket)) }}
 {{- end }}

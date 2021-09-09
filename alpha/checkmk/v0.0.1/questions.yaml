@@ -46,7 +46,7 @@ questions:
       - custom
       - false
     required: true
-    label: 'checkmk resources defalsefaults'
+    label: 'checkmk resources defaults'
     show_subquestion_if: custom
     group: Config
     subquestions:
@@ -221,7 +221,7 @@ questions:
 
 # Images
   - variable: images.checkmk.repository
-    default:
+    default: 
     description: ''
     type: string
     required: true

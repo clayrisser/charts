@@ -1,53 +1,87 @@
 images:
   gitlab:
     repository: gitlab/gitlab-ce
-    tag: 13.7.4-ce.0
+    tag: 13.10.2-ce.0
 
 config:
-  clusterProvider: infrastructure
-  imagePullPolicy: IfNotPresent
+  clusterType: rke
+  imagePullPolicy: Always
   updateStrategy: Recreate
+  password:
+  storage:
+    s3:
+      enabled: false
+      accessKey:
+      host: sfo2.digitaloceanspaces.com
+      namespace: gitlab
+      region: us-east-1
+      secretKey:
+      buckets:
+        artifacts: ''
+        backups: ''
+        dependency-proxy: ''
+        external-diffs: ''
+        lfs: ''
+        packages: ''
+        pages: ''
+        pseudonymizer: ''
+        registry: ''
+        terraform-state: ''
+        tmp: ''
+        uploads: ''
+  keycloak:
+    enabled: false
+    adminCliSecret:
+    autoSignIn: true
+    baseUrl: ''
+    certificate: ''
+    clientId: ''
+    companyName: KeyCloak
+    integration: ''
+    realmName: main
   gitlab:
     baseUrl: ''
     hostname: ''
-    password: password
-    themeId: 2
-    s3:
-      awsAccessKey: ''
-      awsHost: ''
-      awsUploadsBucket: ''
-      awsPackagesBucket: ''
-      awsLfsBucket: ''
-      awsArtifactsBucket: ''
-      awsRegion: us-west-2
-      awsSecretKey: ''
-      enabled: false
-  keycloak:
-    baseUrl: ''
-    clientId: ''
-    companyName: KeyCloak
-    enabled: false
-    realmName: master
-    certificate: ''
-    autoSignIn: false
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  gitlabRunner:
+    enable: true
+    docker:
+      sock: false
+    cache:
+      enabled: true
+      type: pvc
+    resources:
+      enabled: defaults
+      limits:
+        memory: 256Mi
+        cpu: 200m
+      requests:
+        memory: 128Mi
+        cpu: 100m
   postgres:
+    integration:
     database: gitlab
     host: ''
     password: P@ssw0rd
     port: 5432
+    url: ''
     username: postgres
-    # url: ''
 
 service:
   gitlab:
-    type: NodePort
+    type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
-      ssh: ''
+      http:
     lbPorts:
       http: 80
-      ssh: 22
 
 ingress:
   gitlab:
@@ -55,19 +89,24 @@ ingress:
     enabled: false
     hostname: ''
     tls: false
+    proxyIngressPorts: true
     issuer:
       name: letsencrypt-staging
 
 persistence:
   accessMode: ReadWriteOnce
-  enabled: false
-  # existingClaim: ''
-  size: 1Gi
+  enabled: true
   storageClass: ''
+  existingClaim:
+    gitlab: ''
+    runner: ''
+  size:
+    gitlab: 1Gi
+    runner: 1Gi
   velero:
     enabled: false
     restic: true
-    schedule: ''
+    schedule: '@midnight'
     ttl: 2160h0m00s
 
 probes:

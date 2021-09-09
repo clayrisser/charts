@@ -1,17 +1,16 @@
 images:
   nginx:
     repository: nginx
-    tag: 1.21.0
+    tag: latest
 
 config:
-  clusterType: rke
+  clusterProvider: infrastructure
   imagePullPolicy: Always
   updateStrategy: Recreate
   nginx:
     baseUrl: ''
     hostname: ''
     resources:
-      enabled: false
       requests:
         cpu: 100m
         memory: 128Mi
@@ -21,7 +20,7 @@ config:
 
 service:
   nginx:
-    type: ClusterIP
+    type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http:
@@ -36,6 +35,9 @@ ingress:
     tls: false
     issuer:
       name: letsencrypt-staging
+    godaddy:
+      key:
+      secret:
 
 persistence:
   accessMode: ReadWriteOnce
@@ -49,7 +51,6 @@ persistence:
     enabled: false
     restic: true
     schedule: '@midnight'
-    ttl: 2160h0m00s
 
 probes:
   liveness:

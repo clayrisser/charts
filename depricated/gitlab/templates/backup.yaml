@@ -14,23 +14,4 @@ spec:
     includedNamespaces:
       - {{ .Release.Namespace }}
     ttl: {{ .Values.persistence.velero.ttl | quote }}
----
-apiVersion: replicator.siliconhills.dev/v1alpha1
-kind: Replicator
-metadata:
-  name: {{ template "gitlab.fullname" . }}-backup
-  labels:
-    app: {{ template "gitlab.name" . }}-backup
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
- from:
-   apiVersion: velero.io/v1
-   kind: Schedule
-   name: {{ template "gitlab.fullname" . }}
-   namespace: {{ .Release.Namespace }}
- to:
-   name: {{ template "gitlab.fullname" . }}.{{ .Release.Namespace }}
-   namespace: velero
 {{- end }}

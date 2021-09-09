@@ -1,21 +1,21 @@
 categories:
   - Server
 questions:
-
-# Config
-  - variable: config.clusterType
+  # Config
+  - variable: config.clusterProvider
+    default: infrastructure
     description: ''
     type: enum
     options:
-      - aks
+      - infrastructure
       - eks
+      - aks
       - gke
-      - k3s
-      - rke
     required: true
-    label: 'cluster type'
+    label: 'cluster provider'
     group: Config
   - variable: config.imagePullPolicy
+    default: Always
     description: ''
     type: enum
     options:
@@ -25,6 +25,7 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
+    default: Recreate
     description: ''
     type: enum
     options:
@@ -34,8 +35,41 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.nginx.resources.defaults
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'nginx resources defaults'
+    show_subquestion_if: false
+    group: Config
+    subquestions:
+      - variable: config.nginx.resources.requests.cpu
+        default: 100m
+        description: ''
+        type: string
+        required: true
+        label: 'nginx resources requests cpu'
+      - variable: config.nginx.resources.requests.memory
+        default: 128Mi
+        description: ''
+        type: string
+        required: true
+        label: 'nginx resources requests memory'
+      - variable: config.nginx.resources.limits.cpu
+        default: 500m
+        description: ''
+        type: string
+        required: true
+        label: 'nginx resources limits cpu'
+      - variable: config.nginx.resources.limits.memory
+        default: 256Mi
+        description: ''
+        type: string
+        required: true
+        label: 'nginx resources limits memory'
 
-# Persistence
+  # Persistence
   - variable: persistence.enabled
     default: false
     description: ''
@@ -76,7 +110,8 @@ questions:
       - variable: persistence.velero.enabled
         default: false
         description: ''
-        type: boolean
+        type: string
+        show_if: persistence.velero.enabled=true
         required: true
         label: 'velero enabled'
         group: Persistence
@@ -96,17 +131,10 @@ questions:
         required: true
         label: 'velero restic'
         group: Persistence
-      - variable: persistence.velero.ttl
-        default: '2160h0m00s'
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero ttl'
-        group: Persistence
 
-# Services and Load Balancing
+  # Services and Load Balancing
   - variable: ingress.nginx.enabled
+    default: true
     description: ''
     type: boolean
     label: 'nginx ingress enabled'
@@ -114,6 +142,7 @@ questions:
     group: 'Services and Load Balancing'
     subquestions:
       - variable: ingress.nginx.tls
+        default: false
         description: ''
         type: boolean
         required: true
@@ -124,36 +153,50 @@ questions:
         type: hostname
         required: true
         label: 'nginx ingress hostname'
+      - variable: ingress.nginx.godaddy.key
+        default:
+        description: ''
+        type: string
+        required: true
+        label: 'nginx ingress godaddy key'
+      - variable: ingress.nginx.godaddy.secret
+        default:
+        description: ''
+        type: password
+        required: true
+        label: 'nginx ingress godaddy secret'
       - variable: ingress.nginx.issuer.name
+        default: letsencrypt-staging
         description: ''
         type: enum
         show_if: ingress.nginx.tls=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
         label: 'nginx ingress issuer name'
       - variable: ingress.nginx.certificate
+        default: ''
         description: ''
         type: string
         show_if: ingress.nginx.tls=true&&ingress.nginx.issuer.name=none
         required: false
         label: 'nginx ingress certificate'
   - variable: service.nginx.type
+    default: NodePort
     description: ''
     type: enum
     show_if: ingress.nginx.enabled=false
     options:
       - ClusterIP
-      - LoadBalancer
       - NodePort
+      - LoadBalancer
     required: true
     label: 'nginx service type'
     group: 'Services and Load Balancing'
   - variable: service.nginx.nodePorts.http
+    default:
     description: ''
     type: int
     required: false
@@ -163,6 +206,7 @@ questions:
     label: 'nginx http node port'
     group: 'Services and Load Balancing'
   - variable: service.nginx.lbPorts.http
+    default: 80
     description: ''
     type: int
     min: 0
@@ -172,14 +216,16 @@ questions:
     label: 'nginx http lb port'
     group: 'Services and Load Balancing'
 
-# Images
+  # Images
   - variable: images.nginx.repository
+    default: nginx
     description: ''
     type: string
     required: true
     label: 'nginx repository'
     group: Images
   - variable: images.nginx.tag
+    default: latest
     description: ''
     type: string
     required: true
