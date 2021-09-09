@@ -34,6 +34,7 @@ spec:
         enabled: true
         secret: {{ template "openldap.openldap-certificate" . }}
     extraLabels: {}
+    {{- if .Values.config.openldap.dhparam }}
     extraVolumes:
       - name: dhparam
         secret:
@@ -43,6 +44,7 @@ spec:
         readOnly: true
         mountPath: /container/service/slapd/assets/certs/dhparam.pem
         subPath: dhparam.pem
+    {{- end }}
     {{- if .Values.persistence.velero.enabled }}
     podAnnotations:
       backup.velero.io/backup-volumes: data

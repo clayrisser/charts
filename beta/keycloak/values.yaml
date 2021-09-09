@@ -25,7 +25,7 @@ config:
       domain: ''
       username: admin
       password: ''
-      userObjectClasses: 'automount, inetOrgPerson, organizationalPerson, person, posixAccount, sambaSamAccount, shadowAccount, top, univentionFreeAttributes, univentionMail, univentionObject, univentionPWHistory'
+      userObjectClasses: 'inetOrgPerson, organizationalPerson, person, posixAccount, sambaSamAccount, shadowAccount, top'
       tls:
         enabled: true
         ca:

@@ -92,6 +92,12 @@ questions:
     required: false
     label: 'openldap config password'
     group: Config
+  - variable: config.openldap.dhparam
+    description: ''
+    type: multline
+    required: false
+    label: 'openldap dhparam'
+    group: Config
   - variable: config.openldap.resources.enabled
     description: ''
     type: enum

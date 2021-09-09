@@ -66,6 +66,10 @@ docker-build:
 docker-push:
 	@$(DOCKER) push codejamninja/make-helm:latest
 
+.PHONY: clean
+clean:
+	@$(GIT) clean -fXd
+
 .PHONY: $(CHARTS)
 $(CHARTS):
 	-@$(MAKE) -s lint CHART="$@"

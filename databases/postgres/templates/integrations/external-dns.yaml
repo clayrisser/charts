@@ -4,7 +4,7 @@ kind: Plug
 metadata:
   name: ingress-target
   labels:
-    app: {{ template "postgres.name" . }}
+    app: pgadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

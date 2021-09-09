@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: pgadmin
   labels:
-    app: {{ template "postgres.name" . }}
+    app: pgadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -28,6 +28,6 @@ spec:
       nodePort: {{ .Values.service.pgadmin.nodePorts.http }}
       {{- end }}
   selector:
-    app: {{ template "postgres.name" . }}-pgadmin
+    app: pgadmin
     release: {{ .Release.Name }}
 {{- end }}

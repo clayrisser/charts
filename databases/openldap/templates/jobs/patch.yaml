@@ -3,7 +3,7 @@ kind: Job
 metadata:
   name: patch
   labels:
-    app: {{ template "openldap.name" . }}
+    app: patch
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

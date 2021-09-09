@@ -97,7 +97,7 @@ spec:
           apiVersion: v1
           kind: Secret
           metadata:
-            name: {{ template "keycloak.name" . }}-vault
+            name: keycloak-vault
             labels:
               app: {{ template "keycloak.name" . }}
               chart: {{ .Chart.Name }}-{{ .Chart.Version }}
