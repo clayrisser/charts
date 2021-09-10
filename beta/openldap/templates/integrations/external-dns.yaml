@@ -18,5 +18,5 @@ spec:
     name: ingress-target
     namespace: external-dns
   config:
-    ingressName: {{ template "openldap.fullname" . }}-phpldapadmin
+    ingressName: {{ .Release.Namespace }}-{{ template "openldap.name" . }}-phpldapadmin
 {{- end }}

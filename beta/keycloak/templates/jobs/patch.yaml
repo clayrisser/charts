@@ -1,3 +1,12 @@
+{{- $existingIngress := lookup "networking.k8s.io/v1" "Ingress" .Release.Namespace (include "keycloak.name" .) }}
+{{- $patch := true }}
+{{- if $existingIngress }}
+{{- $proxyBuffers := index $existingIngress.metadata.annotations "nginx.ingress.kubernetes.io/proxy-buffers" }}
+{{- if $proxyBuffers }}
+{{- $patch = false }}
+{{- end }}
+{{- end }}
+{{- if $patch }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -104,3 +113,4 @@ spec:
                 -l job-name=patch \
                 --field-selector status.phase=Failed \
                 -o yaml | kubectl delete -f -
+{{- end }}
