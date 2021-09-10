@@ -34,8 +34,9 @@ metadata:
     helm.sh/hook-weight: '0'
     helm.sh/hook-delete-policy: before-hook-creation
 rules:
-  - apiGroups: ['networking.k8s.io']
+  - apiGroups: ['', 'networking.k8s.io']
     resources:
       - ingresses
+      - pods
     verbs:
       - '*'
