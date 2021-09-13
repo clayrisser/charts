@@ -45,7 +45,7 @@ questions:
     required: true
     label: debug
     group: Config
-  - variable: config.keycloak.enabledPreview
+  - variable: config.keycloak.enablePreview
     description: ''
     type: boolean
     required: false
