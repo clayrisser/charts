@@ -120,6 +120,7 @@ spec:
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
 ---
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace (include "openldap.name" .) }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -129,7 +130,19 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: '0'
+    helm.sh/hook-delete-policy: before-hook-creation
 type: Opaque
-stringData:
-  bindPassword: {{ .Values.config.openldap.passwords.admin | default (randAlphaNum 24) | quote }}
+data:
+{{- if (and $existingSecret $existingSecret.data) }}
+{{- if $existingSecret.data.LDAP_ADMIN_PASSWORD }}
+  bindPassword: {{ $existingSecret.data.LDAP_ADMIN_PASSWORD }}
+{{- else }}
+  bindPassword: {{ .Values.config.openldap.passwords.admin | default "" | b64enc | quote }}
+{{- end }}
+{{- else }}
+  bindPassword: {{ .Values.config.openldap.passwords.admin | default "" | b64enc | quote }}
+{{- end }}
 {{- end }}
