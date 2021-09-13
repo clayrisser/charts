@@ -70,6 +70,8 @@ spec:
         {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
         - name: X509_CA_BUNDLE
           value: '/var/run/secrets/kubernetes.io/serviceaccount/*.crt /opt/jboss/certs/ldap-ca.crt'
+        - name: JAVA_OPTS_APPEND
+          value: '{{ .Values.config.keycloak.enablePreview | ternary "-Dkeycloak.profile=preview" "" }} {{ .Values.config.keycloak.javaOpts | default "" }}'
         - name: LDAP_TLS_CRT
           valueFrom:
             secretKeyRef:

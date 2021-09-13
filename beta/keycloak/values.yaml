@@ -12,12 +12,14 @@ config:
   keycloak:
     baseUrl: ''
     defaultTheme: keycloak
+    enablePreview: true
     hostname: ''
+    javaOpts: ''
+    migrationStrategy: IGNORE_EXISTING
     password: ''
     themeZip: keycloak
     username: admin
     welcomeTheme: ''
-    migrationStrategy: IGNORE_EXISTING
     ldap:
       enabled: false
       integration: ''

@@ -45,6 +45,18 @@ questions:
     required: true
     label: debug
     group: Config
+  - variable: config.keycloak.enabledPreview
+    description: ''
+    type: boolean
+    required: false
+    label: 'keycloak enable preview'
+    group: Config
+  - variable: config.keycloak.javaOpts
+    description: ''
+    type: string
+    required: false
+    label: 'keycloak java opts'
+    group: Config
   - variable: config.keycloak.hostname
     description: ''
     type: string
