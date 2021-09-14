@@ -1,1 +1,14 @@
-Thank you for installing keycloak
+{{- $keycloakSecret := lookup "v1" "Secret" .Release.Namespace (printf "credential-%s" (include "keycloak.name" .)) }}
+Thank you for installing
+
+{{- if (not $keycloakSecret) }}
+upgrade chart to render secrets
+{{- else }}
+| service  | username                                           | password                                                 |
+| -------- | -------------------------------------------------- | -------------------------------------------------------- |
+{{- end }}
+{{- if (and $keycloakSecret $keycloakSecret.data) }}
+{{- if (and $keycloakSecret.data.ADMIN_PASSWORD $keycloakSecret.data.ADMIN_USERNAME) }}
+| keycloak | `{{ $keycloakSecret.data.ADMIN_USERNAME | b64dec }}` | `{{ $keycloakSecret.data.ADMIN_PASSWORD | b64dec }}` |
+{{- end }}
+{{- end }}

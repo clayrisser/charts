@@ -63,17 +63,11 @@ questions:
     required: false
     label: 'keycloak hostname'
     group: Config
-  - variable: config.keycloak.username
-    description: ''
-    type: string
-    required: true
-    label: 'keycloak username'
-    group: Config
-  - variable: config.keycloak.password
+  - variable: config.keycloak.adminPassword
     description: ''
     type: password
     required: false
-    label: 'keycloak password'
+    label: 'keycloak admin password'
     group: Config
   - variable: config.keycloak.themeZip
     description: ''

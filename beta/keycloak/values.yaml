@@ -10,15 +10,14 @@ config:
   debug: false
   allowIntegrations: true
   keycloak:
+    adminPassword: ''
     baseUrl: ''
     defaultTheme: keycloak
     enablePreview: true
     hostname: ''
     javaOpts: ''
     migrationStrategy: IGNORE_EXISTING
-    password: ''
     themeZip: keycloak
-    username: admin
     welcomeTheme: ''
     ldap:
       enabled: false

@@ -2,11 +2,15 @@
 {{- $pgadminSecret := lookup "v1" "Secret" .Release.Namespace "pgadmin" }}
 Thank you for installing
 
+{{- if (not $postgresSecret) }}
+upgrade chart to render secrets
+{{- else }}
 | service  | username                                       | password                                       |
 | -------- | ---------------------------------------------- | ---------------------------------------------- |
+{{- end }}
 {{- if (and $postgresSecret $postgresSecret.data) }}
-{{- if $postgresSecret.data.password }}
-| postgres | `{{ $postgresSecret.data.password | b64dec }}` | `{{ $postgresSecret.data.password | b64dec }}` |
+{{- if (and $postgresSecret.data.username $postgresSecret.data.password) }}
+| postgres | `{{ $postgresSecret.data.username | b64dec }}` | `{{ $postgresSecret.data.password | b64dec }}` |
 {{- end }}
 {{- end }}
 {{- if (and $pgadminSecret $pgadminSecret.data) }}

@@ -1,1 +1,14 @@
+{{- $openldapSecret := lookup "v1" "Secret" .Release.Namespace (include "openldap.name" .) }}
 Thank you for installing
+
+{{- if (not $openldapSecret) }}
+upgrade chart to render secrets
+{{- else }}
+| service  | username                                           | password                                                 |
+| -------- | -------------------------------------------------- | -------------------------------------------------------- |
+{{- end }}
+{{- if (and $openldapSecret $openldapSecret.data) }}
+{{- if $openldapSecret.data.password }}
+| openldap | `cn=admin,{{ template "openldap.openldap-dc" . }}` | `{{ $openldapSecret.data.LDAP_ADMIN_PASSWORD | b64dec }}` |
+{{- end }}
+{{- end }}
