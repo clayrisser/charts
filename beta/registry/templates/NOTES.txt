@@ -1,1 +1,7 @@
-Thank you for installing
+add the following yaml to a pod to use this registry
+
+```yaml
+spec:
+  imagePullSecrets:
+    - name: {{ template "registry.fullname" . }}
+```
