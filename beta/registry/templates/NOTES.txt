@@ -1,6 +1,24 @@
-add the following yaml to a pod to use this registry
+add the following yaml to use this registry
 
+**plug.yaml**
+_the plug replicates the `{{ template "registry.fullname" . }}` secret_
 ```yaml
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+spec:
+  interface:
+    name: registry-replicator
+    namespace: {{ .Release.Namespace }}
+  socket:
+    name: registry-replicator
+    namespace: {{ .Release.Namespace }}
+```
+
+**pod.yaml**
+_adding this to a pod uses the replicated secret as the registry credentials_
+```yaml
+apiVersion: v1
+kind: Pod
 spec:
   imagePullSecrets:
     - name: {{ template "registry.fullname" . }}
