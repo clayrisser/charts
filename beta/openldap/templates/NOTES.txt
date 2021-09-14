@@ -8,7 +8,7 @@ upgrade chart to render secrets
 | -------- | -------------------------------------------------- | -------------------------------------------------------- |
 {{- end }}
 {{- if (and $openldapSecret $openldapSecret.data) }}
-{{- if $openldapSecret.data.password }}
+{{- if $openldapSecret.data.LDAP_ADMIN_PASSWORD }}
 | openldap | `cn=admin,{{ template "openldap.openldap-dc" . }}` | `{{ $openldapSecret.data.LDAP_ADMIN_PASSWORD | b64dec }}` |
 {{- end }}
 {{- end }}
