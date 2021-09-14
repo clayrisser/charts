@@ -129,3 +129,4 @@ spec:
                         -l job-name={{ template "openldap.name" . }}-decoupled-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
+{{- end }}
