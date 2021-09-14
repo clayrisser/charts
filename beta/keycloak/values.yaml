@@ -26,7 +26,7 @@ config:
       domain: ''
       username: admin
       password: ''
-      userObjectClasses: 'inetOrgPerson, organizationalPerson, person, posixAccount, sambaSamAccount, shadowAccount, top'
+      userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson, person, posixAccount, top'
       tls:
         enabled: true
         ca:

@@ -214,31 +214,23 @@ spec:
           is.mandatory.in.ldap: 'false'
           ldap.attribute: createTimestamp
           read.only: 'true'
-          user.model.attribute: createTimestamp
-      - name: 'samba acct flags'
+          user.model.attribute: CREATE_TIMESTAMP
+      - name: 'mail enabled'
         federationProviderDisplayName: ldap
-        federationMapperType: hardcoded-ldap-attribute-mapper
+        federationMapperType: user-attribute-ldap-mapper
         config:
-          ldap.attribute.value: '[U          ]'
-          ldap.attribute.name: sambaAcctFlags
-      - name: 'samba sid'
-        federationProviderDisplayName: ldap
-        federationMapperType: hardcoded-ldap-attribute-mapper
-        config:
-          ldap.attribute.value: 'S-1-0-0-11000'
-          ldap.attribute.name: sambaSID
+          attribute.default.value: 'TRUE'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: mailEnabled
+          read.only: 'false'
+          user.model.attribute: MAIL_ENABLED
       - name: 'home directory'
         federationProviderDisplayName: ldap
         federationMapperType: hardcoded-ldap-attribute-mapper
         config:
           ldap.attribute.value: '/home/user'
           ldap.attribute.name: homeDirectory
-      - name: 'univention object type'
-        federationProviderDisplayName: ldap
-        federationMapperType: hardcoded-ldap-attribute-mapper
-        config:
-          ldap.attribute.value: 'users/user'
-          ldap.attribute.name: univentionObjectType
       - name: 'gid number'
         federationProviderDisplayName: ldap
         federationMapperType: hardcoded-ldap-attribute-mapper
