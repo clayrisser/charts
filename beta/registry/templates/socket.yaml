@@ -48,7 +48,7 @@ spec:
                       apiVersion: v1
                       kind: Secret
                       metadata:
-                        name: {{ template "registry.fullname" . }}
+                        name: {{ .Release.Namespace }}-{{ template "registry.name" . }}
                         namespace: {{ .Release.Namesapce }}
                       EOF
                       kubectl get pods -n {{ .Release.Namespace }} \

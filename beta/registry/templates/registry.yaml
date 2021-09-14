@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ template "registry.fullname" . }}
+  name: {{ .Release.Namespace }}-{{ template "registry.name" . }}
   labels:
     app: {{ template "registry.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
