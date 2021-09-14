@@ -1,0 +1,57 @@
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
+metadata:
+  name: registry-replicator
+  labels:
+    app: {{ template "registry.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: registry-replicator
+    namespace: {{ .Release.Namespace }}
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: registry-replicator-coupled-or-updated-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  command:
+                    - sh
+                    - -c
+                    - |-
+                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namesapce %}
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ template "registry.fullname" . }}
+                        namespace: {{ .Release.Namesapce }}
+                      EOF
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name=registry-replicator-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -

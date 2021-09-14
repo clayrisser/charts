@@ -1,0 +1,4 @@
+config:
+  domain: index.docker.io
+  username: ''
+  password: ''

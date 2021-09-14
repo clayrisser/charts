@@ -1,0 +1,14 @@
+apiVersion: v1
+name: registry
+home: https://gitlab.com/bitspur/community/charts
+version: 0.0.1
+appVersion: latest
+description: 'setup registry across namespaces'
+keywords:
+  - docker
+  - registry
+sources:
+  - https://gitlab.com/bitspur/community/charts
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com

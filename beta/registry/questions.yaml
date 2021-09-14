@@ -1,0 +1,23 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.domain
+    description: ''
+    type: string
+    required: true
+    label: domain
+    group: Config
+  - variable: config.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: Config
+  - variable: config.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Config
