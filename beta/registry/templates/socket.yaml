@@ -44,7 +44,7 @@ spec:
                     - sh
                     - -c
                     - |-
-                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namesapce %}
+                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namespace %}
                       apiVersion: v1
                       kind: Secret
                       metadata:
