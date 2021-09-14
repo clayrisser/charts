@@ -37,7 +37,7 @@ Calculate keycloak hostname
 {{- if .Values.ingress.keycloak.enabled -}}
 {{- printf .Values.ingress.keycloak.hostname -}}
 {{- else -}}
-{{- printf "%s-keycloak" (include "keycloak.fullname" .) -}}
+{{- printf "%s-keycloak.%s.svc.cluster.local" (include "keycloak.fullname" .) .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

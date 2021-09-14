@@ -66,7 +66,7 @@ Calculate phpldapadmin hostname
 {{- if .Values.ingress.phpldapadmin.enabled -}}
 {{- printf .Values.ingress.phpldapadmin.hostname -}}
 {{- else -}}
-{{- printf "%s-openldap" (include "openldap.fullname" .) -}}
+{{- printf "%s-openldap.%s.svc.cluster.local" (include "openldap.fullname" .) .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

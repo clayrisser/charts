@@ -1,14 +1,34 @@
 {{- $openldapSecret := lookup "v1" "Secret" .Release.Namespace (include "openldap.name" .) }}
-Thank you for installing
+### openldap
+
+[{{ include "openldap.openldap-hostname" . }}]({{ include "openldap.openldap-hostname" . }})
 
 {{ if (not $openldapSecret) }}
 upgrade chart to render secrets
 {{- else }}
-| service  | username                                           | password                                                 |
-| -------- | -------------------------------------------------- | -------------------------------------------------------- |
+| **bind username** | **bind password** |
+| ----------------- | ----------------- |
 {{- end }}
 {{- if (and $openldapSecret $openldapSecret.data) }}
 {{- if $openldapSecret.data.LDAP_ADMIN_PASSWORD }}
-| openldap | `cn=admin,{{ template "openldap.openldap-dc" . }}` | `{{ $openldapSecret.data.LDAP_ADMIN_PASSWORD | b64dec }}` |
+| `cn=admin,{{ template "openldap.openldap-dc" . }}` | `{{ $openldapSecret.data.LDAP_ADMIN_PASSWORD | b64dec }}` |
+{{- end }}
+{{- end }}
+
+{{- if .Values.config.phpldapadmin.enabled }}
+### phpldapadmin
+
+[{{ include "openldap.phpldapadmin-base-url" . }}]({{ include "openldap.phpldapadmin-base-url" . }})
+
+{{ if (not $openldapSecret) }}
+upgrade chart to render secrets
+{{- else }}
+| **bind username** | **bind password** |
+| ----------------- | ----------------- |
+{{- end }}
+{{- if (and $openldapSecret $openldapSecret.data) }}
+{{- if $openldapSecret.data.LDAP_ADMIN_PASSWORD }}
+| `cn=admin,{{ template "openldap.openldap-dc" . }}` | `{{ $openldapSecret.data.LDAP_ADMIN_PASSWORD | b64dec }}` |
+{{- end }}
 {{- end }}
 {{- end }}
