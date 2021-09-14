@@ -20,7 +20,17 @@ spec:
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
-  configSecretName: socket
+  configMapper:
+    bindPassword: '{% .vars.b64BindPassword | b64dec %}'
+  vars:
+    - name: b64BindPassword
+      fieldref:
+        fieldPath: data.LDAP_ADMIN_PASSWORD
+      objref:
+        apiVersion: v1
+        kind: Secret
+        name: {{ template "openldap.name" . }}
+        namespace: {{ .Release.Namespace }}
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -119,26 +129,3 @@ spec:
                         -l job-name={{ template "openldap.name" . }}-decoupled-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
----
-{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace (include "openldap.name" .) }}
-apiVersion: v1
-kind: Secret
-metadata:
-  name: socket
-  labels:
-    app: {{ template "openldap.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-type: Opaque
-data:
-{{- if (and $existingSecret $existingSecret.data) }}
-{{- if $existingSecret.data.LDAP_ADMIN_PASSWORD }}
-  bindPassword: {{ $existingSecret.data.LDAP_ADMIN_PASSWORD }}
-{{- else }}
-  bindPassword: {{ .Values.config.openldap.passwords.admin | default "" | b64enc | quote }}
-{{- end }}
-{{- else }}
-  bindPassword: {{ .Values.config.openldap.passwords.admin | default "" | b64enc | quote }}
-{{- end }}
-{{- end }}
