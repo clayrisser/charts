@@ -1,20 +1,35 @@
 {{- $postgresSecret := lookup "v1" "Secret" .Release.Namespace (printf "%s-%s-secret" (include "postgres.name" .) (.Values.config.username)) }}
 {{- $pgadminSecret := lookup "v1" "Secret" .Release.Namespace "pgadmin" }}
-Thank you for installing
+### postgres
+
+[{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local]({{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local)
 
 {{ if (not $postgresSecret) }}
 upgrade chart to render secrets
 {{- else }}
-| service  | username                                       | password                                       |
-| -------- | ---------------------------------------------- | ---------------------------------------------- |
+| **username** | **password** |
+| ------------ | ------------ |
 {{- end }}
 {{- if (and $postgresSecret $postgresSecret.data) }}
 {{- if (and $postgresSecret.data.username $postgresSecret.data.password) }}
-| postgres | `{{ $postgresSecret.data.username | b64dec }}` | `{{ $postgresSecret.data.password | b64dec }}` |
+| `{{ $postgresSecret.data.username | b64dec }}` | `{{ $postgresSecret.data.password | b64dec }}` |
 {{- end }}
+{{- end }}
+
+{{- if .Values.config.pgadmin.enabled }}
+### pgadmin
+
+[{{ include "postgres.pgadmin-base-url" . }}]({{ include "postgres.pgadmin-base-url" . }})
+
+{{ if (not $pgadminSecret) }}
+upgrade chart to render secrets
+{{- else }}
+| **email** | **password** |
+| --------- | ------------ |
 {{- end }}
 {{- if (and $pgadminSecret $pgadminSecret.data) }}
 {{- if $pgadminSecret.data.password }}
-| pgadmin  | `{{ .Values.config.pgadmin.email }}`           | `{{ $pgadminSecret.data.password | b64dec }}`  |
+| `{{ .Values.config.pgadmin.email }}` | `{{ $pgadminSecret.data.password | b64dec }}` |
+{{- end }}
 {{- end }}
 {{- end }}
