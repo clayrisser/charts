@@ -1,1 +1,16 @@
+{{- $postgresSecret := lookup "v1" "Secret" .Release.Namespace (printf "%s-%s-secret" (include "postgres.name" .) (.Values.config.username)) }}
+{{- $pgadminSecret := lookup "v1" "Secret" .Release.Namespace "pgadmin" }}
 Thank you for installing
+
+| service  | username                                       | password                                       |
+| -------- | ---------------------------------------------- | ---------------------------------------------- |
+{{- if (and $postgresSecret $postgresSecret.data) }}
+{{- if $postgresSecret.data.password }}
+| postgres | `{{ $postgresSecret.data.password | b64dec }}` | `{{ $postgresSecret.data.password | b64dec }}` |
+{{- end }}
+{{- end }}
+{{- if (and $pgadminSecret $pgadminSecret.data) }}
+{{- if $pgadminSecret.data.password }}
+| pgadmin  | `{{ .Values.config.pgadmin.email }}`           | `{{ $pgadminSecret.data.password | b64dec }}`  |
+{{- end }}
+{{- end }}

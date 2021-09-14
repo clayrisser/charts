@@ -29,6 +29,8 @@
     "posix",
     "postgres",
     "postgresql",
+    "primaryuser",
+    "printf",
     "restic",
     "Risser",
     "selfsigned",
