@@ -71,8 +71,8 @@ spec:
             - name: PGADMIN_DEFAULT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "postgres.name" . }}
-                  key: pgadmin_password
+                  name: pgadmin
+                  key: password
           livenessProbe:
             httpGet:
               path: /

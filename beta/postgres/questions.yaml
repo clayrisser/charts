@@ -108,7 +108,7 @@ questions:
       - variable: config.pgadmin.password
         description: ''
         type: password
-        required: true
+        required: false
         label: 'pgadmin password'
   - variable: config.pgadmin.resources.enabled
     description: ''

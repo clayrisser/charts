@@ -31,7 +31,7 @@ config:
     baseUrl: ''
     enabled: false
     email: admin@example.com
-    password: P@ssw0rd
+    password: ''
     resources:
       enabled: 'false'
       requests:
