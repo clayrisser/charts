@@ -2,7 +2,7 @@
 {{- $pgadminSecret := lookup "v1" "Secret" .Release.Namespace "pgadmin" }}
 Thank you for installing
 
-{{- if (not $postgresSecret) }}
+{{ if (not $postgresSecret) }}
 upgrade chart to render secrets
 {{- else }}
 | service  | username                                       | password                                       |

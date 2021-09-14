@@ -1,7 +1,7 @@
 {{- $openldapSecret := lookup "v1" "Secret" .Release.Namespace (include "openldap.name" .) }}
 Thank you for installing
 
-{{- if (not $openldapSecret) }}
+{{ if (not $openldapSecret) }}
 upgrade chart to render secrets
 {{- else }}
 | service  | username                                           | password                                                 |
