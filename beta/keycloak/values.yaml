@@ -17,6 +17,7 @@ config:
     hostname: ''
     javaOpts: ''
     migrationStrategy: IGNORE_EXISTING
+    replicas: 1
     themeZip: keycloak
     welcomeTheme: ''
     ldap:

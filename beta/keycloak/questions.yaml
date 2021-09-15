@@ -45,6 +45,12 @@ questions:
     required: true
     label: debug
     group: Config
+  - variable: config.keycloak.replicas
+    description: ''
+    type: int
+    required: true
+    label: 'keycloak replicas'
+    group: Config
   - variable: config.keycloak.enablePreview
     description: ''
     type: boolean
