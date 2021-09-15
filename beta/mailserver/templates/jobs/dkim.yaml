@@ -3,7 +3,7 @@ kind: Job
 metadata:
   name: dkim
   labels:
-    app: {{ template "mailserver.name" . }}
+    app: dkim
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "mailserver.name" . }}
+        app: dkim
         release: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure
