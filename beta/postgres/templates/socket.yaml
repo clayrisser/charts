@@ -84,20 +84,20 @@ spec:
                       fi
                       if [ "{% .plugConfig.replicate %}" != "false" ]; then
                         cat <<EOF | kubectl apply -f -
-                        apiVersion: v1
-                        kind: Secret
-                        metadata:
-                          name: {{ template "postgres.name" . }}-{% .plug.metadata.name %}
-                          namespace: '{% .plug.metadata.namespace %}'
-                        type: Opaque
-                        stringData:
-                          protocol: '$POSTGRES_PROTOCOL'
-                          username: '$POSTGRES_USERNAME'
-                          hostname: '$POSTGRES_HOSTNAME'
-                          port: '$POSTGRES_PORT'
-                          password: '$POSTGRES_PASSWORD'
-                          database: '$POSTGRES_DATABASE'
-                          url: '${POSTGRES_PROTOCOL}://${POSTGRES_USERNAME}@${POSTGRES_PASSWORD}:${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DATABASE}'
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ template "postgres.name" . }}-{% .plug.metadata.name %}
+                        namespace: '{% .plug.metadata.namespace %}'
+                      type: Opaque
+                      stringData:
+                        protocol: '$POSTGRES_PROTOCOL'
+                        username: '$POSTGRES_USERNAME'
+                        hostname: '$POSTGRES_HOSTNAME'
+                        port: '$POSTGRES_PORT'
+                        password: '$POSTGRES_PASSWORD'
+                        database: '$POSTGRES_DATABASE'
+                        url: '${POSTGRES_PROTOCOL}://${POSTGRES_USERNAME}@${POSTGRES_PASSWORD}:${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DATABASE}'
                       EOF
                       fi
                       kubectl get pods -n {{ .Release.Namespace }} \

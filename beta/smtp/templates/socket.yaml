@@ -1,0 +1,82 @@
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
+metadata:
+  name: {{ template "smtp.name" . }}
+  labels:
+    app: {{ template "smtp.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: smtp
+    namespace: {{ .Release.Namespace }}
+  config:
+    username: {{ .Values.config.username | quote }}
+    hostname: {{ .Values.config.hostname | quote }}
+    port: {{ .Values.config.port | quote }}
+  configSecretName: {{ template "smtp.name" . }}
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: smtp-coupled-or-updated-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  env:
+                    - name: SMTP_USERNAME
+                      value: '{% .socketConfig.username %}'
+                    - name: SMTP_HOSTNAME
+                      value: '{% .socketConfig.hostname %}'
+                    - name: SMTP_PORT
+                      value: '{% .socketConfig.port %}'
+                    - name: SMTP_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ template "smtp.name" . }}
+                          key: password
+                  command:
+                    - sh
+                    - -c
+                    - |-
+                      if [ "{% .plugConfig.replicate %}" != "false" ]; then
+                        cat <<EOF | kubectl apply -f -
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ template "smtp.name" . }}-{% .plug.metadata.name %}
+                        namespace: '{% .plug.metadata.namespace %}'
+                      type: Opaque
+                      stringData:
+                        hostname: '$SMTP_HOSTNAME'
+                        password: '$SMTP_PASSWORD'
+                        port: '$SMTP_PORT'
+                        username: '$SMTP_USERNAME'
+                      EOF
+                      fi
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "smtp.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -

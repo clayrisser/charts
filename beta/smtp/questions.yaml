@@ -1,0 +1,31 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.hostname
+    description: ''
+    type: string
+    required: true
+    label: hostname
+    group: Config
+  - variable: config.port
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    group: Config
+  - variable: config.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: Config
+  - variable: config.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Config

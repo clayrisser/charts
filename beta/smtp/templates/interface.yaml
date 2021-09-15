@@ -1,0 +1,24 @@
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Interface
+metadata:
+  name: smtp
+  labels:
+    app: {{ template "smtp.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schemas:
+    - version: v0.0.1
+      plugDefinition:
+        properties:
+          replicate: {}
+      socketDefinition:
+        properties:
+          username:
+            required: true
+          password:
+            required: true
+          hostname:
+            required: true
+          port: {}
