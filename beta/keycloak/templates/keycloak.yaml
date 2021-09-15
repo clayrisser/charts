@@ -236,6 +236,24 @@ spec:
           ldap.attribute: mailEnabled
           read.only: 'false'
           user.model.attribute: MAIL_ENABLED
+      - name: 'date of birth'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: birthDate
+          read.only: 'false'
+          user.model.attribute: dob
+      - name: 'gender'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: gender
+          read.only: 'false'
+          user.model.attribute: gender
       - name: 'home directory'
         federationProviderDisplayName: ldap
         federationMapperType: hardcoded-ldap-attribute-mapper
