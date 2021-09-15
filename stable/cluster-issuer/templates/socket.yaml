@@ -44,7 +44,7 @@ spec:
                     - sh
                     - -c
                     - |
-                      cat <<EOF | kubectl delete -f -
+                      cat <<EOF | kubectl delete -f - 2>/dev/null || true
                       apiVersion: v1
                       kind: Secret
                       metadata:
@@ -58,6 +58,10 @@ spec:
                         name: {{ .Values.config.ca.name }}-ca
                         namespace: {{ .Release.Namespace }}
                       EOF
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name=selfsigned-replicator-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
     - when: [decoupled]
       do: recreate
       resource: |
@@ -95,3 +99,7 @@ spec:
                         name: {{ .Values.config.ca.name }}-ca
                         namespace: {% .plug.metadata.namespace %}
                       EOF
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name=selfsigned-replicator-decoupled-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
