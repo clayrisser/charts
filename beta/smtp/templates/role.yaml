@@ -1,9 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "registry.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ template "smtp.name" . }}-{{ .Release.Namespace }}-default
   labels:
-    app: {{ template "registry.name" . }}
+    app: {{ template "smtp.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -14,7 +14,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "registry.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ template "smtp.name" . }}-{{ .Release.Namespace }}-default
 subjects:
   - kind: ServiceAccount
     name: default
@@ -23,9 +23,9 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "registry.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ template "smtp.name" . }}-{{ .Release.Namespace }}-default
   labels:
-    app: {{ template "registry.name" . }}
+    app: {{ template "smtp.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
