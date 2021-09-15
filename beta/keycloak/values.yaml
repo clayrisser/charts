@@ -36,7 +36,7 @@ config:
       domain: ''
       username: admin
       password: ''
-      userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson, person, posixAccount, top, arbitrarySlots, adShim, extendedPerson'
+      userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson, person, posixAccount, top, arbitrarySlots, extendedPerson'
       tls:
         enabled: true
         ca:
