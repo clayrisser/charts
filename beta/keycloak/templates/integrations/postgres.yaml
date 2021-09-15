@@ -1,4 +1,4 @@
-{{- if (and .Values.config.allowIntegrations (not (empty .Values.config.postgres.integration))) }}
+{{- if (not (empty .Values.config.postgres.integration)) }}
 {{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
 {{- $existingKeycloak := lookup "keycloak.org/v1alpha1" "Keycloak" .Release.Namespace (include "keycloak.name" .) }}

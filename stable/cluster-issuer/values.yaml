@@ -1,5 +1,4 @@
 config:
-  allowIntegrations: true
   cloudflareApiKey: ''
   clusterType: rke
   email: ''

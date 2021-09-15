@@ -3,12 +3,6 @@ categories:
 questions:
 
   # Config
-  - variable: config.allowIntegrations
-    description: ''
-    type: boolean
-    required: true
-    label: 'allow integrations'
-    group: Config
   - variable: config.target
     description: ''
     type: string

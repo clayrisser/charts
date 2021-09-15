@@ -1,3 +1,10 @@
+{{- $existingKeycloak := lookup "keycloak.org/v1alpha1" "Keycloak" .Release.Namespace (include "keycloak.name" .) }}
+{{- $externalDatabaseEnabled := false }}
+{{- if $existingKeycloak }}
+{{- if $existingKeycloak.spec.externalDatabase.enabled }}
+{{- $externalDatabaseEnabled = true }}
+{{- end }}
+{{- end }}
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
@@ -17,8 +24,12 @@ spec:
   external:
     enabled: false
   externalDatabase:
+{{- if $externalDatabaseEnabled }}
+    enabled: true
+{{- else }}
     # set to `true` from postgres integration
-    enabled: {{ (and .Values.config.allowIntegrations (not (empty .Values.config.postgres.integration))) | ternary "false" "true" }}
+    enabled: {{ (not (empty .Values.config.postgres.integration)) | ternary "false" "true" }}
+{{- end }}
   keycloakDeploymentSpec:
     experimental:
       command:

@@ -3,12 +3,6 @@ categories:
 questions:
 
 # Config
-  - variable: config.allowIntegration
-    description: ''
-    type: boolean
-    required: true
-    label: 'allow integration'
-    group: Config
   - variable: velero.metrics.enabled
     description: ''
     type: boolean

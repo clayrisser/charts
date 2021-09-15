@@ -19,7 +19,6 @@ velero:
         region: sfo2
 
 config:
-  allowIntegrations: true
   accessKeyId: ''
   secretAccessKey: ''
   digitaloceanToken: ''

@@ -1,4 +1,3 @@
-{{- if .Values.config.allowIntegrations }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
@@ -129,4 +128,3 @@ spec:
                         -l job-name={{ template "openldap.name" . }}-decoupled-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
-{{- end }}

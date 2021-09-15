@@ -1,4 +1,4 @@
-{{- if (and .Values.config.allowIntegrations .Values.config.keycloak.ldap.enabled) }}
+{{- if .Values.config.keycloak.ldap.enabled }}
 {{- if (and .Values.config.keycloak.ldap.tls.enabled (not (empty .Values.config.keycloak.ldap.tls.ca.integration))) }}
 {{- $name := (split "." .Values.config.keycloak.ldap.tls.ca.integration)._1 | default "selfsigned-replicator" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.tls.ca.integration))._0 }}

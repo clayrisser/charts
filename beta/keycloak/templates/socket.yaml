@@ -1,4 +1,3 @@
-{{- if .Values.config.allowIntegrations }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
@@ -52,4 +51,3 @@ spec:
         namespace: {{ .Release.Namespace }}
       fieldref:
         fieldPath: data.ADMIN_USERNAME
-{{- end }}

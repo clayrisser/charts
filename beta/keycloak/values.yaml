@@ -8,7 +8,6 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   debug: false
-  allowIntegrations: true
   keycloak:
     adminPassword: ''
     baseUrl: ''

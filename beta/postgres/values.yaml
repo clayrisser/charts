@@ -13,7 +13,6 @@ images:
 config:
   clusterType: rke
   imagePullPolicy: IfNotPresent
-  allowIntegrations: true
   updateStrategy: Recreate
   username: postgres
   password:

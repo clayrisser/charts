@@ -4,7 +4,6 @@ images:
     tag: 4.17
 
 config:
-  allowIntegration: true
   clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate

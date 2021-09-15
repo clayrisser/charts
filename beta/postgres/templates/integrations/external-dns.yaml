@@ -1,4 +1,4 @@
-{{- if (and .Values.config.allowIntegrations (and .Values.config.pgadmin.enabled .Values.ingress.pgadmin.enabled)) }}
+{{- if (and .Values.config.pgadmin.enabled .Values.ingress.pgadmin.enabled) }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
@@ -19,4 +19,3 @@ spec:
     namespace: external-dns
   config:
     ingressName: pgadmin
-{{- end }}
