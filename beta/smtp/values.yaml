@@ -1,5 +1,4 @@
 config:
-  from: ''
   hostname: ''
   password: ''
   port: 25

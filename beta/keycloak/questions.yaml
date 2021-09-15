@@ -196,6 +196,50 @@ questions:
         show_if: config.keycloak.ldap.tls.enabled=true
         label: 'tls ca key'
 
+  # Smtp Config
+  - variable: config.keycloak.smtp.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: 'Smtp Config'
+    subquestions:
+      - variable: config.keycloak.smtp.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.keycloak.smtp.from
+        description: ''
+        type: string
+        required: true
+        label: from
+      - variable: config.keycloak.smtp.hostname
+        description: ''
+        type: string
+        required: true
+        label: hostname
+        show_if: config.keycloak.smtp.integration=
+      - variable: config.keycloak.smtp.port
+        description: ''
+        type: int
+        required: true
+        label: port
+        show_if: config.keycloak.smtp.integration=
+      - variable: config.keycloak.smtp.username
+        description: ''
+        type: string
+        required: true
+        label: username
+        show_if: config.keycloak.smtp.integration=
+      - variable: config.keycloak.smtp.password
+        description: ''
+        type: password
+        required: true
+        label: password
+        show_if: config.keycloak.smtp.integration=
+
   # Postgres Config
   - variable: config.postgres.integration
     description: ''

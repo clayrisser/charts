@@ -29,12 +29,6 @@ questions:
     required: true
     label: password
     group: Config
-  - variable: config.from
-    description: ''
-    type: string
-    required: true
-    label: from
-    group: Config
   - variable: config.tls
     description: ''
     type: boolean

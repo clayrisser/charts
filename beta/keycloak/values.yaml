@@ -19,6 +19,16 @@ config:
     replicas: 1
     themeZip: keycloak
     welcomeTheme: ''
+    smtp:
+      enabled: false
+      integration: ''
+      from: ''
+      hostname: ''
+      password: ''
+      port: ''
+      username: ''
+      tls:
+        enabled: false
     ldap:
       enabled: false
       integration: ''

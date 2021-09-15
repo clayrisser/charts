@@ -1,10 +1,10 @@
-{{- if (not (empty .Values.config.keycloak.ldap.integration)) }}
-{{- $name := (split "." .Values.config.keycloak.ldap.integration)._1 | default "ldap" }}
-{{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.integration))._0 }}
+{{- if (not (empty .Values.config.keycloak.smtp.integration)) }}
+{{- $name := (split "." .Values.config.keycloak.smtp.integration)._1 | default "smtp" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.keycloak.smtp.integration))._0 }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
-  name: ldap
+  name: smtp
   labels:
     app: {{ template "keycloak.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -14,14 +14,13 @@ spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
-    name: ldap
+    name: smtp
     namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
   config:
-    database: {{ .Values.config.postgres.database | quote }}
-    cleanup: 'false'
+    from: {{ .Values.config.keycloak.smtp.from | quote }}
     replicate: 'false'
   resources:
     - when: [coupled, updated]
@@ -30,7 +29,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: ldap-coupled-or-updated
+          name: smtp-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
           activeDeadlineSeconds: 360
@@ -64,6 +63,13 @@ spec:
                         name: {{ template "keycloak.name" . }}
                         namespace: {{ .Release.Namespace }}
                       EOF
+                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-vault.yaml
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: keycloak-vault
+                        namespace: {{ .Release.Namespace }}
+                      EOF
                       cat <<EOF > /tmp/kustomize/patch-keycloak-realm.yaml
                       - op: replace
                         path: /spec/realm/userFederationProviders/0/config/bindDn
@@ -75,17 +81,10 @@ spec:
                         path: /spec/realm/userFederationProviders/0/config/usersDn
                         value: ou=people,{% .socketConfig.domain %}
                       EOF
-                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-vault.yaml
-                      apiVersion: v1
-                      kind: Secret
-                      metadata:
-                        name: keycloak-vault
-                        namespace: {{ .Release.Namespace }}
-                      EOF
                       cat <<EOF > /tmp/kustomize/patch-keycloak-vault.yaml
                       - op: replace
                         path: /data/main_smtpPassword
-                        value: {% .socketConfig.bindPassword | b64enc | quote %}
+                        value: {% .socketConfig.password | b64enc | quote %}
                       EOF
                       cat <<EOF > /tmp/kustomize/kustomization.yaml
                       apiVersion: kustomize.config.k8s.io/v1beta1
@@ -111,7 +110,7 @@ spec:
                       kubectl kustomize /tmp/kustomize
                       kubectl kustomize /tmp/kustomize | kubectl apply -f -
                       kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name=ldap-coupled-or-updated \
+                        -l job-name=smtp-coupled-or-updated \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
 {{- end }}

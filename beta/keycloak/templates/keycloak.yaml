@@ -125,6 +125,18 @@ spec:
     realm: main
     enabled: true
     displayName: 'Main Realm'
+    {{- if .Values.config.keycloak.smtp.enabled }}
+    smtpServer:
+      password: '${vault.smtpPassword}'
+      starttls: 'true'
+      auth: 'true'
+      port: {{ .Values.config.keycloak.smtp.port | quote }}
+      host: {{ .Values.config.keycloak.smtp.hostname | quote }}
+      from: {{ .Values.config.keycloak.smtp.from | quote }}
+      fromDisplayName: {{ .Values.config.keycloak.smtp.from | quote }}
+      ssl: 'true'
+      user: {{ .Values.config.keycloak.smtp.username | quote }}
+    {{- end }}
     {{- if .Values.config.keycloak.ldap.enabled }}
     userFederationProviders:
       - displayName: ldap

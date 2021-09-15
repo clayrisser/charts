@@ -14,7 +14,6 @@ spec:
     name: smtp
     namespace: {{ .Release.Namespace }}
   config:
-    from: {{ .Values.config.from | quote }}
     hostname: {{ .Values.config.hostname | quote }}
     port: {{ .Values.config.port | quote }}
     starttls: {{ .Values.config.starttls | quote }}
@@ -54,7 +53,7 @@ spec:
                     - name: SMTP_STARTTLS
                       value: '{% .socketConfig.starttls %}'
                     - name: SMTP_FROM
-                      value: '{% .socketConfig.from %}'
+                      value: '{% .plugConfig.from %}'
                     - name: SMTP_USERNAME
                       value: '{% .socketConfig.username %}'
                     - name: SMTP_HOSTNAME
