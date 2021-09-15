@@ -29,3 +29,22 @@ questions:
     required: true
     label: password
     group: Config
+  - variable: config.from
+    description: ''
+    type: string
+    required: true
+    label: from
+    group: Config
+  - variable: config.tls
+    description: ''
+    type: boolean
+    required: true
+    label: tls
+    show_subquestion_if: true
+    group: Config
+    subquestions:
+      - variable: config.starttls
+        description: ''
+        type: boolean
+        required: true
+        label: starttls

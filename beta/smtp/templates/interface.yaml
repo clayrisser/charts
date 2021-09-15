@@ -21,4 +21,8 @@ spec:
             required: true
           hostname:
             required: true
+          from:
+            required: true
+          tls: {}
+          starttls: {}
           port: {}

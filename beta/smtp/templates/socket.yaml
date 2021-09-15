@@ -14,9 +14,12 @@ spec:
     name: smtp
     namespace: {{ .Release.Namespace }}
   config:
-    username: {{ .Values.config.username | quote }}
+    from: {{ .Values.config.from | quote }}
     hostname: {{ .Values.config.hostname | quote }}
     port: {{ .Values.config.port | quote }}
+    starttls: {{ .Values.config.starttls | quote }}
+    tls: {{ .Values.config.tls | quote }}
+    username: {{ .Values.config.username | quote }}
   configSecretName: {{ template "smtp.name" . }}
   resources:
     - when: [coupled, updated]
@@ -46,6 +49,12 @@ spec:
                 - name: kubectl
                   image: bitnami/kubectl:1.20.9
                   env:
+                    - name: SMTP_TLS
+                      value: '{% .socketConfig.tls %}'
+                    - name: SMTP_STARTTLS
+                      value: '{% .socketConfig.starttls %}'
+                    - name: SMTP_FROM
+                      value: '{% .socketConfig.from %}'
                     - name: SMTP_USERNAME
                       value: '{% .socketConfig.username %}'
                     - name: SMTP_HOSTNAME
@@ -70,9 +79,12 @@ spec:
                         namespace: '{% .plug.metadata.namespace %}'
                       type: Opaque
                       stringData:
+                        from: '$SMTP_FROM'
                         hostname: '$SMTP_HOSTNAME'
-                        password: '$SMTP_PASSWORD'
+                        password: $SMTP_PASSWORD
                         port: '$SMTP_PORT'
+                        starttls: '$SMTP_STARTTLS'
+                        tls: '$SMTP_TLS'
                         username: '$SMTP_USERNAME'
                       EOF
                       fi

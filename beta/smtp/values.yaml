@@ -1,5 +1,8 @@
 config:
+  from: ''
   hostname: ''
   password: ''
-  port: ''
+  port: 25
+  starttls: false
+  tls: false
   username: ''
