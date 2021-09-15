@@ -1,6 +1,13 @@
 {{- if (and .Values.config.allowIntegrations (not (empty .Values.config.postgres.integration))) }}
 {{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
+{{- $existingKeycloak := lookup "keycloak.org/v1alpha1" "Keycloak" .Release.Namespace (include "keycloak.name" .) }}
+{{- $patchKeycloak := true }}
+{{- if $existingKeycloak }}
+{{- if $existingKeycloak.spec.externalDatabase.enabled }}
+{{- $patchKeycloak = false }}
+{{- end }}
+{{- end }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
@@ -25,13 +32,14 @@ spec:
     cleanup: 'false'
     replicate: 'false'
   resources:
+{{- if $patchKeycloak }}
     - when: [coupled, updated]
       do: recreate
       resource: |
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: postgres-integration
+          name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
           activeDeadlineSeconds: 360
@@ -86,6 +94,14 @@ spec:
                       EOF
                       kubectl kustomize /tmp/kustomize
                       kubectl kustomize /tmp/kustomize | kubectl apply -f -
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l app=keycloak \
+                        -o yaml | kubectl delete -f -
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name=postgres-coupled-or-updated \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
+{{- end }}
     - when: [coupled, updated]
       do: recreate
       resource: |

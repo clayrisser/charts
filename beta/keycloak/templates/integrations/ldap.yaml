@@ -30,7 +30,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: ldap-integration
+          name: ldap-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
           activeDeadlineSeconds: 360
@@ -91,6 +91,10 @@ spec:
                       EOF
                       kubectl kustomize /tmp/kustomize
                       kubectl kustomize /tmp/kustomize | kubectl apply -f -
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name=ldap-coupled-or-updated \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
     - when: [coupled, updated]
       do: recreate
       resource: |
