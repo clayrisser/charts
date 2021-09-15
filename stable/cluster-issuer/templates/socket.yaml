@@ -1,7 +1,7 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
-  name: selfsigned-replicator
+  name: {{ .Values.config.ca.name }}-replicator
   labels:
     app: {{ template "cluster-issuer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -20,7 +20,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: selfsigned-replicator-coupled-or-updated-{% .plug.metadata.namespace %}
+          name: {{ .Values.config.ca.name }}-replicator-coupled-or-updated-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -48,18 +48,18 @@ spec:
                       apiVersion: v1
                       kind: Secret
                       metadata:
-                        name: {{ .Values.config.ca.name }}-ca
+                        name: {% .plugConfig.caName | default "{{ .Values.config.ca.name }}-ca" %}
                         namespace: {% .plug.metadata.namespace %}
                       EOF
                       cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namespace %}
                       apiVersion: v1
                       kind: Secret
                       metadata:
-                        name: {{ .Values.config.ca.name }}-ca
+                        name: {% .plugConfig.caName | default "{{ .Values.config.ca.name }}-ca" %}
                         namespace: {{ .Release.Namespace }}
                       EOF
                       kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name=selfsigned-replicator-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        -l job-name={{ .Values.config.ca.name }}-replicator-coupled-or-updated-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
     - when: [decoupled]
@@ -68,7 +68,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: selfsigned-replicator-decoupled-{% .plug.metadata.namespace %}
+          name: {{ .Values.config.ca.name }}-replicator-decoupled-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -96,10 +96,10 @@ spec:
                       apiVersion: v1
                       kind: Secret
                       metadata:
-                        name: {{ .Values.config.ca.name }}-ca
+                        name: {% .plugConfig.caName | default "{{ .Values.config.ca.name }}-ca" %}
                         namespace: {% .plug.metadata.namespace %}
                       EOF
                       kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name=selfsigned-replicator-decoupled-{% .plug.metadata.namespace %} \
+                        -l job-name={{ .Values.config.ca.name }}-replicator-decoupled-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -

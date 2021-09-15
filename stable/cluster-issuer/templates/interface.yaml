@@ -10,5 +10,7 @@ metadata:
 spec:
   schemas:
     - version: v0.0.1
-      plugDefinition: {}
+      plugDefinition:
+        properties:
+          caName: {}
       socketDefinition: {}

@@ -62,14 +62,21 @@ spec:
                     - -c
                     - |
                       sleep 10
-                      {%- if (not (eq .plugConfig.replicate "false")) %}
-{{- if (and .Values.service.openldap.tls.enabled (empty .Values.service.openldap.tls.certificate)) }}
+{{- if .Values.service.openldap.tls.enabled }}
                       kubectl get secret {{ template "openldap.openldap-certificate" . }} \
                         -n {{ .Release.Namespace }} -o yaml | \
                         sed 's|^\(\s*name:\s*{{ template "openldap.openldap-certificate" . }}\)|\1-{% .plug.metadata.name %}|g' \
                         grep -v '^\s*namespace:\s*{{ .Release.Namespace }}' | \
                         kubectl apply -f - --namespace={% .plug.metadata.namespace %}
+{{- if (or (empty .Values.service.openldap.tls.certificate) (and (not (empty .Values.service.openldap.tls.ca.certificate)) (not (empty .Values.service.openldap.tls.ca.key)))) }}
+                      kubectl get secret ca \
+                        -n {{ .Release.Namespace }} -o yaml | \
+                        sed 's|^\(\s*name:\s*ca\)|\1-{% .plug.metadata.name %}|g' \
+                        grep -v '^\s*namespace:\s*{{ .Release.Namespace }}' | \
+                        kubectl apply -f - --namespace={% .plug.metadata.namespace %}
 {{- end }}
+{{- end }}
+                      {%- if (not (eq .plugConfig.replicate "false")) %}
                       cat <<EOF | kubectl apply -f -
                       apiVersion: v1
                       kind: Secret

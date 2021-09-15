@@ -48,6 +48,9 @@ service:
       enabled: true
       enforce: false
       certificate: ''
+      ca:
+        certificate: ''
+        key: ''
       issuer:
         name: selfsigned
         dnsNames: ''

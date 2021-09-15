@@ -1,10 +1,10 @@
 {{- if (and .Values.service.openldap.tls.enabled (empty .Values.service.openldap.tls.certificate)) }}
-{{- $name := "selfsigned-replicator" }}
+{{- $name := (printf "%s-replicator" .Values.service.openldap.tls.issuer.name) }}
 {{- $namespace := "kube-system" }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
-  name: selfsigned-replicator
+  name: ca-replicator
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -18,4 +18,6 @@ spec:
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
+  config:
+    caName: ca
 {{- end }}
