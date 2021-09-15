@@ -383,36 +383,58 @@ questions:
     group: Ldap
     show_subquestion_if: true
     subquestions:
-      - variable: config.ldap.domain
-        default: ''
+      - variable: config.ldap.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.ldap.hostname
         description: ''
         type: string
         required: true
-        label: 'ldap domain'
-      - variable: config.ldap.tls
-        default: false
+        label: hostname
+        show_if: config.ldap.integration=
+      - variable: config.ldap.domain
+        description: 'use example.org instead of dc=example,dc=org'
+        type: string
+        required: true
+        label: domain
+        show_if: config.ldap.integration=
+      - variable: config.ldap.username
+        description: ''
+        type: string
+        required: true
+        label: username
+        show_if: config.ldap.integration=
+      - variable: config.ldap.password
+        description: ''
+        type: password
+        required: true
+        label: password
+        show_if: config.ldap.integration=
+      - variable: config.ldap.tls.enabled
         description: ''
         type: boolean
         required: true
-        label: 'ldap tls'
-      - variable: config.ldap.hostname
-        default: ''
+        label: 'tls enabled'
+      - variable: config.ldap.tls.ca.integration
         description: ''
         type: string
         required: false
-        label: 'ldap hostname'
-      - variable: config.ldap.admin
-        default: admin
+        show_if: config.ldap.tls.enabled=true
+        label: 'tls ca integration'
+      - variable: config.ldap.tls.ca.secret
         description: ''
         type: string
         required: false
-        label: 'ldap admin'
-      - variable: config.ldap.password
-        default: P@ssw0rd
+        show_if: config.ldap.tls.enabled=true
+        label: 'tls ca secret'
+      - variable: config.ldap.tls.ca.key
         description: ''
-        type: password
+        type: string
         required: false
-        label: 'ldap password'
+        show_if: config.ldap.tls.enabled=true
+        label: 'tls ca key'
       - variable: config.ldap.queryFilterAlias
         default: '(|(&(mailAlias=%s)(objectClass=PostfixBookMailForward))(&(mailAlias=%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE)))'
         description: ''

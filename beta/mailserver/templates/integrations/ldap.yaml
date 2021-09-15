@@ -1,0 +1,117 @@
+{{- if (not (empty .Values.config.ldap.integration)) }}
+{{- $name := (split "." .Values.config.ldap.integration)._1 | default "ldap" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.ldap.integration))._0 }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: ldap
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: ldap
+    namespace: {{ $namespace }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    database: {{ .Values.config.postgres.database | quote }}
+    cleanup: 'false'
+    replicate: 'false'
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: ldap-coupled-or-updated
+          namespace: {{ .Release.Namespace }}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      sleep 10
+                      mkdir -p /tmp/kustomize
+                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-realm.yaml
+                      apiVersion: keycloak.org/v1alpha1
+                      kind: KeycloakRealm
+                      metadata:
+                        name: {{ template "mailserver.name" . }}
+                        namespace: {{ .Release.Namespace }}
+                      EOF
+                      cat <<EOF > /tmp/kustomize/patch-keycloak-realm.yaml
+                      - op: replace
+                        path: /spec/realm/userFederationProviders/0/config/bindDn
+                        value: {% .socketConfig.bindDN | quote %}
+                      - op: replace
+                        path: /spec/realm/userFederationProviders/0/config/connectionUrl
+                        value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
+                      - op: replace
+                        path: /spec/realm/userFederationProviders/0/config/usersDn
+                        value: ou=people,{% .socketConfig.domain %}
+                      EOF
+                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-vault.yaml
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: keycloak-vault
+                        namespace: {{ .Release.Namespace }}
+                      EOF
+                      cat <<EOF > /tmp/kustomize/patch-keycloak-vault.yaml
+                      - op: replace
+                        path: /data/main_smtpPassword
+                        value: {% .socketConfig.bindPassword | b64enc | quote %}
+                      EOF
+                      cat <<EOF > /tmp/kustomize/kustomization.yaml
+                      apiVersion: kustomize.config.k8s.io/v1beta1
+                      kind: Kustomization
+                      resources:
+                        - keycloak-realm.yaml
+                        - keycloak-vault.yaml
+                      patchesJson6902:
+                        - path: patch-keycloak-realm.yaml
+                          target:
+                            group: keycloak.org
+                            version: v1alpha1
+                            kind: KeycloakRealm
+                            name: {{ template "mailserver.name" . }}
+                            namespace: {{ .Release.Namespace }}
+                        - path: patch-keycloak-vault.yaml
+                          target:
+                            version: v1
+                            kind: Secret
+                            name: keycloak-vault
+                            namespace: {{ .Release.Namespace }}
+                      EOF
+                      kubectl kustomize /tmp/kustomize
+                      kubectl kustomize /tmp/kustomize | kubectl apply -f -
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name=ldap-coupled-or-updated \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
+{{- end }}

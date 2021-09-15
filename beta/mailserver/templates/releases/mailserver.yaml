@@ -90,14 +90,14 @@ spec:
         enable_spamassassin: {{ .Values.config.spamassassin.enabled | ternary "1" "0" }}
         enable_srs: {{ .Values.config.srs.enabled | ternary "1" "0" }}
         fetchmail_poll: {{ .Values.config.fetchmail.poll }}
-        ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
+        ldap_bind_dn: cn={{ .Values.config.ldap.username }},{{ template "mailserver.ldap-dc" . }}
         ldap_bind_pw: {{ .Values.config.ldap.password | quote }}
         ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
         ldap_query_filter_domain: {{ .Values.config.ldap.queryFilterDomain | quote }}
         ldap_query_filter_group: {{ .Values.config.ldap.queryFilterGroup | quote }}
         ldap_query_filter_user: {{ .Values.config.ldap.queryFilterUser | quote }}
         ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
-        ldap_server_host: ldap{{ .Values.config.ldap.tls | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
+        ldap_server_host: ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
         ldap_start_tls:
         one_dir: 1
         pflogsumm_recipient:
@@ -123,12 +123,12 @@ spec:
         sa_tag2: 6.31
         sa_tag: 2.0
         sasl_passwd:
-        saslauthd_ldap_bind_dn: cn={{ .Values.config.ldap.admin }},{{ template "mailserver.ldap-dc" . }}
+        saslauthd_ldap_bind_dn: cn={{ .Values.config.ldap.username }},{{ template "mailserver.ldap-dc" . }}
         saslauthd_ldap_filter: {{ .Values.config.ldap.saslFilter | quote }}
         saslauthd_ldap_password: {{ .Values.config.ldap.password | quote }}
         saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
-        saslauthd_ldap_server: ldap{{ .Values.config.ldap.tls | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
-        saslauthd_ldap_ssl: {{ .Values.config.ldap.tls | ternary "1" "0" }}
+        saslauthd_ldap_server: ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
+        saslauthd_ldap_ssl: {{ .Values.config.ldap.tls.enabled | ternary "1" "0" }}
         saslauthd_mech_options: ''
         saslauthd_mechanisms: {{ .Values.config.ldap.enabled | ternary "ldap" "" }}
         smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}

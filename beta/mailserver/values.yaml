@@ -59,18 +59,24 @@ config:
   fail2ban:
     enabled: false
   ldap:
-    admin: admin
-    domain: ''
     enabled: false
+    integration: ''
+    username: admin
+    domain: ''
     hostname: ''
-    password: pass
+    password: ''
     queryFilterAlias: '(|(&(mailAlias=%s)(objectClass=PostfixBookMailForward))(&(mailAlias=%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE)))'
     queryFilterDomain: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
     queryFilterGroup: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
     queryFilterUser: '(&(mail=%s)(mailEnabled=TRUE))'
     saslFilter: '(&(uid=%u)(mailEnabled=TRUE))'
-    tls: false
     usersOu: people
+    tls:
+      enabled: true
+      ca:
+        integration: kube-system
+        key: tls.crt
+        secret: selfsigned-ca
   tls:
     enabled: false
     certificate:

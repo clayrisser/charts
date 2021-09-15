@@ -1,0 +1,22 @@
+{{- if .Values.ingress.rainloop.enabled }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: ingress-target
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: ingress-target
+    namespace: external-dns
+  socket:
+    name: ingress-target
+    namespace: external-dns
+  config:
+    ingressName: rainloop
+{{- end }}
