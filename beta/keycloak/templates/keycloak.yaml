@@ -36,7 +36,7 @@ spec:
         - sh
         - -c
         - |
-            {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
+            {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.enabled) }}
             if [ "$LDAP_TLS_CRT" != "" ]; then
               mkdir -p /opt/jboss/certs
               echo "-----BEGIN CERTIFICATE-----" > /opt/jboss/certs/ldap-ca.crt

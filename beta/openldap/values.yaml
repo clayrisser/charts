@@ -47,10 +47,8 @@ service:
     tls:
       enabled: true
       enforce: false
-      certificate:
-      ca:
-        certificate: ''
-        key: ''
+      certificate: ''
+      ca: ''
       issuer:
         name: selfsigned
         dnsNames: ''

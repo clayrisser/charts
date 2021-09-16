@@ -177,24 +177,13 @@ questions:
         type: boolean
         required: true
         label: 'tls enabled'
-      - variable: config.keycloak.ldap.tls.ca.integration
+        show_if: config.keycloak.ldap.integration=
+      - variable: config.keycloak.ldap.tls.ca
         description: ''
         type: string
         required: false
-        show_if: config.keycloak.ldap.tls.enabled=true
-        label: 'tls ca integration'
-      - variable: config.keycloak.ldap.tls.ca.secret
-        description: ''
-        type: string
-        required: false
-        show_if: config.keycloak.ldap.tls.enabled=true
-        label: 'tls ca secret'
-      - variable: config.keycloak.ldap.tls.ca.key
-        description: ''
-        type: string
-        required: false
-        show_if: config.keycloak.ldap.tls.enabled=true
-        label: 'tls ca key'
+        show_if: config.keycloak.ldap.tls.enabled=true&&config.keycloak.ldap.integration=
+        label: 'tls ca'
 
   # Smtp Config
   - variable: config.keycloak.smtp.enabled

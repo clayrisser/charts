@@ -322,18 +322,12 @@ questions:
         type: string
         required: false
         label: 'openldap tls certificate'
-      - variable: service.openldap.tls.ca.certificate
+      - variable: service.openldap.tls.ca
         description: ''
         type: string
-        show_if: service.openldap.tls.certificate!=
+        show_if: service.openldap.tls.certificate=
         required: false
-        label: 'openldap tls ca certificate'
-      - variable: service.openldap.tls.ca.key
-        description: ''
-        type: string
-        show_if: service.openldap.tls.certificate!=
-        required: false
-        label: 'openldap tls ca key'
+        label: 'openldap tls ca'
       - variable: service.openldap.tls.issuer.name
         description: ''
         type: enum
