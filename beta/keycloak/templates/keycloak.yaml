@@ -257,7 +257,7 @@ spec:
         config:
           is.binary.attribute: 'false'
           is.mandatory.in.ldap: 'false'
-          ldap.attribute: birthDate
+          ldap.attribute: dob
           read.only: 'false'
           user.model.attribute: dob
       - name: 'gender'
