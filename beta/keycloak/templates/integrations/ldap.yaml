@@ -103,7 +103,7 @@ spec:
                       EOF
                       cat <<EOF > /tmp/kustomize/patch-keycloak-vault.yaml
                       - op: replace
-                        path: /data/main_smtpPassword
+                        path: /data/main_bindCredential
                         value: {% .socketConfig.bindPassword | b64enc | quote %}
                       EOF
                       cat <<EOF > /tmp/kustomize/kustomization.yaml
