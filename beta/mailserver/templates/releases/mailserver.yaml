@@ -75,7 +75,7 @@ spec:
         dovecot_auth_bind: 'yes'
         dovecot_pass_attrs: {{ .Values.config.dovecot.passAttrs | quote }}
         dovecot_pass_filter: {{ .Values.config.dovecot.passFilter | quote }}
-        dovecot_user_attrs: '=uid=5000,=gid=5000{{ (empty .Values.config.dovecot.userAttrs) | ternary "" (printf ",%s" .Values.config.dovecot.userAttrs) }}'
+        dovecot_user_attrs: '=uid=5000,=gid=5000{{ (not .Values.config.dovecot.userAttrs) | ternary "" (printf ",%s" .Values.config.dovecot.userAttrs) }}'
         dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
         {{- end }}
         enable_clamav: {{ .Values.config.clamav.enabled | ternary "1" "0" }}
@@ -233,7 +233,7 @@ spec:
           kubernetes.io/ingress.class: nginx
           {{- end }}
           {{- if .Values.ingress.rainloop.tls }}
-          {{- if (empty .Values.ingress.rainloop.certificate) }}
+          {{- if (not .Values.ingress.rainloop.certificate) }}
           cert-manager.io/cluster-issuer: {{ .Values.ingress.rainloop.issuer.name }}
           kubernetes.io/tls-acme: 'true'
           {{- end }}

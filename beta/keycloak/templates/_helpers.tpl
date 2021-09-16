@@ -20,7 +20,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate keycloak certificate
 */}}
 {{- define "keycloak.keycloak-certificate" -}}
-{{- if (not (empty .Values.ingress.keycloak.certificate)) -}}
+{{- if .Values.ingress.keycloak.certificate -}}
 {{- printf .Values.ingress.keycloak.certificate -}}
 {{- else -}}
 {{- printf "%s-keycloak-letsencrypt" (include "keycloak.fullname" .) -}}
@@ -31,7 +31,7 @@ Calculate keycloak certificate
 Calculate keycloak hostname
 */}}
 {{- define "keycloak.keycloak-hostname" -}}
-{{- if (and .Values.config.keycloak.hostname (not (empty .Values.config.keycloak.hostname))) -}}
+{{- if .Values.config.keycloak.hostname -}}
 {{- printf .Values.config.keycloak.hostname -}}
 {{- else -}}
 {{- if .Values.ingress.keycloak.enabled -}}
@@ -46,11 +46,11 @@ Calculate keycloak hostname
 Calculate keycloak base url
 */}}
 {{- define "keycloak.keycloak-base-url" -}}
-{{- if (and .Values.config.keycloak.baseUrl (not (empty .Values.config.keycloak.baseUrl))) -}}
+{{- if .Values.config.keycloak.baseUrl -}}
 {{- printf .Values.config.keycloak.baseUrl -}}
 {{- else -}}
 {{- if .Values.ingress.keycloak.enabled -}}
-{{- $hostname := ((empty (include "keycloak.keycloak-hostname" .)) | ternary .Values.ingress.keycloak.hostname (include "keycloak.keycloak-hostname" .)) -}}
+{{- $hostname := ((not (include "keycloak.keycloak-hostname" .)) | ternary .Values.ingress.keycloak.hostname (include "keycloak.keycloak-hostname" .)) -}}
 {{- $protocol := (.Values.ingress.keycloak.tls | ternary "https" "http") -}}
 {{- printf "%s://%s" $protocol $hostname -}}
 {{- else -}}
@@ -67,7 +67,7 @@ Calculate postgres url
 {{- if $postgres.url -}}
 {{- printf $postgres.url -}}
 {{- else -}}
-{{- $credentials := ((or (empty $postgres.username) (empty $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) -}}
+{{- $credentials := ((or (not $postgres.username) (not $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) -}}
 {{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host ($postgres.port | toString) $postgres.database -}}
 {{- end -}}
 {{- end -}}
@@ -76,7 +76,7 @@ Calculate postgres url
 Calculate ldap dc
 */}}
 {{- define "keycloak.ldap-dc" -}}
-{{- if (not (empty .Values.config.keycloak.ldap.domain)) -}}
+{{- if .Values.config.keycloak.ldap.domain -}}
 {{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.keycloak.ldap.domain -1) 0) (index (regexSplit "\\." .Values.config.keycloak.ldap.domain -1) 1) -}}
 {{- else -}}
 {{- printf "" -}}

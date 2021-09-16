@@ -1,4 +1,4 @@
-{{- if (not (empty .Values.config.ldap.integration)) }}
+{{- if .Values.config.ldap.integration }}
 {{- $name := (split "." .Values.config.ldap.integration)._1 | default "ldap" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.ldap.integration))._0 }}
 apiVersion: integration.siliconhills.dev/v1alpha2

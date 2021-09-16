@@ -15,7 +15,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     {{- end }}
     {{- if .Values.ingress.pgadmin.tls }}
-    {{- if (empty .Values.ingress.pgadmin.certificate) }}
+    {{- if (not .Values.ingress.pgadmin.certificate) }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.pgadmin.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}

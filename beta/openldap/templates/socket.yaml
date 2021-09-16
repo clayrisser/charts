@@ -68,7 +68,7 @@ spec:
                         sed 's|^\(\s*name:\s*{{ template "openldap.openldap-certificate" . }}\)|\1-{% .plug.metadata.name %}|g' \
                         grep -v '^\s*namespace:\s*{{ .Release.Namespace }}' | \
                         kubectl apply -f - --namespace={% .plug.metadata.namespace %}
-{{- if (or (empty .Values.service.openldap.tls.certificate) (and (not (empty .Values.service.openldap.tls.ca.certificate)) (not (empty .Values.service.openldap.tls.ca.key)))) }}
+{{- if (or (not .Values.service.openldap.tls.certificate) (and .Values.service.openldap.tls.ca.certificate .Values.service.openldap.tls.ca.key)) }}
                       kubectl get secret ca \
                         -n {{ .Release.Namespace }} -o yaml | \
                         sed 's|^\(\s*name:\s*ca\)|\1-{% .plug.metadata.name %}|g' \

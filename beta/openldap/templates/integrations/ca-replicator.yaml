@@ -1,4 +1,4 @@
-{{- if (and .Values.service.openldap.tls.enabled (empty .Values.service.openldap.tls.certificate)) }}
+{{- if (and .Values.service.openldap.tls.enabled (not .Values.service.openldap.tls.certificate)) }}
 {{- $name := (printf "%s-replicator" .Values.service.openldap.tls.issuer.name) }}
 {{- $namespace := "kube-system" }}
 apiVersion: integration.siliconhills.dev/v1alpha2

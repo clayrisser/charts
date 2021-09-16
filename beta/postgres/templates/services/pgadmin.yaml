@@ -24,7 +24,7 @@ spec:
     - name: http
       port: {{ (eq .Values.service.pgadmin.type "LoadBalancer") | ternary .Values.service.pgadmin.lbPorts.http "80" }}
       targetPort: container
-      {{- if (and (eq .Values.service.pgadmin.type "NodePort") (not (empty .Values.service.pgadmin.nodePorts.http))) }}
+      {{- if (and (eq .Values.service.pgadmin.type "NodePort") .Values.service.pgadmin.nodePorts.http) }}
       nodePort: {{ .Values.service.pgadmin.nodePorts.http }}
       {{- end }}
   selector:

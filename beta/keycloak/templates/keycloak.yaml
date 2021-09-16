@@ -28,7 +28,7 @@ spec:
     enabled: true
 {{- else }}
     # set to `true` from postgres integration
-    enabled: {{ (not (empty .Values.config.postgres.integration)) | ternary "false" "true" }}
+    enabled: {{ (not .Values.config.postgres.integration) | ternary "true" "false" }}
 {{- end }}
   keycloakDeploymentSpec:
     experimental:
@@ -52,7 +52,7 @@ spec:
               echo -n $KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL > /opt/jboss/keycloak/secrets/main_bindCredential
             fi
             {{- end }}
-            {{- if (not (empty .Values.config.keycloak.themeZip)) }}
+            {{- if .Values.config.keycloak.themeZip }}
             export CWD=$(pwd)
             mkdir -p /opt/jboss/keycloak/injected-themes
             cd /opt/jboss/keycloak/injected-themes

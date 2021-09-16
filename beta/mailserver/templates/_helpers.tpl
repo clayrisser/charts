@@ -20,7 +20,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate rainloop certificate
 */}}
 {{- define "mailserver.rainloop-certificate" -}}
-{{- if (not (empty .Values.ingress.rainloop.certificate)) -}}
+{{- if .Values.ingress.rainloop.certificate -}}
 {{- printf .Values.ingress.rainloop.certificate -}}
 {{- else -}}
 {{- printf "%s-rainloop-letsencrypt" (include "mailserver.fullname" .) -}}
@@ -31,7 +31,7 @@ Calculate rainloop certificate
 Calculate rainloop hostname
 */}}
 {{- define "mailserver.rainloop-hostname" -}}
-{{- if (and .Values.config.rainloop.hostname (not (empty .Values.config.rainloop.hostname))) -}}
+{{- if .Values.config.rainloop.hostname -}}
 {{- printf .Values.config.rainloop.hostname -}}
 {{- else -}}
 {{- if .Values.ingress.rainloop.enabled -}}
@@ -46,11 +46,11 @@ Calculate rainloop hostname
 Calculate rainloop base url
 */}}
 {{- define "mailserver.rainloop-base-url" -}}
-{{- if (and .Values.config.rainloop.baseUrl (not (empty .Values.config.rainloop.baseUrl))) -}}
+{{- if .Values.config.rainloop.baseUrl -}}
 {{- printf .Values.config.rainloop.baseUrl -}}
 {{- else -}}
 {{- if .Values.ingress.rainloop.enabled -}}
-{{- $hostname := ((empty (include "mailserver.rainloop-hostname" .)) | ternary .Values.ingress.rainloop.hostname (include "mailserver.rainloop-hostname" .)) -}}
+{{- $hostname := ((not (include "mailserver.rainloop-hostname" .)) | ternary .Values.ingress.rainloop.hostname (include "mailserver.rainloop-hostname" .)) -}}
 {{- $protocol := (.Values.ingress.rainloop.tls | ternary "https" "http") -}}
 {{- printf "%s://%s" $protocol $hostname -}}
 {{- else -}}

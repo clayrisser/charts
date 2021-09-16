@@ -19,7 +19,7 @@ spec:
     - name: postgres
       port: {{ (eq .Values.service.postgres.type "LoadBalancer") | ternary .Values.service.postgres.lbPorts.postgres "5432" }}
       targetPort: 5432
-      {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
+      {{- if (and (eq .Values.service.postgres.type "NodePort") .Values.service.postgres.nodePorts.postgres) }}
       nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
       {{- end }}
   selector:

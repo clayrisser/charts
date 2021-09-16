@@ -71,7 +71,7 @@ spec:
                 path: /metadata/annotations/nginx.ingress.kubernetes.io~1proxy-busy-buffers-size
                 value: 256K
               {{- if .Values.ingress.keycloak.tls }}
-              {{- if (empty .Values.ingress.keycloak.certificate) }}
+              {{- if (not .Values.ingress.keycloak.certificate) }}
               - op: add
                 path: /metadata/annotations/cert-manager.io~1cluster-issuer
                 value: {{ .Values.ingress.keycloak.issuer.name }}
