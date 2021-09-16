@@ -66,20 +66,14 @@ spec:
                       EOF
                       cat <<EOF > /tmp/kustomize/patch-keycloak.yaml
                       {%- if (eq .socketConfig.protocol "ldaps") %}
-                      apiVersion: keycloak.org/v1alpha1
-                      kind: Keycloak
-                      metadata:
-                        name: {{ template "keycloak.name" . }}
-                        namespace: {{ .Release.Namespace }}
-                      spec:
-                        keycloakDeploymentSpec:
-                          experimental:
-                            env:
-                              - name: LDAP_TLS_CRT
-                                valueFrom:
-                                  secretKeyRef:
-                                    name: ca-ldap
-                                    key: tls.crt
+                      - op: add
+                        path: /spec/keycloakDeploymentSpec/experimental/env
+                        value:
+                          - name: LDAP_TLS_CRT
+                            valueFrom:
+                              secretKeyRef:
+                                name: ca-ldap
+                                key: tls.crt
                       {%- end %}
                       EOF
                       cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-realm.yaml
@@ -119,9 +113,14 @@ spec:
                         - keycloak.yaml
                         - keycloak-realm.yaml
                         - keycloak-vault.yaml
-                      patchesStrategicMerge:
-                        - patch-keycloak.yaml
                       patchesJson6902:
+                        - path: patch-keycloak.yaml
+                          target:
+                            group: keycloak.org
+                            version: v1alpha1
+                            kind: Keycloak
+                            name: {{ template "keycloak.name" . }}
+                            namespace: {{ .Release.Namespace }}
                         - path: patch-keycloak-realm.yaml
                           target:
                             group: keycloak.org

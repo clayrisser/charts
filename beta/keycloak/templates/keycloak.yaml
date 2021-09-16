@@ -82,19 +82,19 @@ spec:
           value: '{{ .Values.config.keycloak.enablePreview | ternary "-Dkeycloak.profile=preview" "" }} {{ .Values.config.keycloak.javaOpts | default "" }}'
         - name: X509_CA_BUNDLE
           value: '/var/run/secrets/kubernetes.io/serviceaccount/*.crt /opt/jboss/certs/ldap-ca.crt'
-        {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.ca) }}
-        - name: LDAP_TLS_CRT
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.config.keycloak.ldap.tls.ca | quote }}
-              key: tls.crt
-        {{- end }}
         {{- if .Values.config.keycloak.ldap.enabled }}
         - name: KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL
           valueFrom:
             secretKeyRef:
               name: keycloak-vault
               key: main_bindCredential
+        {{- end }}
+        {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.ca) }}
+        - name: LDAP_TLS_CRT
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.config.keycloak.ldap.tls.ca | quote }}
+              key: tls.crt
         {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:
