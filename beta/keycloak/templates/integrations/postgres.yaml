@@ -33,7 +33,7 @@ spec:
     replicate: 'false'
   resources:
     - when: [coupled, updated]
-      do: recreate
+      do: apply
       resource: |
           apiVersion: v1
           kind: Secret
