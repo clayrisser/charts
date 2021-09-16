@@ -52,7 +52,7 @@ spec:
                         namespace: {% .plug.metadata.namespace %}
                       EOF
                       cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | \
-                        sed 's|^\(\s*name:\s*{{ .Values.config.ca.name }}-ca\)|{% .plugConfig.caName | default "{{ .Values.config.ca.name }}-ca" %}|g' \
+                        sed 's|^\(\s*name:\s*{{ .Values.config.ca.name }}-ca\)|{% .plugConfig.caName | default "{{ .Values.config.ca.name }}-ca" %}|g' | \
                         kubectl apply -f - --namespace={% .plug.metadata.namespace %}
                       apiVersion: v1
                       kind: Secret
