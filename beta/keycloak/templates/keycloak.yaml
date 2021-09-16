@@ -64,6 +64,16 @@ spec:
             {{- end }}
             exec /opt/jboss/tools/docker-entrypoint.sh
       env:
+        {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.ca) }}
+        - name: LDAP_TLS_CRT
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.config.keycloak.ldap.tls.ca | quote }}
+              key: tls.crt
+        {{- else }}
+        - name: LDAP_TLS_CRT
+          value: ''
+        {{- end }}
         - name: PROXY_ADDRESS_FORWARDING
           value: 'true'
         {{- if .Values.config.debug }}
@@ -88,13 +98,6 @@ spec:
             secretKeyRef:
               name: keycloak-vault
               key: main_bindCredential
-        {{- end }}
-        {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.ca) }}
-        - name: LDAP_TLS_CRT
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.config.keycloak.ldap.tls.ca | quote }}
-              key: tls.crt
         {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
     resources:

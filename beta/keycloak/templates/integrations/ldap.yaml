@@ -66,8 +66,8 @@ spec:
                       EOF
                       cat <<EOF > /tmp/kustomize/patch-keycloak.yaml
                       {%- if (eq .socketConfig.protocol "ldaps") %}
-                      - op: add
-                        path: /spec/keycloakDeploymentSpec/experimental/env/1
+                      - op: replace
+                        path: /spec/keycloakDeploymentSpec/experimental/env/0
                         value:
                           - name: LDAP_TLS_CRT
                             valueFrom:
