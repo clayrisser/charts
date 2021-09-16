@@ -69,11 +69,11 @@ spec:
                       - op: replace
                         path: /spec/keycloakDeploymentSpec/experimental/env/0
                         value:
-                          - name: LDAP_TLS_CRT
-                            valueFrom:
-                              secretKeyRef:
-                                name: ca-ldap
-                                key: tls.crt
+                          name: LDAP_TLS_CRT
+                          valueFrom:
+                            secretKeyRef:
+                              name: ca-ldap
+                              key: tls.crt
                       {%- end %}
                       EOF
                       cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-realm.yaml
