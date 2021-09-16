@@ -47,7 +47,7 @@ service:
     tls:
       enabled: true
       enforce: false
-      certificate: ''
+      certificate:
       ca:
         certificate: ''
         key: ''
