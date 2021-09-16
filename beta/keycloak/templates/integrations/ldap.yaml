@@ -57,6 +57,31 @@ spec:
                     - |
                       sleep 10
                       mkdir -p /tmp/kustomize
+                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak.yaml
+                      apiVersion: keycloak.org/v1alpha1
+                      kind: Keycloak
+                      metadata:
+                        name: {{ template "keycloak.name" . }}
+                        namespace: {{ .Release.Namespace }}
+                      EOF
+                      cat <<EOF > /tmp/kustomize/patch-keycloak.yaml
+                      {%- if (eq .socketConfig.protocol "ldaps") %}
+                      apiVersion: keycloak.org/v1alpha1
+                      kind: Keycloak
+                      metadata:
+                        name: {{ template "keycloak.name" . }}
+                        namespace: {{ .Release.Namespace }}
+                      spec:
+                        keycloakDeploymentSpec:
+                          experimental:
+                            env:
+                              - name: LDAP_TLS_CRT
+                                valueFrom:
+                                  secretKeyRef:
+                                    name: ca-ldap
+                                    key: tls.crt
+                      {%- end %}
+                      EOF
                       cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-realm.yaml
                       apiVersion: keycloak.org/v1alpha1
                       kind: KeycloakRealm
@@ -91,8 +116,11 @@ spec:
                       apiVersion: kustomize.config.k8s.io/v1beta1
                       kind: Kustomization
                       resources:
+                        - keycloak.yaml
                         - keycloak-realm.yaml
                         - keycloak-vault.yaml
+                      patchesStrategicMerge:
+                        - patch-keycloak.yaml
                       patchesJson6902:
                         - path: patch-keycloak-realm.yaml
                           target:

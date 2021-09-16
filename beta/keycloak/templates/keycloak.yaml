@@ -36,7 +36,7 @@ spec:
         - sh
         - -c
         - |
-            {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.enabled) }}
+            {{- if .Values.config.keycloak.ldap.enabled }}
             if [ "$LDAP_TLS_CRT" != "" ]; then
               mkdir -p /opt/jboss/certs
               echo "-----BEGIN CERTIFICATE-----" > /opt/jboss/certs/ldap-ca.crt
@@ -78,16 +78,16 @@ spec:
           value: {{ .Values.config.keycloak.defaultTheme | quote }}
         - name: KEYCLOAK_WELCOME_THEME
           value: {{ .Values.config.keycloak.welcomeTheme | quote }}
-        {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls) }}
-        - name: X509_CA_BUNDLE
-          value: '/var/run/secrets/kubernetes.io/serviceaccount/*.crt /opt/jboss/certs/ldap-ca.crt'
         - name: JAVA_OPTS_APPEND
           value: '{{ .Values.config.keycloak.enablePreview | ternary "-Dkeycloak.profile=preview" "" }} {{ .Values.config.keycloak.javaOpts | default "" }}'
+        - name: X509_CA_BUNDLE
+          value: '/var/run/secrets/kubernetes.io/serviceaccount/*.crt /opt/jboss/certs/ldap-ca.crt'
+        {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.ca) }}
         - name: LDAP_TLS_CRT
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.config.keycloak.ldap.tls.ca.secret | quote }}
-              key: {{ .Values.config.keycloak.ldap.tls.ca.key | quote }}
+              name: {{ .Values.config.keycloak.ldap.tls.ca | quote }}
+              key: tls.crt
         {{- end }}
         {{- if .Values.config.keycloak.ldap.enabled }}
         - name: KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL

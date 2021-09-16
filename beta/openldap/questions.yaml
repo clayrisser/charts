@@ -326,7 +326,7 @@ questions:
         description: ''
         type: string
         show_if: service.openldap.tls.certificate=
-        required: false
+        required: true
         label: 'openldap tls ca'
       - variable: service.openldap.tls.issuer.name
         description: ''
