@@ -322,12 +322,6 @@ questions:
         type: string
         required: false
         label: 'openldap tls certificate'
-      - variable: service.openldap.tls.ca
-        description: ''
-        type: string
-        show_if: service.openldap.tls.certificate!=''
-        required: true
-        label: 'openldap tls ca'
       - variable: service.openldap.tls.issuer.name
         description: ''
         type: enum
@@ -342,6 +336,12 @@ questions:
         show_if: service.openldap.tls.certificate=
         required: false
         label: 'openldap tls issuer dns names'
+      - variable: service.openldap.tls.ca
+        description: 'only use if you manually provide a tls certificate'
+        type: string
+        show_if: service.openldap.tls.certificate!=
+        required: false
+        label: 'openldap tls ca'
   - variable: service.openldap.nodePorts.ldaps
     default: ''
     description: ''
