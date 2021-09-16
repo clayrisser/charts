@@ -32,6 +32,26 @@ spec:
     cleanup: 'false'
     replicate: 'false'
   resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: keycloak-db-secret
+            namespace: {{ .Release.Namespace }}
+            labels:
+              app: {{ template "keycloak.name" . }}
+              chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+              release: {{ .Release.Name }}
+              heritage: {{ .Release.Service }}
+          stringData:
+            POSTGRES_DATABASE: '{% .plugConfig.database %}'
+            POSTGRES_EXTERNAL_ADDRESS: '{% .socketConfig.hostname %}'
+            POSTGRES_EXTERNAL_PORT: '{% .socketConfig.port %}'
+            POSTGRES_PASSWORD: '{% .socketConfig.password %}'
+            POSTGRES_SUPERUSER: 'true'
+            POSTGRES_USERNAME: '{% .socketConfig.username %}'
 {{- if $patchKeycloak }}
     - when: [coupled, updated]
       do: recreate
@@ -102,24 +122,4 @@ spec:
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
 {{- end }}
-    - when: [coupled, updated]
-      do: recreate
-      resource: |
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: keycloak-db-secret
-            namespace: {{ .Release.Namespace }}
-            labels:
-              app: {{ template "keycloak.name" . }}
-              chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-              release: {{ .Release.Name }}
-              heritage: {{ .Release.Service }}
-          stringData:
-            POSTGRES_DATABASE: '{% .plugConfig.database %}'
-            POSTGRES_EXTERNAL_ADDRESS: '{% .socketConfig.hostname %}'
-            POSTGRES_EXTERNAL_PORT: '{% .socketConfig.port %}'
-            POSTGRES_PASSWORD: '{% .socketConfig.password %}'
-            POSTGRES_SUPERUSER: 'true'
-            POSTGRES_USERNAME: '{% .socketConfig.username %}'
 {{- end }}
