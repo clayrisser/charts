@@ -293,6 +293,23 @@ spec:
         config:
           ldap.attribute.value: '/bin/bash'
           ldap.attribute.name: loginShell
+      - name: groups
+        federationProviderDisplayName: ldap
+        federationMapperType: group-ldap-mapper
+        config:
+          drop.non.existing.groups.during.sync: 'false'
+          group.name.ldap.attribute: cn
+          group.object.classes: groupOfNames
+          groups.dn: ou=groups,{{ template "keycloak.ldap-dc" . }}
+          groups.path: '/'
+          ignore.missing.groups: 'false'
+          memberof.ldap.attribute: memberOf
+          membership.attribute.type: DN
+          membership.ldap.attribute: member
+          membership.user.ldap.attribute: uid
+          mode: LDAP_ONLY
+          preserve.group.inheritance: 'true'
+          user.roles.retrieve.strategy: LOAD_GROUPS_BY_MEMBER_ATTRIBUTE
     {{- end }}
   instanceSelector:
     matchLabels:
