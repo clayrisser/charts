@@ -1,3 +1,10 @@
+{{- $existingHelmRelease := lookup "helm.fluxcd.io/v1" "HelmRelease" .Release.Namespace (include "mailserver.name" .) }}
+{{- $srsSecret := (.Values.config.srs.secret | default (randAlphaNum 24)) }}
+{{- if $existingHelmRelease }}
+{{- if $existingHelmRelease.spec.values.pod.dockermailserver.srs_secret }}
+{{- $srsSecret = $existingHelmRelease.spec.values.pod.dockermailserver.srs_secret }}
+{{- end }}
+{{- end }}
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
@@ -38,8 +45,8 @@ spec:
     secret:
       useExisting: true
     ssl:
-      useExisting: true
-      existingName: {{ .Values.config.tls.certificate | default (include "mailserver.rainloop-certificate" .) }}
+      useExisting: {{ .Values.config.tls.enabled }}
+      existingName: {{ .Values.service.mailserver.tls.certificate | default (include "mailserver.name" .) }}
     psp:
       create: true
     demoMode:
@@ -90,8 +97,8 @@ spec:
         enable_spamassassin: {{ .Values.config.spamassassin.enabled | ternary "1" "0" }}
         enable_srs: {{ .Values.config.srs.enabled | ternary "1" "0" }}
         fetchmail_poll: {{ .Values.config.fetchmail.poll }}
-        ldap_bind_dn: cn={{ .Values.config.ldap.username }},{{ template "mailserver.ldap-dc" . }}
-        ldap_bind_pw: {{ .Values.config.ldap.password | quote }}
+        ldap_bind_dn: cn={{ .Values.config.ldap.bindCN }},{{ template "mailserver.ldap-dc" . }}
+        ldap_bind_pw: {{ .Values.config.ldap.bindPassword | quote }}
         ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
         ldap_query_filter_domain: {{ .Values.config.ldap.queryFilterDomain | quote }}
         ldap_query_filter_group: {{ .Values.config.ldap.queryFilterGroup | quote }}
@@ -123,9 +130,9 @@ spec:
         sa_tag2: 6.31
         sa_tag: 2.0
         sasl_passwd:
-        saslauthd_ldap_bind_dn: cn={{ .Values.config.ldap.username }},{{ template "mailserver.ldap-dc" . }}
+        saslauthd_ldap_bind_dn: cn={{ .Values.config.ldap.bindCN }},{{ template "mailserver.ldap-dc" . }}
         saslauthd_ldap_filter: {{ .Values.config.ldap.saslFilter | quote }}
-        saslauthd_ldap_password: {{ .Values.config.ldap.password | quote }}
+        saslauthd_ldap_password: {{ .Values.config.ldap.bindPassword | quote }}
         saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
         saslauthd_ldap_server: ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
         saslauthd_ldap_ssl: {{ .Values.config.ldap.tls.enabled | ternary "1" "0" }}
@@ -135,7 +142,7 @@ spec:
         spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" }}
         srs_domainname: {{ template "mailserver.mailserver-domain" . }}
         srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
-        srs_secret: {{ .Values.config.srs.secret | quote }}
+        srs_secret: {{ $srsSecret | quote }}
         tls_level: intermediate
         virusmails_delete_delay: {{ .Values.config.virusmailsDeleteDelay | quote }}
         {{- if .Values.config.tls.enabled }}

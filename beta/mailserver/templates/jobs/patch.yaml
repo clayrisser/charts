@@ -1,0 +1,132 @@
+{{- $existingDkimSecret := lookup "v1" "Secret" .Release.Namespace (printf "%s-%s-docker-mailserver-secrets" .Release.Name (include "mailserver.name" .)) }}
+{{- $existingTcpServicesConfigMap := lookup "v1" "ConfigMap" "ingress-nginx" "tcp-services" }}
+{{- $existingIngressDaemonSet := lookup "apps/v1" "DaemonSet" "ingress-nginx" "nginx-ingress-controller" }}
+{{- $patchTcpServices := true }}
+{{- if $existingTcpServicesConfigMap }}
+{{- $port465 := index $existingTcpServicesConfigMap.data "465" }}
+{{- if $port465 }}
+{{- $patchTcpServices = false }}
+{{- end }}
+{{- end }}
+{{- if (or (and .Values.service.mailserver.configureNginxIngress $existingIngressDaemonSet $patchTcpServices) (not $existingDkimSecret)) }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: patch
+  labels:
+    app: patch
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: patch
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: kubectl
+          image: bitnami/kubectl:1.20.9
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+{{- if (not $existingDkimSecret) }}
+              apk add --no-cache opendkim-utils
+              export SECRET_NAME={{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver-secrets
+              opendkim-genkey -t -s mail -d $DOMAIN
+              kubectl create secret generic $SECRET_NAME \
+                --from-file={{ template "mailserver.mailserver-domain" . }}-mail.private=./mail.private \
+                --from-file={{ template "mailserver.mailserver-domain" . }}-mail.txt=./mail.txt
+              kubectl label secret $SECRET_NAME \
+                app={{ template "mailserver.name" . }} \
+                chart={{ .Chart.Name }}-{{ .Chart.Version }} \
+                release={{ .Release.Name }} \
+                heritage={{ .Release.Service }}
+{{- end }}
+{{- if (and .Values.service.mailserver.configureNginxIngress $existingIngressDaemonSet $patchTcpServices) }}
+              cat <<EOF | kubectl apply -f -
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: tcp-services
+                namespace: ingress-nginx
+              data:
+                '25': '{{ .Release.Namespace }}/docker-mailserver:25::PROXY'
+                '110': '{{ .Release.Namespace }}/docker-mailserver:110::PROXY'
+                '143': '{{ .Release.Namespace }}/docker-mailserver:143::PROXY'
+                '465': '{{ .Release.Namespace }}/docker-mailserver:465::PROXY'
+                '587': '{{ .Release.Namespace }}/docker-mailserver:587::PROXY'
+                '993': '{{ .Release.Namespace }}/docker-mailserver:993::PROXY'
+                '995': '{{ .Release.Namespace }}/docker-mailserver:995::PROXY'
+              EOF
+              mkdir -p /tmp/kustomize
+              cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/daemonset.yaml
+              apiVersion: apps/v1
+              kind: DaemonSet
+              metadata:
+                name: nginx-ingress-controller
+                namespace: ingress-nginx
+              EOF
+              cat <<EOF > /tmp/kustomize/patch-daemonset.yaml
+              - op: replace
+                path: /spec/template/spec/containers/0/ports
+                value:
+{{ toYaml (index $existingIngressDaemonSet.spec.template.spec.containers 0).ports | indent 18 }}
+                  - containerPort: 25
+                    hostPort: 25
+                    name: smtp
+                    protocol: TCP
+                  - containerPort: 110
+                    hostPort: 110
+                    name: pop3
+                    protocol: TCP
+                  - containerPort: 143
+                    hostPort: 143
+                    name: imap
+                    protocol: TCP
+                  - containerPort: 465
+                    hostPort: 465
+                    name: smtps
+                    protocol: TCP
+                  - containerPort: 587
+                    hostPort: 587
+                    name: submission
+                    protocol: TCP
+                  - containerPort: 993
+                    hostPort: 993
+                    name: imaps
+                    protocol: TCP
+                  - containerPort: 995
+                    hostPort: 995
+                    name: pop3s
+                    protocol: TCP
+              EOF
+              cat <<EOF > /tmp/kustomize/kustomization.yaml
+              apiVersion: kustomize.config.k8s.io/v1beta1
+              kind: Kustomization
+              resources:
+                - daemonset.yaml
+              patchesJson6902:
+                - path: patch-daemonset.yaml
+                  target:
+                    group: apps
+                    version: v1
+                    kind: DaemonSet
+                    name: nginx-ingress-controller
+                    namespace: ingress-nginx
+              EOF
+              kubectl kustomize /tmp/kustomize
+              kubectl kustomize /tmp/kustomize | kubectl apply -f -
+{{- end }}
+              kubectl get pods -n {{ .Release.Namespace }} \
+                -l job-name=patch \
+                --field-selector status.phase=Failed \
+                -o yaml | kubectl delete -f -
+          env:
+            - name: DOMAIN
+              value: {{ template "mailserver.mailserver-domain" . }}
+{{- end }}

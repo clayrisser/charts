@@ -26,8 +26,67 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 rules:
-  - apiGroups: ['']
+  # TODO: narrow api groups
+  - apiGroups:
+      - '*'
     resources:
       - '*'
     verbs:
       - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "mailserver.name" . }}-{{ .Release.Namespace }}-default
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: '0'
+    helm.sh/hook-delete-policy: before-hook-creation
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "mailserver.name" . }}-{{ .Release.Namespace }}-default
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "mailserver.name" . }}-{{ .Release.Namespace }}-default
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: '0'
+    helm.sh/hook-delete-policy: before-hook-creation
+rules:
+  - apiGroups: ['']
+    resources:
+      - configmaps
+      - daemonset
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+  - apiGroups: ['']
+    resources:
+      - secrets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update

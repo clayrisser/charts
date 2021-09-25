@@ -15,7 +15,7 @@ spec:
     namespace: {{ .Release.Namespace }}
   config:
     bindDN: cn=admin,{{ template "openldap.openldap-dc" . }}
-    domain: {{ template "openldap.openldap-dc" . }}
+    dc: {{ template "openldap.openldap-dc" . }}
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}

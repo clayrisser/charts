@@ -1,4 +1,4 @@
-{{- if .Values.config.keycloak.ldap.integration }}
+{{- if (.Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.integration) }}
 {{- $name := (split "." .Values.config.keycloak.ldap.integration)._1 | default "ldap" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.integration))._0 }}
 apiVersion: integration.siliconhills.dev/v1alpha2
@@ -20,8 +20,6 @@ spec:
     name: {{ $name }}
     namespace: {{ $namespace }}
   config:
-    database: {{ .Values.config.postgres.database | quote }}
-    cleanup: 'false'
     replicate: 'false'
   resources:
     - when: [coupled, updated]
@@ -92,7 +90,7 @@ spec:
                         value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
                       - op: replace
                         path: /spec/realm/userFederationProviders/0/config/usersDn
-                        value: ou=people,{% .socketConfig.domain %}
+                        value: ou=people,{% .socketConfig.dc %}
                       EOF
                       cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-vault.yaml
                       apiVersion: v1

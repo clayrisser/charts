@@ -1,9 +1,9 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Interface
 metadata:
-  name: ldap
+  name: smtp
   labels:
-    app: {{ template "openldap.name" . }}
+    app: {{ template "mailserver.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,19 +12,17 @@ spec:
     - version: v0.0.1
       plugDefinition:
         properties:
+          from:
+            required: true
           replicate: {}
       socketDefinition:
         properties:
-          bindDN:
+          username:
             required: true
-          bindPassword:
+          password:
             required: true
           hostname:
             required: true
-          port:
-            required: true
-          protocol:
-            required: true
-          dc:
-            required: true
+          tls: {}
           starttls: {}
+          port: {}

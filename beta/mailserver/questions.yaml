@@ -4,7 +4,6 @@ questions:
 
 # Config
   - variable: config.clusterType
-    default: rke
     description: ''
     type: enum
     options:
@@ -17,7 +16,6 @@ questions:
     label: 'cluster type'
     group: Config
   - variable: config.imagePullPolicy
-    default: Always
     description: ''
     type: enum
     options:
@@ -27,7 +25,6 @@ questions:
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: Recreate
     description: ''
     type: enum
     options:
@@ -38,70 +35,60 @@ questions:
     label: 'update strategy'
     group: Config
   - variable: config.debug
-    default: false
     description: ''
     type: boolean
     required: true
     label: debug
     group: Config
   - variable: config.domain
-    default: ''
     description: ''
     type: string
     required: false
     label: domain
     group: Config
   - variable: config.postmasterUsername
-    default: postmaster
     description: ''
     type: string
     required: true
     label: 'postmaster username'
     group: Config
   - variable: config.accounts
-    default: ''
     description: ''
     type: multiline
     required: false
     label: accounts
     group: Config
   - variable: config.privateKey
-    default:
     description: ''
     type: string
     required: false
     label: 'private key'
     group: Config
   - variable: config.smtpOnly
-    default: false
     description: ''
     type: boolean
     required: true
     label: 'smtp only'
     group: Config
   - variable: config.spoofProtection
-    default: true
     description: ''
     type: boolean
     required: true
     label: 'spoof protection'
     group: Config
   - variable: config.virusmailsDeleteDelay
-    default: 7
     description: ''
     type: int
     required: true
     label: 'virusmails delete delay'
     group: Config
   - variable: config.clamav.enabled
-    default: false
     description: ''
     type: boolean
     required: true
     label: 'clamav enabled'
     group: Config
   # - variable: config.dovecot.mailboxFormat
-  #   default: maildir
   #   description: ''
   #   type: enum
   #   options:
@@ -112,14 +99,12 @@ questions:
   #   label: 'dovecot mailbox format'
   #   group: Config
   - variable: config.proxy.trustedNetworks
-    default: '10.0.0.0/8 192.168.0.0/16 172.16.0.0/16 127.0.0.0/8'
     description: ''
     type: string
     required: true
     label: 'trusted networks'
     group: Config
   - variable: config.spfTests.enabled
-    default: true
     description: ''
     type: boolean
     required: true
@@ -128,20 +113,17 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: config.spfTests.rblRejectDomains
-        default: ''
         description: ''
         type: string
         required: false
         label: 'spf tests rbl reject domains'
   - variable: config.fail2ban.enabled
-    default: false
     description: ''
     type: boolean
     required: true
     label: 'fail2ban enabled'
     group: Config
   - variable: config.fetchmail.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -150,13 +132,11 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: config.fetchmail.poll
-        default: 300
         description: ''
         type: int
         required: false
         label: 'fetchmail poll'
   - variable: config.tls.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -165,41 +145,35 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: config.tls.certificate
-        default: ''
         description: ''
         type: string
         required: false
         label: 'tls certificate'
   - variable: config.managesieve.enabled
-    default: false
     description: ''
     type: boolean
     required: true
     label: 'managesieve enabled'
     group: Config
   - variable: config.pop3.enabled
-    default: ''
     description: ''
     type: boolean
     required: true
     label: 'pop3 enabled'
     group: Config
   - variable: config.postfix.mailboxSizeLimit
-    default: 0
     description: ''
     type: int
     required: true
     label: 'postfix mailbox size limit'
     group: Config
   - variable: config.postfix.messageSizeLimit
-    default: 100000000
     description: ''
     type: int
     required: true
     label: 'postfix message size limit'
     group: Config
   - variable: config.postgrey.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -208,31 +182,26 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: config.postgrey.autoWhitelistClients
-        default: 5
         description: ''
         type: int
         required: false
         label: 'postgrey auto whitelist clients'
       - variable: config.postgrey.delay
-        default: 300
         description: ''
         type: int
         required: false
         label: 'postgrey delay'
       - variable: config.postgrey.maxAge
-        default: 35
         description: ''
         type: int
         required: false
         label: 'postgrey max age'
       - variable: config.postgrey.text
-        default: 'Delayed by postgrey'
         description: ''
         type: string
         required: false
         label: 'postgrey text'
   - variable: config.reports.pflogsummTrigger
-    default: none
     description: ''
     type: enum
     options:
@@ -243,7 +212,6 @@ questions:
     label: 'reports pflogsumm trigger'
     group: Config
   # - variable: config.reports.logwatchInterval
-  #   default: none
   #   description: ''
   #   type: enum
   #   options:
@@ -254,7 +222,6 @@ questions:
   #   label: 'reports logwatch interval'
   #   group: Config
   # - variable: config.reports.logrotateInterval
-  #   default: daily
   #   description: ''
   #   type: enum
   #   options:
@@ -265,7 +232,6 @@ questions:
   #   label: 'reports logrotate interval'
   #   group: Config
   - variable: config.spamassassin.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -274,38 +240,32 @@ questions:
     show_subquestion_if: true
     subquestions:
       # - variable: config.spamassassin.spamToInbox
-      #   default: true
       #   description: ''
       #   type: boolean
       #   required: true
       #   label: 'spamassassin spam to inbox'
       # - variable: config.spamassassin.moveSpamToJunk
-      #   default: true
       #   description: ''
       #   type: boolean
       #   required: true
       #   label: 'spamassassin move spam to junk'
       #   show_if: config.spamassassin.spamToInbox=true
       # - variable: config.spamassassin.shortcircuitBayesHam
-      #   default: false
       #   description: ''
       #   type: boolean
       #   required: true
       #   label: 'spamassassin shortcircuit bayes ham'
       # - variable: config.spamassassin.shortcircuitBayesSpam
-      #   default: false
       #   description: ''
       #   type: string
       #   required: true
       #   label: 'spamassassin shortcircuit bayes spam'
       - variable: config.spamassassin.spamSubject
-        default: '***SPAM***'
         description: ''
         type: string
         required: false
         label: 'spamassassin spam subject'
   - variable: config.srs.enabled
-    default: true
     description: ''
     type: boolean
     required: true
@@ -314,19 +274,16 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: config.srs.excludeDomains
-        default: ''
         description: ''
         type: string
         required: false
         label: 'srs exclude domains'
       - variable: config.srs.secret
-        default: P@ssw0rd
         description: ''
         type: password
         required: false
         label: 'srs secret'
       # - variable: config.srs.senderClasses
-      #   default: envelope_sender
       #   description: ''
       #   type: enum
       #   options:
@@ -336,7 +293,6 @@ questions:
       #   required: false
       #   label: 'srs sender classes'
   - variable: config.mailserver.resources.enabled
-    default: false
     description: ''
     type: enum
     options:
@@ -349,25 +305,21 @@ questions:
     group: Config
     subquestions:
       - variable: config.mailserver.resources.requests.cpu
-        default: 100m
         description: ''
         type: string
         required: true
         label: 'mailserver resources requests cpu'
       - variable: config.mailserver.resources.requests.memory
-        default: 128Mi
         description: ''
         type: string
         required: true
         label: 'mailserver resources requests memory'
       - variable: config.mailserver.resources.limits.cpu
-        default: 500m
         description: ''
         type: string
         required: true
         label: 'mailserver resources limits cpu'
       - variable: config.mailserver.resources.limits.memory
-        default: 256Mi
         description: ''
         type: string
         required: true
@@ -375,7 +327,6 @@ questions:
 
 # Ldap
   - variable: config.ldap.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -400,103 +351,75 @@ questions:
         required: true
         label: domain
         show_if: config.ldap.integration=
-      - variable: config.ldap.username
+      - variable: config.ldap.bindCN
         description: ''
         type: string
         required: true
-        label: username
+        label: 'bind cn'
         show_if: config.ldap.integration=
-      - variable: config.ldap.password
+      - variable: config.ldap.bindPassword
         description: ''
         type: password
         required: true
-        label: password
+        label: 'bind password'
         show_if: config.ldap.integration=
       - variable: config.ldap.tls.enabled
         description: ''
         type: boolean
         required: true
         label: 'tls enabled'
-      - variable: config.ldap.tls.ca.integration
-        description: ''
-        type: string
-        required: false
-        show_if: config.ldap.tls.enabled=true
-        label: 'tls ca integration'
-      - variable: config.ldap.tls.ca.secret
-        description: ''
-        type: string
-        required: false
-        show_if: config.ldap.tls.enabled=true
-        label: 'tls ca secret'
-      - variable: config.ldap.tls.ca.key
-        description: ''
-        type: string
-        required: false
-        show_if: config.ldap.tls.enabled=true
-        label: 'tls ca key'
+        show_if: config.ldap.integration=
       - variable: config.ldap.queryFilterAlias
-        default: '(|(&(mailAlias=%s)(objectClass=PostfixBookMailForward))(&(mailAlias=%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE)))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter alias'
       - variable: config.ldap.queryFilterDomain
-        default: '(|(&(mail=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailGroupMember=*@%s)(objectClass=PostfixBookMailAccount)(mailEnabled=TRUE))(&(mailalias=*@%s)(objectClass=PostfixBookMailForward)))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter domain'
       - variable: config.ldap.queryFilterGroup
-        default: '(&(mailGroupMember=%s)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter group'
       - variable: config.ldap.queryFilterUser
-        default: '(&(mail=%s)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
         label: 'ldap query filter user'
       - variable: config.ldap.searchBase
-        default: ''
         description: ''
         type: string
         required: false
         label: 'ldap search base'
       - variable: config.ldap.saslFilter
-        default: '(&(uniqueIdentifier=%u)(mailEnabled=TRUE))'
         description: ''
         type: string
         required: false
         label: 'ldap sasl filter'
       - variable: config.ldap.usersOu
-        default: people
         description: ''
         type: string
         required: false
         label: 'ldap users ou'
       - variable: config.dovecot.passAttrs
-        default: ''
         description: ''
         type: string
         required: false
         label: 'dovecot pass attrs'
       - variable: config.dovecot.passFilter
-        default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
         description: ''
         type: string
         required: false
         label: 'dovecot pass filter'
       - variable: config.dovecot.userAttrs
-        default: ''
         description: ''
         type: string
         required: false
         label: 'dovecot user attrs'
       - variable: config.dovecot.userFilter
-        default: '(&(objectClass=PostfixBookMailAccount)(uniqueIdentifier=%n))'
         description: ''
         type: string
         required: false
@@ -504,14 +427,12 @@ questions:
 
 # Rainloop
   - variable: config.rainloop.enabled
-    default: true
     description: ''
     type: boolean
     required: true
     label: 'rainloop enabled'
     group: Rainloop
   - variable: config.rainloop.resources.enabled
-    default: false
     description: ''
     type: enum
     options:
@@ -525,28 +446,24 @@ questions:
     group: Rainloop
     subquestions:
       - variable: config.rainloop.resources.requests.cpu
-        default: 100m
         description: ''
         type: string
         required: true
         show_if: config.rainloop.enabled=true
         label: 'resources requests cpu'
       - variable: config.rainloop.resources.requests.memory
-        default: 128Mi
         description: ''
         type: string
         required: true
         show_if: config.rainloop.enabled=true
         label: 'resources requests memory'
       - variable: config.rainloop.resources.limits.cpu
-        default: 500m
         description: ''
         type: string
         required: true
         show_if: config.rainloop.enabled=true
         label: 'resources limits cpu'
       - variable: config.rainloop.resources.limits.memory
-        default: 256Mi
         description: ''
         type: string
         required: true
@@ -555,7 +472,6 @@ questions:
 
 # Persistence
   - variable: persistence.enabled
-    default: false
     description: ''
     type: boolean
     required: true
@@ -564,13 +480,11 @@ questions:
     group: Persistence
     subquestions:
       - variable: persistence.storageClass
-        default: ''
         description: ''
         type: storageclass
         required: false
         label: 'storage class'
       - variable: persistence.accessMode
-        default: ReadWriteOnce
         description: ''
         type: enum
         options:
@@ -580,26 +494,22 @@ questions:
         required: false
         label: 'access mode'
       - variable: persistence.existingClaim.rainloop
-        default: ''
         description: ''
         type: string
         required: false
         label: 'rainloop existing claim'
       - variable: persistence.size.rainloop
-        default: 1Gi
         description: ''
         type: string
         required: true
         label: 'rainloop size'
       - variable: persistence.velero.enabled
-        default: false
         description: ''
         type: boolean
         required: true
         label: 'velero enabled'
         group: Persistence
       - variable: persistence.velero.schedule
-        default: '@midnight'
         description: ''
         type: string
         show_if: persistence.velero.enabled=true
@@ -607,7 +517,6 @@ questions:
         label: 'velero schedule'
         group: Persistence
       - variable: persistence.velero.restic
-        default: true
         description: ''
         type: boolean
         show_if: persistence.velero.enabled=true
@@ -615,7 +524,6 @@ questions:
         label: 'velero restic'
         group: Persistence
       - variable: persistence.velero.ttl
-        default: '2160h0m00s'
         description: ''
         type: string
         show_if: persistence.velero.enabled=true
@@ -625,7 +533,6 @@ questions:
 
 # Services and Load Balancing
   - variable: service.mailserver.type
-    default: ClusterIP
     description: ''
     type: enum
     options:
@@ -635,8 +542,14 @@ questions:
     required: true
     label: 'mailserver service type'
     group: 'Services and Load Balancing'
+  - variable: service.mailserver.configureNginxIngress
+    description: ''
+    type: boolean
+    required: false
+    show_if: service.mailserver.type=ClusterIP
+    label: 'mailserver configure nginx ingress'
+    group: 'Services and Load Balancing'
   - variable: service.mailserver.nodePorts.smtp
-    default:
     description: ''
     type: int
     required: false
@@ -646,7 +559,6 @@ questions:
     label: 'mailserver smtp node port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.lbPorts.smtp
-    default: 25
     description: ''
     type: int
     min: 0
@@ -656,7 +568,6 @@ questions:
     label: 'mailserver smtp lb port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.nodePorts.pop3
-    default:
     description: ''
     type: int
     required: false
@@ -666,7 +577,6 @@ questions:
     label: 'mailserver pop3 node port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.lbPorts.pop3
-    default: 110
     description: ''
     type: int
     min: 0
@@ -676,7 +586,6 @@ questions:
     label: 'mailserver pop3 lb port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.nodePorts.imap
-    default:
     description: ''
     type: int
     required: false
@@ -686,7 +595,6 @@ questions:
     label: 'mailserver imap node port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.lbPorts.imap
-    default: 143
     description: ''
     type: int
     min: 0
@@ -696,7 +604,6 @@ questions:
     label: 'mailserver imap lb port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.nodePorts.smtps
-    default:
     description: ''
     type: int
     required: false
@@ -706,7 +613,6 @@ questions:
     label: 'mailserver smtps node port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.lbPorts.smtps
-    default: 465
     description: ''
     type: int
     min: 0
@@ -716,7 +622,6 @@ questions:
     label: 'mailserver smtps lb port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.nodePorts.submission
-    default:
     description: ''
     type: int
     required: false
@@ -726,7 +631,6 @@ questions:
     label: 'mailserver submission node port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.lbPorts.submission
-    default: 587
     description: ''
     type: int
     min: 0
@@ -736,7 +640,6 @@ questions:
     label: 'mailserver submission lb port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.nodePorts.imaps
-    default:
     description: ''
     type: int
     required: false
@@ -746,7 +649,6 @@ questions:
     label: 'mailserver imaps node port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.lbPorts.imaps
-    default: 993
     description: ''
     type: int
     min: 0
@@ -756,7 +658,6 @@ questions:
     label: 'mailserver imaps lb port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.nodePorts.pop3s
-    default:
     description: ''
     type: int
     required: false
@@ -766,7 +667,6 @@ questions:
     label: 'mailserver pop3s node port'
     group: 'Services and Load Balancing'
   - variable: service.mailserver.lbPorts.pop3s
-    default: 995
     description: ''
     type: int
     min: 0
@@ -775,8 +675,34 @@ questions:
     show_if: service.mailserver.type=LoadBalancer
     label: 'mailserver pop3s lb port'
     group: 'Services and Load Balancing'
+  - variable: service.mailserver.tls.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'mailserver tls enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mailserver.tls.certificate
+        description: ''
+        type: string
+        required: false
+        label: 'mailserver tls certificate'
+      - variable: service.mailserver.tls.issuer.name
+        description: ''
+        type: enum
+        options:
+          - selfsigned
+        show_if: service.mailserver.tls.certificate=
+        required: false
+        label: 'mailserver tls issuer name'
+      - variable: service.mailserver.tls.issuer.dnsNames
+        description: ''
+        type: string
+        show_if: service.mailserver.tls.certificate=
+        required: false
+        label: 'mailserver tls issuer dns names'
   - variable: ingress.rainloop.enabled
-    default: true
     description: ''
     type: boolean
     label: 'rainloop ingress enabled'
@@ -785,7 +711,6 @@ questions:
     group: 'Services and Load Balancing'
     subquestions:
       - variable: ingress.rainloop.tls
-        default: false
         description: ''
         type: boolean
         required: true
@@ -799,7 +724,6 @@ questions:
         show_if: config.rainloop.enabled=true
         label: 'rainloop ingress hostname'
       - variable: ingress.rainloop.issuer.name
-        default: letsencrypt-staging
         description: ''
         type: enum
         show_if: ingress.rainloop.tls=true&&config.rainloop.enabled=true
@@ -812,14 +736,12 @@ questions:
         required: true
         label: 'rainloop ingress issuer name'
       - variable: ingress.rainloop.certificate
-        default: ''
         description: ''
         type: string
         show_if: ingress.rainloop.tls=true&&ingress.rainloop.issuer.name=none&&config.rainloop.enabled=true
         required: false
         label: 'rainloop ingress certificate'
   - variable: service.rainloop.type
-    default: ClusterIP
     description: ''
     type: enum
     show_if: ingress.rainloop.enabled=false&&config.rainloop.enabled=true
@@ -831,7 +753,6 @@ questions:
     label: 'rainloop service type'
     group: 'Services and Load Balancing'
   - variable: service.rainloop.nodePorts.http&&config.rainloop.enabled=true
-    default:
     description: ''
     type: int
     required: false
@@ -841,7 +762,6 @@ questions:
     label: 'rainloop http node port'
     group: 'Services and Load Balancing'
   - variable: service.rainloop.lbPorts.http
-    default: 80
     description: ''
     type: int
     min: 0
@@ -853,7 +773,6 @@ questions:
 
 # Images
   - variable: images.rainloop.repository
-    default: hardware/rainloop
     description: ''
     type: string
     required: true
@@ -861,7 +780,6 @@ questions:
     label: 'rainloop repository'
     group: Images
   - variable: images.rainloop.tag
-    default: 1.13.0
     description: ''
     type: string
     required: true
@@ -869,14 +787,12 @@ questions:
     label: 'rainloop tag'
     group: Images
   - variable: images.mailserver.repository
-    default: tvial/docker-mailserver
     description: ''
     type: string
     required: true
     label: 'mailserver repository'
     group: Images
   - variable: images.mailserver.tag
-    default: release-v7.0.0
     description: ''
     type: string
     required: true

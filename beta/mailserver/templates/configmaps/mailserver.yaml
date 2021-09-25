@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  dovecot-services.cf: |
+  dovecot.cf: |
     haproxy_trusted_networks = {{ .Values.config.proxy.trustedNetworks }}
     service imap-login {
       inet_listener imap {
@@ -32,8 +32,6 @@ data:
         haproxy = yes
       }
     }
-
-  dovecot.cf: |
     # service stats {
     #   unix_listener stats-reader {
     #     group = docker
@@ -44,6 +42,37 @@ data:
     #     mode = 0666
     #   }
     # }
+
+  postfix-master.cf: |
+    smtp/inet/postscreen_upstream_proxy_protocol=haproxy
+    smtps/inet/smtpd_upstream_proxy_protocol=haproxy
+    submission/inet/smtpd_upstream_proxy_protocol=haproxy
+
+  {{- $rblRejectDomains := (regexSplit "\\," .Values.config.spfTests.rblRejectDomains -1) }}
+  postfix-main.cf: |
+    postscreen_upstream_proxy_protocol = haproxy
+    {{- if .Values.config.spfTests.enabled }}
+    smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range $rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
+    {{- end }}
+
+  postfix-aliases.cf: |
+
+  postfix-virtual.cf: |
+
+  postfix-accounts.cf: {{ .Values.config.accounts | quote }}
+
+  postfix-accounts.cf.bak: |
+
+  91-override-sieve.conf: |
+    plugin {
+      sieve = /var/mail/sieve/%d/%n/.dovecot.sieve
+      sieve_dir = /var/mail/sieve/%d/%n/sieve
+    }
+
+  am-i-healthy.sh: |
+    #!/bin/bash
+    clamscan /tmp/docker-mailserver/TrustedHosts
+    echo "All healthy"
 
   fail2ban-fail2ban.cf: |
     [Definition]
@@ -85,29 +114,6 @@ data:
       # mail_replica = tcp:anotherhost.example.com:12345 # use port 12345 explicitly
     }
 
-  91-override-sieve.conf: |
-    plugin {
-      sieve = /var/mail/sieve/%d/%n/.dovecot.sieve
-      sieve_dir = /var/mail/sieve/%d/%n/sieve
-    }
-
-  am-i-healthy.sh: |
-    #!/bin/bash
-    clamscan /tmp/docker-mailserver/TrustedHosts
-    echo "All healthy"
-
-  postfix-aliases.cf: |
-
-  postfix-virtual.cf: |
-
-  postfix-accounts.cf: {{ .Values.config.accounts | quote }}
-
-  postfix-accounts.cf.bak: |
-
-  postfix-master.cf: |
-    # submission/inet/smtpd_upstream_proxy_protocol=haproxy
-    # smtps/inet/smtpd_upstream_proxy_protocol=haproxy
-
   SigningTable: |
     *@{{ template "mailserver.mailserver-domain" . }} mail._domainkey.{{ template "mailserver.mailserver-domain" . }}
 
@@ -117,10 +123,3 @@ data:
   TrustedHosts: |
     127.0.0.1
     localhost
-
-  {{- $rblRejectDomains := (regexSplit "\\," .Values.config.spfTests.rblRejectDomains -1) }}
-  postfix-main.cf: |
-    # postscreen_upstream_proxy_protocol = haproxy
-    {{- if .Values.config.spfTests.enabled }}
-    smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range $rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
-    {{- end }}
