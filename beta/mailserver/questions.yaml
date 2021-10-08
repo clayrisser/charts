@@ -41,6 +41,7 @@ questions:
     label: debug
     group: Config
   - variable: config.domain
+    scope: user
     description: ''
     type: string
     required: false
@@ -292,6 +293,12 @@ questions:
       #     - 'envelope_sender,header_sender'
       #   required: false
       #   label: 'srs sender classes'
+  - variable: config.mailserver.requiredNodeAffinityLabel
+    description: ''
+    type: string
+    required: false
+    label: 'mailserver required node affinity label'
+    group: Config
   - variable: config.mailserver.resources.enabled
     description: ''
     type: enum
