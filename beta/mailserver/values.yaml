@@ -20,6 +20,7 @@ config:
   accounts: ''
   mailserver:
     replicas: 1
+    requiredNodeAffinityLabel: application/mailserver:true
     resources:
       enabled: defaults
       requests:

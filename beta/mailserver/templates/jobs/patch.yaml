@@ -1,14 +1,25 @@
+{{- $existingDeployment := lookup "apps/v1" "Deployment" .Release.Namespace (printf "%s-%s-mailserver" (include "mailserver.name" .) .Release.Name) }}
 {{- $existingDkimSecret := lookup "v1" "Secret" .Release.Namespace (printf "%s-%s-docker-mailserver-secrets" .Release.Name (include "mailserver.name" .)) }}
-{{- $existingTcpServicesConfigMap := lookup "v1" "ConfigMap" "ingress-nginx" "tcp-services" }}
 {{- $existingIngressDaemonSet := lookup "apps/v1" "DaemonSet" "ingress-nginx" "nginx-ingress-controller" }}
-{{- $patchTcpServices := true }}
+{{- $existingTcpServicesConfigMap := lookup "v1" "ConfigMap" "ingress-nginx" "tcp-services" }}
+
+{{- $configureNginxIngress := (and .Values.service.mailserver.configureNginxIngress $existingIngressDaemonSet) }}
 {{- if $existingTcpServicesConfigMap }}
 {{- $port465 := index $existingTcpServicesConfigMap.data "465" }}
 {{- if $port465 }}
-{{- $patchTcpServices = false }}
+{{- $configureNginxIngress = false }}
 {{- end }}
 {{- end }}
-{{- if (or (and .Values.service.mailserver.configureNginxIngress $existingIngressDaemonSet $patchTcpServices) (not $existingDkimSecret)) }}
+
+{{- $patchDeployment := true }}
+{{- if $existingDeployment }}
+{{- $affinity := $existingDeployment.spec.template.spec.affinity }}
+{{- if $affinity }}
+{{- $patchDeployment = false }}
+{{- end }}
+{{- end }}
+
+{{- if (or $patchDeployment (or $configureNginxIngress (not $existingDkimSecret))) }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -47,7 +58,7 @@ spec:
                 release={{ .Release.Name }} \
                 heritage={{ .Release.Service }}
 {{- end }}
-{{- if (and .Values.service.mailserver.configureNginxIngress $existingIngressDaemonSet $patchTcpServices) }}
+{{- if $configureNginxIngress }}
               cat <<EOF | kubectl apply -f -
               apiVersion: v1
               kind: ConfigMap
@@ -118,6 +129,58 @@ spec:
                     kind: DaemonSet
                     name: nginx-ingress-controller
                     namespace: ingress-nginx
+              EOF
+              kubectl kustomize /tmp/kustomize
+              kubectl kustomize /tmp/kustomize | kubectl apply -f -
+{{- end }}
+{{- if $patchDeployment }}
+              cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/deployment.yaml
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: {{ template "mailserver.name" . }}-{{ .Release.Name }}-mailserver
+                namespace: {{ .Release.Namespace }}
+              EOF
+              cat <<EOF > /tmp/kustomize/patch-deployment.yaml
+              - op: add
+                path: /spec/template/spec/tolerations
+                value:
+                  - key: mailserver
+                    operator: Equal
+                    value: 'true'
+                    effect: NoSchedule
+              - op: add
+                path: /spec/template/spec/affinity
+                value:
+                  nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                      nodeSelectorTerms:
+                        - matchExpressions:
+                            - key: kubernetes.io/arch
+                              operator: In
+                              values:
+                                - amd64
+                          {{- if .Values.config.mailserver.requiredNodeAffinityLabel }}
+                          {{- $requiredNodeAffinityLabel := (splitList ":" .Values.config.mailserver.requiredNodeAffinityLabel) }}
+                            - key: {{ index $requiredNodeAffinityLabel 0 }}
+                              operator: In
+                              values:
+                                - {{ index $requiredNodeAffinityLabel 1 }}
+                          {{- end }}
+              EOF
+              cat <<EOF > /tmp/kustomize/kustomization.yaml
+              apiVersion: kustomize.config.k8s.io/v1beta1
+              kind: Kustomization
+              resources:
+                - deployment.yaml
+              patchesJson6902:
+                - path: patch-deployment.yaml
+                  target:
+                    group: apps
+                    version: v1
+                    kind: Deployment
+                    name: {{ template "mailserver.name" . }}-{{ .Release.Name }}-mailserver
+                    namespace: {{ .Release.Namespace }}
               EOF
               kubectl kustomize /tmp/kustomize
               kubectl kustomize /tmp/kustomize | kubectl apply -f -
