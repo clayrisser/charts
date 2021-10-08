@@ -181,4 +181,3 @@ spec:
           env:
             - name: DOMAIN
               value: {{ template "mailserver.mailserver-domain" . }}
-{{- end }}
