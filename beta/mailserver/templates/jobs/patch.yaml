@@ -1,4 +1,4 @@
-{{- $existingDeployment := lookup "apps/v1" "Deployment" .Release.Namespace (printf "%s-%s-mailserver" (include "mailserver.name" .) .Release.Name) }}
+{{- $existingDeployment := lookup "apps/v1" "Deployment" .Release.Namespace (printf "%s-%s-docker-mailserver" (include "mailserver.name" .) .Release.Name) }}
 {{- $existingDkimSecret := lookup "v1" "Secret" .Release.Namespace (printf "%s-%s-docker-mailserver-secrets" .Release.Name (include "mailserver.name" .)) }}
 {{- $existingIngressDaemonSet := lookup "apps/v1" "DaemonSet" "ingress-nginx" "nginx-ingress-controller" }}
 {{- $existingTcpServicesConfigMap := lookup "v1" "ConfigMap" "ingress-nginx" "tcp-services" }}
@@ -58,6 +58,7 @@ spec:
                 release={{ .Release.Name }} \
                 heritage={{ .Release.Service }}
 {{- end }}
+              mkdir -p /tmp/kustomize
 {{- if $configureNginxIngress }}
               cat <<EOF | kubectl apply -f -
               apiVersion: v1
@@ -74,7 +75,6 @@ spec:
                 '993': '{{ .Release.Namespace }}/docker-mailserver:993::PROXY'
                 '995': '{{ .Release.Namespace }}/docker-mailserver:995::PROXY'
               EOF
-              mkdir -p /tmp/kustomize
               cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/daemonset.yaml
               apiVersion: apps/v1
               kind: DaemonSet
@@ -138,7 +138,7 @@ spec:
               apiVersion: apps/v1
               kind: Deployment
               metadata:
-                name: {{ template "mailserver.name" . }}-{{ .Release.Name }}-mailserver
+                name: {{ template "mailserver.name" . }}-{{ .Release.Name }}-docker-mailserver
                 namespace: {{ .Release.Namespace }}
               EOF
               cat <<EOF > /tmp/kustomize/patch-deployment.yaml
@@ -179,7 +179,7 @@ spec:
                     group: apps
                     version: v1
                     kind: Deployment
-                    name: {{ template "mailserver.name" . }}-{{ .Release.Name }}-mailserver
+                    name: {{ template "mailserver.name" . }}-{{ .Release.Name }}-docker-mailserver
                     namespace: {{ .Release.Namespace }}
               EOF
               kubectl kustomize /tmp/kustomize
