@@ -73,7 +73,7 @@ rules:
   - apiGroups: ['']
     resources:
       - configmaps
-      - daemonset
+      - daemonsets
     verbs:
       - create
       - get
