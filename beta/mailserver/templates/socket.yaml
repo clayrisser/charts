@@ -1,93 +1,93 @@
-apiVersion: integration.siliconhills.dev/v1alpha2
-kind: Socket
-metadata:
-  name: {{ template "mailserver.name" . }}
-  labels:
-    app: {{ template "mailserver.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: smtp
-    namespace: {{ .Release.Namespace }}
-  config:
-    hostname: {{ .Values.config.hostname | quote }}
-    port: {{ .Values.config.port | quote }}
-    starttls: {{ .Values.config.starttls | quote }}
-    tls: {{ .Values.config.tls | quote }}
-    username: {{ .Values.config.username | quote }}
-  configSecretName: {{ template "mailserver.name" . }}
-  resources:
-    - when: [coupled, updated]
-      do: recreate
-      resource: |
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: smtp-coupled-or-updated-{% .plug.metadata.namespace %}
-        spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            spec:
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: bitnami/kubectl:1.20.9
-                  env:
-                    - name: SMTP_TLS
-                      value: '{% .socketConfig.tls %}'
-                    - name: SMTP_STARTTLS
-                      value: '{% .socketConfig.starttls %}'
-                    - name: SMTP_FROM
-                      value: '{% .plugConfig.from %}'
-                    - name: SMTP_USERNAME
-                      value: '{% .socketConfig.username %}'
-                    - name: SMTP_HOSTNAME
-                      value: '{% .socketConfig.hostname %}'
-                    - name: SMTP_PORT
-                      value: '{% .socketConfig.port %}'
-                    - name: SMTP_PASSWORD
-                      valueFrom:
-                        secretKeyRef:
-                          name: {{ template "mailserver.name" . }}
-                          key: password
-                  command:
-                    - sh
-                    - -c
-                    - |-
-                      if [ "{% .plugConfig.replicate %}" != "false" ]; then
-                        cat <<EOF | kubectl apply -f -
-                      apiVersion: v1
-                      kind: Secret
-                      metadata:
-                        name: {{ template "mailserver.name" . }}-{% .plug.metadata.name %}
-                        namespace: '{% .plug.metadata.namespace %}'
-                      type: Opaque
-                      stringData:
-                        from: '$SMTP_FROM'
-                        hostname: '$SMTP_HOSTNAME'
-                        password: $SMTP_PASSWORD
-                        port: '$SMTP_PORT'
-                        starttls: '$SMTP_STARTTLS'
-                        tls: '$SMTP_TLS'
-                        username: '$SMTP_USERNAME'
-                      EOF
-                      fi
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "mailserver.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -
+# apiVersion: integration.siliconhills.dev/v1alpha2
+# kind: Socket
+# metadata:
+#   name: {{ template "mailserver.name" . }}
+#   labels:
+#     app: {{ template "mailserver.name" . }}
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+# spec:
+#   epoch: {{ now | unixEpoch | quote }}
+#   interfaceVersions: '*'
+#   interface:
+#     name: smtp
+#     namespace: {{ .Release.Namespace }}
+#   config:
+#     hostname: {{ .Values.config.hostname | quote }}
+#     port: {{ .Values.config.port | quote }}
+#     starttls: {{ .Values.config.starttls | quote }}
+#     tls: {{ .Values.config.tls | quote }}
+#     username: {{ .Values.config.username | quote }}
+#   configSecretName: {{ template "mailserver.name" . }}
+#   resources:
+#     - when: [coupled, updated]
+#       do: recreate
+#       resource: |
+#         apiVersion: batch/v1
+#         kind: Job
+#         metadata:
+#           name: smtp-coupled-or-updated-{% .plug.metadata.namespace %}
+#         spec:
+#           activeDeadlineSeconds: 360
+#           backoffLimit: 6
+#           ttlSecondsAfterFinished: 360
+#           template:
+#             spec:
+#               restartPolicy: Never
+#               affinity:
+#                 nodeAffinity:
+#                   requiredDuringSchedulingIgnoredDuringExecution:
+#                     nodeSelectorTerms:
+#                       - matchExpressions:
+#                           - key: kubernetes.io/arch
+#                             operator: In
+#                             values:
+#                               - amd64
+#               containers:
+#                 - name: kubectl
+#                   image: bitnami/kubectl:1.20.9
+#                   env:
+#                     - name: SMTP_TLS
+#                       value: '{% .socketConfig.tls %}'
+#                     - name: SMTP_STARTTLS
+#                       value: '{% .socketConfig.starttls %}'
+#                     - name: SMTP_FROM
+#                       value: '{% .plugConfig.from %}'
+#                     - name: SMTP_USERNAME
+#                       value: '{% .socketConfig.username %}'
+#                     - name: SMTP_HOSTNAME
+#                       value: '{% .socketConfig.hostname %}'
+#                     - name: SMTP_PORT
+#                       value: '{% .socketConfig.port %}'
+#                     - name: SMTP_PASSWORD
+#                       valueFrom:
+#                         secretKeyRef:
+#                           name: {{ template "mailserver.name" . }}
+#                           key: password
+#                   command:
+#                     - sh
+#                     - -c
+#                     - |-
+#                       if [ "{% .plugConfig.replicate %}" != "false" ]; then
+#                         cat <<EOF | kubectl apply -f -
+#                       apiVersion: v1
+#                       kind: Secret
+#                       metadata:
+#                         name: {{ template "mailserver.name" . }}-{% .plug.metadata.name %}
+#                         namespace: '{% .plug.metadata.namespace %}'
+#                       type: Opaque
+#                       stringData:
+#                         from: '$SMTP_FROM'
+#                         hostname: '$SMTP_HOSTNAME'
+#                         password: $SMTP_PASSWORD
+#                         port: '$SMTP_PORT'
+#                         starttls: '$SMTP_STARTTLS'
+#                         tls: '$SMTP_TLS'
+#                         username: '$SMTP_USERNAME'
+#                       EOF
+#                       fi
+#                       kubectl get pods -n {{ .Release.Namespace }} \
+#                         -l job-name={{ template "mailserver.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+#                         --field-selector status.phase=Failed \
+#                         -o yaml | kubectl delete -f -

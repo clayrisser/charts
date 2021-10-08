@@ -137,19 +137,6 @@ questions:
         type: int
         required: false
         label: 'fetchmail poll'
-  - variable: config.tls.enabled
-    description: ''
-    type: boolean
-    required: true
-    label: 'tls enabled'
-    group: Config
-    show_subquestion_if: true
-    subquestions:
-      - variable: config.tls.certificate
-        description: ''
-        type: string
-        required: false
-        label: 'tls certificate'
   - variable: config.managesieve.enabled
     description: ''
     type: boolean

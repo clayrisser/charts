@@ -45,7 +45,7 @@ spec:
     secret:
       useExisting: true
     ssl:
-      useExisting: {{ .Values.config.tls.enabled }}
+      useExisting: {{ .Values.service.mailserver.tls.enabled }}
       existingName: {{ .Values.service.mailserver.tls.certificate | default (include "mailserver.name" .) }}
     psp:
       create: true
@@ -145,7 +145,7 @@ spec:
         srs_secret: {{ $srsSecret | quote }}
         tls_level: intermediate
         virusmails_delete_delay: {{ .Values.config.virusmailsDeleteDelay | quote }}
-        {{- if .Values.config.tls.enabled }}
+        {{- if .Values.service.mailserver.tls.enabled }}
         ssl_type: manual
         ssl_cert_path: '/tmp/ssl/tls.crt'
         ssl_key_path: '/tmp/ssl/tls.key'

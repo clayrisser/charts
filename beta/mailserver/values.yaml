@@ -75,9 +75,6 @@ config:
     usersOu: people
     tls:
       enabled: true
-  tls:
-    enabled: false
-    certificate:
   managesieve:
     enabled: false
   pop3:
