@@ -57,13 +57,13 @@ spec:
                 name: tcp-services
                 namespace: ingress-nginx
               data:
-                '25': '{{ .Release.Namespace }}/docker-mailserver:25::PROXY'
-                '110': '{{ .Release.Namespace }}/docker-mailserver:110::PROXY'
-                '143': '{{ .Release.Namespace }}/docker-mailserver:143::PROXY'
-                '465': '{{ .Release.Namespace }}/docker-mailserver:465::PROXY'
-                '587': '{{ .Release.Namespace }}/docker-mailserver:587::PROXY'
-                '993': '{{ .Release.Namespace }}/docker-mailserver:993::PROXY'
-                '995': '{{ .Release.Namespace }}/docker-mailserver:995::PROXY'
+                '25': '{{ .Release.Namespace }}/{{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver:25::PROXY'
+                '110': '{{ .Release.Namespace }}/{{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver:110::PROXY'
+                '143': '{{ .Release.Namespace }}/{{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver:143::PROXY'
+                '465': '{{ .Release.Namespace }}/{{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver:465::PROXY'
+                '587': '{{ .Release.Namespace }}/{{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver:587::PROXY'
+                '993': '{{ .Release.Namespace }}/{{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver:993::PROXY'
+                '995': '{{ .Release.Namespace }}/{{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver:995::PROXY'
               EOF
               cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/daemonset.yaml
               apiVersion: apps/v1
