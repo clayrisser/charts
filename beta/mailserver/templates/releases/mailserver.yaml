@@ -46,7 +46,7 @@ spec:
       useExisting: true
     ssl:
       useExisting: {{ .Values.service.mailserver.tls.enabled }}
-      existingName: {{ .Values.service.mailserver.tls.certificate | default (include "mailserver.name" .) }}
+      existingName: {{ .Values.service.mailserver.tls.certificate | default (printf "%s-cert" (include "mailserver.name" .)) }}
     psp:
       create: true
     demoMode:
