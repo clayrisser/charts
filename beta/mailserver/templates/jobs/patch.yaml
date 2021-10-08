@@ -162,10 +162,10 @@ spec:
                                 - amd64
                           {{- if .Values.config.mailserver.requiredNodeAffinityLabel }}
                           {{- $requiredNodeAffinityLabel := (splitList ":" .Values.config.mailserver.requiredNodeAffinityLabel) }}
-                            - key: {{ index $requiredNodeAffinityLabel 0 }}
+                            - key: {{ (index $requiredNodeAffinityLabel 0) | quote }}
                               operator: In
                               values:
-                                - {{ index $requiredNodeAffinityLabel 1 }}
+                                - {{ (index $requiredNodeAffinityLabel 1 | quote) }}
                           {{- end }}
               EOF
               cat <<EOF > /tmp/kustomize/kustomization.yaml
