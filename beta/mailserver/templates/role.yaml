@@ -70,7 +70,7 @@ metadata:
     helm.sh/hook-weight: '0'
     helm.sh/hook-delete-policy: before-hook-creation
 rules:
-  - apiGroups: ['']
+  - apiGroups: ['', 'apps']
     resources:
       - configmaps
       - daemonsets
