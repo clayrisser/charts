@@ -12,9 +12,10 @@ config:
   updateStrategy: Recreate
   debug: false
   domain: ''
-  postmasterUsername: postmaster
+  postmaster:
+    username: postmaster
+    password: P@ssw0rd
   privateKey:
-  smtpOnly: false
   spoofProtection: true
   virusmailsDeleteDelay: 7
   accounts: ''
@@ -47,6 +48,7 @@ config:
     enabled: true
     rblRejectDomains: ''
   dovecot:
+    enabled: true
     # mailboxFormat: maildir
     passAttrs: ''
     passFilter: '(&(objectClass=PostfixBookMailAccount)(uid=%n))'

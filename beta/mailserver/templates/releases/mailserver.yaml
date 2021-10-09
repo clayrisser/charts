@@ -116,7 +116,7 @@ spec:
         postgrey_delay: {{ .Values.config.postgrey.delay }}
         postgrey_max_age: {{ .Values.config.postgrey.maxAge }}
         postgrey_text: {{ .Values.config.postgrey.text | quote }}
-        postmaster_address: '{{ .Values.config.postmasterUsername }}@{{ template "mailserver.mailserver-domain" . }}'
+        postmaster_address: '{{ .Values.config.postmaster.username }}@{{ template "mailserver.mailserver-domain" . }}'
         postscreen_action: enforce
         relay_host:
         relay_password:
@@ -138,7 +138,7 @@ spec:
         saslauthd_ldap_ssl: {{ .Values.config.ldap.tls.enabled | ternary "1" "0" }}
         saslauthd_mech_options: ''
         saslauthd_mechanisms: {{ .Values.config.ldap.enabled | ternary "ldap" "" }}
-        smtp_only: {{ .Values.config.smtpOnly | ternary "1" "" | quote }}
+        smtp_only: {{ .Values.config.dovecot.enabled | ternary "" "1" | quote }}
         spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" }}
         srs_domainname: {{ template "mailserver.mailserver-domain" . }}
         srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}

@@ -132,6 +132,14 @@ spec:
                 namespace: {{ .Release.Namespace }}
               EOF
               cat <<EOF > /tmp/kustomize/patch-deployment.yaml
+              {{- if (not .Values.config.dovecot.enabled) }}
+              - op: add
+                path: /spec/template/spec/containers/0/command
+                value: |
+                  usermod postfix -a -G sasl
+                  echo "{{ .Values.config.postmaster.password }}" | saslpasswd -f /etc/sasldb2 -p -c -u {{ template "mailserver.mailserver-domain" . }} {{ .Values.config.postmaster.username }}
+                  exec /usr/bin/dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
+              {{- end }}
               - op: add
                 path: /spec/template/spec/tolerations
                 value:

@@ -47,12 +47,6 @@ questions:
     required: false
     label: domain
     group: Config
-  - variable: config.postmasterUsername
-    description: ''
-    type: string
-    required: true
-    label: 'postmaster username'
-    group: Config
   - variable: config.accounts
     description: ''
     type: multiline
@@ -64,12 +58,6 @@ questions:
     type: string
     required: false
     label: 'private key'
-    group: Config
-  - variable: config.smtpOnly
-    description: ''
-    type: boolean
-    required: true
-    label: 'smtp only'
     group: Config
   - variable: config.spoofProtection
     description: ''
@@ -89,6 +77,12 @@ questions:
     required: true
     label: 'clamav enabled'
     group: Config
+  - variable: config.dovecot.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'dovecot enabled'
+    group: Config
   # - variable: config.dovecot.mailboxFormat
   #   description: ''
   #   type: enum
@@ -99,6 +93,20 @@ questions:
   #   required: true
   #   label: 'dovecot mailbox format'
   #   group: Config
+  #   show_if: config.dovecot.enabled=true
+  - variable: config.postmaster.username
+    description: ''
+    type: string
+    required: true
+    label: 'postmaster username'
+    group: Config
+  - variable: config.postmaster.password
+    description: ''
+    type: password
+    required: true
+    label: 'postmaster password'
+    show_if: config.dovecot.enabled=false
+    group: Config
   - variable: config.proxy.trustedNetworks
     description: ''
     type: string
@@ -403,21 +411,25 @@ questions:
         type: string
         required: false
         label: 'dovecot pass attrs'
+        show_if: config.dovecot.enabled=true
       - variable: config.dovecot.passFilter
         description: ''
         type: string
         required: false
         label: 'dovecot pass filter'
+        show_if: config.dovecot.enabled=true
       - variable: config.dovecot.userAttrs
         description: ''
         type: string
         required: false
         label: 'dovecot user attrs'
+        show_if: config.dovecot.enabled=true
       - variable: config.dovecot.userFilter
         description: ''
         type: string
         required: false
         label: 'dovecot user filter'
+        show_if: config.dovecot.enabled=true
 
 # Rainloop
   - variable: config.rainloop.enabled
