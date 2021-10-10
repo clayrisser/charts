@@ -150,7 +150,7 @@ spec:
                     echo "{{ .Values.config.postmaster.password }}" | saslpasswd2 -f /etc/sasldb2 -p -c -u {{ template "mailserver.mailserver-domain" . }} {{ .Values.config.postmaster.username }}
                     exec dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
               - op: add
-                path: /spec/template/spec/containers/0/volumeMounts
+                path: /spec/template/spec/containers/0/volumeMounts/13
                 value:
                   mountPath: /etc/postfix/sasl/smtpd.conf
                   name: configmap
