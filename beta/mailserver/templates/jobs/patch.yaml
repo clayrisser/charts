@@ -149,13 +149,10 @@ spec:
                     usermod postfix -a -G sasl
                     echo "{{ .Values.config.postmaster.password }}" | saslpasswd2 -f /etc/sasldb2 -p -c -u {{ template "mailserver.mailserver-domain" . }} {{ .Values.config.postmaster.username }}
                     exec dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
-              - op: add
-                path: /spec/template/spec/containers/0/volumeMounts/13
-                value:
-                  mountPath: /etc/postfix/sasl/smtpd.conf
-                  name: configmap
-                  readOnly: true
-                  subPath: smtpd.conf
+              $((kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
+                -n {{ .Release.Namespace }} \
+                -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | grep -q "/etc/postfix/sasl/smtpd.conf") && true || \
+                echo '- {"op":"add","path":"/spec/template/spec/containers/0/volumeMounts/0","value":{"mountPath":"/etc/postfix/sasl/smtpd.conf","name":"configmap","readOnly":true,"subPath":"smtpd.conf"} }'))
               {{- end }}
               - op: add
                 path: /spec/template/spec/tolerations
