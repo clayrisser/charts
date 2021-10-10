@@ -128,6 +128,7 @@ spec:
               kubectl kustomize /tmp/kustomize | kubectl apply -f -
 {{- end }}
               sleep 10
+              echo A
               cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/deployment.yaml
               apiVersion: apps/v1
               kind: Deployment
@@ -177,6 +178,9 @@ spec:
                                 - {{ (index $requiredNodeAffinityLabel 1 | quote) }}
                           {{- end }}
               EOF
+              echo B
+              cat /tmp/kustomize/patch-deployment.yaml
+              echo C
               cat <<EOF > /tmp/kustomize/kustomization.yaml
               apiVersion: kustomize.config.k8s.io/v1beta1
               kind: Kustomization
