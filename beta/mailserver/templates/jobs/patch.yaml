@@ -141,8 +141,11 @@ spec:
                 path: /spec/template/spec/containers/0/command
                 value:
                   - usermod postfix -a -G sasl
-                  - echo "{{ .Values.config.postmaster.password }}" | saslpasswd -f /etc/sasldb2 -p -c -u {{ template "mailserver.mailserver-domain" . }} {{ .Values.config.postmaster.username }}
-                  - exec /usr/bin/dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
+                  - echo "{{ .Values.config.postmaster.password }}" | /usr/sbin/saslpasswd2 -f /etc/sasldb2 -p -c -u {{ template "mailserver.mailserver-domain" . }} {{ .Values.config.postmaster.username }}
+                  - /usr/bin/dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
+              - op: add
+                path: /spec/template/spec/containers/0/args
+                value: []
               {{- end }}
               - op: add
                 path: /spec/template/spec/tolerations
