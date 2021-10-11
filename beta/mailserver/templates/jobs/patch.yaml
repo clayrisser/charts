@@ -136,6 +136,11 @@ spec:
                 name: {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver
                 namespace: {{ .Release.Namespace }}
               EOF
+              echo A1
+              kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}'
+              echo A2
+              (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | grep -q "/etc/postfix/sasl/smtpd.conf") && true || echo '- {"op":"add","path":"/spec/template/spec/containers/0/volumeMounts/0","value":{"mountPath":"/etc/postfix/sasl/smtpd.conf","name":"configmap","readOnly":true,"subPath":"smtpd.conf"} }'
+              echo A3
               cat <<EOF > /tmp/kustomize/patch-deployment.yaml
               {{- if .Values.config.dovecot.enabled }}
               - op: remove
