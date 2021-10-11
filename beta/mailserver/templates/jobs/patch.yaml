@@ -135,7 +135,6 @@ spec:
                 name: {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver
                 namespace: {{ .Release.Namespace }}
               EOF
-              echo $((kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | grep -q "/etc/postfix/sasl/smtpd.conf") && true || echo '- {"op":"add","path":"/spec/template/spec/containers/0/volumeMounts/0","value":{"mountPath":"/etc/postfix/sasl/smtpd.conf","name":"configmap","readOnly":true,"subPath":"smtpd.conf"} }')
               cat <<EOF > /tmp/kustomize/patch-deployment.yaml
               {{- if .Values.config.dovecot.enabled }}
               - op: remove
@@ -177,9 +176,21 @@ spec:
                                 - {{ (index $requiredNodeAffinityLabel 1 | quote) }}
                           {{- end }}
               EOF
-              echo B
-              cat /tmp/kustomize/patch-deployment.yaml
-              echo C
+              {{- if (not .Values.config.dovecot.enabled) }}
+              if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
+                -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | \
+                grep -q "/etc/postfix/sasl/smtpd.conf"); then
+                  cat <<EOF >> /tmp/kustomize/patch-deployment.yaml
+                  - op: add
+                    path: /spec/template/spec/containers/0/volumeMounts/0
+                    value:
+                      mountPath: /etc/postfix/sasl/smtpd.conf
+                      name: configmap
+                      readOnly: true
+                      subPath: smtpd.conf
+              EOF
+              fi
+              {{- end }}
               cat <<EOF > /tmp/kustomize/kustomization.yaml
               apiVersion: kustomize.config.k8s.io/v1beta1
               kind: Kustomization
