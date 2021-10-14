@@ -197,7 +197,7 @@ spec:
                 grep -q "ENABLE_AMAVIS"); then
                   cat <<EOF >> /tmp/kustomize/patch-deployment.yaml
               - op: add
-                path: /spec/template/spec/containers/0/env
+                path: /spec/template/spec/containers/0/env/0
                 value:
                   name: ENABLE_AMAVIS
                   value: '0'
