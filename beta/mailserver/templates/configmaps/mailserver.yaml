@@ -54,11 +54,6 @@ data:
     {{- if .Values.config.spfTests.enabled }}
     smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range $rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
     {{- end }}
-    {{- if (not .Values.config.dovecot.enabled) }}
-    smtpd_sasl_auth_enable = yes
-    smtpd_sasl_path = smtpd
-    smtpd_sasl_type = cyrus
-    {{- end }}
 
 {{- if (and (not .Values.config.dovecot.enabled) (not .Values.config.ldap.enabled)) }}
   smtpd.conf: |
