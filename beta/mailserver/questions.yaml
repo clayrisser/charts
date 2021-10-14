@@ -126,6 +126,12 @@ questions:
         type: string
         required: false
         label: 'spf tests rbl reject domains'
+  - variable: config.amavis.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'amavis enabled'
+    group: Config
   - variable: config.fail2ban.enabled
     description: ''
     type: boolean

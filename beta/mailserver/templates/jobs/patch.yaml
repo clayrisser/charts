@@ -191,6 +191,19 @@ spec:
               EOF
               fi
               {{- end }}
+              {{- if (not .Values.config.amavis.enabled) }}
+              if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
+                -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].env}' | \
+                grep -q "ENABLE_AMAVIS"); then
+                  cat <<EOF >> /tmp/kustomize/patch-deployment.yaml
+              - op: add
+                path: /spec/template/spec/containers/0/env
+                value:
+                  name: ENABLE_AMAVIS
+                  value: '0'
+              EOF
+              fi
+              {{- end }}
               cat <<EOF > /tmp/kustomize/kustomization.yaml
               apiVersion: kustomize.config.k8s.io/v1beta1
               kind: Kustomization

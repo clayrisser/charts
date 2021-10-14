@@ -47,6 +47,8 @@ config:
   spfTests:
     enabled: true
     rblRejectDomains: ''
+  amavis:
+    enabled: false
   dovecot:
     enabled: true
     # mailboxFormat: maildir
