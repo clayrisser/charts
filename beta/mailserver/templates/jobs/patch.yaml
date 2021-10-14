@@ -176,7 +176,7 @@ spec:
                                 - {{ (index $requiredNodeAffinityLabel 1 | quote) }}
                           {{- end }}
               EOF
-              {{- if (not .Values.config.dovecot.enabled) }}
+              {{- if (and (not .Values.config.dovecot.enabled) (not .Values.config.ldap.enabled)) }}
               if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
                 -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | \
                 grep -q "/etc/postfix/sasl/smtpd.conf"); then

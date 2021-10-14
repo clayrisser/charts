@@ -55,7 +55,7 @@ data:
     smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net{{ range $rblRejectDomains }}, reject_rbl_client {{ . }}{{ end }}
     {{- end }}
 
-{{- if (not .Values.config.dovecot.enabled) }}
+{{- if (and (not .Values.config.dovecot.enabled) (not .Values.config.ldap.enabled)) }}
   smtpd.conf: |
     pwcheck_method: auxprop
     auxprop_plugin: sasldb
