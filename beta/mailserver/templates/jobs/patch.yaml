@@ -148,6 +148,9 @@ spec:
                   - |
                     usermod postfix -a -G sasl
                     echo "{{ .Values.config.postmaster.password }}" | saslpasswd2 -p -c -u {{ template "mailserver.mailserver-domain" . }} {{ .Values.config.postmaster.username }}
+                    if [ -f /etc/postfix/transport ]; then
+                      postmap /etc/postfix/transport
+                    fi
                     exec dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
               {{- end }}
               - op: add
@@ -191,6 +194,41 @@ spec:
               EOF
               fi
               {{- end }}
+              {{- if false }}
+              if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
+                -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | \
+                grep -q "/etc/postfix/transport"); then
+                  cat <<EOF >> /tmp/kustomize/patch-deployment.yaml
+              - op: add
+                path: /spec/template/spec/containers/0/volumeMounts/0
+                value:
+                  mountPath: /etc/postfix/transport
+                  name: configmap
+                  readOnly: true
+                  subPath: transport
+              EOF
+              fi
+              {{- end }}
+
+
+              {{- if false }}
+              if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
+                -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | \
+                grep -q "/etc/postfix/sender_map"); then
+                  cat <<EOF >> /tmp/kustomize/patch-deployment.yaml
+              - op: add
+                path: /spec/template/spec/containers/0/volumeMounts/0
+                value:
+                  mountPath: /etc/postfix/sender_map
+                  name: configmap
+                  readOnly: true
+                  subPath: transport
+              EOF
+              fi
+              {{- end }}
+
+
+
               {{- if (not .Values.config.amavis.enabled) }}
               if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
                 -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].env}' | \
