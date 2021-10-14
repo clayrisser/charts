@@ -85,18 +85,18 @@ spec:
         dovecot_user_attrs: '=uid=5000,=gid=5000{{ (not .Values.config.dovecot.userAttrs) | ternary "" (printf ",%s" .Values.config.dovecot.userAttrs) }}'
         dovecot_user_filter: {{ .Values.config.dovecot.userFilter | quote }}
         {{- end }}
-        enable_clamav: {{ .Values.config.clamav.enabled | ternary "1" "0" | quote }}
-        enable_fail2ban: {{ .Values.config.fail2ban.enabled | ternary "1" "0" | quote }}
-        enable_fetchmail: {{ .Values.config.fetchmail.enabled | ternary "1" "0" | quote }}
+        enable_clamav: {{ .Values.config.clamav.enabled | ternary "1" "0" }}
+        enable_fail2ban: {{ .Values.config.fail2ban.enabled | ternary "1" "0" }}
+        enable_fetchmail: {{ .Values.config.fetchmail.enabled | ternary "1" "0" }}
         enable_ldap: {{ .Values.config.ldap.enabled | ternary "1" "" | quote }}
-        enable_managesieve: {{ .Values.config.managesieve.enabled | ternary "1" "0" | quote }}
-        enable_pop3: {{ .Values.config.pop3.enabled | ternary "1" "0" | quote }}
+        enable_managesieve: {{ .Values.config.managesieve.enabled | ternary "1" "0" }}
+        enable_pop3: {{ .Values.config.pop3.enabled | ternary "1" "0" }}
         enable_postfix_virtual_transport:
-        enable_postgrey: {{ .Values.config.postgrey.enabled | ternary "1" "0" | quote }}
-        enable_saslauthd: {{ (or .Values.config.ldap.enabled (not .Values.config.dovecot.enabled)) | ternary "1" "0" | quote }}
-        enable_spamassassin: {{ .Values.config.spamassassin.enabled | ternary "1" "0" | quote }}
-        enable_srs: {{ .Values.config.srs.enabled | ternary "1" "0" | quote }}
-        fetchmail_poll: {{ .Values.config.fetchmail.poll | quote }}
+        enable_postgrey: {{ .Values.config.postgrey.enabled | ternary "1" "0" }}
+        enable_saslauthd: '0'
+        enable_spamassassin: {{ .Values.config.spamassassin.enabled | ternary "1" "0" }}
+        enable_srs: {{ .Values.config.srs.enabled | ternary "1" "0" }}
+        fetchmail_poll: {{ .Values.config.fetchmail.poll }}
         ldap_bind_dn: cn={{ .Values.config.ldap.bindCN }},{{ template "mailserver.ldap-dc" . }}
         ldap_bind_pw: {{ .Values.config.ldap.bindPassword | quote }}
         ldap_query_filter_alias: {{ .Values.config.ldap.queryFilterAlias | quote }}
@@ -108,11 +108,11 @@ spec:
         ldap_start_tls:
         one_dir: 1
         pflogsumm_recipient:
-        pflogsumm_trigger: {{ (eq .Values.config.reports.pflogsummTrigger "none") | ternary "" .Values.config.reports.pflogsummTrigger | quote }}
+        pflogsumm_trigger: {{ (eq .Values.config.reports.pflogsummTrigger "none") | ternary "" .Values.config.reports.pflogsummTrigger }}
         postfix_dagent:
         postfix_mailbox_size_limit: {{ .Values.config.postfixMailboxSizeLimit | quote }}
         postfix_message_size_limit: {{ .Values.config.postfixMessageSizeLimit | quote }}
-        postgrey_auto_whitelist_clients: {{ .Values.config.postgrey.autoWhitelistClients | quote }}
+        postgrey_auto_whitelist_clients: {{ .Values.config.postgrey.autoWhitelistClients }}
         postgrey_delay: {{ .Values.config.postgrey.delay }}
         postgrey_max_age: {{ .Values.config.postgrey.maxAge }}
         postgrey_text: {{ .Values.config.postgrey.text | quote }}
@@ -135,11 +135,11 @@ spec:
         saslauthd_ldap_password: {{ .Values.config.ldap.bindPassword | quote }}
         saslauthd_ldap_search_base: ou={{ .Values.config.ldap.usersOu }},{{ template "mailserver.ldap-dc" . }}
         saslauthd_ldap_server: ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
-        saslauthd_ldap_ssl: {{ .Values.config.ldap.tls.enabled | ternary "1" "0" | quote }}
+        saslauthd_ldap_ssl: {{ .Values.config.ldap.tls.enabled | ternary "1" "0" }}
         saslauthd_mech_options: ''
-        saslauthd_mechanisms: {{ .Values.config.ldap.enabled | ternary "ldap" "" | quote }}
+        saslauthd_mechanisms: {{ .Values.config.ldap.enabled | ternary "ldap" "" }}
         smtp_only: {{ .Values.config.dovecot.enabled | ternary "" "1" | quote }}
-        spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" | quote }}
+        spoof_protection: {{ .Values.config.spoofProtection | ternary "1" "0" }}
         srs_domainname: {{ template "mailserver.mailserver-domain" . }}
         srs_exclude_domains: {{ .Values.config.srs.excludeDomains | quote }}
         srs_secret: {{ $srsSecret | quote }}
