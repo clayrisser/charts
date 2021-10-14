@@ -58,7 +58,14 @@ data:
     smtpd_sasl_path = smtpd
     smtpd_sasl_type = cyrus
     {{- end }}
-
+    {{- if .Values.config.transport.map }}
+    transport_maps = hash:/etc/postfix/transport
+    {{- end }}
+    {{- if .Values.config.transport.senderMap }}
+    sender_dependent_default_transport_maps = hash:/etc/postfix/sender_map
+    {{- else if .Values.config.transport.senderRandMap }}
+    sender_dependent_default_transport_maps = randmap:{{ "{" }}{{ .Values.config.transport.senderRandMap }}{{ "}" }}
+    {{- end }}
   {{- if (and (not .Values.config.dovecot.enabled) (not .Values.config.ldap.enabled)) }}
   smtpd.conf: |
     pwcheck_method: auxprop
@@ -135,6 +142,10 @@ data:
     127.0.0.1
     localhost
 
-  transport: |
+  {{- if .Values.config.transport.map }}
+  transport: {{ .Values.config.transport.map }}
+  {{- end }}
 
-  sender_map: |
+  {{- if .Values.config.transport.senderMap }}
+  sender_map: {{ .Values.config.transport.senderMap }}
+  {{- end }}

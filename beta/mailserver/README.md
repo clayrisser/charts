@@ -85,7 +85,6 @@ postmaster@example.com    relay:[smtp-relay.sendinblue.com]:587
 You can find additional resources at the links below.
 
 - http://www.postfix.org/postconf.5.html
-- http://www.postfix.org/postconf.5.html#sender_dependent_default_transport_maps
 - http://www.postfix.org/transport.5.html
 - https://docker-mailserver.github.io/docker-mailserver/edge
 - https://github.com/docker-mailserver/docker-mailserver-helm
@@ -96,4 +95,4 @@ You can find additional resources at the links below.
 - https://www.linuxbabe.com/mail-server/postfix-transport-map-relay-map-flexible-email-delivery
 - https://www.reddit.com/r/sysadmin/comments/3vi9v2/how_to_have_postfix_vary_the_smtp_relay_depending
 - https://www.tauceti.blog/posts/run-postfix-in-kubernetes
-- https://www.thesysadmin.rocks/2020/01/13/postfix-sender_dependent_default_transport_maps-per-domain-outgoing-ip/
+- https://www.thesysadmin.rocks/2020/01/13/postfix-sender_dependent_default_transport_maps-per-domain-outgoing-ip

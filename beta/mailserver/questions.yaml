@@ -107,6 +107,25 @@ questions:
     label: 'postmaster password'
     show_if: config.dovecot.enabled=false
     group: Config
+  - variable: config.transport.map
+    description: ''
+    type: multiline
+    required: false
+    label: 'transport map'
+    group: Config
+  - variable: config.transport.senderMap
+    description: ''
+    type: multiline
+    required: false
+    label: 'transport sender map'
+    group: Config
+  - variable: config.transport.senderRandMap
+    description: ''
+    type: multiline
+    required: false
+    label: 'transport sender rand map'
+    show_if: config.transport.senderMap=
+    group: Config
   - variable: config.proxy.trustedNetworks
     description: ''
     type: string

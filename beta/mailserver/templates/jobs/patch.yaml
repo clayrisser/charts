@@ -136,7 +136,7 @@ spec:
                 namespace: {{ .Release.Namespace }}
               EOF
               cat <<EOF > /tmp/kustomize/patch-deployment.yaml
-              {{- if (or .Values.config.dovecot.enabled .Values.config.ldap.enabled) }}
+              {{- if (and (and (not .Values.config.transport.map) (not .Values.config.transport.senderMap)) (or .Values.config.dovecot.enabled .Values.config.ldap.enabled)) }}
               - op: remove
                 path: /spec/template/spec/containers/0/command
               {{- else }}
@@ -150,6 +150,9 @@ spec:
                     echo "{{ .Values.config.postmaster.password }}" | saslpasswd2 -p -c -u {{ template "mailserver.mailserver-domain" . }} {{ .Values.config.postmaster.username }}
                     if [ -f /etc/postfix/transport ]; then
                       postmap /etc/postfix/transport
+                    fi
+                    if [ -f /etc/postfix/sender_map ]; then
+                      postmap /etc/postfix/sender_map
                     fi
                     exec dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
               {{- end }}
@@ -194,7 +197,7 @@ spec:
               EOF
               fi
               {{- end }}
-              {{- if false }}
+              {{- if .Values.config.transport.map }}
               if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
                 -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | \
                 grep -q "/etc/postfix/transport"); then
@@ -209,9 +212,7 @@ spec:
               EOF
               fi
               {{- end }}
-
-
-              {{- if false }}
+              {{- if .Values.config.transport.senderMap }}
               if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
                 -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | \
                 grep -q "/etc/postfix/sender_map"); then
@@ -222,12 +223,10 @@ spec:
                   mountPath: /etc/postfix/sender_map
                   name: configmap
                   readOnly: true
-                  subPath: transport
+                  subPath: sender_map
               EOF
               fi
               {{- end }}
-
-
 
               {{- if (not .Values.config.amavis.enabled) }}
               if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \

@@ -79,6 +79,10 @@ config:
     usersOu: people
     tls:
       enabled: true
+  transport:
+    map:
+    senderMap:
+    senderRandMap:
   managesieve:
     enabled: false
   pop3:
