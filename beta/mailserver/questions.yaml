@@ -348,7 +348,7 @@ questions:
     group: Transport
   - variable: config.transport.senderRandMap
     description: ''
-    type: multiline
+    type: string
     required: false
     label: 'sender rand map'
     show_if: config.transport.senderMap=

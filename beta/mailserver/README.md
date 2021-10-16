@@ -30,7 +30,7 @@ of this mailserver is automatically routed to the `local` transport.
 In other words, `<CURRENT_DOMAIN> local` does not need to be added
 to this config because it will automatically be applied.
 
-Below is an example of a `transport` config that routes emails being sent
+Below is an example of a **transport** config that routes emails being sent
 to gmail accounts through a sendinblue relay. Note that the square brackets
 in the config prevent an unnecessary dns lookup.
 
@@ -54,10 +54,10 @@ links below.
 - http://www.postfix.org/postconf.5.html#transport_maps
 - http://www.postfix.org/transport.5.html
 
-### sender_map
+### sender map
 
 This config is a hash for the postfix `sender_dependent_default_transport_maps`
-parameter. The configuration will be set in the `sender_map` file.
+parameter. The configuration will be set in the `/etc/postfix/sender_map` file.
 
 This is used to route to the next hop or relay based on the sender or more
 specifically based on the `email from` set on the envelope.
@@ -70,7 +70,7 @@ If a transport is not found when `sender_dependent_default_transport_maps` is ev
 then the `default_transport` will be used. `default_transport` is set to the `smtp`
 transport by default.
 
-Below is an example of a `sender_map` config that routes emails being sent from the
+Below is an example of a **sender map** config that routes emails being sent from the
 postmaster account to sendinblue, assuming my email server domain is _example.com_.
 
 ```
@@ -79,6 +79,33 @@ postmaster@example.com    relay:[smtp-relay.sendinblue.com]:587
 
 - http://www.postfix.org/postconf.5.html#sender_dependent_default_transport_maps
 - http://www.postfix.org/transport.5.html
+
+### fallback relay
+
+The fallback relay config will set the postfix `smtp_fallback_relay` parameter. If
+an smtp destination cannot be reached or the primary relay host is offline, postfix
+will use this fallback relay host.
+
+Below is a example using sendinblue as the **fallback relay**.
+
+```
+[smtp-relay.sendinblue.com]:587
+```
+
+### sasl_passwd
+
+This config is a hash for the postfix `smtp_sasl_password_maps`
+parameter. The configuration will be set in the `/etc/postfix/sasl_passwd` file.
+
+This is used to used to authenticate any relay configured in the previous transport,
+sender map, or fallback relay config.
+
+Below is an example of a **sasl passwd** config that authenticates the sendinblue
+relay.
+
+```
+[smtp-relay.sendinblue.com]:587    <SENDINBLUE_SMTP_USERNAME>:<SENDINBLUE_SMTP_PASSWORD>
+```
 
 ## Resources
 
