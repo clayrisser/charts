@@ -131,7 +131,6 @@ questions:
     type: multiline
     required: false
     label: 'transport sasl passwd'
-    show_if: config.transport.map!=||config.transport.senderMap!=||config.transport.senderRandMap!=
     group: Config
   - variable: config.proxy.trustedNetworks
     description: ''
