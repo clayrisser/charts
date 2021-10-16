@@ -81,6 +81,8 @@ config:
       enabled: true
   monitoring:
     integration: rancher-dashboards
+  sendmailAnalyzer:
+    enabled: false
   transport:
     map:
     senderMap:
@@ -152,9 +154,23 @@ service:
       http:
     lbPorts:
       http: 80
+  sendmailAnalyzer:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
 
 ingress:
   rainloop:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  sendmailAnalyzer:
     certificate: ''
     enabled: false
     hostname: ''
@@ -169,25 +185,13 @@ persistence:
   existingClaim:
     rainloop: ''
     mailserver: ''
+    sendmailAnalyzer: ''
   size:
     rainloop: 1Gi
     mailserver: 1Gi
+    sendmailAnalyzer: 1Gi
   velero:
     enabled: false
     restic: true
     schedule: '@midnight'
     ttl: 2160h0m00s
-
-probes:
-  liveness:
-    initialDelaySeconds: 120
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1

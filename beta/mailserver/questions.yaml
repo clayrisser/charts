@@ -522,6 +522,51 @@ questions:
         show_if: config.rainloop.enabled=true
         label: 'resources limits memory'
 
+# Sendmail Analyzer
+  - variable: config.sendmailAnalyzer.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'sendmailAnalyzer enabled'
+    group: 'Sendmail Analyzer'
+  - variable: config.sendmailAnalyzer.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'resources defaults'
+    show_if: config.sendmailAnalyzer.enabled=true
+    show_subquestion_if: custom
+    group: 'Sendmail Analyzer'
+    subquestions:
+      - variable: config.sendmailAnalyzer.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.sendmailAnalyzer.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.sendmailAnalyzer.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.sendmailAnalyzer.enabled=true
+        label: 'resources requests memory'
+      - variable: config.sendmailAnalyzer.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.sendmailAnalyzer.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.sendmailAnalyzer.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.sendmailAnalyzer.enabled=true
+        label: 'resources limits memory'
+
 # Persistence
   - variable: persistence.enabled
     description: ''
@@ -545,16 +590,29 @@ questions:
           - ReadOnlyMany
         required: false
         label: 'access mode'
-      - variable: persistence.existingClaim.rainloop
-        description: ''
-        type: string
-        required: false
-        label: 'rainloop existing claim'
-      - variable: persistence.size.rainloop
+      - variable: persistence.size.mailserver
         description: ''
         type: string
         required: true
         label: 'rainloop size'
+      - variable: persistence.size.rainloop
+        description: ''
+        type: string
+        required: true
+        show_if: config.rainloop.enabled=true
+        label: 'rainloop size'
+      - variable: persistence.existingClaim.sendmailAnalyzer
+        description: ''
+        type: string
+        required: false
+        show_if: config.sendmailAnalyzer.enabled=true
+        label: 'sendmail analyzer existing claim'
+      - variable: persistence.size.sendmailAnalyzer
+        description: ''
+        type: string
+        required: true
+        show_if: config.sendmailAnalyzer.enabled=true
+        label: 'sendmail analyzer size'
       - variable: persistence.velero.enabled
         description: ''
         type: boolean
@@ -822,8 +880,88 @@ questions:
     show_if: service.rainloop.type=LoadBalancer&&ingress.rainloop.enabled=false&&config.rainloop.enabled=true
     label: 'rainloop http lb port'
     group: 'Services and Load Balancing'
+  - variable: ingress.sendmailAnalyzer.enabled
+    description: ''
+    type: boolean
+    label: 'sendmail analyzer ingress enabled'
+    show_if: config.sendmailAnalyzer.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.sendmailAnalyzer.tls
+        description: ''
+        type: boolean
+        required: true
+        show_if: config.sendmailAnalyzer.enabled=true
+        label: 'sendmail analyzer ingress tls'
+      - variable: ingress.sendmailAnalyzer.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        show_if: config.sendmailAnalyzer.enabled=true
+        label: 'sendmail analyzer ingress hostname'
+      - variable: ingress.sendmailAnalyzer.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.sendmailAnalyzer.tls=true&&config.sendmailAnalyzer.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'sendmail analyzer ingress issuer name'
+      - variable: ingress.sendmailAnalyzer.certificate
+        description: ''
+        type: string
+        show_if: ingress.sendmailAnalyzer.tls=true&&ingress.sendmailAnalyzer.issuer.name=none&&config.sendmailAnalyzer.enabled=true
+        required: false
+        label: 'sendmail analyzer ingress certificate'
+  - variable: service.sendmailAnalyzer.type
+    description: ''
+    type: enum
+    show_if: ingress.sendmailAnalyzer.enabled=false&&config.sendmailAnalyzer.enabled=true
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'sendmail analyzer service type'
+    group: 'Services and Load Balancing'
+  - variable: service.sendmailAnalyzer.nodePorts.http&&config.sendmailAnalyzer.enabled=true
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.sendmailAnalyzer.type=NodePort&&ingress.sendmailAnalyzer.enabled=false&&config.sendmailAnalyzer.enabled=true
+    label: 'sendmail analyzer http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.sendmailAnalyzer.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.sendmailAnalyzer.type=LoadBalancer&&ingress.sendmailAnalyzer.enabled=false&&config.sendmailAnalyzer.enabled=true
+    label: 'sendmail analyzer http lb port'
+    group: 'Services and Load Balancing'
 
 # Images
+  - variable: images.mailserver.repository
+    description: ''
+    type: string
+    required: true
+    label: 'mailserver repository'
+    group: Images
+  - variable: images.mailserver.tag
+    description: ''
+    type: string
+    required: true
+    label: 'mailserver tag'
+    group: Images
   - variable: images.rainloop.repository
     description: ''
     type: string
@@ -838,15 +976,17 @@ questions:
     show_if: config.rainloop.enabled=true
     label: 'rainloop tag'
     group: Images
-  - variable: images.mailserver.repository
+  - variable: images.sendmailAnalyzer.repository
     description: ''
     type: string
     required: true
-    label: 'mailserver repository'
+    show_if: config.sendmailAnalyzer.enabled=true
+    label: 'sendmail analyzer repository'
     group: Images
-  - variable: images.mailserver.tag
+  - variable: images.sendmailAnalyzer.tag
     description: ''
     type: string
     required: true
-    label: 'mailserver tag'
+    show_if: config.sendmailAnalyzer.enabled=true
+    label: 'sendmail analyzer tag'
     group: Images
