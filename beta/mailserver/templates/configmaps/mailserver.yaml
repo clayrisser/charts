@@ -86,8 +86,6 @@ data:
     header_size_limit = 4096000
   {{- end }}
 
-
-
   postfix-aliases.cf: |
 
   postfix-virtual.cf: |
