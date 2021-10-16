@@ -1957,7 +1957,7 @@ data:
               "expr": "probe_success{job=\"smtp_status\", instance=~\".*:25\"} ",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{instance}}",
+              "legendFormat": "{{ "{{" }}instance}}",
               "refId": "A",
               "units": "none",
               "valueHandler": "Number Threshold"
@@ -1965,7 +1965,7 @@ data:
             {
               "expr": "probe_success{job=\"smtp_status_tls\", instance=~\".*:587\"}",
               "hide": true,
-              "legendFormat": "{{instance}}",
+              "legendFormat": "{{ "{{" }}instance}}",
               "refId": "B"
             }
           ],
@@ -6061,7 +6061,7 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "alias": "{{postfix_from.keyword}}",
+                  "alias": "{{ "{{" }}postfix_from.keyword}}",
                   "bucketAggs": [
                     {
                       "fake": true,
@@ -6221,7 +6221,7 @@ data:
               ],
               "targets": [
                 {
-                  "alias": "{{postfix_from.keyword}} - {{postfix_smtp_response.keyword}}",
+                  "alias": "{{ "{{" }}postfix_from.keyword}} - {{ "{{" }}postfix_smtp_response.keyword}}",
                   "bucketAggs": [
                     {
                       "fake": true,
