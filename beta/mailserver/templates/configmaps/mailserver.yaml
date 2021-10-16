@@ -157,13 +157,16 @@ data:
     localhost
 
   {{- if .Values.config.transport.map }}
-  transport: {{ .Values.config.transport.map }}
+  transport: |
+    {{ .Values.config.transport.map }}
   {{- end }}
 
   {{- if .Values.config.transport.senderMap }}
-  sender_map: {{ .Values.config.transport.senderMap }}
+  sender_map: |
+    {{ .Values.config.transport.senderMap }}
   {{- end }}
 
   {{- if .Values.config.transport.saslPasswd }}
-  sasl_passwd: {{ .Values.config.transport.saslPasswd }}
+  sasl_passwd: |
+    {{ .Values.config.transport.saslPasswd }}
   {{- end }}
