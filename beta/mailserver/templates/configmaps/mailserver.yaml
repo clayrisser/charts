@@ -75,7 +75,7 @@ data:
     {{- if .Values.config.transport.saslPasswd }}
     smtp_sasl_auth_enable = yes
     smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
-    smtp_sasl_security_options = noplaintext, noanonymous
+    smtp_sasl_security_options = noanonymous
     smtp_tls_security_level = may
     header_size_limit = 4096000
     {{- end }}
