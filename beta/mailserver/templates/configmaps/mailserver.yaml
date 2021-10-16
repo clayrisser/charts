@@ -78,6 +78,15 @@ data:
   {{- if .Values.config.transport.defaultTransport }}
     default_transport = {{ .Values.config.transport.defaultTransport }}
   {{- end }}
+  {{- if .Values.config.transport.saslPasswd }}
+    smtp_sasl_auth_enable = yes
+    smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+    smtp_sasl_security_options = noplaintext, noanonymous
+    smtp_tls_security_level = may
+    header_size_limit = 4096000
+  {{- end }}
+
+
 
   postfix-aliases.cf: |
 
@@ -157,10 +166,5 @@ data:
   {{- end }}
 
   {{- if .Values.config.transport.saslPasswd }}
-  sasl_passwd: |
-    smtp_sasl_auth_enable = yes
-    smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
-    smtp_sasl_security_options = noplaintext, noanonymous
-    smtp_tls_security_level = may
-    header_size_limit = 4096000
+  sasl_passwd: {{ .Values.config.transport.saslPasswd }}
   {{- end }}
