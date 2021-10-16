@@ -154,6 +154,9 @@ spec:
                     if [ -f /etc/postfix/sender_map ]; then
                       postmap /etc/postfix/sender_map
                     fi
+                    if [ -f /etc/postfix/sasl_passwd ]; then
+                      postmap /etc/postfix/sasl_passwd
+                    fi
                     exec dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
               {{- end }}
               - op: add
@@ -227,7 +230,21 @@ spec:
               EOF
               fi
               {{- end }}
-
+              {{- if .Values.config.transport.saslPasswd }}
+              if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
+                -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].volumeMounts}' | \
+                grep -q "/etc/postfix/sasl_passwd"); then
+                  cat <<EOF >> /tmp/kustomize/patch-deployment.yaml
+              - op: add
+                path: /spec/template/spec/containers/0/volumeMounts/0
+                value:
+                  mountPath: /etc/postfix/sasl_passwd
+                  name: configmap
+                  readOnly: true
+                  subPath: sasl_passwd
+              EOF
+              fi
+              {{- end }}
               {{- if (not .Values.config.amavis.enabled) }}
               if ! (kubectl get deployment {{ .Release.Name }}-{{ template "mailserver.name" . }}-docker-mailserver \
                 -n {{ .Release.Namespace }} -o jsonpath='{.spec.template.spec.containers[0].env}' | \

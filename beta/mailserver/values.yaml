@@ -81,6 +81,7 @@ config:
       enabled: true
   transport:
     map:
+    saslPasswd:
     senderMap:
     senderRandMap:
   managesieve:
