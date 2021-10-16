@@ -1,0 +1,23 @@
+{{- $opensearchSecret := lookup "v1" "Secret" .Release.Namespace (include "opensearch.name" .) }}
+{{- $opensearchDashboardsSecret := lookup "v1" "Secret" .Release.Namespace (include "opensearch.name" .) }}
+### opensearch
+
+[{{ include "opensearch.opensearch-hostname" . }}]({{ include "opensearch.opensearch-base-url" . }})
+
+{{- if (not $opensearchSecret) }}
+upgrade chart to render secrets
+{{- else }}
+TODO: render passwords
+{{- end }}
+
+{{- if .Values.config.opensearchDashboards.enabled }}
+### opensearch dashboards
+
+[{{ include "opensearch.opensearch-dashboards-hostname" . }}]({{ include "opensearch.opensearch-dashboards-base-url" . }})
+
+{{- if (not $opensearchSecret) }}
+upgrade chart to render secrets
+{{- else }}
+TODO: render passwords
+{{- end }}
+{{- end }}

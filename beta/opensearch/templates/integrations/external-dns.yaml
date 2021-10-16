@@ -1,0 +1,45 @@
+{{- if .Values.ingress.opensearch.enabled }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: ingress-target
+  labels:
+    app: {{ template "opensearch.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: ingress-target
+    namespace: external-dns
+  socket:
+    name: ingress-target
+    namespace: external-dns
+  config:
+    ingressName: {{ .Release.Namespace }}-{{ template "opensearch.name" . }}-opensearch
+{{- end }}
+---
+{{- if (and .Values.config.opensearchDashboards.enabled .Values.ingress.opensearchDashboards.enabled) }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: dashboards-ingress-target
+  labels:
+    app: {{ template "opensearch.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: ingress-target
+    namespace: external-dns
+  socket:
+    name: ingress-target
+    namespace: external-dns
+  config:
+    ingressName: {{ .Release.Namespace }}-{{ template "opensearch.name" . }}-opensearch-dashboards
+{{- end }}

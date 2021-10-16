@@ -1,0 +1,372 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.clusterType
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.opensearch.replicas
+    description: ''
+    type: int
+    required: true
+    label: 'opensearch replicas'
+    group: Config
+  - variable: config.opensearch.domain
+    description: 'use example.org instead of dc=example,dc=org'
+    type: string
+    required: true
+    label: 'opensearch domain'
+    group: Config
+  - variable: config.opensearch.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'opensearch resources defaults'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.opensearch.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch resources requests cpu'
+      - variable: config.opensearch.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch resources requests memory'
+      - variable: config.opensearch.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch resources limits cpu'
+      - variable: config.opensearch.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch resources limits memory'
+  - variable: config.opensearchDashboards.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'opensearchDashboards enabled'
+    group: Config
+  - variable: config.opensearchDashboards.replicas
+    description: ''
+    type: int
+    required: true
+    label: 'opensearchDashboards replicas'
+    show_if: config.opensearchDashboards.enabled=true
+    group: Config
+  - variable: config.opensearchDashboards.domain
+    description: 'use example.org instead of dc=example,dc=org'
+    type: string
+    required: true
+    label: 'opensearchDashboards domain'
+    show_if: config.opensearchDashboards.enabled=true
+    group: Config
+  - variable: config.opensearchDashboards.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'opensearch dashboards resources defaults'
+    show_subquestion_if: custom&&config.opensearchDashboards.enabled=true
+    group: Config
+    subquestions:
+      - variable: config.opensearchDashboards.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch dashboards resources requests cpu'
+        show_if: config.opensearchDashboards.enabled=true
+      - variable: config.opensearchDashboards.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch dashboards resources requests memory'
+        show_if: config.opensearchDashboards.enabled=true
+      - variable: config.opensearchDashboards.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch dashboards resources limits cpu'
+        show_if: config.opensearchDashboards.enabled=true
+      - variable: config.opensearchDashboards.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch dashboards resources limits memory'
+        show_if: config.opensearchDashboards.enabled=true
+
+  # Persistence
+  - variable: persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim.opensearch
+        description: ''
+        type: string
+        required: false
+        label: 'opensearch existing claim'
+      - variable: persistence.size.opensearch
+        description: ''
+        type: string
+        required: true
+        label: 'opensearch size'
+      - variable: persistence.velero.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
+        group: Persistence
+
+  # Services and Load Balancing
+  - variable: ingress.opensearch.enabled
+    description: ''
+    type: boolean
+    label: 'opensearch ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.opensearch.externalDns
+        description: ''
+        type: boolean
+        required: true
+        label: 'opensearch external dns'
+      - variable: ingress.opensearch.tls
+        description: ''
+        type: boolean
+        required: true
+        label: 'opensearch ingress tls'
+      - variable: ingress.opensearch.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'opensearch ingress hostname'
+      - variable: ingress.opensearch.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.opensearch.tls=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'opensearch ingress issuer name'
+      - variable: ingress.opensearch.certificate
+        description: ''
+        type: string
+        show_if: ingress.opensearch.tls=true&&ingress.opensearch.issuer.name=none
+        required: false
+        label: 'opensearch ingress certificate'
+  - variable: service.opensearch.type
+    description: ''
+    type: enum
+    show_if: ingress.opensearch.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'opensearch service type'
+    group: 'Services and Load Balancing'
+  - variable: service.opensearch.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.opensearch.type=NodePort&&ingress.opensearch.enabled=false
+    label: 'opensearch http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.opensearch.lbPorts.http
+    description: ''
+    type: int
+    required: true
+    show_if: service.opensearch.type=LoadBalancer&&ingress.opensearch.enabled=false
+    label: 'opensearch http lb port'
+    group: 'Services and Load Balancing'
+  - variable: ingress.opensearchDashboards.enabled
+    description: ''
+    type: boolean
+    label: 'opensearch dashboards ingress enabled'
+    show_if: config.opensearchDashboards.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.opensearchDashboards.externalDns
+        description: ''
+        type: boolean
+        show_if: config.opensearchDashboards.enabled=true
+        required: true
+        label: 'opensearch dashboards external dns'
+      - variable: ingress.opensearchDashboards.tls
+        description: ''
+        type: boolean
+        show_if: config.opensearchDashboards.enabled=true
+        required: true
+        label: 'opensearch dashboards ingress tls'
+      - variable: ingress.opensearchDashboards.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.opensearchDashboards.enabled=true
+        required: true
+        label: 'opensearch dashboards ingress hostname'
+      - variable: ingress.opensearchDashboards.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.opensearchDashboards.tls=true&&config.opensearchDashboards.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'opensearch dashboards ingress issuer name'
+      - variable: ingress.opensearchDashboards.certificate
+        description: ''
+        type: string
+        show_if: ingress.opensearchDashboards.tls=true&&ingress.opensearchDashboards.issuer.name=none&&config.opensearchDashboards.enabled=true
+        required: false
+        label: 'opensearch dashboards ingress certificate'
+  - variable: service.opensearchDashboards.type
+    description: ''
+    type: enum
+    show_if: ingress.opensearchDashboards.enabled=false&&config.opensearchDashboards.enabled=true
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'opensearch dashboards service type'
+    group: 'Services and Load Balancing'
+  - variable: service.opensearchDashboards.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.opensearchDashboards.type=NodePort&&ingress.opensearchDashboards.enabled=false&&config.opensearchDashboards.enabled=true
+    label: 'opensearch dashboards http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.opensearchDashboards.lbPorts.http
+    description: ''
+    type: int
+    required: true
+    show_if: service.opensearchDashboards.type=LoadBalancer&&ingress.opensearchDashboards.enabled=false&&config.opensearchDashboards.enabled=true
+    label: 'opensearch dashboards http lb port'
+    group: 'Services and Load Balancing'
+
+  # Images
+  - variable: images.opensearch.repository
+    description: ''
+    type: string
+    required: true
+    label: 'opensearch repository'
+    group: Images
+  - variable: images.opensearch.tag
+    description: ''
+    type: string
+    required: true
+    label: 'opensearch tag'
+    group: Images
+  - variable: images.opensearchDashboards.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.opensearchDashboards.enabled=true
+    label: 'opensearch dashboards repository'
+    group: Images
+  - variable: images.opensearchDashboards.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.opensearchDashboards.enabled=true
+    label: 'opensearch dashboards tag'
+    group: Images

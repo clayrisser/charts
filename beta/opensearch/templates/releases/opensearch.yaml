@@ -1,0 +1,20 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ template "opensearch.name" . }}
+  labels:
+    app: {{ template "opensearch.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  forceUpgrade: false
+  helmVersion: v3
+  wait: false
+  git:
+    timeout: 120s
+  chart:
+    git: https://github.com/jp-gouin/helm-opensearch.git
+    ref: 2f6a8d08acefd0cd04bf18482493a8a756b13a15
+    path: .
+  values: {}

@@ -1,0 +1,86 @@
+images:
+  opensearch:
+    repository: opensearchproject/opensearch
+    tag: 1.1.0
+  opensearchDashboards:
+    repository: opensearchproject/opensearch-dashboards
+    tag: 1.1.0
+
+config:
+  clusterType: rke
+  imagePullPolicy: Always
+  updateStrategy: RollingUpdate
+  debug: false
+  opensearch:
+    replicas: 1
+    domain: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  opensearchDashboards:
+    enabled: true
+    replicas: 1
+    domain: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+service:
+  opensearch:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    # TODO: test load balancer
+    lbPorts:
+      http: 80
+  opensearchDashboards:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    # TODO: test load balancer
+    lbPorts:
+      http: 80
+
+ingress:
+  opensearch:
+    externalDns: true
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+  opensearchDashboards:
+    externalDns: true
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: true
+  storageClass: ''
+  existingClaim:
+    opensearch: ''
+  size:
+    opensearch: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
