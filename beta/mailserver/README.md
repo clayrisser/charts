@@ -92,7 +92,7 @@ Below is a example using sendinblue as the **fallback relay**.
 [smtp-relay.sendinblue.com]:587
 ```
 
-### sasl_passwd
+### sasl passwd
 
 This config is a hash for the postfix `smtp_sasl_password_maps`
 parameter. The configuration will be set in the `/etc/postfix/sasl_passwd` file.

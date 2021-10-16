@@ -345,6 +345,7 @@ questions:
     type: multiline
     required: false
     label: 'sender map'
+    show_if: config.transport.senderRandMap=
     group: Transport
   - variable: config.transport.senderRandMap
     description: ''
