@@ -80,11 +80,12 @@ config:
     tls:
       enabled: true
   transport:
-    fallbackRelay:
     map:
-    saslPasswd:
     senderMap:
     senderRandMap:
+    defaultTransport:
+    fallbackRelay:
+    saslPasswd:
   managesieve:
     enabled: false
   pop3:

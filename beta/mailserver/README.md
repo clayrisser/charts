@@ -10,6 +10,21 @@ there is a clean separation between transports sending emails to their
 final destination with the `smtp` transport and emails being relayed with
 the `relay` transport. The separation allows more fine grained control.
 
+Below is an example configuration that will relay all emails sent to _aol.com_
+through sendinblue and will round robin relay the rest of the emails through
+sendgrid and sendinblue and will cause any emails that were not received
+to fallback to relay through sendgrid.
+
+| Transport Config      | Value                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **map**               | `aol.com relay:[smtp-relay.sendinblue.com]:587`                                                                           |
+| **sender rand map**   | `relay:[smtp.sendgrid.net]:587,relay:[smtp-relay.sendinblue.com]:587`                                                     |
+| **default transport** | `relay:[smtp.sendgrid.net]:587`                                                                                           |
+| **fallback relay**    | `[smtp.sendgrid.net]:587`                                                                                                 |
+| **sasl passwd**       | `[smtp.sendgrid.net]:587 apikey:<SENDGRID_API_KEY>`<br/>`[smtp-relay.sendinblue.com]:587 <SMTP_USERNAME>:<SMTP_PASSWORD>` |
+
+You can find detailed documentation about how this configuration works below.
+
 ### transport
 
 This config is a hash for the postfix `transport_maps` parameter. The
