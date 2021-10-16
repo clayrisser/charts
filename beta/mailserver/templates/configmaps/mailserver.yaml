@@ -66,24 +66,25 @@ data:
     {{- else if .Values.config.transport.senderRandMap }}
     sender_dependent_default_transport_maps = randmap:{{ "{" }}{{ .Values.config.transport.senderRandMap }}{{ "}" }}
     {{- end }}
-  {{- if (and (not .Values.config.dovecot.enabled) (not .Values.config.ldap.enabled)) }}
-  smtpd.conf: |
-    pwcheck_method: auxprop
-    auxprop_plugin: sasldb
-    mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
-  {{- end }}
-  {{- if .Values.config.transport.fallbackRelay }}
+    {{- if .Values.config.transport.fallbackRelay }}
     smtp_fallback_relay = {{ .Values.config.transport.fallbackRelay }}
-  {{- end }}
-  {{- if .Values.config.transport.defaultTransport }}
+    {{- end }}
+    {{- if .Values.config.transport.defaultTransport }}
     default_transport = {{ .Values.config.transport.defaultTransport }}
-  {{- end }}
-  {{- if .Values.config.transport.saslPasswd }}
+    {{- end }}
+    {{- if .Values.config.transport.saslPasswd }}
     smtp_sasl_auth_enable = yes
     smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
     smtp_sasl_security_options = noplaintext, noanonymous
     smtp_tls_security_level = may
     header_size_limit = 4096000
+    {{- end }}
+
+  {{- if (and (not .Values.config.dovecot.enabled) (not .Values.config.ldap.enabled)) }}
+  smtpd.conf: |
+    pwcheck_method: auxprop
+    auxprop_plugin: sasldb
+    mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
   {{- end }}
 
   postfix-aliases.cf: |
