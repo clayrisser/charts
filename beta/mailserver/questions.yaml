@@ -378,7 +378,7 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'ldap enabled'
+    label: enabled
     group: Ldap
     show_subquestion_if: true
     subquestions:
@@ -482,7 +482,7 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'rainloop enabled'
+    label: enabled
     group: Rainloop
   - variable: config.rainloop.resources.enabled
     description: ''
@@ -527,7 +527,7 @@ questions:
     description: ''
     type: boolean
     required: true
-    label: 'sendmailAnalyzer enabled'
+    label: enabled
     group: 'Sendmail Analyzer'
   - variable: config.sendmailAnalyzer.resources.enabled
     description: ''
