@@ -80,6 +80,7 @@ config:
     tls:
       enabled: true
   transport:
+    fallbackRelay:
     map:
     saslPasswd:
     senderMap:

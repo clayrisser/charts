@@ -107,31 +107,6 @@ questions:
     label: 'postmaster password'
     show_if: config.dovecot.enabled=false
     group: Config
-  - variable: config.transport.map
-    description: ''
-    type: multiline
-    required: false
-    label: 'transport map'
-    group: Config
-  - variable: config.transport.senderMap
-    description: ''
-    type: multiline
-    required: false
-    label: 'transport sender map'
-    group: Config
-  - variable: config.transport.senderRandMap
-    description: ''
-    type: multiline
-    required: false
-    label: 'transport sender rand map'
-    show_if: config.transport.senderMap=
-    group: Config
-  - variable: config.transport.saslPasswd
-    description: ''
-    type: multiline
-    required: false
-    label: 'transport sasl passwd'
-    group: Config
   - variable: config.proxy.trustedNetworks
     description: ''
     type: string
@@ -357,6 +332,39 @@ questions:
         type: string
         required: true
         label: 'mailserver resources limits memory'
+
+# Transport
+  - variable: config.transport.map
+    description: ''
+    type: multiline
+    required: false
+    label: map
+    group: Transport
+  - variable: config.transport.senderMap
+    description: ''
+    type: multiline
+    required: false
+    label: 'sender map'
+    group: Transport
+  - variable: config.transport.senderRandMap
+    description: ''
+    type: multiline
+    required: false
+    label: 'sender rand map'
+    show_if: config.transport.senderMap=
+    group: Transport
+  - variable: config.transport.fallbackRelay
+    description: ''
+    type: string
+    required: false
+    label: 'fallback relay'
+    group: Transport
+  - variable: config.transport.saslPasswd
+    description: ''
+    type: multiline
+    required: false
+    label: 'sasl passwd'
+    group: Transport
 
 # Ldap
   - variable: config.ldap.enabled

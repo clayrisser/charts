@@ -72,6 +72,9 @@ data:
     auxprop_plugin: sasldb
     mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
   {{- end }}
+  {{- if .Values.config.transport.fallbackRelay }}
+    smtp_fallback_relay = {{ .Values.config.transport.fallbackRelay }}
+  {{- end }}
 
   postfix-aliases.cf: |
 
