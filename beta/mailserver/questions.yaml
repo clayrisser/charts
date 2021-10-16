@@ -334,6 +334,12 @@ questions:
         label: 'mailserver resources limits memory'
 
 # Transport
+  - variable: config.transport.defaultTransport
+    description: 'set to smtp by default'
+    type: string
+    required: false
+    label: 'default transport'
+    group: Transport
   - variable: config.transport.map
     description: ''
     type: multiline
@@ -341,14 +347,14 @@ questions:
     label: map
     group: Transport
   - variable: config.transport.senderMap
-    description: ''
+    description: 'sender map and sender rand map cannot both be set'
     type: multiline
     required: false
     label: 'sender map'
     show_if: config.transport.senderRandMap=
     group: Transport
   - variable: config.transport.senderRandMap
-    description: ''
+    description: 'sender map and sender rand map cannot both be set'
     type: string
     required: false
     label: 'sender rand map'

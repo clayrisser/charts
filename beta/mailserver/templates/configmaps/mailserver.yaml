@@ -75,6 +75,9 @@ data:
   {{- if .Values.config.transport.fallbackRelay }}
     smtp_fallback_relay = {{ .Values.config.transport.fallbackRelay }}
   {{- end }}
+  {{- if .Values.config.transport.defaultTransport }}
+    default_transport = {{ .Values.config.transport.defaultTransport }}
+  {{- end }}
 
   postfix-aliases.cf: |
 

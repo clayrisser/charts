@@ -77,7 +77,29 @@ postmaster account to sendinblue, assuming my email server domain is _example.co
 postmaster@example.com    relay:[smtp-relay.sendinblue.com]:587
 ```
 
+You can find additional documentation for this option at the
+links below.
+
 - http://www.postfix.org/postconf.5.html#sender_dependent_default_transport_maps
+- http://www.postfix.org/transport.5.html
+
+### default transport
+
+This config will set the postfix `default_transport` parameter. It configures the
+transport that is used if no transport is found in `transport_maps` or
+`sender_dependent_default_transport_maps`. By default it is set to `smtp`, which tries
+to directly deliver the email. This will not work if the outgoing mail port `25` is blocked.
+
+Below is an example setting the **default transport** to relay emails to sendinblue.
+
+```
+relay:[smtp-relay.sendinblue.com]:587
+```
+
+You can find additional documentation for this option at the
+links below.
+
+- http://www.postfix.org/postconf.5.html#default_transport
 - http://www.postfix.org/transport.5.html
 
 ### fallback relay
@@ -91,6 +113,12 @@ Below is a example using sendinblue as the **fallback relay**.
 ```
 [smtp-relay.sendinblue.com]:587
 ```
+
+You can find additional documentation for this option at the
+links below.
+
+- http://www.postfix.org/postconf.5.html#fallback_relay
+- http://www.postfix.org/transport.5.html
 
 ### sasl passwd
 
@@ -106,6 +134,12 @@ relay.
 ```
 [smtp-relay.sendinblue.com]:587    <SENDINBLUE_SMTP_USERNAME>:<SENDINBLUE_SMTP_PASSWORD>
 ```
+
+You can find additional documentation for this option at the
+links below.
+
+- http://www.postfix.org/postconf.5.html#smtp_sasl_password_maps
+- http://www.postfix.org/transport.5.html
 
 ## Resources
 
