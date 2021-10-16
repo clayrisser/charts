@@ -156,6 +156,7 @@ spec:
                     fi
                     if [ -f /etc/postfix/sasl_passwd ]; then
                       postmap /etc/postfix/sasl_passwd
+                      chmod 0600 /etc/postfix/sasl_passwd /etc/postfix/sasl_passwd.db
                     fi
                     exec dumb-init -- supervisord -c /etc/supervisor/supervisord.conf
               {{- end }}
