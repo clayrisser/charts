@@ -79,6 +79,8 @@ config:
     usersOu: people
     tls:
       enabled: true
+  monitoring:
+    integration: rancher-dashboards
   transport:
     map:
     senderMap:
