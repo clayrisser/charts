@@ -1,10 +1,13 @@
 images:
-  rainloop:
-    repository: hardware/rainloop
-    tag: 1.13.0
   mailserver:
     repository: mailserver/docker-mailserver
     tag: 10.1.0
+  rainloop:
+    repository: hardware/rainloop
+    tag: 1.13.0
+  sendmailAnalyzer:
+    repository: registry.gitlab.com/bitspur/community/docker-sendmailanalyzer
+    tag: 9.4.0
 
 config:
   clusterType: rke
@@ -83,6 +86,16 @@ config:
     integration: rancher-dashboards
   sendmailAnalyzer:
     enabled: false
+    baseUrl: ''
+    hostname: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
   transport:
     map:
     senderMap:
