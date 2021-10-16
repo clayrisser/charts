@@ -234,6 +234,7 @@ questions:
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - selfsigned
         required: true
         label: 'phpldapadmin ingress issuer name'
       - variable: ingress.phpldapadmin.certificate

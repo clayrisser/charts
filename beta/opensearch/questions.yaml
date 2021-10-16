@@ -235,6 +235,7 @@ questions:
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - selfsigned
         required: true
         label: 'opensearch ingress issuer name'
       - variable: ingress.opensearch.certificate
@@ -307,6 +308,7 @@ questions:
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - selfsigned
         required: true
         label: 'opensearch dashboards ingress issuer name'
       - variable: ingress.opensearchDashboards.certificate

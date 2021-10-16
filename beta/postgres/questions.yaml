@@ -291,6 +291,7 @@ questions:
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - selfsigned
         required: true
         label: 'pgadmin ingress issuer name'
       - variable: ingress.pgadmin.certificate
@@ -350,6 +351,7 @@ questions:
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - selfsigned
         required: true
         label: 'metrics ingress issuer name'
       - variable: ingress.metrics.certificate

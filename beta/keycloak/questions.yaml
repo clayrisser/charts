@@ -369,6 +369,7 @@ questions:
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - selfsigned
         required: true
         label: 'keycloak ingress issuer name'
       - variable: ingress.keycloak.certificate

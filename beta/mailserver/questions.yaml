@@ -490,7 +490,7 @@ questions:
     options:
       - defaults
       - custom
-      - false
+      - 'false'
     required: true
     label: 'resources defaults'
     show_if: config.rainloop.enabled=true
@@ -535,7 +535,7 @@ questions:
     options:
       - defaults
       - custom
-      - false
+      - 'false'
     required: true
     label: 'resources defaults'
     show_if: config.sendmailAnalyzer.enabled=true
@@ -594,7 +594,7 @@ questions:
         description: ''
         type: string
         required: true
-        label: 'rainloop size'
+        label: 'mailserver size'
       - variable: persistence.size.rainloop
         description: ''
         type: string
@@ -843,6 +843,7 @@ questions:
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - selfsigned
         required: true
         label: 'rainloop ingress issuer name'
       - variable: ingress.rainloop.certificate
@@ -911,6 +912,7 @@ questions:
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - selfsigned
         required: true
         label: 'sendmail analyzer ingress issuer name'
       - variable: ingress.sendmailAnalyzer.certificate
