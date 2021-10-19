@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "patch-operator.name" . }}
+  labels:
+    app: {{ template "patch-operator.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "patch-operator.name" . }}
+      release: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "patch-operator.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ template "patch-operator.name" . }}
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "patch-operator.name" . }}
+      containers:
+        - name: {{ template "patch-operator.name" . }}
+          image: {{ .Values.images.patchOperator.repository }}:{{ .Values.images.patchOperator.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          {{- if (and .Values.config.patchOperator.resources.enabled (not (eq .Values.config.patchOperator.resources.enabled "false"))) }}
+          resources:
+            requests:
+{{ toYaml .Values.config.patchOperator.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.patchOperator.resources.limits | indent 14 }}
+          {{- else }}
+          resources: {}
+          {{- end }}
+          {{- if .Values.config.debug }}
+          env:
+            - name: DEBUG_OPERATOR
+              value: '{{ .Values.config.debug }}'
+          {{- else }}
+          env: []
+          {{- end }}

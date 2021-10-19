@@ -1,0 +1,16 @@
+name: patch-operator
+apiVersion: v1
+home: https://gitlab.com/bitspur/community/patch-operator
+icon: ""
+version: 0.0.1
+appVersion: 0.0.1
+description: "kubernetes operator that patches resources"
+keywords:
+  - controller
+  - operator
+  - patch
+sources:
+  - https://github.com/silicon-hills/patch-operator.git
+maintainers:
+  - name: "Clay Risser"
+    email: email@clayrisser.com

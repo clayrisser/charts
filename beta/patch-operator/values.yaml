@@ -1,0 +1,20 @@
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  patchOperator:
+    baseUrl: ""
+    hostname: ""
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+images:
+  patchOperator:
+    repository: registry.gitlab.com/bitspur/community/patch-operator
+    tag: 0.0.1
