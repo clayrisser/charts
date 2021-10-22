@@ -194,6 +194,24 @@ questions:
     required: true
     label: 'backrest size'
     group: Persistence
+  - variable: persistence.size.wal
+    description: ''
+    type: string
+    required: true
+    label: 'wal size'
+    group: Persistence
+  - variable: persistence.size.alertmanager
+    description: ''
+    type: string
+    required: true
+    label: 'alertmanager size'
+    group: Persistence
+  - variable: persistence.size.archive
+    description: ''
+    type: string
+    required: true
+    label: 'archive size'
+    group: Persistence
   - variable: persistence.size.prometheus
     description: ''
     type: string
