@@ -2,6 +2,11 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: olm
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: operators
 ---
 kind: ServiceAccount
@@ -54,15 +59,6 @@ spec:
         app: olm-operator
     spec:
       serviceAccountName: olm-operator-serviceaccount
-      # affinity:
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #         - matchExpressions:
-      #             - key: kubernetes.io/arch
-      #               operator: In
-      #               values:
-      #                 - amd64
       containers:
         - name: olm-operator
           command:
@@ -76,17 +72,17 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
-            - containerPort: 8081
               name: metrics
-              protocol: TCP
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8080
+              scheme: HTTP
           readinessProbe:
             httpGet:
               path: /healthz
               port: 8080
+              scheme: HTTP
           terminationMessagePolicy: FallbackToLogsOnError
           env:
           - name: OPERATOR_NAMESPACE
@@ -122,15 +118,6 @@ spec:
         app: catalog-operator
     spec:
       serviceAccountName: olm-operator-serviceaccount
-      # affinity:
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #         - matchExpressions:
-      #             - key: kubernetes.io/arch
-      #               operator: In
-      #               values:
-      #                 - amd64
       containers:
         - name: catalog-operator
           command:
@@ -140,22 +127,22 @@ spec:
           - olm
           - -configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
           - -util-image
-          - {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
+          -  quay.io/operator-framework/olm@sha256:7df4e1f16bfd107acc76bc1e3a5910224b90b317aca697b6541c3e55c27bc2ee
           image: {{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
-            - containerPort: 8081
               name: metrics
-              protocol: TCP
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8080
+              scheme: HTTP
           readinessProbe:
             httpGet:
               path: /healthz
               port: 8080
+              scheme: HTTP
           terminationMessagePolicy: FallbackToLogsOnError
           resources:
             requests:
@@ -216,7 +203,7 @@ metadata:
   name: packageserver
   namespace: olm
   labels:
-    olm.version: 0.18.3
+    olm.version: v0.19.1
 spec:
   displayName: Package Server
   description: Represents an Operator package that is available from a given CatalogSource which will resolve to a ClusterServiceVersion.
@@ -332,7 +319,7 @@ spec:
               - name: tmpfs
                 emptyDir: {}
   maturity: alpha
-  version: 0.18.3
+  version: v0.19.1
   apiservicedefinitions:
     owned:
     - group: packages.operators.coreos.com
