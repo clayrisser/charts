@@ -95,17 +95,9 @@ spec:
       LDAP_TLS_PROTOCOL_MIN: '3.0'
       LDAP_TLS_REQCERT: 'never'
       LDAP_TLS_VERIFY_CLIENT: 'never'
+    {{- if .Values.config.openldap.organizationalUnits }}
     customLdifFiles:
-      01-organization.ldif: |
-        version: 1
-        dn: {{ template "openldap.openldap-dc" . }}
-        objectClass: top
-        objectClass: dcObject
-        objectClass: organization
-        o: {{ .Values.config.organization }}
-        dc: {{ index (regexSplit "\\." .Values.config.openldap.domain -1) 0 }}
-      {{- if .Values.config.openldap.organizationalUnits }}
-      02-organizational-units.ldif: |
+      10-organizational-units.ldif: |
         {{- range (splitList "," .Values.config.openldap.organizationalUnits) }}
         dn: ou={{ . }},{{ template "openldap.openldap-dc" $ }}
         objectclass: organizationalUnit
@@ -113,7 +105,7 @@ spec:
         ou: {{ . }}
         {{- printf "\n" }}
         {{- end }}
-      {{- end }}
+    {{- end }}
     replication:
       enabled: true
       clusterName: 'cluster.local'
