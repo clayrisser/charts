@@ -1,5 +1,5 @@
---- templates/operator.yaml	2021-12-09 12:16:03.135469406 -0600
-+++ templates/operator.yaml.tmp	2021-12-09 12:16:18.231509805 -0600
+--- templates/operator.yaml	2021-12-09 12:27:53.425381059 -0600
++++ templates/operator.yaml.tmp	2021-12-09 12:26:36.177172429 -0600
 @@ -2,7 +2,7 @@
  kind: CustomResourceDefinition
  metadata:

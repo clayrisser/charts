@@ -7,11 +7,17 @@ export PATCHES_PATCH := $(addsuffix .patch,$(PATCHES))
 .PHONY: patch-apply
 patch-apply: $(PATCHES) $(PATCHES_PATCH)
 	@for f in $(PATCHES); do \
-		$(CAT) $${f}.patch | $(PATCH) -p0; \
+		$(CAT) $${f}.patch | $(PATCH) -p0 -N -r$(NULL) || $(TRUE); \
+	done
+
+.PHONY: patch-revert
+patch-revert: $(PATCHES) $(PATCHES_PATCH)
+	@for f in $(PATCHES); do \
+		$(CAT) $${f}.patch | $(PATCH) -p0 -N -r$(NULL) -R || $(TRUE); \
 	done
 
 .PHONY: patch-build
-patch-build: $(PATCHES) $(PATCHES_TMP)
+patch-build: patch-revert $(PATCHES_TMP)
 	@for f in $(PATCHES); do \
 		$(DIFF) -Naur $$f $${f}.tmp > $${f}.patch || $(TRUE); \
 	done
