@@ -1,13 +1,9 @@
-# Default values for gitlab.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-gitlabRootPassword: "nndUz9CAQN"
-openldapPassword: "spx7bz4MS8pnflRLiqJiYXEA"
-mailgunPassword: "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"
+gitlabRootPassword: 'nndUz9CAQN'
+openldapPassword: 'spx7bz4MS8pnflRLiqJiYXEA'
+mailgunPassword: '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'
 
 namespace: gitlab-system
-updateDescription: "one"
+updateDescription: 'one'
 gitlabConfig:
   certmanagerIssuerEmail: jay.goyal@betasource.tech
   domain: hosted.promanager.online
@@ -17,7 +13,7 @@ gitlabConfig:
       provider: AWS
       region: us-east-2
       aws_access_key_id: AKIAU5BN4B7CURBLNM6R
-      aws_secret_access_key: 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  
+      aws_secret_access_key: V4KrH342XDO1K0oLdk0WO80SFtuyWrbxMUXIyb2r
     connection:
       secret: gitlab-rails-storage
       key: connection
@@ -31,22 +27,22 @@ gitlabConfig:
       useSecret: true
       secret: gitlab-postgres-db-secret
       key: POSTGRES_PASSWORD
-    preparedStatements: false 
+    preparedStatements: false
   ingress:
     configureCertmanager: false
     # class: nginx
     provider: nginx
     enabled: true
-    annotations: 
+    annotations:
       clusterIssuer: letsencrypt-cloudflare-prod
       externalDnsTarget: v0-aws-internal.promanager.online
     tls:
       enabled: true
       secretName: wildcard-letsencrypt-gitlab-new-1
-    path: /      
+    path: /
   initialRootPassword:
     secret: gitlab-root-password
-    key: admin    
+    key: admin
   bucketCredential:
     secret: gitlab-rails-storage
     key: connection
@@ -58,16 +54,16 @@ gitlabConfig:
     externalDiffs: gitlab-mr-diffs
     terraformState: gitlab-terraform-state-promanager
     dependencyProxy: gitlab-dependency-proxy
-    backups: gitlab-backup-storage-sourcemanager 
+    backups: gitlab-backup-storage-sourcemanager
     tmpBucket: gitlab-tmp-storage-sourcemanager
   ldapSyncCronJob:
-    cron: "*/1 * * * *"  
+    cron: '*/1 * * * *'
   ldap:
     preventSignin: false
     servers:
       main:
         label: 'LDAP'
-        host: "a-openldap-openldap-openldap-stack-ha.a-openldap.svc.cluster.local"
+        host: 'a-openldap-openldap-openldap-stack-ha.a-openldap.svc.cluster.local'
         port: 389
         uid: 'uid'
         bind_dn: 'cn=admin,dc=promanager,dc=online'
@@ -75,7 +71,7 @@ gitlabConfig:
         password:
           secret: openldap-secret
           key: admin
-        encryption: 'plain' 
+        encryption: 'plain'
         allow_username_or_email_login: true
   smtp:
     enabled: true
@@ -86,8 +82,7 @@ gitlabConfig:
       secret: mailgun-password
       key: password
     domain: em9444.promanager.online
-    authentication: "plain"
-
+    authentication: 'plain'
 
 ingressDomain: new-gitlab.hosted.promanager.online
 

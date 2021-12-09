@@ -1,0 +1,137 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ template "nextcloud.name" . }}
+  labels:
+    app: {{ template "nextcloud.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  forceUpgrade: false
+  helmVersion: v3
+  wait: false
+  git:
+    timeout: 120s
+  chart:
+    repository: https://github.com/nextcloud/helm.git
+    ref: nextcloud-2.10.0
+    path: charts/nextcloud
+  values:
+    replicaCount: {{ .Values.config.nextcloud.replicas }}
+    podAnnotations: {}
+    podLabels: {}
+    image:
+      repository: {{ .Values.images.nextcloud.repository | quote }}
+      tag: {{ .Values.images.nextcloud.tag | quote }}
+      pullPolicy: {{ .Values.config.imagePullPolicy }}
+    nextcloud:
+      host: {{ .Values.ingress.nextcloud.hostname }}
+      username: {{ .Values.config.nextcloud.username }}
+      password: {{ .Values.config.nextcloud.password }}
+      ## Use an existing secret
+      existingSecret:
+        enabled: false
+        # secretName: nameofsecret
+        # usernameKey: username
+        # passwordKey: password
+        # smtpUsernameKey: smtp_username
+        # smtpPasswordKey: smtp_password
+      update: 0
+      containerPort: 8080
+      datadir: /var/www/html/data
+      persistence:
+        subPath:
+      mail:
+        enabled: false
+        fromAddress: user
+        domain: domain.com
+        smtp:
+          host: domain.com
+          secure: ssl
+          port: 465
+          authtype: LOGIN
+          name: user
+          password: pass
+      internalDatabase:
+        enabled: false
+        name: ''
+      externalDatabase:
+        enabled: true
+        type: {{ .Values.config.nextcloud.externalDatabase.type }}
+        host: {{ .Values.config.nextcloud.externalDatabase.host }}
+        port: {{ .Values.config.nextcloud.externalDatabase.port }}
+        dbname: {{ .Values.config.nextcloud.externalDatabase.dbname }}
+        username: {{ .Values.config.nextcloud.externalDatabase.username }}
+        password: {{ .Values.config.nextcloud.externalDatabase.password }}
+        ## Use a existing secret
+        existingSecret:
+          enabled: false
+          # secretName: nameofsecret
+          # usernameKey: username
+          # passwordKey: password
+      cronjob:
+        enabled: false
+        image: {}
+        schedule: "*/15 * * * *"
+        annotations: {}
+        curlInsecure: false
+        failedJobsHistoryLimit: 5
+        successfulJobsHistoryLimit: 2
+      persistence:
+        enabled: false
+        accessMode: ReadWriteOnce
+        size: 8Gi
+
+      redis:
+        enabled: false
+        usePassword: true
+        password: "pass"
+    session: {}
+      # maxSessionAge:
+      # sessionCookies:
+    livenessProbe:
+      initialDelaySeconds: 120
+      timeoutSeconds: 30
+      failureThreshold: 6
+
+    readinessProbe:
+      initialDelaySeconds: 30
+      timeoutSeconds: 3
+      periodSeconds: 5
+
+    service:
+      name: nextcloud
+      type: ClusterIP
+      externalPort: 80
+      internalPort: 3000
+      nodePort:
+      annotations: {}
+    ingress:
+      enabled: true
+      hosts:
+         - {{ .Values.ingress.nextcloud.hostname }}
+      path: /
+      labels:
+        # Used to add custom labels to the Ingress
+        # Useful if for example you have multiple Ingress controllers and want your Ingress controllers to bind to specific Ingresses
+        # traffic: internal
+      annotations:
+         kubernetes.io/ingress.class: nginx
+         kubernetes.io/tls-acme: "true"
+      tls:
+        # Secrets must be manually created in the namespace.
+         - secretName: {{ .Values.ingress.nextcloud.issuer.name }}
+           hosts:
+             - {{ .Values.ingress.nextcloud.hostname }}
+    resources: {}
+      # limits:
+      #  cpu: 100m
+      #  memory: 128Mi
+      # requests:
+      #  cpu: 100m
+      #  memory: 128Mi
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+

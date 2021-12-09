@@ -1,0 +1,28 @@
+nextcloudVersion: v1
+kind: Service
+metadata:
+  name: {{ template "nextcloud.name" . }}
+  labels:
+    app: {{ template "nextcloud.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.nextcloud.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.nextcloud.type }}
+  {{- if (eq .Values.service.nextcloud.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.nextcloud.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ (eq .Values.service.nextcloud.type "LoadBalancer") | ternary .Values.service.nextcloud.lbPorts.http "80" }}
+      targetPort: container
+      {{- if (and (eq .Values.service.nextcloud.type "NodePort") (not (empty .Values.service.nextcloud.nodePorts.http))) }}
+      nodePort: {{ .Values.service.nextcloud.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "nextcloud.name" . }}
+    release: {{ .Release.Name }}

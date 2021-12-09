@@ -1,0 +1,160 @@
+categories:
+  - Server
+questions:
+  # Config
+  - variable: config.clusterType
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.nextcloud.replicas
+    description: ''
+    type: int
+    required: true
+    label: 'nextcloud replicas'
+    group: Config
+  - variable: config.allowIntegrations
+    description: ''
+    type: boolean
+    required: true
+    label: 'allow integrations'
+    group: Config
+  - variable: config.nextcloud.username
+    description: ''
+    type: string
+    required: true
+    label: 'username'
+    default: 'admin'
+    group: nextcloud
+  - variable: config.nextcloud.password
+    description: ''
+    type: password
+    required: true
+    label: 'password'
+    default: 'pass'
+    group: nextcloud
+  - variable: config.nextcloud.externalDatabase.type
+    description: ''
+    type: string
+    required: true
+    label: 'database type'
+    group: database
+  - variable: config.nextcloud.externalDatabase.host
+    description: 'database host'
+    type: string
+    required: true
+    label: 'database host'
+    group: database
+  - variable: config.nextcloud.externalDatabase.port
+    description: ''
+    type: int
+    required: true
+    label: 'database port'
+    group: database
+  - variable: config.nextcloud.externalDatabase.dbname
+    description: ''
+    type: string
+    required: true
+    label: 'database dbname'
+    group: database
+  - variable: config.nextcloud.externalDatabase.username
+    description: ''
+    type: string
+    required: true
+    label: 'database username'
+    group: database
+  - variable: config.nextcloud.externalDatabase.password
+    description: ''
+    type: password
+    required: true
+    label: 'database password'
+    group: database
+  # Services and Load Balancing
+  - variable: ingress.nextcloud.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'nextcloud ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.nextcloud.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'nextcloud ingress tls'
+      - variable: ingress.nextcloud.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'nextcloud ingress hostname'
+      - variable: ingress.nextcloud.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.nextcloud.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+        required: true
+        label: 'nextcloud ingress issuer name'
+      - variable: ingress.nextcloud.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.nextcloud.tls=true&&ingress.nextcloud.issuer.name=none
+        required: false
+        label: 'nextcloud ingress certificate'
+  - variable: service.nextcloud.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.nextcloud.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'nextcloud service type'
+    group: 'Services and Load Balancing'
+  - variable: service.nextcloud.nodePorts.http
+    default:
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.nextcloud.type=NodePort&&ingress.nextcloud.enabled=false
+    label: 'nextcloud http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.nextcloud.lbPorts.http
+    default: 80
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.nextcloud.type=LoadBalancer&&ingress.nextcloud.enabled=false
+    label: 'nextcloud http lb port'
+    group: 'Services and Load Balancing'

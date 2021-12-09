@@ -1,0 +1,78 @@
+images:
+  nextcloud:
+    repository: nextcloud
+    tag: 21.0.5-fpm
+
+config:
+  clusterType: rke
+  imagePullPolicy: Always
+  updateStrategy: Recreate
+  allowIntegrations: true
+  debug: false
+  nextcloud:
+    host: ''
+    username: admin
+    password: pass
+    existingSecret:
+      enabled: false
+    update: 0
+    containerPort: 8080
+    datadir: /var/www/html/data
+    persistence:
+      subPath:
+    mail:
+      enabled: false
+      fromAddress: user
+      domain: domain.com
+      smtp:
+        host: domain.com
+        secure: ssl
+        port: 465
+        authtype: LOGIN
+        name: user
+        password: pass
+    internalDatabase:
+      enabled: false
+      name: ''
+    externalDatabase:
+      enabled: true
+      integration: a-postgres
+      type: postgres
+      host: ''
+      port: 5432
+      dbname: a_nextcloud
+      username: postgres
+      password: ''
+      existingSecret:
+        enabled: false
+    cronjob:
+      enabled: false
+      image: {}
+      schedule: '*/15 * * * *'
+      annotations: {}
+      curlInsecure: false
+      failedJobsHistoryLimit: 5
+      successfulJobsHistoryLimit: 2
+    redis:
+      enabled: false
+      usePassword: true
+      password: 'pass'
+
+service:
+  nextcloud:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  nextcloud:
+    externalDns: true
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
