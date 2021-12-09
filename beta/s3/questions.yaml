@@ -2,42 +2,39 @@ categories:
   - Server
 questions:
   # Config
-  - variable: config.hostname
+  - variable: config.host
     description: ''
     type: string
     required: true
-    label: hostname
+    label: host
     group: Config
   - variable: config.port
     description: ''
-    type: int
-    min: 0
-    max: 65535
-    required: true
+    type: string
+    required: false
     label: port
     group: Config
-  - variable: config.username
+  - variable: config.accessKey
     description: ''
     type: string
     required: false
-    label: username
+    label: 'access key'
     group: Config
-  - variable: config.password
+  - variable: config.secretKey
     description: ''
     type: password
     required: false
-    label: password
+    label: 'secret key'
     group: Config
-  - variable: config.tls
+  - variable: config.region
+    description: ''
+    type: string
+    required: false
+    label: region
+    group: Config
+  - variable: config.pathStyle
     description: ''
     type: boolean
     required: true
-    label: tls
-    show_subquestion_if: true
+    label: 'path style'
     group: Config
-    subquestions:
-      - variable: config.starttls
-        description: ''
-        type: boolean
-        required: true
-        label: starttls

@@ -1,0 +1,15 @@
+apiVersion: v1
+name: s3
+home: https://gitlab.com/bitspur/community/charts
+version: 0.0.1
+appVersion: latest
+description: 's3 credentials integration socket'
+keywords:
+  - mail
+  - email
+  - s3
+sources:
+  - https://gitlab.com/bitspur/community/charts
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com

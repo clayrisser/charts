@@ -1,0 +1,93 @@
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
+metadata:
+  name: {{ template "s3.name" . }}
+  labels:
+    app: {{ template "s3.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: s3
+    namespace: {{ .Release.Namespace }}
+  config:
+    host: {{ .Values.config.host | quote }}
+    port: {{ .Values.config.port | quote }}
+    accessKey: {{ .Values.config.accessKey | quote }}
+    pathStyle: {{ .Values.config.pathStyle | quote }}
+    region: {{ .Values.config.region | quote }}
+  configSecretName: {{ template "s3.name" . }}
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: s3-coupled-or-updated-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  env:
+                    - name: S3_BUCKET
+                      value: '{% .plugConfig.bucket %}'
+                    - name: S3_ACCESS_KEY
+                      value: '{% .socketConfig.accessKey %}'
+                    - name: S3_HOST
+                      value: '{% .socketConfig.host %}'
+                    - name: S3_PORT
+                      value: '{% .socketConfig.port %}'
+                    - name: S3_PATH_STYLE
+                      value: '{% .socketConfig.pathStyle %}'
+                    - name: S3_REGION
+                      value: '{% .socketConfig.region %}'
+                    - name: S3_SECRET_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ template "s3.name" . }}
+                          key: secretKey
+                  command:
+                    - sh
+                    - -c
+                    - |-
+                      if [ "{% .plugConfig.replicate %}" != "false" ]; then
+                        cat <<EOF | kubectl apply -f -
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ template "s3.name" . }}-{% .plug.metadata.name %}
+                        namespace: '{% .plug.metadata.namespace %}'
+                      type: Opaque
+                      stringData:
+                        accessKey: '$S3_ACCESS_KEY'
+                        bucket: '$S3_BUCKET'
+                        host: '$S3_HOST'
+                        pathStyle: '$S3_PATH_STYLE'
+                        port: '$S3_PORT'
+                        region: '$S3_REGION'
+                        secretKey: $S3_SECRET_KEY
+                      EOF
+                      fi
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "s3.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -

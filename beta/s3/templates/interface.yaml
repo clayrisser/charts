@@ -1,9 +1,9 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Interface
 metadata:
-  name: smtp
+  name: s3
   labels:
-    app: {{ template "smtp.name" . }}
+    app: {{ template "s3.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,15 +12,15 @@ spec:
     - version: v0.0.1
       plugDefinition:
         properties:
-          from:
+          bucket:
             required: true
           replicate: {}
       socketDefinition:
         properties:
-          hostname:
+          host:
             required: true
-          password: {}
+          accessKey: {}
+          pathStyle: {}
           port: {}
-          starttls: {}
-          tls: {}
-          username: {}
+          region: {}
+          secretKey: {}

@@ -1,0 +1,7 @@
+config:
+  accessKey: ''
+  host: ''
+  pathStyle: true
+  port: ''
+  region: ''
+  secretKey: ''
