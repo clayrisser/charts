@@ -1,0 +1,180 @@
+--- templates/operator.yaml	2021-12-09 12:16:03.135469406 -0600
++++ templates/operator.yaml.tmp	2021-12-09 12:16:18.231509805 -0600
+@@ -2,7 +2,7 @@
+ kind: CustomResourceDefinition
+ metadata:
+   annotations:
+-    cert-manager.io/inject-ca-from: gitlab-system/gitlab-serving-cert
++    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/gitlab-serving-cert
+     controller-gen.kubebuilder.io/version: v0.3.0
+   name: gitlabs.apps.gitlab.com
+ spec:
+@@ -124,26 +124,26 @@
+ metadata:
+   creationTimestamp: null
+   name: gitlab-app
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ ---
+ apiVersion: v1
+ kind: ServiceAccount
+ metadata:
+   creationTimestamp: null
+   name: gitlab-manager
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ ---
+ apiVersion: v1
+ kind: ServiceAccount
+ metadata:
+   name: gitlab-nginx-ingress
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ ---
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: Role
+ metadata:
+   name: gitlab-leader-election-role
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ rules:
+ - apiGroups:
+   - ""
+@@ -171,7 +171,7 @@
+ kind: Role
+ metadata:
+   name: gitlab-nginx-ingress
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ rules:
+ - apiGroups:
+   - ""
+@@ -572,7 +572,7 @@
+ kind: RoleBinding
+ metadata:
+   name: gitlab-leader-election-rolebinding
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ roleRef:
+   apiGroup: rbac.authorization.k8s.io
+   kind: Role
+@@ -580,13 +580,13 @@
+ subjects:
+ - kind: ServiceAccount
+   name: gitlab-manager
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ ---
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: RoleBinding
+ metadata:
+   name: gitlab-nginx-ingress
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ roleRef:
+   apiGroup: rbac.authorization.k8s.io
+   kind: Role
+@@ -594,7 +594,7 @@
+ subjects:
+ - kind: ServiceAccount
+   name: gitlab-nginx-ingress
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ ---
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+@@ -607,7 +607,7 @@
+ subjects:
+ - kind: ServiceAccount
+   name: gitlab-app
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ ---
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+@@ -620,7 +620,7 @@
+ subjects:
+ - kind: ServiceAccount
+   name: gitlab-manager
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ ---
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+@@ -633,7 +633,7 @@
+ subjects:
+ - kind: ServiceAccount
+   name: gitlab-manager
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ ---
+ apiVersion: v1
+ kind: Service
+@@ -641,7 +641,7 @@
+   labels:
+     control-plane: controller-manager
+   name: gitlab-controller-manager-metrics-service
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ spec:
+   ports:
+   - name: https
+@@ -654,7 +654,7 @@
+ kind: Service
+ metadata:
+   name: gitlab-webhook-service
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ spec:
+   ports:
+   - port: 443
+@@ -669,7 +669,7 @@
+   labels:
+     control-plane: controller-manager
+   name: gitlab-controller-manager
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ spec:
+   replicas: 1
+   selector:
+@@ -747,11 +747,11 @@
+ kind: Certificate
+ metadata:
+   name: gitlab-serving-cert
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ spec:
+   dnsNames:
+-  - gitlab-webhook-service.gitlab-system.svc
+-  - gitlab-webhook-service.gitlab-system.svc.cluster.local
++  - gitlab-webhook-service.{{ .Release.Namespace }}.svc
++  - gitlab-webhook-service.{{ .Release.Namespace }}.svc.cluster.local
+   issuerRef:
+     kind: Issuer
+     name: gitlab-selfsigned-issuer
+@@ -761,7 +761,7 @@
+ kind: Issuer
+ metadata:
+   name: gitlab-selfsigned-issuer
+-  namespace: gitlab-system
++  namespace: {{ .Release.Namespace }}
+ spec:
+   selfSigned: {}
+ ---
+@@ -769,14 +769,14 @@
+ kind: ValidatingWebhookConfiguration
+ metadata:
+   annotations:
+-    cert-manager.io/inject-ca-from: gitlab-system/gitlab-serving-cert
++    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/gitlab-serving-cert
+   name: gitlab-gitlab-validating-webhook-configuration
+ webhooks:
+ - clientConfig:
+     caBundle: Cg==
+     service:
+       name: gitlab-webhook-service
+-      namespace: gitlab-system
++      namespace: {{ .Release.Namespace }}
+       path: /validate-apps-gitlab-com-v1beta1-gitlab
+   failurePolicy: Fail
+   name: vgitlab.kb.io
