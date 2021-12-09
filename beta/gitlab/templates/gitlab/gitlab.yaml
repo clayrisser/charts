@@ -1,0 +1,205 @@
+apiVersion: apps.gitlab.com/v1beta1
+kind: GitLab
+metadata:
+  name: gitlab
+  namespace: {{ .Values.namespace }}
+  #labels:
+  #  update-description: {{ .Values.updateDescription }}
+spec:
+  chart:
+    version: "5.5.0" # https://gitlab.com/gitlab-org/cloud-native/gitlab-operator/-/blob/0.1.0/CHART_VERSIONS
+    values:
+      ## Settings to for the Let's Encrypt ACME Issuer
+      # certmanager-issuer:
+      #   # The email address to register certificates requested from Let's Encrypt.
+      #   # Required if using Let's Encrypt.
+      #   email: {{ .Values.gitlabConfig.certmanagerIssuerEmail }}
+      certmanager:
+        install: false
+      postgresql:
+        install: false
+      nginx-ingress:
+        # controller:
+        #   autoscaling:
+        #     enabled: true
+        #     minReplicas: 2
+        #   resources:
+        #     requests:
+        #       cpu: 100m
+        #       memory: 250Mi
+        #   service:
+        #     annotations:
+        #       service.beta.kubernetes.io/aws-load-balancer-internal: 'true'
+        controller:
+          service:
+            type: NodePort     
+      gitlab:
+        migrations:
+          enabled: true
+        toolbox:
+          enabled: true
+          replicas: 1
+          backups:
+            cron:
+              enabled: true
+              concurrencyPolicy: Replace
+              # schedule: '*/15 * * * *'
+              schedule: '0 */4 * * *'
+              extraArgs: '--maximum-backups 10 --skip registry  --skip uploads --skip artifacts --skip lfs --skip packages --skip external_diffs --skip terraform_state --skip pages'
+              persistence:
+                enabled: true
+                size: '100Gi'
+            objectStorage:
+              backend: 's3'
+              config: 
+                secret: gitlab-minio
+                key: s3cmd-config
+          persistence:
+            enabled: false
+            accessMode: 'ReadWriteOnce'
+            size: '10Gi'
+          resources:
+            requests:
+              cpu: '55m'
+              memory: '350M'
+          securityContext:
+            fsGroup: '1000'
+            runAsUser: '1000'  
+      global:
+        # shell:
+        #   port: 32022
+        #   tcp:
+        #       proxyProtocol: true 
+        hosts:
+          domain: {{ .Values.gitlabConfig.domain }} # Provide a real base domain for GitLab. "gitlab." and "registry." will be exposed as subdomains.
+          https: true
+          #externalIP: "1.1.1.1" # If using a static wildcard DNS record for the base domain, enter the IP address it resolves to here.
+          gitlab:
+            name: gitlab.{{ .Values.gitlabConfig.domain }}
+            https: false
+            # webservice:
+            # ingress:
+            #   tls:
+            #     secretName: gitlab-letsencrypt-wild
+          registry:
+            name: registry.{{ .Values.gitlabConfig.domain }}
+            https: true
+            # ingress:
+            #   tls:
+            #     secretName: gitlab-letsencrypt-wild
+          minio:
+            name: minio.hosted.promanager.online
+            https: false
+          tls:
+            enabled: true
+            secretName: wildcard-star-promanager-gitlab
+        # ingress:
+        #   enabled: false
+        #   configureCertmanager: false
+        minio:
+          enabled: false #{{ .Values.gitlabConfig.minio.enabled }}
+        kas:
+          enabled: true
+        pages:
+          objectStore:
+            enabled: true
+            bucket: gitlab-object-store-new
+            connection: 
+              secret: {{ .Values.gitlabConfig.redis.password.secret }}
+              key: {{ .Values.gitlabConfig.redis.password.key }}
+        redis:
+          install: false
+          #password:
+          #  enabled: {{ .Values.gitlabConfig.redis.password.enabled }}
+          #  secret: {{ .Values.gitlabConfig.redis.password.secret }}
+          #  key: {{ .Values.gitlabConfig.redis.password.key }}
+        # gitaly:
+        #   enabled: false
+        psql:
+          password:
+            useSecret: {{ .Values.gitlabConfig.psql.password.useSecret }}
+            secret: {{ .Values.gitlabConfig.psql.password.secret }}
+            key: {{ .Values.gitlabConfig.psql.password.key }}
+          host: {{ .Values.postgres.host }}
+          port: {{ .Values.postgres.port }}
+          username: {{ .Values.postgres.username }}
+          database: {{ .Values.postgres.database }}
+          preparedStatements: {{ .Values.gitlabConfig.psql.preparedStatements }}
+        ingress:
+          configureCertmanager: false
+          tls:
+            secretName: wildcard-star-promanager-gitlab
+        #  configureCertmanager: {{ .Values.gitlabConfig.ingress.configureCertmanager }}
+          # class: nginx
+          provider: {{ .Values.gitlabConfig.ingress.provider }}
+          enabled: {{ .Values.gitlabConfig.ingress.enabled }}
+          annotations: 
+            cert-manager.io/cluster-issuer: {{ .Values.gitlabConfig.ingress.annotations.clusterIssuer }}
+            external-dns.alpha.kubernetes.io/target: {{ .Values.gitlabConfig.ingress.annotations.externalDnsTarget }}
+            kubernetes.io/ingress.class: nginx
+            kubernetes.io/tls-acme: "true"
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          tls:
+            enabled: {{ .Values.gitlabConfig.ingress.tls.enabled }}
+            secretName: wildcard-star-promanager-gitlab #{{ .Values.gitlabConfig.ingress.tls.secretName }}
+          path: {{ .Values.gitlabConfig.ingress.path }}
+        initialRootPassword:
+          secret: {{ .Values.gitlabConfig.initialRootPassword.secret }}
+          key: {{ .Values.gitlabConfig.initialRootPassword.key }}
+        appConfig:
+          object_store:
+            enabled: true
+           # proxy_download: true
+            connection:
+              secret: {{ .Values.gitlabConfig.bucketCredential.secret }}
+              key: {{ .Values.gitlabConfig.bucketCredential.key }}
+          lfs:
+            #enabled: true
+            #proxy_download: true
+            bucket: {{ .Values.gitlabConfig.buckets.lfs }}
+            #connection: {}            
+          artifacts:
+            #enabled: true
+            #proxy_download: true
+            bucket: {{ .Values.gitlabConfig.buckets.artifacts }}
+            #connection: {}              
+          uploads:
+            #enabled: true
+            #proxy_download: true
+            bucket: {{ .Values.gitlabConfig.buckets.uploads }}
+            #connection: {}             
+          packages:
+            #enabled: true
+            #proxy_download: true
+            bucket: {{ .Values.gitlabConfig.buckets.packages }}
+            #connection: {}            
+          externalDiffs:
+            enabled: true
+            bucket: {{ .Values.gitlabConfig.buckets.externalDiffs }}
+           # connection: {}            
+          terraformState:
+            enabled: true
+            bucket: {{ .Values.gitlabConfig.buckets.terraformState }}
+            #connection: {}            
+          dependencyProxy:
+            enabled: true
+            #proxy_download: true
+            bucket: {{ .Values.gitlabConfig.buckets.dependencyProxy }}
+            #connection: {}           
+          backups:
+            bucket: {{ .Values.gitlabConfig.buckets.backups }}
+            tmpBucket: {{ .Values.gitlabConfig.buckets.tmpBucket }}
+            #connection: {}             
+          cron_jobs:
+            ldap_group_sync_worker:
+              cron: "{{ .Values.gitlabConfig.ldapSyncCronJob.cron}}"
+          ldap:
+          {{- toYaml .Values.gitlabConfig.ldap | nindent 12 }}
+        email:
+          from: 'no-reply@promanager.online'
+          display_name: 'Promanager GitLab'
+        #railsSecrets:
+        #    secret: {{ .Values.gitlabConfig.redis.password.secret }}
+        smtp:
+        {{- toYaml .Values.gitlabConfig.smtp | nindent 10 }}
+          
