@@ -1,95 +1,92 @@
-gitlabRootPassword: 'nndUz9CAQN'
-openldapPassword: 'spx7bz4MS8pnflRLiqJiYXEA'
-mailgunPassword: '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'
+images:
+  gitlab:
+    repository: gitlab/gitlab-ce
+    tag: 14.5.1-ce.0
 
-namespace: gitlab-system
-updateDescription: 'one'
-gitlabConfig:
-  certmanagerIssuerEmail: jay.goyal@betasource.tech
-  domain: hosted.promanager.online
-  minio:
+config:
+  clusterProvider: infrastructure
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  gitlab:
+    baseUrl: ''
+    hostname: ''
+    adminPassword: P@ssw0rd
+    themeId: 2
+  s3:
     enabled: false
-    awsConfig:
-      provider: AWS
-      region: us-east-2
-      aws_access_key_id: AKIAU5BN4B7CURBLNM6R
-      aws_secret_access_key: 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
-    connection:
-      secret: gitlab-rails-storage
-      key: connection
-  redis:
-    password:
-      enabled: true
-      secret: gitlab-redis
-      key: redis-password
-  psql:
-    password:
-      useSecret: true
-      secret: gitlab-postgres-db-secret
-      key: POSTGRES_PASSWORD
-    preparedStatements: false
-  ingress:
-    configureCertmanager: false
-    # class: nginx
-    provider: nginx
-    enabled: true
-    annotations:
-      clusterIssuer: letsencrypt-cloudflare-prod
-      externalDnsTarget: v0-aws-internal.promanager.online
-    tls:
-      enabled: true
-      secretName: wildcard-letsencrypt-gitlab-new-1
-    path: /
-  initialRootPassword:
-    secret: gitlab-root-password
-    key: admin
-  bucketCredential:
-    secret: gitlab-rails-storage
-    key: connection
-  buckets:
-    lfs: gitlab-lfs-storage
-    artifacts: gitlab-artifacts-storage
-    uploads: gitlab-uploads-storage
-    packages: gitlab-packages-storage
-    externalDiffs: gitlab-mr-diffs
-    terraformState: gitlab-terraform-state-promanager
-    dependencyProxy: gitlab-dependency-proxy
-    backups: gitlab-backup-storage-sourcemanager
-    tmpBucket: gitlab-tmp-storage-sourcemanager
-  ldapSyncCronJob:
-    cron: '*/1 * * * *'
-  ldap:
-    preventSignin: false
-    servers:
-      main:
-        label: 'LDAP'
-        host: 'a-openldap-openldap-openldap-stack-ha.a-openldap.svc.cluster.local'
-        port: 389
-        uid: 'uid'
-        bind_dn: 'cn=admin,dc=promanager,dc=online'
-        base: 'dc=promanager,dc=online'
-        password:
-          secret: openldap-secret
-          key: admin
-        encryption: 'plain'
-        allow_username_or_email_login: true
+    integration: ''
+    host: ''
+    region: us-west-2
+    accessKey: ''
+    secretKey: ''
+    buckets:
+      lfs: ''
+      artifacts: ''
+      uploads: ''
+      packages: ''
+      externalDiffs: ''
+      terraformState: ''
+      dependencyProxy: ''
+      backups: ''
+      tmpBucket: ''
   smtp:
-    enabled: true
-    address: smtp.sendgrid.net
-    port: 587
-    user_name: apikey
-    password:
-      secret: mailgun-password
-      key: password
-    domain: em9444.promanager.online
-    authentication: 'plain'
+    enabled: false
+    integration: ''
+    hostname: ''
+    from: ''
+    password: ''
+    port: ''
+    username: ''
+    tls:
+      enabled: false
+  keycloak:
+    enabled: false
+    integration: ''
+    baseUrl: ''
+    autoSignIn: false
+    certificate: ''
+    clientId: ''
+    companyName: KeyCloak
+    realmName: master
+  postgres:
+    integration: ''
+    database: postgres
+    host: ''
+    password: ''
+    port: 5432
+    username: postgres
+    # url: ''
 
-ingressDomain: new-gitlab.hosted.promanager.online
+service:
+  gitlab:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+      ssh: ''
+    lbPorts:
+      http: 80
+      ssh: 22
 
-postgres:
-  integration: 'a-postgres'
-  database: a-gitlab
-  host: 'postgres-postgres.a-postgres.svc.cluster.local'
-  password: P@ssw0rd
-  port: 5432
-  username: postgres
+ingress:
+  gitlab:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: true
+  storageClass: ''
+  existingClaim:
+    gitlab: ''
+  size:
+    gitlab: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s

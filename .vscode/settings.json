@@ -82,5 +82,7 @@
   ],
   "[helm]": {
     "editor.formatOnSave": false
-  }
+  },
+  "editor.formatOnSave": false,
+  "yaml.format.enable": false
 }
