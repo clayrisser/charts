@@ -12,23 +12,42 @@ config:
     hostname: ''
     adminPassword: P@ssw0rd
     themeId: 2
+  gitlabRunner:
+    enabled: true
+    docker:
+      sock: false
+    cache:
+      enabled: true
+      type: pvc
+    resources:
+      enabled: defaults
+      limits:
+        memory: 256Mi
+        cpu: 200m
+      requests:
+        memory: 128Mi
+        cpu: 100m
   s3:
     enabled: false
     integration: ''
-    host: ''
-    region: us-west-2
     accessKey: ''
+    host: ''
+    namespace: gitlab
+    region: us-west-2
     secretKey: ''
     buckets:
-      lfs: ''
       artifacts: ''
-      uploads: ''
-      packages: ''
-      externalDiffs: ''
-      terraformState: ''
-      dependencyProxy: ''
       backups: ''
-      tmpBucket: ''
+      dependencyProxy: ''
+      externalDiffs: ''
+      lfs: ''
+      packages: ''
+      pages: ''
+      pseudonymizer: ''
+      registry: ''
+      terraform-state: ''
+      tmp: ''
+      uploads: ''
   smtp:
     enabled: false
     integration: ''
@@ -59,7 +78,8 @@ config:
 
 service:
   gitlab:
-    type: NodePort
+    type: ClusterIP
+    configureNginxIngress: false
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
@@ -83,8 +103,10 @@ persistence:
   storageClass: ''
   existingClaim:
     gitlab: ''
+    runner: ''
   size:
     gitlab: 1Gi
+    runner: 1Gi
   velero:
     enabled: false
     restic: true

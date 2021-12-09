@@ -1,3 +1,7 @@
+include mkpm.mk
+ifneq (,$(MKPM_READY))
+include $(MKPM)/gnu
+
 HELM := helm
 GIT := git
 SED := sed
@@ -74,3 +78,5 @@ clean:
 $(CHARTS):
 	-@$(MAKE) -s lint CHART="$@"
 #	-@$(MAKE) -s debug CHART="$@"
+
+endif

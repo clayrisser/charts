@@ -17,3 +17,8 @@ quote_type = single
 [{m,M}akefile{,.*}]
 charset = utf-8
 indent_style = tab
+indent_size = 4
+[*.mk]
+charset = utf-8
+indent_style = tab
+indent_size = 4

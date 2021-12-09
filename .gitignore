@@ -1,5 +1,6 @@
 *.tmp
 .DS_Store
+.mkpm/
 /*.tgz
 /index.yaml
 /public
