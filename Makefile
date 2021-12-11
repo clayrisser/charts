@@ -14,17 +14,17 @@ CHARTS := $(shell $(GIT) ls-files | $(GREP) -Ev "^depricated\/" \
 
 .EXPORT_ALL_VARIABLES:
 
-.PHONY: all
-all: $(CHARTS)
+.PHONY: charts
+charts: $(CHARTS)
 
 .PHONY: lint
 lint:
 ifeq ($(CHART),.)
 	-@for c in $(CHARTS); do \
-			echo && \
-			echo "LINTING: $$c" && \
-			$(MAKE) -s lint CHART="$$c"; \
-		done
+		$(ECHO) && \
+		$(ECHO) "LINTING: $$c" && \
+		$(MAKE) -s lint CHART="$$c"; \
+	done
 else
 	@$(HELM) lint $(CHART)
 endif
@@ -42,7 +42,7 @@ else
 endif
 
 .PHONY: package
-package:
+package: $(CHARTS)
 	@mkdir -p ./public
 	@mv ./public/*.tgz ./ 2>/dev/null || true
 	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
@@ -76,7 +76,8 @@ clean:
 
 .PHONY: $(CHARTS)
 $(CHARTS):
-	-@$(MAKE) -s lint CHART="$@"
+	@$(MAKE) -C $@ -s prepack || $(TRUE)
+	@$(MAKE) -s lint CHART="$@"
 #	-@$(MAKE) -s debug CHART="$@"
 
 endif
