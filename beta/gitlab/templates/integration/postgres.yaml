@@ -1,6 +1,6 @@
-{{- if .Values.postgres.integration }}
-{{- $name := (split "." .Values.postgres.integration)._1 | default "postgres" }}
-{{- $namespace := (split "." (printf "%s." .Values.postgres.integration))._0 }}
+{{- if .Values.config.postgres.integration }}
+{{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
 {{- $patchKeycloak := true }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
@@ -21,7 +21,7 @@ spec:
     name: {{ $name }}
     namespace: {{ $namespace }}
   config:
-    database: {{ .Values.postgres.database | quote }}
+    database: {{ .Values.config.postgres.database | quote }}
     createdb: 'true'
     cleanup: 'false'
     replicate: 'false'

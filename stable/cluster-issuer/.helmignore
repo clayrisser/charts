@@ -1,26 +1,19 @@
-.DS_Store
-
-# vcs
-.git/
-.gitignore
-.bzr/
-.bzrignore
-.hg/
-.hgignore
-.svn/
-
-# backup files
 *.bak
+*.orig
 *.swp
 *.tmp
-
-# editors
 *.tmproj
 *~
-.\#*
+.DS_Store
+.bzr/
+.bzrignore
+.git/
+.gitignore
+.hg/
+.hgignore
 .idea/
 .project
-\#*\#
-
-# kubernetes
-OWNERS
+.svn/
+.vscode/
+/Makefile
+/patches

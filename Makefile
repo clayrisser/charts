@@ -15,10 +15,10 @@ CHARTS := $(shell $(GIT) ls-files | $(GREP) -Ev "^depricated\/" \
 .EXPORT_ALL_VARIABLES:
 
 .PHONY: charts
-charts: $(CHARTS)
+charts: $(CHARTS) ## prepare all helm charts
 
 .PHONY: lint
-lint:
+lint: ##
 ifeq ($(CHART),.)
 	-@for c in $(CHARTS); do \
 		$(ECHO) && \
@@ -30,7 +30,7 @@ else
 endif
 
 .PHONY: debug
-debug:
+debug: ##
 ifeq ($(CHART),.)
 	@for c in $(CHARTS); do \
 			echo && \
@@ -42,7 +42,7 @@ else
 endif
 
 .PHONY: package
-package: $(CHARTS)
+package: $(CHARTS) ## package helm charts
 	@mkdir -p ./public
 	@mv ./public/*.tgz ./ 2>/dev/null || true
 	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
@@ -52,7 +52,7 @@ package: $(CHARTS)
 	@mv index.yaml ./public
 
 .PHONY: prev-artifacts
-prev-artifacts:
+prev-artifacts: ##
 	@JOB_ID=$$(curl -s -L -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" \
 			$(CI_SERVER_URL)/api/v4/projects/$(CI_PROJECT_ID)/jobs?scope=success | \
 			jq -r '[.[] | select(.name=="$(CI_JOB_NAME)")][0].id') && \
@@ -63,20 +63,20 @@ prev-artifacts:
 		fi
 
 .PHONY: docker-build
-docker-build:
+docker-build: ##
 	@$(DOCKER) build -f ./Dockerfile -t codejamninja/make-helm:latest .
 
 .PHONY: docker-push
-docker-push:
+docker-push: ##
 	@$(DOCKER) push codejamninja/make-helm:latest
 
 .PHONY: clean
-clean:
+clean: ##
 	@$(GIT) clean -fXd
 
 .PHONY: $(CHARTS)
 $(CHARTS):
-	@$(MAKE) -C $@ -s prepack || $(TRUE)
+	@$(MAKE) -C $@ -s prepack 2>$(NULL) || $(TRUE)
 	@$(MAKE) -s lint CHART="$@"
 #	-@$(MAKE) -s debug CHART="$@"
 

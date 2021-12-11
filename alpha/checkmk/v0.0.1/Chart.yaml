@@ -3,7 +3,6 @@ name: checkmk
 home: https://github.com/clayrisser/checkmk
 icon: https://checkmk.com/application/files/6915/9834/3137/checkmk_logo_main_vertical.png
 version: 0.0.1
-type: application
 appVersion: latest
 description: 'checkmk'
 keywords:

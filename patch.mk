@@ -1,3 +1,6 @@
+export PATCHES ?=
+export PATCHES_DIR ?= patches
+
 export DIFF ?= diff
 export PATCH ?= patch
 
@@ -7,19 +10,22 @@ export PATCHES_PATCH := $(addprefix patches/,$(addsuffix .patch,$(PATCHES)))
 .PHONY: patch-apply
 patch-apply: $(PATCHES) $(PATCHES_PATCH)
 	@for f in $(PATCHES); do \
-		$(CAT) patches/$${f}.patch | $(PATCH) -p0 -N -r$(NULL) || $(TRUE); \
+		[ -f "$(PATCHES_DIR)/$${f}.patch" ] && \
+		$(CAT) "$(PATCHES_DIR)/$${f}.patch" | $(PATCH) -p0 -N -r$(NULL) || $(TRUE); \
 	done
 
 .PHONY: patch-revert
 patch-revert: $(PATCHES) $(PATCHES_PATCH)
 	@for f in $(PATCHES); do \
-		$(CAT) patches/$${f}.patch | $(PATCH) -p0 -N -r$(NULL) -R || $(TRUE); \
+		[ -f "$(PATCHES_DIR)/$${f}.patch" ] && \
+		$(CAT) "$(PATCHES_DIR)/$${f}.patch" | $(PATCH) -p0 -N -r$(NULL) -R || $(TRUE); \
 	done
 
 .PHONY: patch-build
 patch-build: patch-revert $(PATCHES_TMP)
 	@for f in $(PATCHES); do \
-		$(DIFF) -Naur $$f $${f}.tmp > patches/$${f}.patch || $(TRUE); \
+		$(MKDIR) -p "$$($(ECHO) "$(PATCHES_DIR)/$${f}.patch" | $(SED) 's|[\\\\/][^\\\/]*$$||g')" && \
+		$(DIFF) -Naur "$$f" "$${f}.tmp" > "$(PATCHES_DIR)/$${f}.patch" || $(TRUE); \
 	done
 $(PATCHES_TMP):
 	@$(CP) $(patsubst %.tmp,%,$@) $@
