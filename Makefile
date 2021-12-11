@@ -8,6 +8,10 @@ SED := sed
 GREP := grep
 DOCKER := docker
 
+CI_PAGES_URL ?= http://localhost:8000
+HELM_REPO_URL := $(CI_PAGES_URL)
+HELM_REPO_INDEX := $(HELM_REPO_URL)/index.yaml
+
 CHART := .
 CHARTS := $(shell $(GIT) ls-files | $(GREP) -Ev "^depricated\/" \
 	| $(GREP) -oE '.+\/Chart\.yaml' | $(SED) 's/\/Chart\.yaml$$//g' | sort -u)
@@ -60,9 +64,12 @@ package: $(CHARTS) ## package helm charts
 	@mv ./public/*.tgz ./ 2>/dev/null || true
 	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
 	@$(HELM) package $(CHARTS) --destination .
-	@$(HELM) repo index --url $(CI_PAGES_URL) .
+	@$(HELM) repo index --url $(HELM_REPO_URL) .
 	@mv *.tgz ./public
 	@mv index.yaml ./public
+	@cp -r ./public-overlay/* ./public
+	@cat ./public-overlay/index.html | $(SED) 's|{{HELM_REPO_INDEX}}|$(HELM_REPO_INDEX)|g' > \
+		./public/index.html
 
 .PHONY: prev-artifacts
 prev-artifacts: ## load previous artifacts
