@@ -6,13 +6,7 @@ variables:
   GITLAB_TOKEN: ''
 
 stages:
-  - lint
   - publish
-
-lint:
-  stage: lint
-  script:
-    - make -s lint
 
 pages:
   stage: publish

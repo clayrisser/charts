@@ -23,10 +23,23 @@ ifeq ($(CHART),.)
 	-@for c in $(CHARTS); do \
 		$(ECHO) && \
 		$(ECHO) "LINTING: $$c" && \
+		$(MAKE) -s prepack CHART="$$c" && \
 		$(MAKE) -s lint CHART="$$c"; \
 	done
 else
 	@$(HELM) lint $(CHART)
+endif
+
+.PHONY: prepack
+prepack: ##
+ifeq ($(CHART),.)
+	-@for c in $(CHARTS); do \
+		$(ECHO) && \
+		$(ECHO) "PREPACKING: $$c" && \
+		$(MAKE) -s prepack CHART="$$c"; \
+	done
+else
+	@$(MAKE) -C $(CHART) -s prepack 2>$(NULL) || $(TRUE)
 endif
 
 .PHONY: debug
@@ -52,7 +65,7 @@ package: $(CHARTS) ## package helm charts
 	@mv index.yaml ./public
 
 .PHONY: prev-artifacts
-prev-artifacts: ##
+prev-artifacts: ## load previous artifacts
 	@JOB_ID=$$(curl -s -L -H "PRIVATE-TOKEN: $(GITLAB_TOKEN)" \
 			$(CI_SERVER_URL)/api/v4/projects/$(CI_PROJECT_ID)/jobs?scope=success | \
 			jq -r '[.[] | select(.name=="$(CI_JOB_NAME)")][0].id') && \
@@ -77,7 +90,7 @@ clean: ##
 .PHONY: $(CHARTS)
 $(CHARTS):
 	@$(MAKE) -C $@ -s prepack 2>$(NULL) || $(TRUE)
-	@$(MAKE) -s lint CHART="$@"
+	@$(HELM) lint $@
 #	-@$(MAKE) -s debug CHART="$@"
 
 endif

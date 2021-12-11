@@ -12,6 +12,7 @@
 .hg/
 .hgignore
 .idea/
+.mkpm/
 .project
 .svn/
 .vscode/
