@@ -1,5 +1,5 @@
 image:
-  name: codejamninja/make-helm:latest
+  name: registry.gitlab.com/silicon-hills/community/ci-images/kube-commands:0.0.1
   entrypoint: ["/bin/sh", "-c"]
 
 variables:
