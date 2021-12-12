@@ -4,7 +4,7 @@ images:
     tag: 14.5.1-ce.0
 
 config:
-  clusterProvider: infrastructure
+  clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   gitlab:
@@ -31,7 +31,7 @@ config:
     enabled: false
     integration: ''
     accessKey: ''
-    host: ''
+    endpoint: ''
     namespace: gitlab
     region: us-west-2
     secretKey: ''

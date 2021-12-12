@@ -1,66 +1,87 @@
+{{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "gitlab.name" -}}
+{{- define "gitlab.name" }}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this
+(by the DNS naming spec).
 */}}
-{{- define "gitlab.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
+{{- define "gitlab.fullname" }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
-{{- end }}
-{{- end }}
 
 {{/*
-Create chart name and version as used by the chart label.
+Calculate gitlab certificate
 */}}
-{{- define "gitlab.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "gitlab.labels" -}}
-helm.sh/chart: {{ include "gitlab.chart" . }}
-{{ include "gitlab.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "gitlab.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "gitlab.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "gitlab.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "gitlab.fullname" .) .Values.serviceAccount.name }}
+{{- define "gitlab.gitlab-certificate" }}
+{{- if (not (empty .Values.ingress.gitlab.certificate)) }}
+{{- printf .Values.ingress.gitlab.certificate }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- printf "%s-gitlab-letsencrypt" (include "gitlab.fullname" .) }}
 {{- end }}
 {{- end }}
 
+{{/*
+Calculate gitlab hostname
+*/}}
+{{- define "gitlab.gitlab-hostname" }}
+{{- if (and .Values.config.gitlab.hostname (not (empty .Values.config.gitlab.hostname))) }}
+{{- printf .Values.config.gitlab.hostname }}
+{{- else }}
+{{- if .Values.ingress.gitlab.enabled }}
+{{- printf .Values.ingress.gitlab.hostname }}
+{{- else }}
+{{- printf "%s-gitlab" (include "gitlab.fullname" .) }}
+{{- end }}
+{{- end }}
+{{- end }}
 
+{{/*
+Calculate gitlab base url
+*/}}
+{{- define "gitlab.gitlab-base-url" }}
+{{- if (and .Values.config.gitlab.baseUrl (not (empty .Values.config.gitlab.baseUrl))) }}
+{{- printf .Values.config.gitlab.baseUrl }}
+{{- else }}
+{{- if .Values.ingress.gitlab.enabled }}
+{{- $hostname := ((empty (include "gitlab.gitlab-hostname" .)) | ternary .Values.ingress.gitlab.hostname (include "gitlab.gitlab-hostname" .)) }}
+{{- $protocol := (.Values.ingress.gitlab.tls | ternary "https" "http") }}
+{{- printf "%s://%s" $protocol $hostname }}
+{{- else }}
+{{- printf "http://%s" (include "gitlab.gitlab-hostname" .) }}
+{{- end }}
+{{- end }}
+{{- end }}
 
+{{/*
+Calculate postgres url
+*/}}
+{{- define "gitlab.postgres-url" }}
+{{- $postgres := .Values.config.postgres }}
+{{- if $postgres.url }}
+{{- printf $postgres.url }}
+{{- else }}
+{{- $credentials := ((or (empty $postgres.username) (empty $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) }}
+{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host ($postgres.port | toString) $postgres.database }}
+{{- end }}
+{{- end }}
 
+{{/*
+Calculate keycloak client id
+*/}}
+{{- define "gitlab.keycloak-client-id" }}
+{{- printf "%s" (.Values.config.keycloak.clientId | default (include "gitlab.gitlab-hostname" .)) }}
+{{- end }}
+
+{{/*
+Calculate bucket name
+*/}}
+{{- define "gitlab.bucket-name" }}
+{{- printf "%s" (pluck .bucket .values.config.s3.buckets | first | default (printf "%s-%s" .values.config.s3.namespace .bucket)) }}
+{{- end }}

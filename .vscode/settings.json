@@ -25,6 +25,7 @@
     "inet",
     "jboss",
     "kanister",
+    "kanisterio",
     "keycloak",
     "kube",
     "kubemod",

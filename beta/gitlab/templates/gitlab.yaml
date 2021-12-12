@@ -1,204 +1,706 @@
 apiVersion: apps.gitlab.com/v1beta1
 kind: GitLab
 metadata:
-  name: gitlab
-  namespace: \{\{ .Values.namespace }}
-  #labels:
-  #  update-description: \{\{ .Values.updateDescription }}
+  name: {{ template "gitlab.name" . }}
+  labels:
+    app: {{ template "gitlab.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   chart:
-    version: "5.5.0" # https://gitlab.com/gitlab-org/cloud-native/gitlab-operator/-/blob/0.1.0/CHART_VERSIONS
+    version: '5.5.0'
     values:
-      ## Settings to for the Let's Encrypt ACME Issuer
-      # certmanager-issuer:
-      #   # The email address to register certificates requested from Let's Encrypt.
-      #   # Required if using Let's Encrypt.
-      #   email: \{\{ .Values.gitlabConfig.certmanagerIssuerEmail }}
-      certmanager:
-        install: false
-      postgresql:
-        install: false
-      nginx-ingress:
-        # controller:
-        #   autoscaling:
-        #     enabled: true
-        #     minReplicas: 2
-        #   resources:
-        #     requests:
-        #       cpu: 100m
-        #       memory: 250Mi
-        #   service:
-        #     annotations:
-        #       service.beta.kubernetes.io/aws-load-balancer-internal: 'true'
-        controller:
-          service:
-            type: NodePort
-      gitlab:
-        migrations:
-          enabled: true
-        toolbox:
-          enabled: true
-          replicas: 1
-          backups:
-            cron:
-              enabled: true
-              concurrencyPolicy: Replace
-              # schedule: '*/15 * * * *'
-              schedule: '0 */4 * * *'
-              extraArgs: '--maximum-backups 10 --skip registry  --skip uploads --skip artifacts --skip lfs --skip packages --skip external_diffs --skip terraform_state --skip pages'
-              persistence:
-                enabled: true
-                size: '100Gi'
-            objectStorage:
-              backend: 's3'
-              config:
-                secret: gitlab-minio
-                key: s3cmd-config
-          persistence:
-            enabled: false
-            accessMode: 'ReadWriteOnce'
-            size: '10Gi'
-          resources:
-            requests:
-              cpu: '55m'
-              memory: '350M'
-          securityContext:
-            fsGroup: '1000'
-            runAsUser: '1000'
       global:
-        # shell:
-        #   port: 32022
-        #   tcp:
-        #       proxyProtocol: true
+        common:
+          labels: {}
+        operator:
+          enabled: false
+          rollout:
+            autoPause: true
+        pod:
+          labels: {}
+        edition: ce
+        # gitlabVersion: master
+        application:
+          create: false
+          links: []
+          allowClusterRoles: true
         hosts:
-          domain: \{\{ .Values.gitlabConfig.domain }} # Provide a real base domain for GitLab. "gitlab." and "registry." will be exposed as subdomains.
-          https: true
-          #externalIP: "1.1.1.1" # If using a static wildcard DNS record for the base domain, enter the IP address it resolves to here.
+          domain: {{ template "gitlab.gitlab-hostname" . }}
+          hostSuffix:
+          https: {{ .Values.ingress.gitlab.tls }}
+          externalIP:
+          ssh: ~
           gitlab:
-            name: gitlab.\{\{ .Values.gitlabConfig.domain }}
-            https: false
-            # webservice:
-            # ingress:
-            #   tls:
-            #     secretName: gitlab-letsencrypt-wild
-          registry:
-            name: registry.\{\{ .Values.gitlabConfig.domain }}
-            https: true
-            # ingress:
-            #   tls:
-            #     secretName: gitlab-letsencrypt-wild
-          minio:
-            name: minio.hosted.promanager.online
-            https: false
-          tls:
-            enabled: true
-            secretName: wildcard-star-promanager-gitlab
-        # ingress:
-        #   enabled: false
-        #   configureCertmanager: false
-        minio:
-          enabled: false #\{\{ .Values.gitlabConfig.minio.enabled }}
-        kas:
-          enabled: true
-        pages:
-          objectStore:
-            enabled: true
-            bucket: gitlab-object-store-new
-            connection:
-              secret: \{\{ .Values.gitlabConfig.redis.password.secret }}
-              key: \{\{ .Values.gitlabConfig.redis.password.key }}
-        redis:
-          install: false
-          #password:
-          #  enabled: \{\{ .Values.gitlabConfig.redis.password.enabled }}
-          #  secret: \{\{ .Values.gitlabConfig.redis.password.secret }}
-          #  key: \{\{ .Values.gitlabConfig.redis.password.key }}
-        # gitaly:
-        #   enabled: false
-        psql:
-          password:
-            useSecret: \{\{ .Values.gitlabConfig.psql.password.useSecret }}
-            secret: \{\{ .Values.gitlabConfig.psql.password.secret }}
-            key: \{\{ .Values.gitlabConfig.psql.password.key }}
-          host: \{\{ .Values.postgres.host }}
-          port: \{\{ .Values.postgres.port }}
-          username: \{\{ .Values.postgres.username }}
-          database: \{\{ .Values.postgres.database }}
-          preparedStatements: \{\{ .Values.gitlabConfig.psql.preparedStatements }}
+            name: {{ template "gitlab.gitlab-hostname" . }}
+            https: {{ .Values.ingress.gitlab.tls }}
+          minio: {}
+          registry: {}
+          tls: {}
+          smartcard: {}
+          kas: {}
+          pages: {}
         ingress:
           configureCertmanager: false
-          tls:
-            secretName: wildcard-star-promanager-gitlab
-        #  configureCertmanager: \{\{ .Values.gitlabConfig.ingress.configureCertmanager }}
-          # class: nginx
-          provider: \{\{ .Values.gitlabConfig.ingress.provider }}
-          enabled: \{\{ .Values.gitlabConfig.ingress.enabled }}
-          annotations:
-            cert-manager.io/cluster-issuer: \{\{ .Values.gitlabConfig.ingress.annotations.clusterIssuer }}
-            external-dns.alpha.kubernetes.io/target: \{\{ .Values.gitlabConfig.ingress.annotations.externalDnsTarget }}
-            kubernetes.io/ingress.class: nginx
-            kubernetes.io/tls-acme: "true"
-            nginx.ingress.kubernetes.io/ssl-redirect: "false"
-          tls:
-            enabled: \{\{ .Values.gitlabConfig.ingress.tls.enabled }}
-            secretName: wildcard-star-promanager-gitlab #\{\{ .Values.gitlabConfig.ingress.tls.secretName }}
-          path: \{\{ .Values.gitlabConfig.ingress.path }}
+          enabled: false
+          tls: {}
+        gitlab:
+          license: {}
         initialRootPassword:
-          secret: \{\{ .Values.gitlabConfig.initialRootPassword.secret }}
-          key: \{\{ .Values.gitlabConfig.initialRootPassword.key }}
+          secret: {{ template "gitlab.name" . }}
+          key: password
+        psql:
+          connectTimeout:
+          password:
+            useSecret: true
+            secret: {{ include "gitlab.name" . }}-postgres
+            key: POSTGRES_PASSWORD
+          host: {{ .Values.config.postgres.host | quote }}
+          port: {{ .Values.config.postgres.port }}
+          username: {{ .Values.config.postgres.username | quote }}
+          database: {{ .Values.config.postgres.database | quote }}
+          applicationName:
+          preparedStatements: false
+        redis:
+          password:
+            enabled: true
+        gitaly:
+          enabled: true
+          authToken: {}
+          internal:
+            names: ['default']
+          external: []
+          service:
+            name: gitaly
+            type: ClusterIP
+            externalPort: 8075
+            internalPort: 8075
+            tls:
+              externalPort: 8076
+              internalPort: 8076
+          tls:
+            enabled: false
+        praefect:
+          enabled: false
+          authToken: {}
+          autoMigrate: true
+          dbSecret: {}
+          virtualStorages:
+            - name: default
+              gitalyReplicas: 3
+              maxUnavailable: 1
+          psql:
+            sslMode: 'disable'
+          service:
+            name: praefect
+            type: ClusterIP
+            externalPort: 8075
+            internalPort: 8075
+            tls:
+              externalPort: 8076
+              internalPort: 8076
+          tls:
+            enabled: false
+        minio:
+          enabled: {{ (not .Values.config.s3.enabled) }}
+          credentials: {}
+        grafana:
+          enabled: false
         appConfig:
+          enableUsagePing: true
+          enableSeatLink: true
+          enableImpersonation:
+          defaultCanCreateGroup: true
+          usernameChangingEnabled: true
+          issueClosingPattern:
+          defaultTheme:
+          defaultProjectsFeatures:
+            issues: true
+            mergeRequests: true
+            wiki: true
+            snippets: true
+            builds: true
+          webhookTimeout:
+          maxRequestDurationSeconds:
+          cron_jobs: {}
+          contentSecurityPolicy:
+            enabled: false
+            report_only: true
+          gravatar:
+            plainUrl:
+            sslUrl:
+          extra:
+            googleAnalyticsId:
+            matomoUrl:
+            matomoSiteId:
           object_store:
-            enabled: true
-           # proxy_download: true
+            enabled: {{ .Values.config.s3.enabled }}
+            proxy_download: true
+            storage_options: {}
             connection:
-              secret: \{\{ .Values.gitlabConfig.bucketCredential.secret }}
-              key: \{\{ .Values.gitlabConfig.bucketCredential.key }}
+              secret: store
+              key: objectStoreConnection
           lfs:
-            #enabled: true
-            #proxy_download: true
-            bucket: \{\{ .Values.gitlabConfig.buckets.lfs }}
-            #connection: {}
+            enabled: true
+            proxy_download: true
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "lfs") }}
+            connection: {}
           artifacts:
-            #enabled: true
-            #proxy_download: true
-            bucket: \{\{ .Values.gitlabConfig.buckets.artifacts }}
-            #connection: {}
+            enabled: true
+            proxy_download: true
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "artifacts") }}
+            connection: {}
           uploads:
-            #enabled: true
-            #proxy_download: true
-            bucket: \{\{ .Values.gitlabConfig.buckets.uploads }}
-            #connection: {}
+            enabled: true
+            proxy_download: true
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "uploads") }}
+            connection: {}
           packages:
-            #enabled: true
-            #proxy_download: true
-            bucket: \{\{ .Values.gitlabConfig.buckets.packages }}
-            #connection: {}
+            enabled: true
+            proxy_download: true
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "packages") }}
+            connection: {}
           externalDiffs:
-            enabled: true
-            bucket: \{\{ .Values.gitlabConfig.buckets.externalDiffs }}
-           # connection: {}
+            enabled: false
+            when:
+            proxy_download: true
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "external-diffs") }}
+            connection: {}
           terraformState:
-            enabled: true
-            bucket: \{\{ .Values.gitlabConfig.buckets.terraformState }}
-            #connection: {}
+            enabled: false
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "terraform-state") }}
+            connection: {}
           dependencyProxy:
-            enabled: true
-            #proxy_download: true
-            bucket: \{\{ .Values.gitlabConfig.buckets.dependencyProxy }}
-            #connection: {}
+            enabled: false
+            proxy_download: true
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "dependency-proxy") }}
+            connection: {}
+          pseudonymizer:
+            configMap:
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "pseudonymizer") }}
+            connection: {}
           backups:
-            bucket: \{\{ .Values.gitlabConfig.buckets.backups }}
-            tmpBucket: \{\{ .Values.gitlabConfig.buckets.tmpBucket }}
-            #connection: {}
-          cron_jobs:
-            ldap_group_sync_worker:
-              cron: \{\{ .Values.gitlabConfig.ldapSyncCronJob.cron}}
-          ldap: {}
-          # \{\{- toYaml .Values.gitlabConfig.ldap | nindent 12 }}
-        email:
-          from: 'no-reply@promanager.online'
-          display_name: 'Promanager GitLab'
-        #railsSecrets:
-        #    secret: \{\{ .Values.gitlabConfig.redis.password.secret }}
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "backups") }}
+            tmpBucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "tmp") }}
+          incomingEmail:
+            enabled: false
+            address: ""
+            host: "imap.gmail.com"
+            port: 993
+            ssl: true
+            startTls: false
+            user: ""
+            password:
+              secret: ""
+              key: password
+            expungeDeleted: false
+            logger:
+              logPath: "/dev/stdout"
+            mailbox: inbox
+            idleTimeout: 60
+          serviceDeskEmail:
+            enabled: false
+            address: ""
+            host: "imap.gmail.com"
+            port: 993
+            ssl: true
+            startTls: false
+            user: ""
+            password:
+              secret: ""
+              key: password
+            expungeDeleted: false
+            logger:
+              logPath: "/dev/stdout"
+            mailbox: inbox
+            idleTimeout: 60
+          ldap:
+            preventSignin: false
+            servers: {}
+          gitlab_kas: {}
+          omniauth:
+            enabled: {{ .Values.config.keycloak.enabled }}
+            allowBypassTwoFactor: []
+            allowSingleSignOn: ['saml']
+            autoLinkLdapUser: false
+            autoLinkSamlUser: true
+            autoLinkUser: ['saml']
+            autoSignInWithProvider: {{ .Values.config.keycloak.autoSignIn | ternary "saml" "" }}
+            blockAutoCreatedUsers: false
+            externalProviders: []
+            syncProfileAttributes: ['email']
+            syncProfileFromProvider: ['saml']
+            providers:
+              {{- if .Values.config.keycloak.enabled }}
+              - secret: {{ template "gitlab.name" . }}-omniauth
+              {{- end }}
+          sentry:
+            enabled: false
+            dsn:
+            clientside_dsn:
+            environment:
+          smartcard:
+            enabled: false
+            CASecret:
+            clientCertificateRequiredHost:
+            sanExtensions: false
+            requiredForGitAccess: false
+          initialDefaults: {}
+        geo:
+          enabled: false
+          role: primary
+          nodeName: gitlab.gitlab.host
+          psql:
+            password: {}
+        kas:
+          enabled: false
+        shell:
+          port: 22
+          authToken: {}
+          hostKeys: {}
+        railsSecrets: {}
+        rails:
+          bootsnap:
+            enabled: true
+        registry:
+          bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "registry") }}
+          certificate: {}
+          httpSecret: {}
+          notifications: {}
+        pages:
+          enabled: false
+          accessControl: false
+          path:
+          host:
+          port:
+          https:
+          externalHttp: []
+          externalHttps: []
+          artifactsServer: true
+          objectStore:
+            enabled: true
+            bucket: {{ template "gitlab.bucket-name" (dict "values" .Values "bucket" "pages") }}
+            connection: {}
+          apiSecret: {}
+        runner:
+          registrationToken: {}
         smtp:
-        # \{\{- toYaml .Values.gitlabConfig.smtp | nindent 10 }}
+          enabled: false
+          address: smtp.mailgun.org
+          port: 2525
+          user_name: ""
+          password:
+            secret: ""
+            key: password
+          authentication: "plain"
+          starttls_auto: false
+          openssl_verify_mode: "peer"
+        email:
+          from: ''
+          display_name: GitLab
+          reply_to: ''
+          subject_suffix: ''
+          smime:
+            enabled: false
+            secretName: ""
+            keyName: "tls.key"
+            certName: "tls.crt"
+        time_zone: UTC
+        service:
+          labels: {}
+          annotations: {}
+        deployment:
+          {{- if .Values.persistence.velero.enabled }}
+          annotations:
+            backup.velero.io/backup-volumes: data
+          {{- else }}
+          annotations: {}
+          {{- end }}
+        antiAffinity: soft
+        workhorse:
+          serviceName: webservice-default
+        webservice:
+          workerTimeout: 60
+        certificates:
+          image:
+            repository: registry.gitlab.com/gitlab-org/build/cng/alpine-certificates
+            tag: 20191127-r2
+          customCAs: []
+        kubectl:
+          image:
+            repository: registry.gitlab.com/gitlab-org/build/cng/kubectl
+            tag: 1.13.12
+            pullSecrets: []
+          securityContext:
+            runAsUser: 65534
+            fsGroup: 65534
+        busybox:
+          image:
+            repository: busybox
+            tag: latest
+        serviceAccount:
+          enabled: false
+          create: true
+          annotations: {}
+        tracing:
+          connection:
+            string: ""
+          urlTemplate: ""
+        extraEnv: {}
+      upgradeCheck:
+        enabled: true
+        image: {}
+        securityContext:
+          runAsUser: 65534
+          fsGroup: 65534
+        tolerations: []
+        resources:
+          requests:
+            cpu: 50m
+      certmanager:
+        createCustomResource: true
+        nameOverride: cert-manager
+        install: false
+        rbac:
+          create: true
+        webhook:
+          enabled: false
+      nginx-ingress:
+        enabled: false
+        tcpExternalConfig: "true"
+        controller:
+          addHeaders:
+            Referrer-Policy: strict-origin-when-cross-origin
+          config:
+            hsts: "false"
+            hsts-include-subdomains: "false"
+            server-name-hash-bucket-size: "256"
+            use-http2: "true"
+            ssl-ciphers: "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4"
+            ssl-protocols: "TLSv1.3 TLSv1.2"
+            server-tokens: "false"
+          service:
+            externalTrafficPolicy: "Local"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          publishService:
+            enabled: true
+          replicaCount: 2
+          minAvailable: 1
+          scope:
+            enabled: true
+          metrics:
+            enabled: true
+            service:
+              annotations:
+                gitlab.com/prometheus_scrape: "true"
+                gitlab.com/prometheus_port: "10254"
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "10254"
+          admissionWebhooks:
+            enabled: false
+        defaultBackend:
+          enabled: true
+          minAvailable: 1
+          replicaCount: 1
+          resources:
+            requests:
+              cpu: 5m
+              memory: 5Mi
+        rbac:
+          create: true
+          scope: true
+        serviceAccount:
+          create: true
+      prometheus:
+        install: false
+        rbac:
+          create: true
+        alertmanager:
+          enabled: false
+        alertmanagerFiles:
+          alertmanager.yml: {}
+        kubeStateMetrics:
+          enabled: false
+        nodeExporter:
+          enabled: false
+        pushgateway:
+          enabled: false
+        server:
+          retention: 15d
+        serverFiles:
+          prometheus.yml:
+            scrape_configs:
+              - job_name: prometheus
+                static_configs:
+                  - targets:
+                    - localhost:9090
+              - job_name: 'kubernetes-apiservers'
+                kubernetes_sd_configs:
+                  - role: endpoints
+                scheme: https
+                tls_config:
+                  ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                  insecure_skip_verify: true
+                bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+                relabel_configs:
+                  - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+                    action: keep
+                    regex: default;kubernetes;https
+              - job_name: 'kubernetes-pods'
+                kubernetes_sd_configs:
+                  - role: pod
+                relabel_configs:
+                  - source_labels: [__meta_kubernetes_pod_annotation_gitlab_com_prometheus_scrape]
+                    action: keep
+                    regex: true
+                  - source_labels: [__meta_kubernetes_pod_annotation_gitlab_com_prometheus_path]
+                    action: replace
+                    target_label: __metrics_path__
+                    regex: (.+)
+                  - source_labels: [__address__, __meta_kubernetes_pod_annotation_gitlab_com_prometheus_port]
+                    action: replace
+                    regex: ([^:]+)(?::\d+)?;(\d+)
+                    replacement: $1:$2
+                    target_label: __address__
+                  - action: labelmap
+                    regex: __meta_kubernetes_pod_label_(.+)
+                  - source_labels: [__meta_kubernetes_namespace]
+                    action: replace
+                    target_label: kubernetes_namespace
+                  - source_labels: [__meta_kubernetes_pod_name]
+                    action: replace
+                    target_label: kubernetes_pod_name
+              - job_name: 'kubernetes-service-endpoints'
+                kubernetes_sd_configs:
+                  - role: endpoints
+                relabel_configs:
+                  - action: keep
+                    regex: true
+                    source_labels:
+                      - __meta_kubernetes_service_annotation_gitlab_com_prometheus_scrape
+                  - action: replace
+                    regex: (https?)
+                    source_labels:
+                      - __meta_kubernetes_service_annotation_gitlab_com_prometheus_scheme
+                    target_label: __scheme__
+                  - action: replace
+                    regex: (.+)
+                    source_labels:
+                      - __meta_kubernetes_service_annotation_gitlab_com_prometheus_path
+                    target_label: __metrics_path__
+                  - action: replace
+                    regex: ([^:]+)(?::\d+)?;(\d+)
+                    replacement: $1:$2
+                    source_labels:
+                      - __address__
+                      - __meta_kubernetes_service_annotation_gitlab_com_prometheus_port
+                    target_label: __address__
+                  - action: labelmap
+                    regex: __meta_kubernetes_service_label_(.+)
+                  - action: replace
+                    source_labels:
+                      - __meta_kubernetes_namespace
+                    target_label: kubernetes_namespace
+                  - action: replace
+                    source_labels:
+                      - __meta_kubernetes_service_name
+                    target_label: kubernetes_name
+                  - action: replace
+                    source_labels:
+                      - __meta_kubernetes_pod_node_name
+                    target_label: kubernetes_node
+              - job_name: 'kubernetes-services'
+                metrics_path: /probe
+                params:
+                  module: [http_2xx]
+                kubernetes_sd_configs:
+                  - role: service
+                relabel_configs:
+                  - source_labels: [__meta_kubernetes_service_annotation_gitlab_com_prometheus_probe]
+                    action: keep
+                    regex: true
+                  - source_labels: [__address__]
+                    target_label: __param_target
+                  - target_label: __address__
+                    replacement: blackbox
+                  - source_labels: [__param_target]
+                    target_label: instance
+                  - action: labelmap
+                    regex: __meta_kubernetes_service_label_(.+)
+                  - source_labels: [__meta_kubernetes_namespace]
+                    target_label: kubernetes_namespace
+                  - source_labels: [__meta_kubernetes_service_name]
+                    target_label: kubernetes_name
+      redis:
+        install: true
+        existingSecret: gitlab-redis-secret
+        existingSecretKey: redis-password
+        usePasswordFile: true
+        cluster:
+          enabled: false
+        metrics:
+          enabled: true
+      postgresql:
+        postgresqlUsername: gitlab
+        postgresqlPostgresPassword: bogus
+        install: false
+        postgresqlDatabase: gitlabhq_production
+        image:
+          tag: 11.9.0
+        usePasswordFile: true
+        existingSecret: 'bogus'
+        initdbScriptsConfigMap: 'bogus'
+        master:
+          extraVolumeMounts:
+            - name: custom-init-scripts
+              mountPath: /docker-entrypoint-preinitdb.d/init_revision.sh
+              subPath: init_revision.sh
+          podAnnotations:
+            postgresql.gitlab/init-revision: "1"
+        metrics:
+          enabled: true
+      registry:
+        enabled: false
+      shared-secrets:
+        enabled: true
+        rbac:
+          create: true
+      gitlab-runner:
+        install: {{ .Values.config.gitlabRunner.enable }}
+        unregisterRunners: true
+        preEntrypointScript: |
+          {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+          mkdir -p /tmp/gitlab/cache  /tmp/gitlab/build
+          {{- end }}
+          cat >> /home/gitlab-runner/.gitlab-runner/config.toml << EOF
+          {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+              [[runners.kubernetes.volumes.pvc]]
+                name = '{{ .Values.persistence.existingClaim.gitlabRunner | default (printf "%s-gitlab-runner" (include "gitlab.name" . )) }}'
+                mount_path = "/tmp/gitlab"
+          {{- end }}
+          {{- if .Values.config.gitlabRunner.docker.sock }}
+              [[runners.kubernetes.volumes.host_path]]
+                name = "docker-sock"
+                mount_path = "/var/run/docker.sock"
+          {{- end }}
+          EOF
+        rbac:
+          create: true
+        metrics:
+          enabled: false
+        runners:
+          locked: false
+          cache: {}
+          image: ubuntu:18.04
+          imagePullSecrets: []
+          imagePullPolicy: {{ (eq .Values.config.imagePullPolicy "Always") | ternary "always" "if-not-present" }}
+          requestConcurrency: 1
+          tags: ''
+          runUntagged: true
+          protected: false
+          privileged: true
+          # secret: gitlab-runner
+          # namespace:
+          pollTimeout: 180
+          outputLimit: 4096
+          builds: {}
+          services: {}
+          helpers: {}
+          # serviceAccountName:
+          # cloneUrl:
+          nodeSelector: {}
+          nodeTolerations: {}
+          podLabels: {}
+          podAnnotations: {}
+          env: {}
+        securityContext:
+          fsGroup: 65533
+          runAsUser: 100
+{{- if (and .Values.config.gitlabRunner.resources.enabled (not (eq .Values.config.gitlabRunner.resources.enabled "false"))) }}
+        resources:
+          limits:
+{{ toYaml .Values.config.gitlabRunner.resources.limits | indent 12 }}
+          requests:
+{{ toYaml .Values.config.gitlabRunner.resources.requests | indent 12 }}
+{{- else }}
+        resources: {}
+{{- end }}
+        {{- if (and .Values.config.gitlabRunner.cache.enabled (eq .Values.config.gitlabRunner.cache.type "pvc")) }}
+        envVars:
+          - name: RUNNER_CACHE_DIR
+            value: /tmp/gitlab/cache
+          - name: RUNNER_BUILDS_DIR
+            value: /tmp/gitlab/builds
+        {{- end }}
+        podAnnotations:
+          gitlab.com/prometheus_scrape: "true"
+          gitlab.com/prometheus_port: 9252
+      grafana:
+        admin:
+          existingSecret: bogus
+        env:
+          GF_SECURITY_ADMIN_USER: bogus
+          GF_SECURITY_ADMIN_PASSWORD: bogus
+        command: [ "sh", "-x", "/tmp/scripts/import-secret.sh" ]
+        sidecar:
+          dashboards:
+            enabled: true
+            label: gitlab_grafana_dashboard
+          datasources:
+            enabled: true
+            label: gitlab_grafana_datasource
+        grafana.ini:
+          server:
+            root_url: http://localhost/-/grafana/
+        extraSecretMounts:
+          - name: initial-password
+            mountPath: /tmp/initial
+            readOnly: true
+            secretName: gitlab-grafana-initial-password
+            defaultMode: 400
+        extraConfigmapMounts:
+          - name: import-secret
+            mountPath: /tmp/scripts
+            configMap: gitlab-grafana-import-secret
+            readOnly: true
+        testFramework:
+          enabled: false
+      gitlab:
+        task-runner:
+          enabled: false
+          replicas: 1
+          antiAffinityLabels:
+            matchLabels:
+              app: 'gitaly'
+        gitlab-shell:
+          enabled: true
+          service:
+            internalPort: 2222
+            type: ClusterIP
+        webservice:
+          ingress:
+            enabled: {{ .Values.ingress.gitlab.enabled }}
+            annotations:
+              {{- if (eq .Values.config.clusterType "aks") }}
+              kubernetes.io/ingress.class: addon-http-application-routing
+              {{- else }}
+              kubernetes.io/ingress.class: nginx
+              {{- end }}
+              {{- if .Values.ingress.gitlab.tls }}
+              {{- if (empty .Values.ingress.gitlab.certificate) }}
+              cert-manager.io/cluster-issuer: {{ .Values.ingress.gitlab.issuer.name }}
+              kubernetes.io/tls-acme: 'true'
+              {{- end }}
+              nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+              {{- end }}
+            {{- if .Values.ingress.gitlab.tls }}
+            tls:
+              enabled: true
+              secretName: {{ template "gitlab.gitlab-certificate" . }}
+            {{- else }}
+            tls: {}
+            {{- end }}

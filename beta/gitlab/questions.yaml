@@ -1,266 +1,507 @@
 categories:
   - Server
 questions:
-  # GitConfig
-  - variable: gitlabRootPassword
-    description: ''
-    default: 'gitlab-system'
-    type: string
-    required: true
-    label: 'gitlab Root Password'
-    group: 'Git Config'
-  - variable: namespace
-    description: ''
-    default: 'gitlab-system'
-    type: string
-    required: true
-    label: 'namespace to deployment'
-    group: 'Git Config'
-  - variable: updateDescription
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'Description'
-    group: 'Git Config'    
 
-#Storage
-  - variable: gitlabConfig.minio.awsConfig.region
-    description: ''
-    default: 'us-east-2'
-    type: string
-    required: true
-    label: 'aws region'
-    group: 'Storage' 
-  - variable: gitlabConfig.minio.awsConfig.aws_access_key_id
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'aws access key'
-    group: 'Storage'
-  - variable: gitlabConfig.minio.awsConfig.aws_secret_access_key
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'aws secret key'
-    group: 'Storage'         
-  - variable: gitlabConfig.buckets.lfs
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'lfs bucket name'
-    group: 'Storage'
-  - variable: gitlabConfig.buckets.artifacts
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'artifacts bucket name'
-    group: 'Storage'
-  - variable: gitlabConfig.buckets.uploads
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'uploads bucket name'
-    group: 'Storage' 
-  - variable: gitlabConfig.buckets.packages
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'packages bucket name'
-    group: 'Storage' 
-  - variable: gitlabConfig.buckets.externalDiffs
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'external diffs bucket name'
-    group: 'Storage' 
-  - variable: gitlabConfig.buckets.terraformState
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'terraform state bucket name'
-    group: 'Storage' 
-  - variable: gitlabConfig.buckets.dependencyProxy
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'dependency proxy bucket name'
-    group: 'Storage' 
-  - variable: gitlabConfig.buckets.backups
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'backups bucket name'
-    group: 'Storage' 
-  - variable: gitlabConfig.buckets.tmpBucket
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'tmp bucket bucket name'
-    group: 'Storage'  
-
-
-#Postgres 
-  - variable: postgres.integration
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'postgres integration'
-    group: 'Postgres'
-  - variable: postgres.host
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'postgres host'
-    group: 'Postgres' 
-  - variable: postgres.port
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'postgres port'
-    group: 'Postgres'
-  - variable: postgres.username
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'postgres username'
-    group: 'Postgres'        
-  - variable: postgres.database
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'postgres database'
-    group: 'Postgres'     
-
-#ingress
-  - variable:  gitlabConfig.ingress.annotations.clusterIssuer
+# Config
+  - variable: config.clusterType
     description: ''
     type: enum
     options:
-      - none
-      - letsencrypt-cloudflare-staging
-      - letsencrypt-cloudflare-prod
-      - letsencrypt-staging
-      - letsencrypt-prod
-      - selfsigned
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
     required: true
-    label: 'ingress issuer name'
-    group: 'Ingress'
-  - variable: gitlabConfig.certmanagerIssuerEmail
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
     description: ''
-    default: 'jay.goyal@betasource.tech'
-    type: string
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
     required: true
-    label: 'certmanager issuer email'
-    group: 'Ingress'
-  - variable: gitlabConfig.domain
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
     description: ''
-    default: 'hosted.promanager.online'
-    type: string
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - OnDelete
     required: true
-    label: 'domain'
-    group: 'Ingress'     
+    label: 'update strategy'
+    group: Config
+  - variable: config.password
+    description: ''
+    type: password
+    required: false
+    label: 'gitlab password'
+    group: Config
+  # - variable: config.gitlab.resources.enabled
+  #   description: ''
+  #   type: enum
+  #   options:
+  #     - defaults
+  #     - custom
+  #     - 'false'
+  #   required: true
+  #   label: 'gitlab resources defaults'
+  #   show_subquestion_if: custom
+  #   group: Config
+  #   subquestions:
+  #     - variable: config.gitlab.resources.requests.cpu
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'gitlab resources requests cpu'
+  #     - variable: config.gitlab.resources.requests.memory
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'gitlab resources requests memory'
+  #     - variable: config.gitlab.resources.limits.cpu
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'gitlab resources limits cpu'
+  #     - variable: config.gitlab.resources.limits.memory
+  #       description: ''
+  #       type: string
+  #       required: true
+  #       label: 'gitlab resources limits memory'
 
-#ldap
-  - variable: gitlabConfig.ldap.servers.main.host
+# Keycloak Config
+  - variable: config.keycloak.enabled
     description: ''
-    default: ''
-    type: string
+    type: boolean
     required: true
-    label: 'ldap host'
-    group: 'Ldap'     
-  - variable: gitlabConfig.ldap.servers.main.port
-    description: ''
-    default: ''
-    type: int
-    required: true
-    label: 'ldap port'
-    group: 'Ldap'
-  - variable: openldapPassword
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'ldap password'
-    group: 'Ldap'         
-  - variable: gitlabConfig.ldap.servers.main.uid
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'ldap uid'
-    group: 'Ldap'     
-  - variable: gitlabConfig.ldap.servers.main.bind_dn
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'ldap bind_dn'
-    group: 'Ldap'     
-  - variable: gitlabConfig.ldap.servers.main.base
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'ldap base'
-    group: 'Ldap'     
-  - variable: gitlabConfig.ldap.servers.main.encryption
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'ldap encryption'
-    group: 'Ldap'
-#smtp    
-  - variable: gitlabConfig.smtp.address
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'smtp address'
-    group: 'Smtp'
-  - variable: gitlabConfig.smtp.port
-    description: ''
-    default: ''
-    type: int
-    required: true
-    label: 'smtp port'
-    group: 'Smtp'
-  - variable: gitlabConfig.smtp.user_name
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'smtp user_name'
-    group: 'Smtp'
-  - variable: gitlabConfig.smtp.domain
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'smtp domain'
-    group: 'Smtp'
-  - variable: mailgunPassword
-    description: ''
-    default: ''
-    type: string
-    required: true
-    label: 'smtp password'
-    group: 'Smtp'
+    label: enabled
+    group: 'KeyCloak Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.keycloak.autoSignIn
+        description: ''
+        type: boolean
+        required: true
+        label: 'auto sign in'
+      - variable: config.keycloak.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.keycloak.companyName
+        description: ''
+        type: string
+        required: false
+        label: 'company name'
+      - variable: config.keycloak.realmName
+        description: ''
+        type: string
+        required: false
+        label: 'realm name'
+      - variable: config.keycloak.adminPassword
+        description: ''
+        type: password
+        show_if: config.keycloak.integration=
+        required: false
+        label: 'admin password'
+      - variable: config.keycloak.baseUrl
+        description: ''
+        type: string
+        required: false
+        label: 'base url'
+        show_if: config.keycloak.integration=
+      - variable: config.keycloak.clientId
+        description: ''
+        type: string
+        required: false
+        label: 'client id'
+        show_if: config.keycloak.integration=
+      - variable: config.keycloak.certificate
+        description: ''
+        type: password
+        required: false
+        label: certificate
+        show_if: config.keycloak.integration=
 
+# Storage
+  - variable: config.storage.s3.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 's3 enabled'
+    show_subquestion_if: true
+    group: Storage
+    subquestions:
+      - variable: config.storage.s3.namespace
+        description: ''
+        type: string
+        required: false
+        label: 's3 namespace'
+      - variable: config.storage.s3.host
+        description: ''
+        type: string
+        required: true
+        label: 's3 host'
+      - variable: config.storage.s3.region
+        description: ''
+        type: string
+        required: true
+        label: 's3 region'
+      - variable: config.storage.s3.accessKey
+        description: ''
+        type: string
+        required: true
+        label: 's3 access key'
+      - variable: config.storage.s3.secretKey
+        description: ''
+        type: password
+        required: true
+        label: 's3 secret key'
+      - variable: config.storage.s3.buckets.artifacts
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 artifacts bucket'
+      - variable: config.storage.s3.buckets.backups
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 backups bucket'
+      - variable: config.storage.s3.buckets.dependency-proxy
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 dependency proxy bucket'
+      - variable: config.storage.s3.buckets.external-diffs
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 external diffs bucket'
+      - variable: config.storage.s3.buckets.lfs
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 lfs bucket'
+      - variable: config.storage.s3.buckets.packages
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 packages bucket'
+      - variable: config.storage.s3.buckets.pages
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 pages bucket'
+      - variable: config.storage.s3.buckets.pseudonymizer
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 pseudonymizer bucket'
+      - variable: config.storage.s3.buckets.registry
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 registry bucket'
+      - variable: config.storage.s3.buckets.terraform-state
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 terraform state bucket'
+      - variable: config.storage.s3.buckets.tmp
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 tmp bucket'
+      - variable: config.storage.s3.buckets.uploads
+        description: ''
+        type: string
+        required: true
+        show_if: config.storage.s3.namespace=
+        label: 's3 uploads bucket'
+
+# Runner Config
+  - variable: config.gitlabRunner.enable
+    description: ''
+    type: boolean
+    required: true
+    label: enable
+    group: 'Runner Config'
+  - variable: config.gitlabRunner.docker.sock
+    description: ''
+    type: boolean
+    required: true
+    label: 'docker sock'
+    group: 'Runner Config'
+  - variable: config.gitlabRunner.cache.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'cache enabled'
+    show_subquestion_if: true
+    group: 'Runner Config'
+    subquestions:
+      - variable: config.gitlabRunner.cache.type
+        description: ''
+        type: enum
+        options:
+          - pvc
+        required: true
+        label: 'cache type'
+  - variable: config.gitlabRunner.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: 'true'
+    group: Config
+    subquestions:
+      - variable: config.gitlabRunner.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.gitlabRunner.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.gitlabRunner.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.gitlabRunner.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+# Postgres Config
+  - variable: config.postgres.integration
+    description: ''
+    type: string
+    required: false
+    label: integration
+    group: 'Postgres Config'
+  - variable: config.postgres.host
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    description: 'only letters, digits and _ allowed'
+    type: string
+    required: true
+    label: database
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.url
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.integration=
+    group: 'Postgres Config'
+
+# Persistence
+  - variable: persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim.gitlab
+        description: ''
+        type: string
+        required: false
+        label: 'gitlab existing claim'
+      - variable: persistence.size.gitlab
+        description: ''
+        type: string
+        required: true
+        label: 'gitlab size'
+      - variable: persistence.existingClaim.runner
+        description: ''
+        type: string
+        required: false
+        label: 'runner existing claim'
+        show_if: config.gitlabRunner.enable=true
+      - variable: persistence.size.runner
+        description: ''
+        type: string
+        required: true
+        label: 'runner size'
+        show_if: config.gitlabRunner.enable=true
+      - variable: persistence.velero.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
+        group: Persistence
+
+# Services and Load Balancing
+  - variable: ingress.gitlab.enabled
+    description: ''
+    type: boolean
+    label: 'gitlab ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.gitlab.tls
+        description: ''
+        type: boolean
+        required: true
+        label: 'gitlab ingress tls'
+      - variable: ingress.gitlab.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'gitlab ingress hostname'
+      - variable: ingress.gitlab.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.gitlab.tls=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'gitlab ingress issuer name'
+      - variable: ingress.gitlab.certificate
+        description: ''
+        type: string
+        show_if: ingress.gitlab.tls=true&&ingress.gitlab.issuer.name=none
+        required: false
+        label: 'gitlab ingress certificate'
+  - variable: service.gitlab.type
+    description: ''
+    type: enum
+    show_if: ingress.gitlab.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'gitlab service type'
+    group: 'Services and Load Balancing'
+  - variable: service.gitlab.proxyIngressPorts
+    description: ''
+    type: boolean
+    required: true
+    label: 'gitlab proxy ingress ports'
+    group: 'Services and Load Balancing'
+  - variable: service.gitlab.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.gitlab.type=NodePort&&ingress.gitlab.enabled=false
+    label: 'gitlab http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.gitlab.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.gitlab.type=LoadBalancer&&ingress.gitlab.enabled=false
+    label: 'gitlab http lb port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.gitlab.repository
+    description: ''
+    type: string
+    required: true
+    label: 'gitlab repository'
+    group: Images
+  - variable: images.gitlab.tag
+    description: ''
+    type: string
+    required: true
+    label: 'gitlab tag'
+    group: Images

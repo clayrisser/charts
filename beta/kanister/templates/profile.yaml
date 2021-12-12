@@ -1,4 +1,4 @@
-{{- if (empty .Values.config.s3.integration) -}}
+{{- if (empty .Values.config.s3.integration) }}
 apiVersion: cr.kanister.io/v1alpha1
 kind: Profile
 metadata:
@@ -25,4 +25,4 @@ credential:
       name: s3
       namespace: {{ .Release.Namespace }}
 skipSSLVerify: true
-{{- end -}}
+{{- end }}
