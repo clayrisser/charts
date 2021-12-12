@@ -1,0 +1,23 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: {{ template "kanister.name" . }}
+  labels:
+    app: {{ template "kanister.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  forceUpgrade: false
+  helmVersion: v3
+  timeout: 1200
+  chart:
+    repository: http://charts.kanister.io
+    name: kanister-operator
+    version: 0.2.3
+  git:
+    timeout: 60s
+  values:
+    image:
+      repository: {{ .Values.images.kanister.repository | quote }}
+      tag: {{ .Values.images.kanister.tag | quote }}

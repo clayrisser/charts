@@ -24,6 +24,7 @@
     "imaps",
     "inet",
     "jboss",
+    "kanister",
     "keycloak",
     "kube",
     "kubemod",

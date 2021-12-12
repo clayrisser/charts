@@ -1,0 +1,79 @@
+{{- if .Values.config.s3.integration }}
+{{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: s3
+  labels:
+    app: {{ template "kanister.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: s3
+    namespace: {{ $namespace }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    bucket: {{ .Values.config.s3.bucket | quote }}
+    prefix: {{ .Values.config.s3.prefix | quote }}
+    replicate: 'false'
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      resource: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: s3
+            namespace: {{ .Release.Namespace }}
+          stringData:
+            ACCESS_KEY: '{% .socketConfig.accessKey %}'
+            SECRET_KEY: '{% .socketConfig.secretKey %}'
+    - when: [coupled, updated]
+      do: apply
+      resource: |
+          apiVersion: cr.kanister.io/v1alpha1
+          kind: Profile
+          metadata:
+            name: s3
+            namespace: {{ .Release.Namespace }}
+          location:
+            type: s3Compliant
+            bucket: '{% .plugConfig.bucket %}'
+            endpoint: '{% .socketConfig.endpoint %}'
+            prefix: '{% .plugConfig.prefix %}'
+            region: '{% .socketConfig.region %}'
+          credential:
+            type: keyPair
+            keyPair:
+              idField: ACCESS_KEY
+              secretField: SECRET_KEY
+              secret:
+                apiVersion: v1
+                kind: Secret
+                name: s3
+                namespace: {{ .Release.Namespace }}
+          skipSSLVerify: true
+    - when: [decoupled]
+      do: delete
+      resource: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: s3
+            namespace: {{ .Release.Namespace }}
+    - when: [decoupled]
+      do: delete
+      resource: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: s3
+            namespace: {{ .Release.Namespace }}
+{{- end }}

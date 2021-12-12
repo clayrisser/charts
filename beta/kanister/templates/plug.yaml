@@ -1,9 +1,9 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
-  name: {{ template "s3.name" . }}
+  name: {{ template "kanister.name" . }}
   labels:
-    app: {{ template "s3.name" . }}
+    app: {{ template "kanister.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,14 +11,14 @@ spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
-    name: s3
+    name: kanister
     namespace: {{ .Release.Namespace }}
   config:
     accessKey: {{ .Values.config.accessKey | quote }}
     endpoint: {{ .Values.config.endpoint | quote }}
     pathStyle: {{ .Values.config.pathStyle | quote }}
     region: {{ .Values.config.region | quote }}
-  configSecretName: {{ template "s3.name" . }}
+  configSecretName: {{ template "kanister.name" . }}
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -26,7 +26,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: s3-coupled-or-updated-{% .plug.metadata.namespace %}
+          name: kanister-coupled-or-updated-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -47,22 +47,20 @@ spec:
                 - name: kubectl
                   image: bitnami/kubectl:1.20.9
                   env:
-                    - name: S3_BUCKET
+                    - name: kanister_BUCKET
                       value: '{% .plugConfig.bucket %}'
-                    - name: S3_PREFIX
-                      value: '{% .plugConfig.prefix %}'
-                    - name: S3_ACCESS_KEY
+                    - name: kanister_ACCESS_KEY
                       value: '{% .socketConfig.accessKey %}'
-                    - name: S3_ENDPOINT
+                    - name: kanister_ENDPOINT
                       value: '{% .socketConfig.endpoint %}'
-                    - name: S3_PATH_STYLE
+                    - name: kanister_PATH_STYLE
                       value: '{% .socketConfig.pathStyle %}'
-                    - name: S3_REGION
+                    - name: kanister_REGION
                       value: '{% .socketConfig.region %}'
-                    - name: S3_SECRET_KEY
+                    - name: kanister_SECRET_KEY
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "s3.name" . }}
+                          name: {{ template "kanister.name" . }}
                           key: secretKey
                   command:
                     - sh
@@ -73,20 +71,19 @@ spec:
                       apiVersion: v1
                       kind: Secret
                       metadata:
-                        name: {{ template "s3.name" . }}-{% .plug.metadata.name %}
+                        name: {{ template "kanister.name" . }}-{% .plug.metadata.name %}
                         namespace: '{% .plug.metadata.namespace %}'
                       type: Opaque
                       stringData:
-                        accessKey: '$S3_ACCESS_KEY'
-                        bucket: '$S3_BUCKET'
-                        endpoint: '$S3_ENDPOINT'
-                        pathStyle: '$S3_PATH_STYLE'
-                        prefix: '$S3_PREFIX'
-                        region: '$S3_REGION'
-                        secretKey: $S3_SECRET_KEY
+                        accessKey: '$kanister_ACCESS_KEY'
+                        bucket: '$kanister_BUCKET'
+                        endpoint: '$kanister_ENDPOINT'
+                        pathStyle: '$kanister_PATH_STYLE'
+                        region: '$kanister_REGION'
+                        secretKey: $kanister_SECRET_KEY
                       EOF
                       fi
                       kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "s3.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        -l job-name={{ template "kanister.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -

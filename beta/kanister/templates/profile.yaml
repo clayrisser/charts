@@ -1,0 +1,28 @@
+{{- if (empty .Values.config.s3.integration) -}}
+apiVersion: cr.kanister.io/v1alpha1
+kind: Profile
+metadata:
+  name: s3
+  labels:
+    app: {{ template "kanister.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+location:
+  type: s3Compliant
+  bucket: {{ .Values.config.s3.bucket | quote }}
+  endpoint: {{ .Values.config.s3.endpoint | quote }}
+  prefix: {{ .Values.config.s3.prefix | quote }}
+  region: {{ .Values.config.s3.region | quote }}
+credential:
+  type: keyPair
+  keyPair:
+    idField: ACCESS_KEY
+    secretField: SECRET_KEY
+    secret:
+      apiVersion: v1
+      kind: Secret
+      name: s3
+      namespace: {{ .Release.Namespace }}
+skipSSLVerify: true
+{{- end -}}
