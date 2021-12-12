@@ -14,13 +14,13 @@ spec:
         properties:
           bucket:
             required: true
+          prefix: {}
           replicate: {}
       socketDefinition:
         properties:
-          host:
+          endpoint:
             required: true
           accessKey: {}
           pathStyle: {}
-          port: {}
           region: {}
           secretKey: {}

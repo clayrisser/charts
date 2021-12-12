@@ -1,7 +1,6 @@
 config:
   accessKey: ''
-  host: ''
+  endpoint: ''
   pathStyle: true
-  port: ''
   region: ''
   secretKey: ''

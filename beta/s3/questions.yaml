@@ -2,17 +2,11 @@ categories:
   - Server
 questions:
   # Config
-  - variable: config.host
+  - variable: config.endpoint
     description: ''
     type: string
     required: true
-    label: host
-    group: Config
-  - variable: config.port
-    description: ''
-    type: string
-    required: false
-    label: port
+    label: endpoint
     group: Config
   - variable: config.accessKey
     description: ''
