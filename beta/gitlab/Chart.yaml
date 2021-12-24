@@ -4,3 +4,6 @@ description: 'a full devops toolchain'
 name: gitlab
 type: application
 version: 0.7.0
+dependencies:
+- name: gitlab-operator
+  repository: "file://charts/gitlab-operator"
