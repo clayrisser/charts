@@ -1,0 +1,11 @@
+apiVersion: v2
+appVersion: 14.5.1
+description: 'a full devops toolchain'
+name: gitlab
+type: application
+version: 0.7.0
+annotations:
+  catalog.cattle.io/auto-install: gitlab-operator=match
+  catalog.cattle.io/display-name: GitLab
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/rancher-version: < 2.6.1-0
