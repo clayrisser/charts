@@ -9,3 +9,4 @@ annotations:
   catalog.cattle.io/display-name: GitLab
   catalog.cattle.io/namespace: gitlab-system
   catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: gitlab
