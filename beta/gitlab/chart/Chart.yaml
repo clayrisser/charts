@@ -8,4 +8,3 @@ annotations:
   catalog.cattle.io/auto-install: gitlab-operator=match
   catalog.cattle.io/display-name: GitLab
   catalog.cattle.io/os: linux
-  catalog.cattle.io/rancher-version: < 2.6.1-0
