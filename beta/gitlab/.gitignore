@@ -1,1 +1,1 @@
-templates/operator*.yaml
+charts/gitlab-operator/templates/operator*.yaml

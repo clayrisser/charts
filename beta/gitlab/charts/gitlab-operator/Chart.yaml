@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: 14.5.1
+description: 'gitlab operator'
+name: gitlab-operator
+type: application
+version: 0.7.0
