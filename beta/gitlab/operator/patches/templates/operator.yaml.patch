@@ -1,5 +1,5 @@
---- templates/operator.yaml	2021-12-24 00:47:11.616223950 -0600
-+++ templates/operator.yaml.tmp	2021-12-24 00:46:52.127988876 -0600
+--- templates/operator.yaml	2021-12-24 02:16:08.185000411 -0600
++++ templates/operator.yaml.tmp	2021-12-24 02:17:13.431722716 -0600
 @@ -2,8 +2,11 @@
  kind: CustomResourceDefinition
  metadata:
@@ -212,7 +212,21 @@
  spec:
    replicas: 1
    selector:
-@@ -743,25 +774,25 @@
+@@ -687,11 +718,13 @@
+         - --zap-devel=true
+         command:
+         - /manager
++{{- if .Values.config.watchNamespace }}
+         env:
+         - name: WATCH_NAMESPACE
+           valueFrom:
+             fieldRef:
+               fieldPath: metadata.namespace
++{{- end }}
+         image: registry.gitlab.com/gitlab-org/cloud-native/gitlab-operator:0.2.0
+         imagePullPolicy: Always
+         livenessProbe:
+@@ -743,25 +776,25 @@
            defaultMode: 420
            secretName: webhook-server-cert
  ---
@@ -244,7 +258,7 @@
  spec:
    selfSigned: {}
  ---
-@@ -769,14 +800,17 @@
+@@ -769,14 +802,17 @@
  kind: ValidatingWebhookConfiguration
  metadata:
    annotations:

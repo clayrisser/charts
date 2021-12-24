@@ -27,6 +27,8 @@ patch-build: patch-revert $(PATCHES_TMP)
 		$(MKDIR) -p "$$($(ECHO) "$(PATCHES_DIR)/$${f}.patch" | $(SED) 's|[\\\\/][^\\\/]*$$||g')" && \
 		$(DIFF) -Naur "$$f" "$${f}.tmp" > "$(PATCHES_DIR)/$${f}.patch" || $(TRUE); \
 	done
+.PHONY: patch-build-prepare
+patch-build-prepare: | patch-apply $(PATCHES_TMP) patch-revert
 $(PATCHES_TMP):
 	@$(CP) $(patsubst %.tmp,%,$@) $@
 .SECONDEXPANSION:
