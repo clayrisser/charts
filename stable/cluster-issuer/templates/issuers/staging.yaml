@@ -19,6 +19,7 @@ spec:
             ingressTemplate:
               metadata:
                 annotations:
+                  acme.cert-manager.io/http01-edit-in-place: 'true'
                   {{- if (eq .Values.config.clusterType "aks") }}
                   kubernetes.io/ingress.class: addon-http-application-routing
                   {{- else }}
