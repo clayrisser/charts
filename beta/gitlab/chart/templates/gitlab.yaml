@@ -25,16 +25,16 @@ spec:
         ingress:
           enabled: {{ .Values.ingress.gitlab.enabled }}
           configureCertmanager: true
-        psql:
-          password:
-            useSecret: true
-            secret: {{ include "gitlab.name" . }}-postgres
-            key: POSTGRES_PASSWORD
-          host: {{ .Values.config.postgres.host | quote }}
-          port: {{ .Values.config.postgres.port }}
-          username: {{ .Values.config.postgres.username | quote }}
-          database: {{ .Values.config.postgres.database | quote }}
-          preparedStatements: false
+        # psql:
+        #   password:
+        #     useSecret: true
+        #     secret: {{ include "gitlab.name" . }}-postgres
+        #     key: POSTGRES_PASSWORD
+        #   host: {{ .Values.config.postgres.host | quote }}
+        #   port: {{ .Values.config.postgres.port }}
+        #   username: {{ .Values.config.postgres.username | quote }}
+        #   database: {{ .Values.config.postgres.database | quote }}
+        #   preparedStatements: false
         redis:
           password:
             enabled: true
@@ -241,7 +241,7 @@ spec:
         install: true
         usePasswordFile: true
       postgresql:
-        install: false
+        install: true
       registry:
         enabled: false
       shared-secrets:
