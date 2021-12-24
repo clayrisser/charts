@@ -14,14 +14,9 @@ spec:
       global:
         common:
           labels: {}
-        operator:
-          enabled: false
-          rollout:
-            autoPause: true
         pod:
           labels: {}
         edition: ce
-        # gitlabVersion: master
         application:
           create: false
           links: []

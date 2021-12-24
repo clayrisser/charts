@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: 0.0.1
+description: 'core resources'
+name: core
+type: application
+version: 0.0.1
+annotations:
+  catalog.cattle.io/display-name: Core
+  catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/release-name: core
