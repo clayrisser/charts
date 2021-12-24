@@ -16,6 +16,14 @@ spec:
     solvers:
       - http01:
           ingress:
+            ingressTemplate:
+              metadata:
+                annotations:
+                  {{- if (eq .Values.config.clusterType "aks") }}
+                  kubernetes.io/ingress.class: addon-http-application-routing
+                  {{- else }}
+                  kubernetes.io/ingress.class: nginx
+                  {{- end }}
             {{- if (eq .Values.config.clusterType "aks") }}
             class: addon-http-application-routing
             {{- else }}
