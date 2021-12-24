@@ -1,5 +1,5 @@
---- templates/operator.yaml	2021-12-10 22:49:20.395535390 -0600
-+++ templates/operator.yaml.tmp	2021-12-10 22:48:54.153214962 -0600
+--- templates/operator.yaml	2021-12-24 00:37:25.665322376 -0600
++++ templates/operator.yaml.tmp	2021-12-24 00:38:17.701915910 -0600
 @@ -2,8 +2,11 @@
  kind: CustomResourceDefinition
  metadata:
@@ -212,7 +212,12 @@
  spec:
    replicas: 1
    selector:
-@@ -747,11 +778,11 @@
+@@ -743,25 +774,25 @@
+           defaultMode: 420
+           secretName: webhook-server-cert
+ ---
+-apiVersion: cert-manager.io/v1alpha2
++apiVersion: cert-manager.io/v1
  kind: Certificate
  metadata:
    name: gitlab-serving-cert
@@ -227,7 +232,10 @@
    issuerRef:
      kind: Issuer
      name: gitlab-selfsigned-issuer
-@@ -761,7 +792,7 @@
+   secretName: webhook-server-cert
+ ---
+-apiVersion: cert-manager.io/v1alpha2
++apiVersion: cert-manager.io/v1
  kind: Issuer
  metadata:
    name: gitlab-selfsigned-issuer
