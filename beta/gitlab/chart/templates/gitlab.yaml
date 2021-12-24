@@ -42,7 +42,7 @@ spec:
           kas: {}
           pages: {}
         ingress:
-          configureCertmanager: false
+          configureCertmanager: true
           enabled: false
           tls: {}
         gitlab:
@@ -358,6 +358,8 @@ spec:
         resources:
           requests:
             cpu: 50m
+      certmanager-issuer:
+        email: nope@nope.no
       certmanager:
         installCRDs: true
         nameOverride: cert-manager
