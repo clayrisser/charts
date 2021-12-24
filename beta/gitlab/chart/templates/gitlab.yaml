@@ -359,7 +359,7 @@ spec:
           requests:
             cpu: 50m
       certmanager:
-        createCustomResource: true
+        installCRDs: true
         nameOverride: cert-manager
         install: false
         rbac:
@@ -670,7 +670,7 @@ spec:
         testFramework:
           enabled: false
       gitlab:
-        task-runner:
+        toolbox:
           enabled: false
           replicas: 1
           antiAffinityLabels:
