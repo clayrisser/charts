@@ -13,6 +13,7 @@ export OPERATOR_VERSION ?= 0.2.0
 prepack: templates/operator.yaml patch-apply
 
 templates/operator.yaml:
+	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
 		https://gitlab.com/api/v4/projects/18899486/packages/generic/gitlab-operator/$(OPERATOR_VERSION)/gitlab-operator-kubernetes-$(OPERATOR_VERSION).yaml
 
