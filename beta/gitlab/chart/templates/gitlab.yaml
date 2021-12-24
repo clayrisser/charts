@@ -550,7 +550,7 @@ spec:
         install: false
         postgresqlDatabase: gitlabhq_production
         image:
-          tag: 11.9.0
+          tag: 12.9.0
         usePasswordFile: true
         existingSecret: 'bogus'
         initdbScriptsConfigMap: 'bogus'
