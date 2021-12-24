@@ -7,4 +7,5 @@ version: 0.7.0
 annotations:
   catalog.cattle.io/auto-install: gitlab-operator=match
   catalog.cattle.io/display-name: GitLab
+  catalog.cattle.io/namespace: gitlab-system
   catalog.cattle.io/os: linux

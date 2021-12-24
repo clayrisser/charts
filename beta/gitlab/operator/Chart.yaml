@@ -6,5 +6,7 @@ type: application
 version: 0.2.0
 annotations:
   catalog.cattle.io/display-name: 'GitLab Operator'
-  # catalog.cattle.io/hidden: 'true'
+  catalog.cattle.io/hidden: 'true'
+  catalog.cattle.io/namespace: gitlab-system
   catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: gitlab-operator

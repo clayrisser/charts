@@ -1,2 +1,2 @@
 config:
-  watchNamespace:
+  watchNamespace: gitlab-system
