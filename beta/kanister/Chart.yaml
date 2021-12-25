@@ -2,7 +2,7 @@ apiVersion: v2
 name: kanister
 home: https://gitlab.com/bitspur/community/charts
 version: 0.0.1
-appVersion: latest
+appVersion: 0.70.0
 type: application
 description: 'application specific data management'
 keywords:
@@ -14,5 +14,7 @@ maintainers:
   - name: 'Clay Risser'
     email: email@clayrisser.com
 annotations:
-  catalog.cattle.io/release-name: kanister
+  catalog.cattle.io/display-name: Kanister
   catalog.cattle.io/namespace: kanister
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: kanister
