@@ -12,4 +12,4 @@ config:
 images:
   kanister:
     repository: ghcr.io/kanisterio/controller
-    tag: 0.70.0
+    tag: 0.71.0

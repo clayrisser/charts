@@ -14,10 +14,10 @@ spec:
     name: kanister
     namespace: {{ .Release.Namespace }}
   config:
-    accessKey: {{ .Values.config.accessKey | quote }}
-    endpoint: {{ .Values.config.endpoint | quote }}
-    pathStyle: {{ .Values.config.pathStyle | quote }}
-    region: {{ .Values.config.region | quote }}
+    accessKey: {{ .Values.config.s3.accessKey | quote }}
+    endpoint: {{ .Values.config.s3.endpoint | quote }}
+    pathStyle: {{ .Values.config.s3.pathStyle | quote }}
+    region: {{ .Values.config.s3.region | quote }}
   configSecretName: {{ template "kanister.name" . }}
   resources:
     - when: [coupled, updated]
