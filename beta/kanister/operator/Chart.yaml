@@ -1,10 +1,10 @@
 apiVersion: v2
-name: kanister
+name: kanister-operator
 home: https://gitlab.com/bitspur/community/charts
 version: 0.0.1
-appVersion: 0.70.0
+appVersion: 0.71.0
 type: application
-description: 'application specific data management'
+description: 'kubernetes operator for kanister'
 keywords:
   - data
   - backup
@@ -14,7 +14,8 @@ maintainers:
   - name: 'Clay Risser'
     email: email@clayrisser.com
 annotations:
-  catalog.cattle.io/display-name: Kanister
+  catalog.cattle.io/display-name: 'Kanister Operator'
+  catalog.cattle.io/hidden: 'true'
   catalog.cattle.io/namespace: kanister
   catalog.cattle.io/os: linux
-  catalog.cattle.io/release-name: kanister
+  catalog.cattle.io/release-name: kanister-operator

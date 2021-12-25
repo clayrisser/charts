@@ -8,8 +8,3 @@ config:
     pathStyle: true
     region: ''
     secretKey: ''
-
-images:
-  kanister:
-    repository: ghcr.io/kanisterio/controller
-    tag: 0.71.0

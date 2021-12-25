@@ -1,0 +1,21 @@
+apiVersion: v2
+name: kanister
+home: https://gitlab.com/bitspur/community/charts
+version: 0.0.1
+appVersion: 0.71.0
+type: application
+description: 'application specific data management'
+keywords:
+  - data
+  - backup
+sources:
+  - https://gitlab.com/bitspur/community/charts
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
+annotations:
+  catalog.cattle.io/auto-install: kanister-operator=match
+  catalog.cattle.io/display-name: Kanister
+  catalog.cattle.io/namespace: kanister
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: kanister
