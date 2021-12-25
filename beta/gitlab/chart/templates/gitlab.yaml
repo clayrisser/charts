@@ -82,7 +82,7 @@ spec:
           enableImpersonation: true
           defaultCanCreateGroup: true
           usernameChangingEnabled: true
-          defaultTheme:
+          defaultTheme: {{ .Values.config.gitlab.themeId | quote }}
           defaultProjectsFeatures:
             issues: true
             mergeRequests: true

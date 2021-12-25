@@ -34,11 +34,11 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.password
+  - variable: config.gitlab.rootPassword
     description: ''
     type: password
     required: false
-    label: 'gitlab password'
+    label: 'gitlab root password'
     group: Config
   # - variable: config.gitlab.resources.enabled
   #   description: ''
@@ -127,112 +127,112 @@ questions:
         label: certificate
         show_if: config.keycloak.integration=
 
-# Storage
-  - variable: config.storage.s3.enabled
+# S3
+  - variable: config.s3.enabled
     description: ''
     type: boolean
     required: true
-    label: 's3 enabled'
+    label: enabled
     show_subquestion_if: true
-    group: Storage
+    group: S3
     subquestions:
-      - variable: config.storage.s3.namespace
+      - variable: config.s3.namespace
         description: ''
         type: string
         required: false
-        label: 's3 namespace'
-      - variable: config.storage.s3.host
+        label: namespace
+      - variable: config.s3.host
         description: ''
         type: string
         required: true
-        label: 's3 host'
-      - variable: config.storage.s3.region
+        label: host
+      - variable: config.s3.region
         description: ''
         type: string
         required: true
-        label: 's3 region'
-      - variable: config.storage.s3.accessKey
+        label: region
+      - variable: config.s3.accessKey
         description: ''
         type: string
         required: true
-        label: 's3 access key'
-      - variable: config.storage.s3.secretKey
+        label: 'access key'
+      - variable: config.s3.secretKey
         description: ''
         type: password
         required: true
-        label: 's3 secret key'
-      - variable: config.storage.s3.buckets.artifacts
+        label: 'secret key'
+      - variable: config.s3.buckets.artifacts
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 artifacts bucket'
-      - variable: config.storage.s3.buckets.backups
+        show_if: config.s3.namespace=
+        label: 'artifacts bucket'
+      - variable: config.s3.buckets.backups
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 backups bucket'
-      - variable: config.storage.s3.buckets.dependency-proxy
+        show_if: config.s3.namespace=
+        label: 'backups bucket'
+      - variable: config.s3.buckets.dependency-proxy
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 dependency proxy bucket'
-      - variable: config.storage.s3.buckets.external-diffs
+        show_if: config.s3.namespace=
+        label: 'dependency proxy bucket'
+      - variable: config.s3.buckets.external-diffs
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 external diffs bucket'
-      - variable: config.storage.s3.buckets.lfs
+        show_if: config.s3.namespace=
+        label: 'external diffs bucket'
+      - variable: config.s3.buckets.lfs
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 lfs bucket'
-      - variable: config.storage.s3.buckets.packages
+        show_if: config.s3.namespace=
+        label: 'lfs bucket'
+      - variable: config.s3.buckets.packages
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 packages bucket'
-      - variable: config.storage.s3.buckets.pages
+        show_if: config.s3.namespace=
+        label: 'packages bucket'
+      - variable: config.s3.buckets.pages
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 pages bucket'
-      - variable: config.storage.s3.buckets.pseudonymizer
+        show_if: config.s3.namespace=
+        label: 'pages bucket'
+      - variable: config.s3.buckets.pseudonymizer
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 pseudonymizer bucket'
-      - variable: config.storage.s3.buckets.registry
+        show_if: config.s3.namespace=
+        label: 'pseudonymizer bucket'
+      - variable: config.s3.buckets.registry
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 registry bucket'
-      - variable: config.storage.s3.buckets.terraform-state
+        show_if: config.s3.namespace=
+        label: 'registry bucket'
+      - variable: config.s3.buckets.terraform-state
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 terraform state bucket'
-      - variable: config.storage.s3.buckets.tmp
+        show_if: config.s3.namespace=
+        label: 'terraform state bucket'
+      - variable: config.s3.buckets.tmp
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 tmp bucket'
-      - variable: config.storage.s3.buckets.uploads
+        show_if: config.s3.namespace=
+        label: 'tmp bucket'
+      - variable: config.s3.buckets.uploads
         description: ''
         type: string
         required: true
-        show_if: config.storage.s3.namespace=
-        label: 's3 uploads bucket'
+        show_if: config.s3.namespace=
+        label: 'uploads bucket'
 
 # Runner Config
   - variable: config.gitlabRunner.enable

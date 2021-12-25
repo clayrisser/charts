@@ -10,7 +10,7 @@ config:
   gitlab:
     baseUrl: ''
     hostname: ''
-    adminPassword: P@ssw0rd
+    rootPassword:
     themeId: 2
   gitlabRunner:
     enabled: true
