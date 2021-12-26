@@ -18,7 +18,7 @@ spec:
     endpoint: {{ .Values.config.s3.endpoint | quote }}
     pathStyle: {{ .Values.config.s3.pathStyle | quote }}
     region: {{ .Values.config.s3.region | quote }}
-  configSecretName: {{ template "kanister.name" . }}
+  configSecretName: {{ template "kanister.name" . }}-socket
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -47,17 +47,17 @@ spec:
                 - name: kubectl
                   image: bitnami/kubectl:1.20.9
                   env:
-                    - name: kanister_BUCKET
+                    - name: KANISTER_BUCKET
                       value: '{% .plugConfig.bucket %}'
-                    - name: kanister_ACCESS_KEY
+                    - name: KANISTER_ACCESS_KEY
                       value: '{% .socketConfig.accessKey %}'
-                    - name: kanister_ENDPOINT
+                    - name: KANISTER_ENDPOINT
                       value: '{% .socketConfig.endpoint %}'
-                    - name: kanister_PATH_STYLE
+                    - name: KANISTER_PATH_STYLE
                       value: '{% .socketConfig.pathStyle %}'
-                    - name: kanister_REGION
+                    - name: KANISTER_REGION
                       value: '{% .socketConfig.region %}'
-                    - name: kanister_SECRET_KEY
+                    - name: KANISTER_SECRET_KEY
                       valueFrom:
                         secretKeyRef:
                           name: {{ template "kanister.name" . }}
@@ -75,12 +75,12 @@ spec:
                         namespace: '{% .plug.metadata.namespace %}'
                       type: Opaque
                       stringData:
-                        accessKey: '$kanister_ACCESS_KEY'
-                        bucket: '$kanister_BUCKET'
-                        endpoint: '$kanister_ENDPOINT'
-                        pathStyle: '$kanister_PATH_STYLE'
-                        region: '$kanister_REGION'
-                        secretKey: $kanister_SECRET_KEY
+                        accessKey: '$KANISTER_ACCESS_KEY'
+                        bucket: '$KANISTER_BUCKET'
+                        endpoint: '$KANISTER_ENDPOINT'
+                        pathStyle: '$KANISTER_PATH_STYLE'
+                        region: '$KANISTER_REGION'
+                        secretKey: $KANISTER_SECRET_KEY
                       EOF
                       fi
                       kubectl get pods -n {{ .Release.Namespace }} \

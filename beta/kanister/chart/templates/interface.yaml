@@ -1,0 +1,25 @@
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Interface
+metadata:
+  name: s3
+  labels:
+    app: {{ template "mailserver.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schemas:
+    - version: v0.0.1
+      plugDefinition:
+        properties:
+          replicate: {}
+          bucket:
+            required: true
+      socketDefinition:
+        properties:
+          accessKey: {}
+          pathStyle: {}
+          region: {}
+          secretKey: {}
+          endpoint:
+            required: true
