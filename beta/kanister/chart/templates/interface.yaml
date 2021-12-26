@@ -3,7 +3,7 @@ kind: Interface
 metadata:
   name: s3
   labels:
-    app: {{ template "mailserver.name" . }}
+    app: {{ template "kanister.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
