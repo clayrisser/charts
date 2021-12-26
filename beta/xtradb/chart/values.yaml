@@ -22,9 +22,6 @@ config:
   clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
-  tls:
-    enabled: false
-    certificate:
   connection:
     enabled: true
   passwords:
@@ -38,6 +35,7 @@ config:
     size: 1
     pause: false
     upgrade:
+      apply: Disabled
       schedule: '0 4 * * *'
     mysqlConfig: ''
     resources:

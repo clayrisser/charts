@@ -10,16 +10,16 @@ metadata:
 spec:
   crVersion: 1.10.0
   secretsName: {{ include "xtradb.name" . }}
-  {{- if .Values.config.tls.enabled }}
-  sslSecretName: {{ .Values.config.tls.certificate | default (printf "%s-tls" (include "xtradb.fullname" .)) }}
-  sslInternalSecretName: {{ .Values.config.tls.certificate | default (printf "%s-tls" (include "xtradb.fullname" .)) }}
+  {{- if .Values.service.xtradb.tls.enabled }}
+  sslSecretName: {{ .Values.service.xtradb.tls.certificate | default (include "xtradb.name" .) }}
+  sslInternalSecretName: {{ .Values.service.xtradb.tls.certificate | default (include "xtradb.name" .) }}
   {{- end }}
   allowUnsafeConfigurations: true
   pause: {{ .Values.config.xtradb.pause }}
   updateStrategy: {{ .Values.config.updateStrategy }}
   upgradeOptions:
     versionServiceEndpoint: https://check.percona.com/versions
-    apply: 8.0-recommended
+    apply: {{ .Values.config.xtradb.upgrade.apply }}
     schedule: {{ .Values.config.xtradb.upgrade.schedule }}
   xtradb:
     size: {{ .Values.config.xtradb.size }}
@@ -29,7 +29,7 @@ spec:
     forceUnsafeBootstrap: false
 {{- if .Values.config.xtradb.mysqlConfig }}
     configuration: |
-{{ tpl .Values.config.xtradb.mysqlConfig $ | nindent 6 }}
+{{ .Values.config.xtradb.mysqlConfig | nindent 6 }}
 {{- end }}
     # imagePullSecrets: []
     # priorityClassName:

@@ -79,12 +79,13 @@ questions:
     required: true
     label: pause
     group: XtraDB
-  - variable: config.xtradb.upgrade.schedule
-    description: ''
-    type: string
-    required: false
-    label: 'upgrade schedule'
-    group: XtraDB
+  # TODO: add upgrade options
+  # - variable: config.xtradb.upgrade.schedule
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: 'upgrade schedule'
+  #   group: XtraDB
   - variable: config.xtradb.mysqlConfig
     description: ''
     type: multiline

@@ -1,0 +1,36 @@
+{{- if (and .Values.service.xtradb.tls.enabled (not .Values.service.xtradb.tls.certificate)) }}
+{{- $serviceName := (printf "%s-%s-xtradb-stack-ha" .Release.Name (include "xtradb.name" .)) }}
+{{- $customDnsNames := list }}
+{{- if .Values.service.xtradb.tls.issuer.dnsNames }}
+{{- $customDnsNames = (splitList " " .Values.service.xtradb.tls.issuer.dnsNames) }}
+{{- end }}
+{{- $dnsNames := (concat $customDnsNames (list (printf "%s.%s" $serviceName .Release.Namespace) (printf "%s.%s.svc" $serviceName .Release.Namespace) (printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace))) }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "xtradb.name" . }}
+  labels:
+    app: {{ template "xtradb.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  secretName: xtradb-cert
+  isCA: false
+  commonName: {{ $serviceName | quote }}
+  subject:
+    organizations:
+      - {{ .Values.service.xtradb.tls.issuer.name | quote }}
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  issuerRef:
+    name: {{ .Values.service.xtradb.tls.issuer.name | quote }}
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+  {{- range $dnsNames }}
+    - {{ . }}
+  {{- end }}
+{{- end }}
