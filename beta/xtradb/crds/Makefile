@@ -2,7 +2,7 @@ include ../../../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 
-export PATCHES := templates/operator.yaml
+export PATCHES := templates/crds.yaml
 
 include $(PROJECT_ROOT)/patch.mk
 
@@ -10,9 +10,9 @@ export CURL ?= curl
 export OPERATOR_VERSION ?= v1.10.0
 
 .PHONY: prepack
-prepack: | templates/operator.yaml patch-apply
+prepack: | templates/crds.yaml patch-apply
 
-templates/operator.yaml:
+templates/crds.yaml:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
 		https://raw.githubusercontent.com/percona/percona-xtradb-cluster-operator/${OPERATOR_VERSION}/deploy/bundle.yaml

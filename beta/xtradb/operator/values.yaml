@@ -1,7 +1,0 @@
-images:
-  xtradbOperator:
-    repository: percona/percona-xtradb-cluster-operator
-    tag: 1.10.0
-
-config:
-  watchNamespace: false

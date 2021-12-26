@@ -1,4 +1,7 @@
 images:
+  xtradbOperator:
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.10.0
   xtradb:
     repository: percona/percona-xtradb-cluster
     tag: 8.0.23-14.1
