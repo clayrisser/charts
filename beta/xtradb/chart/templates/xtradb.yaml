@@ -112,6 +112,9 @@ spec:
       #     requests:
       #       storage: {{ .Values.persistence.size.haproxy | quote }}
       # {{- end }}
+ logcollector:
+    enabled: {{ .Values.config.logcollector.enabled }}
+    image: '{{ .Values.images.logcollector.repository }}:{{ .Values.images.logcollector.tag }}'
   proxysql:
     enabled: {{ .Values.config.proxysql.enabled }}
     size: {{ .Values.config.proxysql.size }}

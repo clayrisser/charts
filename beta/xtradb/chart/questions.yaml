@@ -59,11 +59,11 @@ questions:
     required: true
     label: 'clustercheck password'
     group: Config
-  - variable: config.connection.enabled
+  - variable: config.logcollector.enabled
     description: ''
     type: boolean
     required: true
-    label: 'connection enabled'
+    label: 'logcollector enabled'
     group: Config
 
 # XtraDB

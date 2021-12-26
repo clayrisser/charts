@@ -35,6 +35,7 @@
     "ldap",
     "ldaps",
     "letsencrypt",
+    "logcollector",
     "logwatch",
     "mailalias",
     "maildir",
