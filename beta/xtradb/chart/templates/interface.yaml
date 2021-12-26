@@ -3,7 +3,7 @@ kind: Interface
 metadata:
   name: mysql
   labels:
-    app: {{ template "postgres.name" . }}
+    app: {{ template "xtradb.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

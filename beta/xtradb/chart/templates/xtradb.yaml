@@ -92,7 +92,7 @@ spec:
 {{- end }}
     volumeSpec:
       emptyDir: {}
- logcollector:
+  logcollector:
     enabled: {{ .Values.config.logcollector.enabled }}
     image: '{{ .Values.images.logcollector.repository }}:{{ .Values.images.logcollector.tag }}'
   proxysql:

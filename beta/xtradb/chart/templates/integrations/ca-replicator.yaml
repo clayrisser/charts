@@ -1,12 +1,12 @@
-{{- if (and .Values.service.openldap.tls.enabled (not .Values.service.openldap.tls.certificate)) }}
-{{- $name := (printf "%s-replicator" .Values.service.openldap.tls.issuer.name) }}
+{{- if (and .Values.service.xtradb.tls.enabled (not .Values.service.xtradb.tls.certificate)) }}
+{{- $name := (printf "%s-replicator" .Values.service.xtradb.tls.issuer.name) }}
 {{- $namespace := "cert-manager" }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
   name: ca-replicator
   labels:
-    app: {{ template "openldap.name" . }}
+    app: {{ template "xtradb.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
