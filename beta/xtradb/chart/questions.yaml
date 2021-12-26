@@ -306,56 +306,6 @@ questions:
         show_if: config.phpmyadmin.enabled=true
         label: 'resources limits memory'
 
-# Backup Config
-  - variable: config.backup.enabled
-    description: ''
-    type: boolean
-    required: true
-    label: enabled
-    group: 'Backup Config'
-    show_subquestion_if: true
-    subquestions:
-      - variable: config.backup.password
-        description: ''
-        type: password
-        required: true
-        label: 'backup password'
-      - variable: config.backup.keep
-        description: ''
-        type: int
-        required: true
-        label: keep
-      - variable: config.backup.schedule
-        description: ''
-        type: string
-        required: true
-        label: schedule
-      - variable: config.backup.s3.endpoint
-        description: ''
-        type: string
-        required: true
-        label: 's3 endpoint'
-      - variable: config.backup.s3.region
-        description: ''
-        type: string
-        required: true
-        label: 's3 region'
-      - variable: config.backup.s3.bucket
-        description: ''
-        type: string
-        required: true
-        label: 's3 bucket'
-      - variable: config.backup.s3.accessKey
-        description: ''
-        type: string
-        required: true
-        label: 's3 access key'
-      - variable: config.backup.s3.secretKey
-        description: ''
-        type: password
-        required: true
-        label: 's3 secret key'
-
 # Persistence
   - variable: persistence.enabled
     description: ''
@@ -610,20 +560,19 @@ questions:
     show_if: config.pmm.enabled=true
     label: 'pmm tag'
     group: Images
-  - variable: images.backup.repository
+  - variable: images.logcollector.repository
     description: ''
     type: string
     required: true
-    show_if: config.backup.enabled=true
-    label: 'backup repository'
+    show_if: config.logcollector.enabled=true
+    label: 'logcollector repository'
     group: Images
-  - variable: images.backup.tag
+  - variable: images.logcollector.tag
     description: ''
     type: string
     required: true
-    show_if: config.backup.enabled=true
-    label: 'backup tag'
-    show_if: config.phpmyadmin.enabled=true
+    show_if: config.logcollector.enabled=true
+    label: 'logcollector tag'
     group: Images
   - variable: images.phpmyadmin.repository
     description: ''

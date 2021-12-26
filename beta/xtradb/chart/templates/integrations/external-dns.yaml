@@ -1,0 +1,22 @@
+{{- if (and .Values.config.phpmyadmin.enabled .Values.ingress.phpmyadmin.enabled) }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: ingress-target
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: ingress-target
+    namespace: external-dns
+  socket:
+    name: ingress-target
+    namespace: external-dns
+  config:
+    ingressName: phpmyadmin
+{{- end }}
