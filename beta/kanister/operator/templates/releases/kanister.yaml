@@ -13,8 +13,8 @@ spec:
   timeout: 1200
   chart:
     repository: http://charts.kanister.io
-    name: kanister
-    version: 0.2.3
+    name: kanister-operator
+    version: 0.71.0
   git:
     timeout: 60s
   values:
