@@ -32,7 +32,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.phpmyadmin.tls }}
   tls:
-    - secretName: {{ template "pxc-db.phpmyadmin-certificate" . }}
+    - secretName: {{ template "xtradb.phpmyadmin-certificate" . }}
       hosts:
         - {{ .Values.ingress.phpmyadmin.hostname }}
   {{- end }}

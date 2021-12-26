@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: phpmyadmin
   labels:
-    app: {{ template "pxc-db.name" . }}-phpmyadmin
+    app: {{ template "xtradb.name" . }}-phpmyadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
