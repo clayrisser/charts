@@ -49,6 +49,7 @@
     "opensearch",
     "opensearchproject",
     "osixia",
+    "percona",
     "pflogsumm",
     "pgadmin",
     "phpldapadmin",
@@ -84,7 +85,8 @@
     "tvial",
     "univention",
     "velero",
-    "virusmails"
+    "virusmails",
+    "xtradb"
   ],
   "[helm]": {
     "editor.formatOnSave": false

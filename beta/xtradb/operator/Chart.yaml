@@ -1,0 +1,20 @@
+apiVersion: v2
+name: xtradb-operator
+home: https://gitlab.com/bitspur/community/charts
+version: 0.0.1
+appVersion: 1.10.0
+type: application
+description: 'kubernetes operator for xtradb'
+keywords:
+  - data
+  - backup
+sources:
+  - https://gitlab.com/bitspur/community/charts
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
+annotations:
+  catalog.cattle.io/display-name: 'XtraDB Operator'
+  catalog.cattle.io/namespace: xtradb-system
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: xtradb-operator

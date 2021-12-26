@@ -1,0 +1,85 @@
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Socket
+metadata:
+  name: {{ template "xtradb.name" . }}
+  labels:
+    app: {{ template "xtradb.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: xtradb
+    namespace: {{ .Release.Namespace }}
+  config: {}
+  configSecretName: {{ template "xtradb.name" . }}-socket
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: xtradb-coupled-or-updated-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  env:
+                    - name: xtradb_BUCKET
+                      value: '{% .plugConfig.bucket %}'
+                    - name: xtradb_ACCESS_KEY
+                      value: '{% .socketConfig.accessKey %}'
+                    - name: xtradb_ENDPOINT
+                      value: '{% .socketConfig.endpoint %}'
+                    - name: xtradb_PATH_STYLE
+                      value: '{% .socketConfig.pathStyle %}'
+                    - name: xtradb_REGION
+                      value: '{% .socketConfig.region %}'
+                    - name: xtradb_SECRET_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ template "xtradb.name" . }}
+                          key: secretKey
+                  command:
+                    - sh
+                    - -c
+                    - |-
+                      if [ "{% .plugConfig.replicate %}" != "false" ]; then
+                        cat <<EOF | kubectl apply -f -
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ template "xtradb.name" . }}-{% .plug.metadata.name %}
+                        namespace: '{% .plug.metadata.namespace %}'
+                      type: Opaque
+                      stringData:
+                        accessKey: '$xtradb_ACCESS_KEY'
+                        bucket: '$xtradb_BUCKET'
+                        endpoint: '$xtradb_ENDPOINT'
+                        pathStyle: '$xtradb_PATH_STYLE'
+                        region: '$xtradb_REGION'
+                        secretKey: $xtradb_SECRET_KEY
+                      EOF
+                      fi
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "xtradb.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -

@@ -1,0 +1,19 @@
+apiVersion: v2
+name: xtradb
+home: https://gitlab.com/bitspur/community/charts
+version: 0.0.1
+appVersion: 0.71.0
+type: application
+description: 'enterprise MySQL'
+keywords:
+  - data
+  - backup
+sources:
+  - https://gitlab.com/bitspur/community/charts
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
+annotations:
+  catalog.cattle.io/auto-install: xtradb-operator=match
+  catalog.cattle.io/display-name: XtraDB
+  catalog.cattle.io/os: linux
