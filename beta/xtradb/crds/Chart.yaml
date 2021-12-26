@@ -16,6 +16,6 @@ maintainers:
 annotations:
   catalog.cattle.io/display-name: 'XtraDB Crds'
   catalog.cattle.io/hidden: 'true'
-  catalog.cattle.io/namespace: xtradb-system
+  catalog.cattle.io/namespace: kube-system
   catalog.cattle.io/os: linux
   catalog.cattle.io/release-name: xtradb-crds
