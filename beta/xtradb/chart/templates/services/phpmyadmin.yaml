@@ -1,0 +1,33 @@
+{{- if .Values.config.phpmyadmin.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin
+  labels:
+    app: {{ template "pxc-db.name" . }}-phpmyadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- if (eq .Values.service.phpmyadmin.type "ClusterIP") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
+spec:
+  {{- if .Values.ingress.phpmyadmin.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.phpmyadmin.type }}
+  {{- if (eq .Values.service.phpmyadmin.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.phpmyadmin.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ (eq .Values.service.phpmyadmin.type "LoadBalancer") | ternary .Values.service.phpmyadmin.lbPorts.http "80" }}
+      targetPort: container
+      {{- if (and (eq .Values.service.phpmyadmin.type "NodePort") (not (empty .Values.service.phpmyadmin.nodePorts.http))) }}
+      nodePort: {{ .Values.service.phpmyadmin.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: phpmyadmin
+    release: {{ .Release.Name }}
+{{- end }}
