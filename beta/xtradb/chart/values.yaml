@@ -1,0 +1,146 @@
+images:
+  xtradb:
+    repository: percona/percona-xtradb-cluster
+    tag: 8.0.20-11.1
+  haproxy:
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.5.0-haproxy
+  proxysql:
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.6.0-proxysql
+  pmm:
+    repository: perconalab/pmm-client
+    tag: 1.17.1
+  backup:
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.6.0-xtradb8.0-backup
+  phpmyadmin:
+    repository: osixia/phpmyadmin
+    tag: 5.0.2
+
+config:
+  clusterType: rke
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  tls:
+    enabled: false
+    certificate:
+  connection:
+    enabled: true
+  passwords:
+    clustercheck:
+    monitor:
+    operator:
+    root:
+  operator:
+    enabled: false
+  xtradb:
+    size: 1
+    pause: false
+    upgrade:
+      schedule: '0 4 * * *'
+    mysqlConfig: ''
+    resources:
+      enabled: false
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
+  proxysql:
+    enabled: false
+    password: P@ssw0rd
+    size: 1
+    resources:
+      enabled: false
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
+  haproxy:
+    enabled: false
+    size: 1
+    resources:
+      enabled: false
+      requests:
+        cpu: 600m
+        memory: 1G
+      limits:
+        cpu: 1G
+        memory: 600m
+  pmm:
+    enabled: false
+    hostname: ''
+    password:
+    username: admin
+  backup:
+    enabled: false
+    password: P@ssw0rd
+    keep: 5
+    schedule: '0 0 * * *'
+    s3:
+      accessKey: ''
+      bucket: ''
+      endpoint: https://sfo2.digitaloceanspaces.com
+      region: sfo2
+      secretKey: ''
+  phpmyadmin:
+    enabled: false
+    resources:
+      enabled: false
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+service:
+  xtradb:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    tls:
+      enabled: true
+      # enforce: false
+      certificate: ''
+      ca: ''
+      issuer:
+        name: selfsigned
+        dnsNames: ''
+    nodePorts:
+      mysql:
+    lbPorts:
+      mysql: 3306
+  phpmyadmin:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  phpmyadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  storageClass: ''
+  size:
+    xtradb: 1Gi
+    proxysql: 1Gi
+    # haproxy: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s

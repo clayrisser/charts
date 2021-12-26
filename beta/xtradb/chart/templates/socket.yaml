@@ -1,9 +1,9 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
-  name: {{ template "xtradb.name" . }}
+  name: mysql
   labels:
-    app: {{ template "xtradb.name" . }}
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,10 +11,14 @@ spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
-    name: xtradb
+    name: {{ template "postgres.name" . }}
     namespace: {{ .Release.Namespace }}
-  config: {}
-  configSecretName: {{ template "xtradb.name" . }}-socket
+  config:
+    protocol: mysql
+    username: {{ .Values.config.username | quote }}
+    hostname: {{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
+    port: '3306'
+  configSecretName: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -22,7 +26,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: xtradb-coupled-or-updated-{% .plug.metadata.namespace %}
+          name: {{ template "postgres.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -41,45 +45,110 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: bitnami/kubectl:1.20.9
+                  image: registry.gitlab.com/silicon-hills/community/ci-images/kubectl-mysql:0.0.1
                   env:
-                    - name: xtradb_BUCKET
-                      value: '{% .plugConfig.bucket %}'
-                    - name: xtradb_ACCESS_KEY
-                      value: '{% .socketConfig.accessKey %}'
-                    - name: xtradb_ENDPOINT
-                      value: '{% .socketConfig.endpoint %}'
-                    - name: xtradb_PATH_STYLE
-                      value: '{% .socketConfig.pathStyle %}'
-                    - name: xtradb_REGION
-                      value: '{% .socketConfig.region %}'
-                    - name: xtradb_SECRET_KEY
+                    - name: MYSQL_PROTOCOL
+                      value: '{% .socketConfig.protocol %}'
+                    - name: MYSQL_USERNAME
+                      value: '{% .socketConfig.username %}'
+                    - name: MYSQL_HOSTNAME
+                      value: '{% .socketConfig.hostname %}'
+                    - name: MYSQL_PORT
+                      value: '{% .socketConfig.port %}'
+                    - name: MYSQL_DATABASE
+                      value: '{% .plugConfig.database %}'
+                    - name: MYSQL_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "xtradb.name" . }}
-                          key: secretKey
+                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
+                          key: password
                   command:
                     - sh
                     - -c
-                    - |-
+                    - |
+                      if [ "{% .plugConfig.createdb %}" != "false" ]; then
+                        # TODO: create database
+                        if true; then
+                          echo "STATUS_MESSAGE: database $DATABASE already exists"
+                        else
+                          echo "STATUS_MESSAGE: created database $MYSQL_DATABASE"
+                        fi
+                      fi
                       if [ "{% .plugConfig.replicate %}" != "false" ]; then
                         cat <<EOF | kubectl apply -f -
                       apiVersion: v1
                       kind: Secret
                       metadata:
-                        name: {{ template "xtradb.name" . }}-{% .plug.metadata.name %}
+                        name: {{ template "postgres.name" . }}-{% .plug.metadata.name %}
                         namespace: '{% .plug.metadata.namespace %}'
                       type: Opaque
                       stringData:
-                        accessKey: '$xtradb_ACCESS_KEY'
-                        bucket: '$xtradb_BUCKET'
-                        endpoint: '$xtradb_ENDPOINT'
-                        pathStyle: '$xtradb_PATH_STYLE'
-                        region: '$xtradb_REGION'
-                        secretKey: $xtradb_SECRET_KEY
+                        protocol: '$MYSQL_PROTOCOL'
+                        username: '$MYSQL_USERNAME'
+                        hostname: '$MYSQL_HOSTNAME'
+                        port: '$MYSQL_PORT'
+                        password: '$MYSQL_PASSWORD'
+                        database: '$MYSQL_DATABASE'
+                        url: '${MYSQL_PROTOCOL}://${MYSQL_USERNAME}@${MYSQL_PASSWORD}:${MYSQL_HOSTNAME}:${MYSQL_PORT}/${MYSQL_DATABASE}'
                       EOF
                       fi
                       kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "xtradb.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        -l job-name={{ template "postgres.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
+
+    - when: [decoupled]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ template "postgres.name" . }}-decoupled-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: registry.gitlab.com/silicon-hills/community/ci-images/kubectl-mysql:0.0.1
+                  env:
+                    - name: MYSQL_PROTOCOL
+                      value: '{% .socketConfig.protocol %}'
+                    - name: MYSQL_USERNAME
+                      value: '{% .socketConfig.username %}'
+                    - name: MYSQL_HOSTNAME
+                      value: '{% .socketConfig.hostname %}'
+                    - name: MYSQL_PORT
+                      value: '{% .socketConfig.port %}'
+                    - name: MYSQL_DATABASE
+                      value: '{% .plugConfig.database %}'
+                    - name: MYSQL_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
+                          key: password
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      {%- if (and (not (eq .plugConfig.createdb "false")) (eq .plugConfig.cleanup "true")) %}
+                      # TODO: drop database
+                      {%- end %}
+                      kubectl delete secret {{ template "postgres.name" . }}-{% .plug.metadata.name %} \
+                        -n {% .plug.metadata.namespace %}
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "postgres.name" . }}-decoupled-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -

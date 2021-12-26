@@ -1,0 +1,640 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterType
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+      - SmartUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.passwords.root
+    description: ''
+    type: password
+    required: true
+    label: 'root password'
+    group: Config
+  - variable: config.passwords.operator
+    description: ''
+    type: password
+    required: true
+    label: 'operator password'
+    group: Config
+  - variable: config.passwords.monitor
+    description: ''
+    type: password
+    required: true
+    label: 'monitor password'
+    group: Config
+  - variable: config.passwords.clustercheck
+    description: ''
+    type: password
+    required: true
+    label: 'clustercheck password'
+    group: Config
+  - variable: config.connection.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'connection enabled'
+    group: Config
+
+# XtraDB
+  - variable: config.xtradb.size
+    description: ''
+    type: int
+    required: true
+    label: size
+    group: XtraDB
+  - variable: config.xtradb.pause
+    description: ''
+    type: boolean
+    required: true
+    label: pause
+    group: XtraDB
+  - variable: config.xtradb.upgrade.schedule
+    description: ''
+    type: string
+    required: false
+    label: 'upgrade schedule'
+    group: XtraDB
+  - variable: config.xtradb.mysqlConfig
+    description: ''
+    type: multiline
+    required: false
+    label: 'mysql config'
+    group: XtraDB
+  - variable: config.xtradb.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: XtraDB
+    subquestions:
+      - variable: config.xtradb.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.xtradb.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.xtradb.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.xtradb.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+# HaProxy
+  - variable: config.haproxy.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: HaProxy
+  - variable: config.haproxy.size
+    description: ''
+    type: int
+    required: true
+    label: size
+    show_if: config.haproxy.enabled=true
+    group: HaProxy
+  - variable: config.haproxy.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - false
+    required: true
+    show_if: config.haproxy.enabled=true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: HaProxy
+    subquestions:
+      - variable: config.haproxy.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.haproxy.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'resources requests memory'
+      - variable: config.haproxy.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.haproxy.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'resources limits memory'
+
+# ProxySql
+  - variable: config.proxysql.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: ProxySql
+  - variable: config.proxysql.password
+    description: ''
+    type: password
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql password'
+    group: ProxySql
+  - variable: config.proxysql.size
+    description: ''
+    type: int
+    required: true
+    label: size
+    show_if: config.proxysql.enabled=true
+    group: ProxySql
+  - variable: config.proxysql.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: 'true'
+    show_if: config.proxysql.enabled=true
+    group: ProxySql
+    subquestions:
+      - variable: config.proxysql.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.proxysql.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'resources requests memory'
+      - variable: config.proxysql.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.proxysql.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'resources limits memory'
+
+# Pmm Config
+  - variable: config.pmm.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'Pmm Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.pmm.hostname
+        description: ''
+        type: string
+        required: true
+        label: hostname
+      - variable: config.pmm.username
+        description: ''
+        type: string
+        required: true
+        label: username
+      - variable: config.pmm.password
+        description: ''
+        type: password
+        required: true
+        label: password
+
+# PhpMyAdmin Config
+  - variable: config.phpmyadmin.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'PhpMyAdmin Config'
+  - variable: config.phpmyadmin.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - 'true'
+      - 'false'
+    required: true
+    label: 'resources defaults'
+    show_if: config.phpmyadmin.enabled=true
+    show_subquestion_if: 'true'
+    group: 'PhpMyAdmin Config'
+    subquestions:
+      - variable: config.phpmyadmin.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.phpmyadmin.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'resources requests memory'
+      - variable: config.phpmyadmin.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.phpmyadmin.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'resources limits memory'
+
+# Backup Config
+  - variable: config.backup.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'Backup Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.backup.password
+        description: ''
+        type: password
+        required: true
+        label: 'backup password'
+      - variable: config.backup.keep
+        description: ''
+        type: int
+        required: true
+        label: keep
+      - variable: config.backup.schedule
+        description: ''
+        type: string
+        required: true
+        label: schedule
+      - variable: config.backup.s3.endpoint
+        description: ''
+        type: string
+        required: true
+        label: 's3 endpoint'
+      - variable: config.backup.s3.region
+        description: ''
+        type: string
+        required: true
+        label: 's3 region'
+      - variable: config.backup.s3.bucket
+        description: ''
+        type: string
+        required: true
+        label: 's3 bucket'
+      - variable: config.backup.s3.accessKey
+        description: ''
+        type: string
+        required: true
+        label: 's3 access key'
+      - variable: config.backup.s3.secretKey
+        description: ''
+        type: password
+        required: true
+        label: 's3 secret key'
+
+# Persistence
+  - variable: persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.size.xtradb
+        description: ''
+        type: string
+        required: true
+        label: 'xtradb size'
+      - variable: persistence.size.haproxy
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'haproxy size'
+      - variable: persistence.size.proxysql
+        description: ''
+        type: string
+        required: true
+        show_if: config.proxysql.enabled=true
+        label: 'proxysql size'
+      - variable: persistence.velero.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
+        group: Persistence
+
+# Services and Load Balancing
+  - variable: service.xtradb.type
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'xtradb service type'
+    group: 'Services and Load Balancing'
+  - variable: service.xtradb.nodePorts.mysql
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.xtradb.type=NodePort
+    label: 'xtradb mysql node port'
+    group: 'Services and Load Balancing'
+  - variable: service.xtradb.lbPorts.mysql
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.xtradb.type=LoadBalancer
+    label: 'xtradb mysql lb port'
+    group: 'Services and Load Balancing'
+  - variable: service.xtradb.tls.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'xtradb tls enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.xtradb.tls.certificate
+        description: ''
+        type: string
+        required: false
+        label: 'xtradb tls certificate'
+      - variable: service.xtradb.tls.issuer.name
+        description: ''
+        type: enum
+        options:
+          - selfsigned
+        show_if: service.xtradb.tls.certificate=
+        required: false
+        label: 'xtradb tls issuer name'
+      - variable: service.xtradb.tls.issuer.dnsNames
+        description: ''
+        type: string
+        show_if: service.xtradb.tls.certificate=
+        required: false
+        label: 'xtradb tls issuer dns names'
+      - variable: service.xtradb.tls.ca
+        description: 'only use if you manually provide a tls certificate'
+        type: string
+        show_if: service.xtradb.tls.certificate!=
+        required: false
+        label: 'xtradb tls ca'
+  - variable: ingress.phpmyadmin.enabled
+    description: ''
+    type: boolean
+    label: 'phpmyadmin ingress enabled'
+    show_if: config.phpmyadmin.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.phpmyadmin.tls
+        description: ''
+        type: boolean
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'phpmyadmin ingress tls'
+      - variable: ingress.phpmyadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        show_if: config.phpmyadmin.enabled=true
+        label: 'phpmyadmin ingress hostname'
+      - variable: ingress.phpmyadmin.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.phpmyadmin.tls=true&&config.phpmyadmin.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'phpmyadmin ingress issuer name'
+      - variable: ingress.phpmyadmin.certificate
+        description: ''
+        type: string
+        show_if: ingress.phpmyadmin.tls=true&&ingress.phpmyadmin.issuer.name=none&&config.phpmyadmin.enabled=true
+        required: false
+        label: 'phpmyadmin ingress certificate'
+  - variable: service.phpmyadmin.type
+    description: ''
+    type: enum
+    show_if: ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'phpmyadmin service type'
+    group: 'Services and Load Balancing'
+  - variable: service.phpmyadmin.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.phpmyadmin.type=NodePort&&ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    label: 'phpmyadmin http node port'
+    group: 'Services and Load Balancing'
+  - variable: service.phpmyadmin.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.phpmyadmin.type=LoadBalancer&&ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
+    label: 'phpmyadmin http lb port'
+    group: 'Services and Load Balancing'
+
+# Images
+  - variable: images.xtradb.repository
+    description: ''
+    type: string
+    required: true
+    label: 'xtradb repository'
+    group: Images
+  - variable: images.xtradb.tag
+    description: ''
+    type: string
+    required: true
+    label: 'xtradb tag'
+    group: Images
+  - variable: images.haproxy.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.haproxy.enabled=true
+    label: 'haproxy repository'
+    group: Images
+  - variable: images.haproxy.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.haproxy.enabled=true
+    label: 'haproxy tag'
+    group: Images
+  - variable: images.proxysql.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql repository'
+    group: Images
+  - variable: images.proxysql.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.proxysql.enabled=true
+    label: 'proxysql tag'
+    group: Images
+  - variable: images.pmm.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.pmm.enabled=true
+    label: 'pmm repository'
+    group: Images
+  - variable: images.pmm.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.pmm.enabled=true
+    label: 'pmm tag'
+    group: Images
+  - variable: images.backup.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.backup.enabled=true
+    label: 'backup repository'
+    group: Images
+  - variable: images.backup.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.backup.enabled=true
+    label: 'backup tag'
+    show_if: config.phpmyadmin.enabled=true
+    group: Images
+  - variable: images.phpmyadmin.repository
+    description: ''
+    type: string
+    required: true
+    label: 'phpmyadmin repository'
+    show_if: config.phpmyadmin.enabled=true
+    group: Images
+  - variable: images.phpmyadmin.tag
+    description: ''
+    type: string
+    required: true
+    label: 'phpmyadmin tag'
+    show_if: config.phpmyadmin.enabled=true
+    group: Images

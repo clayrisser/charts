@@ -1,9 +1,9 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Interface
 metadata:
-  name: xtradb
+  name: mysql
   labels:
-    app: {{ template "xtradb.name" . }}
+    app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,14 +12,20 @@ spec:
     - version: v0.0.1
       plugDefinition:
         properties:
-          replicate: {}
-          bucket:
+          database:
             required: true
+          cleanup: {}
+          replicate: {}
+          createdb: {}
       socketDefinition:
         properties:
-          accessKey: {}
-          pathStyle: {}
-          region: {}
-          secretKey: {}
-          endpoint:
+          protocol:
+            required: true
+          username:
+            required: true
+          password:
+            required: true
+          hostname:
+            required: true
+          port:
             required: true
