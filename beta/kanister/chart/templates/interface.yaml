@@ -11,15 +11,6 @@ spec:
   schemas:
     - version: v0.0.1
       plugDefinition:
-        properties:
-          replicate: {}
-          bucket:
-            required: true
+        properties: {}
       socketDefinition:
-        properties:
-          accessKey: {}
-          pathStyle: {}
-          region: {}
-          secretKey: {}
-          endpoint:
-            required: true
+        properties: {}

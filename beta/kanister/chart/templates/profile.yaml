@@ -2,7 +2,7 @@
 apiVersion: cr.kanister.io/v1alpha1
 kind: Profile
 metadata:
-  name: s3
+  name: {{ template "kanister.name" . }}-s3
   labels:
     app: {{ template "kanister.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

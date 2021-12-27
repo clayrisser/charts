@@ -13,12 +13,6 @@ spec:
   interface:
     name: kanister
     namespace: {{ .Release.Namespace }}
-  config:
-    accessKey: {{ .Values.config.s3.accessKey | quote }}
-    endpoint: {{ .Values.config.s3.endpoint | quote }}
-    pathStyle: {{ .Values.config.s3.pathStyle | quote }}
-    region: {{ .Values.config.s3.region | quote }}
-  configSecretName: {{ template "kanister.name" . }}-socket
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -26,7 +20,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: kanister-coupled-or-updated-{% .plug.metadata.namespace %}
+          name: {{ template "kanister.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %}
         spec:
           activeDeadlineSeconds: 360
           backoffLimit: 6
@@ -46,43 +40,24 @@ spec:
               containers:
                 - name: kubectl
                   image: bitnami/kubectl:1.20.9
-                  env:
-                    - name: KANISTER_BUCKET
-                      value: '{% .plugConfig.bucket %}'
-                    - name: KANISTER_ACCESS_KEY
-                      value: '{% .socketConfig.accessKey %}'
-                    - name: KANISTER_ENDPOINT
-                      value: '{% .socketConfig.endpoint %}'
-                    - name: KANISTER_PATH_STYLE
-                      value: '{% .socketConfig.pathStyle %}'
-                    - name: KANISTER_REGION
-                      value: '{% .socketConfig.region %}'
-                    - name: KANISTER_SECRET_KEY
-                      valueFrom:
-                        secretKeyRef:
-                          name: {{ template "kanister.name" . }}
-                          key: secretKey
                   command:
                     - sh
                     - -c
-                    - |-
-                      if [ "{% .plugConfig.replicate %}" != "false" ]; then
-                        cat <<EOF | kubectl apply -f -
+                    - |
+                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namespace %}
+                      apiVersion: cr.kanister.io/v1alpha1
+                      kind: Profile
+                      metadata:
+                        name: kanister-s3
+                        namespace: {{ .Release.Namespace }}
+                      EOF
+                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namespace %}
                       apiVersion: v1
                       kind: Secret
                       metadata:
-                        name: {{ template "kanister.name" . }}-{% .plug.metadata.name %}
-                        namespace: '{% .plug.metadata.namespace %}'
-                      type: Opaque
-                      stringData:
-                        accessKey: '$KANISTER_ACCESS_KEY'
-                        bucket: '$KANISTER_BUCKET'
-                        endpoint: '$KANISTER_ENDPOINT'
-                        pathStyle: '$KANISTER_PATH_STYLE'
-                        region: '$KANISTER_REGION'
-                        secretKey: $KANISTER_SECRET_KEY
+                        name: kanister-s3
+                        namespace: {{ .Release.Namespace }}
                       EOF
-                      fi
                       kubectl get pods -n {{ .Release.Namespace }} \
                         -l job-name={{ template "kanister.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
