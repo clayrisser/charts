@@ -1,6 +1,6 @@
 {{- if .Values.config.postgres.integration }}
-{{- $name := (index (split "." .Values.config.postgres.integration) 1) | default "postgres" }}
-{{- $namespace := (index (split "." (printf "%s." .Values.config.postgres.integration)) 0) }}
+{{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
 {{- $existingKeycloak := lookup "keycloak.org/v1alpha1" "Keycloak" .Release.Namespace (include "keycloak.name" .) }}
 {{- $patchKeycloak := true }}
 {{- if $existingKeycloak }}
