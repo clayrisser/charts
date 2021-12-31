@@ -1,6 +1,6 @@
 {{- if .Values.config.keycloak.smtp.integration }}
-{{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
-{{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
+{{- $name := (split "." .Values.config.keycloak.smtp.integration)._1 | default "postgres" }}
+{{- $namespace := (split "." (printf "%s." .Values.config..keycloak.smtp.integration))._0 }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
