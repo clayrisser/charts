@@ -1,6 +1,6 @@
 {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.integration) }}
-{{- $name := (index (split "." .Values.config.keycloak.ldap.integration) 1) | default "ldap" }}
-{{- $namespace := (index (split "." (printf "%s." .Values.config.keycloak.ldap.integration)) 0) }}
+{{- $name := (split "." .Values.config.keycloak.ldap.integration)._1 | default "ldap" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.integration))._0 }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug
 metadata:
