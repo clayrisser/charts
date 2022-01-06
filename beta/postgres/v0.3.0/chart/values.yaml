@@ -3,12 +3,23 @@ images:
     repository: dpage/pgadmin4
     tag: 5.6
   postgres:
-    registry: registry.developers.crunchydata.com/crunchydata
-    repository: crunchy-postgres-ha
-    tag: centos8-13.3-4.7.0
-  metrics:
-    repository: registry.developers.crunchydata.com/crunchydata
-    tag: centos8-4.7.0
+    repository: perconalab/percona-postgresql-operator
+    tag: main-ppg14-postgres-ha
+  pmm:
+    repository: percona/pmm-client
+    tag: 2.24.0
+  backup:
+    repository: perconalab/percona-postgresql-operator
+    tag: main-ppg14-pgbackrest
+  backrestRepo:
+    repository: perconalab/percona-postgresql-operator
+    tag: main-ppg14-pgbackrest-repo
+  pgBouncer:
+    repository: perconalab/percona-postgresql-operator
+    tag: main-ppg14-pgbouncer
+  pgBadger:
+    repository: perconalab/percona-postgresql-operator
+    tag: main-ppg14-pgbadger
 
 config:
   clusterType: rke
@@ -16,15 +27,54 @@ config:
   updateStrategy: Recreate
   username: postgres
   password:
-  shutdown: false
-  resources:
-    enabled: defaults
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 250m
-      memory: 512Mi
+  pause: false
+  standby: false
+  passwords:
+    pgBouncer:
+    pgUser:
+    postgres:
+    primaryUser:
+  postgres:
+    hotStandbyReplicas: 2
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 512Mi
+  pmm:
+    enabled: false
+    resources:
+      enabled: defaults
+      requests:
+        memory: 200M
+        cpu: 500m
+      limits:
+        cpu: 1000m
+        memory: 400M
+  backup:
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 48Mi
+      limits:
+        cpu: 1000m
+        memory: 64Mi
+  pgBadger:
+    enabled: false
+  pgBouncer:
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 1000m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 512Mi
   pgadmin:
     hostname: ''
     baseUrl: ''
@@ -32,7 +82,7 @@ config:
     email: admin@example.com
     password: ''
     resources:
-      enabled: 'false'
+      enabled: defaults
       requests:
         cpu: 100m
         memory: 128Mi

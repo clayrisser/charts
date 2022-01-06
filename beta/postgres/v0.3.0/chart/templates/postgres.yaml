@@ -1,0 +1,175 @@
+apiVersion: pg.percona.com/v1
+kind: PerconaPGCluster
+metadata:
+  name: {{ template "postgres.name" . }}
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    pgo-version: 1.2.0
+spec:
+  secretsName: {{ template "postgres.name" . }}-users
+#  sslCA: cluster1-ssl-ca
+#  sslSecretName: cluster1-ssl-keypair
+#  sslReplicationSecretName: cluster1-ssl-keypair
+  upgradeOptions:
+    versionServiceEndpoint: https://check.percona.com
+    apply: disabled
+    schedule: '0 4 * * *'
+  database: pgdb
+  port: '5432'
+  user: pguser
+  disableAutofail: false
+  tlsOnly: false
+  standby: {{ .Values.config.standby }}
+  pause: {{ .Values.config.pause }}
+  keepData: true
+  keepBackups: true
+#  pgDataSource:
+#    restoreFrom: ""
+#    restoreOpts: ""
+#  tablespaceStorages:
+#    lake:
+#      volumeSpec:
+#        size: 1G
+#        accessmode: ReadWriteOnce
+#        storagetype: dynamic
+#        storageclass: ""
+#        matchLabels: ""
+#  walStorage:
+#    volumeSpec:
+#      size: 1G
+#      accessmode: ReadWriteOnce
+#      storagetype: dynamic
+#      storageclass: ""
+#      matchLabels: ""
+#  userLabels:
+#    pgo-version: "1.2.0"
+  pgPrimary:
+    image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
+    imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+{{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
+    resources:
+{{ toYaml .Values.config.postgres.resources.requests | indent 6 }}
+    limits:
+{{ toYaml .Values.config.postgres.resources.limits | indent 6 }}
+{{- else }}
+    resources: {}
+    limits: {}
+{{- end }}
+    tolerations: []
+    volumeSpec:
+      size: 1G
+      accessmode: ReadWriteOnce
+      storagetype: dynamic
+      storageclass: ""
+    expose:
+      serviceType: ClusterIP
+#      loadBalancerSourceRanges:
+#      annotations:
+#        pg-cluster-annot: cluster1
+#      labels:
+#        pg-cluster-label: cluster1
+#    customconfig: ""
+  pmm:
+    enabled: false
+    image: {{ .Values.images.pmm.repository }}:{{ .Values.images.pmm.tag }}
+    imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    serverHost: monitoring-service
+    serverUser: admin
+    pmmSecret: cluster1-pmm-secret
+{{- if (and .Values.config.pmm.resources.enabled (not (eq .Values.config.pmm.resources.enabled "false"))) }}
+    resources:
+{{ toYaml .Values.config.pmm.resources.requests | indent 6 }}
+    limits:
+{{ toYaml .Values.config.pmm.resources.limits | indent 6 }}
+{{- else }}
+    resources: {}
+    limits: {}
+{{- end }}
+  backup:
+    image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
+    imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    backrestRepoImage: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
+{{- if (and .Values.config.backup.resources.enabled (not (eq .Values.config.backup.resources.enabled "false"))) }}
+    resources:
+{{ toYaml .Values.config.backup.resources.requests | indent 6 }}
+    limits:
+{{ toYaml .Values.config.backup.resources.limits | indent 6 }}
+{{- else }}
+    resources: {}
+    limits: {}
+{{- end }}
+    volumeSpec:
+      size: 1G
+      accessmode: ReadWriteOnce
+      storagetype: dynamic
+      storageclass: ""
+#    storages:
+#      my-gcs:
+#        type: gcs
+#        bucket: some-gcs-bucket
+#    repoPath: ""
+    schedule:
+      - name: "sat-night-backup"
+        schedule: "0 0 * * 6"
+        keep: 3
+        type: full
+        storage: local
+  pgBouncer:
+    image: {{ .Values.images.pgBouncer.repository }}:{{ .Values.images.pgBouncer.tag }}
+    imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    size: {{ .Values.config.pgBouncer.replicas }}
+{{- if (and .Values.config.pgBouncer.resources.enabled (not (eq .Values.config.pgBouncer.resources.enabled "false"))) }}
+    resources:
+{{ toYaml .Values.config.pgBouncer.resources.requests | indent 6 }}
+    limits:
+{{ toYaml .Values.config.pgBouncer.resources.limits | indent 6 }}
+{{- else }}
+    resources: {}
+    limits: {}
+{{- end }}
+    expose:
+      serviceType: ClusterIP
+#      loadBalancerSourceRanges:
+#      annotations:
+#        pg-cluster-annot: cluster1
+#      labels:
+#        pg-cluster-label: cluster1
+  pgReplicas:
+    hotStandby:
+      size: {{ .Values.config.postgres.hotStandbyReplicas }}
+{{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
+      resources:
+{{ toYaml .Values.config.postgres.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.postgres.resources.limits | indent 8 }}
+{{- else }}
+      resources: {}
+      limits: {}
+{{- end }}
+      volumeSpec:
+        accessmode: ReadWriteOnce
+        size: 1G
+        storagetype: dynamic
+        storageclass: ""
+#      affinity:
+#        default: null
+#      labels:
+#        pg-cluster-label: cluster1
+#      annotations:
+#        pg-cluster-annot: cluster1-1
+      enableSyncStandby: false
+      expose:
+        serviceType: ClusterIP
+#        loadBalancerSourceRanges:
+#        annotations:
+#          pg-cluster-annot: cluster1
+#        labels:
+#          pg-cluster-label: cluster1
+  pgBadger:
+    enabled: {{ .Values.config.pgBadger.enabled }}
+    image: {{ .Values.images.pgBadger.repository }}:{{ .Values.images.pgBadger.tag }}
+    imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    port: 10000
