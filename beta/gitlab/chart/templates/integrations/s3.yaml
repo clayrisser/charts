@@ -1,0 +1,37 @@
+{{- if (and .Values.config.s3.enabled .Values.config.s3.integration) }}
+{{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: s3
+  labels:
+    app: {{ template "kanister.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: s3
+    namespace: {{ $namespace }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    bucket: {{ .Values.config.s3.buckets.artifacts | quote }}
+    prefix: ''
+    replicate: 'false'
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      resource: |
+        apiVersion: patch.bitspur.com/v1alpha1
+        kind: Patch
+        metadata:
+          name: postgres-coupled-or-updated
+          namespace: {{ .Release.Namespace }}
+        spec:
+          patches: []
+{{- end }}
