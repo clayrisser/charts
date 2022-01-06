@@ -1,0 +1,33 @@
+{{- if .Values.config.pgadmin.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  labels:
+    app: pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- if (eq .Values.service.pgadmin.type "ClusterIP") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
+spec:
+  {{- if .Values.ingress.pgadmin.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.pgadmin.type }}
+  {{- if (eq .Values.service.pgadmin.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.pgadmin.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ (eq .Values.service.pgadmin.type "LoadBalancer") | ternary .Values.service.pgadmin.lbPorts.http "80" }}
+      targetPort: container
+      {{- if (and (eq .Values.service.pgadmin.type "NodePort") .Values.service.pgadmin.nodePorts.http) }}
+      nodePort: {{ .Values.service.pgadmin.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: pgadmin
+    release: {{ .Release.Name }}
+{{- end }}

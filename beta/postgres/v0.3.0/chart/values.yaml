@@ -1,0 +1,93 @@
+images:
+  pgadmin:
+    repository: dpage/pgadmin4
+    tag: 5.6
+  postgres:
+    registry: registry.developers.crunchydata.com/crunchydata
+    repository: crunchy-postgres-ha
+    tag: centos8-13.3-4.7.0
+  metrics:
+    repository: registry.developers.crunchydata.com/crunchydata
+    tag: centos8-4.7.0
+
+config:
+  clusterType: rke
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  username: postgres
+  password:
+  shutdown: false
+  resources:
+    enabled: defaults
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 512Mi
+  pgadmin:
+    hostname: ''
+    baseUrl: ''
+    enabled: false
+    email: admin@example.com
+    password: ''
+    resources:
+      enabled: 'false'
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  # TODO: enable metrics
+  metrics:
+    enabled: false
+    grafana:
+      integration:
+      username: admin
+      password: P@ssw0rd
+    alertmanager:
+      enabled: false
+
+service:
+  postgres:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      postgres:
+    lbPorts:
+      postgres: 5432
+  pgadmin:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  size:
+    alertmanager: 2Gi
+    archive: 2Gi
+    backrest: 2Gi
+    grafana: 2Gi
+    primary: 2Gi
+    prometheus: 2Gi
+    replica: 2Gi
+    wal: 2Gi
+  storageClass: ''
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s

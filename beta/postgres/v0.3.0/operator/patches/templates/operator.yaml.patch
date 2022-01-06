@@ -1,0 +1,69 @@
+--- templates/operator.yaml	2022-01-06 07:03:41.049351794 -0600
++++ templates/operator.yaml.tmp	2022-01-06 07:04:07.121556794 -0600
+@@ -2,8 +2,9 @@
+ kind: ServiceAccount
+ metadata:
+   name: pgo-deployer-sa
+-  namespace: pgo
++  namespace: {{ .Release.Namespace }}
+ ---
++{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "pgo-deployer-cr")) }}
+ kind: ClusterRole
+ apiVersion: rbac.authorization.k8s.io/v1
+ metadata:
+@@ -115,12 +116,13 @@
+     verbs:
+       - delete
+       - list
++{{- end }}
+ ---
+ apiVersion: v1
+ kind: ConfigMap
+ metadata:
+   name: pgo-deployer-cm
+-  namespace: pgo
++  namespace: {{ .Release.Namespace }}
+ data:
+   values.yaml: |-
+     # =====================
+@@ -249,6 +251,7 @@
+     storage9_type: "dynamic"
+     storage9_class: "rook-ceph-block"
+ ---
++{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "pgo-deployer-cr")) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+ metadata:
+@@ -260,13 +263,14 @@
+ subjects:
+   - kind: ServiceAccount
+     name: pgo-deployer-sa
+-    namespace: pgo
++    namespace: {{ .Release.Namespace }}
++{{- end }}
+ ---
+ apiVersion: batch/v1
+ kind: Job
+ metadata:
+   name: pgo-deploy
+-  namespace: pgo
++  namespace: {{ .Release.Namespace }}
+ spec:
+   backoffLimit: 0
+   template:
+@@ -277,7 +281,7 @@
+       restartPolicy: Never
+       containers:
+         - name: pgo-deploy
+-          image: percona/percona-postgresql-operator:1.1.0-pgo-deployer
++          image: {{ .Values.images.postgresOperator.repository }}:{{ .Values.images.postgresOperator.tag }}
+           imagePullPolicy: Always
+           env:
+             - name: DEPLOY_ACTION
+@@ -288,4 +292,4 @@
+       volumes:
+         - name: deployer-conf
+           configMap:
+-            name: pgo-deployer-cm
+\ No newline at end of file
++            name: pgo-deployer-cm
