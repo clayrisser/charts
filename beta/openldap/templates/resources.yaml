@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: {{ template "openldap.name" . }}
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  limits:
+    - type: Pod
+      max:
+        cpu: '2'
+        memory: '2Gi'
+      min:
+        cpu: '10m'
+        memory: '16Mi'
+      default: # limit
+        cpu: '500m'
+        memory: '1Gi'
+      defaultRequest:
+        cpu: '100m'
+        memory: '128Mi'
+      maxLimitRequestRatio:
+        cpu: '10'
