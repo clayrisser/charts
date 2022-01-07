@@ -568,12 +568,6 @@ questions:
     label: 'pgadmin tag'
     show_if: config.pgadmin.enabled=true
     group: Images
-  - variable: images.postgres.registry
-    description: ''
-    type: string
-    required: true
-    label: 'postgres registry'
-    group: Images
   - variable: images.postgres.repository
     description: ''
     type: string
