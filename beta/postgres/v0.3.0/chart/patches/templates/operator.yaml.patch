@@ -1,5 +1,5 @@
---- templates/operator.yaml	2022-01-07 05:51:26.218506571 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 05:51:25.514504005 -0600
+--- templates/operator.yaml	2022-01-07 06:05:24.974152026 -0600
++++ templates/operator.yaml.tmp	2022-01-07 06:05:31.674201889 -0600
 @@ -2,8 +2,9 @@
  kind: ServiceAccount
  metadata:
@@ -44,7 +44,7 @@
      pgo_tls_ca_store: ""
      pgo_tls_no_verify: "false"
      pod_anti_affinity: "preferred"
-@@ -249,6 +251,7 @@
+@@ -249,10 +251,11 @@
      storage9_type: "dynamic"
      storage9_class: "rook-ceph-block"
  ---
@@ -52,6 +52,11 @@
  apiVersion: rbac.authorization.k8s.io/v1
  kind: ClusterRoleBinding
  metadata:
+-  name: pgo-deployer-crb
++  name: pgo-deployer-cr
+ roleRef:
+   apiGroup: rbac.authorization.k8s.io
+   kind: ClusterRole
 @@ -260,13 +263,14 @@
  subjects:
    - kind: ServiceAccount
