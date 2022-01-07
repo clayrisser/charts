@@ -1,4 +1,4 @@
---- templates/operator.yaml	2022-01-07 09:03:02.572818688 -0600
+--- templates/operator.yaml	2022-01-07 09:09:23.832920142 -0600
 +++ templates/operator.yaml.tmp	2022-01-07 09:04:37.764844711 -0600
 @@ -1,13 +1,22 @@
 +{{- if (not (lookup "v1" "ServiceAccount" .Values.namespace "pgo-deployer-sa")) }}
