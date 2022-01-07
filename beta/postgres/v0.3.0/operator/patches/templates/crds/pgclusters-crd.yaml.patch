@@ -1,5 +1,5 @@
---- templates/crds/pgclusters-crd.yaml	2022-01-07 09:09:23.828920141 -0600
-+++ templates/crds/pgclusters-crd.yaml.tmp	2022-01-07 09:09:52.996927654 -0600
+--- templates/crds/pgclusters-crd.yaml	2022-01-07 09:19:11.245067732 -0600
++++ templates/crds/pgclusters-crd.yaml.tmp	2022-01-07 09:18:49.705062412 -0600
 @@ -1,8 +1,11 @@
 ----
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "pgclusters.pg.percona.com")) }}
@@ -9,7 +9,7 @@
    name: pgclusters.pg.percona.com
 +  annotations:
 +    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '0'
++    helm.sh/hook-weight: '1'
  spec:
    group: pg.percona.com
    names:

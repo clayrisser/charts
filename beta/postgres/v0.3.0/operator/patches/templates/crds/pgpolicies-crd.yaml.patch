@@ -1,5 +1,5 @@
---- templates/crds/pgpolicies-crd.yaml	2022-01-07 09:09:23.832920142 -0600
-+++ templates/crds/pgpolicies-crd.yaml.tmp	2022-01-07 09:09:56.096928450 -0600
+--- templates/crds/pgpolicies-crd.yaml	2022-01-07 09:19:11.245067732 -0600
++++ templates/crds/pgpolicies-crd.yaml.tmp	2022-01-07 09:18:52.877063195 -0600
 @@ -1,8 +1,11 @@
 ----
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "pgpolicies.pg.percona.com")) }}
@@ -9,7 +9,7 @@
    name: pgpolicies.pg.percona.com
 +  annotations:
 +    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '0'
++    helm.sh/hook-weight: '1'
  spec:
    group: pg.percona.com
    names:

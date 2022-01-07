@@ -1,5 +1,5 @@
---- templates/operator.yaml	2022-01-07 09:09:23.832920142 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 09:04:37.764844711 -0600
+--- templates/operator.yaml	2022-01-07 09:19:11.249067733 -0600
++++ templates/operator.yaml.tmp	2022-01-07 09:18:15.041053843 -0600
 @@ -1,13 +1,22 @@
 +{{- if (not (lookup "v1" "ServiceAccount" .Values.namespace "pgo-deployer-sa")) }}
  apiVersion: v1
@@ -10,7 +10,7 @@
 +  namespace: {{ .Values.namespace }}
 +  annotations:
 +    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '0'
++    helm.sh/hook-weight: '5'
 +{{- end }}
  ---
 +{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "pgo-deployer-cr")) }}
@@ -20,7 +20,7 @@
    name: pgo-deployer-cr
 +  annotations:
 +    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '0'
++    helm.sh/hook-weight: '5'
  rules:
    - apiGroups:
        - ''
@@ -39,7 +39,7 @@
 +  namespace: {{ .Values.namespace }}
 +  annotations:
 +    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '0'
++    helm.sh/hook-weight: '10'
  data:
    values.yaml: |-
      # =====================
@@ -75,7 +75,7 @@
 +  name: pgo-deployer-crb-{{ .Values.namespace }}
 +  annotations:
 +    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '0'
++    helm.sh/hook-weight: '5'
  roleRef:
    apiGroup: rbac.authorization.k8s.io
    kind: ClusterRole
@@ -96,7 +96,7 @@
 +  namespace: {{ .Values.namespace }}
 +  annotations:
 +    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '0'
++    helm.sh/hook-weight: '10'
  spec:
    backoffLimit: 0
    template:
