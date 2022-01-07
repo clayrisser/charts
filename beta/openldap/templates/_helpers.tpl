@@ -28,6 +28,17 @@ Calculate openldap certificate
 {{- end -}}
 
 {{/*
+Calculate openldap ca
+*/}}
+{{- define "openldap.openldap-ca" -}}
+{{- if (not .Values.service.openldap.tls.certificate) -}}
+{{- printf "ca" -}}
+{{- else -}}
+{{- printf .Values.service.openldap.tls.ca -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Calculate openldap hostname
 */}}
 {{- define "openldap.openldap-hostname" -}}

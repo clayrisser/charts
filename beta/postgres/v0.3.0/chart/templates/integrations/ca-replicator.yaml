@@ -1,0 +1,23 @@
+{{- if (and .Values.service.postgres.tls.enabled (not .Values.service.postgres.tls.certificate)) }}
+{{- $name := (printf "%s-replicator" .Values.service.postgres.tls.issuer.name) }}
+{{- $namespace := "cert-manager" }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: ca-replicator
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: replicator
+    namespace: {{ $namespace }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    caName: ca
+{{- end }}

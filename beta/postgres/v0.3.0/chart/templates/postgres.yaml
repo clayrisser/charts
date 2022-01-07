@@ -7,12 +7,14 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    pgo-version: 1.2.0
+    pgo-version: '1.2.0'
 spec:
   secretsName: {{ template "postgres.name" . }}-users
-#  sslCA: cluster1-ssl-ca
-#  sslSecretName: cluster1-ssl-keypair
-#  sslReplicationSecretName: cluster1-ssl-keypair
+  {{- if .Values.service.postgres.tls.enabled }}
+  sslCA: {{ template "postgres.postgres-ca" . }}
+  sslSecretName: {{ template "postgres.postgres-certificate" . }}
+  sslReplicationSecretName: {{ template "postgres.postgres-certificate" . }}
+  {{- end }}
   upgradeOptions:
     versionServiceEndpoint: https://check.percona.com
     apply: disabled
@@ -29,23 +31,20 @@ spec:
 #  pgDataSource:
 #    restoreFrom: ""
 #    restoreOpts: ""
-#  tablespaceStorages:
-#    lake:
-#      volumeSpec:
-#        size: 1G
-#        accessmode: ReadWriteOnce
-#        storagetype: dynamic
-#        storageclass: ""
-#        matchLabels: ""
-#  walStorage:
-#    volumeSpec:
-#      size: 1G
-#      accessmode: ReadWriteOnce
-#      storagetype: dynamic
-#      storageclass: ""
-#      matchLabels: ""
-#  userLabels:
-#    pgo-version: "1.2.0"
+  {{- if (and .Values.config.wal.enabled .Values.persistence.enabled) }}
+  walStorage:
+    volumeSpec:
+      size: {{ .Values.persistence.size.wal | quote }}
+      accessmode: {{ .Values.persistence.accessMode | quote }}
+      storagetype: dynamic
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageclass: ''
+      {{- else }}
+      storageclass: {{ .Values.persistence.storageClass | quote }}
+      {{- end }}
+  {{- end }}
+  userLabels:
+    pgo-version: '1.2.0'
   pgPrimary:
     image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy }}
@@ -59,11 +58,17 @@ spec:
     limits: {}
 {{- end }}
     tolerations: []
+    {{- if .Values.persistence.enabled }}
     volumeSpec:
-      size: 1G
-      accessmode: ReadWriteOnce
+      size: {{ .Values.persistence.size.primary | quote }}
+      accessmode: {{ .Values.persistence.accessMode | quote }}
       storagetype: dynamic
-      storageclass: ""
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageclass: ''
+      {{- else }}
+      storageclass: {{ .Values.persistence.storageClass | quote }}
+      {{- end }}
+    {{- end }}
     expose:
       serviceType: ClusterIP
 #      loadBalancerSourceRanges:
@@ -88,6 +93,7 @@ spec:
     resources: {}
     limits: {}
 {{- end }}
+{{- if .Values.config.backup.enabled }}
   backup:
     image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
@@ -101,22 +107,29 @@ spec:
     resources: {}
     limits: {}
 {{- end }}
+    {{- if .Values.persistence.enabled }}
     volumeSpec:
-      size: 1G
-      accessmode: ReadWriteOnce
+      size: {{ .Values.persistence.size.backup | quote }}
+      accessmode: {{ .Values.persistence.accessMode | quote }}
       storagetype: dynamic
-      storageclass: ""
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageclass: ''
+      {{- else }}
+      storageclass: {{ .Values.persistence.storageClass | quote }}
+      {{- end }}
+    {{- end }}
 #    storages:
 #      my-gcs:
 #        type: gcs
 #        bucket: some-gcs-bucket
 #    repoPath: ""
     schedule:
-      - name: "sat-night-backup"
-        schedule: "0 0 * * 6"
-        keep: 3
+      - name: default
+        schedule: {{ .Values.config.backup.schedule | quote }}
+        keep: {{ .Values.config.backup.keep | quote }}
         type: full
         storage: local
+{{- end }}
   pgBouncer:
     image: {{ .Values.images.pgBouncer.repository }}:{{ .Values.images.pgBouncer.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
@@ -138,8 +151,8 @@ spec:
 #      labels:
 #        pg-cluster-label: cluster1
   pgReplicas:
-    hotStandby:
-      size: {{ .Values.config.postgres.hotStandbyReplicas }}
+    hot:
+      size: {{ .Values.config.postgres.hotReplicas }}
 {{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
       resources:
 {{ toYaml .Values.config.postgres.resources.requests | indent 8 }}
@@ -149,11 +162,17 @@ spec:
       resources: {}
       limits: {}
 {{- end }}
+      {{- if .Values.persistence.enabled }}
       volumeSpec:
-        accessmode: ReadWriteOnce
-        size: 1G
+        size: {{ .Values.persistence.size.replicas | quote }}
+        accessmode: {{ .Values.persistence.accessMode | quote }}
         storagetype: dynamic
-        storageclass: ""
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageclass: ''
+        {{- else }}
+        storageclass: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+      {{- end }}
 #      affinity:
 #        default: null
 #      labels:

@@ -32,7 +32,7 @@ spec:
       secret: {{ template "openldap.openldap-certificate" . }}
       CA:
         enabled: true
-        secret: {{ template "openldap.openldap-certificate" . }}
+        secret: {{ template "openldap.openldap-ca" . }}
     extraLabels: {}
     {{- if .Values.config.openldap.dhparam }}
     extraVolumes:

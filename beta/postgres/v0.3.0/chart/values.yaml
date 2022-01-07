@@ -29,13 +29,14 @@ config:
   password:
   pause: false
   standby: false
+  wal: true
   passwords:
     pgBouncer:
     pgUser:
     postgres:
     primaryUser:
   postgres:
-    hotStandbyReplicas: 2
+    hotReplicas: 2
     resources:
       enabled: defaults
       requests:
@@ -55,6 +56,9 @@ config:
         cpu: 1000m
         memory: 400M
   backup:
+    enabled: false
+    schedule: '0 0 * * *'
+    keep: 7
     resources:
       enabled: defaults
       requests:
@@ -103,6 +107,14 @@ service:
   postgres:
     type: ClusterIP
     externalTrafficPolicy: Cluster
+    tls:
+      enabled: true
+      enforce: false
+      certificate: ''
+      ca: ''
+      issuer:
+        name: selfsigned
+        dnsNames: ''
     nodePorts:
       postgres:
     lbPorts:
@@ -127,14 +139,10 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   size:
-    alertmanager: 2Gi
-    archive: 2Gi
-    backrest: 2Gi
-    grafana: 2Gi
-    primary: 2Gi
-    prometheus: 2Gi
-    replica: 2Gi
-    wal: 2Gi
+    backup: 1Gi
+    primary: 1Gi
+    replica: 1Gi
+    wal: 1Gi
   storageClass: ''
   velero:
     enabled: false

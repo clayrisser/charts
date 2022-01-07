@@ -34,6 +34,8 @@ config:
     root: P@ssw0rd
   operator:
     enabled: false
+  wal:
+    enabled: true
   pxc:
     size: 1
     pause: false
@@ -128,25 +130,9 @@ persistence:
   enabled: false
   storageClass: ''
   size:
-    pxc: 1Gi
-    proxysql: 1Gi
-    # haproxy: 1Gi
+    wal: 1Gi
   velero:
     enabled: false
     restic: true
     schedule: '@midnight'
     ttl: 2160h0m00s
-
-probes:
-  liveness:
-    initialDelaySeconds: 120
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1

@@ -17,6 +17,28 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 
 {{/*
+Calculate postgres certificate
+*/}}
+{{- define "postgres.postgres-certificate" -}}
+{{- if (not .Values.service.postgres.tls.certificate) -}}
+{{- printf "%s-cert" (include "postgres.name" .) -}}
+{{- else -}}
+{{- printf .Values.service.postgres.tls.certificate -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate postgres ca
+*/}}
+{{- define "postgres.postgres-ca" -}}
+{{- if (not .Values.service.postgres.tls.certificate) -}}
+{{- printf "ca" -}}
+{{- else -}}
+{{- printf .Values.service.postgres.tls.ca -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Calculate pgadmin certificate
 */}}
 {{- define "postgres.pgadmin-certificate" -}}
