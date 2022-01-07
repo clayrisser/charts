@@ -1,0 +1,14 @@
+{{- if .Values.config.postgres.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "postgres.name" . }}
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  postgres-ha.yaml: |
+    {{ .Values.config.postgres.config }}
+{{- end }}

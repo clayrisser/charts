@@ -71,8 +71,9 @@ spec:
     {{- end }}
     expose:
       serviceType: ClusterIP
-#      loadBalancerSourceRanges:
-#    customconfig: ""
+    {{- if .Values.config.postgres.config }}
+    customconfig: {{ template "postgres.name" . }}
+    {{- end }}
   pmm:
     enabled: false
     image: {{ .Values.images.pmm.repository }}:{{ .Values.images.pmm.tag }}
@@ -141,7 +142,6 @@ spec:
 {{- end }}
     expose:
       serviceType: ClusterIP
-#      loadBalancerSourceRanges:
 {{- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0)) }}
   pgReplicas:
     hot:
@@ -166,12 +166,30 @@ spec:
         storageclass: {{ .Values.persistence.storageClass | quote }}
         {{- end }}
       {{- end }}
-#      affinity:
-#        default: null
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "postgres.name" . }}
       enableSyncStandby: false
       expose:
         serviceType: ClusterIP
-#        loadBalancerSourceRanges:
 {{- end }}
   pgBadger:
     enabled: {{ .Values.config.pgBadger.enabled }}

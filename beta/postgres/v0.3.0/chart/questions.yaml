@@ -82,6 +82,12 @@ questions:
     required: true
     label: 'postgres hot replicas'
     group: Config
+  - variable: config.postgres.config
+    description: ''
+    type: multiline
+    required: false
+    label: 'postgres config'
+    group: Config
   - variable: config.postgres.resources.enabled
     description: ''
     type: enum
