@@ -31,7 +31,7 @@ spec:
 #  pgDataSource:
 #    restoreFrom: ""
 #    restoreOpts: ""
-  # {\{\- if .Values.config.wal }}
+  {{- if .Values.config.wal }}
   walStorage:
     volumeSpec:
       size: {{ .Values.persistence.size.wal | quote }}
@@ -42,7 +42,7 @@ spec:
       {{- else }}
       storageclass: {{ .Values.persistence.storageClass | quote }}
       {{- end }}
-  # {\{\- end }}
+  {{- end }}
   userLabels:
     pgo-version: '1.2.0'
   pgPrimary:
@@ -88,7 +88,7 @@ spec:
     resources: {}
     limits: {}
 {{- end }}
-# {\{\- if .Values.config.backup.enabled }}
+{{- if .Values.config.backup.enabled }}
   backup:
     image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
@@ -122,7 +122,7 @@ spec:
         keep: {{ .Values.config.backup.keep | quote }}
         type: full
         storage: local
-# {\{\- end }}
+{{- end }}
   pgBouncer:
     image: {{ .Values.images.pgBouncer.repository }}:{{ .Values.images.pgBouncer.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
@@ -138,7 +138,7 @@ spec:
 {{- end }}
     expose:
       serviceType: ClusterIP
-# {\{\- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0.0)) }}
+{{- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0.0)) }}
   pgReplicas:
     hot:
       size: {{ .Values.config.postgres.hotReplicas }}
@@ -184,7 +184,7 @@ spec:
       enableSyncStandby: false
       expose:
         serviceType: ClusterIP
-# {\{\- end }}
+{{- end }}
   pgBadger:
     enabled: {{ .Values.config.pgBadger.enabled }}
     image: {{ .Values.images.pgBadger.repository }}:{{ .Values.images.pgBadger.tag }}
