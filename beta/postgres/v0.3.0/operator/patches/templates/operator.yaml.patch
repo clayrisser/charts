@@ -1,5 +1,5 @@
 --- templates/operator.yaml	2022-01-07 09:19:11.249067733 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 09:22:59.253123770 -0600
++++ templates/operator.yaml.tmp	2022-01-07 09:37:07.718974339 -0600
 @@ -1,13 +1,22 @@
 +{{- if (not (lookup "v1" "ServiceAccount" .Values.namespace "pgo-deployer-sa")) }}
  apiVersion: v1
@@ -87,7 +87,7 @@
 +    namespace: {{ .Values.namespace }}
 +{{- end }}
  ---
-+{{- if (not (lookup "batch/v1" "Job" .Values.namespace "pgo-deploy")) }}
++{{- if (not (lookup "v1" "ConfigMap" .Values.namespace "pgo-deployer-cm")) }}
  apiVersion: batch/v1
  kind: Job
  metadata:
