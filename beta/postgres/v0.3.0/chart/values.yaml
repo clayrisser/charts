@@ -20,6 +20,9 @@ images:
   pgBadger:
     repository: perconalab/percona-postgresql-operator
     tag: main-ppg14-pgbadger
+  postgresOperator:
+    repository: percona/percona-postgresql-operator
+    tag: 1.1.0-pgo-deployer
 
 config:
   clusterType: rke

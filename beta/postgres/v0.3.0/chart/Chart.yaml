@@ -13,6 +13,6 @@ maintainers:
   - name: 'Clay Risser'
     email: email@clayrisser.com
 annotations:
-  catalog.cattle.io/auto-install: postgres-operator=match
+  catalog.cattle.io/auto-install: postgres-crds=match
   catalog.cattle.io/display-name: Postgres
   catalog.cattle.io/os: linux

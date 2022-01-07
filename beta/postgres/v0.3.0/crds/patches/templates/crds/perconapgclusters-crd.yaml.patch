@@ -1,0 +1,16 @@
+--- templates/crds/perconapgclusters-crd.yaml	2022-01-07 05:51:17.986476562 -0600
++++ templates/crds/perconapgclusters-crd.yaml.tmp	2022-01-07 05:52:15.138684490 -0600
+@@ -1,4 +1,4 @@
+----
++{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "perconapgclusters.pg.percona.com")) }}
+ apiVersion: apiextensions.k8s.io/v1
+ kind: CustomResourceDefinition
+ metadata:
+@@ -32,4 +32,5 @@
+       status: {}
+       scale:
+         specReplicasPath: .spec.pgReplicas.hotStandby.size
+-        statusReplicasPath: .status.ready
+\ No newline at end of file
++        statusReplicasPath: .status.ready
++{{- end }}
