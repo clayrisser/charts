@@ -90,7 +90,7 @@ spec:
     resources: {}
     limits: {}
 {{- end }}
-{{- if .Values.config.backup.enabled }}
+# {{- if .Values.config.backup.enabled }}
   backup:
     image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
@@ -126,7 +126,7 @@ spec:
         keep: {{ .Values.config.backup.keep | quote }}
         type: full
         storage: local
-{{- end }}
+# {{- end }}
   pgBouncer:
     image: {{ .Values.images.pgBouncer.repository }}:{{ .Values.images.pgBouncer.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
