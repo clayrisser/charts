@@ -25,18 +25,16 @@ config:
   clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
-  username: postgres
-  password:
   pause: false
   standby: false
   wal: true
   passwords:
-    pgBouncer:
-    pgUser:
+    pgbouncer:
+    pguser:
     postgres:
     primaryUser:
   postgres:
-    hotReplicas: 2
+    hotReplicas: 0
     resources:
       enabled: defaults
       requests:
@@ -93,15 +91,6 @@ config:
       limits:
         cpu: 200m
         memory: 256Mi
-  # TODO: enable metrics
-  metrics:
-    enabled: false
-    grafana:
-      integration:
-      username: admin
-      password: P@ssw0rd
-    alertmanager:
-      enabled: false
 
 service:
   postgres:

@@ -31,7 +31,7 @@ spec:
 #  pgDataSource:
 #    restoreFrom: ""
 #    restoreOpts: ""
-  {{- if (and .Values.config.wal.enabled .Values.persistence.enabled) }}
+  {{- if (and .Values.config.wal .Values.persistence.enabled) }}
   walStorage:
     volumeSpec:
       size: {{ .Values.persistence.size.wal | quote }}
@@ -72,10 +72,6 @@ spec:
     expose:
       serviceType: ClusterIP
 #      loadBalancerSourceRanges:
-#      annotations:
-#        pg-cluster-annot: cluster1
-#      labels:
-#        pg-cluster-label: cluster1
 #    customconfig: ""
   pmm:
     enabled: false
@@ -146,10 +142,7 @@ spec:
     expose:
       serviceType: ClusterIP
 #      loadBalancerSourceRanges:
-#      annotations:
-#        pg-cluster-annot: cluster1
-#      labels:
-#        pg-cluster-label: cluster1
+{{- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0)) }}
   pgReplicas:
     hot:
       size: {{ .Values.config.postgres.hotReplicas }}
@@ -175,18 +168,11 @@ spec:
       {{- end }}
 #      affinity:
 #        default: null
-#      labels:
-#        pg-cluster-label: cluster1
-#      annotations:
-#        pg-cluster-annot: cluster1-1
       enableSyncStandby: false
       expose:
         serviceType: ClusterIP
 #        loadBalancerSourceRanges:
-#        annotations:
-#          pg-cluster-annot: cluster1
-#        labels:
-#          pg-cluster-label: cluster1
+{{- end }}
   pgBadger:
     enabled: {{ .Values.config.pgBadger.enabled }}
     image: {{ .Values.images.pgBadger.repository }}:{{ .Values.images.pgBadger.tag }}

@@ -58,6 +58,7 @@
     "pgbackrest",
     "pgbadger",
     "pgbouncer",
+    "pguser",
     "phpldapadmin",
     "phpmyadmin",
     "posix",

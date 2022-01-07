@@ -1,3 +1,612 @@
 categories:
-  - Server
-questions: {}
+  - Database
+questions:
+
+  # Config
+  - variable: config.clusterType
+    description: ''
+    type: enum
+    options:
+      - aks
+      - eks
+      - gke
+      - k3s
+      - rke
+    required: true
+    label: 'cluster type'
+    group: Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - OnDelete
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.pause
+    description: ''
+    type: boolean
+    required: true
+    label: pause
+    group: Config
+  - variable: config.standby
+    description: ''
+    type: boolean
+    required: false
+    label: standby
+    group: Config
+  - variable: config.wal
+    description: ''
+    type: boolean
+    required: true
+    label: wal
+    group: Config
+  - variable: config.passwords.pgbouncer
+    description: ''
+    type: password
+    required: false
+    label: 'pgbouncer password'
+    group: Config
+  - variable: config.passwords.pguser
+    description: ''
+    type: password
+    required: false
+    label: 'pguser password'
+    group: Config
+  - variable: config.passwords.postgres
+    description: ''
+    type: password
+    required: false
+    label: 'postgres password'
+    group: Config
+  - variable: config.passwords.primaryUser
+    description: ''
+    type: password
+    required: false
+    label: 'primary user password'
+    group: Config
+  - variable: config.postgres.hotReplicas
+    description: ''
+    type: int
+    required: true
+    label: 'postgres hot replicas'
+    group: Config
+  - variable: config.postgres.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'postgres resources enabled'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.postgres.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'postgres resources requests cpu'
+      - variable: config.postgres.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'postgres resources requests memory'
+      - variable: config.postgres.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'postgres resources limits cpu'
+      - variable: config.postgres.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'postgres resources limits memory'
+  - variable: config.pgBadger.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'pgbadger enabled'
+    group: Config
+
+  # PMM
+  - variable: config.pmm.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: PMM
+  - variable: config.pmm.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_if: config.pmm.enabled=true
+    show_subquestion_if: custom
+    group: PMM
+    subquestions:
+      - variable: config.pmm.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pmm.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.pmm.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pmm.enabled=true
+        label: 'resources requests memory'
+      - variable: config.pmm.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pmm.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.pmm.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pmm.enabled=true
+        label: 'resources limits memory'
+
+  # Backup
+  - variable: config.backup.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: Backup
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.backup.schedule
+        description: ''
+        type: string
+        required: true
+        label: schedule
+      - variable: config.backup.keep
+        description: ''
+        type: string
+        required: true
+        label: keep
+  - variable: config.backup.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_if: config.backup.enabled=true
+    show_subquestion_if: custom
+    group: Backup
+    subquestions:
+      - variable: config.backup.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.backup.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.backup.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.backup.enabled=true
+        label: 'resources requests memory'
+      - variable: config.backup.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.backup.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.backup.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.backup.enabled=true
+        label: 'resources limits memory'
+
+  # PgBouncer
+  - variable: config.pgBouncer.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: PgBouncer
+  - variable: config.pgBouncer.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_if: config.pgBouncer.enabled=true
+    show_subquestion_if: custom
+    group: PgBouncer
+    subquestions:
+      - variable: config.pgBouncer.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgBouncer.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.pgBouncer.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgBouncer.enabled=true
+        label: 'resources requests memory'
+      - variable: config.pgBouncer.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgBouncer.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.pgBouncer.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgBouncer.enabled=true
+        label: 'resources limits memory'
+
+  # PGAdmin
+  - variable: config.pgadmin.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.email
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin email'
+      - variable: config.pgadmin.password
+        description: ''
+        type: password
+        required: false
+        label: 'pgadmin password'
+  - variable: config.pgadmin.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'pgadmin resources enabled'
+    show_subquestion_if: custom
+    show_if: config.pgadmin.enabled=true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgadmin.enabled=true
+        label: 'pgadmin resources requests cpu'
+      - variable: config.pgadmin.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgadmin.enabled=true
+        label: 'pgadmin resources requests memory'
+      - variable: config.pgadmin.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgadmin.enabled=true
+        label: 'pgadmin resources limits cpu'
+      - variable: config.pgadmin.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgadmin.enabled=true
+        label: 'pgadmin resources limits memory'
+
+  # Persistence
+  - variable: persistence.size.primary
+    description: ''
+    type: string
+    required: true
+    label: 'primary size'
+    group: Persistence
+  - variable: persistence.size.replica
+    description: ''
+    type: string
+    required: true
+    label: 'replica size'
+    group: Persistence
+  - variable: persistence.size.backrest
+    description: ''
+    type: string
+    required: true
+    label: 'backrest size'
+    group: Persistence
+  - variable: persistence.size.wal
+    description: ''
+    type: string
+    required: true
+    label: 'wal size'
+    group: Persistence
+  - variable: persistence.size.alertmanager
+    description: ''
+    type: string
+    required: true
+    label: 'alertmanager size'
+    group: Persistence
+  - variable: persistence.size.archive
+    description: ''
+    type: string
+    required: true
+    label: 'archive size'
+    group: Persistence
+  - variable: persistence.size.prometheus
+    description: ''
+    type: string
+    required: true
+    label: 'prometheus size'
+    show_if: config.metrics.enabled=true
+    group: Persistence
+  - variable: persistence.size.alertmanager
+    description: ''
+    type: string
+    required: true
+    label: 'alertmanager size'
+    show_if: config.metrics.enabled=true&&config.metrics.alertmanager.enabled=true
+    group: Persistence
+  - variable: persistence.size.grafana
+    description: ''
+    type: string
+    required: true
+    label: 'grafana size'
+    show_if: config.metrics.enabled=true&&config.metrics.grafana.enabled=true
+    group: Persistence
+  - variable: persistence.storageClass
+    description: ''
+    type: storageclass
+    required: false
+    label: 'storage class'
+    group: Persistence
+  - variable: persistence.accessMode
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadWriteMany
+      - ReadOnlyMany
+    required: false
+    label: 'access mode'
+    group: Persistence
+  - variable: persistence.velero.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'velero enabled'
+    group: Persistence
+  - variable: persistence.velero.schedule
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: false
+    label: 'velero schedule'
+    group: Persistence
+  - variable: persistence.velero.restic
+    description: ''
+    type: boolean
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero restic'
+    group: Persistence
+  - variable: persistence.velero.ttl
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero ttl'
+    group: Persistence
+
+  # Services and Load Balancing
+  - variable: ingress.pgadmin.enabled
+    description: ''
+    type: boolean
+    label: 'pgadmin ingress enabled'
+    show_if: config.pgadmin.enabled=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.pgadmin.tls
+        description: ''
+        type: boolean
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress tls'
+      - variable: ingress.pgadmin.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.pgadmin.enabled=true
+        required: true
+        label: 'pgadmin ingress hostname'
+      - variable: ingress.pgadmin.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.pgadmin.tls=true&&config.pgadmin.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - selfsigned
+        required: true
+        label: 'pgadmin ingress issuer name'
+      - variable: ingress.pgadmin.certificate
+        description: ''
+        type: string
+        show_if: ingress.pgadmin.tls=true&&ingress.pgadmin.issuer.name=none&&config.pgadmin.enabled=true
+        required: false
+        label: 'pgadmin ingress certificate'
+  - variable: service.pgadmin.type
+    description: ''
+    type: enum
+    show_if: ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'pgadmin service type'
+    group: 'Services and Load Balancing'
+  - variable: service.pgadmin.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.pgadmin.type=NodePort&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    label: 'pgadmin http node port'
+    group: 'Services and Load Balancing'
+  - variable: ingress.metrics.enabled
+    description: ''
+    type: boolean
+    label: 'metrics ingress enabled'
+    show_if: config.metrics=true
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.metrics.tls
+        description: ''
+        type: boolean
+        required: true
+        show_if: config.metrics=true
+        label: 'metrics ingress tls'
+      - variable: ingress.metrics.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        show_if: config.metrics=true
+        label: 'metrics ingress hostname'
+      - variable: ingress.metrics.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.metrics.tls=true&&config.metrics=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - selfsigned
+        required: true
+        label: 'metrics ingress issuer name'
+      - variable: ingress.metrics.certificate
+        description: ''
+        type: string
+        show_if: ingress.metrics.tls=true&&ingress.metrics.issuer.name=none&&config.metrics=true
+        required: false
+        label: 'metrics ingress certificate'
+  - variable: service.metrics.type
+    description: ''
+    type: enum
+    show_if: ingress.metrics.enabled=false&&config.metrics=true
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'metrics service type'
+    group: 'Services and Load Balancing'
+  - variable: service.pgadmin.lbPorts.http
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.pgadmin.type=LoadBalancer&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    label: 'pgadmin http lb port'
+    group: 'Services and Load Balancing'
+  - variable: service.postgres.type
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'postgres service type'
+    group: 'Services and Load Balancing'
+  - variable: service.postgres.nodePorts.postgres
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.postgres.type=NodePort
+    label: 'postgres node port'
+    group: 'Services and Load Balancing'
+  - variable: service.postgres.lbPorts.postgres
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.postgres.type=LoadBalancer
+    label: 'postgres lb port'
+    group: 'Services and Load Balancing'
+
+  # Images
+  - variable: images.pgadmin.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgadmin repository'
+    show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.pgadmin.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgadmin tag'
+    show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.postgres.registry
+    description: ''
+    type: string
+    required: true
+    label: 'postgres registry'
+    group: Images
+  - variable: images.postgres.repository
+    description: ''
+    type: string
+    required: true
+    label: 'postgres repository'
+    group: Images
+  - variable: images.postgres.tag
+    description: ''
+    type: string
+    required: true
+    label: 'postgres tag'
+    group: Images
