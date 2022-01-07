@@ -142,7 +142,7 @@ spec:
 {{- end }}
     expose:
       serviceType: ClusterIP
-{{- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0)) }}
+{{- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0.0)) }}
   pgReplicas:
     hot:
       size: {{ .Values.config.postgres.hotReplicas }}
