@@ -1,5 +1,5 @@
 --- templates/operator.yaml	2022-01-07 09:19:11.249067733 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 09:18:15.041053843 -0600
++++ templates/operator.yaml.tmp	2022-01-07 09:22:59.253123770 -0600
 @@ -1,13 +1,22 @@
 +{{- if (not (lookup "v1" "ServiceAccount" .Values.namespace "pgo-deployer-sa")) }}
  apiVersion: v1
@@ -96,7 +96,7 @@
 +  namespace: {{ .Values.namespace }}
 +  annotations:
 +    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '10'
++    helm.sh/hook-weight: '11'
  spec:
    backoffLimit: 0
    template:
