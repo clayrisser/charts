@@ -343,51 +343,21 @@ questions:
     type: string
     required: true
     label: 'replica size'
-    group: Persistence
-  - variable: persistence.size.backrest
-    description: ''
-    type: string
-    required: true
-    label: 'backrest size'
+    show_if: config.postgres.hotReplicas!=0
     group: Persistence
   - variable: persistence.size.wal
     description: ''
     type: string
     required: true
     label: 'wal size'
+    show_if: config.wal
     group: Persistence
-  - variable: persistence.size.alertmanager
-    description: ''
-    type: string
-    required: true
-    label: 'alertmanager size'
-    group: Persistence
-  - variable: persistence.size.archive
+  - variable: persistence.size.backup
     description: ''
     type: string
     required: true
     label: 'archive size'
-    group: Persistence
-  - variable: persistence.size.prometheus
-    description: ''
-    type: string
-    required: true
-    label: 'prometheus size'
-    show_if: config.metrics.enabled=true
-    group: Persistence
-  - variable: persistence.size.alertmanager
-    description: ''
-    type: string
-    required: true
-    label: 'alertmanager size'
-    show_if: config.metrics.enabled=true&&config.metrics.alertmanager.enabled=true
-    group: Persistence
-  - variable: persistence.size.grafana
-    description: ''
-    type: string
-    required: true
-    label: 'grafana size'
-    show_if: config.metrics.enabled=true&&config.metrics.grafana.enabled=true
+    show_if: config.backup.enabled
     group: Persistence
   - variable: persistence.storageClass
     description: ''
@@ -615,4 +585,72 @@ questions:
     type: string
     required: true
     label: 'postgres tag'
+    group: Images
+  - variable: images.pmm.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pmm repository'
+    show_if: config.pmm.enabled
+    group: Images
+  - variable: images.pmm.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pmm tag'
+    show_if: config.pmm.enabled
+    group: Images
+  - variable: images.backup.repository
+    description: ''
+    type: string
+    required: true
+    label: 'backup repository'
+    show_if: config.backup.enabled
+    group: Images
+  - variable: images.backup.tag
+    description: ''
+    type: string
+    required: true
+    label: 'backup tag'
+    show_if: config.backup.enabled
+    group: Images
+  - variable: images.backrestRepo.repository
+    description: ''
+    type: string
+    required: true
+    label: 'backrestRepo repository'
+    show_if: config.backup.enabled
+    group: Images
+  - variable: images.backrestRepo.tag
+    description: ''
+    type: string
+    required: true
+    label: 'backrestRepo tag'
+    show_if: config.backup.enabled
+    group: Images
+  - variable: images.pgBouncer.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgBouncer repository'
+    group: Images
+  - variable: images.pgBouncer.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgBouncer tag'
+    group: Images
+  - variable: images.pgBadger.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgBadger repository'
+    show_if: config.pgBadger.enabled
+    group: Images
+  - variable: images.pgBadger.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgBadger tag'
+    show_if: config.pgBadger.enabled
     group: Images
