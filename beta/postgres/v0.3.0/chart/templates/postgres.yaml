@@ -31,7 +31,7 @@ spec:
 #  pgDataSource:
 #    restoreFrom: ""
 #    restoreOpts: ""
-  {{- if (and .Values.config.wal .Values.persistence.enabled) }}
+  # {{- if (and .Values.config.wal .Values.persistence.enabled) }}
   walStorage:
     volumeSpec:
       size: {{ .Values.persistence.size.wal | quote }}
@@ -42,7 +42,7 @@ spec:
       {{- else }}
       storageclass: {{ .Values.persistence.storageClass | quote }}
       {{- end }}
-  {{- end }}
+  # {{- end }}
   userLabels:
     pgo-version: '1.2.0'
   pgPrimary:
@@ -142,7 +142,7 @@ spec:
 {{- end }}
     expose:
       serviceType: ClusterIP
-{{- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0.0)) }}
+# {{- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0.0)) }}
   pgReplicas:
     hot:
       size: {{ .Values.config.postgres.hotReplicas }}
@@ -190,7 +190,7 @@ spec:
       enableSyncStandby: false
       expose:
         serviceType: ClusterIP
-{{- end }}
+# {{- end }}
   pgBadger:
     enabled: {{ .Values.config.pgBadger.enabled }}
     image: {{ .Values.images.pgBadger.repository }}:{{ .Values.images.pgBadger.tag }}

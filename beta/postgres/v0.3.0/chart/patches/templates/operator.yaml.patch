@@ -1,5 +1,5 @@
 --- templates/operator.yaml	2022-01-07 06:05:24.974152026 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 06:07:37.251085901 -0600
++++ templates/operator.yaml.tmp	2022-01-07 06:13:49.249290924 -0600
 @@ -2,8 +2,9 @@
  kind: ServiceAccount
  metadata:
@@ -44,21 +44,21 @@
      pgo_tls_ca_store: ""
      pgo_tls_no_verify: "false"
      pod_anti_affinity: "preferred"
-@@ -249,6 +251,7 @@
-     storage9_type: "dynamic"
-     storage9_class: "rook-ceph-block"
- ---
-+{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "pgo-deployer-crb")) }}
+@@ -252,7 +254,7 @@
  apiVersion: rbac.authorization.k8s.io/v1
  kind: ClusterRoleBinding
  metadata:
-@@ -260,13 +263,14 @@
+-  name: pgo-deployer-crb
++  name: pgo-deployer-crb-{{ .Release.Namespace }}
+ roleRef:
+   apiGroup: rbac.authorization.k8s.io
+   kind: ClusterRole
+@@ -260,13 +262,13 @@
  subjects:
    - kind: ServiceAccount
      name: pgo-deployer-sa
 -    namespace: pgo
 +    namespace: {{ .Release.Namespace }}
-+{{- end }}
  ---
  apiVersion: batch/v1
  kind: Job
@@ -69,7 +69,7 @@
  spec:
    backoffLimit: 0
    template:
-@@ -277,7 +281,7 @@
+@@ -277,7 +279,7 @@
        restartPolicy: Never
        containers:
          - name: pgo-deploy
@@ -78,7 +78,7 @@
            imagePullPolicy: Always
            env:
              - name: DEPLOY_ACTION
-@@ -288,4 +292,4 @@
+@@ -288,4 +290,4 @@
        volumes:
          - name: deployer-conf
            configMap:
