@@ -15,10 +15,10 @@ spec:
     namespace: {{ .Release.Namespace }}
   config:
     protocol: psql
-    username: {{ .Values.config.username | quote }}
+    username: pguser
     hostname: {{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
     port: '5432'
-  configSecretName: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
+  configSecretName: {{ template "postgres.name" . }}-users
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -60,8 +60,8 @@ spec:
                     - name: POSTGRES_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
-                          key: password
+                          name: {{ template "postgres.name" . }}-users
+                          key: pguser
                   command:
                     - sh
                     - -c
@@ -145,8 +145,8 @@ spec:
                     - name: POSTGRES_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "postgres.name" . }}-{{ .Values.config.username }}-secret
-                          key: password
+                          name: {{ template "postgres.name" . }}-users
+                          key: pguser
                   command:
                     - sh
                     - -c
