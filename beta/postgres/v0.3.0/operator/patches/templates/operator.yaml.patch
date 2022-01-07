@@ -1,5 +1,5 @@
 --- templates/operator.yaml	2022-01-07 09:19:11.249067733 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 09:37:07.718974339 -0600
++++ templates/operator.yaml.tmp	2022-01-07 09:41:45.772262660 -0600
 @@ -1,13 +1,22 @@
 +{{- if (not (lookup "v1" "ServiceAccount" .Values.namespace "pgo-deployer-sa")) }}
  apiVersion: v1
@@ -43,6 +43,15 @@
  data:
    values.yaml: |-
      # =====================
+@@ -147,7 +161,7 @@
+     ccp_image_pull_secret_manifest: ""
+     ccp_image_tag: "1.1.0-postgres-ha"
+     create_rbac: "true"
+-    crunchy_debug: "false"
++    crunchy_debug: "true"
+     db_name: ""
+     db_password_age_days: "0"
+     db_password_length: "24"
 @@ -165,7 +179,7 @@
      reconcile_rbac: "true"
      exporterport: "9187"
