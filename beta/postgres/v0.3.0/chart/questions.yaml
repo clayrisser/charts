@@ -34,6 +34,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
   - variable: config.pause
     description: ''
     type: boolean
@@ -554,6 +560,30 @@ questions:
     group: 'Services and Load Balancing'
 
   # Images
+  - variable: images.postgres.repository
+    description: ''
+    type: string
+    required: true
+    label: 'postgres repository'
+    group: Images
+  - variable: images.postgres.tag
+    description: ''
+    type: string
+    required: true
+    label: 'postgres tag'
+    group: Images
+  - variable: images.postgresOperator.repository
+    description: ''
+    type: string
+    required: true
+    label: 'postgres operator repository'
+    group: Images
+  - variable: images.postgresOperator.tag
+    description: ''
+    type: string
+    required: true
+    label: 'postgres operator tag'
+    group: Images
   - variable: images.pgadmin.repository
     description: ''
     type: string
@@ -567,18 +597,6 @@ questions:
     required: true
     label: 'pgadmin tag'
     show_if: config.pgadmin.enabled=true
-    group: Images
-  - variable: images.postgres.repository
-    description: ''
-    type: string
-    required: true
-    label: 'postgres repository'
-    group: Images
-  - variable: images.postgres.tag
-    description: ''
-    type: string
-    required: true
-    label: 'postgres tag'
     group: Images
   - variable: images.pmm.repository
     description: ''

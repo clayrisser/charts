@@ -1,17 +1,10 @@
---- templates/operator.yaml	2022-01-07 09:19:11.249067733 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 09:41:45.772262660 -0600
-@@ -1,13 +1,22 @@
-+{{- if (not (lookup "v1" "ServiceAccount" .Values.namespace "pgo-deployer-sa")) }}
- apiVersion: v1
+--- templates/operator.yaml	2022-01-07 10:40:56.975552330 -0600
++++ templates/operator.yaml.tmp	2022-01-07 10:48:00.453438063 -0600
+@@ -2,12 +2,15 @@
  kind: ServiceAccount
  metadata:
    name: pgo-deployer-sa
 -  namespace: pgo
-+  namespace: {{ .Values.namespace }}
-+  annotations:
-+    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '5'
-+{{- end }}
  ---
 +{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "pgo-deployer-cr")) }}
  kind: ClusterRole
@@ -24,92 +17,72 @@
  rules:
    - apiGroups:
        - ''
-@@ -115,12 +124,17 @@
+@@ -115,12 +118,12 @@
      verbs:
        - delete
        - list
 +{{- end }}
  ---
-+{{- if (not (lookup "v1" "ConfigMap" .Values.namespace "pgo-deployer-cm")) }}
  apiVersion: v1
  kind: ConfigMap
  metadata:
    name: pgo-deployer-cm
 -  namespace: pgo
-+  namespace: {{ .Values.namespace }}
-+  annotations:
-+    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '10'
  data:
    values.yaml: |-
      # =====================
-@@ -147,7 +161,7 @@
+@@ -147,7 +150,7 @@
      ccp_image_pull_secret_manifest: ""
      ccp_image_tag: "1.1.0-postgres-ha"
      create_rbac: "true"
 -    crunchy_debug: "false"
-+    crunchy_debug: "true"
++    crunchy_debug: {{ .Values.config.debug | quote }}
      db_name: ""
      db_password_age_days: "0"
      db_password_length: "24"
-@@ -165,7 +179,7 @@
+@@ -165,7 +168,7 @@
      reconcile_rbac: "true"
      exporterport: "9187"
      metrics: "false"
 -    namespace: "pgo"
-+    namespace: ""
++    namespace: {{ .Release.Namespace | quote }}
      namespace_mode: "dynamic"
      pgbadgerport: "10000"
      pgo_add_os_ca_store: "false"
-@@ -189,7 +203,7 @@
+@@ -189,7 +192,7 @@
      pgo_image_tag: "1.1.0"
      pgo_installation_name: "devtest"
      pgo_noauth_routes: ""
 -    pgo_operator_namespace: "pgo"
-+    pgo_operator_namespace: "{{ .Values.namespace }}"
++    pgo_operator_namespace: {{ .Release.Namespace | quote }}
      pgo_tls_ca_store: ""
      pgo_tls_no_verify: "false"
      pod_anti_affinity: "preferred"
-@@ -248,11 +262,16 @@
-     storage9_size: "1Gi"
-     storage9_type: "dynamic"
-     storage9_class: "rook-ceph-block"
-+{{- end }}
- ---
-+{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" (printf "pgo-deployer-crb-%s" .Values.namespace))) }}
+@@ -252,7 +255,7 @@
  apiVersion: rbac.authorization.k8s.io/v1
  kind: ClusterRoleBinding
  metadata:
 -  name: pgo-deployer-crb
-+  name: pgo-deployer-crb-{{ .Values.namespace }}
-+  annotations:
-+    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '5'
++  name: pgo-deployer-crb-{{ .Release.Namespace }}
  roleRef:
    apiGroup: rbac.authorization.k8s.io
    kind: ClusterRole
-@@ -260,13 +279,18 @@
+@@ -260,13 +263,12 @@
  subjects:
    - kind: ServiceAccount
      name: pgo-deployer-sa
 -    namespace: pgo
-+    namespace: {{ .Values.namespace }}
-+{{- end }}
++    namespace: {{ .Release.Namespace | quote }}
  ---
-+{{- if (not (lookup "v1" "ConfigMap" .Values.namespace "pgo-deployer-cm")) }}
  apiVersion: batch/v1
  kind: Job
  metadata:
    name: pgo-deploy
 -  namespace: pgo
-+  namespace: {{ .Values.namespace }}
-+  annotations:
-+    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '11'
  spec:
    backoffLimit: 0
    template:
-@@ -277,7 +301,7 @@
+@@ -277,7 +279,7 @@
        restartPolicy: Never
        containers:
          - name: pgo-deploy
@@ -118,11 +91,10 @@
            imagePullPolicy: Always
            env:
              - name: DEPLOY_ACTION
-@@ -288,4 +312,5 @@
+@@ -288,4 +290,4 @@
        volumes:
          - name: deployer-conf
            configMap:
 -            name: pgo-deployer-cm
 \ No newline at end of file
 +            name: pgo-deployer-cm
-+{{- end }}
