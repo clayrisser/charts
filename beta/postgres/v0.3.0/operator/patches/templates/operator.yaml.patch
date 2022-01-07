@@ -1,5 +1,5 @@
---- templates/operator.yaml	2022-01-07 05:02:22.701896678 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 05:12:30.921196179 -0600
+--- templates/operator.yaml	2022-01-07 05:33:09.002091560 -0600
++++ templates/operator.yaml.tmp	2022-01-07 05:32:56.462031391 -0600
 @@ -2,8 +2,9 @@
  kind: ServiceAccount
  metadata:
@@ -31,7 +31,7 @@
      exporterport: "9187"
      metrics: "false"
 -    namespace: "pgo"
-+    namespace: ""
++    namespace: "{{ .Release.Namespace }}"
      namespace_mode: "dynamic"
      pgbadgerport: "10000"
      pgo_add_os_ca_store: "false"

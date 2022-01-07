@@ -7,19 +7,7 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    autofail: 'true'
-    crunchy-pgbadger: 'false'
-    crunchy-pgha-scope: {{ template "postgres.name" . }}
-    deployment-name: {{ template "postgres.name" . }}
-    name: {{ template "postgres.name" . }}
-    pg-cluster: {{ template "postgres.name" . }}
-    pg-pod-anti-affinity: ''
-    pgo-backrest: 'true'
     pgo-version: '1.2.0'
-    pgouser: admin
-  annotations:
-    current-primary: {{ template "postgres.name" . }}
-    primary-deployment: {{ template "postgres.name" . }}
 spec:
   secretsName: {{ template "postgres.name" . }}-users
   {{- if .Values.service.postgres.tls.enabled }}
