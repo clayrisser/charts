@@ -1,5 +1,5 @@
---- templates/crds/pgreplicas-crd.yaml	2022-01-07 05:51:18.702479173 -0600
-+++ templates/crds/pgreplicas-crd.yaml.tmp	2022-01-07 05:53:03.798860834 -0600
+--- templates/crds/pgreplicas-crd.yaml	2022-01-07 09:03:02.572818688 -0600
++++ templates/crds/pgreplicas-crd.yaml.tmp	2022-01-07 08:56:19.324700078 -0600
 @@ -1,4 +1,4 @@
 ----
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "pgreplicas.pg.percona.com")) }}

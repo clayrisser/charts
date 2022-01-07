@@ -1,5 +1,5 @@
---- templates/crds/pgpolicies-crd.yaml	2022-01-07 05:51:18.486478385 -0600
-+++ templates/crds/pgpolicies-crd.yaml.tmp	2022-01-07 05:52:49.558809286 -0600
+--- templates/crds/pgpolicies-crd.yaml	2022-01-07 09:03:02.572818688 -0600
++++ templates/crds/pgpolicies-crd.yaml.tmp	2022-01-07 08:56:19.204700040 -0600
 @@ -1,4 +1,4 @@
 ----
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "pgpolicies.pg.percona.com")) }}

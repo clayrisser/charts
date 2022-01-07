@@ -1,10 +1,10 @@
 apiVersion: v2
-name: postgres-crds
+name: postgres-operator
 home: https://gitlab.com/bitspur/community/charts
 version: 0.0.1
 appVersion: 0.71.0
 type: application
-description: 'kubernetes crds for postgres'
+description: 'kubernetes operator for postgres'
 keywords:
   - database
 sources:
@@ -17,5 +17,4 @@ annotations:
   catalog.cattle.io/hidden: 'true'
   catalog.cattle.io/namespace: pgo
   catalog.cattle.io/os: linux
-  catalog.cattle.io/release-name: postgres-crds
-  catalog.cattle.io/release-namespace: pgo
+  catalog.cattle.io/release-name: postgres-operator

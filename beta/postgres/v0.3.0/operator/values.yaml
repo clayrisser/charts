@@ -1,0 +1,6 @@
+images:
+  postgresOperator:
+    repository: percona/percona-postgresql-operator
+    tag: 1.1.0-pgo-deployer
+
+namespace: pgo
