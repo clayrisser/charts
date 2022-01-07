@@ -1,5 +1,5 @@
---- templates/operator.yaml	2022-01-06 07:03:41.049351794 -0600
-+++ templates/operator.yaml.tmp	2022-01-06 07:04:07.121556794 -0600
+--- templates/operator.yaml	2022-01-07 05:02:22.701896678 -0600
++++ templates/operator.yaml.tmp	2022-01-07 05:12:30.921196179 -0600
 @@ -2,8 +2,9 @@
  kind: ServiceAccount
  metadata:
@@ -26,6 +26,24 @@
  data:
    values.yaml: |-
      # =====================
+@@ -165,7 +167,7 @@
+     reconcile_rbac: "true"
+     exporterport: "9187"
+     metrics: "false"
+-    namespace: "pgo"
++    namespace: ""
+     namespace_mode: "dynamic"
+     pgbadgerport: "10000"
+     pgo_add_os_ca_store: "false"
+@@ -189,7 +191,7 @@
+     pgo_image_tag: "1.1.0"
+     pgo_installation_name: "devtest"
+     pgo_noauth_routes: ""
+-    pgo_operator_namespace: "pgo"
++    pgo_operator_namespace: "{{ .Release.Namespace }}"
+     pgo_tls_ca_store: ""
+     pgo_tls_no_verify: "false"
+     pod_anti_affinity: "preferred"
 @@ -249,6 +251,7 @@
      storage9_type: "dynamic"
      storage9_class: "rook-ceph-block"
