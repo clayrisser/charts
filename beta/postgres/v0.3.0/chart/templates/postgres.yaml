@@ -183,7 +183,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:
                   matchExpressions:
-                    - key: app
+                    - key: pg-cluster
                       operator: In
                       values:
                         - {{ template "postgres.name" . }}
