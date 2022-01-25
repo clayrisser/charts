@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
     pgo-version: '1.2.0'
 spec:
-  secretsName: {{ template "postgres.name" . }}-users
+  # secretsName: {{ template "postgres.name" . }}-users
   {{- if .Values.service.postgres.tls.enabled }}
   sslCA: {{ template "postgres.postgres-ca" . }}
   sslSecretName: {{ template "postgres.postgres-certificate" . }}
@@ -43,8 +43,8 @@ spec:
       storageclass: {{ .Values.persistence.storageClass | quote }}
       {{- end }}
   {{- end }}
-  userLabels:
-    pgo-version: '1.2.0'
+  # userLabels:
+  #   pgo-version: '1.2.0'
   pgPrimary:
     image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy }}

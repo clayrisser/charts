@@ -1,6 +1,6 @@
 images:
   postgresOperator:
-    repository: percona/percona-postgresql-operator
+    repository: perconalab/percona-postgresql-operator
     tag: main-pgo-deployer
   pgadmin:
     repository: dpage/pgadmin4
