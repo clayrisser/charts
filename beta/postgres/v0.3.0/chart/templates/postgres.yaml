@@ -88,10 +88,8 @@ spec:
     resources: {}
     limits: {}
 {{- end }}
-{{- if .Values.config.backup.enabled }}
   backup:
     antiAffinityType: preferred
-    repoPath: ""
     backrestRepoImage: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
@@ -104,9 +102,6 @@ spec:
     resources: {}
     limits: {}
 {{- end }}
-    serviceAccount: ""
-    storageTypes: null
-    storages: null
     volumeSpec:
       size: {{ .Values.persistence.size.backup | quote }}
       accessmode: {{ .Values.persistence.accessMode | quote }}
@@ -121,12 +116,15 @@ spec:
 #        type: gcs
 #        bucket: some-gcs-bucket
 #    repoPath: ""
+{{- if .Values.config.backup.enabled }}
     schedule:
       - name: default
         schedule: {{ .Values.config.backup.schedule | quote }}
         keep: {{ .Values.config.backup.keep | quote }}
         type: full
         storage: local
+{{- else }}
+    schedule: []
 {{- end }}
   pgBouncer:
     image: {{ .Values.images.pgBouncer.repository }}:{{ .Values.images.pgBouncer.tag }}
