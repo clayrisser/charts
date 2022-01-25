@@ -15,10 +15,10 @@ spec:
     namespace: {{ .Release.Namespace }}
   config:
     protocol: psql
-    username: pguser
+    username: postgres
     hostname: {{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
     port: '5432'
-  configSecretName: {{ template "postgres.name" . }}-users
+  configSecretName: {{ template "postgres.name" . }}-postgres-secret
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -60,8 +60,8 @@ spec:
                     - name: POSTGRES_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "postgres.name" . }}-users
-                          key: pguser
+                          name: {{ template "postgres.name" . }}-postgres-secret
+                          key: password
                   command:
                     - sh
                     - -c
@@ -104,7 +104,6 @@ spec:
                         -l job-name={{ template "postgres.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
-
     - when: [decoupled]
       do: recreate
       resource: |
@@ -145,8 +144,8 @@ spec:
                     - name: POSTGRES_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "postgres.name" . }}-users
-                          key: pguser
+                          name: {{ template "postgres.name" . }}-postgres-secret
+                          key: password
                   command:
                     - sh
                     - -c

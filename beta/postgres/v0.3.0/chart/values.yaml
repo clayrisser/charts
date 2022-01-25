@@ -31,7 +31,7 @@ config:
   debug: false
   pause: false
   standby: false
-  wal: true
+  wal: false
   passwords:
     pgbouncer:
     pguser:
@@ -143,3 +143,5 @@ persistence:
     restic: true
     schedule: '@midnight'
     ttl: 2160h0m00s
+  kanister:
+    enabled: false

@@ -1,9 +1,13 @@
-{{- if .Values.backup.kanister.enabled }}
+{{- if .Values.persistence.kanister.enabled }}
 apiVersion: cr.kanister.io/v1alpha1
 kind: Blueprint
 metadata:
-  name: postgres-bp_blueprint
-  namespace: kanister
+  name: postgres
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 actions:
   backup:
     secretNames:
@@ -44,7 +48,7 @@ actions:
             - pipefail
             - -c
             - |
-              export PGHOST='postgres-postgres.a-postgres.svc.cluster.local'
+              export PGHOST="{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local"
               export PGUSER='postgres'
               export PGPASSWORD={{"{{"}} .Secrets.postgres.Data.password | toString {{"}}"}}
               backup_file_path="backup.sql"
