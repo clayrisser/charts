@@ -1,0 +1,55 @@
+{{- if .Values.backup.kanister.enabled }}
+apiVersion: cr.kanister.io/v1alpha1
+kind: Blueprint
+metadata:
+  name: postgres-bp_blueprint
+  namespace: kanister
+actions:
+  backup:
+    secretNames:
+      - postgres
+    kind: deployment
+    phases:
+      - args:
+          command:
+            - bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              export PGHOST="{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local"
+              export PGUSER='postgres'
+              export PGPASSWORD={{"{{"}} .Secrets.postgres.Data.password | toString {{"}}"}}
+              backup_file_path='{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}pgsql.sql'
+              pg_dumpall --clean -U $PGUSER | kando location push --profile '{{ toJson .Profile }}' --path "${backup_file_path}" -
+          image: ghcr.io/kanisterio/postgres-kanister-tools:0.71.0
+          namespace: {{ .Release.Namespace }}
+        func: KubeTask
+        name: pgDump
+  restore:
+    secretNames:
+      - postgres
+    inputArtifactNames:
+      - pgBackup
+    kind: deployment
+    phases:
+      - args:
+          command:
+            - bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              export PGHOST='postgres-postgres.a-postgres.svc.cluster.local'
+              export PGUSER='postgres'
+              export PGPASSWORD={{"{{"}} .Secrets.postgres.Data.password | toString {{"}}"}}
+              backup_file_path="backup.sql"
+          image: ghcr.io/kanisterio/postgres-kanister-tools:0.71.0
+          namespace: {{ .Release.Namespace }}
+        func: KubeTask
+        name: pgRestore
+{{- end }}

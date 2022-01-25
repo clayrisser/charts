@@ -90,9 +90,11 @@ spec:
 {{- end }}
 {{- if .Values.config.backup.enabled }}
   backup:
+    antiAffinityType: preferred
+    repoPath: ""
+    backrestRepoImage: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
-    backrestRepoImage: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
 {{- if (and .Values.config.backup.resources.enabled (not (eq .Values.config.backup.resources.enabled "false"))) }}
     resources:
 {{ toYaml .Values.config.backup.resources.requests | indent 6 }}
@@ -102,6 +104,9 @@ spec:
     resources: {}
     limits: {}
 {{- end }}
+    serviceAccount: ""
+    storageTypes: null
+    storages: null
     volumeSpec:
       size: {{ .Values.persistence.size.backup | quote }}
       accessmode: {{ .Values.persistence.accessMode | quote }}
