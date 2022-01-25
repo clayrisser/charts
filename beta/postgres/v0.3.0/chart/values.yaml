@@ -145,3 +145,4 @@ persistence:
     ttl: 2160h0m00s
   kanister:
     enabled: false
+    schedule: '0 0 * * *'

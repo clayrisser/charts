@@ -2,7 +2,8 @@
 apiVersion: cr.kanister.io/v1alpha1
 kind: Blueprint
 metadata:
-  name: postgres
+  name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}
+  namespace: kanister
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -56,4 +57,31 @@ actions:
           namespace: {{ .Release.Namespace }}
         func: KubeTask
         name: pgRestore
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}-kanister
+  namespace: kanister
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: {{ .Values.persistence.kanister.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: kanister-sa-cluster
+          containers:
+            - name: {{ template "postgres.name" . }}-backup
+              image: registry.gitlab.com/shri178/kanctl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  kanctl create actionset --action backup --namespace kanister --blueprint {{ template "postgres.fullname" . }}-{{ .Release.Namespace }} --deployment {{ .Release.Namespace }}/postgres --secrets postgres={{ .Release.Namespace }}/{{ template "postgres.name" . }}-postgres-secret --profile s3
+          restartPolicy: OnFailure
 {{- end }}

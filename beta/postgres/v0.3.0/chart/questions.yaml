@@ -408,6 +408,19 @@ questions:
     required: true
     label: 'velero ttl'
     group: Persistence
+  - variable: persistence.kanister.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'kanister enabled'
+    group: Persistence
+    show_subquestion_if: true
+    subquestions:
+      - variable: persistence.kanister.schedule
+        description: ''
+        type: string
+        required: false
+        label: 'kanister schedule'
 
   # Services and Load Balancing
   - variable: ingress.pgadmin.enabled
