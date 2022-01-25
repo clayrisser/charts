@@ -118,11 +118,7 @@ spec:
 #    repoPath: ""
     schedule:
       - name: default
-{{- if .Values.config.backup.enabled }}
-        schedule: {{ .Values.config.backup.schedule | quote }}
-{{- else }}
-        schedule: '0 0 31 2 0'
-{{- end }}
+        schedule: {{ .Values.config.backup.enabled | ternary .Values.config.backup.schedule "0 0 31 2 *" }}
         keep: {{ .Values.config.backup.keep | quote }}
         type: full
         storage: local
