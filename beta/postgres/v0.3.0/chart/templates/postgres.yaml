@@ -116,16 +116,16 @@ spec:
 #        type: gcs
 #        bucket: some-gcs-bucket
 #    repoPath: ""
-{{- if .Values.config.backup.enabled }}
     schedule:
       - name: default
+{{- if .Values.config.backup.enabled }}
         schedule: {{ .Values.config.backup.schedule | quote }}
+{{- else }}
+        schedule: '0 0 31 2 0'
+{{- end }}
         keep: {{ .Values.config.backup.keep | quote }}
         type: full
         storage: local
-{{- else }}
-    schedule: []
-{{- end }}
   pgBouncer:
     image: {{ .Values.images.pgBouncer.repository }}:{{ .Values.images.pgBouncer.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
