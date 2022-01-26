@@ -70,7 +70,7 @@ spec:
                         name: {% .plugConfig.caName | default "ca" %}
                         namespace: {% .plug.metadata.namespace %}
                       stringData:
-                        tls.crt:
+                        tls.crt: |
                       $(echo "$CA_TLS_CRT" | sed 's|^|    |g')
                       {%- if (eq .plugConfig.includeTlsKey "true") %}
                         tls.key: |
