@@ -39,7 +39,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: bitnami/kubectl:1.20.9
+                  image: codejamninja/kube-commands:0.0.2
                   env:
                     - name: CA_TLS_CRT
                       valueFrom:
@@ -105,7 +105,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: bitnami/kubectl:1.20.9
+                  image: codejamninja/kube-commands:0.0.2
                   command:
                     - sh
                     - -c
