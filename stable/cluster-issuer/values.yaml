@@ -2,6 +2,3 @@ config:
   cloudflareApiKey: ''
   clusterType: rke
   email: ''
-  ca:
-    enabled: true
-    name: selfsigned

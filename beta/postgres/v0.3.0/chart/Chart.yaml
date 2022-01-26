@@ -4,6 +4,7 @@ home: https://gitlab.com/bitspur/community/charts
 version: 0.0.1
 appVersion: 0.0.1
 type: application
+icon: https://www.postgresql.org/media/img/about/press/elephant.png
 description: 'create and manage postgresql clusters running in kubernetes'
 keywords:
   - database

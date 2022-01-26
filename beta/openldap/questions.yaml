@@ -318,31 +318,29 @@ questions:
         type: boolean
         required: true
         label: 'openldap tls enforce'
-      - variable: service.openldap.tls.certificate
-        description: ''
+      - variable: service.openldap.tls.certificate.name
+        description: 'certificate will be automatically generated if not set'
         type: string
         required: false
-        label: 'openldap tls certificate'
-      - variable: service.openldap.tls.issuer.name
-        description: ''
-        type: enum
-        options:
-          - selfsigned
-        show_if: service.openldap.tls.certificate=
-        required: false
-        label: 'openldap tls issuer name'
-      - variable: service.openldap.tls.issuer.dnsNames
+        label: 'openldap tls certificate name'
+      - variable: service.openldap.tls.certificate.ca
         description: ''
         type: string
-        show_if: service.openldap.tls.certificate=
+        show_if: service.openldap.tls.certificate.name!=
         required: false
-        label: 'openldap tls issuer dns names'
-      - variable: service.openldap.tls.ca
-        description: 'only use if you manually provide a tls certificate'
+        label: 'openldap tls certificate ca'
+      - variable: service.openldap.tls.certificate.issuer.integration
+        description: 'replicates the ca that was used to generate the certificate'
         type: string
-        show_if: service.openldap.tls.certificate!=
+        show_if: service.openldap.tls.certificate.name=
+        required: true
+        label: 'openldap tls certificate issuer integration'
+      - variable: service.openldap.tls.certificate.issuer.dnsNames
+        description: ''
+        type: string
+        show_if: service.openldap.tls.certificate.name=
         required: false
-        label: 'openldap tls ca'
+        label: 'openldap tls certificate issuer dns names'
   - variable: service.openldap.nodePorts.ldaps
     default: ''
     description: ''

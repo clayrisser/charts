@@ -47,11 +47,12 @@ service:
     tls:
       enabled: true
       enforce: false
-      certificate: ''
-      ca: ''
-      issuer:
-        name: selfsigned
-        dnsNames: ''
+      certificate:
+        name: ''
+        ca: ''
+        issuer:
+          integration: cert-manager
+          dnsNames: ''
     nodePorts:
       ldap:
       ldaps:

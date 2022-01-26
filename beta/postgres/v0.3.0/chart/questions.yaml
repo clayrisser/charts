@@ -483,6 +483,15 @@ questions:
     show_if: service.pgadmin.type=NodePort&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin http node port'
     group: 'Services and Load Balancing'
+  - variable: service.pgadmin.lbPorts.http
+    description: ''
+    type: int
+    required: true
+    min: 0
+    max: 65535
+    show_if: service.pgadmin.type=LoadBalancer&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
+    label: 'pgadmin http lb port'
+    group: 'Services and Load Balancing'
   - variable: ingress.metrics.enabled
     description: ''
     type: boolean
@@ -534,15 +543,6 @@ questions:
     required: true
     label: 'metrics service type'
     group: 'Services and Load Balancing'
-  - variable: service.pgadmin.lbPorts.http
-    description: ''
-    type: int
-    required: true
-    min: 0
-    max: 65535
-    show_if: service.pgadmin.type=LoadBalancer&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
-    label: 'pgadmin http lb port'
-    group: 'Services and Load Balancing'
   - variable: service.postgres.type
     description: ''
     type: enum
@@ -571,6 +571,42 @@ questions:
     show_if: service.postgres.type=LoadBalancer
     label: 'postgres lb port'
     group: 'Services and Load Balancing'
+  - variable: service.postgres.tls.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'postgres tls enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.postgres.tls.enforce
+        description: ''
+        type: boolean
+        required: true
+        label: 'postgres tls enforce'
+      - variable: service.postgres.tls.certificate.name
+        description: 'certificate will be automatically generated if not set'
+        type: string
+        required: false
+        label: 'postgres tls certificate name'
+      - variable: service.postgres.tls.certificate.ca
+        description: ''
+        type: string
+        show_if: service.postgres.tls.certificate.name!=
+        required: false
+        label: 'postgres tls certificate ca'
+      - variable: service.postgres.tls.certificate.issuer.integration
+        description: 'replicates the ca that was used to generate the certificate'
+        type: string
+        show_if: service.postgres.tls.certificate.name=
+        required: true
+        label: 'postgres tls certificate issuer integration'
+      - variable: service.postgres.tls.certificate.issuer.dnsNames
+        description: ''
+        type: string
+        show_if: service.postgres.tls.certificate.name=
+        required: false
+        label: 'postgres tls certificate issuer dns names'
 
   # Images
   - variable: images.postgres.repository

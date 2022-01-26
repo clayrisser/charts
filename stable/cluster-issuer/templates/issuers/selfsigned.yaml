@@ -1,8 +1,7 @@
-{{- if .Values.config.ca.enabled }}
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: {{ .Values.config.ca.name }}
+  name: selfsigned
   labels:
     app: {{ template "cluster-issuer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -10,5 +9,4 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   ca:
-    secretName: {{ .Values.config.ca.name }}-ca
-{{- end }}
+    secretName: selfsigned-ca

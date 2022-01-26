@@ -5,27 +5,14 @@ questions:
     description: ''
     type: enum
     options:
+      - rke
       - aks
       - eks
       - gke
       - k3s
-      - rke
     required: true
     label: 'cluster type'
     group: Config
-  - variable: config.ca.enabled
-    required: true
-    type: boolean
-    description: ''
-    label: 'ca enabled'
-    group: Config
-    show_subquestion_if: true
-    subquestions:
-      - variable: config.ca.name
-        required: true
-        type: string
-        description: ''
-        label: 'ca name'
   - variable: config.email
     required: true
     type: string
