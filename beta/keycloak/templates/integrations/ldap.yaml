@@ -25,118 +25,62 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: batch/v1
-        kind: Job
+        apiVersion: patch.bitspur.com/v1alpha1
+        kind: Patch
         metadata:
           name: ldap-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            spec:
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: bitnami/kubectl:1.20.9
-                  command:
-                    - sh
-                    - -c
-                    - |
-                      sleep 10
-                      mkdir -p /tmp/kustomize
-                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak.yaml
-                      apiVersion: keycloak.org/v1alpha1
-                      kind: Keycloak
-                      metadata:
-                        name: {{ template "keycloak.name" . }}
-                        namespace: {{ .Release.Namespace }}
-                      EOF
-                      cat <<EOF > /tmp/kustomize/patch-keycloak.yaml
-                      {%- if (eq .socketConfig.protocol "ldaps") %}
-                      - op: replace
-                        path: /spec/keycloakDeploymentSpec/experimental/env/0
-                        value:
-                          name: LDAP_TLS_CRT
-                          valueFrom:
-                            secretKeyRef:
-                              name: ca-ldap
-                              key: tls.crt
-                      {%- end %}
-                      EOF
-                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-realm.yaml
-                      apiVersion: keycloak.org/v1alpha1
-                      kind: KeycloakRealm
-                      metadata:
-                        name: {{ template "keycloak.name" . }}
-                        namespace: {{ .Release.Namespace }}
-                      EOF
-                      cat <<EOF > /tmp/kustomize/patch-keycloak-realm.yaml
-                      - op: replace
-                        path: /spec/realm/userFederationProviders/0/config/bindDn
-                        value: {% .socketConfig.bindDN | quote %}
-                      - op: replace
-                        path: /spec/realm/userFederationProviders/0/config/connectionUrl
-                        value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
-                      - op: replace
-                        path: /spec/realm/userFederationProviders/0/config/usersDn
-                        value: ou=people,{% .socketConfig.dc %}
-                      EOF
-                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/keycloak-vault.yaml
-                      apiVersion: v1
-                      kind: Secret
-                      metadata:
-                        name: keycloak-vault
-                        namespace: {{ .Release.Namespace }}
-                      EOF
-                      cat <<EOF > /tmp/kustomize/patch-keycloak-vault.yaml
-                      - op: replace
-                        path: /data/main_bindCredential
-                        value: {% .socketConfig.bindPassword | b64enc | quote %}
-                      EOF
-                      cat <<EOF > /tmp/kustomize/kustomization.yaml
-                      apiVersion: kustomize.config.k8s.io/v1beta1
-                      kind: Kustomization
-                      resources:
-                        - keycloak.yaml
-                        - keycloak-realm.yaml
-                        - keycloak-vault.yaml
-                      patchesJson6902:
-                        - path: patch-keycloak.yaml
-                          target:
-                            group: keycloak.org
-                            version: v1alpha1
-                            kind: Keycloak
-                            name: {{ template "keycloak.name" . }}
-                            namespace: {{ .Release.Namespace }}
-                        - path: patch-keycloak-realm.yaml
-                          target:
-                            group: keycloak.org
-                            version: v1alpha1
-                            kind: KeycloakRealm
-                            name: {{ template "keycloak.name" . }}
-                            namespace: {{ .Release.Namespace }}
-                        - path: patch-keycloak-vault.yaml
-                          target:
-                            version: v1
-                            kind: Secret
-                            name: keycloak-vault
-                            namespace: {{ .Release.Namespace }}
-                      EOF
-                      kubectl kustomize /tmp/kustomize
-                      kubectl kustomize /tmp/kustomize | kubectl apply -f -
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name=ldap-coupled-or-updated \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -
+          patches:
+            {%- if (eq .socketConfig.protocol "ldaps") %}
+            - id: keycloak
+              target:
+                group: keycloak.org
+                version: v1alpha1
+                kind: Keycloak
+                name: {{ template "keycloak.name" . }}
+              waitForTimeout: 5
+              waitForResource: true
+              type: json
+              patch: |-
+                - op: replace
+                  path: /spec/keycloakDeploymentSpec/experimental/env/0
+                  value:
+                    name: LDAP_TLS_CRT
+                    valueFrom:
+                      secretKeyRef:
+                        name: ca-ldap
+                        key: tls.crt
+            {%- end %}
+            - id: keycloak-realm
+              target:
+                group: keycloak.org
+                version: v1alpha1
+                kind: KeycloakRealm
+                name: {{ template "keycloak.name" . }}
+              waitForTimeout: 5
+              waitForResource: true
+              type: json
+              patch: |-
+                - op: replace
+                  path: /spec/realm/userFederationProviders/0/config/bindDn
+                  value: {% .socketConfig.bindDN | quote %}
+                - op: replace
+                  path: /spec/realm/userFederationProviders/0/config/connectionUrl
+                  value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
+                - op: replace
+                  path: /spec/realm/userFederationProviders/0/config/usersDn
+                  value: ou=people,{% .socketConfig.dc %}
+            - id: keycloak-vault
+              target:
+                version: v1
+                kind: Secret
+                name: keycloak-vault
+              waitForTimeout: 5
+              waitForResource: true
+              type: json
+              patch: |-
+                - op: replace
+                  path: /data/main_bindCredential
+                  value: {% .socketConfig.bindPassword | b64enc | quote %}
 {{- end }}
