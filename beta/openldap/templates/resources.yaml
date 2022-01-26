@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   limits:
-    - type: Pod
+    - type: Container
       max:
         cpu: '2'
         memory: '2Gi'
