@@ -62,7 +62,7 @@ spec:
                         name: {% .plugConfig.caName | default "ca" %}
                         namespace: {% .plug.metadata.namespace %}
                       EOF
-                      cat <<EOF
+                      cat <<EOF | kubectl apply -f - --namespace={% .plug.metadata.namespace %}
                       apiVersion: v1
                       kind: Secret
                       metadata:
