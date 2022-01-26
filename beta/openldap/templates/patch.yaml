@@ -1,0 +1,33 @@
+apiVersion: patch.bitspur.com/v1alpha1
+kind: Patch
+metadata:
+  name: {{ template "openldap.name" . }}
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  patches:
+    - id: openldap
+      target:
+        group: apps
+        version: v1
+        kind: StatefulSet
+        name: {{ template "openldap.fullname" . }}-openldap-stack-ha
+      waitForTimeout: 5
+      waitForResource: true
+      type: json
+      patch: |-
+        - op: add
+          path: /spec/template/spec/affinity
+          value:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: kubernetes.io/arch
+                        operator: In
+                        values:
+                          - amd64
