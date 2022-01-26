@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: default
+  name: {{ template "cluster-issuer.name" . }}
 automountServiceAccountToken: true
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -19,7 +19,7 @@ roleRef:
   name: {{ template "cluster-issuer.name" . }}
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: {{ template "cluster-issuer.name" . }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -43,7 +43,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "cluster-issuer.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ template "cluster-issuer.name" . }}-{{ .Release.Namespace }}-{{ template "cluster-issuer.name" . }}
   labels:
     app: {{ template "cluster-issuer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -56,16 +56,16 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "cluster-issuer.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ template "cluster-issuer.name" . }}-{{ .Release.Namespace }}-{{ template "cluster-issuer.name" . }}
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: {{ template "cluster-issuer.name" . }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "cluster-issuer.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ template "cluster-issuer.name" . }}-{{ .Release.Namespace }}-{{ template "cluster-issuer.name" . }}
   labels:
     app: {{ template "cluster-issuer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

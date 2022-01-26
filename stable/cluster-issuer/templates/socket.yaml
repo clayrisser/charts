@@ -27,6 +27,7 @@ spec:
           ttlSecondsAfterFinished: 360
           template:
             spec:
+              serviceAccount: {{ template "cluster-issuer.name" . }}
               restartPolicy: Never
               affinity:
                 nodeAffinity:
@@ -93,6 +94,7 @@ spec:
           ttlSecondsAfterFinished: 360
           template:
             spec:
+              serviceAccount: {{ template "cluster-issuer.name" . }}
               restartPolicy: Never
               affinity:
                 nodeAffinity:
