@@ -63,12 +63,14 @@ spec:
                     - |
                       sleep 10
 {{- if .Values.service.openldap.tls.enabled }}
-{{- if (or (not .Values.service.openldap.tls.certificate) .Values.service.openldap.tls.ca) }}
+{{- if (or (not .Values.service.openldap.tls.certificate.name) .Values.service.openldap.tls.certificate.ca) }}
+                      {%- if (not (eq .plugConfig.replicateCa "false")) %}
                       kubectl get secret {{ template "openldap.openldap-ca" . }} \
                         -n {{ .Release.Namespace }} -o yaml | \
                         sed 's|^\(\s*name:\s*\){{ template "openldap.openldap-ca" . }}|\1ca-{% .plug.metadata.name %}|g' | \
                         grep -v '^\s*namespace:\s*{{ .Release.Namespace }}' | \
                         kubectl apply -f - --namespace={% .plug.metadata.namespace %}
+                      {%- end %}
 {{- end }}
 {{- end }}
                       {%- if (not (eq .plugConfig.replicate "false")) %}
