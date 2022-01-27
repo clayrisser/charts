@@ -20,5 +20,5 @@ spec:
     namespace: {{ $namespace }}
   config:
     caName: ca
-    includeTlsKey: 'true'
+    includeTlsKey: 'false'
 {{- end }}

@@ -39,26 +39,116 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: bitnami/kubectl:1.20.9
+                  image: codejamninja/kube-commands:0.0.2
                   command:
                     - sh
                     - -c
                     - |
-                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namespace %}
+                      cat <<EOF | kubectl get -f - -o yaml | \
+                        sed 's|^\(\s*name:\s*\).\+|\1{% .plug.metadata.name %}-{% .plug.metadata.namespace %}|g' | \
+                        grep -v '^\s*namespace:\s' | \
+                        kubectl apply -f - --namespace={{ .Release.Namespace }}
                       apiVersion: cr.kanister.io/v1alpha1
-                      kind: Profile
+                      kind: Blueprint
                       metadata:
-                        name: kanister-s3
-                        namespace: {{ .Release.Namespace }}
-                      EOF
-                      cat <<EOF | kubectl get -f - -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -f - --namespace={% .plug.metadata.namespace %}
-                      apiVersion: v1
-                      kind: Secret
-                      metadata:
-                        name: kanister-s3
-                        namespace: {{ .Release.Namespace }}
+                        name: {% .plugConfig.blueprint | default .plug.metadata.name | quote %}
+                        namespace: {% .plug.metadata.namespace | quote %}
                       EOF
                       kubectl get pods -n {{ .Release.Namespace }} \
                         -l job-name={{ template "kanister.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        {%- if .plugConfig.schedule %}
+        apiVersion: batch/v1beta1
+        kind: CronJob
+        metadata:
+          name: {{ template "kanister.name" . }}-{% .plug.metadata.namespace %}
+        spec:
+          schedule: {% .plugConfig.schedule | quote %}
+          jobTemplate:
+            spec:
+              activeDeadlineSeconds: 360
+              backoffLimit: 6
+              ttlSecondsAfterFinished: 360
+              template:
+                spec:
+                  restartPolicy: Never
+                  affinity:
+                    nodeAffinity:
+                      requiredDuringSchedulingIgnoredDuringExecution:
+                        nodeSelectorTerms:
+                          - matchExpressions:
+                              - key: kubernetes.io/arch
+                                operator: In
+                                values:
+                                  - amd64
+                  serviceAccountName: kanister-sa-cluster
+                  containers:
+                    - name: backup
+                      image: registry.gitlab.com/shri178/kanctl:latest
+                      command:
+                        - /bin/sh
+                        - -c
+                        - |
+                          kanctl create actionset \
+                            --namespace {{ .Release.Namespace }} \
+                            --blueprint {% .plug.metadata.name %}-{% .plug.metadata.namespace %} \
+                            {%- if .plugConfig.deployment %}
+                            --deployment {% .plug.metadata.namespace %}/{% .plugConfig.deployment %} \
+                            {%- else if .plugConfig.statefulset %}
+                            --statefulset {% .plug.metadata.namespace %}/{% .plugConfig.statefulset %} \
+                            {%- end %}
+                            {%- if .plugConfig.secrets %}
+                            --secrets {% .plugConfig.secrets %} \
+                            {%- end %}
+                            {{- if .Values.config.s3.integration }}
+                            --profile {{ template "kanister.name" . }}-s3 \
+                            {{- end }}
+                            --action backup
+        {%- end %}
+    - when: [decoupled]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ template "kanister.name" . }}-decoupled-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: codejamninja/kube-commands:0.0.2
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      kubectl delete cronjob {{ template "kanister.name" . }}-{% .plug.metadata.name %} \
+                        -n {{ .Release.Namespace }}
+                      cat <<EOF | kubectl get -f - -o yaml | kubectl delete -f -
+                      apiVersion: cr.kanister.io/v1alpha1
+                      kind: Blueprint
+                      metadata:
+                        name: {% .plug.metadata.name %}-{% .plug.metadata.namespace %}
+                        namespace: {{ .Release.Namespace }}
+                      EOF
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "kanister.name" . }}-decoupled-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -

@@ -11,6 +11,11 @@ spec:
   schemas:
     - version: v0.0.1
       plugDefinition:
-        properties: {}
+        properties:
+          blueprint: {}
+          deployment: {}
+          schedule: {}
+          secrets: {}
+          statefulset: {}
       socketDefinition:
         properties: {}
