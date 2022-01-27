@@ -1,9 +1,31 @@
 {{- if .Values.persistence.kanister.enabled }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: kanister-postgres
+  labels:
+    app: {{ template "postgres.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: kanister
+    namespace: kanister
+  socket:
+    name: kanister
+    namespace: kanister
+  config:
+    schedule: {{ .Values.persistence.kanister.enabled | quote }}
+    blueprint: postgres
+    deployment: postgres
+    secrets: postgres={{ .Release.Namespace }}/postgres-postgres-secret
+---
 apiVersion: cr.kanister.io/v1alpha1
 kind: Blueprint
 metadata:
-  name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}
-  namespace: kanister
+  name: postgres
   labels:
     app: {{ template "postgres.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -57,31 +79,4 @@ actions:
           namespace: {{ .Release.Namespace }}
         func: KubeTask
         name: pgRestore
----
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: {{ template "postgres.fullname" . }}-{{ .Release.Namespace }}-kanister
-  namespace: kanister
-  labels:
-    app: {{ template "postgres.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  schedule: {{ .Values.persistence.kanister.schedule | quote }}
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          serviceAccountName: kanister-sa-cluster
-          containers:
-            - name: {{ template "postgres.name" . }}-backup
-              image: registry.gitlab.com/shri178/kanctl:latest
-              command:
-                - /bin/sh
-                - -c
-                - |
-                  kanctl create actionset --action backup --namespace kanister --blueprint {{ template "postgres.fullname" . }}-{{ .Release.Namespace }} --deployment {{ .Release.Namespace }}/postgres --secrets postgres={{ .Release.Namespace }}/{{ template "postgres.name" . }}-postgres-secret --profile s3
-          restartPolicy: OnFailure
 {{- end }}
