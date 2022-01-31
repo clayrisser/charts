@@ -54,9 +54,6 @@ spec:
                 name: gitlab
               waitForTimeout: 5
               waitForResource: true
-              skipIf:
-                - jsonPath: data
-                  regex: howdy
               patch: |-
                 spec:
                   chart:

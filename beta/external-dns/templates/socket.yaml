@@ -19,64 +19,23 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: batch/v1
-        kind: Job
+        apiVersion: patch.bitspur.com/v1alpha1
+        kind: Patch
         metadata:
           name: ingress-target-coupled-or-updated-{% .plug.metadata.namespace %}
+          namespace: {{ .Release.Namespace }}
         spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            spec:
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: bitnami/kubectl:1.20.9
-                  command:
-                    - sh
-                    - -c
-                    - |-
-                      sleep 10
-                      mkdir -p /tmp/kustomize
-                      cat <<EOF | kubectl get -f - -o yaml > /tmp/kustomize/ingress.yaml
-                      apiVersion: networking.k8s.io/v1
-                      kind: Ingress
-                      metadata:
-                        name: {% .plugConfig.ingressName %}
-                        namespace: {% .plug.metadata.namespace %}
-                      EOF
-                      cat <<EOF > /tmp/kustomize/patch.yaml
-                      - op: add
-                        path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
-                        value: {% .socketConfig.target %}
-                      EOF
-                      cat <<EOF > /tmp/kustomize/kustomization.yaml
-                      apiVersion: kustomize.config.k8s.io/v1beta1
-                      kind: Kustomization
-                      resources:
-                        - ingress.yaml
-                      patchesJson6902:
-                        - path: patch.yaml
-                          target:
-                            group: networking.k8s.io
-                            version: v1
-                            kind: Ingress
-                            name: {% .plugConfig.ingressName %}
-                            namespace: {% .plug.metadata.namespace %}
-                      EOF
-                      kubectl kustomize /tmp/kustomize
-                      kubectl kustomize /tmp/kustomize | kubectl apply -f -
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name=ingress-target-coupled-or-updated-{% .plug.metadata.namespace %} \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -
+          patches:
+            - id: ingress
+              target:
+                group: networking.k8s.io
+                version: v1
+                kind: Ingress
+                name: {% .plugConfig.ingressName %}
+              waitForTimeout: 5
+              waitForResource: true
+              type: json
+              patch: |-
+                - op: add
+                  path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
+                  value: {% .socketConfig.target %}
