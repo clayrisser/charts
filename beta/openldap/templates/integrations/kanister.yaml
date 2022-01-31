@@ -1,0 +1,84 @@
+{{- if (and .Values.persistence.enabled .Values.persistence.kanister.enabled) }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: kanister-openldap
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: kanister
+    namespace: kanister
+  socket:
+    name: kanister
+    namespace: kanister
+  config:
+    schedule: {{ .Values.persistence.kanister.enabled | quote }}
+    blueprint: openldap
+    statefulset: {{ .Release.Name }}-{{ template "openldap.name" . }}-openldap-stack-ha
+    secrets: openldap={{ .Release.Namespace }}/{{ template "openldap.name" . }}
+---
+apiVersion: cr.kanister.io/v1alpha1
+kind: Blueprint
+metadata:
+  name: openldap
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+actions:
+  backup:
+    secretNames:
+      - openldap
+    kind: deployment
+    phases:
+      - args:
+          command:
+            - bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              export HOST="{{ .Release.Name }}-{{ template "openldap.name" . }}-openldap-stack-ha.{{ .Release.Namespace }}.svc.cluster.local"
+              export BIND_ID='cn=admin,{{ template "openldap.openldap-dc" . }}'
+              export BIND_PASSWORD={{"{{"}} .Secrets.openldap.Data.password | toString {{"}}"}}
+              export BACKUP_FILE_PATH='{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}.ldap'
+              echo $BACKUP_FILE_PATH \> $BIND_PASSWORD:$BIND_ID@$HOST
+              slapcat
+          image: ghcr.io/kanisterio/openldap-kanister-tools:0.71.0
+          namespace: {{ .Release.Namespace }}
+        func: KubeTask
+        name: pgDump
+  restore:
+    secretNames:
+      - openldap
+    inputArtifactNames:
+      - ldapBackup
+    kind: deployment
+    phases:
+      - args:
+          command:
+            - bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              export HOST="{{ .Release.Name }}-{{ template "openldap.name" . }}-openldap-stack-ha.{{ .Release.Namespace }}.svc.cluster.local"
+              export USER='openldap'
+              export PASSWORD={{"{{"}} .Secrets.openldap.Data.password | toString {{"}}"}}
+              export BACKUP_FILE_PATH='backup.ldap'
+              echo $BACKUP_FILE_PATH \> $BIND_PASSWORD:$BIND_ID@$HOST
+          image: ghcr.io/kanisterio/openldap-kanister-tools:0.71.0
+          namespace: {{ .Release.Namespace }}
+        func: KubeTask
+        name: pgRestore
+{{- end }}
