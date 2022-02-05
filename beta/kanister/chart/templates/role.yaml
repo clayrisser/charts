@@ -38,6 +38,12 @@ rules:
       - list
       - patch
       - update
+  - apiGroups: ['']
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
   - apiGroups: ['cr.kanister.io']
     resources:
       - '*'
