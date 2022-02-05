@@ -6,7 +6,7 @@ questions:
   - variable: config.s3.integration
     description: ''
     type: string
-    required: true
+    required: false
     label: integration
     group: S3
   - variable: config.s3.endpoint
