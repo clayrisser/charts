@@ -30,7 +30,7 @@ spec:
           apiVersion: v1
           kind: Secret
           metadata:
-            name: s3
+            name: {{ template "kanister.name" . }}-s3
             namespace: {{ .Release.Namespace }}
           stringData:
             ACCESS_KEY: '{% .socketConfig.accessKey %}'
@@ -41,7 +41,7 @@ spec:
           apiVersion: cr.kanister.io/v1alpha1
           kind: Profile
           metadata:
-            name: s3
+            name: {{ template "kanister.name" . }}-s3
             namespace: {{ .Release.Namespace }}
           location:
             type: s3Compliant
@@ -57,7 +57,7 @@ spec:
               secret:
                 apiVersion: v1
                 kind: Secret
-                name: s3
+                name: {{ template "kanister.name" . }}-s3
                 namespace: {{ .Release.Namespace }}
           skipSSLVerify: true
     - when: [decoupled]
