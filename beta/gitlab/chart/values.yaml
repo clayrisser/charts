@@ -10,8 +10,9 @@ config:
   gitlab:
     baseUrl: ''
     hostname: ''
-    rootPassword:
+    rootPassword: ''
     themeId: 2
+
   gitlabRunner:
     enabled: true
     docker:
@@ -48,25 +49,33 @@ config:
       terraform-state: ''
       tmp: ''
       uploads: ''
+  email:
+    from: 'no-reply@promanager.online'
+    display_name: 'GitLab'
   smtp:
     enabled: false
     integration: ''
-    hostname: ''
-    from: ''
-    password: ''
-    port: ''
-    username: ''
-    tls:
-      enabled: false
+    address: smtp.sendgrid.net
+    port: 587
+    user_name: apikey
+    password:
+      secret: mailgun-password
+      key: password
+    domain: em9444.promanager.online
+    authentication: "plain"
+    mailgunPassword: ""
+
+
+
   keycloak:
-    enabled: false
+    enabled: true
     integration: ''
     baseUrl: ''
     autoSignIn: false
     certificate: ''
     clientId: ''
-    companyName: KeyCloak
-    realmName: master
+    companyName: 'Some Company'
+    realmName: main
   postgres:
     integration: ''
     database: postgres

@@ -4,10 +4,10 @@ include $(MKPM)/gnu
 
 export PATCHES := templates/operator.yaml
 
-include $(PROJECT_ROOT)/patch.mk
+include $(MKPM)/patch
 
 export CURL ?= curl
-export OPERATOR_VERSION ?= 0.2.0
+export OPERATOR_VERSION ?= 0.5.1
 
 .PHONY: prepack
 prepack: templates/operator.yaml patch-apply

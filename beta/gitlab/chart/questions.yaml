@@ -111,21 +111,62 @@ questions:
       - variable: config.keycloak.baseUrl
         description: ''
         type: string
+        show_if: config.keycloak.integration=
         required: false
         label: 'base url'
-        show_if: config.keycloak.integration=
       - variable: config.keycloak.clientId
         description: ''
         type: string
         required: false
         label: 'client id'
-        show_if: config.keycloak.integration=
       - variable: config.keycloak.certificate
         description: ''
         type: password
         required: false
         label: certificate
         show_if: config.keycloak.integration=
+
+# Mail Config
+  - variable: config.smtp.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'Mail Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.smtp.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.smtp.address
+        description: ''
+        type: string
+        required: false
+        label: 'smtp address'
+      - variable: config.smtp.port
+        description: ''
+        type: string
+        required: false
+        label: 'smtp port'
+      - variable: config.smtp.user_name
+        description: ''
+        type: string
+        required: false
+        label: 'smtp user_name'
+      - variable: config.smtp.mailgunPassword
+        description: ''
+        type: password
+        show_if: config.smtp.integration=
+        required: false
+        label: 'smtp mailgun password'
+      - variable: config.smtp.domain
+        description: ''
+        type: string
+        required: false
+        label: 'domain'
+        show_if: config.smtp.integration=
 
 # S3
   - variable: config.s3.enabled
@@ -260,6 +301,7 @@ questions:
         type: enum
         options:
           - pvc
+          - s3
         required: true
         label: 'cache type'
   - variable: config.gitlabRunner.resources.enabled

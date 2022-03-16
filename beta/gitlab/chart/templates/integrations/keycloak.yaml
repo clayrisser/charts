@@ -1,0 +1,98 @@
+{{- if (not (empty .Values.config.keycloak.integration)) }}
+{{- $name := (split "." .Values.config.keycloak.integration)._1 | default "keycloak" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.keycloak.integration))._0 }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: gitlab-omniauth-plug
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "gitlab.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  epoch: "1646238016"
+  interfaceVersions: '*'
+  interface:
+    name: keycloak
+    namespace: {{$namespace}}
+  socket:
+    name: keycloak
+    namespace: {{$namespace}}
+  config:
+    clientId: {{ .Values.config.keycloak.clientId }}
+    redirectUris: "*"
+    replicate: "flase"
+    cleanup: "false"
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ template "gitlab.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              serviceAccountName: {{ template "gitlab.name" . }}-omniauth-sa
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: registry.gitlab.com/silicon-hills/community/ci-images/kubectl-psql:0.0.1
+                  command:
+                    - sh
+                    - -c
+                    - |
+                      wget https://github.com/mikefarah/yq/releases/download/v4.21.1/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+                      curl -s "{{ .Values.config.keycloak.baseUrl }}/auth/realms/{{ .Values.config.keycloak.realmName }}/protocol/saml/descriptor" -o idp.xml && idp_cert=$(cat idp.xml | yq -p x ".EntityDescriptor.IDPSSODescriptor.KeyDescriptor.KeyInfo.X509Data.X509Certificate")
+                      cat <<EOF | kubectl apply -f -
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: gitlab-omniauth
+                        labels:
+                          app: {{ template "gitlab.name" . }}
+                          chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+                          release: {{ .Release.Name }}
+                          heritage: {{ .Release.Service }}
+                      type: Opaque
+                      stringData:
+                        provider: |
+                          name: saml
+                          label: KeyCloak
+                          groups_attribute: roles
+                          external_groups:
+                            - ""
+                          args:
+                            assertion_consumer_service_url: "https://{{.Values.ingress.gitlab.hostname }}/users/auth/saml/callback"
+                            idp_cert: ${idp_cert}
+                            idp_cert_fingerprint_algorithm: "http://www.w3.org/2000/09/xmldsig#sha1"
+                            idp_sso_target_url: "{{ .Values.config.keycloak.baseUrl }}/auth/realms/{{ .Values.config.keycloak.realmName }}/protocol/saml/clients/{{ .Values.config.keycloak.clientId }}"
+                            issuer: {{ .Values.config.keycloak.clientId }}
+                            name_identifier_format: urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+                            attribute_statements:
+                              email: ['email']
+                              first_name: ['first_name']
+                              last_name: ['last_name']
+                              name: ['name']
+                              username: ['name']
+                      EOF
+                      kubectl get pods -n {{ .Release.Namespace }}  \
+                        -l job-name={{ template "gitlab.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -
+{{- end }}

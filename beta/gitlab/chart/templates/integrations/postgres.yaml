@@ -1,6 +1,6 @@
 {{- if .Values.config.postgres.integration }}
-{{- $name := (index (split "." .Values.config.postgres.integration) 1) | default "postgres" }}
-{{- $namespace := (index (split "." (printf "%s." .Values.config.postgres.integration)) 0) }}
+{{- $name := (split "." .Values.config.postgres.integration)._1 | default "s3" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
 {{- $patchGitlab := true }}
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Plug

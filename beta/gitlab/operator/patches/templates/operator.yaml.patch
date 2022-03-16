@@ -1,22 +1,12 @@
---- templates/operator.yaml	2021-12-24 08:40:04.260983308 -0600
-+++ templates/operator.yaml.tmp	2021-12-24 08:42:47.915464310 -0600
-@@ -1,9 +1,14 @@
+--- templates/operator.yaml	2022-03-10 23:42:10.063315505 +0530
++++ templates/operator.yaml.tmp	2022-03-10 23:53:37.055556734 +0530
+@@ -1,3 +1,5 @@
 +{{- $existingCrd := lookup "apiextensions.k8s.io/v1beta1" "CustomResourceDefinition" "" "gitlabs.apps.gitlab.com" }}
 +{{- if (not $existingCrd) }}
- apiVersion: apiextensions.k8s.io/v1beta1
+ apiVersion: apiextensions.k8s.io/v1
  kind: CustomResourceDefinition
  metadata:
-   annotations:
--    cert-manager.io/inject-ca-from: gitlab-system/gitlab-serving-cert
-+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/gitlab-serving-cert
-     controller-gen.kubebuilder.io/version: v0.3.0
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
-   name: gitlabs.apps.gitlab.com
- spec:
-   additionalPrinterColumns:
-@@ -118,32 +123,33 @@
+@@ -116,6 +118,7 @@
      plural: ""
    conditions: []
    storedVersions: []
@@ -24,267 +14,130 @@
  ---
  apiVersion: v1
  kind: ServiceAccount
- metadata:
-   creationTimestamp: null
-   name: gitlab-app
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
+@@ -239,6 +242,8 @@
+   - create
+   - patch
  ---
- apiVersion: v1
- kind: ServiceAccount
- metadata:
-   creationTimestamp: null
-   name: gitlab-manager
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- ---
- apiVersion: v1
- kind: ServiceAccount
- metadata:
-   name: gitlab-nginx-ingress
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- ---
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "gitlab-app-role" }}
++{{- if (not $existing) }}
  apiVersion: rbac.authorization.k8s.io/v1
- kind: Role
- metadata:
-   name: gitlab-leader-election-role
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- rules:
- - apiGroups:
-   - ""
-@@ -171,7 +177,7 @@
- kind: Role
- metadata:
-   name: gitlab-nginx-ingress
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- rules:
- - apiGroups:
-   - ""
-@@ -257,6 +263,10 @@
- metadata:
-   creationTimestamp: null
-   name: gitlab-app-role
-+  annotations:
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
- rules:
- - apiGroups:
-   - security.openshift.io
-@@ -272,6 +282,10 @@
- metadata:
-   creationTimestamp: null
-   name: gitlab-manager-role
-+  annotations:
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
- rules:
- - apiGroups:
-   - apps
-@@ -544,6 +558,10 @@
  kind: ClusterRole
  metadata:
-   name: gitlab-proxy-role
-+  annotations:
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
- rules:
- - apiGroups:
-   - authentication.k8s.io
-@@ -562,6 +580,10 @@
- kind: ClusterRole
- metadata:
-   name: gitlab-metrics-reader
-+  annotations:
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
- rules:
- - nonResourceURLs:
-   - /metrics
-@@ -572,7 +594,7 @@
- kind: RoleBinding
- metadata:
-   name: gitlab-leader-election-rolebinding
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- roleRef:
-   apiGroup: rbac.authorization.k8s.io
-   kind: Role
-@@ -580,13 +602,13 @@
- subjects:
- - kind: ServiceAccount
-   name: gitlab-manager
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- ---
- apiVersion: rbac.authorization.k8s.io/v1
- kind: RoleBinding
- metadata:
-   name: gitlab-nginx-ingress
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- roleRef:
-   apiGroup: rbac.authorization.k8s.io
-   kind: Role
-@@ -594,12 +616,16 @@
- subjects:
- - kind: ServiceAccount
-   name: gitlab-nginx-ingress
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- ---
- apiVersion: rbac.authorization.k8s.io/v1
- kind: ClusterRoleBinding
- metadata:
-   name: gitlab-gitlab-app-rolebinding
-+  annotations:
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
- roleRef:
-   apiGroup: rbac.authorization.k8s.io
-   kind: ClusterRole
-@@ -607,12 +633,16 @@
- subjects:
- - kind: ServiceAccount
-   name: gitlab-app
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- ---
- apiVersion: rbac.authorization.k8s.io/v1
- kind: ClusterRoleBinding
- metadata:
-   name: gitlab-gitlab-manager-rolebinding
-+  annotations:
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
- roleRef:
-   apiGroup: rbac.authorization.k8s.io
-   kind: ClusterRole
-@@ -620,12 +650,16 @@
- subjects:
- - kind: ServiceAccount
-   name: gitlab-manager
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- ---
- apiVersion: rbac.authorization.k8s.io/v1
- kind: ClusterRoleBinding
- metadata:
-   name: gitlab-gitlab-proxy-rolebinding
-+  annotations:
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
- roleRef:
-   apiGroup: rbac.authorization.k8s.io
-   kind: ClusterRole
-@@ -633,7 +667,7 @@
- subjects:
- - kind: ServiceAccount
-   name: gitlab-manager
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- ---
- apiVersion: v1
- kind: Service
-@@ -641,7 +675,7 @@
-   labels:
-     control-plane: controller-manager
-   name: gitlab-controller-manager-metrics-service
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- spec:
-   ports:
-   - name: https
-@@ -654,7 +688,7 @@
- kind: Service
- metadata:
-   name: gitlab-webhook-service
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- spec:
-   ports:
-   - port: 443
-@@ -669,7 +703,7 @@
-   labels:
-     control-plane: controller-manager
-   name: gitlab-controller-manager
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- spec:
-   replicas: 1
-   selector:
-@@ -687,11 +721,13 @@
-         - --zap-devel=true
-         command:
-         - /manager
-+{{- if .Values.config.watchNamespace }}
-         env:
-         - name: WATCH_NAMESPACE
-           valueFrom:
-             fieldRef:
-               fieldPath: metadata.namespace
+@@ -253,7 +258,10 @@
+   - securitycontextconstraints
+   verbs:
+   - use
 +{{- end }}
-         image: registry.gitlab.com/gitlab-org/cloud-native/gitlab-operator:0.2.0
-         imagePullPolicy: Always
-         livenessProbe:
-@@ -743,25 +779,25 @@
-           defaultMode: 420
-           secretName: webhook-server-cert
  ---
--apiVersion: cert-manager.io/v1alpha2
-+apiVersion: cert-manager.io/v1
- kind: Certificate
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "gitlab-manager-role" }}
++{{- if (not $existing) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRole
  metadata:
-   name: gitlab-serving-cert
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- spec:
-   dnsNames:
--  - gitlab-webhook-service.gitlab-system.svc
--  - gitlab-webhook-service.gitlab-system.svc.cluster.local
-+  - gitlab-webhook-service.{{ .Release.Namespace }}.svc
-+  - gitlab-webhook-service.{{ .Release.Namespace }}.svc.cluster.local
-   issuerRef:
-     kind: Issuer
-     name: gitlab-selfsigned-issuer
-   secretName: webhook-server-cert
+@@ -526,7 +534,11 @@
+   - patch
+   - update
+   - watch
++
++{{- end }}
  ---
--apiVersion: cert-manager.io/v1alpha2
-+apiVersion: cert-manager.io/v1
- kind: Issuer
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "gitlab-metrics-reader" }}
++{{- if (not $existing) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRole
  metadata:
-   name: gitlab-selfsigned-issuer
--  namespace: gitlab-system
-+  namespace: {{ .Release.Namespace }}
- spec:
-   selfSigned: {}
+@@ -536,7 +548,10 @@
+   - /metrics
+   verbs:
+   - get
++{{- end }}
  ---
-@@ -769,14 +805,17 @@
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "gitlab-nginx-ingress" }}
++{{- if (not $existing) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRole
+ metadata:
+@@ -596,7 +611,10 @@
+   - get
+   - list
+   - watch
++{{- end }}
+ ---
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "gitlab-proxy-role" }}
++{{- if (not $existing) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRole
+ metadata:
+@@ -614,6 +632,7 @@
+   - subjectaccessreviews
+   verbs:
+   - create
++{{- end }}
+ ---
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: RoleBinding
+@@ -643,6 +662,8 @@
+   name: gitlab-nginx-ingress
+   namespace: gitlab-system
+ ---
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "gitlab-gitlab-app-rolebinding" }}
++{{- if (not $existing) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+ metadata:
+@@ -655,7 +676,10 @@
+ - kind: ServiceAccount
+   name: gitlab-app
+   namespace: gitlab-system
++{{- end }}
+ ---
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "gitlab-gitlab-manager-rolebinding" }}
++{{- if (not $existing) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+ metadata:
+@@ -668,7 +692,10 @@
+ - kind: ServiceAccount
+   name: gitlab-manager
+   namespace: gitlab-system
++{{- end}}
+ ---
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "gitlab-gitlab-nginx-ingress" }}
++{{- if (not $existing) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+ metadata:
+@@ -681,7 +708,10 @@
+ - kind: ServiceAccount
+   name: gitlab-nginx-ingress
+   namespace: gitlab-system
++{{- end }}
+ ---
++{{- $existing := lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "gitlab-gitlab-proxy-rolebinding" }}
++{{- if (not $existing) }}
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+ metadata:
+@@ -694,6 +724,7 @@
+ - kind: ServiceAccount
+   name: gitlab-manager
+   namespace: gitlab-system
++{{- end }}
+ ---
+ apiVersion: v1
+ kind: Service
+@@ -832,6 +863,8 @@
+ spec:
+   controller: k8s.io/ingress-nginx
+ ---
++{{- $existing := lookup "admissionregistration.k8s.io/v1" "ValidatingWebhookConfiguration" "" "gitlab-gitlab-validating-webhook-configuration" }}
++{{- if (not $existing) }}
+ apiVersion: admissionregistration.k8s.io/v1
  kind: ValidatingWebhookConfiguration
  metadata:
-   annotations:
--    cert-manager.io/inject-ca-from: gitlab-system/gitlab-serving-cert
-+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/gitlab-serving-cert
-+    helm.sh/hook: pre-install
-+    helm.sh/hook-weight: '0'
-+    helm.sh/hook-delete-policy: before-hook-creation
-   name: gitlab-gitlab-validating-webhook-configuration
- webhooks:
- - clientConfig:
-     caBundle: Cg==
-     service:
-       name: gitlab-webhook-service
--      namespace: gitlab-system
-+      namespace: {{ .Release.Namespace }}
-       path: /validate-apps-gitlab-com-v1beta1-gitlab
-   failurePolicy: Fail
-   name: vgitlab.kb.io
+@@ -859,3 +892,4 @@
+     resources:
+     - gitlabs
+   sideEffects: None
++{{- end }}
+\ No newline at end of file
