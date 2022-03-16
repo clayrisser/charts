@@ -21,6 +21,7 @@ spec:
     namespace: {{ $namespace }}
   config:
     replicate: 'false'
+    replicateCa: 'false'
   resources:
     - when: [coupled, updated]
       do: recreate
