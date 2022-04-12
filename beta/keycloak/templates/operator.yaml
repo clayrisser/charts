@@ -27,4 +27,4 @@ spec:
   name: keycloak-operator
   source: operatorhubio-catalog
   sourceNamespace: olm
-  startingCSV: keycloak-operator.v15.0.2
+  startingCSV: keycloak-operator.v17.0.0
