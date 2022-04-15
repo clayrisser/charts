@@ -36,6 +36,8 @@ spec:
         - sh
         - -c
         - |
+            mkdir -p /opt/jboss/keycloak/providers
+            cd /opt/jboss/keycloak/providers && curl -o promanager-authenticator-jar-with-dependencies.jar https://promanager-theme.s3.us-east-2.amazonaws.com/promanager-authenticator-jar-with-dependencies.jar
             {{- if .Values.config.keycloak.ldap.enabled }}
             if [ "$LDAP_TLS_CRT" != "" ]; then
               mkdir -p /opt/jboss/certs
