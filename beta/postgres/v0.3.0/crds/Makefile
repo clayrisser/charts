@@ -8,7 +8,7 @@ export PATCHES := templates/crds/perconapgclusters-crd.yaml \
 	templates/crds/pgreplicas-crd.yaml \
 	templates/crds/pgtasks-crd.yaml
 
-include $(PROJECT_ROOT)/patch.mk
+include $(MKPM)/patch
 
 export CURL ?= curl
 export OPERATOR_VERSION ?= v1.1.0

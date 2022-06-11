@@ -4,9 +4,25 @@ include $(MKPM)/gnu
 
 export PATCHES :=
 
-include $(PROJECT_ROOT)/patch.mk
+include $(MKPM)/patch
+
+export CURL ?= curl
+export OPERATOR_VERSION ?= 0.21.2
 
 .PHONY: prepack
-prepack: patch-apply
+prepack: | \
+	templates/olm.yaml \
+	templates/crds.yaml \
+	patch-apply
+
+templates/crds.yaml:
+	@$(MKDIR) -p $(@D)
+	@$(CURL) -Lo $@ \
+		https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/v$(OPERATOR_VERSION)/deploy/upstream/quickstart/crds.yaml
+
+templates/olm.yaml:
+	@$(MKDIR) -p $(@D)
+	@$(CURL) -Lo $@ \
+		https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/v$(OPERATOR_VERSION)/deploy/upstream/quickstart/olm.yaml
 
 endif

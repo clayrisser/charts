@@ -6,7 +6,7 @@ export PATCHES := templates/crds/actionset.yaml \
 	templates/crds/blueprint.yaml \
 	templates/crds/profile.yaml
 
-include $(PROJECT_ROOT)/patch.mk
+include $(MKPM)/patch
 
 export CURL ?= curl
 export KANISTER_VERSION ?= 0.71.0

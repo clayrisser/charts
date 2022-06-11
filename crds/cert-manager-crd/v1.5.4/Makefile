@@ -4,7 +4,7 @@ include $(MKPM)/gnu
 
 export PATCHES :=
 
-include $(PROJECT_ROOT)/patch.mk
+include $(MKPM)/patch
 
 export CURL ?= curl
 export CERT_MANAGER_VERSION ?= v1.5.4

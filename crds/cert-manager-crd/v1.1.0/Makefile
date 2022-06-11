@@ -4,7 +4,7 @@ include $(MKPM)/gnu
 
 export PATCHES :=
 
-include $(PROJECT_ROOT)/patch.mk
+include $(MKPM)/patch
 
 .PHONY: prepack
 prepack: patch-apply

@@ -4,7 +4,7 @@ include $(MKPM)/gnu
 
 export PATCHES :=
 
-include $(PROJECT_ROOT)/patch.mk
+include $(MKPM)/patch
 
 export CURL ?= curl
 export APPLICATION_CRD_VERSION ?= v0.8.3

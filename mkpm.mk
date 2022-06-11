@@ -1,5 +1,6 @@
 MKPM_PACKAGES := \
-	gnu=0.0.3
+	gnu=0.0.3 \
+	patch=0.0.1
 
 MKPM_REPOS := \
 	https://gitlab.com/risserlabs/community/mkpm-stable.git

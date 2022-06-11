@@ -4,7 +4,7 @@ include $(MKPM)/gnu
 
 export PATCHES := templates/crds.yaml
 
-include $(PROJECT_ROOT)/patch.mk
+include $(MKPM)/patch
 
 export CURL ?= curl
 export OPERATOR_VERSION ?= v1.10.0
