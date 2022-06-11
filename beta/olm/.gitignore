@@ -1,2 +1,2 @@
-templates/crds.yaml
+templates/crds/crds.yaml
 templates/olm.yaml
