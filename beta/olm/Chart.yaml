@@ -15,7 +15,6 @@ maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
 annotations:
-  catalog.cattle.io/auto-install: olm-crd=match
   catalog.cattle.io/namespace: olm
   catalog.cattle.io/os: linux
   catalog.cattle.io/release-name: olm
