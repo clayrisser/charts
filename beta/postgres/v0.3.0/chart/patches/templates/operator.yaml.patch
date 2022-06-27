@@ -1,5 +1,5 @@
---- templates/operator.yaml	2022-06-27 14:22:41.918021775 -0500
-+++ templates/operator.yaml.tmp	2022-06-27 14:22:58.202044215 -0500
+--- templates/operator.yaml	2022-06-27 14:30:55.210706430 -0500
++++ templates/operator.yaml.tmp	2022-06-27 14:31:04.146718899 -0500
 @@ -3,10 +3,14 @@
  metadata:
    name: pgo-deployer-sa
@@ -15,7 +15,15 @@
  rules:
    - apiGroups:
        - ''
-@@ -147,7 +151,7 @@
+@@ -116,6 +120,7 @@
+     verbs:
+       - delete
+       - list
++{{- end }}
+ ---
+ apiVersion: v1
+ kind: ConfigMap
+@@ -147,7 +152,7 @@
      ccp_image_pull_secret_manifest: ""
      ccp_image_tag: "1.2.0-ppg14-postgres-ha"
      create_rbac: "true"
@@ -24,7 +32,7 @@
      db_name: ""
      db_password_age_days: "0"
      db_password_length: "24"
-@@ -165,7 +169,7 @@
+@@ -165,7 +170,7 @@
      reconcile_rbac: "true"
      exporterport: "9187"
      metrics: "false"
@@ -33,7 +41,7 @@
      namespace_mode: "disabled"
      pgbadgerport: "10000"
      pgo_add_os_ca_store: "false"
-@@ -189,7 +193,7 @@
+@@ -189,7 +194,7 @@
      pgo_image_tag: "1.2.0"
      pgo_installation_name: "devtest"
      pgo_noauth_routes: ""
@@ -42,7 +50,7 @@
      pgo_tls_ca_store: ""
      pgo_tls_no_verify: "false"
      pod_anti_affinity: "preferred"
-@@ -252,7 +256,7 @@
+@@ -252,7 +257,7 @@
  apiVersion: rbac.authorization.k8s.io/v1
  kind: ClusterRoleBinding
  metadata:
@@ -51,7 +59,7 @@
  roleRef:
    apiGroup: rbac.authorization.k8s.io
    kind: ClusterRole
-@@ -260,7 +264,7 @@
+@@ -260,7 +265,7 @@
  subjects:
    - kind: ServiceAccount
      name: pgo-deployer-sa
@@ -60,7 +68,7 @@
  ---
  apiVersion: batch/v1
  kind: Job
-@@ -276,7 +280,7 @@
+@@ -276,7 +281,7 @@
        restartPolicy: Never
        containers:
          - name: pgo-deploy
