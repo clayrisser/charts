@@ -5,4 +5,4 @@ annotations:
   # catalog.cattle.io/hidden: 'true'
   catalog.cattle.io/namespace: olm
   catalog.cattle.io/os: linux
-  catalog.cattle.io/release-name: olm
+  catalog.cattle.io/release-name: olm-crds
