@@ -77,12 +77,20 @@ spec:
             httpGet:
               path: /
               port: container
-{{ toYaml .Values.probes.liveness | indent 12 }}
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
           readinessProbe:
             httpGet:
               path: /
               port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
       volumes:
         - name: config
           configMap:
