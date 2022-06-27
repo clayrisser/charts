@@ -3,6 +3,7 @@
     "alertmanager",
     "amavis",
     "apikey",
+    "apiserver",
     "automount",
     "bitspur",
     "centos",

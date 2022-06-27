@@ -1,5 +1,5 @@
---- templates/operator.yaml	2022-01-07 11:17:21.954531131 -0600
-+++ templates/operator.yaml.tmp	2022-01-07 11:17:41.074714144 -0600
+--- templates/operator.yaml	2022-06-27 17:22:46.966695607 -0500
++++ templates/operator.yaml.tmp	2022-06-27 17:27:30.228401059 -0500
 @@ -2,12 +2,15 @@
  kind: ServiceAccount
  metadata:
@@ -47,12 +47,21 @@
 -    namespace: "pgo"
 -    namespace_mode: "dynamic"
 +    namespace: {{ .Release.Namespace | quote }}
-+    namespace_mode: "disabled"
++    namespace_mode: {{ .Values.config.namespaceMode | quote }}
      pgbadgerport: "10000"
      pgo_add_os_ca_store: "false"
      pgo_admin_password: "examplepassword"
-@@ -189,7 +192,7 @@
-     pgo_image_tag: "1.1.0"
+@@ -182,14 +185,14 @@
+     pgo_cluster_admin: "false"
+     pgo_disable_eventing: "false"
+     pgo_disable_tls: "false"
+-    pgo_image_prefix: "percona/percona-postgresql-operator"
++    pgo_image_prefix: {{ .Values.images.postgresApiServer.repository | quote }}
+     pgo_image_pull_policy: "Always"
+     pgo_image_pull_secret: ""
+     pgo_image_pull_secret_manifest: ""
+-    pgo_image_tag: "1.1.0"
++    pgo_image_tag: {{ .Values.images.postgresApiServer.tag | quote }}
      pgo_installation_name: "devtest"
      pgo_noauth_routes: ""
 -    pgo_operator_namespace: "pgo"
@@ -89,7 +98,14 @@
        containers:
          - name: pgo-deploy
 -          image: percona/percona-postgresql-operator:1.1.0-pgo-deployer
-+          image: {{ .Values.images.postgresOperator.repository }}:{{ .Values.images.postgresOperator.tag }}
++          image: {{ .Values.images.postgresDeployer.repository }}:{{ .Values.images.postgresDeployer.tag }}
            imagePullPolicy: Always
            env:
              - name: DEPLOY_ACTION
+@@ -288,4 +290,4 @@
+       volumes:
+         - name: deployer-conf
+           configMap:
+-            name: pgo-deployer-cm
+\ No newline at end of file
++            name: pgo-deployer-cm

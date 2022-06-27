@@ -40,6 +40,15 @@ questions:
     required: true
     label: debug
     group: Config
+  - variable: config.namespaceMode
+    description: ''
+    type: enum
+    options:
+      - disabled
+      - dynamic
+    required: true
+    label: 'namespace mode'
+    group: Config
   - variable: config.pause
     description: ''
     type: boolean
