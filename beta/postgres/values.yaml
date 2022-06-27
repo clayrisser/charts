@@ -1,28 +1,28 @@
 images:
   postgresOperator:
     repository: perconalab/percona-postgresql-operator
-    tag: main-pgo-deployer
+    tag: PR-223-f2de1381-pgo-deployer
   pgadmin:
     repository: dpage/pgadmin4
     tag: 5.6
   postgres:
     repository: perconalab/percona-postgresql-operator
-    tag: main-ppg14-postgres-ha
+    tag: 1.1.0-ppg14-postgres-ha
   pmm:
     repository: percona/pmm-client
     tag: 2.24.0
   backup:
     repository: perconalab/percona-postgresql-operator
-    tag: main-ppg14-pgbackrest
+    tag: 1.1.0-ppg14-pgbackrest
   backrestRepo:
     repository: perconalab/percona-postgresql-operator
-    tag: main-ppg14-pgbackrest-repo
+    tag: 1.1.0-ppg14-pgbackrest-repo
   pgBouncer:
     repository: perconalab/percona-postgresql-operator
-    tag: main-ppg14-pgbouncer
+    tag: 1.1.0-ppg14-pgbouncer
   pgBadger:
     repository: perconalab/percona-postgresql-operator
-    tag: main-ppg14-pgbadger
+    tag: 1.1.0-ppg14-pgbadger
 
 config:
   clusterType: rke

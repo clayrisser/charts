@@ -7,7 +7,7 @@ export PATCHES := templates/operator.yaml
 include $(MKPM)/patch
 
 export CURL ?= curl
-export OPERATOR_VERSION ?= v1.2.0
+export OPERATOR_VERSION ?= 1.1.0
 
 .PHONY: prepack
 prepack: | $(PATCHES) patch-apply
@@ -15,6 +15,6 @@ prepack: | $(PATCHES) patch-apply
 templates/operator.yaml:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
-		https://raw.githubusercontent.com/percona/percona-postgresql-operator/$(OPERATOR_VERSION)/deploy/operator.yaml
+		https://raw.githubusercontent.com/percona/percona-postgresql-operator/v$(OPERATOR_VERSION)/deploy/operator.yaml
 
 endif

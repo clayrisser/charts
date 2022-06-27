@@ -1,8 +1,10 @@
---- templates/operator.yaml	2022-06-27 14:30:55.210706430 -0500
-+++ templates/operator.yaml.tmp	2022-06-27 14:31:04.146718899 -0500
-@@ -3,10 +3,14 @@
+--- templates/operator.yaml	2022-01-07 11:17:21.954531131 -0600
++++ templates/operator.yaml.tmp	2022-01-07 11:17:41.074714144 -0600
+@@ -2,12 +2,15 @@
+ kind: ServiceAccount
  metadata:
    name: pgo-deployer-sa
+-  namespace: pgo
  ---
 +{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "pgo-deployer-cr")) }}
  kind: ClusterRole
@@ -15,7 +17,7 @@
  rules:
    - apiGroups:
        - ''
-@@ -116,6 +120,7 @@
+@@ -115,12 +118,12 @@
      verbs:
        - delete
        - list
@@ -23,26 +25,34 @@
  ---
  apiVersion: v1
  kind: ConfigMap
-@@ -147,7 +152,7 @@
+ metadata:
+   name: pgo-deployer-cm
+-  namespace: pgo
+ data:
+   values.yaml: |-
+     # =====================
+@@ -147,7 +150,7 @@
      ccp_image_pull_secret_manifest: ""
-     ccp_image_tag: "1.2.0-ppg14-postgres-ha"
+     ccp_image_tag: "1.1.0-postgres-ha"
      create_rbac: "true"
 -    crunchy_debug: "false"
 +    crunchy_debug: {{ .Values.config.debug | quote }}
      db_name: ""
      db_password_age_days: "0"
      db_password_length: "24"
-@@ -165,7 +170,7 @@
+@@ -165,8 +168,8 @@
      reconcile_rbac: "true"
      exporterport: "9187"
      metrics: "false"
 -    namespace: "pgo"
+-    namespace_mode: "dynamic"
 +    namespace: {{ .Release.Namespace | quote }}
-     namespace_mode: "disabled"
++    namespace_mode: "disabled"
      pgbadgerport: "10000"
      pgo_add_os_ca_store: "false"
-@@ -189,7 +194,7 @@
-     pgo_image_tag: "1.2.0"
+     pgo_admin_password: "examplepassword"
+@@ -189,7 +192,7 @@
+     pgo_image_tag: "1.1.0"
      pgo_installation_name: "devtest"
      pgo_noauth_routes: ""
 -    pgo_operator_namespace: "pgo"
@@ -50,7 +60,7 @@
      pgo_tls_ca_store: ""
      pgo_tls_no_verify: "false"
      pod_anti_affinity: "preferred"
-@@ -252,7 +257,7 @@
+@@ -252,7 +255,7 @@
  apiVersion: rbac.authorization.k8s.io/v1
  kind: ClusterRoleBinding
  metadata:
@@ -59,7 +69,7 @@
  roleRef:
    apiGroup: rbac.authorization.k8s.io
    kind: ClusterRole
-@@ -260,7 +265,7 @@
+@@ -260,13 +263,12 @@
  subjects:
    - kind: ServiceAccount
      name: pgo-deployer-sa
@@ -68,11 +78,17 @@
  ---
  apiVersion: batch/v1
  kind: Job
-@@ -276,7 +281,7 @@
+ metadata:
+   name: pgo-deploy
+-  namespace: pgo
+ spec:
+   backoffLimit: 0
+   template:
+@@ -277,7 +279,7 @@
        restartPolicy: Never
        containers:
          - name: pgo-deploy
--          image: percona/percona-postgresql-operator:1.2.0-pgo-deployer
+-          image: percona/percona-postgresql-operator:1.1.0-pgo-deployer
 +          image: {{ .Values.images.postgresOperator.repository }}:{{ .Values.images.postgresOperator.tag }}
            imagePullPolicy: Always
            env:
