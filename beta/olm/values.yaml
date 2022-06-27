@@ -1,4 +1,1 @@
-images:
-  olm:
-    repository: quay.io/operator-framework/olm
-    tag: v0.19.1
+{}
