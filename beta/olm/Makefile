@@ -14,13 +14,6 @@ prepack: | \
 	templates/olm.yaml \
 	patch-apply
 
-# charts/crds/crds.yaml \
-
-charts/crds/crds.yaml:
-	@$(MKDIR) -p $(@D)
-	@$(CURL) -Lo $@ \
-		https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/v$(OPERATOR_VERSION)/deploy/upstream/quickstart/crds.yaml
-
 templates/olm.yaml:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
