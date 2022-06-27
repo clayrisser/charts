@@ -56,12 +56,12 @@
      pgo_disable_eventing: "false"
      pgo_disable_tls: "false"
 -    pgo_image_prefix: "percona/percona-postgresql-operator"
-+    pgo_image_prefix: {{ .Values.images.postgresApiServer.repository | quote }}
++    pgo_image_prefix: {{ .Values.images.pgo.repository | quote }}
      pgo_image_pull_policy: "Always"
      pgo_image_pull_secret: ""
      pgo_image_pull_secret_manifest: ""
 -    pgo_image_tag: "1.1.0"
-+    pgo_image_tag: {{ .Values.images.postgresApiServer.tag | quote }}
++    pgo_image_tag: {{ .Values.images.pgo.tag | quote }}
      pgo_installation_name: "devtest"
      pgo_noauth_routes: ""
 -    pgo_operator_namespace: "pgo"
@@ -98,7 +98,7 @@
        containers:
          - name: pgo-deploy
 -          image: percona/percona-postgresql-operator:1.1.0-pgo-deployer
-+          image: {{ .Values.images.postgresDeployer.repository }}:{{ .Values.images.postgresDeployer.tag }}
++          image: {{ .Values.images.deployer.repository }}:{{ .Values.images.deployer.tag }}
            imagePullPolicy: Always
            env:
              - name: DEPLOY_ACTION

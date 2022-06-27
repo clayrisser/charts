@@ -1,8 +1,8 @@
 images:
-  postgresDeployer:
+  deployer:
     repository: perconalab/percona-postgresql-operator
     tag: PR-223-f2de1381-pgo-deployer
-  postgresApiServer:
+  pgo:
     repository: perconalab/percona-postgresql-operator
     tag: PR-223-f2de1381
   pgadmin:
