@@ -1,0 +1,8 @@
+apiVersion: v2
+name: postgres-crds
+version: 1.2.0
+annotations:
+  catalog.cattle.io/hidden: 'true'
+  catalog.cattle.io/namespace: pgo
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: postgres-crds
