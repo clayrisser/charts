@@ -2,8 +2,7 @@ include ../../../../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 
-export PATCHES :=
-export CRDS := templates/crds/perconapgclusters-crd.yaml \
+export PATCHES := templates/crds/perconapgclusters-crd.yaml \
 	templates/crds/pgclusters-crd.yaml \
 	templates/crds/pgpolicies-crd.yaml \
 	templates/crds/pgreplicas-crd.yaml \
@@ -12,16 +11,14 @@ export CRDS := templates/crds/perconapgclusters-crd.yaml \
 include $(MKPM)/patch
 
 export CURL ?= curl
-export OPERATOR_VERSION ?= 1.2.0
+export OPERATOR_VERSION ?= v1.2.0
 
 .PHONY: prepack
-prepack: | $(CRDS) \
-	$(PATCHES) \
-	patch-apply
+prepack: | $(PATCHES) patch-apply
 
-$(CRDS):
+$(PATCHES):
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
-		https://raw.githubusercontent.com/percona/percona-postgresql-operator/v$(OPERATOR_VERSION)/installers/ansible/roles/pgo-operator/files/crds/$(@F)
+		https://raw.githubusercontent.com/percona/percona-postgresql-operator/$(OPERATOR_VERSION)/installers/ansible/roles/pgo-operator/files/crds/$(@F)
 
 endif
