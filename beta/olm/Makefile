@@ -12,10 +12,10 @@ export OPERATOR_VERSION ?= 0.21.2
 .PHONY: prepack
 prepack: | \
 	templates/olm.yaml \
-	crds/crds.yaml \
+	charts/crds/crds.yaml \
 	patch-apply
 
-crds/crds.yaml:
+charts/crds/crds.yaml:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
 		https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/v$(OPERATOR_VERSION)/deploy/upstream/quickstart/crds.yaml

@@ -15,6 +15,9 @@ sources:
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
+dependencies:
+  - name: "olm-crds"
+    version: "0.0.1"
 annotations:
   catalog.cattle.io/namespace: olm
   catalog.cattle.io/os: linux
