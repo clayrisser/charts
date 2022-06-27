@@ -2,7 +2,7 @@ include ../../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 
-export PATCHES :=
+export PATCHES := templates/olm.yaml
 
 include $(MKPM)/patch
 
