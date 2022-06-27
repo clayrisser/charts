@@ -7,7 +7,7 @@ export PATCHES := templates/operator.yaml
 include $(MKPM)/patch
 
 export CURL ?= curl
-export OPERATOR_VERSION ?= v1.1.0
+export OPERATOR_VERSION ?= v1.2.0
 
 .PHONY: prepack
 prepack: | $(PATCHES) patch-apply
