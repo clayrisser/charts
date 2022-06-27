@@ -630,17 +630,29 @@ questions:
     required: true
     label: 'postgres tag'
     group: Images
-  - variable: images.postgresOperator.repository
+  - variable: images.postgresDeployer.repository
     description: ''
     type: string
     required: true
-    label: 'postgres operator repository'
+    label: 'postgres deployer repository'
     group: Images
-  - variable: images.postgresOperator.tag
+  - variable: images.postgresDeployer.tag
     description: ''
     type: string
     required: true
-    label: 'postgres operator tag'
+    label: 'postgres deployer tag'
+    group: Images
+  - variable: images.postgresApiServer.repository
+    description: ''
+    type: string
+    required: true
+    label: 'postgres api server repository'
+    group: Images
+  - variable: images.postgresApiServer.tag
+    description: ''
+    type: string
+    required: true
+    label: 'postgres api server tag'
     group: Images
   - variable: images.pgadmin.repository
     description: ''
