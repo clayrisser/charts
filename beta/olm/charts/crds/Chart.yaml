@@ -1,3 +1,7 @@
 apiVersion: v2
 name: olm-crds
 version: 0.0.1
+annotations:
+  catalog.cattle.io/namespace: olm
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: olm
