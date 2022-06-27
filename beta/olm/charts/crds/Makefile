@@ -1,4 +1,4 @@
-include ../../mkpm.mk
+include ../../../../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 
@@ -12,6 +12,7 @@ export OPERATOR_VERSION ?= 0.21.2
 .PHONY: prepack
 prepack: | \
 	templates/crds.yaml \
+	$(PATCHES) \
 	patch-apply
 
 templates/crds.yaml:

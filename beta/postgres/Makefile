@@ -1,4 +1,4 @@
-include ../../../../mkpm.mk
+include ../../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 
