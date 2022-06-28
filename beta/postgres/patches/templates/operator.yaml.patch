@@ -1,10 +1,8 @@
---- templates/operator.yaml	2022-06-27 17:22:46.966695607 -0500
-+++ templates/operator.yaml.tmp	2022-06-27 17:27:30.228401059 -0500
-@@ -2,12 +2,15 @@
- kind: ServiceAccount
+--- templates/operator.yaml	2022-06-28 15:07:04.190351591 -0500
++++ templates/operator.yaml.tmp	2022-06-28 15:07:13.926373450 -0500
+@@ -3,10 +3,14 @@
  metadata:
    name: pgo-deployer-sa
--  namespace: pgo
  ---
 +{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "pgo-deployer-cr")) }}
  kind: ClusterRole
@@ -17,7 +15,7 @@
  rules:
    - apiGroups:
        - ''
-@@ -115,12 +118,12 @@
+@@ -116,6 +120,7 @@
      verbs:
        - delete
        - list
@@ -25,42 +23,36 @@
  ---
  apiVersion: v1
  kind: ConfigMap
- metadata:
-   name: pgo-deployer-cm
--  namespace: pgo
- data:
-   values.yaml: |-
-     # =====================
-@@ -147,7 +150,7 @@
+@@ -147,7 +152,7 @@
      ccp_image_pull_secret_manifest: ""
-     ccp_image_tag: "1.1.0-postgres-ha"
+     ccp_image_tag: "1.2.0-ppg14-postgres-ha"
      create_rbac: "true"
 -    crunchy_debug: "false"
 +    crunchy_debug: {{ .Values.config.debug | quote }}
      db_name: ""
      db_password_age_days: "0"
      db_password_length: "24"
-@@ -165,8 +168,8 @@
+@@ -165,8 +170,8 @@
      reconcile_rbac: "true"
      exporterport: "9187"
      metrics: "false"
 -    namespace: "pgo"
--    namespace_mode: "dynamic"
+-    namespace_mode: "disabled"
 +    namespace: {{ .Release.Namespace | quote }}
 +    namespace_mode: {{ .Values.config.namespaceMode | quote }}
      pgbadgerport: "10000"
      pgo_add_os_ca_store: "false"
      pgo_admin_password: "examplepassword"
-@@ -182,14 +185,14 @@
+@@ -182,14 +187,14 @@
      pgo_cluster_admin: "false"
      pgo_disable_eventing: "false"
      pgo_disable_tls: "false"
--    pgo_image_prefix: "percona/percona-postgresql-operator"
+-    pgo_image_prefix: "perconalab/percona-postgresql-operator"
 +    pgo_image_prefix: {{ .Values.images.pgo.repository | quote }}
      pgo_image_pull_policy: "Always"
      pgo_image_pull_secret: ""
      pgo_image_pull_secret_manifest: ""
--    pgo_image_tag: "1.1.0"
+-    pgo_image_tag: "1.2.0"
 +    pgo_image_tag: {{ .Values.images.pgo.tag | quote }}
      pgo_installation_name: "devtest"
      pgo_noauth_routes: ""
@@ -69,7 +61,7 @@
      pgo_tls_ca_store: ""
      pgo_tls_no_verify: "false"
      pod_anti_affinity: "preferred"
-@@ -252,7 +255,7 @@
+@@ -252,7 +257,7 @@
  apiVersion: rbac.authorization.k8s.io/v1
  kind: ClusterRoleBinding
  metadata:
@@ -78,7 +70,7 @@
  roleRef:
    apiGroup: rbac.authorization.k8s.io
    kind: ClusterRole
-@@ -260,13 +263,12 @@
+@@ -260,7 +265,7 @@
  subjects:
    - kind: ServiceAccount
      name: pgo-deployer-sa
@@ -87,25 +79,12 @@
  ---
  apiVersion: batch/v1
  kind: Job
- metadata:
-   name: pgo-deploy
--  namespace: pgo
- spec:
-   backoffLimit: 0
-   template:
-@@ -277,7 +279,7 @@
+@@ -276,7 +281,7 @@
        restartPolicy: Never
        containers:
          - name: pgo-deploy
--          image: percona/percona-postgresql-operator:1.1.0-pgo-deployer
+-          image: percona/percona-postgresql-operator:1.2.0-pgo-deployer
 +          image: {{ .Values.images.deployer.repository }}:{{ .Values.images.deployer.tag }}
            imagePullPolicy: Always
            env:
              - name: DEPLOY_ACTION
-@@ -288,4 +290,4 @@
-       volumes:
-         - name: deployer-conf
-           configMap:
--            name: pgo-deployer-cm
-\ No newline at end of file
-+            name: pgo-deployer-cm
