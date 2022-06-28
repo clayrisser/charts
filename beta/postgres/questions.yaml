@@ -353,11 +353,11 @@ questions:
     required: true
     label: 'primary size'
     group: Persistence
-  - variable: persistence.size.replica
+  - variable: persistence.size.replicas
     description: ''
     type: string
     required: true
-    label: 'replica size'
+    label: 'replicas size'
     show_if: config.postgres.hotReplicas!=0
     group: Persistence
   - variable: persistence.size.wal

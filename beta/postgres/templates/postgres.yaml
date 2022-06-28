@@ -48,14 +48,15 @@ spec:
   pgPrimary:
     image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-{{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
     resources:
-{{ toYaml .Values.config.postgres.resources.requests | indent 6 }}
-    limits:
-{{ toYaml .Values.config.postgres.resources.limits | indent 6 }}
+{{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
+      requests:
+{{ toYaml .Values.config.postgres.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.postgres.resources.limits | indent 8 }}
 {{- else }}
-    resources: {}
-    limits: {}
+      requests: {}
+      limits: {}
 {{- end }}
     tolerations: []
     volumeSpec:
@@ -79,28 +80,31 @@ spec:
     serverHost: monitoring-service
     serverUser: admin
     pmmSecret: cluster1-pmm-secret
-{{- if (and .Values.config.pmm.resources.enabled (not (eq .Values.config.pmm.resources.enabled "false"))) }}
     resources:
-{{ toYaml .Values.config.pmm.resources.requests | indent 6 }}
-    limits:
-{{ toYaml .Values.config.pmm.resources.limits | indent 6 }}
+{{- if (and .Values.config.pmm.resources.enabled (not (eq .Values.config.pmm.resources.enabled "false"))) }}
+      requests:
+{{ toYaml .Values.config.pmm.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.pmm.resources.limits | indent 8 }}
 {{- else }}
-    resources: {}
-    limits: {}
+      requests: {}
+      limits: {}
 {{- end }}
   backup:
-    antiAffinityType: preferred
+    affinity:
+      antiAffinityType: preferred
     backrestRepoImage: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
-{{- if (and .Values.config.backup.resources.enabled (not (eq .Values.config.backup.resources.enabled "false"))) }}
     resources:
-{{ toYaml .Values.config.backup.resources.requests | indent 6 }}
-    limits:
-{{ toYaml .Values.config.backup.resources.limits | indent 6 }}
+{{- if (and .Values.config.backup.resources.enabled (not (eq .Values.config.backup.resources.enabled "false"))) }}
+      requests:
+{{ toYaml .Values.config.backup.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.backup.resources.limits | indent 8 }}
 {{- else }}
-    resources: {}
-    limits: {}
+      requests: {}
+      limits: {}
 {{- end }}
     volumeSpec:
       size: {{ .Values.persistence.size.backup | quote }}
@@ -126,14 +130,15 @@ spec:
     image: {{ .Values.images.pgBouncer.repository }}:{{ .Values.images.pgBouncer.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     size: {{ .Values.config.pgBouncer.replicas }}
-{{- if (and .Values.config.pgBouncer.resources.enabled (not (eq .Values.config.pgBouncer.resources.enabled "false"))) }}
     resources:
+{{- if (and .Values.config.pgBouncer.resources.enabled (not (eq .Values.config.pgBouncer.resources.enabled "false"))) }}
+      requests:
 {{ toYaml .Values.config.pgBouncer.resources.requests | indent 6 }}
-    limits:
+      limits:
 {{ toYaml .Values.config.pgBouncer.resources.limits | indent 6 }}
 {{- else }}
-    resources: {}
-    limits: {}
+      requests: {}
+      limits: {}
 {{- end }}
     expose:
       serviceType: ClusterIP
@@ -141,14 +146,15 @@ spec:
   pgReplicas:
     hot:
       size: {{ .Values.config.postgres.hotReplicas }}
-{{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
       resources:
+{{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
+        requests:
 {{ toYaml .Values.config.postgres.resources.requests | indent 8 }}
-      limits:
+        limits:
 {{ toYaml .Values.config.postgres.resources.limits | indent 8 }}
 {{- else }}
-      resources: {}
-      limits: {}
+        requests: {}
+        limits: {}
 {{- end }}
       volumeSpec:
         size: {{ .Values.persistence.size.replicas | quote }}

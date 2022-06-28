@@ -139,7 +139,7 @@ persistence:
   size:
     backup: 1Gi
     primary: 1Gi
-    replica: 1Gi
+    replicas: 1Gi
     wal: 1Gi
   storageClass: ''
   velero:
