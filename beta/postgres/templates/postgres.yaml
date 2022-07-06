@@ -142,9 +142,8 @@ spec:
 {{- end }}
     expose:
       serviceType: ClusterIP
-{{- if (and .Values.config.postgres.hotReplicas (gt .Values.config.postgres.hotReplicas 0.0)) }}
   pgReplicas:
-    hot:
+    hotStandby:
       size: {{ .Values.config.postgres.hotReplicas }}
       resources:
 {{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
@@ -189,7 +188,6 @@ spec:
       enableSyncStandby: false
       expose:
         serviceType: ClusterIP
-{{- end }}
   pgBadger:
     enabled: {{ .Values.config.pgBadger.enabled }}
     image: {{ .Values.images.pgBadger.repository }}:{{ .Values.images.pgBadger.tag }}
