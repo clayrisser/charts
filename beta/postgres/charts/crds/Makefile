@@ -2,12 +2,12 @@ include ../../../../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 
-export PATCHES :=
 export CRDS := templates/crds/perconapgclusters-crd.yaml \
 	templates/crds/pgclusters-crd.yaml \
 	templates/crds/pgpolicies-crd.yaml \
 	templates/crds/pgreplicas-crd.yaml \
 	templates/crds/pgtasks-crd.yaml
+export PATCHES := $(CRDS)
 
 include $(MKPM)/patch
 
@@ -16,7 +16,6 @@ export OPERATOR_VERSION ?= 1.2.0
 
 .PHONY: prepack
 prepack: | \
-	$(CRDS) \
 	$(PATCHES) \
 	patch-apply
 
