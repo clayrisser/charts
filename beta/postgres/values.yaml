@@ -111,7 +111,7 @@ service:
         name: ''
         ca: ''
         issuer:
-          integration: cert-manager
+          integration: kube-system
           dnsNames: ''
     nodePorts:
       postgres:
