@@ -19,4 +19,4 @@ maintainers:
     email: jam@codejam.ninja
 annotations:
   catalog.cattle.io/release-name: cluster-issuer
-  catalog.cattle.io/namespace: cert-manager
+  catalog.cattle.io/namespace: kube-system

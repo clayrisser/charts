@@ -10,3 +10,4 @@ metadata:
 spec:
   ca:
     secretName: selfsigned-ca
+  selfSigned: {}
