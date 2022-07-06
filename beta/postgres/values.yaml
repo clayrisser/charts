@@ -106,7 +106,7 @@ service:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     tls:
-      enabled: true
+      enabled: false
       certificate:
         name: ''
         ca: ''
