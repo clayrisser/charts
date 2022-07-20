@@ -1,7 +1,7 @@
 images:
   deployer:
-    repository: registry.gitlab.com/risserlabs/community/images/pgo-deployer
-    tag: 1.2.0
+    repository: perconalab/percona-postgresql-operator
+    tag: 1.2.0-pgo-deployer
   pgo:
     repository: perconalab/percona-postgresql-operator
     tag: 1.2.0
