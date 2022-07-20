@@ -1,31 +1,31 @@
 images:
   deployer:
-    repository: registry.gitlab.com/risserlabs/community/percona-postgresql-operator
+    repository: registry.gitlab.com/risserlabs/community/images/pgo-deployer
     tag: 1.2.0
   pgo:
-    repository: registry.gitlab.com/risserlabs/community/percona-postgresql-operator
+    repository: perconalab/percona-postgresql-operator
     tag: 1.2.0
-  postgres:
-    repository: registry.gitlab.com/risserlabs/community/percona-docker/postgres-ha
-    tag: 1.2.0-ppg14
-  backup:
-    repository: registry.gitlab.com/risserlabs/community/percona-docker/pgbackrest
-    tag: 1.2.0-ppg14
-  backrestRepo:
-    repository: registry.gitlab.com/risserlabs/community/percona-docker/pgbackrest-repo
-    tag: 1.2.0-ppg14
-  pgBouncer:
-    repository: registry.gitlab.com/risserlabs/community/percona-docker/pgbouncer
-    tag: 1.2.0-ppg14
-  pgBadger:
-    repository: registry.gitlab.com/risserlabs/community/percona-docker/pgbadger
-    tag: 1.2.0-ppg14
-  pmm:
-    repository: percona/pmm-client
-    tag: 2.24.0
   pgadmin:
     repository: dpage/pgadmin4
     tag: 5.6
+  postgres:
+    repository: perconalab/percona-postgresql-operator
+    tag: 1.2.0-ppg14-postgres-ha
+  pmm:
+    repository: percona/pmm-client
+    tag: 2.24.0
+  backup:
+    repository: perconalab/percona-postgresql-operator
+    tag: 1.2.0-ppg14-pgbackrest
+  backrestRepo:
+    repository: perconalab/percona-postgresql-operator
+    tag: 1.2.0-ppg14-pgbackrest-repo
+  pgBouncer:
+    repository: perconalab/percona-postgresql-operator
+    tag: 1.2.0-ppg14-pgbouncer
+  pgBadger:
+    repository: perconalab/percona-postgresql-operator
+    tag: 1.2.0-ppg14-pgbadger
 
 config:
   clusterType: rke
