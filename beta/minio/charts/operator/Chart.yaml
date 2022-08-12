@@ -1,8 +1,8 @@
 apiVersion: v2
-name: minio-operator
+name: operator-minio
 version: 4.4.25
 annotations:
   catalog.cattle.io/hidden: 'true'
   catalog.cattle.io/namespace: operators
   catalog.cattle.io/os: linux
-  catalog.cattle.io/release-name: minio-operator
+  catalog.cattle.io/release-name: operator-minio
