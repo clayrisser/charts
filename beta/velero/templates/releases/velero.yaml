@@ -1,5 +1,5 @@
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
 metadata:
   name: {{ template "velero.name" . }}
   labels:
@@ -9,11 +9,10 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   helmVersion: v3
-  chart:
-    repository: https://vmware-tanzu.github.io/helm-charts
-    name: velero
-    version: 2.29.8
-  values:
+  repo: https://vmware-tanzu.github.io/helm-charts
+  chart: velero
+  version: 2.29.8
+  valuesContent: |
     image:
       repository: velero/velero
       tag: v1.6.3
