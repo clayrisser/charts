@@ -1,7 +1,7 @@
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
-  name: {{ template "velero.name" . }}
+  name: {{ template "velero.name" . }}-v
   labels:
     app.kubernetes.io/name: {{ template "velero.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
