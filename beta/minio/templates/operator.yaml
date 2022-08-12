@@ -1,0 +1,30 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ template "minio.name" . }}
+  labels:
+    app: {{ template "minio.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  targetNamespaces:
+    - {{ .Release.Namespace }}
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: {{ template "minio.name" . }}
+  labels:
+    app: {{ template "minio.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  # https://olm.operatorframework.io/docs/tasks/install-operator-with-olm/#example-install-a-specific-version-of-an-operator
+  channel: alpha
+  installPlanApproval: Manual
+  name: minio-operator
+  source: operatorhubio-catalog
+  sourceNamespace: olm
+  startingCSV: minio-operator.v4.4.25

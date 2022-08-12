@@ -1,0 +1,42 @@
+images:
+  minio:
+    repository: quay.io/minio/minio@sha256
+    tag: dc7140730094aed0b7dfb185974d68081ec5443c5ecdab7e8bae4479744706bf
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  minio: {}
+
+service:
+  minio:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+    lbPorts:
+      http: 80
+
+ingress:
+  minio:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: letsencrypt-staging
+
+persistence:
+  accessMode: ReadWriteOnce
+  size:
+    minio: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'

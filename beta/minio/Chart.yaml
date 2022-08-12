@@ -1,0 +1,13 @@
+apiVersion: v1
+name: minio
+home: https://min.io
+icon: https://avatars.githubusercontent.com/u/695951?s=200&v=4
+version: 0.0.1
+appVersion: latest
+description: 'multi cloud object storage'
+keywords: []
+sources:
+  - https://github.com/minio/minio
+maintainers:
+  - name: 'Jam Risser'
+    email: jam@codejam.ninja
