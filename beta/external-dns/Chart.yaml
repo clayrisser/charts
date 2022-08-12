@@ -1,7 +1,7 @@
 apiVersion: v1
 name: external-dns
 home: https://github.com/kubernetes-sigs/external-dns
-icon: https://raw.githubusercontent.com/kubernetes-sigs/external-dns/master/img/external-dns.png
+icon: https://github.com/kubernetes-sigs/external-dns/blob/master/docs/img/external-dns.png
 version: 0.0.1
 appVersion: latest
 description: 'synchronizes exposed kubernetes services and ingresses with dns providers'
