@@ -11,3 +11,7 @@ sources:
 maintainers:
   - name: 'Jam Risser'
     email: jam@codejam.ninja
+annotations:
+  catalog.cattle.io/auto-install: minio-operator=4.4.25
+  catalog.cattle.io/display-name: Minio
+  catalog.cattle.io/os: linux

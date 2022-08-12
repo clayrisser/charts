@@ -1,8 +1,8 @@
-{{- if (not (lookup "operators.coreos.com/v1" "OperatorGroup" "operators" (include "minio.name" .))) }}
+{{- if (not (lookup "operators.coreos.com/v1" "OperatorGroup" "operators" "minio")) }}
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: {{ template "minio.name" . }}
+  name: minio
   namespace: operators
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
@@ -12,12 +12,11 @@ spec:
     - {{ .Release.Namespace }}
 {{- end }}
 ---
-{{- if (not (lookup "operators.coreos.com/v1" "Subscription" "operators" (include "minio.name" .))) }}
+{{- if (not (lookup "operators.coreos.com/v1" "Subscription" "operators" "minio")) }}
 apiVersion: operators.coreos.com/v1
 kind: Subscription
-namespace: operators
 metadata:
-  name: {{ template "minio.name" . }}
+  name: minio
   namespace: operators
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
@@ -29,5 +28,5 @@ spec:
   name: minio-operator
   source: operatorhubio-catalog
   sourceNamespace: olm
-  startingCSV: minio-operator.v4.4.25
+  startingCSV: minio-operator.v{{ .Chart.Version }}
 {{- end }}
