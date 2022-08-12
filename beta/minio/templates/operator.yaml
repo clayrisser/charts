@@ -1,3 +1,4 @@
+{{- if (not (lookup "operators.coreos.com/v1" "OperatorGroup" "operators" (include "minio.name" .))) }}
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
@@ -9,8 +10,10 @@ metadata:
 spec:
   targetNamespaces:
     - {{ .Release.Namespace }}
+{{- end }}
 ---
-apiVersion: operators.coreos.com/v1alpha1
+{{- if (not (lookup "operators.coreos.com/v1" "Subscription" "operators" (include "minio.name" .))) }}
+apiVersion: operators.coreos.com/v1
 kind: Subscription
 namespace: operators
 metadata:
@@ -27,3 +30,4 @@ spec:
   source: operatorhubio-catalog
   sourceNamespace: olm
   startingCSV: minio-operator.v4.4.25
+{{- end }}
