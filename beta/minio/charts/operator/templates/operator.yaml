@@ -23,7 +23,7 @@ metadata:
     helm.sh/hook-weight: '5'
 spec:
   # https://olm.operatorframework.io/docs/tasks/install-operator-with-olm/#example-install-a-specific-version-of-an-operator
-  channel: alpha
+  channel: stable
   installPlanApproval: Manual
   name: minio-operator
   source: operatorhubio-catalog
