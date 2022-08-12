@@ -12,8 +12,7 @@ spec:
     - version: v0.0.1
       plugDefinition:
         properties:
-          bucket:
-            required: true
+          bucket: {}
           prefix: {}
           replicate: {}
       socketDefinition:
@@ -24,3 +23,5 @@ spec:
           pathStyle: {}
           region: {}
           secretKey: {}
+          defaultBucket: {}
+          defaultPrefix: {}

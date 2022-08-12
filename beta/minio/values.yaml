@@ -7,6 +7,8 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   debug: false
+  defaultBucket: ''
+  defaultPrefix: ''
   minio: {}
 
 service:

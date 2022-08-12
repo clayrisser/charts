@@ -33,3 +33,15 @@ questions:
     required: true
     label: 'path style'
     group: Config
+  - variable: config.defaultBucket
+    description: ''
+    type: string
+    required: false
+    label: 'default bucket'
+    group: Config
+  - variable: config.defaultPrefix
+    description: ''
+    type: string
+    required: false
+    label: 'default prefix'
+    group: Config

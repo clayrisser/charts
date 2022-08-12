@@ -18,7 +18,9 @@ spec:
     endpoint: ''
     pathStyle: 'true'
     region: ''
-  configSecretName: storage-credentials
+    defaultBucket: {{ .Values.config.defaultBucket | quote }}
+    defaultPrefix: {{ .Values.config.defaultPrefix | quote }}
+  configSecretName: {{ template "s3.name" . }}
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -45,12 +47,12 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: bitnami/kubectl:1.20.9
+                  image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
                   env:
                     - name: S3_BUCKET
-                      value: '{% .plugConfig.bucket %}'
+                      value: '{% .plugConfig.bucket | ternary .plugConfig.bucket .socketConfig.defaultBucket %}'
                     - name: S3_PREFIX
-                      value: '{% .plugConfig.prefix %}'
+                      value: '{% (and .plugConfig.prefix .plugConfig.bucket) | ternary .plugConfig.prefix .socketConfig.defaultPrefix %}'
                     - name: S3_ACCESS_KEY
                       value: '{% .socketConfig.accessKey %}'
                     - name: S3_ENDPOINT

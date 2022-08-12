@@ -4,3 +4,5 @@ config:
   pathStyle: true
   region: ''
   secretKey: ''
+  defaultBucket: ''
+  defaultPrefix: ''
