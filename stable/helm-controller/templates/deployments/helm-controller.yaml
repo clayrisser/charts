@@ -21,7 +21,6 @@ spec:
         app: {{ template "helm-controller.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "helm-controller.name" . }}
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
