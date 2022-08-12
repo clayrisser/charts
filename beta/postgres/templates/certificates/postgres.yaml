@@ -10,10 +10,10 @@ kind: Certificate
 metadata:
   name: {{ template "postgres.name" . }}
   labels:
-    app: {{ template "postgres.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "postgres.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   secretName: postgres-cert
   isCA: false

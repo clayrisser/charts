@@ -3,10 +3,10 @@ kind: HelmRelease
 metadata:
   name: {{ template "opensearch.name" . }}
   labels:
-    app: {{ template "opensearch.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "opensearch.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   forceUpgrade: false
   helmVersion: v3

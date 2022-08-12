@@ -2,7 +2,7 @@ apiVersion: minio.min.io/v2
 kind: Tenant
 metadata:
   labels:
-    app: {{ template "minio.name" . }}
+    app.kubernetes.io/name: {{ template "minio.name" . }}
   name: storage-lite
 spec:
   certConfig: {}

@@ -3,10 +3,10 @@ kind: PerconaXtraDBCluster
 metadata:
   name: {{ template "xtradb.name" . }}
   labels:
-    app: {{ template "xtradb.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "xtradb.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   crVersion: 1.10.0
   secretsName: {{ include "xtradb.name" . }}

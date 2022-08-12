@@ -5,10 +5,10 @@ apiVersion: v1
 metadata:
   name: {{ template "gitlab.name" . }}-gitlab-runner
   labels:
-    app: {{ template "gitlab.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "gitlab.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode }}

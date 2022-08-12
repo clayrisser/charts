@@ -15,10 +15,10 @@ kind: Job
 metadata:
   name: patch
   labels:
-    app: patch
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: patch
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: '0'
@@ -28,7 +28,7 @@ spec:
     metadata:
       labels:
         app: patch
-        release: {{ .Release.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure
       containers:

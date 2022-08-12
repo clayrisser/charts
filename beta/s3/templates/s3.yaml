@@ -3,10 +3,10 @@ kind: Secret
 metadata:
   name: {{ template "s3.name" . }}
   labels:
-    app: {{ template "s3.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "s3.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 type: Opaque
 stringData:
   secretKey: {{ .Values.config.secretKey | quote }}

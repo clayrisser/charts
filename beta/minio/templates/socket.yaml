@@ -1,16 +1,92 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
-  name: {{ template "minio.name" . }}
+  name: {{ template "s3.name" . }}
   labels:
-    app: {{ template "minio.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "s3.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
     name: s3
     namespace: {{ .Release.Namespace }}
-  config: {}
+  config:
+    # TODO: set endpoint
+    endpoint: ''
+    pathStyle: 'true'
+    region: ''
+  configSecretName: storage-credentials
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: s3-coupled-or-updated-{% .plug.metadata.namespace %}
+        spec:
+          activeDeadlineSeconds: 360
+          backoffLimit: 6
+          ttlSecondsAfterFinished: 360
+          template:
+            spec:
+              restartPolicy: Never
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: kubernetes.io/arch
+                            operator: In
+                            values:
+                              - amd64
+              containers:
+                - name: kubectl
+                  image: bitnami/kubectl:1.20.9
+                  env:
+                    - name: S3_BUCKET
+                      value: '{% .plugConfig.bucket %}'
+                    - name: S3_PREFIX
+                      value: '{% .plugConfig.prefix %}'
+                    - name: S3_ACCESS_KEY
+                      value: '{% .socketConfig.accessKey %}'
+                    - name: S3_ENDPOINT
+                      value: '{% .socketConfig.endpoint %}'
+                    - name: S3_PATH_STYLE
+                      value: '{% .socketConfig.pathStyle %}'
+                    - name: S3_REGION
+                      value: '{% .socketConfig.region %}'
+                    - name: S3_SECRET_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ template "s3.name" . }}
+                          key: secretKey
+                  command:
+                    - sh
+                    - -c
+                    - |-
+                      if [ "{% .plugConfig.replicate %}" != "false" ]; then
+                        cat <<EOF | kubectl apply -f -
+                      apiVersion: v1
+                      kind: Secret
+                      metadata:
+                        name: {{ template "s3.name" . }}-{% .plug.metadata.name %}
+                        namespace: '{% .plug.metadata.namespace %}'
+                      type: Opaque
+                      stringData:
+                        accessKey: '$S3_ACCESS_KEY'
+                        bucket: '$S3_BUCKET'
+                        endpoint: '$S3_ENDPOINT'
+                        pathStyle: '$S3_PATH_STYLE'
+                        prefix: '$S3_PREFIX'
+                        region: '$S3_REGION'
+                        secretKey: $S3_SECRET_KEY
+                      EOF
+                      fi
+                      kubectl get pods -n {{ .Release.Namespace }} \
+                        -l job-name={{ template "s3.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        --field-selector status.phase=Failed \
+                        -o yaml | kubectl delete -f -

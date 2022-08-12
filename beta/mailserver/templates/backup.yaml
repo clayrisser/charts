@@ -4,10 +4,10 @@ kind: Schedule
 metadata:
   name: {{ template "mailserver.fullname" . }}-{{ .Release.Namespace }}
   labels:
-    app: {{ template "mailserver.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "mailserver.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   schedule: {{ .Values.persistence.velero.schedule | quote }}
   template:
@@ -20,10 +20,10 @@ kind: Plug
 metadata:
   name: velero-schedule-replicator
   labels:
-    app: {{ .Release.Name }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ .Release.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   interfaceVersions: '*'
   interface:

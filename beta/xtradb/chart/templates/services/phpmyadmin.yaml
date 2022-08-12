@@ -4,10 +4,10 @@ kind: Service
 metadata:
   name: phpmyadmin
   labels:
-    app: {{ template "xtradb.name" . }}-phpmyadmin
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "xtradb.name" . }}-phpmyadmin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
     {{- if (eq .Values.service.phpmyadmin.type "ClusterIP") }}
     kubernetes.io/cluster-service: 'true'
     {{- end }}
@@ -29,5 +29,5 @@ spec:
       {{- end }}
   selector:
     app: phpmyadmin
-    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

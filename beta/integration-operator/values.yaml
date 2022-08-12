@@ -1,10 +1,9 @@
 images:
   integrationOperator:
-    repository: siliconhills/integration-operator
+    repository: registry.gitlab.com/risserlabs/internal/integration-operator/integration-operator
     tag: 0.1.1
 
 config:
-  clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   integrationOperator:

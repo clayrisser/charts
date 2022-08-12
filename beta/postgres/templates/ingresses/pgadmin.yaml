@@ -4,10 +4,10 @@ kind: Ingress
 metadata:
   name: pgadmin
   labels:
-    app: pgadmin
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: pgadmin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
     {{- if (eq .Values.config.clusterType "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing

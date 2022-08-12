@@ -10,10 +10,10 @@ kind: Certificate
 metadata:
   name: {{ template "openldap.name" . }}
   labels:
-    app: {{ template "openldap.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "openldap.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   secretName: openldap-cert
   isCA: false

@@ -7,10 +7,10 @@ metadata:
   name: gitlab-omniauth-plug
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "gitlab.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "gitlab.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: "1646238016"
   interfaceVersions: '*'
@@ -66,9 +66,9 @@ spec:
                         name: gitlab-omniauth
                         labels:
                           app: {{ template "gitlab.name" . }}
-                          chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-                          release: {{ .Release.Name }}
-                          heritage: {{ .Release.Service }}
+                          helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+                          app.kubernetes.io/instance: {{ .Release.Name }}
+                          app.kubernetes.io/managed-by: {{ .Release.Service }}
                       type: Opaque
                       stringData:
                         provider: |
