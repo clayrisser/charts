@@ -2,8 +2,8 @@ name: helm-controller
 apiVersion: v1
 home: https://github.com/k3s-io/helm-controller
 icon: ""
-version: 0.12.1
-appVersion: 0.12.1
+version: 0.12.3
+appVersion: 0.12.3
 description: "a simple way to manage helm charts with custom resource definitions in k8s"
 keywords:
   - operator
@@ -13,5 +13,5 @@ maintainers:
   - name: "Clay Risser"
     email: email@clayrisser.com
 annotations:
-  catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/namespace: helm-controller
   catalog.cattle.io/release-name: helm-controller
