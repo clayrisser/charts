@@ -12,8 +12,8 @@ spec:
     - {{ .Release.Namespace }}
 {{- end }}
 ---
-{{- if (not (lookup "operators.coreos.com/v1" "Subscription" "operators" "minio")) }}
-apiVersion: operators.coreos.com/v1
+{{- if (not (lookup "operators.coreos.com/v1alpha1" "Subscription" "operators" "minio")) }}
+apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: minio
