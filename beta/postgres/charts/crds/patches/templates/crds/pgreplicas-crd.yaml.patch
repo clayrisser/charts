@@ -1,14 +1,20 @@
---- templates/crds/pgreplicas-crd.yaml	2022-06-30 01:51:08.691791857 +0530
-+++ templates/crds/pgreplicas-crd.yaml.tmp	2022-06-30 01:59:49.346354012 +0530
-@@ -1,4 +1,5 @@
+--- templates/crds/pgreplicas-crd.yaml	2022-08-12 03:54:45.031202072 -0500
++++ templates/crds/pgreplicas-crd.yaml.tmp	2022-08-12 03:55:19.210974419 -0500
+@@ -1,8 +1,12 @@
  ---
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "pgreplicas.pg.percona.com")) }}
  apiVersion: apiextensions.k8s.io/v1
  kind: CustomResourceDefinition
  metadata:
-@@ -27,3 +28,4 @@
+   name: pgreplicas.pg.percona.com
++  annotations:
++    helm.sh/hook: pre-install,pre-upgrade
++    helm.sh/hook-weight: '5'
+ spec:
+   group: pg.percona.com
+   names:
+@@ -27,3 +31,4 @@
              properties:
                state: { type: string }
                message: { type: string }
 +{{- end }}
-\ No newline at end of file

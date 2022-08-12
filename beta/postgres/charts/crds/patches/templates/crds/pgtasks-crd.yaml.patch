@@ -1,14 +1,20 @@
---- templates/crds/pgtasks-crd.yaml	2022-06-30 01:51:08.671792004 +0530
-+++ templates/crds/pgtasks-crd.yaml.tmp	2022-06-30 02:00:17.350339652 +0530
-@@ -1,4 +1,5 @@
+--- templates/crds/pgtasks-crd.yaml	2022-08-12 03:54:45.031202072 -0500
++++ templates/crds/pgtasks-crd.yaml.tmp	2022-08-12 03:55:21.730957034 -0500
+@@ -1,8 +1,12 @@
  ---
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "pgtasks.pg.percona.com")) }}
  apiVersion: apiextensions.k8s.io/v1
  kind: CustomResourceDefinition
  metadata:
-@@ -29,3 +30,4 @@
+   name: pgtasks.pg.percona.com
++  annotations:
++    helm.sh/hook: pre-install,pre-upgrade
++    helm.sh/hook-weight: '5'
+ spec:
+   conversion:
+     strategy: None
+@@ -29,3 +33,4 @@
              properties:
                state: { type: string }
                message: { type: string }
 +{{- end }}
-\ No newline at end of file

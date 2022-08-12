@@ -12,7 +12,7 @@ export PATCHES := $(CRDS)
 include $(MKPM)/patch
 
 export CURL ?= curl
-export OPERATOR_VERSION ?= 1.2.0
+export OPERATOR_VERSION ?= 1.3.0
 
 .PHONY: prepack
 prepack: | \
