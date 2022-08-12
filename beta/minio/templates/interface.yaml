@@ -3,7 +3,7 @@ kind: Interface
 metadata:
   name: s3
   labels:
-    app.kubernetes.io/name: {{ template "s3.name" . }}
+    app.kubernetes.io/name: {{ template "minio.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}

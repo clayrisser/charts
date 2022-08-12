@@ -1,0 +1,70 @@
+categories:
+  - Operators
+questions:
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.helmController.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'helm controller resources enabled'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.helmController.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'helm controller resources requests cpu'
+      - variable: config.helmController.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'helm controller resources requests memory'
+      - variable: config.helmController.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'helm controller resources limits cpu'
+      - variable: config.helmController.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'helm controller resources limits memory'
+
+  # Images
+  - variable: images.helmController.repository
+    description: ''
+    type: string
+    required: true
+    label: 'helm controller repository'
+    group: Images
+  - variable: images.helmController.tag
+    description: ''
+    type: string
+    required: true
+    label: 'helm controller tag'
+    group: Images

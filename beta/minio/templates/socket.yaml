@@ -1,9 +1,9 @@
 apiVersion: integration.siliconhills.dev/v1alpha2
 kind: Socket
 metadata:
-  name: {{ template "s3.name" . }}
+  name: {{ template "minio.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "s3.name" . }}
+    app.kubernetes.io/name: {{ template "minio.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -20,7 +20,7 @@ spec:
     region: ''
     defaultBucket: {{ .Values.config.defaultBucket | quote }}
     defaultPrefix: {{ .Values.config.defaultPrefix | quote }}
-  configSecretName: {{ template "s3.name" . }}
+  configSecretName: {{ template "minio.name" . }}
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -64,7 +64,7 @@ spec:
                     - name: S3_SECRET_KEY
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "s3.name" . }}
+                          name: {{ template "minio.name" . }}
                           key: secretKey
                   command:
                     - sh
@@ -75,7 +75,7 @@ spec:
                       apiVersion: v1
                       kind: Secret
                       metadata:
-                        name: {{ template "s3.name" . }}-{% .plug.metadata.name %}
+                        name: {{ template "minio.name" . }}-{% .plug.metadata.name %}
                         namespace: '{% .plug.metadata.namespace %}'
                       type: Opaque
                       stringData:
@@ -89,6 +89,6 @@ spec:
                       EOF
                       fi
                       kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "s3.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
+                        -l job-name={{ template "minio.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
