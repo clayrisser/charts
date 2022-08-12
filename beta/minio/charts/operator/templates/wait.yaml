@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Release.Name }}-wait
+  name: minio-wait
   annotations:
     helm.sh/hook: post-install
     helm.sh/hook-weight: '5'

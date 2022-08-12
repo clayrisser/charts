@@ -25,22 +25,3 @@ spec:
   source: operatorhubio-catalog
   sourceNamespace: olm
   startingCSV: minio-operator.v{{ .Chart.Version }}
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: {{ .Release.Name }}-wait
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '5'
-    helm.sh/hook-delete-policy: hook-succeeded
-spec:
-  template:
-    metadata:
-      name: wait
-    spec:
-      restartPolicy: Never
-      containers:
-        - name: wait
-          image: busybox
-          command: [/bin/sleep, '10']
