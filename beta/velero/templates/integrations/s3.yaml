@@ -44,7 +44,7 @@ spec:
               patch: |-
                 - op: replace
                   path: /data/cloud
-                  value: {% printf "[default]\naws_access_key_id=%s\naws_secret_access_key=%s" .socketConfig.accessKey .socketConfig.secretKey | base64enc | quote %}
+                  value: {% printf "[default]\naws_access_key_id=%s\naws_secret_access_key=%s" .socketConfig.accessKey .socketConfig.secretKey | b64enc | quote %}
             - id: helm-chart
               target:
                 group: helm.cattle.io
