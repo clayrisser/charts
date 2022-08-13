@@ -22,7 +22,7 @@ spec:
   configMapper:
     endpoint: '{% .data.endpoint %}'
     tls: '{% .data.tls %}'
-    url: '{% .data.endpoint | ternary (printf "http%s://%s" ((eq .data.tls "true") | ternary "s" "") .data.endpoint) "" %}'
+    url: '{% (empty .data.endpoint) | ternary "" (printf "http%s://%s" ((eq .data.tls "true") | ternary "s" "") .data.endpoint) %}'
   data:
     endpoint: {{ .Values.config.s3.endpoint | quote }}
     tls: {{ .Values.config.s3.tls | quote }}
@@ -56,9 +56,9 @@ spec:
                   image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
                   env:
                     - name: S3_BUCKET
-                      value: '{% .plugConfig.bucket | ternary .plugConfig.bucket .socketConfig.defaultBucket %}'
+                      value: '{% (empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket %}'
                     - name: S3_PREFIX
-                      value: '{% (and .plugConfig.prefix .plugConfig.bucket) | ternary .plugConfig.prefix .socketConfig.defaultPrefix %}'
+                      value: '{% (empty .plugConfig.bucket) | ternary .socketConfig.defaultPrefix .plugConfig.prefix %}'
                     - name: S3_ACCESS_KEY
                       value: '{% .socketConfig.accessKey %}'
                     - name: S3_ENDPOINT

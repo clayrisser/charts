@@ -55,8 +55,8 @@ spec:
               patch: |-
                 spec:
                   set:
-                    configuration.backupStorageLocation.bucket: {% .plugConfig.bucket | ternary .plugConfig.bucket .socketConfig.defaultBucket %}
-                    configuration.backupStorageLocation.prefix: {% (and .plugConfig.prefix .plugConfig.bucket) | ternary .plugConfig.prefix .socketConfig.defaultPrefix %}
+                    configuration.backupStorageLocation.bucket: {% (empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket %}
+                    configuration.backupStorageLocation.prefix: {% (empty .plugConfig.bucket) | ternary .socketConfig.defaultPrefix .plugConfig.prefix %}
                     configuration.backupStorageLocation.config.region: {% .socketConfig.region %}
                     {%- if .socketConfig.url %}
                     configuration.backupStorageLocation.config.s3Url: {% .socketConfig.url %}
