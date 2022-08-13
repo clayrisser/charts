@@ -44,7 +44,7 @@ questions:
     description: ''
     type: string
     required: true
-    label: bucket
+    label: prefix
     group: 'S3 Config'
   - variable: config.s3.endpoint
     description: ''
