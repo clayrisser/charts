@@ -6,7 +6,7 @@ kind: Plug
 metadata:
   name: s3
   labels:
-    app.kubernetes.io/name: {{ template "kanister.name" . }}
+    app.kubernetes.io/name: {{ template "velero.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
