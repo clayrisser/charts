@@ -14,12 +14,18 @@ spec:
     name: s3
     namespace: {{ .Release.Namespace }}
   config:
-    # TODO: set endpoint
-    endpoint: ''
     pathStyle: 'true'
     region: ''
     defaultBucket: {{ .Values.config.defaultBucket | quote }}
     defaultPrefix: {{ .Values.config.defaultPrefix | quote }}
+  configMapper:
+    endpoint: '{% .data.endpoint %}'
+    tls: '{% .data.tls %}'
+    url: '{% .data.endpoint | ternary (printf "http%s://%s" ((eq .data.tls "true") | ternary "s" "") .data.endpoint) "" %}'
+  data:
+    # TODO: set endpoint
+    endpoint: ''
+    tls: 'false'
   configSecretName: {{ template "minio.name" . }}
   resources:
     - when: [coupled, updated]

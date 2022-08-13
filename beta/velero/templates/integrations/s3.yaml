@@ -1,0 +1,64 @@
+{{- if (and .Values.config.s3.enabled .Values.config.s3.integration) }}
+{{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
+apiVersion: integration.siliconhills.dev/v1alpha2
+kind: Plug
+metadata:
+  name: s3
+  labels:
+    app.kubernetes.io/name: {{ template "kanister.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: s3
+    namespace: {{ $namespace }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    bucket: {{ .Values.config.s3.buckets.artifacts | quote }}
+    prefix: ''
+    replicate: 'false'
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      resource: |
+        apiVersion: patch.bitspur.com/v1alpha1
+        kind: Patch
+        metadata:
+          name: postgres-coupled-or-updated
+          namespace: {{ .Release.Namespace }}
+        spec:
+          patches:
+            - id: cloud-credentials
+              target:
+                version: v1
+                kind: Secret
+                name: cloud-credentials
+              waitForResource: true
+              type: json
+              patch: |-
+                - op: replace
+                  path: /data/cloud
+                  value: {% printf "[default]\naws_access_key_id=%s\naws_secret_access_key=%s" .socketConfig.accessKey .socketConfig.secretKey | base64enc | quote %}
+            - id: helm-chart
+              target:
+                group: helm.cattle.io
+                version: v1
+                kind: HelmChart
+                name: {{ template "velero.name" . }}-release
+              waitForResource: true
+              patch: |-
+                spec:
+                  set:
+                    configuration.backupStorageLocation.bucket: {% .plugConfig.bucket | ternary .plugConfig.bucket .socketConfig.defaultBucket %}
+                    configuration.backupStorageLocation.prefix: {% (and .plugConfig.prefix .plugConfig.bucket) | ternary .plugConfig.prefix .socketConfig.defaultPrefix %}
+                    configuration.backupStorageLocation.config.region: {% .socketConfig.region %}
+                    {%- if .socketConfig.url %}
+                    configuration.backupStorageLocation.config.s3Url: {% .socketConfig.url %}
+                    {%- end %}
+{{- end }}

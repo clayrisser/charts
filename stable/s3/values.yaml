@@ -1,8 +1,10 @@
 config:
-  accessKey: ''
-  endpoint: ''
-  pathStyle: true
-  region: ''
-  secretKey: ''
-  defaultBucket: ''
-  defaultPrefix: ''
+  s3:
+    accessKey: ''
+    endpoint: ''
+    pathStyle: true
+    region: ''
+    secretKey: ''
+    tls: true
+    defaultBucket: ''
+    defaultPrefix: ''

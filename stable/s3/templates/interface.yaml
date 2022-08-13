@@ -20,8 +20,10 @@ spec:
           endpoint:
             required: true
           accessKey: {}
+          defaultBucket: {}
+          defaultPrefix: {}
           pathStyle: {}
           region: {}
           secretKey: {}
-          defaultBucket: {}
-          defaultPrefix: {}
+          tls: {}
+          url: {}

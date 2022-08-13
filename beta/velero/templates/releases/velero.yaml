@@ -64,15 +64,15 @@ spec:
     configuration:
       provider: {{ .Values.velero.configuration.provider }}
       backupStorageLocation:
-        bucket: {{ .Values.velero.configuration.backupStorageLocation.bucket }}
+        bucket: {{ .Values.config.s3.bucket }}
         caCert:
         name: default
-        prefix: {{ .Values.velero.configuration.backupStorageLocation.prefix }}
+        prefix: {{ .Values.config.s3.prefix }}
         config:
           profile: default
-          region: {{ .Values.velero.configuration.backupStorageLocation.config.region }}
-          {{- if .Values.velero.configuration.backupStorageLocation.config.s3Url }}
-          s3Url: {{ .Values.velero.configuration.backupStorageLocation.config.s3Url }}
+          region: {{ .Values.config.s3.region }}
+          {{- if .Values.config.s3.endpoint }}
+          s3Url: {{ printf "http%s://%s" (.Values.config.s3.tls | ternary "s" "") .Values.config.s3.endpoint }}
           {{- end }}
       volumeSnapshotLocation:
         name: default

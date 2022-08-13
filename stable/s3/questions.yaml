@@ -2,46 +2,46 @@ categories:
   - Server
 questions:
 
-  # Config
-  - variable: config.endpoint
+  # S3 Config
+  - variable: config.s3.endpoint
     description: ''
     type: string
     required: true
     label: endpoint
-    group: Config
-  - variable: config.accessKey
+    group: 'S3 Config'
+  - variable: config.s3.accessKey
     description: ''
     type: string
     required: false
     label: 'access key'
-    group: Config
-  - variable: config.secretKey
+    group: 'S3 Config'
+  - variable: config.s3.secretKey
     description: ''
     type: password
     required: false
     label: 'secret key'
-    group: Config
-  - variable: config.region
+    group: 'S3 Config'
+  - variable: config.s3.region
     description: ''
     type: string
     required: false
     label: region
-    group: Config
-  - variable: config.pathStyle
+    group: 'S3 Config'
+  - variable: config.s3.pathStyle
     description: ''
     type: boolean
     required: true
     label: 'path style'
-    group: Config
-  - variable: config.defaultBucket
+    group: 'S3 Config'
+  - variable: config.s3.defaultBucket
     description: ''
     type: string
     required: false
     label: 'default bucket'
-    group: Config
-  - variable: config.defaultPrefix
+    group: 'S3 Config'
+  - variable: config.s3.defaultPrefix
     description: ''
     type: string
     required: false
     label: 'default prefix'
-    group: Config
+    group: 'S3 Config'

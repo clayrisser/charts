@@ -26,30 +26,42 @@ questions:
           - aws
         required: true
         label: provider
-      - variable: velero.configuration.backupStorageLocation.bucket
-        description: ''
-        type: string
-        show_if: velero.configuration.provider=aws
-        required: true
-        label: bucket
-      - variable: velero.configuration.backupStorageLocation.prefix
-        description: ''
-        type: string
-        show_if: velero.configuration.provider=aws
-        required: false
-        label: prefix
-      - variable: velero.configuration.backupStorageLocation.config.s3Url
-        description: ''
-        type: string
-        show_if: velero.configuration.provider=aws
-        required: true
-        label: 's3 url'
-      - variable: velero.configuration.backupStorageLocation.config.region
-        description: ''
-        type: string
-        show_if: velero.configuration.provider=aws
-        required: false
-        label: region
+
+  # S3 Config
+  - variable: config.s3.integration
+    description: ''
+    type: string
+    required: true
+    label: integration
+    group: 'S3 Config'
+  - variable: config.s3.endpoint
+    description: ''
+    type: string
+    show_if: config.s3.integration=
+    required: true
+    label: endpoint
+    group: 'S3 Config'
+  - variable: config.s3.tls
+    description: ''
+    type: boolean
+    show_if: config.s3.integration=
+    required: false
+    label: tls
+    group: 'S3 Config'
+  - variable: config.s3.region
+    description: ''
+    type: string
+    show_if: config.s3.integration=
+    required: false
+    label: region
+    group: 'S3 Config'
+  - variable: config.s3.pathStyle
+    description: ''
+    type: boolean
+    show_if: config.s3.integration=
+    required: true
+    label: 'path style'
+    group: 'S3 Config'
 
 # Snapshots
   - variable: velero.snapshotsEnabled

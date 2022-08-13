@@ -25,3 +25,5 @@ spec:
           secretKey: {}
           defaultBucket: {}
           defaultPrefix: {}
+          tls: {}
+          url: {}

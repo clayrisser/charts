@@ -9,4 +9,4 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 type: Opaque
 stringData:
-  secretKey: {{ .Values.config.secretKey | quote }}
+  secretKey: {{ .Values.config.s3.secretKey | quote }}
