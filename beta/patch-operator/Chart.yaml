@@ -2,8 +2,8 @@ name: patch-operator
 apiVersion: v1
 home: https://gitlab.com/bitspur/community/patch-operator
 icon: ""
-version: 0.0.1
-appVersion: 0.0.1
+version: 0.1.0
+appVersion: 0.1.0
 description: "kubernetes operator that patches resources"
 keywords:
   - controller
