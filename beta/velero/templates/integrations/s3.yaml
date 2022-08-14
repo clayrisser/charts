@@ -27,7 +27,7 @@ spec:
     - when: [coupled, updated]
       do: apply
       resource: |
-        apiVersion: patch.bitspur.com/v1alpha1
+        apiVersion: patch.risserlabs.com/v1alpha1
         kind: Patch
         metadata:
           name: s3-coupled-or-updated
