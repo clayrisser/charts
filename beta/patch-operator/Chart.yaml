@@ -1,6 +1,6 @@
 name: patch-operator
 apiVersion: v1
-home: https://gitlab.com/bitspur/community/patch-operator
+home: https://gitlab.com/risserlabs/community/patch-operator
 icon: ""
 version: 0.1.0
 appVersion: 0.1.0
@@ -10,7 +10,7 @@ keywords:
   - operator
   - patch
 sources:
-  - https://github.com/silicon-hills/patch-operator.git
+  - https://gitlab.com/risserlabs/community/patch-operator.git
 maintainers:
   - name: "Clay Risser"
     email: email@clayrisser.com

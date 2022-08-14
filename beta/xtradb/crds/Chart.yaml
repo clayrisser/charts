@@ -1,6 +1,6 @@
 apiVersion: v2
 name: xtradb-crds
-home: https://gitlab.com/bitspur/community/charts
+home: https://gitlab.com/risserlabs/community/charts
 version: 0.0.1
 appVersion: 1.10.0
 type: application
@@ -9,7 +9,7 @@ keywords:
   - data
   - backup
 sources:
-  - https://gitlab.com/bitspur/community/charts
+  - https://gitlab.com/risserlabs/community/charts
 maintainers:
   - name: 'Clay Risser'
     email: email@clayrisser.com
