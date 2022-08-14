@@ -52,6 +52,7 @@ spec:
                 kind: HelmChart
                 name: {{ template "velero.name" . }}-release
               waitForResource: true
+              type: merge
               patch: |-
                 spec:
                   set:
