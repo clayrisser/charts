@@ -16,5 +16,5 @@ config:
 
 images:
   patchOperator:
-    repository: registry.gitlab.com/bitspur/community/patch-operator
+    repository: registry.gitlab.com/risserlabs/community/patch-operator
     tag: 0.0.1
