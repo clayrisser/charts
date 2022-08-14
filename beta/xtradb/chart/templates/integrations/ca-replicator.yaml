@@ -1,7 +1,7 @@
 {{- if (and .Values.service.xtradb.tls.enabled (not .Values.service.xtradb.tls.certificate)) }}
 {{- $name := (printf "%s-replicator" .Values.service.xtradb.tls.issuer.name) }}
 {{- $namespace := "cert-manager" }}
-apiVersion: integration.siliconhills.dev/v1alpha2
+apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
   name: ca-replicator

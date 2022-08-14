@@ -1,7 +1,7 @@
 images:
   integrationOperator:
     repository: registry.gitlab.com/risserlabs/internal/integration-operator/integration-operator
-    tag: 0.1.1
+    tag: 0.1.2
 
 config:
   imagePullPolicy: IfNotPresent

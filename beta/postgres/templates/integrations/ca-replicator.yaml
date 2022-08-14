@@ -1,7 +1,7 @@
 {{- if (and .Values.service.postgres.tls.enabled (not .Values.service.postgres.tls.certificate.name)) }}
 {{- $name := (split "." .Values.service.postgres.tls.certificate.issuer.integration)._1 | default "ca-replicator" }}
 {{- $namespace := (split "." (printf "%s." .Values.service.postgres.tls.certificate.issuer.integration))._0 }}
-apiVersion: integration.siliconhills.dev/v1alpha2
+apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
   name: ca-replicator

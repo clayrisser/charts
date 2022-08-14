@@ -1,7 +1,7 @@
 {{- if (and .Values.config.ldap.enabled .Values.config.ldap.integration) }}
 {{- $name := (split "." .Values.config.ldap.integration)._1 | default "ldap" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.ldap.integration))._0 }}
-apiVersion: integration.siliconhills.dev/v1alpha2
+apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
   name: ldap

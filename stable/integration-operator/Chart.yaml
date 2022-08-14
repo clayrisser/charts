@@ -2,8 +2,8 @@ name: integration-operator
 apiVersion: v1
 home: https://github.com/silicon-hills/integration-operator
 icon: ""
-version: 0.1.1
-appVersion: 0.1.1
+version: 0.1.2
+appVersion: 0.1.2
 description: "kubernetes operator to integrate deployments"
 keywords:
   - controller

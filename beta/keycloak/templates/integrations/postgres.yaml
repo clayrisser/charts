@@ -8,7 +8,7 @@
 {{- $patchKeycloak = false }}
 {{- end }}
 {{- end }}
-apiVersion: integration.siliconhills.dev/v1alpha2
+apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
   name: postgres

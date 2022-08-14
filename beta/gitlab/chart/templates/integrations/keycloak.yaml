@@ -1,7 +1,7 @@
 {{- if (not (empty .Values.config.keycloak.integration)) }}
 {{- $name := (split "." .Values.config.keycloak.integration)._1 | default "keycloak" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.integration))._0 }}
-apiVersion: integration.siliconhills.dev/v1alpha2
+apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
   name: gitlab-omniauth-plug
