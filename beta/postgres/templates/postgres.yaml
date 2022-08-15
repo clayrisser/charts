@@ -93,11 +93,7 @@ spec:
   backup:
     affinity:
       antiAffinityType: preferred
-{{- if .Values.config.backup.enabled }}
     backrestRepoImage: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
-{{- else }}
-    backrestRepoImage: registry.gitlab.com/risserlabs/community/images/pgbackrest-null:0.0.1
-{{- end }}
     image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     resources:
