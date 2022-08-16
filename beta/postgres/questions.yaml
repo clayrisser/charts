@@ -34,6 +34,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.operatorOnly
+    description: ''
+    type: boolean
+    required: true
+    label: 'operator only'
+    group: Config
   - variable: config.debug
     description: ''
     type: boolean

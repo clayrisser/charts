@@ -28,6 +28,7 @@ images:
     tag: 1.3.0-ppg14-pgbadger
 
 config:
+  operatorOnly: false
   clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
