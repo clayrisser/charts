@@ -1,5 +1,5 @@
---- templates/operator.yaml	2022-08-12 03:51:59.904019670 -0500
-+++ templates/operator.yaml.tmp	2022-08-12 03:51:05.976145546 -0500
+--- templates/operator.yaml	2022-08-16 10:26:10.011402833 -0500
++++ templates/operator.yaml.tmp	2022-08-16 10:26:23.395258363 -0500
 @@ -3,10 +3,14 @@
  metadata:
    name: pgo-deployer-sa
@@ -32,17 +32,15 @@
      db_name: ""
      db_password_age_days: "0"
      db_password_length: "24"
-@@ -165,8 +170,8 @@
+@@ -165,7 +170,7 @@
      reconcile_rbac: "true"
      exporterport: "9187"
      metrics: "false"
 -    namespace: "pgo"
--    namespace_mode: "disabled"
 +    namespace: {{ .Release.Namespace | quote }}
-+    namespace_mode: {{ .Values.config.namespaceMode | quote }}
+     namespace_mode: "disabled"
      pgbadgerport: "10000"
      pgo_add_os_ca_store: "false"
-     pgo_admin_password: "examplepassword"
 @@ -182,14 +187,14 @@
      pgo_cluster_admin: "false"
      pgo_disable_eventing: "false"

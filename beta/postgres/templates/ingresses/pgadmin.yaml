@@ -9,11 +9,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
-    {{- if (eq .Values.config.clusterType "aks") }}
-    kubernetes.io/ingress.class: addon-http-application-routing
-    {{- else }}
-    kubernetes.io/ingress.class: nginx
-    {{- end }}
     {{- if .Values.ingress.pgadmin.tls }}
     {{- if (not .Values.ingress.pgadmin.certificate) }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.pgadmin.issuer.name }}

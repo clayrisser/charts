@@ -3,18 +3,6 @@ categories:
 questions:
   # Config
 
-  - variable: config.clusterType
-    description: ''
-    type: enum
-    options:
-      - aks
-      - eks
-      - gke
-      - k3s
-      - rke
-    required: true
-    label: 'cluster type'
-    group: Config
   - variable: config.imagePullPolicy
     description: ''
     type: enum
@@ -34,26 +22,11 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
-  - variable: config.operatorOnly
-    description: ''
-    type: boolean
-    required: true
-    label: 'operator only'
-    group: Config
   - variable: config.debug
     description: ''
     type: boolean
     required: true
     label: debug
-    group: Config
-  - variable: config.namespaceMode
-    description: ''
-    type: enum
-    options:
-      - disabled
-      - dynamic
-    required: true
-    label: 'namespace mode'
     group: Config
   - variable: config.pause
     description: ''

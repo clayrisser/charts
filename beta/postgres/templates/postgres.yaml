@@ -1,4 +1,3 @@
-{{- if (not .Values.config.operatorOnly) }}
 apiVersion: pg.percona.com/v1
 kind: PerconaPGCluster
 metadata:
@@ -178,4 +177,3 @@ spec:
     image: {{ .Values.images.pgBadger.repository }}:{{ .Values.images.pgBadger.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     port: 10000
-{{- end }}
