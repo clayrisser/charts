@@ -96,7 +96,7 @@ spec:
   backup:
     affinity:
       antiAffinityType: preferred
-    backrestRepoImage: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
+    backrestRepoImage: {{ .Values.images.backrestRepo.repository }}:{{ .Values.images.backrestRepo.tag }}
     image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     resources:
