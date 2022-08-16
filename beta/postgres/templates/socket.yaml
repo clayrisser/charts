@@ -45,7 +45,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/silicon-hills/community/ci-images/kubectl-psql:0.0.1
+                  image: registry.gitlab.com/risserlabs/community/images/kube-commands-psql:0.0.1
                   env:
                     - name: POSTGRES_PROTOCOL
                       value: '{% .socketConfig.protocol %}'
@@ -129,7 +129,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/silicon-hills/community/ci-images/kubectl-psql:0.0.1
+                  image: registry.gitlab.com/risserlabs/community/images/kube-commands-psql:0.0.1
                   env:
                     - name: POSTGRES_PROTOCOL
                       value: '{% .socketConfig.protocol %}'
