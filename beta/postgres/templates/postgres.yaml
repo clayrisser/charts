@@ -1,4 +1,4 @@
-{{- if (not config.operatorOnly) }}
+{{- if (not .Values.config.operatorOnly) }}
 apiVersion: pg.percona.com/v1
 kind: PerconaPGCluster
 metadata:
