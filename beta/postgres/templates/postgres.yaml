@@ -46,6 +46,8 @@ spec:
   userLabels:
     pgo-version: '1.3.0'
   pgPrimary:
+    affinity:
+      antiAffinityType: preferred
     image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy }}
     resources:
@@ -127,15 +129,17 @@ spec:
         type: full
         storage: local
   pgBouncer:
+    affinity:
+      antiAffinityType: preferred
     image: {{ .Values.images.pgBouncer.repository }}:{{ .Values.images.pgBouncer.tag }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     size: {{ .Values.config.pgBouncer.replicas }}
     resources:
 {{- if (and .Values.config.pgBouncer.resources.enabled (not (eq .Values.config.pgBouncer.resources.enabled "false"))) }}
       requests:
-{{ toYaml .Values.config.pgBouncer.resources.requests | indent 6 }}
+{{ toYaml .Values.config.pgBouncer.resources.requests | indent 8 }}
       limits:
-{{ toYaml .Values.config.pgBouncer.resources.limits | indent 6 }}
+{{ toYaml .Values.config.pgBouncer.resources.limits | indent 8 }}
 {{- else }}
       requests: {}
       limits: {}
@@ -148,9 +152,9 @@ spec:
       resources:
 {{- if (and .Values.config.postgres.resources.enabled (not (eq .Values.config.postgres.resources.enabled "false"))) }}
         requests:
-{{ toYaml .Values.config.postgres.resources.requests | indent 8 }}
+{{ toYaml .Values.config.postgres.resources.requests | indent 10 }}
         limits:
-{{ toYaml .Values.config.postgres.resources.limits | indent 8 }}
+{{ toYaml .Values.config.postgres.resources.limits | indent 10 }}
 {{- else }}
         requests: {}
         limits: {}
@@ -164,27 +168,7 @@ spec:
         {{- else }}
         storageclass: {{ .Values.persistence.storageClass | quote }}
         {{- end }}
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 91
-              preference:
-                matchExpressions:
-                  - key: application/state
-                    operator: In
-                    values:
-                      - stateful
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 90
-              podAffinityTerm:
-                topologyKey: kubernetes.io/hostname
-                labelSelector:
-                  matchExpressions:
-                    - key: pg-cluster
-                      operator: In
-                      values:
-                        - {{ template "postgres.name" . }}
+      affinity: {}
       enableSyncStandby: false
       expose:
         serviceType: ClusterIP
