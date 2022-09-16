@@ -1,7 +1,7 @@
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
 metadata:
-  name: {{ template "openldap.name" . }}
+  name: {{ template "openldap.name" . }}-release
   labels:
     app.kubernetes.io/name: {{ template "openldap.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
