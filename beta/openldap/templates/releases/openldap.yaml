@@ -8,16 +8,11 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  forceUpgrade: false
   helmVersion: v3
-  wait: false
-  git:
-    timeout: 120s
-  chart:
-    git: https://github.com/jp-gouin/helm-openldap.git
-    ref: v2.1.6
-    path: .
-  values:
+  repo: https://jp-gouin.github.io/helm-openldap
+  chart: openldap-stack-ha
+  version: 3.0.1
+  valuesContent: |
     replicaCount: {{ .Values.config.openldap.replicas }}
     updateStrategy:
       type: {{ .Values.config.updateStrategy | quote }}
@@ -126,15 +121,15 @@ spec:
       accessModes:
         - {{ .Values.persistence.accessMode | quote }}
       size: {{ .Values.persistence.size.openldap | quote }}
-    {{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) }}
+{{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) }}
     resources:
       requests:
 {{ toYaml .Values.config.openldap.resources.requests | indent 8 }}
       limits:
 {{ toYaml .Values.config.openldap.resources.limits | indent 8 }}
-    {{- else }}
+{{- else }}
     resources: {}
-    {{- end }}
+{{- end }}
     nodeSelector: {}
     tolerations: []
     test:
