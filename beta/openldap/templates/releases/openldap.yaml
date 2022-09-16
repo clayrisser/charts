@@ -121,6 +121,15 @@ spec:
       accessModes:
         - {{ .Values.persistence.accessMode | quote }}
       size: {{ .Values.persistence.size.openldap | quote }}
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                    - amd64
 {{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) }}
     resources:
       requests:
