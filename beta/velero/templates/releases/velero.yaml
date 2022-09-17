@@ -1,3 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: vmware-tanzu
+spec:
+  url: https://vmware-tanzu.github.io/helm-charts
+---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
@@ -8,11 +15,16 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  helmVersion: v3
-  repo: https://vmware-tanzu.github.io/helm-charts
-  chart: velero
-  version: 2.31.6
-  valuesContent: |
+  chart:
+    spec:
+      chart: velero
+      reconcileStrategy: string
+      version: 2.31.6
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: vmware-tanzu
+  values:
     image:
       repository: velero/velero
       tag: v1.9.1
