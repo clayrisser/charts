@@ -44,6 +44,7 @@ spec:
           ttlSecondsAfterFinished: 360
           template:
             spec:
+              automountServiceAccountToken: true
               restartPolicy: Never
               affinity:
                 nodeAffinity:
@@ -107,6 +108,7 @@ spec:
           ttlSecondsAfterFinished: 360
           template:
             spec:
+              automountServiceAccountToken: true
               restartPolicy: Never
               affinity:
                 nodeAffinity:

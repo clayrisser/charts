@@ -42,6 +42,7 @@ spec:
           template:
             spec:
               restartPolicy: Never
+              automountServiceAccountToken: true
               affinity:
                 nodeAffinity:
                   requiredDuringSchedulingIgnoredDuringExecution:
