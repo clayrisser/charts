@@ -62,7 +62,7 @@ spec:
                     - -c
                     - |
                       sleep 10
-{{- if .Values.service.openldap.tls.enabled }}
+{{- if (and .Values.service.openldap.tls.enabled .Values.service.openldap.tls.enforce) }}
 {{- if (or (not .Values.service.openldap.tls.certificate.name) .Values.service.openldap.tls.certificate.ca) }}
                       {%- if (not (eq .plugConfig.replicateCa "false")) %}
                       kubectl get secret {{ template "openldap.openldap-ca" . }} \

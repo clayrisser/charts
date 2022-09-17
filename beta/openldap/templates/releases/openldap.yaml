@@ -26,8 +26,7 @@ spec:
       enabled: {{ .Values.service.openldap.tls.enabled }}
       secret: {{ template "openldap.openldap-certificate" . }}
       CA:
-        enabled: true
-        secret: {{ template "openldap.openldap-ca" . }}
+        enabled: {{ .Values.service.openldap.tls.enforce | ternary "true" "false" }}
     extraLabels: {}
     {{- if .Values.config.openldap.dhparam }}
     extraVolumes:
@@ -88,8 +87,8 @@ spec:
       LDAP_TLS_ENFORCE: {{ .Values.service.openldap.tls.enforce | quote }}
       LDAP_TLS_KEY_FILENAME: 'tls.key'
       LDAP_TLS_PROTOCOL_MIN: '3.0'
-      LDAP_TLS_REQCERT: 'never'
-      LDAP_TLS_VERIFY_CLIENT: 'never'
+      LDAP_TLS_REQCERT: {{ .Values.service.openldap.tls.enforce | ternary "try" "never" | quote }}
+      LDAP_TLS_VERIFY_CLIENT: {{ .Values.service.openldap.tls.enforce | ternary "try" "never" | quote }}
     {{- if .Values.config.openldap.organizationalUnits }}
     customLdifFiles:
       10-organizational-units.ldif: |

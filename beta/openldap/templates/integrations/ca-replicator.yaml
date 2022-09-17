@@ -1,4 +1,4 @@
-{{- if (and .Values.service.openldap.tls.enabled (not .Values.service.openldap.tls.certificate.name)) }}
+{{- if (and .Values.service.openldap.tls.enabled (and .Values.service.openldap.tls.enforce (not .Values.service.openldap.tls.certificate.name))) }}
 {{- $name := (split "." .Values.service.openldap.tls.certificate.issuer.integration)._1 | default "ca-replicator" }}
 {{- $namespace := (split "." (printf "%s." .Values.service.openldap.tls.certificate.issuer.integration))._0 }}
 apiVersion: integration.risserlabs.com/v1alpha2
