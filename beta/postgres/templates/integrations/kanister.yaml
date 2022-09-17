@@ -39,7 +39,7 @@ actions:
     phases:
       - args:
           command:
-            - bash
+            - /bin/bash
             - -o
             - errexit
             - -o
@@ -64,7 +64,7 @@ actions:
     phases:
       - args:
           command:
-            - bash
+            - /bin/bash
             - -o
             - errexit
             - -o

@@ -11,11 +11,11 @@ spec:
   helmVersion: v3
   repo: https://vmware-tanzu.github.io/helm-charts
   chart: velero
-  version: 2.29.8
+  version: 2.31.6
   valuesContent: |
     image:
       repository: velero/velero
-      tag: v1.6.3
+      tag: v1.9.1
       pullPolicy: IfNotPresent
       imagePullSecrets: []
     podAnnotations: {}
@@ -31,14 +31,14 @@ spec:
     initContainers:
       {{- if (eq .Values.velero.configuration.volumeSnapshotLocation.provider "velero.io/aws") }}
       - name: velero-plugin-for-aws
-        image: velero/velero-plugin-for-aws:v1.2.1
+        image: velero/velero-plugin-for-aws:v1.5.0
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
             name: plugins
       {{- else if (eq .Values.velero.configuration.volumeSnapshotLocation.provider "digitalocean.com/velero") }}
       - name: velero-plugin-for-digitalocean
-        image: digitalocean/velero-plugin:v1.0.0
+        image: digitalocean/velero-plugin:v1.1.0
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
