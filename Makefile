@@ -96,7 +96,7 @@ clean: ##
 
 .PHONY: $(CHARTS)
 $(CHARTS):
-	@$(MAKE) -C $@ -s prepack 2>$(NULL) || $(TRUE)
+	@$(MAKE) -C $@ -s prepack
 	@$(HELM) lint $@
 #	-@$(MAKE) -s debug CHART="$@"
 
