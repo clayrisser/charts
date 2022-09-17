@@ -27,7 +27,6 @@ spec:
   chart:
     spec:
       chart: velero
-      reconcileStrategy: string
       version: 2.31.6
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
