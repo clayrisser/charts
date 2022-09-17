@@ -3,18 +3,6 @@ categories:
 questions:
 
   # Config
-  - variable: config.clusterType
-    description: ''
-    type: enum
-    options:
-      - aks
-      - eks
-      - gke
-      - k3s
-      - rke
-    required: true
-    label: 'cluster type'
-    group: Config
   - variable: config.imagePullPolicy
     description: ''
     type: enum

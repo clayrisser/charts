@@ -163,11 +163,6 @@ spec:
       ingress:
         enabled: {{ .Values.ingress.phpldapadmin.enabled }}
         annotations:
-          {{- if (eq .Values.config.clusterType "aks") }}
-          kubernetes.io/ingress.class: addon-http-application-routing
-          {{- else }}
-          kubernetes.io/ingress.class: nginx
-          {{- end }}
           {{- if .Values.ingress.phpldapadmin.tls }}
           {{- if (not .Values.ingress.phpldapadmin.certificate) }}
           cert-manager.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
