@@ -38,9 +38,11 @@ actions:
       - openldap
     kind: deployment
     phases:
-      - args:
+      - func: KubeTask
+        name: ldapdump
+        args:
           command:
-            - bash
+            - /bin/bash
             - -o
             - errexit
             - -o
@@ -51,12 +53,10 @@ actions:
               export BIND_ID='cn=admin,{{ template "openldap.openldap-dc" . }}'
               export BIND_PASSWORD={{"{{"}} .Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
               export BACKUP_FILE_PATH='{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}.ldap'
-              echo $BACKUP_FILE_PATH \> $BIND_PASSWORD:$BIND_ID@$HOST
-              echo slapcat
-          image: ghcr.io/kanisterio/kanister-tools:0.71.0
+              ldapsearch -x -D "$BIND_ID" -w $BIND_PASSWORD  -b "{{ template "openldap.openldap-dc" . }}" -H ldap://$HOST -LLL | kando location push --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_FILE_PATH}" -
+              kando output backupLocation "${BACKUP_FILE_PATH}"
+          image: registry.gitlab.com/risserlabs/community/images/kando-openldap:0.0.1
           namespace: {{ .Release.Namespace }}
-        func: KubeTask
-        name: pgDump
   restore:
     secretNames:
       - openldap
@@ -64,7 +64,9 @@ actions:
       - ldapBackup
     kind: deployment
     phases:
-      - args:
+      - func: KubeTask
+        name: ldaprestore
+        args:
           command:
             - bash
             - -o
@@ -76,10 +78,10 @@ actions:
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export USER='openldap'
               export PASSWORD={{"{{"}} .Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
-              export BACKUP_FILE_PATH='backup.ldap'
-              echo $BACKUP_FILE_PATH \> $BIND_PASSWORD:$BIND_ID@$HOST
-          image: ghcr.io/kanisterio/kanister-tools:0.71.0
+              export BIND_ID='cn=admin,{{ template "openldap.openldap-dc" . }}'
+              BACKUP_LOCATION={{"{{"}} .ArtifactsIn.cloudObject.KeyValue.backupLocation {{"}}"}}
+              kando location pull --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_LOCATION}" > openldapbkp.ldap
+              ldapadd x -D "$BIND_ID" -w $PASSWORD  -H ldap://$HOST -f openldapbkp.ldap
+          image: registry.gitlab.com/risserlabs/community/images/kando-openldap:0.0.1
           namespace: {{ .Release.Namespace }}
-        func: KubeTask
-        name: pgRestore
 {{- end }}
