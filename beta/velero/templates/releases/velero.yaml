@@ -20,6 +20,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
+  interval: 5m
+  suspend: true
   chart:
     spec:
       chart: velero
