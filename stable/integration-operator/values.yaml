@@ -11,8 +11,8 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 1m
+        memory: 20Mi
       limits:
-        cpu: 500m
-        memory: 256Mi
+        cpu: 50m
+        memory: 128Mi
