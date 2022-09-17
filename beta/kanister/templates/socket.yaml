@@ -85,7 +85,6 @@ spec:
                                 operator: In
                                 values:
                                   - amd64
-                  serviceAccountName: kanister-sa-cluster
                   containers:
                     - name: backup
                       image: registry.gitlab.com/shri178/kanctl:latest
