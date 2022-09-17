@@ -20,7 +20,7 @@ spec:
   config:
     schedule: {{ .Values.persistence.kanister.schedule | quote }}
     blueprint: openldap
-    statefulset: {{ .Release.Name }}-{{ template "openldap.name" . }}-openldap-stack-ha
+    statefulset: {{ .Release.Name }}-release
     secrets: openldap={{ .Release.Namespace }}/{{ template "openldap.name" . }}
 ---
 apiVersion: cr.kanister.io/v1alpha1
