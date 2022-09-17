@@ -52,7 +52,7 @@ actions:
               export BIND_PASSWORD={{"{{"}} .Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
               export BACKUP_FILE_PATH='{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}.ldap'
               echo $BACKUP_FILE_PATH \> $BIND_PASSWORD:$BIND_ID@$HOST
-              slapcat
+              echo slapcat
           image: ghcr.io/kanisterio/kanister-tools:0.71.0
           namespace: {{ .Release.Namespace }}
         func: KubeTask
