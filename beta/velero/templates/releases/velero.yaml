@@ -20,7 +20,13 @@ spec:
       imagePullSecrets: []
     podAnnotations: {}
     podLabels: {}
-    resources: {}
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 10m
+        memory: 128Mi
     dnsPolicy: ClusterFirst
     initContainers:
       {{- if (eq .Values.velero.configuration.volumeSnapshotLocation.provider "velero.io/aws") }}
@@ -111,7 +117,13 @@ spec:
       podVolumePath: /var/lib/kubelet/pods
       privileged: false
       priorityClassName: ""
-      resources: {}
+      resources:
+        limits:
+          cpu: 1
+          memory: 1Gi
+        requests:
+          cpu: 10m
+          memory: 128Mi
       tolerations: []
       extraVolumes: []
       extraVolumeMounts: []
