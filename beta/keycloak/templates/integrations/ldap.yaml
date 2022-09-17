@@ -32,6 +32,7 @@ spec:
           name: ldap-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
+          epoch: {{ now | unixEpoch | quote }}
           patches:
             {%- if (eq .socketConfig.protocol "ldaps") %}
             - id: keycloak

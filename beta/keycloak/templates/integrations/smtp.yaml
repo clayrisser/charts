@@ -32,6 +32,7 @@ spec:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
+          epoch: {{ now | unixEpoch | quote }}
           patches:
             - id: keycloak-realm
               target:

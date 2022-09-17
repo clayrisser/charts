@@ -1,5 +1,18 @@
-apiVersion: helm.cattle.io/v1
-kind: HelmChart
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: jp-gouin
+  labels:
+    app.kubernetes.io/name: {{ template "openldap.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  url: https://jp-gouin.github.io/helm-openldap
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
 metadata:
   name: {{ .Release.Name }}-release
   labels:
@@ -8,11 +21,16 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  helmVersion: v3
-  repo: https://jp-gouin.github.io/helm-openldap
-  chart: openldap-stack-ha
-  version: 3.0.1
-  valuesContent: |
+  interval: 5m
+  chart:
+    spec:
+      chart: openldap-stack-ha
+      version: 3.0.1
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: jp-gouin
+  values:
     replicaCount: {{ .Values.config.openldap.replicas }}
     updateStrategy:
       type: {{ .Values.config.updateStrategy | quote }}
