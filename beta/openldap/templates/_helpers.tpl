@@ -45,7 +45,7 @@ Calculate openldap hostname
 {{- if .Values.config.openldap.hostname -}}
 {{- printf .Values.config.openldap.hostname -}}
 {{- else -}}
-{{- printf "%s-%s-openldap-stack-ha.%s.svc.cluster.local" .Release.Name (include "openldap.name" .) .Release.Namespace -}}
+{{- printf "%s-release.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 
@@ -77,7 +77,7 @@ Calculate phpldapadmin hostname
 {{- if .Values.ingress.phpldapadmin.enabled -}}
 {{- printf .Values.ingress.phpldapadmin.hostname -}}
 {{- else -}}
-{{- printf "%s-openldap.%s.svc.cluster.local" (include "openldap.fullname" .) .Release.Namespace -}}
+{{- printf "%s-release-phpldapadmin.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
