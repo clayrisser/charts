@@ -22,7 +22,7 @@ credential:
     secret:
       apiVersion: v1
       kind: Secret
-      name: s3
+      name: {{ template "kanister.name" . }}-s3
       namespace: {{ .Release.Namespace }}
 skipSSLVerify: true
 {{- end }}
