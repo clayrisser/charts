@@ -31,6 +31,8 @@ spec:
         kind: HelmRepository
         name: jp-gouin
   values:
+    global:
+      ldapDomain: {{ .Values.config.openldap.domain | quote }}
     replicaCount: {{ .Values.config.openldap.replicas }}
     updateStrategy:
       type: {{ .Values.config.updateStrategy | quote }}
@@ -87,7 +89,6 @@ spec:
       CONTAINER_LOG_LEVEL: '4'
       KEEP_EXISTING_CONFIG: 'false'
       LDAP_BACKEND: 'mdb'
-      LDAP_DOMAIN: {{ .Values.config.openldap.domain | quote }}
       LDAP_HASH_PASSWORD: {{ .Values.config.openldap.hashPassword | quote }}
       LDAP_LOG_LEVEL: {{ .Values.config.debug | ternary "-1" "256" | quote }}
       LDAP_ORGANISATION: {{ .Values.config.openldap.organization | quote }}
@@ -201,15 +202,6 @@ spec:
         PHPLDAPADMIN_HTTPS: 'false'
         PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: allow
         PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
-        PHPLDAPADMIN_LDAP_HOSTS: |
-          #PYTHON2BASH:[
-            {'{{ .Release.Name }}': [
-              {'server': [
-                {'host': 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-{{ template "openldap.name" . }}-openldap-stack-ha'},
-              ]},
-              {'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-dc" . }}'}]}
-            ]}
-          ]
     livenessProbe:
       enabled: true
       initialDelaySeconds: 20
