@@ -1,7 +1,7 @@
 apiVersion: v2
 name: kanister
 home: https://gitlab.com/risserlabs/community/charts
-version: 0.0.1
+version: 0.71.0
 appVersion: 0.71.0
 type: application
 description: 'application specific data management'
