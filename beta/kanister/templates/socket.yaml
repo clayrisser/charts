@@ -107,45 +107,16 @@ spec:
                             --action backup
         {%- end %}
     - when: [decoupled]
-      do: recreate
+      do: delete
       resource: |
-        apiVersion: batch/v1
-        kind: Job
+        apiVersion: batch/v1beta1
+        kind: CronJob
         metadata:
-          name: {{ template "kanister.name" . }}-decoupled-{% .plug.metadata.namespace %}
-        spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            spec:
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: codejamninja/kube-commands:0.0.2
-                  command:
-                    - sh
-                    - -c
-                    - |
-                      kubectl delete cronjob {{ template "kanister.name" . }}-{% .plug.metadata.name %} \
-                        -n {{ .Release.Namespace }}
-                      cat <<EOF | kubectl get -f - -o yaml | kubectl delete -f -
-                      apiVersion: cr.kanister.io/v1alpha1
-                      kind: Blueprint
-                      metadata:
-                        name: {% .plug.metadata.name %}-{% .plug.metadata.namespace %}
-                        namespace: {{ .Release.Namespace }}
-                      EOF
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "kanister.name" . }}-decoupled-{% .plug.metadata.namespace %} \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -
+          name: {{ template "kanister.name" . }}-{% .plug.metadata.namespace %}
+    - when: [decoupled]
+      do: delete
+      resource: |
+        apiVersion: cr.kanister.io/v1alpha1
+        kind: Blueprint
+        metadata:
+          name: {% .plug.metadata.name %}-{% .plug.metadata.namespace %}
