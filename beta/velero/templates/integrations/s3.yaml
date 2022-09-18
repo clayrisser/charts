@@ -48,19 +48,22 @@ spec:
                   value: {% printf "[default]\naws_access_key_id=%s\naws_secret_access_key=%s" .socketConfig.accessKey .socketConfig.secretKey | b64enc | quote %}
             - id: helm-chart
               target:
-                group: helm.cattle.io
-                version: v1
-                kind: HelmChart
-                name: {{ template "velero.name" . }}-release
+                group: helm.toolkit.fluxcd.io
+                version: v2beta1
+                kind: HelmRelease
+                name: {{ .Release.Name }}-release
               waitForResource: true
               type: merge
               patch: |-
                 spec:
-                  set:
-                    configuration.backupStorageLocation.bucket: {% (empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket %}
-                    configuration.backupStorageLocation.prefix: {% (empty .plugConfig.bucket) | ternary .socketConfig.defaultPrefix .plugConfig.prefix %}
-                    configuration.backupStorageLocation.config.region: {% .socketConfig.region %}
-                    {%- if .socketConfig.url %}
-                    configuration.backupStorageLocation.config.s3Url: {% .socketConfig.url %}
-                    {%- end %}
+                  values:
+                    configuration:
+                      backupStorageLocation:
+                        bucket: {% (empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket %}
+                        prefix: {% (empty .plugConfig.bucket) | ternary .socketConfig.defaultPrefix .plugConfig.prefix %}
+                        config:
+                          region: {% .socketConfig.region %}
+                          {%- if .socketConfig.url %}
+                          s3Url: {% .socketConfig.url %}
+                          {%- end %}
 {{- end }}
