@@ -680,14 +680,12 @@ questions:
     type: string
     required: true
     label: 'backrestRepo repository'
-    show_if: config.backup.enabled
     group: Images
   - variable: images.backrestRepo.tag
     description: ''
     type: string
     required: true
     label: 'backrestRepo tag'
-    show_if: config.backup.enabled
     group: Images
   - variable: images.pgBouncer.repository
     description: ''
