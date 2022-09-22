@@ -666,14 +666,12 @@ questions:
     type: string
     required: true
     label: 'backup repository'
-    show_if: config.backup.enabled
     group: Images
   - variable: images.backup.tag
     description: ''
     type: string
     required: true
     label: 'backup tag'
-    show_if: config.backup.enabled
     group: Images
   - variable: images.backrestRepo.repository
     description: ''
