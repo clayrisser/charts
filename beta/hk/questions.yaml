@@ -1,0 +1,167 @@
+categories:
+  - Database
+questions:
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - OnDelete
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.pause
+    description: ''
+    type: boolean
+    required: true
+    label: pause
+    group: Config
+  - variable: config.standby
+    description: ''
+    type: boolean
+    required: false
+    label: standby
+    group: Config
+  - variable: config.wal
+    description: ''
+    type: boolean
+    required: true
+    label: wal
+    group: Config
+  - variable: config.passwords.pgbouncer
+    description: ''
+    type: password
+    required: false
+    label: 'pgbouncer password'
+    group: Config
+  - variable: config.passwords.pguser
+    description: ''
+    type: password
+    required: false
+    label: 'pguser password'
+    group: Config
+  - variable: config.passwords.postgres
+    description: ''
+    type: password
+    required: false
+    label: 'postgres password'
+    group: Config
+  - variable: config.passwords.primaryUser
+    description: ''
+    type: password
+    required: false
+    label: 'primary user password'
+    group: Config
+  - variable: config.postgres.hotReplicas
+    description: ''
+    type: int
+    required: true
+    label: 'postgres hot replicas'
+    group: Config
+  - variable: config.postgres.config
+    description: ''
+    type: multiline
+    required: false
+    label: 'postgres config'
+    group: Config
+  - variable: config.postgres.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'postgres resources enabled'
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.postgres.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'postgres resources requests cpu'
+      - variable: config.postgres.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'postgres resources requests memory'
+      - variable: config.postgres.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'postgres resources limits cpu'
+      - variable: config.postgres.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'postgres resources limits memory'
+  - variable: config.pgBadger.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'pgbadger enabled'
+    group: Config
+
+  # PMM
+  - variable: config.pmm.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: PMM
+  - variable: config.pmm.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_if: config.pmm.enabled=true
+    show_subquestion_if: custom
+    group: PMM
+    subquestions:
+      - variable: config.pmm.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pmm.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.pmm.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pmm.enabled=true
+        label: 'resources requests memory'
+      - variable: config.pmm.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pmm.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.pmm.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pmm.enabled=true
+        label: 'resources limits memory'
