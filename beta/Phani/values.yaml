@@ -1,0 +1,23 @@
+backup:
+    enabled: false
+    schedule: '0 0 * * *'
+    keep: 7
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 48Mi
+      limits:
+        cpu: 1000m
+        memory: 64Mi
+
+pgBouncer:
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 1000m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 512Mi

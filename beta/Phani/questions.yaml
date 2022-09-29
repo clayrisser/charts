@@ -1,0 +1,101 @@
+# Backup
+  - variable: config.backup.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: Backup
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.backup.schedule
+        description: ''
+        type: string
+        required: true
+        label: schedule
+      - variable: config.backup.keep
+        description: ''
+        type: string
+        required: true
+        label: keep
+  - variable: config.backup.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_if: config.backup.enabled=true
+    show_subquestion_if: custom
+    group: Backup
+    subquestions:
+      - variable: config.backup.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.backup.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.backup.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.backup.enabled=true
+        label: 'resources requests memory'
+      - variable: config.backup.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.backup.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.backup.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.backup.enabled=true
+        label: 'resources limits memory'
+
+# PgBouncer
+  - variable: config.pgBouncer.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: PgBouncer
+  - variable: config.pgBouncer.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_if: config.pgBouncer.enabled=true
+    show_subquestion_if: custom
+    group: PgBouncer
+    subquestions:
+      - variable: config.pgBouncer.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgBouncer.enabled=true
+        label: 'resources requests cpu'
+      - variable: config.pgBouncer.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgBouncer.enabled=true
+        label: 'resources requests memory'
+      - variable: config.pgBouncer.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgBouncer.enabled=true
+        label: 'resources limits cpu'
+      - variable: config.pgBouncer.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        show_if: config.pgBouncer.enabled=true
+        label: 'resources limits memory'

@@ -1,0 +1,15 @@
+
+apiVersion: v1
+name: Phani
+home: https://github.com/clayrisser/nginx
+icon: https://www.nginx.com/wp-content/uploads/2019/10/NGINX-Logo-White-Endorsement-RGB.svg
+version: 0.0.1
+appVersion: 0.0.1
+description: 'example deployment'
+keywords:
+  - nginx
+sources:
+  - https://github.com/clayrisser/nginx
+maintainers:
+  - name: 'Phani'
+    email: kotharuphani@gmail.com
