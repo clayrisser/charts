@@ -1,0 +1,165 @@
+{{- if and (not .Values.application.initializeCommand) .Values.cronjobs -}}
+apiVersion: v1
+kind: List
+items:
+{{- range $jobName, $jobConfig:= .Values.cronjobs }}
+{{- if $.Capabilities.APIVersions.Has "batch/v1" }}
+- apiVersion: "batch/v1"
+{{- else }}
+- apiVersion: "batch/v1beta1"
+{{- end }}
+  kind: CronJob
+  metadata:
+    name: "{{ template "trackableappname" $ }}-{{ $jobName}}"
+    annotations:
+      {{ if $.Values.gitlab.app }}app.gitlab.com/app: {{ $.Values.gitlab.app | quote }}{{ end }}
+      {{ if $.Values.gitlab.env }}app.gitlab.com/env: {{ $.Values.gitlab.env | quote }}{{ end }}
+    labels:
+      track: "{{ $.Values.application.track }}"
+      tier: "{{ $.Values.application.tier }}"
+      {{ include "sharedlabels" $ | nindent 6 }}
+  spec:
+    concurrencyPolicy: {{ default "Forbid" $jobConfig.concurrencyPolicy }}
+    failedJobsHistoryLimit: {{ default 1 $jobConfig.failedJobsHistoryLimit }}
+    startingDeadlineSeconds: {{ default 300 $jobConfig.startingDeadlineSeconds }}
+    schedule: {{ $jobConfig.schedule | quote }}
+    successfulJobsHistoryLimit: {{ default 1 $jobConfig.successfulJobsHistoryLimit }}
+    jobTemplate:
+      spec:
+        {{- if $jobConfig.activeDeadlineSeconds }}
+        activeDeadlineSeconds: {{ $jobConfig.activeDeadlineSeconds }}
+        {{- end }}
+        template:
+          metadata:
+            annotations:
+              checksum/application-secrets: "{{ $.Values.application.secretChecksum }}"
+              {{ if $.Values.gitlab.app }}app.gitlab.com/app: {{ $.Values.gitlab.app | quote }}{{ end }}
+              {{ if $.Values.gitlab.env }}app.gitlab.com/env: {{ $.Values.gitlab.env | quote }}{{ end }}
+              {{- if $.Values.podAnnotations }}
+              {{ toYaml $.Values.podAnnotations | nindent 12 }}
+              {{- end }}
+            labels:
+              app: {{ template "appname" $ }}
+              release: {{ $.Release.Name }}
+              track: "{{ $.Values.application.track }}"
+              tier: "{{ $.Values.application.tier }}"
+          spec:
+            imagePullSecrets:
+              {{ toYaml $.Values.image.secrets | nindent 14 }}
+            restartPolicy: {{ default "OnFailure" $jobConfig.restartPolicy }}
+            {{- with $nodeSelectorConfig := default $.Values.nodeSelector $jobConfig.nodeSelector -}}
+            {{- if $nodeSelectorConfig  }}
+            nodeSelector:
+            {{ toYaml $nodeSelectorConfig | nindent 14 }}
+            {{- end }}
+            {{- end }}
+            {{- with $tolerationsConfig := default $.Values.tolerations $jobConfig.tolerations -}}
+            {{- if $tolerationsConfig }}
+            tolerations:
+            {{ toYaml $tolerationsConfig | nindent 14 }}
+            {{- end }}
+            {{- end }}
+            {{- with $affinityConfig := default $.Values.affinity $jobConfig.affinity -}}
+            {{- if $affinityConfig  }}
+            affinity:
+            {{ toYaml $affinityConfig | nindent 14 }}
+            {{- end }}
+            {{- end }}
+            containers:
+            - name: {{ $.Chart.Name }}
+              image: "{{ template "cronjobimagename" (dict "job" . "glob" $.Values) }}"
+              imagePullPolicy: {{ $.Values.image.pullPolicy }}
+              {{- if $jobConfig.command }}
+              command: 
+              {{- range $jobConfig.command }}
+              - {{ . }}
+              {{- end }}
+              {{- end }}
+              {{- if $jobConfig.command }}
+              args: 
+              {{- range $jobConfig.args }}
+              - {{ . }}
+              {{- end }}
+              {{- end }}
+              {{- if $.Values.application.secretName }}
+              envFrom:
+              - secretRef:
+                  name: {{ $.Values.application.secretName }}
+              {{- end }}
+              env:
+              {{- if $.Values.postgresql.managed }}
+              - name: POSTGRES_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: app-postgres
+                    key: username
+              - name: POSTGRES_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: app-postgres
+                    key: password
+              - name: POSTGRES_HOST
+                valueFrom:
+                  secretKeyRef:
+                    name: app-postgres
+                    key: privateIP
+              {{- end }}
+              {{- if $.Values.application.database_url }}
+              - name: DATABASE_URL
+                value: {{ $.Values.application.database_url | quote }}
+              {{- end }}
+              - name: GITLAB_ENVIRONMENT_NAME
+                value: {{ $.Values.gitlab.envName | quote }}
+              - name: GITLAB_ENVIRONMENT_URL
+                value: {{ $.Values.gitlab.envURL | quote }}
+              ports:
+              - name: "{{ $.Values.service.name }}"
+                containerPort: {{ $.Values.service.internalPort }}
+              {{- with $livenessProbeConfig := default $.Values.livenessProbe $jobConfig.livenessProbe }}
+              {{- if $livenessProbeConfig }}
+              livenessProbe:
+              {{- if eq $livenessProbeConfig.probeType "httpGet" }}
+                httpGet:
+                  path: {{ $livenessProbeConfig.path }}
+                  scheme: {{ $livenessProbeConfig.scheme }}
+                  port: {{ default $.Values.service.internalPort $livenessProbeConfig.port }}
+              {{- else if eq $livenessProbeConfig.probeType "tcpSocket" }}
+                tcpSocket:
+                  port: {{ default $.Values.service.internalPort $.Values.service.internalPort }}
+              {{- else if eq $livenessProbeConfig.probeType "exec" }}
+                exec:
+                  command:
+                    {{ toYaml $livenessProbeConfig.command | nindent 18 }}
+              {{- end }}
+                initialDelaySeconds: {{ $livenessProbeConfig.initialDelaySeconds }}
+                timeoutSeconds: {{  $livenessProbeConfig.timeoutSeconds }}
+                failureThreshold: {{ $livenessProbeConfig.failureThreshold }}
+                periodSeconds: {{ $livenessProbeConfig.periodSeconds }}
+              {{- end }}
+              {{- end }}
+              {{- with $readinessProbe := default $.Values.readinessProbe  $jobConfig.readinessProbe }}
+              {{- if $readinessProbe  }}
+              readinessProbe:
+                {{- if eq $readinessProbe.probeType "httpGet" }}
+                httpGet:
+                  path: {{ $readinessProbe.path }}
+                  scheme: {{ $readinessProbe.scheme }}
+                  port: {{ default $.Values.service.internalPort $readinessProbe.port }}
+                {{- else if eq $readinessProbe.probeType "tcpSocket" }}
+                tcpSocket:
+                  port: {{ default $.Values.service.internalPort $readinessProbe.port }}
+                {{- else if eq $readinessProbe.probeType "exec" }}
+                exec:
+                  command:
+                    {{ toYaml $readinessProbe.command | nindent 18 }}
+                {{- end }}
+                initialDelaySeconds: {{ $readinessProbe.initialDelaySeconds }}
+                timeoutSeconds: {{ $readinessProbe.timeoutSeconds }}
+                failureThreshold: {{ $readinessProbe.failureThreshold }}
+                periodSeconds: {{ $readinessProbe.periodSeconds }}
+              {{- end }}
+              {{- end }}
+              resources:
+                {{ toYaml $.Values.resources | nindent 16 }}
+{{- end -}}
+{{- end -}}
