@@ -26,3 +26,6 @@ nginx.ingress.kubernetes.io/server-snippet: |-
       deny all;
   }
 {{- end }}
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations }}
+{{- end }}
