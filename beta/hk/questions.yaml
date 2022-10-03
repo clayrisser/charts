@@ -58,11 +58,11 @@ questions:
     required: false
     label: 'pguser password'
     group: Config
-  - variable: config.passwords.postgres
+  - variable: config.passwords.nginx
     description: ''
     type: password
     required: false
-    label: 'postgres password'
+    label: 'nginx password'
     group: Config
   - variable: config.passwords.primaryUser
     description: ''
@@ -70,19 +70,19 @@ questions:
     required: false
     label: 'primary user password'
     group: Config
-  - variable: config.postgres.hotReplicas
+  - variable: config.nginx.hotReplicas
     description: ''
     type: int
     required: true
-    label: 'postgres hot replicas'
+    label: 'nginx hot replicas'
     group: Config
-  - variable: config.postgres.config
+  - variable: config.nginx.config
     description: ''
     type: multiline
     required: false
-    label: 'postgres config'
+    label: 'nginx config'
     group: Config
-  - variable: config.postgres.resources.enabled
+  - variable: config.nginx.resources.enabled
     description: ''
     type: enum
     options:
@@ -90,30 +90,30 @@ questions:
       - custom
       - 'false'
     required: true
-    label: 'postgres resources enabled'
+    label: 'nginx resources enabled'
     show_subquestion_if: custom
     group: Config
     subquestions:
-      - variable: config.postgres.resources.requests.cpu
+      - variable: config.nginx.resources.requests.cpu
         description: ''
         type: string
         required: true
-        label: 'postgres resources requests cpu'
-      - variable: config.postgres.resources.requests.memory
+        label: 'nginx resources requests cpu'
+      - variable: config.nginx.resources.requests.memory
         description: ''
         type: string
         required: true
-        label: 'postgres resources requests memory'
-      - variable: config.postgres.resources.limits.cpu
+        label: 'nginx resources requests memory'
+      - variable: config.nginx.resources.limits.cpu
         description: ''
         type: string
         required: true
-        label: 'postgres resources limits cpu'
-      - variable: config.postgres.resources.limits.memory
+        label: 'nginx resources limits cpu'
+      - variable: config.nginx.resources.limits.memory
         description: ''
         type: string
         required: true
-        label: 'postgres resources limits memory'
+        label: 'nginx resources limits memory'
   - variable: config.pgBadger.enabled
     description: ''
     type: boolean
@@ -165,3 +165,121 @@ questions:
         required: true
         show_if: config.pmm.enabled=true
         label: 'resources limits memory'
+
+
+  # Images
+  - variable: images.nginx.repository
+    description: ''
+    type: string
+    required: true
+    label: 'nginx repository'
+    group: Images
+  - variable: images.nginx.tag
+    description: ''
+    type: string
+    required: true
+    label: 'nginx tag'
+    group: Images
+  - variable: images.deployer.repository
+    description: ''
+    type: string
+    required: true
+    label: 'deployer repository'
+    group: Images
+  - variable: images.deployer.tag
+    description: ''
+    type: string
+    required: true
+    label: 'deployer tag'
+    group: Images
+  - variable: images.pgo.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgo repository'
+    group: Images
+  - variable: images.pgo.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgo tag'
+    group: Images
+  - variable: images.pgadmin.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgadmin repository'
+    show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.pgadmin.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgadmin tag'
+    show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.pmm.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pmm repository'
+    show_if: config.pmm.enabled
+    group: Images
+  - variable: images.pmm.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pmm tag'
+    show_if: config.pmm.enabled
+    group: Images
+  - variable: images.backup.repository
+    description: ''
+    type: string
+    required: true
+    label: 'backup repository'
+    group: Images
+  - variable: images.backup.tag
+    description: ''
+    type: string
+    required: true
+    label: 'backup tag'
+    group: Images
+  - variable: images.backrestRepo.repository
+    description: ''
+    type: string
+    required: true
+    label: 'backrestRepo repository'
+    group: Images
+  - variable: images.backrestRepo.tag
+    description: ''
+    type: string
+    required: true
+    label: 'backrestRepo tag'
+    group: Images
+  - variable: images.pgBouncer.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgBouncer repository'
+    group: Images
+  - variable: images.pgBouncer.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgBouncer tag'
+    group: Images
+  - variable: images.pgBadger.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgBadger repository'
+    show_if: config.pgBadger.enabled
+    group: Images
+  - variable: images.pgBadger.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgBadger tag'
+    show_if: config.pgBadger.enabled
+    group: Images
+
