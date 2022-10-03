@@ -99,3 +99,120 @@
         required: true
         show_if: config.pgBouncer.enabled=true
         label: 'resources limits memory'
+
+ # Images
+  - variable: images.nginx.repository
+    description: ''
+    type: string
+    required: true
+    label: 'nginx repository'
+    group: Images
+  - variable: images.nginx.tag
+    description: ''
+    type: string
+    required: true
+    label: 'nginx tag'
+    group: Images
+  - variable: images.deployer.repository
+    description: ''
+    type: string
+    required: true
+    label: 'deployer repository'
+    group: Images
+  - variable: images.deployer.tag
+    description: ''
+    type: string
+    required: true
+    label: 'deployer tag'
+    group: Images
+  - variable: images.pgo.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgo repository'
+    group: Images
+  - variable: images.pgo.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgo tag'
+    group: Images
+  - variable: images.pgadmin.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgadmin repository'
+    show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.pgadmin.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgadmin tag'
+    show_if: config.pgadmin.enabled=true
+    group: Images
+  - variable: images.pmm.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pmm repository'
+    show_if: config.pmm.enabled
+    group: Images
+  - variable: images.pmm.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pmm tag'
+    show_if: config.pmm.enabled
+    group: Images
+  - variable: images.backup.repository
+    description: ''
+    type: string
+    required: true
+    label: 'backup repository'
+    group: Images
+  - variable: images.backup.tag
+    description: ''
+    type: string
+    required: true
+    label: 'backup tag'
+    group: Images
+  - variable: images.backrestRepo.repository
+    description: ''
+    type: string
+    required: true
+    label: 'backrestRepo repository'
+    group: Images
+  - variable: images.backrestRepo.tag
+    description: ''
+    type: string
+    required: true
+    label: 'backrestRepo tag'
+    group: Images
+  - variable: images.pgBouncer.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgBouncer repository'
+    group: Images
+  - variable: images.pgBouncer.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgBouncer tag'
+    group: Images
+  - variable: images.pgBadger.repository
+    description: ''
+    type: string
+    required: true
+    label: 'pgBadger repository'
+    show_if: config.pgBadger.enabled
+    group: Images
+  - variable: images.pgBadger.tag
+    description: ''
+    type: string
+    required: true
+    label: 'pgBadger tag'
+    show_if: config.pgBadger.enabled
+    group: Images
+
