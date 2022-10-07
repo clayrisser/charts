@@ -32,7 +32,7 @@ spec:
                   name: http
   {{- if .Values.ingress.keycloak.tls }}
   tls:
-    - secretName: {{ template "postgres.keycloak-certificate" . }}
+    - secretName: {{ template "keycloak.keycloak-certificate" . }}
       hosts:
         - {{ .Values.ingress.keycloak.hostname }}
   {{- end }}
