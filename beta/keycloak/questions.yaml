@@ -303,7 +303,7 @@ questions:
         type: enum
         show_if: ingress.keycloak.tls=true
         options:
-          - ''
+          - label: ''
           - letsencrypt-cloudflare-staging
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
