@@ -16,7 +16,7 @@ spec:
   config:
     protocol: psql
     username: postgres
-    hostname: {{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local
+    hostname: postgres.{{ .Release.Namespace }}.svc.cluster.local
     port: '5432'
   configSecretName: {{ template "postgres.name" . }}-postgres-secret
   resources:
