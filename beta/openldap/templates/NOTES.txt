@@ -3,32 +3,9 @@
 
 [{{ include "openldap.openldap-hostname" . }}]({{ include "openldap.openldap-hostname" . }})
 
-{{ if (not $openldapSecret) }}
-upgrade chart to render secrets
-{{- else }}
-| **bind username** | **bind password** |
-| ----------------- | ----------------- |
-{{- end }}
-{{- if (and $openldapSecret $openldapSecret.data) }}
-{{- if $openldapSecret.data.LDAP_ADMIN_PASSWORD }}
-| `cn=admin,{{ template "openldap.openldap-dc" . }}` | `{{ $openldapSecret.data.LDAP_ADMIN_PASSWORD | b64dec }}` |
-{{- end }}
-{{- end }}
-
 {{- if .Values.config.phpldapadmin.enabled }}
 ### phpldapadmin
 
 [{{ include "openldap.phpldapadmin-base-url" . }}]({{ include "openldap.phpldapadmin-base-url" . }})
 
-{{ if (not $openldapSecret) }}
-upgrade chart to render secrets
-{{- else }}
-| **bind username** | **bind password** |
-| ----------------- | ----------------- |
-{{- end }}
-{{- if (and $openldapSecret $openldapSecret.data) }}
-{{- if $openldapSecret.data.LDAP_ADMIN_PASSWORD }}
-| `cn=admin,{{ template "openldap.openldap-dc" . }}` | `{{ $openldapSecret.data.LDAP_ADMIN_PASSWORD | b64dec }}` |
-{{- end }}
-{{- end }}
 {{- end }}
