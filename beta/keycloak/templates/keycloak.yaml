@@ -10,10 +10,10 @@ kind: Keycloak
 metadata:
   name: {{ template "keycloak.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "keycloak.name" . }}
-    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "keycloak.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 spec:
   instances: {{ .Values.config.keycloak.replicas }}
   extensions: []
@@ -118,10 +118,10 @@ kind: KeycloakRealm
 metadata:
   name: {{ template "keycloak.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "keycloak.name" . }}
-    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "keycloak.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 spec:
   realm:
     id: main
@@ -313,4 +313,4 @@ spec:
     {{- end }}
   instanceSelector:
     matchLabels:
-      app: {{ template "keycloak.name" . }}
+      app.kubernetes.io/name: {{ template "keycloak.name" . }}
