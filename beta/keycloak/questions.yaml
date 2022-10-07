@@ -303,13 +303,12 @@ questions:
         type: enum
         show_if: ingress.keycloak.tls=true
         options:
-          - label: 'none'
           - letsencrypt-cloudflare-staging
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned
-        required: true
+        required: false
         label: 'keycloak ingress issuer name'
       - variable: ingress.keycloak.certificate
         description: ''
