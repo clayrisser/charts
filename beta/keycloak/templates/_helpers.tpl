@@ -60,6 +60,17 @@ Calculate keycloak base url
 {{- end -}}
 
 {{/*
+Calculate keycloak certificate
+*/}}
+{{- define "postgres.keycloak-certificate" -}}
+{{- if .Values.ingress.keycloak.certificate -}}
+{{- printf .Values.ingress.keycloak.certificate -}}
+{{- else -}}
+{{- printf "%s-keycloak-letsencrypt" (include "postgres.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Calculate postgres url
 */}}
 {{- define "keycloak.postgres-url" -}}
