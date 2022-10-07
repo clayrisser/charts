@@ -1,0 +1,8 @@
+apiVersion: v2
+name: keycloak-crds
+version: 19.0.2
+annotations:
+  catalog.cattle.io/hidden: 'true'
+  catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: keycloak-crds

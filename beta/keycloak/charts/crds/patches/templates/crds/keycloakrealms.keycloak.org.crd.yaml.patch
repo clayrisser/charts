@@ -1,0 +1,19 @@
+--- templates/crds/keycloakrealms.keycloak.org.crd.yaml	2022-10-07 06:43:08.097088414 -0500
++++ templates/crds/keycloakrealms.keycloak.org.crd.yaml.tmp	2022-10-07 06:46:34.579290873 -0500
+@@ -1,7 +1,11 @@
++{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "keycloakrealms.keycloak.org")) }}
+ apiVersion: apiextensions.k8s.io/v1
+ kind: CustomResourceDefinition
+ metadata:
+   name: keycloakrealms.keycloak.org
++  annotations:
++    helm.sh/hook: pre-install,pre-upgrade
++    helm.sh/hook-weight: '5'
+ spec:
+   group: keycloak.org
+   names:
+@@ -1399,3 +1403,4 @@
+     storage: true
+     subresources:
+       status: {}
++{{- end }}

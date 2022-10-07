@@ -22,9 +22,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   # https://olm.operatorframework.io/docs/tasks/install-operator-with-olm/#example-install-a-specific-version-of-an-operator
-  channel: alpha
+  channel: {{ .Values.olm.keycloak.channel }}
   installPlanApproval: Automatic
   name: keycloak-operator
   source: operatorhubio-catalog
   sourceNamespace: olm
-  startingCSV: keycloak-operator.v17.0.0
+  startingCSV: keycloak-operator.v{{ .Values.olm.keycloak.version }}

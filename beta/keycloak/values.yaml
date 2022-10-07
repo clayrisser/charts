@@ -1,7 +1,12 @@
+olm:
+  keycloak:
+    channel: alpha
+    version: 19.0.2
+
 images:
   keycloak:
     repository: jboss/keycloak
-    tag: 15.0.2
+    tag: 19.0.2
 
 config:
   clusterType: rke

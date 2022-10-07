@@ -103,5 +103,8 @@
     "editor.formatOnSave": false
   },
   "editor.formatOnSave": false,
-  "yaml.format.enable": false
+  "yaml.format.enable": false,
+  "grammarly.files.exclude": [
+    "**/*"
+  ]
 }
