@@ -18,9 +18,7 @@ spec:
   instances: {{ .Values.config.keycloak.replicas }}
   extensions: []
   externalAccess:
-    enabled: true
-    host: {{ template "keycloak.keycloak-hostname" . }}
-    tlsTermination: reencrypt
+    enabled: false
   external:
     enabled: false
   externalDatabase:
