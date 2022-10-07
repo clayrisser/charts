@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ template "keycloak.name" . }}-external
+  name: {{ template "keycloak.name" . }}-discovery
   labels:
     app.kubernetes.io/name: keycloak
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -27,9 +27,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: keycloak
+                name: keycloak-discovery
                 port:
-                  name: http
+                  number: 8080
   {{- if .Values.ingress.keycloak.tls }}
   tls:
     - secretName: {{ template "keycloak.keycloak-certificate" . }}
