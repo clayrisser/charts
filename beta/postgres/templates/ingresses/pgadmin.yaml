@@ -11,8 +11,10 @@ metadata:
   annotations:
     {{- if .Values.ingress.pgadmin.tls }}
     {{- if (not .Values.ingress.pgadmin.certificate) }}
-    cert-manager.io/cluster-issuer: {{ .Values.ingress.pgadmin.issuer.name }}
     kubernetes.io/tls-acme: 'true'
+    {{- if .Values.ingress.pgadmin.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.pgadmin.issuer.name }}
+    {{- end }}
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}

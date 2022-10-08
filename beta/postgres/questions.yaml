@@ -28,6 +28,12 @@ questions:
     required: true
     label: debug
     group: Config
+  - variable: config.enableIstio
+    description: ''
+    type: boolean
+    required: true
+    label: 'enable istio'
+    group: Config
   - variable: config.pause
     description: ''
     type: boolean
@@ -437,7 +443,6 @@ questions:
         type: enum
         show_if: ingress.pgadmin.tls=true&&config.pgadmin.enabled=true
         options:
-          - none
           - letsencrypt-cloudflare-staging
           - letsencrypt-cloudflare-prod
           - letsencrypt-staging
@@ -479,57 +484,6 @@ questions:
     max: 65535
     show_if: service.pgadmin.type=LoadBalancer&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin http lb port'
-    group: 'Services and Load Balancing'
-  - variable: ingress.metrics.enabled
-    description: ''
-    type: boolean
-    label: 'metrics ingress enabled'
-    show_if: config.metrics=true
-    show_subquestion_if: true
-    group: 'Services and Load Balancing'
-    subquestions:
-      - variable: ingress.metrics.tls
-        description: ''
-        type: boolean
-        required: true
-        show_if: config.metrics=true
-        label: 'metrics ingress tls'
-      - variable: ingress.metrics.hostname
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        show_if: config.metrics=true
-        label: 'metrics ingress hostname'
-      - variable: ingress.metrics.issuer.name
-        description: ''
-        type: enum
-        show_if: ingress.metrics.tls=true&&config.metrics=true
-        options:
-          - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
-          - letsencrypt-staging
-          - letsencrypt-prod
-          - selfsigned
-        required: true
-        label: 'metrics ingress issuer name'
-      - variable: ingress.metrics.certificate
-        description: ''
-        type: string
-        show_if: ingress.metrics.tls=true&&ingress.metrics.issuer.name=none&&config.metrics=true
-        required: false
-        label: 'metrics ingress certificate'
-  - variable: service.metrics.type
-    description: ''
-    type: enum
-    show_if: ingress.metrics.enabled=false&&config.metrics=true
-    options:
-      - ClusterIP
-      - LoadBalancer
-      - NodePort
-    required: true
-    label: 'metrics service type'
     group: 'Services and Load Balancing'
   - variable: service.postgres.type
     description: ''

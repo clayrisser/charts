@@ -9,10 +9,10 @@ images:
     tag: 19.0.2
 
 config:
-  clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   debug: false
+  enableIstio: false
   keycloak:
     adminPassword: ''
     baseUrl: ''

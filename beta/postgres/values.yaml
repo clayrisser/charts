@@ -31,6 +31,7 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   debug: false
+  enableIstio: false
   pause: false
   standby: false
   wal: false
@@ -130,7 +131,7 @@ ingress:
     hostname: ''
     tls: false
     issuer:
-      name: letsencrypt-staging
+      name: ''
 
 persistence:
   accessMode: ReadWriteOnce

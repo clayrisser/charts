@@ -184,8 +184,10 @@ spec:
         annotations:
           {{- if .Values.ingress.phpldapadmin.tls }}
           {{- if (not .Values.ingress.phpldapadmin.certificate) }}
-          cert-manager.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
           kubernetes.io/tls-acme: 'true'
+          {{- if .Values.ingress.phpldapadmin.issuer.name }}
+          cert-manager.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
+          {{- end }}
           {{- end }}
           nginx.ingress.kubernetes.io/ssl-redirect: 'true'
           {{- end }}
