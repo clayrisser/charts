@@ -16,7 +16,7 @@ spec:
   apparatus:
     endpoint: /socket
     containers:
-      - image: registry.gitlab.com/bitspur/community/keycloak-socket:0.0.2
+      - image: registry.gitlab.com/risserlabs/community/keycloak-integration-apparatus:0.0.3
         imagePullPolicy: Always
         name: apparatus
         ports:
