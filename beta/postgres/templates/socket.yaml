@@ -47,6 +47,7 @@ spec:
               containers:
                 - name: kubectl
                   image: registry.gitlab.com/risserlabs/community/images/kube-commands-psql:0.0.1
+                  imagePullPolicy: Always
                   env:
                     - name: POSTGRES_PROTOCOL
                       value: '{% .socketConfig.protocol %}'
@@ -132,6 +133,7 @@ spec:
               containers:
                 - name: kubectl
                   image: registry.gitlab.com/risserlabs/community/images/kube-commands-psql:0.0.1
+                  imagePullPolicy: Always
                   env:
                     - name: POSTGRES_PROTOCOL
                       value: '{% .socketConfig.protocol %}'
