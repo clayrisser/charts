@@ -23,7 +23,7 @@ metadata:
 spec:
   # https://olm.operatorframework.io/docs/tasks/install-operator-with-olm/#example-install-a-specific-version-of-an-operator
   channel: {{ .Values.olm.keycloak.channel }}
-  installPlanApproval: Automatic
+  installPlanApproval: Manual
   name: keycloak-operator
   source: operatorhubio-catalog
   sourceNamespace: olm
