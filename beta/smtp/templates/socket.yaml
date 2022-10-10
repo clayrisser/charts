@@ -33,6 +33,9 @@ spec:
           backoffLimit: 6
           ttlSecondsAfterFinished: 360
           template:
+            metadata:
+              annotations:
+                sidecar.istio.io/inject: 'false'
             spec:
               restartPolicy: Never
               affinity:
