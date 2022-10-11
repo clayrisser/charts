@@ -32,7 +32,7 @@ spec:
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
-  name: olm-{{ template "keycloak.name" . }}
+  name: olm
   labels:
     app.kubernetes.io/name: {{ template "keycloak.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -51,7 +51,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: approve-install-plan-{{ template "keycloak.name" . }}
+  name: approve-install-plan
 spec:
   activeDeadlineSeconds: 360
   backoffLimit: 6
@@ -85,7 +85,7 @@ spec:
               apiVersion: patch.risserlabs.com/v1alpha1
               kind: Patch
               metadata:
-                name: approve-install-plan-{{ template "keycloak.name" . }}
+                name: approve-install-plan
                 namespace: {{ .Release.Namespace }}
               spec:
                 epoch: '$(date +%s)'
