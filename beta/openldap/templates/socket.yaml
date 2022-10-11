@@ -19,6 +19,11 @@ spec:
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
+{{- if (and .Values.service.openldap.tls.enabled .Values.service.openldap.tls.enforce) }}
+{{- if (or (not .Values.service.openldap.tls.certificate.name) .Values.service.openldap.tls.certificate.ca) }}
+    canReplicateCa: 'true'
+{{- end }}
+{{- end }}
   configMapper:
     bindPassword: '{% .vars.b64BindPassword | b64dec %}'
   vars:

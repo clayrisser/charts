@@ -80,7 +80,7 @@ spec:
             - sh
             - -c
             - |
-              NAME=$(kubectl get installplans.operators.coreos.com -n {{ .Release.Namespace }} | grep "$CSV" | cut -d' ' -f1)
+              export NAME=$(kubectl get installplans.operators.coreos.com -n {{ .Release.Namespace }} | grep "$CSV" | cut -d' ' -f1)
               cat <<EOF | kubectl apply -f -
               apiVersion: patch.risserlabs.com/v1alpha1
               kind: Patch
