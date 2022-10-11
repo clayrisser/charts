@@ -32,7 +32,7 @@ spec:
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
-  name: olm
+  name: olm-{{ template "keycloak.name" . }}
   labels:
     app.kubernetes.io/name: {{ template "keycloak.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -47,3 +47,67 @@ spec:
   socket:
     name: olm
     namespace: olm
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: approve-install-plan-{{ template "keycloak.name" . }}
+spec:
+  activeDeadlineSeconds: 360
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 360
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: 'false'
+    spec:
+      automountServiceAccountToken: true
+      restartPolicy: Never
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+      containers:
+        - name: kubectl
+          image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - |
+              NAME=$(kubectl get installplans.operators.coreos.com -n {{ .Release.Namespace }} | grep "$CSV" | cut -d' ' -f1)
+              cat <<EOF | kubectl apply -f -
+              apiVersion: patch.risserlabs.com/v1alpha1
+              kind: Patch
+              metadata:
+                name: ingress-target-coupled-or-updated-{% .plug.metadata.namespace %}
+                namespace: {{ .Release.Namespace }}
+              spec:
+                epoch: '$(date +%s)'
+                patches:
+                  - id: approve
+                    target:
+                      group: operators.coreos.com
+                      version: v1alpha1
+                      kind: InstallPlan
+                      name: ${NAME}
+                    waitForTimeout: 5
+                    waitForResource: true
+                    type: json
+                    patch: |-
+                      - op: add
+                        path: /spec/approved
+                        value: true
+              EOF
+              kubectl get pods -n {{ .Release.Namespace }} \
+                -l job-name=approve-install-plan-{{ template "keycloak.name" . }} \
+                --field-selector status.phase=Failed \
+                -o yaml | kubectl delete -f -
+          env:
+            - name: CSV
+              value: keycloak-operator.v19.0.2
