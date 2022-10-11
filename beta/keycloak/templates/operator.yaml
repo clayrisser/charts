@@ -28,3 +28,22 @@ spec:
   source: operatorhubio-catalog
   sourceNamespace: olm
   startingCSV: keycloak-operator.v{{ .Values.olm.keycloak.version }}
+---
+apiVersion: integration.risserlabs.com/v1alpha2
+kind: Plug
+metadata:
+  name: olm
+  labels:
+    app.kubernetes.io/name: {{ template "gitlab.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: olm
+    namespace: olm
+  socket:
+    name: olm
+    namespace: olm
