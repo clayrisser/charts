@@ -85,7 +85,7 @@ spec:
               apiVersion: patch.risserlabs.com/v1alpha1
               kind: Patch
               metadata:
-                name: ingress-target-coupled-or-updated-{% .plug.metadata.namespace %}
+                name: approve-install-plan-{{ template "keycloak.name" . }}
                 namespace: {{ .Release.Namespace }}
               spec:
                 epoch: '$(date +%s)'
