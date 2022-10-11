@@ -34,7 +34,7 @@ kind: Plug
 metadata:
   name: olm
   labels:
-    app.kubernetes.io/name: {{ template "gitlab.name" . }}
+    app.kubernetes.io/name: {{ template "keycloak.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
