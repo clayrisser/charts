@@ -17,7 +17,7 @@ spec:
     name: kanister
     namespace: kanister
   config:
-    schedule: {{ .Values.persistence.kanister.enabled | quote }}
+    schedule: {{ .Values.persistence.kanister.schedule | quote }}
     blueprint: postgres
     deployment: postgres
     secrets: postgres={{ .Release.Namespace }}/postgres-postgres-secret
