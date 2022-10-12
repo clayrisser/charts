@@ -89,13 +89,13 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-  # # Services and Load Balancing
+  # # Networking
   # - variable: ingress.minio.enabled
   #   description: ''
   #   type: boolean
   #   label: 'minio ingress enabled'
   #   show_subquestion_if: true
-  #   group: 'Services and Load Balancing'
+  #   group: 'Networking'
   #   subquestions:
   #     - variable: ingress.minio.tls
   #       description: ''
@@ -137,7 +137,7 @@ questions:
   #     - NodePort
   #   required: true
   #   label: 'minio service type'
-  #   group: 'Services and Load Balancing'
+  #   group: 'Networking'
   # - variable: service.minio.nodePorts.http
   #   description: ''
   #   type: int
@@ -146,7 +146,7 @@ questions:
   #   max: 32767
   #   show_if: service.minio.type=NodePort&&ingress.minio.enabled=false
   #   label: 'minio http node port'
-  #   group: 'Services and Load Balancing'
+  #   group: 'Networking'
   # - variable: service.minio.lbPorts.http
   #   description: ''
   #   type: int
@@ -155,7 +155,7 @@ questions:
   #   required: true
   #   show_if: service.minio.type=LoadBalancer&&ingress.minio.enabled=false
   #   label: 'minio http lb port'
-  #   group: 'Services and Load Balancing'
+  #   group: 'Networking'
 
   # Images
   - variable: images.minio.repository

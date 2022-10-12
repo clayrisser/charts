@@ -318,14 +318,14 @@ questions:
         show_if: persistence.backup.enabled=true
         label: 'backup restore postgres snapshot'
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.flectra.enabled
     default: true
     description: ''
     type: boolean
     label: 'flectra ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.flectra.tls
         default: false
@@ -375,7 +375,7 @@ questions:
     required: true
     label: 'flectra service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.flectra.nodePorts.http
         default: ''
@@ -392,7 +392,7 @@ questions:
     show_if: config.pgadmin.enabled=true
     label: 'pgadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.pgadmin.tls
         default: false
@@ -445,7 +445,7 @@ questions:
     required: true
     label: 'pgadmin service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.pgadmin.nodePorts.http
         default: ''
@@ -466,7 +466,7 @@ questions:
     required: true
     label: 'postgres service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.postgres.nodePorts.postgres
         default: ''

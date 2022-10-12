@@ -116,14 +116,14 @@ questions:
         required: false
         label: 'existing claim'
 
-# Services and Load Balancing
+# Networking
   - variable: chartmuseum.ingress.enabled
     default: true
     description: ''
     type: boolean
     label: 'chartmuseum ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: chartmuseum.ingress.hosts.0.tls
         default: false
@@ -154,7 +154,7 @@ questions:
       - NodePort
     required: true
     label: 'chartmuseum service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: chartmuseum.service.nodePort
     default: ''
     description: ''
@@ -164,7 +164,7 @@ questions:
     max: 32767
     show_if: chartmuseum.service.type=NodePort&&chartmuseum.ingress.enabled=false
     label: 'chartmuseum http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: chartmuseum.image.repository

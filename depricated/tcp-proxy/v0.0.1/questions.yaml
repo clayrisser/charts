@@ -34,7 +34,7 @@ questions:
     label: 'remote port'
     group: Config
 
-# Services and Load Balancing
+# Networking
   - variable: service.type
     default: NodePort
     description: ''
@@ -46,7 +46,7 @@ questions:
     required: true
     label: 'service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.nodePorts.tcpProxy.port
         default: ''

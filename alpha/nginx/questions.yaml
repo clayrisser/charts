@@ -105,13 +105,13 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.nginx.enabled
     description: ''
     type: boolean
     label: 'nginx ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.nginx.tls
         description: ''
@@ -152,7 +152,7 @@ questions:
       - NodePort
     required: true
     label: 'nginx service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.nginx.nodePorts.http
     description: ''
     type: int
@@ -161,7 +161,7 @@ questions:
     max: 32767
     show_if: service.nginx.type=NodePort&&ingress.nginx.enabled=false
     label: 'nginx http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.nginx.lbPorts.http
     description: ''
     type: int
@@ -170,7 +170,7 @@ questions:
     required: true
     show_if: service.nginx.type=LoadBalancer&&ingress.nginx.enabled=false
     label: 'nginx http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.nginx.repository

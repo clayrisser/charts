@@ -203,7 +203,7 @@ questions:
         show_if: persistence.stash.enabled=true
         label: 'stash restore snapshot data'
 
-# Services and Load Balancing
+# Networking
   - variable: service.jicofo.type
     default: NodePort
     description: ''
@@ -216,7 +216,7 @@ questions:
     required: true
     label: 'jicofo service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.jicofo.nodePorts.http
         default: ''
@@ -238,7 +238,7 @@ questions:
     required: true
     label: 'prosody service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.prosody.nodePorts.http
         default: ''
@@ -254,7 +254,7 @@ questions:
     type: boolean
     label: 'web ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.web.tls
         default: false
@@ -304,7 +304,7 @@ questions:
     required: true
     label: 'web service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.web.nodePorts.http
         default: ''
@@ -326,7 +326,7 @@ questions:
     required: true
     label: 'jvb service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.jvb.nodePorts.http
         default: ''

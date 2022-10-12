@@ -188,13 +188,13 @@ questions:
     label: 'velero ttl'
     group: Persistence
 
-  # Services and Load Balancing
+  # Networking
   - variable: ingress.erpnext.enabled
     description: ''
     type: boolean
     label: 'erpnext ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.erpnext.tls
         description: ''
@@ -235,7 +235,7 @@ questions:
       - NodePort
     required: true
     label: 'erpnext service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.erpnext.nodePorts.http
     description: ''
     type: int
@@ -244,7 +244,7 @@ questions:
     max: 32767
     show_if: service.erpnext.type=NodePort&&ingress.erpnext.enabled=false
     label: 'erpnext http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.erpnext.lbPorts.http
     description: ''
     type: int
@@ -253,7 +253,7 @@ questions:
     required: true
     show_if: service.erpnext.type=LoadBalancer&&ingress.erpnext.enabled=false
     label: 'erpnext http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   # Images
   # - variable: images.erpnext.repository
   #   description: ''

@@ -178,14 +178,14 @@ questions:
         show_if: persistence.backup.enabled=true
         label: 'backup restore sks snapshot'
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.sks.enabled
     default: true
     description: ''
     type: boolean
     label: 'sks ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.sks.tls
         default: false
@@ -235,7 +235,7 @@ questions:
     required: true
     label: 'sks service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.sks.nodePorts.http
         default: ''

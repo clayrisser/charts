@@ -222,14 +222,14 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.keycloak.enabled
     default: true
     description: ''
     type: boolean
     label: 'keycloak ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.keycloak.tls
         default: false
@@ -274,7 +274,7 @@ questions:
       - NodePort
     required: true
     label: 'keycloak service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.keycloak.nodePorts.http
     default: ''
     description: ''
@@ -284,7 +284,7 @@ questions:
     max: 32767
     show_if: service.keycloak.type=NodePort&&ingress.keycloak.enabled=false
     label: 'keycloak http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.keycloak.lbPorts.http
     default: 80
     description: ''
@@ -294,7 +294,7 @@ questions:
     required: true
     show_if: service.keycloak.type=LoadBalancer&&ingress.keycloak.enabled=false
     label: 'keycloak http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.keycloak.repository

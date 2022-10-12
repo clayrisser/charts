@@ -193,14 +193,14 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.bitwardenrs.enabled
     default: true
     description: ''
     type: boolean
     label: 'bitwardenrs ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.bitwardenrs.tls
         default: false
@@ -243,7 +243,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'bitwardenrs service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.bitwardenrs.nodePorts.http
     default:
     description: ''
@@ -253,7 +253,7 @@ questions:
     max: 32767
     show_if: service.bitwardenrs.type=NodePort&&ingress.bitwardenrs.enabled=false
     label: 'bitwardenrs http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.bitwardenrs.lbPorts.http
     default: 80
     description: ''
@@ -263,7 +263,7 @@ questions:
     required: true
     show_if: service.bitwardenrs.type=LoadBalancer&&ingress.bitwardenrs.enabled=false
     label: 'bitwardenrs http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.bitwardenrs.repository

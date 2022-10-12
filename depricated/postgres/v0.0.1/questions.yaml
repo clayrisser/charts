@@ -262,7 +262,7 @@ questions:
     label: 'velero ttl'
     group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.pgadmin.enabled
     default: true
     description: ''
@@ -270,7 +270,7 @@ questions:
     label: 'pgadmin ingress enabled'
     show_if: config.pgadmin.enabled=true
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.pgadmin.tls
         default: false
@@ -317,7 +317,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'pgadmin service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.pgadmin.nodePorts.http
     default: ''
     description: ''
@@ -327,7 +327,7 @@ questions:
     max: 32767
     show_if: service.pgadmin.type=NodePort&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.pgadmin.lbPorts.http
     default: 80
     description: ''
@@ -337,7 +337,7 @@ questions:
     max: 65535
     show_if: service.pgadmin.type=LoadBalancer&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.postgres.type
     default: NodePort
     description: ''
@@ -348,7 +348,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'postgres service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.postgres.nodePorts.postgres
     default: ''
     description: ''
@@ -358,7 +358,7 @@ questions:
     max: 32767
     show_if: service.postgres.type=NodePort
     label: 'postgres node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.postgres.lbPorts.postgres
     default: 5432
     description: ''
@@ -368,7 +368,7 @@ questions:
     max: 65535
     show_if: service.postgres.type=LoadBalancer
     label: 'postgres lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.pgadmin.repository

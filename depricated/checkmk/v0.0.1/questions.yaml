@@ -145,14 +145,14 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.checkmk.enabled
     default: true
     description: ''
     type: boolean
     label: 'checkmk ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.checkmk.tls
         default: false
@@ -197,7 +197,7 @@ questions:
       - NodePort
     required: true
     label: 'checkmk service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.checkmk.nodePorts.http
     default:
     description: ''
@@ -207,7 +207,7 @@ questions:
     max: 32767
     show_if: service.checkmk.type=NodePort&&ingress.checkmk.enabled=false
     label: 'checkmk http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.checkmk.lbPorts.http
     default: 80
     description: ''
@@ -217,7 +217,7 @@ questions:
     required: true
     show_if: service.checkmk.type=LoadBalancer&&ingress.checkmk.enabled=false
     label: 'checkmk http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.checkmk.repository

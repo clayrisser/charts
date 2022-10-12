@@ -103,13 +103,13 @@ spec:
                     waitForTimeout: 5
                     waitForResource: true
                     type: json
-                    patch: |-
+                    patch: |
                       - op: add
                         path: /spec/approved
                         value: true
               EOF
               kubectl get pods -n {{ .Release.Namespace }} \
-                -l job-name=approve-install-plan-{{ template "keycloak.name" . }} \
+                -l job-name=approve-install-plan \
                 --field-selector status.phase=Failed \
                 -o yaml | kubectl delete -f -
           env:

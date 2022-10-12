@@ -186,14 +186,14 @@ questions:
     show_if: config.postgres.integration=
     group: 'Postgres Config'
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.cabot.enabled
     default: true
     description: ''
     type: boolean
     label: 'cabot ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.cabot.tls
         default: false
@@ -238,7 +238,7 @@ questions:
       - NodePort
     required: true
     label: 'cabot service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.cabot.nodePorts.http
     default:
     description: ''
@@ -248,7 +248,7 @@ questions:
     max: 32767
     show_if: service.cabot.type=NodePort&&ingress.cabot.enabled=false
     label: 'cabot http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.cabot.lbPorts.http
     default: 80
     description: ''
@@ -258,7 +258,7 @@ questions:
     required: true
     show_if: service.cabot.type=LoadBalancer&&ingress.cabot.enabled=false
     label: 'cabot http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.cabot.repository

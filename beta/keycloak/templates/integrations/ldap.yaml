@@ -34,6 +34,7 @@ spec:
         spec:
           epoch: {{ now | unixEpoch | quote }}
           patches:
+            {{- if .Values.config.keycloak.ldap.tls.enabled }}
             {%- if (not (eq .plugConfig.replicateCa "false")) %}
             {%- if (eq .socketConfig.protocol "ldaps") %}
             - id: keycloak
@@ -45,7 +46,7 @@ spec:
               waitForTimeout: 5
               waitForResource: true
               type: json
-              patch: |-
+              patch: |
                 - op: replace
                   path: /spec/keycloakDeploymentSpec/experimental/env/0
                   value:
@@ -56,6 +57,7 @@ spec:
                         key: tls.crt
             {%- end %}
             {%- end %}
+            {{- end }}
             - id: keycloak-realm
               target:
                 group: keycloak.org

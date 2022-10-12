@@ -221,14 +221,14 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.sonarqube.enabled
     default: true
     description: ''
     type: boolean
     label: 'sonarqube ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.sonarqube.tls
         default: false
@@ -270,7 +270,7 @@ questions:
       - NodePort
     required: true
     label: 'sonarqube service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.sonarqube.nodePorts.http
     default:
     description: ''
@@ -280,7 +280,7 @@ questions:
     max: 32767
     show_if: service.sonarqube.type=NodePort&&ingress.sonarqube.enabled=false
     label: 'sonarqube http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.sonarqube.repository

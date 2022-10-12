@@ -240,13 +240,13 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.wordpress.enabled
     description: ''
     type: boolean
     label: 'wordpress ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.wordpress.tls
         description: ''
@@ -287,7 +287,7 @@ questions:
   #     - NodePort
   #   required: true
   #   label: 'wordpress service type'
-  #   group: 'Services and Load Balancing'
+  #   group: 'Networking'
   # - variable: service.wordpress.nodePorts.http
   #   description: ''
   #   type: int
@@ -296,7 +296,7 @@ questions:
   #   max: 32767
   #   show_if: service.wordpress.type=NodePort&&ingress.wordpress.enabled=false
   #   label: 'wordpress http node port'
-  #   group: 'Services and Load Balancing'
+  #   group: 'Networking'
   # - variable: service.wordpress.lbPorts.http
   #   description: ''
   #   type: int
@@ -305,7 +305,7 @@ questions:
   #   required: true
   #   show_if: service.wordpress.type=LoadBalancer&&ingress.wordpress.enabled=false
   #   label: 'wordpress http lb port'
-  #   group: 'Services and Load Balancing'
+  #   group: 'Networking'
 
 # Images
   - variable: images.wordpress.repository

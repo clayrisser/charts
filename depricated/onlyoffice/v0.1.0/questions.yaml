@@ -428,14 +428,14 @@ questions:
         show_if: persistence.backup.enabled=true
         label: 'backup restore postgres snapshot'
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.onlyoffice.enabled
     default: true
     description: ''
     type: boolean
     label: 'onlyoffice ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.onlyoffice.tls
         default: false
@@ -485,7 +485,7 @@ questions:
     required: true
     label: 'onlyoffice service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.onlyoffice.nodePorts.http
         default: ''
@@ -502,7 +502,7 @@ questions:
     show_if: config.pgadmin.enabled=true
     label: 'pgadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.pgadmin.tls
         default: false
@@ -555,7 +555,7 @@ questions:
     required: true
     label: 'pgadmin service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.pgadmin.nodePorts.http
         default: ''
@@ -572,7 +572,7 @@ questions:
     show_if: config.phpredisadmin.enabled=true
     label: 'phpredisadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.phpredisadmin.tls
         default: false
@@ -625,7 +625,7 @@ questions:
     required: true
     label: 'phpredisadmin service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.phpredisadmin.nodePorts.http
         default: ''
@@ -646,7 +646,7 @@ questions:
     required: true
     label: 'postgres service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.postgres.nodePorts.postgres
         default: ''
@@ -666,7 +666,7 @@ questions:
     required: true
     label: 'redis service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.redis.nodePorts.redis
         default: ''

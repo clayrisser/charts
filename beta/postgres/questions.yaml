@@ -416,14 +416,14 @@ questions:
         required: false
         label: 'kanister schedule'
 
-  # Services and Load Balancing
+  # Networking
   - variable: ingress.pgadmin.enabled
     description: ''
     type: boolean
     label: 'pgadmin ingress enabled'
     show_if: config.pgadmin.enabled=true
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.pgadmin.tls
         description: ''
@@ -466,7 +466,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'pgadmin service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.pgadmin.nodePorts.http
     description: ''
     type: int
@@ -475,7 +475,7 @@ questions:
     max: 32767
     show_if: service.pgadmin.type=NodePort&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.pgadmin.lbPorts.http
     description: ''
     type: int
@@ -484,7 +484,7 @@ questions:
     max: 65535
     show_if: service.pgadmin.type=LoadBalancer&&ingress.pgadmin.enabled=false&&config.pgadmin.enabled=true
     label: 'pgadmin http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.postgres.type
     description: ''
     type: enum
@@ -494,7 +494,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'postgres service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.postgres.nodePorts.postgres
     description: ''
     type: int
@@ -503,7 +503,7 @@ questions:
     max: 32767
     show_if: service.postgres.type=NodePort
     label: 'postgres node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.postgres.lbPorts.postgres
     description: ''
     type: int
@@ -512,14 +512,14 @@ questions:
     max: 65535
     show_if: service.postgres.type=LoadBalancer
     label: 'postgres lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.postgres.tls.enabled
     description: ''
     type: boolean
     required: true
     label: 'postgres tls enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.postgres.tls.enforce
         description: ''

@@ -199,7 +199,7 @@ questions:
             required: false
             label: 'kanister schedule'
 
-  # Services and Load Balancing
+  # Networking
   - variable: ingress.phpldapadmin.enabled
     default: true
     description: ''
@@ -207,7 +207,7 @@ questions:
     label: 'phpldapadmin ingress enabled'
     show_if: config.phpldapadmin.enabled=true
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.phpldapadmin.externalDns
         default: false
@@ -262,7 +262,7 @@ questions:
       - NodePort
     required: true
     label: 'phpldapadmin service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.phpldapadmin.nodePorts.http
     default: ''
     description: ''
@@ -272,7 +272,7 @@ questions:
     max: 32767
     show_if: service.phpldapadmin.type=NodePort&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
     label: 'phpldapadmin http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.phpldapadmin.lbPorts.http
     default: 80
     description: ''
@@ -280,7 +280,7 @@ questions:
     required: true
     show_if: service.phpldapadmin.type=LoadBalancer&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
     label: 'phpldapadmin http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.openldap.type
     default: NodePort
     description: ''
@@ -291,7 +291,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'openldap service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.openldap.nodePorts.ldap
     default: ''
     description: ''
@@ -301,7 +301,7 @@ questions:
     max: 32767
     show_if: service.openldap.type=NodePort
     label: 'openldap ldap node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.openldap.lbPorts.ldap
     default: 389
     description: ''
@@ -311,14 +311,14 @@ questions:
     max: 65535
     show_if: service.openldap.type=LoadBalancer
     label: 'openldap ldap lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.openldap.tls.enabled
     description: ''
     type: boolean
     required: true
     label: 'openldap tls enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.openldap.tls.enforce
         description: ''
@@ -357,7 +357,7 @@ questions:
     max: 32767
     show_if: service.openldap.type=NodePort&&service.openldap.tls.enabled=true
     label: 'openldap ldaps node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.openldap.lbPorts.ldaps
     default: 636
     description: ''
@@ -367,7 +367,7 @@ questions:
     max: 65535
     show_if: service.openldap.type=LoadBalancer&&service.openldap.tls.enabled=true
     label: 'openldap ldaps lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
   # Images
   - variable: images.openldap.repository

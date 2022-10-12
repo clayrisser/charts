@@ -201,13 +201,13 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-  # Services and Load Balancing
+  # Networking
   - variable: ingress.opensearch.enabled
     description: ''
     type: boolean
     label: 'opensearch ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.opensearch.externalDns
         description: ''
@@ -254,7 +254,7 @@ questions:
       - NodePort
     required: true
     label: 'opensearch service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.opensearch.nodePorts.http
     description: ''
     type: int
@@ -263,21 +263,21 @@ questions:
     max: 32767
     show_if: service.opensearch.type=NodePort&&ingress.opensearch.enabled=false
     label: 'opensearch http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.opensearch.lbPorts.http
     description: ''
     type: int
     required: true
     show_if: service.opensearch.type=LoadBalancer&&ingress.opensearch.enabled=false
     label: 'opensearch http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: ingress.opensearchDashboards.enabled
     description: ''
     type: boolean
     label: 'opensearch dashboards ingress enabled'
     show_if: config.opensearchDashboards.enabled=true
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.opensearchDashboards.externalDns
         description: ''
@@ -327,7 +327,7 @@ questions:
       - NodePort
     required: true
     label: 'opensearch dashboards service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.opensearchDashboards.nodePorts.http
     description: ''
     type: int
@@ -336,14 +336,14 @@ questions:
     max: 32767
     show_if: service.opensearchDashboards.type=NodePort&&ingress.opensearchDashboards.enabled=false&&config.opensearchDashboards.enabled=true
     label: 'opensearch dashboards http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.opensearchDashboards.lbPorts.http
     description: ''
     type: int
     required: true
     show_if: service.opensearchDashboards.type=LoadBalancer&&ingress.opensearchDashboards.enabled=false&&config.opensearchDashboards.enabled=true
     label: 'opensearch dashboards http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
   # Images
   - variable: images.opensearch.repository

@@ -312,14 +312,14 @@ questions:
         show_if: persistence.backup.enabled=true
         label: 'backup restore postgres snapshot'
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.sourcegraph.enabled
     default: true
     description: ''
     type: boolean
     label: 'sourcegraph ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.sourcegraph.tls
         default: false
@@ -369,7 +369,7 @@ questions:
     required: true
     label: 'sourcegraph service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.sourcegraph.nodePorts.http
         default: ''
@@ -386,7 +386,7 @@ questions:
     show_if: config.pgadmin.enabled=true
     label: 'pgadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.pgadmin.tls
         default: false
@@ -439,7 +439,7 @@ questions:
     required: true
     label: 'pgadmin service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.pgadmin.nodePorts.http
         default: ''
@@ -460,7 +460,7 @@ questions:
     required: true
     label: 'postgres service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.postgres.nodePorts.postgres
         default: ''

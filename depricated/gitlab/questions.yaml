@@ -301,14 +301,14 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.gitlab.enabled
     default: true
     description: ''
     type: boolean
     label: 'gitlab ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.gitlab.tls
         default: false
@@ -351,7 +351,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'gitlab service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.gitlab.nodePorts.http
     default: ''
     description: ''
@@ -361,7 +361,7 @@ questions:
     max: 32767
     show_if: service.gitlab.type=NodePort&&ingress.gitlab.enabled=false
     label: 'gitlab http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.gitlab.lbPorts.http
     default: 80
     description: ''
@@ -371,7 +371,7 @@ questions:
     required: true
     show_if: service.gitlab.type=LoadBalancer&&ingress.gitlab.enabled=false
     label: 'gitlab http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.gitlab.nodePorts.ssh
     default: ''
     description: ''
@@ -381,7 +381,7 @@ questions:
     max: 32767
     show_if: service.gitlab.type=NodePort&&ingress.gitlab.enabled=false
     label: 'gitlab ssh node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.gitlab.lbPorts.ssh
     default: 22
     description: ''
@@ -391,7 +391,7 @@ questions:
     required: true
     show_if: service.gitlab.type=LoadBalancer&&ingress.gitlab.enabled=false
     label: 'gitlab ssh lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.gitlab.repository

@@ -205,14 +205,14 @@ questions:
         required: true
         label: 'volback backup'
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.enabled
     default: true
     description: ''
     type: boolean
     label: 'ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.tls
         default: false
@@ -254,7 +254,7 @@ questions:
     required: true
     label: 'service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.nodePorts.onlyoffice.http
         default: ''

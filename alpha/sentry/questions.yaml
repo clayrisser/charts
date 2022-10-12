@@ -244,14 +244,14 @@ questions:
     label: 'velero ttl'
     group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.sentry.enabled
     default: true
     description: ''
     type: boolean
     label: 'sentry ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.sentry.tls
         default: false
@@ -294,7 +294,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'sentry service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.sentry.nodePorts.http
     default: ''
     description: ''
@@ -304,7 +304,7 @@ questions:
     max: 32767
     show_if: service.sentry.type=NodePort&&ingress.sentry.enabled=false
     label: 'sentry http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.sentry.lbPorts.http
     default: 80
     description: ''
@@ -314,7 +314,7 @@ questions:
     required: true
     show_if: service.sentry.type=LoadBalancer&&ingress.sentry.enabled=false
     label: 'sentry http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.sentry.repository

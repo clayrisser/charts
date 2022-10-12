@@ -247,14 +247,14 @@ questions:
         label: 'velero restic'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.harbor.enabled
     default: true
     description: ''
     type: boolean
     label: 'harbor ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.harbor.tls
         default: false
@@ -297,7 +297,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'harbor service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.harbor.nodePorts.http
     default:
     description: ''
@@ -307,7 +307,7 @@ questions:
     max: 32767
     show_if: service.harbor.type=NodePort&&ingress.harbor.enabled=false
     label: 'harbor http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.harbor.lbPorts.http
     default: 80
     description: ''
@@ -317,4 +317,4 @@ questions:
     required: true
     show_if: service.harbor.type=LoadBalancer&&ingress.harbor.enabled=false
     label: 'harbor http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'

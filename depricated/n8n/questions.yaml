@@ -219,7 +219,7 @@ questions:
         show_if: persistence.backup.enabled=true
         label: 'backup restore n8n snapshot'
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.n8n.enabled
     default: true
     description: ''
@@ -227,7 +227,7 @@ questions:
     label: 'n8n ingress enabled'
     show_if: config.gatekeeper.enabled=false
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.n8n.tls
         default: false
@@ -280,7 +280,7 @@ questions:
     required: true
     label: 'n8n service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.n8n.nodePorts.http
         default: ''
@@ -297,7 +297,7 @@ questions:
     label: 'gatekeeper ingress enabled'
     show_if: config.gatekeeper.enabled=true
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.gatekeeper.tls
         default: false
@@ -350,7 +350,7 @@ questions:
     required: true
     label: 'gatekeeper service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.gatekeeper.nodePorts.http
         default: ''

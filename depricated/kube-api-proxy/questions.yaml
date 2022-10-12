@@ -60,14 +60,14 @@ questions:
     label: subpath
     group: Config
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.kubeApiProxy.enabled
     default: true
     description: ''
     type: boolean
     label: 'kube api proxy ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.kubeApiProxy.tls
         default: false
@@ -117,7 +117,7 @@ questions:
     required: true
     label: 'kube api proxy service type'
     show_subquestion_if: NodePort
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: service.kubeApiProxy.nodePorts.http
         default: ''

@@ -225,14 +225,14 @@ questions:
         label: 'velero ttl'
         group: Persistence
 
-# Services and Load Balancing
+# Networking
   - variable: ingress.directus.enabled
     default: true
     description: ''
     type: boolean
     label: 'directus ingress enabled'
     show_subquestion_if: true
-    group: 'Services and Load Balancing'
+    group: 'Networking'
     subquestions:
       - variable: ingress.directus.tls
         default: false
@@ -275,7 +275,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'directus service type'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.directus.nodePorts.http
     default:
     description: ''
@@ -285,7 +285,7 @@ questions:
     max: 32767
     show_if: service.directus.type=NodePort&&ingress.directus.enabled=false
     label: 'directus http node port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
   - variable: service.directus.lbPorts.http
     default: 80
     description: ''
@@ -295,7 +295,7 @@ questions:
     required: true
     show_if: service.directus.type=LoadBalancer&&ingress.directus.enabled=false
     label: 'directus http lb port'
-    group: 'Services and Load Balancing'
+    group: 'Networking'
 
 # Images
   - variable: images.directus.repository
