@@ -22,7 +22,11 @@ spec:
 {{- if (and .Values.service.openldap.tls.enabled .Values.service.openldap.tls.enforce) }}
 {{- if (or (not .Values.service.openldap.tls.certificate.name) .Values.service.openldap.tls.certificate.ca) }}
     canReplicateCa: 'true'
+{{- else }}
+    canReplicateCa: 'false'
 {{- end }}
+{{- else }}
+    canReplicateCa: 'false'
 {{- end }}
   configMapper:
     bindPassword: '{% .vars.b64BindPassword | b64dec %}'
