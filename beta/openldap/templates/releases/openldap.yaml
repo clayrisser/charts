@@ -46,7 +46,7 @@ spec:
       enabled: {{ .Values.service.openldap.tls.enabled }}
       secret: {{ template "openldap.openldap-certificate" . }}
       CA:
-        enabled: {{ .Values.service.openldap.tls.enforce | ternary "true" "false" }}
+        enabled: 'true'
     extraLabels: {}
     {{- if .Values.config.openldap.dhparam }}
     extraVolumes:
