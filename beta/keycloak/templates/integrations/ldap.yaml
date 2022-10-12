@@ -34,7 +34,8 @@ spec:
         spec:
           epoch: {{ now | unixEpoch | quote }}
           patches:
-            {%- if (and (and .socketConfig.canReplicateCa (eq .socketConfig.canReplicateCa "true")) (and (eq .socketConfig.protocol "ldaps") (not (eq .plugConfig.replicateCa "false")))) %}
+            {%- if (and (eq .socketConfig.canReplicateCa "true") (not (eq .plugConfig.replicateCa "false"))) %}
+            {%- if (eq .socketConfig.protocol "ldaps") %}
             - id: keycloak
               target:
                 group: keycloak.org
@@ -53,6 +54,7 @@ spec:
                       secretKeyRef:
                         name: ca-ldap
                         key: tls.crt
+            {%- end %}
             {%- end %}
             - id: keycloak-realm
               target:
