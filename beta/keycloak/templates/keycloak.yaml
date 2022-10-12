@@ -313,4 +313,7 @@ spec:
     {{- end }}
   instanceSelector:
     matchLabels:
+{{- if (or (not .Values.config.keycloak.ldap.enabled) (empty .Values.config.keycloak.ldap.integration)) }}
       app.kubernetes.io/name: {{ template "keycloak.name" . }}
+{{- end }}
+      app.kubernetes.io/name: 'null'

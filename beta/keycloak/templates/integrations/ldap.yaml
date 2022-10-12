@@ -75,6 +75,9 @@ spec:
                 - op: replace
                   path: /spec/realm/userFederationProviders/0/config/usersDn
                   value: ou=people,{% .socketConfig.dc %}
+                - op: replace
+                  path: /spec/instanceSelector/matchLabels/app.kubernetes.io~1name
+                  value: {{ template "keycloak.name" . }}
             - id: keycloak-vault
               target:
                 version: v1
