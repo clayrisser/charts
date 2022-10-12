@@ -81,7 +81,7 @@ spec:
             - -c
             - |
               sleep 5
-              export NAME=$(kubectl get installplans.operators.coreos.com -n {{ .Release.Namespace }} | grep "$CSV" | cut -d' ' -f1)
+              export NAME=$(kubectl get installplans.operators.coreos.com -n {{ .Release.Namespace }} | grep "$CSV" | cut -d' ' -f1 | grep -vE '^NAME$' | head -n1)
               if [ "$NAME" = "" ]; then
                 exit 1
               fi
