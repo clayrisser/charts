@@ -29,4 +29,3 @@ spec:
           dc:
             required: true
           starttls: {}
-          canReplicateCa: {}

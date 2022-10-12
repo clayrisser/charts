@@ -34,7 +34,7 @@ spec:
         spec:
           epoch: {{ now | unixEpoch | quote }}
           patches:
-            {%- if (and (eq .socketConfig.canReplicateCa "true") (not (eq .plugConfig.replicateCa "false"))) %}
+            {%- if (not (eq .plugConfig.replicateCa "false")) %}
             {%- if (eq .socketConfig.protocol "ldaps") %}
             - id: keycloak
               target:
