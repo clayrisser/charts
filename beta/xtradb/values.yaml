@@ -22,9 +22,10 @@ images:
     tag: 5.0.2
 
 config:
-  clusterType: rke
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
+  debug: false
+  enableIstio: false
   passwords:
     clustercheck:
     monitor:
@@ -91,13 +92,13 @@ service:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     tls:
-      enabled: true
-      # enforce: false
-      certificate: ''
-      ca: ''
-      issuer:
-        name: selfsigned
-        dnsNames: ''
+      enabled: false
+      certificate:
+        name: ''
+        ca: ''
+        issuer:
+          integration: kube-system
+          dnsNames: ''
     nodePorts:
       mysql:
     lbPorts:

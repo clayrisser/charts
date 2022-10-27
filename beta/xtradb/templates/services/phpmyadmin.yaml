@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: phpmyadmin
   labels:
-    app.kubernetes.io/name: {{ template "xtradb.name" . }}-phpmyadmin
+    app.kubernetes.io/name: phpmyadmin
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}

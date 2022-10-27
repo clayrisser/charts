@@ -1,35 +1,35 @@
 {{- if (and .Values.ingress.phpmyadmin.enabled .Values.config.phpmyadmin.enabled) }}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: phpmyadmin
-  annotations:
-    {{- if (eq .Values.config.clusterType "aks") }}
-    kubernetes.io/ingress.class: addon-http-application-routing
-    {{- else }}
-    kubernetes.io/ingress.class: nginx
-    {{- end }}
-    {{- if .Values.ingress.phpmyadmin.tls }}
-    {{- if (empty .Values.ingress.phpmyadmin.certificate) }}
-    cert-manager.io/cluster-issuer: {{ .Values.ingress.phpmyadmin.issuer.name }}
-    kubernetes.io/tls-acme: 'true'
-    {{- end }}
-    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
-    {{- end }}
   labels:
     app.kubernetes.io/name: phpmyadmin
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    {{- if .Values.ingress.phpmyadmin.tls }}
+    {{- if (not .Values.ingress.phpmyadmin.certificate) }}
+    kubernetes.io/tls-acme: 'true'
+    {{- if .Values.ingress.phpmyadmin.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.phpmyadmin.issuer.name }}
+    {{- end }}
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
 spec:
   rules:
     - host: {{ .Values.ingress.phpmyadmin.hostname }}
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
-              serviceName: phpmyadmin
-              servicePort: http
+              service:
+                name: phpmyadmin
+                port:
+                  name: http
   {{- if .Values.ingress.phpmyadmin.tls }}
   tls:
     - secretName: {{ template "xtradb.phpmyadmin-certificate" . }}

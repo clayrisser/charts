@@ -3,18 +3,6 @@ categories:
 questions:
 
 # Config
-  - variable: config.clusterType
-    description: ''
-    type: enum
-    options:
-      - aks
-      - eks
-      - gke
-      - k3s
-      - rke
-    required: true
-    label: 'cluster type'
-    group: Config
   - variable: config.imagePullPolicy
     description: ''
     type: enum
@@ -29,11 +17,22 @@ questions:
     type: enum
     options:
       - Recreate
-      - RollingUpdate
-      - SmartUpdate
       - OnDelete
+      - RollingUpdate
     required: true
     label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.enableIstio
+    description: ''
+    type: boolean
+    required: true
+    label: 'enable istio'
     group: Config
   - variable: config.passwords.root
     description: ''

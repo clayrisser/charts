@@ -1,23 +1,24 @@
-{{- if (and .Values.service.xtradb.tls.enabled (not .Values.service.xtradb.tls.certificate)) }}
-{{- $name := (printf "%s-replicator" .Values.service.xtradb.tls.issuer.name) }}
-{{- $namespace := "cert-manager" }}
+{{- if (and .Values.service.postgres.tls.enabled (not .Values.service.postgres.tls.certificate.name)) }}
+{{- $name := (split "." .Values.service.postgres.tls.certificate.issuer.integration)._1 | default "ca-replicator" }}
+{{- $namespace := (split "." (printf "%s." .Values.service.postgres.tls.certificate.issuer.integration))._0 }}
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
   name: ca-replicator
   labels:
-    app.kubernetes.io/name: {{ template "xtradb.name" . }}
+    app.kubernetes.io/name: {{ template "postgres.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   interfaceVersions: '*'
   interface:
-    name: replicator
+    name: ca-replicator
     namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
   config:
     caName: ca
+    includeTlsKey: 'false'
 {{- end }}
