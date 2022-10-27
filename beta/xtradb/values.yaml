@@ -34,6 +34,7 @@ config:
     monitor: ''
     operator: ''
     root: ''
+    xtrabackup: ''
   xtradb:
     size: 1
     pause: false

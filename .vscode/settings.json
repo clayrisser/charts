@@ -97,6 +97,7 @@
     "univention",
     "velero",
     "virusmails",
+    "xtrabackup",
     "xtradb"
   ],
   "[helm]": {
