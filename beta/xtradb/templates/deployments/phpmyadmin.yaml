@@ -46,9 +46,15 @@ spec:
         - name: phpmyadmin
           image: {{ .Values.images.phpmyadmin.repository }}:{{ .Values.images.phpmyadmin.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-{{- if .Values.config.phpmyadmin.resources.enabled }}
           resources:
-{{ toYaml .Values.config.phpmyadmin.resources | indent 12 }}
+{{- if (and .Values.config.phpmyadmin.resources.enabled (not (eq .Values.config.phpmyadmin.resources.enabled "false"))) }}
+            requests:
+{{ toYaml .Values.config.phpmyadmin.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.phpmyadmin.resources.limits | indent 14 }}
+{{- else }}
+            requests: {}
+            limits: {}
 {{- end }}
           ports:
             - name: container
