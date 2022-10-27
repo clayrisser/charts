@@ -58,6 +58,12 @@ questions:
     required: false
     label: 'clustercheck password'
     group: Config
+  - variable: config.passwords.xtrabackup
+    description: ''
+    type: password
+    required: false
+    label: 'xtrabackup password'
+    group: Config
   - variable: config.logcollector.enabled
     description: ''
     type: boolean
