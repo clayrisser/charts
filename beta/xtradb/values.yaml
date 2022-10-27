@@ -27,10 +27,10 @@ config:
   debug: false
   enableIstio: false
   passwords:
-    clustercheck:
-    monitor:
-    operator:
-    root:
+    clustercheck: ''
+    monitor: ''
+    operator: ''
+    root: ''
   xtradb:
     size: 1
     pause: false
@@ -48,7 +48,7 @@ config:
         memory: 600m
   proxysql:
     enabled: false
-    password: P@ssw0rd
+    password: ''
     size: 1
     resources:
       enabled: false
@@ -74,7 +74,7 @@ config:
   pmm:
     enabled: false
     hostname: ''
-    password:
+    password: ''
     username: admin
   phpmyadmin:
     enabled: false
