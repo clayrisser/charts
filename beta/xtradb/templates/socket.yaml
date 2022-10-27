@@ -11,7 +11,7 @@ spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
-    name: {{ template "xtradb.name" . }}
+    name: mysql
     namespace: {{ .Release.Namespace }}
   config:
     protocol: mysql
