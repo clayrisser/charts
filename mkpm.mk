@@ -1,6 +1,6 @@
 export MKPM_PACKAGES_DEFAULT := \
-	patch=0.0.1 \
-	gnu=0.0.3
+	gnu=0.0.3 \
+	patch=0.0.1
 
 export MKPM_REPO_DEFAULT := \
 	https://gitlab.com/risserlabs/community/mkpm-stable.git
