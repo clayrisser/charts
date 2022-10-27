@@ -37,25 +37,25 @@ questions:
   - variable: config.passwords.root
     description: ''
     type: password
-    required: true
+    required: false
     label: 'root password'
     group: Config
   - variable: config.passwords.operator
     description: ''
     type: password
-    required: true
+    required: false
     label: 'operator password'
     group: Config
   - variable: config.passwords.monitor
     description: ''
     type: password
-    required: true
+    required: false
     label: 'monitor password'
     group: Config
   - variable: config.passwords.clustercheck
     description: ''
     type: password
-    required: true
+    required: false
     label: 'clustercheck password'
     group: Config
   - variable: config.logcollector.enabled
@@ -186,7 +186,7 @@ questions:
   - variable: config.proxysql.password
     description: ''
     type: password
-    required: true
+    required: false
     show_if: config.proxysql.enabled=true
     label: 'proxysql password'
     group: ProxySql
