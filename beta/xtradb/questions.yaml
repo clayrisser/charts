@@ -372,6 +372,19 @@ questions:
         required: true
         label: 'velero ttl'
         group: Persistence
+      - variable: persistence.kanister.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'kanister enabled'
+        group: Persistence
+      - variable: persistence.kanister.schedule
+        description: ''
+        type: string
+        show_if: persistence.kanister.enabled=true
+        required: false
+        label: 'kanister schedule'
+        group: Persistence
 
 # Networking
   - variable: service.xtradb.type
