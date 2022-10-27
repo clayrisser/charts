@@ -125,4 +125,6 @@ spec:
     serverHost: {{ .Values.config.pmm.hostname | quote }}
     serverUser: {{ .Values.config.pmm.username | quote }}
   backup:
-    enabled: false
+    image: '{{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}'
+    pitr:
+      enabled: false

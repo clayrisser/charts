@@ -14,6 +14,9 @@ images:
   logcollector:
     repository: percona/percona-xtradb-cluster-operator
     tag: 1.10.0-logcollector
+  backup:
+    repository: percona/percona-xtradb-cluster-operator
+    tag: 1.10.0-pxc8.0-backup
   pmm:
     repository: perconalab/pmm-client
     tag: 2.21.0
@@ -41,11 +44,11 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 600m
-        memory: 1G
+        cpu: 100m
+        memory: 12Mi
       limits:
-        cpu: 1G
-        memory: 600m
+        cpu: 100m
+        memory: 12Mi
   proxysql:
     enabled: false
     password: ''
@@ -53,22 +56,22 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 600m
-        memory: 1G
+        cpu: 100m
+        memory: 12Mi
       limits:
-        cpu: 1G
-        memory: 600m
+        cpu: 100m
+        memory: 12Mi
   haproxy:
     enabled: false
     size: 1
     resources:
       enabled: defaults
       requests:
-        cpu: 600m
-        memory: 1G
+        cpu: 100m
+        memory: 12Mi
       limits:
-        cpu: 1G
-        memory: 600m
+        cpu: 100m
+        memory: 12Mi
   logcollector:
     enabled: false
   pmm:
@@ -82,10 +85,10 @@ config:
       enabled: defaults
       requests:
         cpu: 100m
-        memory: 128Mi
+        memory: 12Mi
       limits:
-        cpu: 500m
-        memory: 256Mi
+        cpu: 100m
+        memory: 12Mi
 
 service:
   xtradb:

@@ -530,6 +530,18 @@ questions:
     required: true
     label: 'xtradb tag'
     group: Images
+  - variable: images.backup.repository
+    description: ''
+    type: string
+    required: true
+    label: 'backup repository'
+    group: Images
+  - variable: images.backup.tag
+    description: ''
+    type: string
+    required: true
+    label: 'backup tag'
+    group: Images
   - variable: images.haproxy.repository
     description: ''
     type: string
