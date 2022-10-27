@@ -235,13 +235,13 @@ questions:
         show_if: config.proxysql.enabled=true
         label: 'resources limits memory'
 
-# Pmm Config
+# Pmm
   - variable: config.pmm.enabled
     description: ''
     type: boolean
     required: true
     label: enabled
-    group: 'Pmm Config'
+    group: Pmm
     show_subquestion_if: true
     subquestions:
       - variable: config.pmm.hostname
@@ -260,13 +260,13 @@ questions:
         required: true
         label: password
 
-# PhpMyAdmin Config
+# PhpMyAdmin
   - variable: config.phpmyadmin.enabled
     description: ''
     type: boolean
     required: true
     label: enabled
-    group: 'PhpMyAdmin Config'
+    group: PhpMyAdmin
   - variable: config.phpmyadmin.resources.enabled
     description: ''
     type: enum
@@ -278,7 +278,7 @@ questions:
     label: 'resources defaults'
     show_if: config.phpmyadmin.enabled=true
     show_subquestion_if: 'true'
-    group: 'PhpMyAdmin Config'
+    group: PhpMyAdmin
     subquestions:
       - variable: config.phpmyadmin.resources.requests.cpu
         description: ''
