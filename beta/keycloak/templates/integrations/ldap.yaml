@@ -73,7 +73,11 @@ spec:
                   value: {% .socketConfig.bindDN | quote %}
                 - op: replace
                   path: /spec/realm/userFederationProviders/0/config/connectionUrl
+                  {%- if (eq .socketConfig.protocol "ldap{{ .Values.config.keycloak.ldap.tls.enabled | ternary "s" "" }}") %}
                   value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
+                  {%- else %}
+                  value: ldap{{ .Values.config.keycloak.ldap.tls.enabled | ternary "s" "" }}://{% .socketConfig.hostname %}
+                  {%- end %}
                 - op: replace
                   path: /spec/realm/userFederationProviders/0/config/usersDn
                   value: ou=people,{% .socketConfig.dc %}
