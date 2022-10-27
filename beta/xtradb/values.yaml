@@ -1,25 +1,25 @@
 images:
   xtradbOperator:
     repository: percona/percona-xtradb-cluster-operator
-    tag: 1.10.0
+    tag: 1.11.0
   xtradb:
     repository: percona/percona-xtradb-cluster
-    tag: 8.0.23-14.1
+    tag: 8.0.29-21.1
   haproxy:
     repository: percona/percona-xtradb-cluster-operator
-    tag: 1.10.0-haproxy
+    tag: 1.11.0-haproxy
   proxysql:
     repository: percona/percona-xtradb-cluster-operator
-    tag: 1.10.0-proxysql
+    tag: 1.11.0-proxysql
   logcollector:
     repository: percona/percona-xtradb-cluster-operator
-    tag: 1.10.0-logcollector
+    tag: 1.11.0-logcollector
   backup:
     repository: percona/percona-xtradb-cluster-operator
-    tag: 1.10.0-pxc8.0-backup
+    tag: 1.11.0-pxc8.0-backup
   pmm:
     repository: perconalab/pmm-client
-    tag: 2.21.0
+    tag: 2.29.1
   phpmyadmin:
     repository: osixia/phpmyadmin
     tag: 5.0.2

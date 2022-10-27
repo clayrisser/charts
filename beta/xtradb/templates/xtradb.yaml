@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  crVersion: 1.10.0
+  crVersion: 1.11.0
   secretsName: {{ include "xtradb.name" . }}
   {{- if .Values.service.xtradb.tls.enabled }}
   sslSecretName: {{ .Values.service.xtradb.tls.certificate | default (include "xtradb.name" .) }}

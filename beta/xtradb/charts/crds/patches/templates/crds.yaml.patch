@@ -1,5 +1,5 @@
---- templates/crds.yaml	2022-10-27 08:13:37.152674651 -0500
-+++ templates/crds.yaml.tmp	2022-10-27 08:14:31.704908359 -0500
+--- templates/crds.yaml	2022-10-27 11:00:13.050137313 -0500
++++ templates/crds.yaml.tmp	2022-10-27 11:00:48.122299427 -0500
 @@ -1,7 +1,11 @@
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "perconaxtradbclusters.pxc.percona.com")) }}
  apiVersion: apiextensions.k8s.io/v1
@@ -12,61 +12,44 @@
  spec:
    group: pxc.percona.com
    names:
-@@ -450,11 +454,16 @@
-           specReplicasPath: .spec.pxc.size
-           statusReplicasPath: .status.pxc.ready
-           labelSelectorPath: .status.pxc.labelSelectorPath
+@@ -8541,12 +8545,16 @@
+       storage: true
+       subresources:
+         status: {}
 +{{- end }}
  ---
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "perconaxtradbclusterbackups.pxc.percona.com")) }}
  apiVersion: apiextensions.k8s.io/v1
  kind: CustomResourceDefinition
  metadata:
-   name: perconaxtradbclusterbackups.pxc.percona.com
-+  annotations:
+   annotations:
+     controller-gen.kubebuilder.io/version: v0.8.0
 +    helm.sh/hook: pre-install,pre-upgrade
 +    helm.sh/hook-weight: '5'
+   creationTimestamp: null
+   name: perconaxtradbclusterbackups.pxc.percona.com
  spec:
-   group: pxc.percona.com
-   names:
-@@ -506,11 +515,16 @@
-         jsonPath: .metadata.creationTimestamp
-       subresources:
-         status: {}
+@@ -8643,12 +8651,16 @@
+     plural: ""
+   conditions: []
+   storedVersions: []
 +{{- end }}
  ---
 +{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "perconaxtradbclusterrestores.pxc.percona.com")) }}
  apiVersion: apiextensions.k8s.io/v1
  kind: CustomResourceDefinition
  metadata:
+   annotations:
+     controller-gen.kubebuilder.io/version: v0.8.0
++    helm.sh/hook: pre-install,pre-upgrade
++    helm.sh/hook-weight: '5'
+   creationTimestamp: null
    name: perconaxtradbclusterrestores.pxc.percona.com
-+  annotations:
-+    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '5'
  spec:
-   group: pxc.percona.com
-   names:
-@@ -554,11 +568,16 @@
-         jsonPath: .metadata.creationTimestamp
-       subresources:
-         status: {}
-+{{- end }}
- ---
-+{{- if (not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "perconaxtradbbackups.pxc.percona.com")) }}
- apiVersion: apiextensions.k8s.io/v1
- kind: CustomResourceDefinition
- metadata:
-   name: perconaxtradbbackups.pxc.percona.com
-+  annotations:
-+    helm.sh/hook: pre-install,pre-upgrade
-+    helm.sh/hook-weight: '5'
- spec:
-   group: pxc.percona.com
-   names:
-@@ -606,178 +625,4 @@
-       - name: Age
-         type: date
-         jsonPath: .metadata.creationTimestamp
+@@ -8781,197 +8793,4 @@
+     plural: ""
+   conditions: []
+   storedVersions: []
 ----
 -kind: Role
 -apiVersion: rbac.authorization.k8s.io/v1
@@ -148,6 +131,25 @@
 -  - patch
 -  - delete
 -- apiGroups:
+-  - coordination.k8s.io
+-  resources:
+-  - leases
+-  verbs:
+-  - get
+-  - list
+-  - watch
+-  - create
+-  - update
+-  - patch
+-  - delete
+-- apiGroups:
+-  - ""
+-  resources:
+-  - events
+-  verbs:
+-  - create
+-  - patch
+-- apiGroups:
 -  - certmanager.k8s.io
 -  - cert-manager.io
 -  resources:
@@ -221,7 +223,7 @@
 -              fieldPath: metadata.name
 -        - name: OPERATOR_NAME
 -          value: percona-xtradb-cluster-operator
--        image: percona/percona-xtradb-cluster-operator:1.10.0
+-        image: percona/percona-xtradb-cluster-operator:1.11.0
 -        imagePullPolicy: Always
 -        livenessProbe:
 -          failureThreshold: 3

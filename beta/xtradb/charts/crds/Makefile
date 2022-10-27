@@ -7,7 +7,7 @@ export PATCHES := templates/crds.yaml
 include $(MKPM)/patch
 
 export CURL ?= curl
-export OPERATOR_VERSION ?= v1.10.0
+export OPERATOR_VERSION ?= 1.11.0
 
 .PHONY: prepack
 prepack: | templates/crds.yaml patch-apply
@@ -15,6 +15,6 @@ prepack: | templates/crds.yaml patch-apply
 templates/crds.yaml:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
-		https://raw.githubusercontent.com/percona/percona-xtradb-cluster-operator/${OPERATOR_VERSION}/deploy/bundle.yaml
+		https://raw.githubusercontent.com/percona/percona-xtradb-cluster-operator/v${OPERATOR_VERSION}/deploy/bundle.yaml
 
 endif
