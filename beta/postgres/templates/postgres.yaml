@@ -24,8 +24,8 @@ spec:
   user: pguser
   disableAutofail: false
   tlsOnly: false
-  standby: {{ .Values.config.standby }}
-  pause: {{ .Values.config.pause }}
+  standby: {{ .Values.config.postgres.standby }}
+  pause: {{ .Values.config.postgres.pause }}
   keepData: true
   keepBackups: true
 #  pgDataSource:

@@ -34,18 +34,6 @@ questions:
     required: true
     label: 'enable istio'
     group: Config
-  - variable: config.pause
-    description: ''
-    type: boolean
-    required: true
-    label: pause
-    group: Config
-  - variable: config.standby
-    description: ''
-    type: boolean
-    required: false
-    label: standby
-    group: Config
   - variable: config.wal
     description: ''
     type: boolean
@@ -76,18 +64,38 @@ questions:
     required: false
     label: 'primary user password'
     group: Config
+  - variable: config.pgBadger.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'pgbadger enabled'
+    group: Config
+
+  # Postgres
   - variable: config.postgres.hotReplicas
     description: ''
     type: int
     required: true
     label: 'postgres hot replicas'
-    group: Config
+    group: Postgres
+  - variable: config.postgres.pause
+    description: ''
+    type: boolean
+    required: true
+    label: pause
+    group: Postgres
+  - variable: config.postgres.standby
+    description: ''
+    type: boolean
+    required: false
+    label: standby
+    group: Postgres
   - variable: config.postgres.config
     description: ''
     type: multiline
     required: false
     label: 'postgres config'
-    group: Config
+    group: Postgres
   - variable: config.postgres.resources.enabled
     description: ''
     type: enum
@@ -98,7 +106,7 @@ questions:
     required: true
     label: 'postgres resources enabled'
     show_subquestion_if: custom
-    group: Config
+    group: Postgres
     subquestions:
       - variable: config.postgres.resources.requests.cpu
         description: ''
@@ -120,12 +128,6 @@ questions:
         type: string
         required: true
         label: 'postgres resources limits memory'
-  - variable: config.pgBadger.enabled
-    description: ''
-    type: boolean
-    required: true
-    label: 'pgbadger enabled'
-    group: Config
 
   # PMM
   - variable: config.pmm.enabled

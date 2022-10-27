@@ -97,7 +97,7 @@ questions:
     options:
       - defaults
       - custom
-      - false
+      - 'false'
     required: true
     label: 'resources enabled'
     show_subquestion_if: custom
@@ -144,7 +144,7 @@ questions:
     options:
       - defaults
       - custom
-      - false
+      - 'false'
     required: true
     show_if: config.haproxy.enabled=true
     label: 'resources enabled'

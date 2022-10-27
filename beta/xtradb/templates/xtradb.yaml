@@ -42,7 +42,7 @@ spec:
     podDisruptionBudget:
       maxUnavailable: 1
     resources:
-{{- if .Values.config.xtradb.resources.enabled }}
+{{- if (and .Values.config.xtradb.resources.enabled (not (eq .Values.config.xtradb.resources.enabled "false"))) }}
       requests:
 {{ toYaml .Values.config.xtradb.resources.requests | indent 8 }}
       limits:
@@ -81,7 +81,7 @@ spec:
     podDisruptionBudget:
       maxUnavailable: 1
     resources:
-{{- if .Values.config.haproxy.resources.enabled }}
+{{- if (and .Values.config.haproxy.resources.enabled (not (eq .Values.config.haproxy.resources.enabled "false"))) }}
       requests:
 {{ toYaml .Values.config.haproxy.resources.requests | indent 8 }}
       limits:
@@ -108,7 +108,7 @@ spec:
     podDisruptionBudget:
       maxUnavailable: 1
     resources:
-{{- if .Values.config.proxysql.resources.enabled }}
+{{- if (and .Values.config.proxysql.resources.enabled (not (eq .Values.config.proxysql.resources.enabled "false"))) }}
       requests:
 {{ toYaml .Values.config.proxysql.resources.requests | indent 8 }}
       limits:

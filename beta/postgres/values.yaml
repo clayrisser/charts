@@ -32,8 +32,6 @@ config:
   updateStrategy: Recreate
   debug: false
   enableIstio: false
-  pause: false
-  standby: false
   wal: false
   passwords:
     pgbouncer:
@@ -41,8 +39,10 @@ config:
     postgres:
     primaryUser:
   postgres:
-    config: ''
     hotReplicas: 0
+    pause: false
+    standby: false
+    config: ''
     resources:
       enabled: defaults
       requests:
