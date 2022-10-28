@@ -1,4 +1,13 @@
 images:
+  nginx:
+    repository: frappe/erpnext-nginx
+    tag: v14.4.0
+  worker:
+    repository: frappe/erpnext-worker
+    tag: v14.4.0
+  socketio:
+    repository: frappe/frappe-socketio
+    tag: v14.4.0
   erpnext:
     repository: tootsuite/erpnext
     tag: v3.3.0
@@ -8,6 +17,8 @@ config:
   updateStrategy: Recreate
   debug: false
   enableIstio: false
+  nginx:
+    config: ''
   erpnext:
     hostname: ''
     baseUrl: ''
@@ -47,10 +58,10 @@ ingress:
       name: ''
 
 persistence:
-  accessMode: ReadWriteMany
+  enabled: false
   size:
-    assets: 1Gi
-    system: 1Gi
+    worker: 1Gi
+    logs: 1Gi
   storageClass: ''
   velero:
     enabled: false

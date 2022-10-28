@@ -34,19 +34,27 @@ questions:
     label: 'enable istio'
     group: Config
 
+  # Nginx
+  - variable: config.nginx.config
+    description: 'https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/stable/alpine/20-envsubst-on-templates.sh'
+    type: multiline
+    required: false
+    label: config
+    group: Nginx
+
   # ERPNext
-  - variable: config.keycloak.hostname
+  - variable: config.erpnext.hostname
     description: ''
     type: string
     required: false
     label: hostname
-    group: Keycloak
-  - variable: config.keycloak.baseUrl
+    group: ERPNext
+  - variable: config.erpnext.baseUrl
     description: ''
     type: string
     required: false
     label: 'base url'
-    group: Keycloak
+    group: ERPNext
   - variable: config.erpnext.resources.enabled
     description: ''
     type: enum
@@ -129,6 +137,72 @@ questions:
   #   required: false
   #   label: url
   #   group: MySQL
+
+# Persistence
+  - variable: persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.size.worker
+        description: ''
+        type: string
+        required: true
+        label: 'worker size'
+      - variable: persistence.size.logs
+        description: ''
+        type: string
+        required: true
+        show_if: config.haproxy.enabled=true
+        label: 'logs size'
+      - variable: persistence.velero.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+      - variable: persistence.velero.schedule
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
+        group: Persistence
+      - variable: persistence.kanister.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'kanister enabled'
+        group: Persistence
+      - variable: persistence.kanister.schedule
+        description: ''
+        type: string
+        show_if: persistence.kanister.enabled=true
+        required: false
+        label: 'kanister schedule'
+        group: Persistence
 
   # Persistence
   - variable: persistence.size.assets
@@ -268,15 +342,39 @@ questions:
     group: Networking
 
   # Images
-  # - variable: images.erpnext.repository
-  #   description: ''
-  #   type: string
-  #   required: true
-  #   label: 'erpnext repository'
-  #   group: Images
-  # - variable: images.erpnext.tag
-  #   description: ''
-  #   type: string
-  #   required: true
-  #   label: 'erpnext tag'
-  #   group: Images
+  - variable: images.nginx.repository
+    description: ''
+    type: string
+    required: true
+    label: 'nginx repository'
+    group: Images
+  - variable: images.nginx.tag
+    description: ''
+    type: string
+    required: true
+    label: 'nginx tag'
+    group: Images
+  - variable: images.worker.repository
+    description: ''
+    type: string
+    required: true
+    label: 'worker repository'
+    group: Images
+  - variable: images.worker.tag
+    description: ''
+    type: string
+    required: true
+    label: 'worker tag'
+    group: Images
+  - variable: images.erpnext.repository
+    description: ''
+    type: string
+    required: true
+    label: 'erpnext repository'
+    group: Images
+  - variable: images.erpnext.tag
+    description: ''
+    type: string
+    required: true
+    label: 'erpnext tag'
+    group: Images

@@ -128,8 +128,8 @@ ingress:
       name: ''
 
 persistence:
-  accessMode: ReadWriteOnce
   enabled: false
+  accessMode: ReadWriteOnce
   storageClass: ''
   size:
     xtradb: 1Gi

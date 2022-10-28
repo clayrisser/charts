@@ -31,59 +31,311 @@ spec:
         kind: HelmRepository
         name: erpnext
   values:
-    replicaCount: 1
-    pythonImage:
-      repository: frappe/erpnext-worker
-      tag: v12.18.0
-      pullPolicy: IfNotPresent
-    socketIOImage:
-      repository: frappe/frappe-socketio
-      tag: v12.15.0
-      pullPolicy: IfNotPresent
-    frappePyPort: "8000"
-    socketIOPort: "9000"
-    # postgresHost: {{ .Values.config.mysql.host }}
-    # postgresPort: {{ .Values.config.mysql.port }}
-    serviceAccount:
-      create: true
-    service:
-      type: ClusterIP
-      port: {{ (eq .Values.service.erpnext.type "LoadBalancer") | ternary .Values.service.erpnext.lbPorts.http  ((and (eq .Values.service.erpnext.type "NodePort") (not (empty .Values.service.erpnext.nodePorts.http))) | ternary .Values.service.erpnext.nodePorts.http "80") }}
+    nginx:
+      replicaCount: 1
+      image:
+        repository: {{ .Values.images.nginx.repository | quote }}
+        tag: {{ .Values.images.nginx.tag | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      config: |
+        {{ .Values.config.nginx.config }}
+      environment:
+        upstreamRealIPAddress: "127.0.0.1"
+        upstreamRealIPRecursive: "off"
+        upstreamRealIPHeader: "X-Forwarded-For"
+        frappeSiteNameHeader: "$host"
+      livenessProbe:
+        tcpSocket:
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      readinessProbe:
+        tcpSocket:
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      service:
+        type: ClusterIP
+        port: 8080
+        # port: {{ (eq .Values.service.erpnext.type "LoadBalancer") | ternary .Values.service.erpnext.lbPorts.http  ((and (eq .Values.service.erpnext.type "NodePort") (not (empty .Values.service.erpnext.nodePorts.http))) | ternary .Values.service.erpnext.nodePorts.http "80") }}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+      envVars: []
+      initContainers: []
+      sidecars: []
+    worker:
+      image:
+        repository: {{ .Values.images.worker.repository | quote }}
+        tag: {{ .Values.images.worker.tag | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      gunicorn:
+        replicaCount: 1
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        service:
+          type: ClusterIP
+          port: 8000
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+        args:
+          - /home/frappe/frappe-bench/env/bin/gunicorn
+          - --bind=0.0.0.0:8000
+          - --config=/opt/patches/gevent_patch.py
+          - --log-file=-
+          - --preload
+          - --threads=4
+          - --timeout=120
+          - --worker-class=gevent
+          - --worker-tmp-dir=/dev/shm
+          - --workers=2
+          - frappe.app:application
+        envVars: []
+        initContainers: []
+        sidecars: []
+      default:
+        replicaCount: 1
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+        livenessProbe:
+          override: false
+          probe: {}
+        readinessProbe:
+          override: false
+          probe: {}
+        envVars: []
+        initContainers: []
+        sidecars: []
+      short:
+        replicaCount: 1
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+        livenessProbe:
+          override: false
+          probe: {}
+        readinessProbe:
+          override: false
+          probe: {}
+        envVars: []
+        initContainers: []
+        sidecars: []
+      long:
+        replicaCount: 1
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+        livenessProbe:
+          override: false
+          probe: {}
+        readinessProbe:
+          override: false
+          probe: {}
+        envVars: []
+        initContainers: []
+        sidecars: []
+      scheduler:
+        replicaCount: 1
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+        livenessProbe:
+          override: false
+          probe: {}
+        readinessProbe:
+          override: false
+          probe: {}
+        envVars: []
+        initContainers: []
+        sidecars: []
+    socketio:
+      replicaCount: 1
+      livenessProbe:
+        tcpSocket:
+          port: 9000
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      readinessProbe:
+        tcpSocket:
+          port: 9000
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      image:
+        repository: frappe/frappe-socketio
+        tag: v14.13.0
+        pullPolicy: IfNotPresent
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+      service:
+        type: ClusterIP
+        port: 9000
+      envVars: []
+      initContainers: []
+      sidecars: []
     persistence:
       worker:
         enabled: {{ .Values.persistence.enabled }}
-        size: {{ .Values.persistence.size.system }}
+        size: {{ .Values.persistence.size.worker }}
         storageClass: {{ .Values.persistence.storageClass }}
       logs:
         enabled: {{ .Values.persistence.enabled }}
-        size: {{ .Values.persistence.size.system }}
+        size: {{ .Values.persistence.size.logs }}
         storageClass: {{ .Values.persistence.storageClass }}
-    podSecurityContext:
-      runAsUser: 991
-      runAsGroup: 991
-      fsGroup: 991
-    securityContext: {}
+    ingress:
+      # ingressName: ""
+      # className: ""
+      enabled: false
+      annotations: {}
+        # kubernetes.io/ingress.class: nginx
+        # kubernetes.io/tls-acme: "true"
+        # cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+      - host: erp.cluster.local
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+      tls: []
+      #  - secretName: auth-server-tls
+      #    hosts:
+      #      - auth-server.local
+    jobs:
+      volumePermissions:
+        enabled: false
+        backoffLimit: 0
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+      configure:
+        enabled: true
+        fixVolume: true
+        backoffLimit: 0
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+      createSite:
+        enabled: true
+        forceCreate: false
+        siteName: "erp.cluster.local"
+        adminPassword: "changeit"
+        installApps:
+          - erpnext
+        dbType: mariadb
+        backoffLimit: 0
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+      dropSite:
+        enabled: false
+        forced: false
+        siteName: "erp.cluster.local"
+        backoffLimit: 0
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+      backup:
+        enabled: false
+        siteName: "erp.cluster.local"
+        withFiles: true
+        push:
+          enabled: false
+          # bucket: "erpnext"
+          # region: "us-east-1"
+          # accessKey: "ACCESSKEY"
+          # secretKey: "SECRETKEY"
+          # endpoint: http://store.storage.svc.cluster.local
+        backoffLimit: 0
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+      migrate:
+        enabled: false
+        siteName: "erp.cluster.local"
+        backoffLimit: 0
+        resources: {}
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+    imagePullSecrets: []
+    nameOverride: ""
+    fullnameOverride: ""
     serviceAccount:
       create: true
-      annotations: {}
-      name: ''
-    podAnnotations: {}
-    resources: {}
-    autoscaling:
+    podSecurityContext:
+      supplementalGroups: [1000]
+      # runAsUser: 991
+      # runAsGroup: 991
+      # fsGroup: 991
+    securityContext:
+      capabilities:
+        add:
+        - CAP_CHOWN
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+    redis-cache:
+      enabled: true
+      architecture: standalone
+      auth:
+        enabled: false
+        sentinal: false
+      master:
+        containerPorts:
+          redis: 6379
+        persistence:
+          enabled: false
+    redis-queue:
+      enabled: true
+      architecture: standalone
+      auth:
+        enabled: false
+        sentinal: false
+      master:
+        containerPorts:
+          redis: 6379
+        persistence:
+          enabled: false
+    redis-socketio:
+      enabled: true
+      architecture: standalone
+      auth:
+        enabled: false
+        sentinal: false
+      master:
+        containerPorts:
+          redis: 6379
+        persistence:
+          enabled: false
+    mariadb:
       enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-      # podAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #     - topologyKey: kubernetes.io/hostname
-      #       labelSelector:
-      #         matchExpressions:
-      #           - key: app.kubernetes.io/instance
-      #             operator: In
-      #             values:
-      #               - {{ template "erpnext.fullname" . }}-backend
-
+    postgresql:
+      enabled: false
+{{- if (not .Values.config.mysql.integration) }}
+    dbHost: {{ .Values.config.mysql.host | quote }}
+    dbPort: {{ .Values.config.mysql.port | quote }}
+    dbRootPassword: {{ .Values.config.mysql.password | quote }}
+    dbRootUser: {{ .Values.config.mysql.username | quote }}
+    mariadbHost: {{ .Values.config.mysql.host | quote }}
+{{- end }}

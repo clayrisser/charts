@@ -357,18 +357,6 @@ questions:
         type: string
         required: true
         label: 'xtradb size'
-      - variable: persistence.size.haproxy
-        description: ''
-        type: string
-        required: true
-        show_if: config.haproxy.enabled=true
-        label: 'haproxy size'
-      - variable: persistence.size.proxysql
-        description: ''
-        type: string
-        required: true
-        show_if: config.proxysql.enabled=true
-        label: 'proxysql size'
       - variable: persistence.velero.enabled
         description: ''
         type: boolean
