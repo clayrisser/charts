@@ -1,0 +1,9 @@
+### mysql
+
+[{{ include "xtradb.xtradb-hostname" . }}]({{ include "xtradb.xtradb-hostname" . }})
+
+{{- if .Values.config.phpmyadmin.enabled }}
+### phpmyadmin
+
+[{{ include "xtradb.phpmyadmin-base-url" . }}]({{ include "xtradb.phpmyadmin-base-url" . }})
+{{- end }}

@@ -36,6 +36,7 @@ config:
     root: ''
     xtrabackup: ''
   xtradb:
+    hostname: ''
     size: 1
     pause: false
     upgrade:
@@ -81,6 +82,8 @@ config:
     password: ''
     username: admin
   phpmyadmin:
+    hostname: ''
+    baseUrl: ''
     enabled: false
     resources:
       enabled: defaults

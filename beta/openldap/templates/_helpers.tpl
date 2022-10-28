@@ -63,7 +63,7 @@ Calculate phpldapadmin certificate
 {{- if .Values.ingress.phpldapadmin.certificate -}}
 {{- printf .Values.ingress.phpldapadmin.certificate -}}
 {{- else -}}
-{{- printf "%s-phpldapadmin-letsencrypt" (include "openldap.fullname" .) -}}
+{{- printf "%s-release-phpldapadmin-letsencrypt" .Release.Name -}}
 {{- end -}}
 {{- end -}}
 

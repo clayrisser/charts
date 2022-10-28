@@ -39,13 +39,24 @@ Calculate postgres ca
 {{- end -}}
 
 {{/*
+Calculate postgres hostname
+*/}}
+{{- define "postgres.postgres-hostname" -}}
+{{- if .Values.config.postgres.hostname -}}
+{{- printf .Values.config.postgres.hostname -}}
+{{- else -}}
+{{- printf "%s.%s.svc.cluster.local" (include "postgres.name" .) .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Calculate pgadmin certificate
 */}}
 {{- define "postgres.pgadmin-certificate" -}}
 {{- if .Values.ingress.pgadmin.certificate -}}
 {{- printf .Values.ingress.pgadmin.certificate -}}
 {{- else -}}
-{{- printf "%s-pgadmin-letsencrypt" (include "postgres.fullname" .) -}}
+{{- printf "pgadmin-letsencrypt" -}}
 {{- end -}}
 {{- end -}}
 
@@ -59,7 +70,7 @@ Calculate pgadmin hostname
 {{- if .Values.ingress.pgadmin.enabled -}}
 {{- printf .Values.ingress.pgadmin.hostname -}}
 {{- else -}}
-{{- printf "%s-pgadmin" (include "postgres.fullname" .) -}}
+{{- printf "pgadmin.%s.svc.cluster.local" .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

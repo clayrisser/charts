@@ -39,6 +39,7 @@ config:
     postgres:
     primaryUser:
   postgres:
+    hostname: ''
     hotReplicas: 0
     pause: false
     standby: false

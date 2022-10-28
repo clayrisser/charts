@@ -23,7 +23,7 @@ Calculate keycloak certificate
 {{- if .Values.ingress.keycloak.certificate -}}
 {{- printf .Values.ingress.keycloak.certificate -}}
 {{- else -}}
-{{- printf "%s-keycloak-letsencrypt" (include "keycloak.fullname" .) -}}
+{{- printf "%s-discovery-letsencrypt" (include "keycloak.name" .) -}}
 {{- end -}}
 {{- end -}}
 
@@ -37,7 +37,7 @@ Calculate keycloak hostname
 {{- if .Values.ingress.keycloak.enabled -}}
 {{- printf .Values.ingress.keycloak.hostname -}}
 {{- else -}}
-{{- printf "%s-keycloak.%s.svc.cluster.local" (include "keycloak.fullname" .) .Release.Namespace -}}
+{{- printf "%s-discovery.%s.svc.cluster.local" (include "keycloak.name" .) .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

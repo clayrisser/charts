@@ -15,6 +15,7 @@ config:
     replicas: 1
     domain: example.org
     hashPassword: SHA512CRYPT
+    hostname: ''
     organization: 'Example Organization'
     organizationalUnits: people,groups
     dhparam: |-
@@ -38,6 +39,8 @@ config:
         cpu: 500m
         memory: 256Mi
   phpldapadmin:
+    hostname: ''
+    baseUrl: ''
     enabled: false
 
 service:

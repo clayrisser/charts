@@ -1,0 +1,9 @@
+### postgres
+
+[{{ include "postgres.postgres-hostname" . }}]({{ include "postgres.postgres-hostname" . }})
+
+{{- if .Values.config.pgadmin.enabled }}
+### pgadmin
+
+[{{ include "postgres.pgadmin-base-url" . }}]({{ include "postgres.pgadmin-base-url" . }})
+{{- end }}

@@ -16,7 +16,7 @@ spec:
   config:
     protocol: mysql
     username: root
-    hostname: {{ template "xtradb.name" . }}-xtradb.{{ .Release.Namespace }}.svc.cluster.local
+    hostname: {{ template "xtradb.xtradb-hostname" . }}
     port: '3306'
   configSecretName: {{ template "xtradb.name" . }}-{{ .Values.config.username }}-secret
   resources:
