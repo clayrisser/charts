@@ -17,7 +17,7 @@ spec:
   sslInternalSecretName: {{ .Values.service.xtradb.tls.certificate | default (include "xtradb.name" .) }}
   {{- end }}
   pause: {{ .Values.config.xtradb.pause }}
-  updateStrategy: {{ ternary (and (eq config.updateStrategy "SmartUpdate") (and (not config.haproxy.enabled) (not proxysql.enabled))) | "Recreate" .Values.config.updateStrategy }}
+  updateStrategy: {{ (and (eq .Values.config.updateStrategy "SmartUpdate") (and (not .Values.config.haproxy.enabled) (not .Values.config.proxysql.enabled))) | ternary "Recreate" .Values.config.updateStrategy }}
   initImage: '{{ .Values.images.xtradbOperator.repository }}:{{ .Values.images.xtradbOperator.tag }}'
   upgradeOptions:
     versionServiceEndpoint: https://check.percona.com/versions
