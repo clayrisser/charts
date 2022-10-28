@@ -49,18 +49,18 @@ config:
         cpu: 100m
         memory: 128Mi
       limits:
-        cpu: 250m
+        cpu: 200m
         memory: 512Mi
   pmm:
     enabled: false
     resources:
       enabled: defaults
       requests:
-        memory: 200M
-        cpu: 500m
+        cpu: 10m
+        memory: 64Mi
       limits:
-        cpu: 1000m
-        memory: 400M
+        cpu: 100m
+        memory: 128Mi
   backup:
     enabled: false
     schedule: '0 0 * * *'
@@ -68,11 +68,11 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 100m
-        memory: 48Mi
-      limits:
-        cpu: 1000m
+        cpu: 10m
         memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
   pgBadger:
     enabled: false
   pgBouncer:
@@ -80,11 +80,11 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 1000m
-        memory: 128Mi
+        cpu: 10m
+        memory: 64Mi
       limits:
-        cpu: 2000m
-        memory: 512Mi
+        cpu: 100m
+        memory: 128Mi
   pgadmin:
     hostname: ''
     baseUrl: ''
@@ -94,11 +94,11 @@ config:
     resources:
       enabled: defaults
       requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
         cpu: 100m
         memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
 
 service:
   postgres:
