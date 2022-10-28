@@ -296,12 +296,12 @@ questions:
     type: enum
     options:
       - defaults
-      - 'true'
+      - custom
       - 'false'
     required: true
     label: 'resources defaults'
     show_if: config.phpmyadmin.enabled=true
-    show_subquestion_if: 'true'
+    show_subquestion_if: custom
     group: PhpMyAdmin
     subquestions:
       - variable: config.phpmyadmin.resources.requests.cpu
