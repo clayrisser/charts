@@ -76,7 +76,7 @@ questions:
     description: ''
     type: int
     required: true
-    label: 'postgres hot replicas'
+    label: 'hot replicas'
     group: Postgres
   - variable: config.postgres.pause
     description: ''
@@ -94,7 +94,13 @@ questions:
     description: ''
     type: multiline
     required: false
-    label: 'postgres config'
+    label: config
+    group: Postgres
+  - variable: config.postgres.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
     group: Postgres
   - variable: config.postgres.resources.enabled
     description: ''
@@ -104,7 +110,7 @@ questions:
       - custom
       - 'false'
     required: true
-    label: 'postgres resources enabled'
+    label: 'resources enabled'
     show_subquestion_if: custom
     group: Postgres
     subquestions:
@@ -112,22 +118,22 @@ questions:
         description: ''
         type: string
         required: true
-        label: 'postgres resources requests cpu'
+        label: 'resources requests cpu'
       - variable: config.postgres.resources.requests.memory
         description: ''
         type: string
         required: true
-        label: 'postgres resources requests memory'
+        label: 'resources requests memory'
       - variable: config.postgres.resources.limits.cpu
         description: ''
         type: string
         required: true
-        label: 'postgres resources limits cpu'
+        label: 'resources limits cpu'
       - variable: config.postgres.resources.limits.memory
         description: ''
         type: string
         required: true
-        label: 'postgres resources limits memory'
+        label: 'resources limits memory'
 
   # PMM
   - variable: config.pmm.enabled
@@ -295,6 +301,16 @@ questions:
         type: password
         required: false
         label: 'pgadmin password'
+      - variable: config.pgadmin.hostname
+        description: ''
+        type: string
+        required: false
+        label: hostname
+      - variable: config.pgadmin.baseUrl
+        description: ''
+        type: string
+        required: false
+        label: 'base url'
   - variable: config.pgadmin.resources.enabled
     description: ''
     type: enum
@@ -303,7 +319,7 @@ questions:
       - custom
       - 'false'
     required: true
-    label: 'pgadmin resources enabled'
+    label: 'resources enabled'
     show_subquestion_if: custom
     show_if: config.pgadmin.enabled=true
     group: PGAdmin
@@ -313,25 +329,25 @@ questions:
         type: string
         required: true
         show_if: config.pgadmin.enabled=true
-        label: 'pgadmin resources requests cpu'
+        label: 'resources requests cpu'
       - variable: config.pgadmin.resources.requests.memory
         description: ''
         type: string
         required: true
         show_if: config.pgadmin.enabled=true
-        label: 'pgadmin resources requests memory'
+        label: 'resources requests memory'
       - variable: config.pgadmin.resources.limits.cpu
         description: ''
         type: string
         required: true
         show_if: config.pgadmin.enabled=true
-        label: 'pgadmin resources limits cpu'
+        label: 'resources limits cpu'
       - variable: config.pgadmin.resources.limits.memory
         description: ''
         type: string
         required: true
         show_if: config.pgadmin.enabled=true
-        label: 'pgadmin resources limits memory'
+        label: 'resources limits memory'
 
   # Persistence
   - variable: persistence.size.primary

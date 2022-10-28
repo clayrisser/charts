@@ -97,6 +97,12 @@ questions:
     required: false
     label: 'mysql config'
     group: XtraDB
+  - variable: config.xtradb.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: XtraDB
   - variable: config.xtradb.resources.enabled
     description: ''
     type: enum
@@ -273,6 +279,18 @@ questions:
     required: true
     label: enabled
     group: PhpMyAdmin
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.phpmyadmin.hostname
+        description: ''
+        type: string
+        required: false
+        label: hostname
+      - variable: config.phpmyadmin.baseUrl
+        description: ''
+        type: string
+        required: false
+        label: 'base url'
   - variable: config.phpmyadmin.resources.enabled
     description: ''
     type: enum

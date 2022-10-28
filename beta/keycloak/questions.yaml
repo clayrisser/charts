@@ -33,54 +33,62 @@ questions:
     required: true
     label: 'enable istio'
     group: Config
+
+  # Keycloak
   - variable: config.keycloak.replicas
     description: ''
     type: int
     required: true
-    label: 'keycloak replicas'
-    group: Config
+    label: replicas
+    group: Keycloak
   - variable: config.keycloak.enablePreview
     description: ''
     type: boolean
     required: false
-    label: 'keycloak enable preview'
-    group: Config
+    label: 'enable preview'
+    group: Keycloak
   - variable: config.keycloak.javaOpts
     description: ''
     type: string
     required: false
-    label: 'keycloak java opts'
-    group: Config
+    label: 'java opts'
+    group: Keycloak
   - variable: config.keycloak.hostname
     description: ''
     type: string
     required: false
-    label: 'keycloak hostname'
-    group: Config
+    label: hostname
+    group: Keycloak
+  - variable: config.keycloak.baseUrl
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: Keycloak
   - variable: config.keycloak.adminPassword
     description: ''
     type: password
     required: false
-    label: 'keycloak admin password'
-    group: Config
+    label: 'admin password'
+    group: Keycloak
   - variable: config.keycloak.themeZip
     description: ''
     type: string
     required: false
-    label: 'keycloak theme zip'
-    group: Config
+    label: 'theme zip'
+    group: Keycloak
   - variable: config.keycloak.defaultTheme
     description: ''
     type: string
     required: false
-    label: 'keycloak default theme'
-    group: Config
+    label: 'default theme'
+    group: Keycloak
   - variable: config.keycloak.welcomeTheme
     description: ''
     type: string
     required: false
-    label: 'keycloak welcome theme'
-    group: Config
+    label: 'welcome theme'
+    group: Keycloak
   - variable: config.keycloak.migrationStrategy
     description: ''
     type: enum
@@ -88,8 +96,8 @@ questions:
       - IGNORE_EXISTING
       - OVERWRITE_EXISTING
     required: true
-    label: 'keycloak migration strategy'
-    group: Config
+    label: 'migration strategy'
+    group: Keycloak
   - variable: config.keycloak.resources.enabled
     description: ''
     type: enum
@@ -98,30 +106,30 @@ questions:
       - custom
       - 'false'
     required: true
-    label: 'keycloak resources defaults'
+    label: 'resources defaults'
     show_subquestion_if: custom
-    group: Config
+    group: Keycloak
     subquestions:
       - variable: config.keycloak.resources.requests.cpu
         description: ''
         type: string
         required: true
-        label: 'keycloak resources requests cpu'
+        label: 'resources requests cpu'
       - variable: config.keycloak.resources.requests.memory
         description: ''
         type: string
         required: true
-        label: 'keycloak resources requests memory'
+        label: 'resources requests memory'
       - variable: config.keycloak.resources.limits.cpu
         description: ''
         type: string
         required: true
-        label: 'keycloak resources limits cpu'
+        label: 'resources limits cpu'
       - variable: config.keycloak.resources.limits.memory
         description: ''
         type: string
         required: true
-        label: 'keycloak resources limits memory'
+        label: 'resources limits memory'
 
   # Ldap Config
   - variable: config.keycloak.ldap.enabled
@@ -178,14 +186,14 @@ questions:
         show_if: config.keycloak.ldap.tls.enabled=true&&config.keycloak.ldap.integration=
         label: 'tls ca'
 
-  # Smtp Config
+  # Smtp
   - variable: config.keycloak.smtp.enabled
     description: ''
     type: boolean
     required: true
     label: enabled
     show_subquestion_if: true
-    group: 'Smtp Config'
+    group: Smtp
     subquestions:
       - variable: config.keycloak.smtp.integration
         description: ''
@@ -222,40 +230,40 @@ questions:
         label: password
         show_if: config.keycloak.smtp.integration=
 
-  # Postgres Config
+  # Postgres
   - variable: config.postgres.integration
     description: ''
     type: string
     required: false
     label: integration
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.host
     description: ''
     type: string
     required: true
     label: host
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.database
     description: 'only letters, digits and _ allowed'
     type: string
     required: true
     label: database
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.username
     description: ''
     type: string
     required: true
     label: username
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.password
     description: ''
     type: password
     required: true
     label: password
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   - variable: config.postgres.port
     description: ''
     type: int
@@ -264,13 +272,13 @@ questions:
     required: true
     label: port
     show_if: config.postgres.integration=
-    group: 'Postgres Config'
+    group: Postgres
   # - variable: config.postgres.url
   #   description: ''
   #   type: string
   #   required: false
   #   label: url
-  #   group: 'Postgres Config'
+  #   group: Postgres
 
   # Networking
   - variable: ingress.keycloak.enabled

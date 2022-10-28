@@ -33,18 +33,20 @@ questions:
     required: true
     label: 'enable istio'
     group: Config
+
+  # Openldap
   - variable: config.openldap.replicas
     description: ''
     type: int
     required: true
-    label: 'openldap replicas'
-    group: Config
+    label: replicas
+    group: Openldap
   - variable: config.openldap.domain
     description: 'use example.org instead of dc=example,dc=org'
     type: string
     required: true
-    label: 'openldap domain'
-    group: Config
+    label: domain
+    group: Openldap
   - variable: config.openldap.hashPassword
     description: ''
     type: enum
@@ -54,38 +56,44 @@ questions:
       - SHA256CRYPT
       - SSHA
       - NONE
-    label: 'openldap hash password'
-    group: Config
+    label: 'hash password'
+    group: Openldap
   - variable: config.openldap.organization
     description: ''
     type: string
     required: true
-    label: 'openldap organization'
-    group: Config
+    label: organization
+    group: Openldap
   - variable: config.openldap.organizationalUnits
     description: ''
     type: string
     required: false
-    label: 'openldap organizational units'
-    group: Config
+    label: 'organizational units'
+    group: Openldap
   - variable: config.openldap.passwords.admin
     description: ''
     type: password
     required: false
-    label: 'openldap admin password'
-    group: Config
+    label: 'admin password'
+    group: Openldap
   - variable: config.openldap.passwords.config
     description: ''
     type: password
     required: false
-    label: 'openldap config password'
-    group: Config
+    label: 'config password'
+    group: Openldap
   - variable: config.openldap.dhparam
     description: ''
     type: multiline
     required: false
-    label: 'openldap dhparam'
-    group: Config
+    label: dhparam
+    group: Openldap
+  - variable: config.openldap.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Openldap
   - variable: config.openldap.resources.enabled
     description: ''
     type: enum
@@ -94,36 +102,50 @@ questions:
       - custom
       - 'false'
     required: true
-    label: 'openldap resources defaults'
+    label: 'resources defaults'
     show_subquestion_if: custom
-    group: Config
+    group: Openldap
     subquestions:
       - variable: config.openldap.resources.requests.cpu
         description: ''
         type: string
         required: true
-        label: 'openldap resources requests cpu'
+        label: 'resources requests cpu'
       - variable: config.openldap.resources.requests.memory
         description: ''
         type: string
         required: true
-        label: 'openldap resources requests memory'
+        label: 'resources requests memory'
       - variable: config.openldap.resources.limits.cpu
         description: ''
         type: string
         required: true
-        label: 'openldap resources limits cpu'
+        label: 'resources limits cpu'
       - variable: config.openldap.resources.limits.memory
         description: ''
         type: string
         required: true
-        label: 'openldap resources limits memory'
+        label: 'resources limits memory'
+
+  # PhpLdapAdmin
   - variable: config.phpldapadmin.enabled
     description: ''
     type: boolean
     required: true
-    label: 'phpldapadmin enabled'
-    group: Config
+    label: enabled
+    group: PhpLdapAdmin
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.phpldapadmin.hostname
+        description: ''
+        type: string
+        required: false
+        label: hostname
+      - variable: config.phpldapadmin.baseUrl
+        description: ''
+        type: string
+        required: false
+        label: 'base url'
 
   # Persistence
   - variable: persistence.enabled

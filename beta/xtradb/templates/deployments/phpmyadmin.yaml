@@ -14,7 +14,7 @@ spec:
       app: phpmyadmin
       app.kubernetes.io/instance: {{ .Release.Name }}
   strategy:
-    type: {{ .Values.config.updateStrategy }}
+    type: {{ (eq .Values.config.updateStrategy "SmartUpdate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
