@@ -4,7 +4,7 @@ images:
     tag: 1.11.0
   xtradb:
     repository: percona/percona-xtradb-cluster
-    tag: 8.0.29-21.1
+    tag: 8.0.27-18.1
   haproxy:
     repository: percona/percona-xtradb-cluster-operator
     tag: 1.11.0-haproxy
@@ -26,7 +26,7 @@ images:
 
 config:
   imagePullPolicy: IfNotPresent
-  updateStrategy: Recreate
+  updateStrategy: SmartUpdate
   debug: false
   enableIstio: false
   passwords:

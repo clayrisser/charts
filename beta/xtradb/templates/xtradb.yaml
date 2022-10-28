@@ -9,14 +9,16 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   crVersion: 1.11.0
+  enableCRValidationWebhook: false
+  allowUnsafeConfigurations: true
   secretsName: {{ include "xtradb.name" . }}
   {{- if .Values.service.xtradb.tls.enabled }}
   sslSecretName: {{ .Values.service.xtradb.tls.certificate | default (include "xtradb.name" .) }}
   sslInternalSecretName: {{ .Values.service.xtradb.tls.certificate | default (include "xtradb.name" .) }}
   {{- end }}
-  allowUnsafeConfigurations: true
   pause: {{ .Values.config.xtradb.pause }}
-  updateStrategy: {{ .Values.config.updateStrategy }}
+  updateStrategy: {{ ternary (and (eq config.updateStrategy "SmartUpdate") (and (not config.haproxy.enabled) (not proxysql.enabled))) | "Recreate" .Values.config.updateStrategy }}
+  initImage: '{{ .Values.images.xtradbOperator.repository }}:{{ .Values.images.xtradbOperator.tag }}'
   upgradeOptions:
     versionServiceEndpoint: https://check.percona.com/versions
     apply: {{ .Values.config.xtradb.upgrade.apply }}
@@ -26,6 +28,7 @@ spec:
     image: '{{ .Values.images.xtradb.repository }}:{{ .Values.images.xtradb.tag }}'
     readinessDelaySec: 15
     livenessDelaySec: 300
+    autoRecovery: true
 {{- if .Values.config.xtradb.mysqlConfig }}
     configuration: |
 {{ .Values.config.xtradb.mysqlConfig | nindent 6 }}
@@ -36,11 +39,26 @@ spec:
     {{- end }}
     labels: {}
     nodeSelector: {}
-    affinity: {}
     tolerations: []
+    affinity:
+      antiAffinityTopologyKey: kubernetes.io/hostname
     gracePeriod: 600
+    livenessDelaySec: 300
+    livenessProbes:
+      failureThreshold: 3
+      initialDelaySeconds: 300
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
     podDisruptionBudget:
       maxUnavailable: 1
+    readinessDelaySec: 15
+    readinessProbes:
+      failureThreshold: 5
+      initialDelaySeconds: 15
+      periodSeconds: 30
+      successThreshold: 1
+      timeoutSeconds: 15
     resources:
 {{- if (and .Values.config.xtradb.resources.enabled (not (eq .Values.config.xtradb.resources.enabled "false"))) }}
       requests:
