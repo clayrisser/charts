@@ -245,7 +245,7 @@ questions:
     type: boolean
     label: 'drupal ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.drupal.tls
         description: ''
@@ -286,7 +286,7 @@ questions:
   #     - NodePort
   #   required: true
   #   label: 'drupal service type'
-  #   group: 'Networking'
+  #   group: Networking
   # - variable: service.drupal.nodePorts.http
   #   description: ''
   #   type: int
@@ -295,7 +295,7 @@ questions:
   #   max: 32767
   #   show_if: service.drupal.type=NodePort&&ingress.drupal.enabled=false
   #   label: 'drupal http node port'
-  #   group: 'Networking'
+  #   group: Networking
   # - variable: service.drupal.lbPorts.http
   #   description: ''
   #   type: int
@@ -304,7 +304,7 @@ questions:
   #   required: true
   #   show_if: service.drupal.type=LoadBalancer&&ingress.drupal.enabled=false
   #   label: 'drupal http lb port'
-  #   group: 'Networking'
+  #   group: Networking
 
   # Images
   - variable: images.drupal.repository

@@ -415,7 +415,7 @@ questions:
     show_if: config.kibana=true
     label: 'kibana ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.kibana.tls
         default: false
@@ -468,7 +468,7 @@ questions:
     required: true
     label: 'kibana service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.kibana.nodePorts.http
         default: ''
@@ -484,7 +484,7 @@ questions:
     type: boolean
     label: 'elasticsearch ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.elasticsearch.tls
         default: false
@@ -534,7 +534,7 @@ questions:
     show_if: ingress.elasticsearch.enabled=false
     label: 'elasticsearch service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.elasticsearch.nodePorts.elasticsearch
         default: ''

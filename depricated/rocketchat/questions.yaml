@@ -606,7 +606,7 @@ questions:
     type: boolean
     label: 'rocketchat ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.rocketchat.tls
         default: false
@@ -656,7 +656,7 @@ questions:
     required: true
     label: 'rocketchat service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.rocketchat.nodePorts.http
         default: ''
@@ -673,7 +673,7 @@ questions:
     show_if: config.mongoExpress.enabled=true
     label: 'mongo express ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.mongoExpress.tls
         default: false
@@ -726,7 +726,7 @@ questions:
     required: true
     label: 'mongo express service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.mongoExpress.nodePorts.http
         default: ''
@@ -747,7 +747,7 @@ questions:
     required: true
     label: 'mongodb service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.mongodb.nodePorts.mongodb
         default: ''

@@ -185,7 +185,7 @@ questions:
     type: boolean
     label: 'sks ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.sks.tls
         default: false
@@ -235,7 +235,7 @@ questions:
     required: true
     label: 'sks service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.sks.nodePorts.http
         default: ''

@@ -424,7 +424,7 @@ questions:
     type: boolean
     label: 'gitlab ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.gitlab.tls
         description: ''
@@ -465,13 +465,13 @@ questions:
       - NodePort
     required: true
     label: 'gitlab service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.gitlab.proxyIngressPorts
     description: ''
     type: boolean
     required: true
     label: 'gitlab proxy ingress ports'
-    group: 'Networking'
+    group: Networking
   - variable: service.gitlab.nodePorts.http
     description: ''
     type: int
@@ -480,7 +480,7 @@ questions:
     max: 32767
     show_if: service.gitlab.type=NodePort&&ingress.gitlab.enabled=false
     label: 'gitlab http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.gitlab.lbPorts.http
     description: ''
     type: int
@@ -489,7 +489,7 @@ questions:
     required: true
     show_if: service.gitlab.type=LoadBalancer&&ingress.gitlab.enabled=false
     label: 'gitlab http lb port'
-    group: 'Networking'
+    group: Networking
 
   # Images
   - variable: images.gitlab.repository

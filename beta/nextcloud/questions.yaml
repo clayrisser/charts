@@ -92,7 +92,7 @@ questions:
     type: boolean
     label: 'nextcloud ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.nextcloud.tls
         default: false
@@ -137,7 +137,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'nextcloud service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.nextcloud.nodePorts.http
     default:
     description: ''
@@ -147,7 +147,7 @@ questions:
     max: 32767
     show_if: service.nextcloud.type=NodePort&&ingress.nextcloud.enabled=false
     label: 'nextcloud http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.nextcloud.lbPorts.http
     default: 80
     description: ''
@@ -157,4 +157,4 @@ questions:
     required: true
     show_if: service.nextcloud.type=LoadBalancer&&ingress.nextcloud.enabled=false
     label: 'nextcloud http lb port'
-    group: 'Networking'
+    group: Networking

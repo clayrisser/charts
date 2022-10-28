@@ -254,7 +254,7 @@ questions:
     type: boolean
     label: 'harbor ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.harbor.tls
         default: false
@@ -297,7 +297,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'harbor service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.harbor.nodePorts.http
     default:
     description: ''
@@ -307,7 +307,7 @@ questions:
     max: 32767
     show_if: service.harbor.type=NodePort&&ingress.harbor.enabled=false
     label: 'harbor http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.harbor.lbPorts.http
     default: 80
     description: ''
@@ -317,4 +317,4 @@ questions:
     required: true
     show_if: service.harbor.type=LoadBalancer&&ingress.harbor.enabled=false
     label: 'harbor http lb port'
-    group: 'Networking'
+    group: Networking

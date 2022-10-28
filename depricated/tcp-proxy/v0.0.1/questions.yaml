@@ -46,7 +46,7 @@ questions:
     required: true
     label: 'service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.nodePorts.tcpProxy.port
         default: ''

@@ -1,10 +1,10 @@
 apiVersion: v1
 name: erpnext
 home: https://github.com/tootsuite/erpnext
-icon: ''
-version: 0.0.1
+icon: https://raw.githubusercontent.com/frappe/erpnext/develop/erpnext/public/images/erpnext-logo.png
+version: 14.4.0
 appVersion: latest
-description: 'new - social network server'
+description: 'free and open source erp'
 keywords:
   - erpnext
 sources:

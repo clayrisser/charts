@@ -651,14 +651,14 @@ questions:
       - NodePort
     required: true
     label: 'mailserver service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.configureNginxIngress
     description: ''
     type: boolean
     required: false
     show_if: service.mailserver.type=ClusterIP
     label: 'mailserver configure nginx ingress'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.nodePorts.smtp
     description: ''
     type: int
@@ -667,7 +667,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type=NodePort
     label: 'mailserver smtp node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.lbPorts.smtp
     description: ''
     type: int
@@ -676,7 +676,7 @@ questions:
     required: true
     show_if: service.mailserver.type=LoadBalancer
     label: 'mailserver smtp lb port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.nodePorts.pop3
     description: ''
     type: int
@@ -685,7 +685,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type=NodePort
     label: 'mailserver pop3 node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.lbPorts.pop3
     description: ''
     type: int
@@ -694,7 +694,7 @@ questions:
     required: true
     show_if: service.mailserver.type=LoadBalancer
     label: 'mailserver pop3 lb port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.nodePorts.imap
     description: ''
     type: int
@@ -703,7 +703,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type=NodePort
     label: 'mailserver imap node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.lbPorts.imap
     description: ''
     type: int
@@ -712,7 +712,7 @@ questions:
     required: true
     show_if: service.mailserver.type=LoadBalancer
     label: 'mailserver imap lb port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.nodePorts.smtps
     description: ''
     type: int
@@ -721,7 +721,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type=NodePort
     label: 'mailserver smtps node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.lbPorts.smtps
     description: ''
     type: int
@@ -730,7 +730,7 @@ questions:
     required: true
     show_if: service.mailserver.type=LoadBalancer
     label: 'mailserver smtps lb port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.nodePorts.submission
     description: ''
     type: int
@@ -739,7 +739,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type=NodePort
     label: 'mailserver submission node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.lbPorts.submission
     description: ''
     type: int
@@ -748,7 +748,7 @@ questions:
     required: true
     show_if: service.mailserver.type=LoadBalancer
     label: 'mailserver submission lb port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.nodePorts.imaps
     description: ''
     type: int
@@ -757,7 +757,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type=NodePort
     label: 'mailserver imaps node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.lbPorts.imaps
     description: ''
     type: int
@@ -766,7 +766,7 @@ questions:
     required: true
     show_if: service.mailserver.type=LoadBalancer
     label: 'mailserver imaps lb port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.nodePorts.pop3s
     description: ''
     type: int
@@ -775,7 +775,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type=NodePort
     label: 'mailserver pop3s node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.lbPorts.pop3s
     description: ''
     type: int
@@ -784,14 +784,14 @@ questions:
     required: true
     show_if: service.mailserver.type=LoadBalancer
     label: 'mailserver pop3s lb port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.tls.enabled
     description: ''
     type: boolean
     required: true
     label: 'mailserver tls enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.mailserver.tls.certificate
         description: ''
@@ -818,7 +818,7 @@ questions:
     label: 'rainloop ingress enabled'
     show_if: config.rainloop.enabled=true
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.rainloop.tls
         description: ''
@@ -862,7 +862,7 @@ questions:
       - NodePort
     required: true
     label: 'rainloop service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.rainloop.nodePorts.http&&config.rainloop.enabled=true
     description: ''
     type: int
@@ -871,7 +871,7 @@ questions:
     max: 32767
     show_if: service.rainloop.type=NodePort&&ingress.rainloop.enabled=false&&config.rainloop.enabled=true
     label: 'rainloop http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.rainloop.lbPorts.http
     description: ''
     type: int
@@ -880,14 +880,14 @@ questions:
     required: true
     show_if: service.rainloop.type=LoadBalancer&&ingress.rainloop.enabled=false&&config.rainloop.enabled=true
     label: 'rainloop http lb port'
-    group: 'Networking'
+    group: Networking
   - variable: ingress.sendmailAnalyzer.enabled
     description: ''
     type: boolean
     label: 'sendmail analyzer ingress enabled'
     show_if: config.sendmailAnalyzer.enabled=true
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.sendmailAnalyzer.tls
         description: ''
@@ -931,7 +931,7 @@ questions:
       - NodePort
     required: true
     label: 'sendmail analyzer service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.sendmailAnalyzer.nodePorts.http&&config.sendmailAnalyzer.enabled=true
     description: ''
     type: int
@@ -940,7 +940,7 @@ questions:
     max: 32767
     show_if: service.sendmailAnalyzer.type=NodePort&&ingress.sendmailAnalyzer.enabled=false&&config.sendmailAnalyzer.enabled=true
     label: 'sendmail analyzer http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.sendmailAnalyzer.lbPorts.http
     description: ''
     type: int
@@ -949,7 +949,7 @@ questions:
     required: true
     show_if: service.sendmailAnalyzer.type=LoadBalancer&&ingress.sendmailAnalyzer.enabled=false&&config.sendmailAnalyzer.enabled=true
     label: 'sendmail analyzer http lb port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.mailserver.repository

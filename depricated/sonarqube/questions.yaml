@@ -228,7 +228,7 @@ questions:
     type: boolean
     label: 'sonarqube ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.sonarqube.tls
         default: false
@@ -270,7 +270,7 @@ questions:
       - NodePort
     required: true
     label: 'sonarqube service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.sonarqube.nodePorts.http
     default:
     description: ''
@@ -280,7 +280,7 @@ questions:
     max: 32767
     show_if: service.sonarqube.type=NodePort&&ingress.sonarqube.enabled=false
     label: 'sonarqube http node port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.sonarqube.repository

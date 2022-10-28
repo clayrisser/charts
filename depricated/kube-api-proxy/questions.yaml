@@ -67,7 +67,7 @@ questions:
     type: boolean
     label: 'kube api proxy ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.kubeApiProxy.tls
         default: false
@@ -117,7 +117,7 @@ questions:
     required: true
     label: 'kube api proxy service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.kubeApiProxy.nodePorts.http
         default: ''

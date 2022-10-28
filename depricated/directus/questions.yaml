@@ -232,7 +232,7 @@ questions:
     type: boolean
     label: 'directus ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.directus.tls
         default: false
@@ -275,7 +275,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'directus service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.directus.nodePorts.http
     default:
     description: ''
@@ -285,7 +285,7 @@ questions:
     max: 32767
     show_if: service.directus.type=NodePort&&ingress.directus.enabled=false
     label: 'directus http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.directus.lbPorts.http
     default: 80
     description: ''
@@ -295,7 +295,7 @@ questions:
     required: true
     show_if: service.directus.type=LoadBalancer&&ingress.directus.enabled=false
     label: 'directus http lb port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.directus.repository

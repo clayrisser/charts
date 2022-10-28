@@ -123,7 +123,7 @@ questions:
     show_if: config.phpredisadmin.enabled=true
     label: 'phpredisadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.phpredisadmin.tls
         default: false
@@ -176,7 +176,7 @@ questions:
     required: true
     label: 'phpredisadmin service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.phpredisadmin.nodePorts.http
         default: ''
@@ -197,7 +197,7 @@ questions:
     required: true
     label: 'redis service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.redis.nodePorts.redis
         default: ''

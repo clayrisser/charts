@@ -1,25 +1,14 @@
 categories:
   - Server
 questions:
+
   # Config
-  - variable: config.clusterType
-    description: ''
-    type: enum
-    options:
-      - aks
-      - eks
-      - gke
-      - k3s
-      - rke
-    required: true
-    label: 'cluster type'
-    group: Config
   - variable: config.imagePullPolicy
     description: ''
     type: enum
     options:
-      - Always
       - IfNotPresent
+      - Always
     required: true
     label: 'pull policy'
     group: Config
@@ -29,42 +18,68 @@ questions:
     options:
       - Recreate
       - RollingUpdate
-      - OnDelete
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.enableIstio
+    description: ''
+    type: boolean
+    required: true
+    label: 'enable istio'
+    group: Config
+
+  # ERPNext
+  - variable: config.keycloak.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Keycloak
+  - variable: config.keycloak.baseUrl
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: Keycloak
   - variable: config.erpnext.resources.enabled
     description: ''
     type: enum
     options:
       - defaults
       - custom
-      - false
+      - 'false'
     required: true
-    label: 'erpnext resources defaults'
+    label: 'resources enabled'
     show_subquestion_if: custom
-    group: Config
+    group: ERPNext
     subquestions:
       - variable: config.erpnext.resources.requests.cpu
         description: ''
         type: string
         required: true
-        label: 'erpnext resources requests cpu'
+        label: 'resources requests cpu'
       - variable: config.erpnext.resources.requests.memory
         description: ''
         type: string
         required: true
-        label: 'erpnext resources requests memory'
+        label: 'resources requests memory'
       - variable: config.erpnext.resources.limits.cpu
         description: ''
         type: string
         required: true
-        label: 'erpnext resources limits cpu'
+        label: 'resources limits cpu'
       - variable: config.erpnext.resources.limits.memory
         description: ''
         type: string
         required: true
-        label: 'erpnext resources limits memory'
+        label: 'resources limits memory'
+
   # Postgres
   - variable: config.postgres.integration
     description: ''
@@ -75,15 +90,22 @@ questions:
   - variable: config.postgres.host
     description: ''
     type: string
-    required: false
+    required: true
     label: host
     show_if: config.postgres.integration=
     group: Postgres
   - variable: config.postgres.database
-    description: ''
+    description: 'only letters, digits and _ allowed'
     type: string
     required: true
     label: database
+    group: Postgres
+  - variable: config.postgres.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.integration=
     group: Postgres
   - variable: config.postgres.password
     description: ''
@@ -101,36 +123,32 @@ questions:
     label: port
     show_if: config.postgres.integration=
     group: Postgres
-  - variable: config.postgres.url
-    description: ''
-    type: string
-    required: false
-    label: url
-    show_if: config.postgres.integration=
-    group: Postgres
-  - variable: config.postgres.username
-    description: ''
-    type: string
-    required: true
-    label: username
-    show_if: config.postgres.integration=
-    group: Postgres
+  # - variable: config.postgres.url
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: url
+  #   group: Postgres
 
   # Persistence
-  - variable: persistence.enabled
+  - variable: persistence.size.assets
     description: ''
-    type: boolean
+    type: string
     required: true
-    label: enabled
-    show_subquestion_if: true
+    label: 'primary assets'
     group: Persistence
-    subquestions:
+  - variable: persistence.size.system
+    description: ''
+    type: string
+    required: true
+    label: 'replicas system'
+    show_if: config.postgres.hotReplicas!=0
+    group: Persistence
   - variable: persistence.storageClass
     description: ''
     type: storageclass
     required: false
     label: 'storage class'
-    default: do-block-storage
     group: Persistence
   - variable: persistence.accessMode
     description: ''
@@ -141,24 +159,6 @@ questions:
       - ReadOnlyMany
     required: false
     label: 'access mode'
-    group: Persistence
-  - variable: persistence.existingClaim.erpnext
-    description: ''
-    type: string
-    required: false
-    label: 'erpnext existing claim'
-    group: Persistence
-  - variable: persistence.size.assets
-    description: ''
-    type: string
-    required: true
-    label: 'size assets'
-    group: Persistence
-  - variable: persistence.size.system
-    description: ''
-    type: string
-    required: true
-    label: 'size system'
     group: Persistence
   - variable: persistence.velero.enabled
     description: ''
@@ -187,6 +187,19 @@ questions:
     required: true
     label: 'velero ttl'
     group: Persistence
+  - variable: persistence.kanister.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'kanister enabled'
+    group: Persistence
+    show_subquestion_if: true
+    subquestions:
+      - variable: persistence.kanister.schedule
+        description: ''
+        type: string
+        required: false
+        label: 'kanister schedule'
 
   # Networking
   - variable: ingress.erpnext.enabled
@@ -194,7 +207,7 @@ questions:
     type: boolean
     label: 'erpnext ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.erpnext.tls
         description: ''
@@ -235,7 +248,7 @@ questions:
       - NodePort
     required: true
     label: 'erpnext service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.erpnext.nodePorts.http
     description: ''
     type: int
@@ -244,7 +257,7 @@ questions:
     max: 32767
     show_if: service.erpnext.type=NodePort&&ingress.erpnext.enabled=false
     label: 'erpnext http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.erpnext.lbPorts.http
     description: ''
     type: int
@@ -253,7 +266,8 @@ questions:
     required: true
     show_if: service.erpnext.type=LoadBalancer&&ingress.erpnext.enabled=false
     label: 'erpnext http lb port'
-    group: 'Networking'
+    group: Networking
+
   # Images
   # - variable: images.erpnext.repository
   #   description: ''

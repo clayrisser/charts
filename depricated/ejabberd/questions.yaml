@@ -548,7 +548,7 @@ questions:
     type: boolean
     label: 'ejabberd ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.ejabberd.tls
         default: false
@@ -598,7 +598,7 @@ questions:
     required: true
     label: 'ejabberd service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.ejabberd.nodePorts.http
         default: ''
@@ -616,7 +616,7 @@ questions:
     min: 30000
     max: 32767
     label: 'ejabberd xmpp port'
-    group: 'Networking'
+    group: Networking
   - variable: ingress.pgadmin.enabled
     default: true
     description: ''
@@ -624,7 +624,7 @@ questions:
     show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
     label: 'pgadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.pgadmin.tls
         default: false
@@ -677,7 +677,7 @@ questions:
     required: true
     label: 'pgadmin service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.pgadmin.nodePorts.http
         default: ''
@@ -696,7 +696,7 @@ questions:
     show_if: config.phpredisadmin.enabled=true&&config.redis.internal=true
     label: 'phpredisadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.phpredisadmin.tls
         default: false
@@ -749,7 +749,7 @@ questions:
     required: true
     label: 'phpredisadmin service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.phpredisadmin.nodePorts.http
         default: ''
@@ -771,7 +771,7 @@ questions:
     label: 'postgres service type'
     show_if: config.postgres.internal=true
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.postgres.nodePorts.postgres
         default: ''
@@ -792,7 +792,7 @@ questions:
     label: 'redis service type'
     show_if: config.redis.internal=true
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.redis.nodePorts.redis
         default: ''

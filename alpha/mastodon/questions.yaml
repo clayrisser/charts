@@ -230,7 +230,7 @@ questions:
     type: boolean
     label: 'mastodon ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.mastodon.tls
         description: ''
@@ -271,7 +271,7 @@ questions:
       - NodePort
     required: true
     label: 'mastodon service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.mastodon.nodePorts.http
     description: ''
     type: int
@@ -280,7 +280,7 @@ questions:
     max: 32767
     show_if: service.mastodon.type=NodePort&&ingress.mastodon.enabled=false
     label: 'mastodon http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mastodon.lbPorts.http
     description: ''
     type: int
@@ -289,7 +289,7 @@ questions:
     required: true
     show_if: service.mastodon.type=LoadBalancer&&ingress.mastodon.enabled=false
     label: 'mastodon http lb port'
-    group: 'Networking'
+    group: Networking
 
   # Images
   - variable: images.mastodon.repository

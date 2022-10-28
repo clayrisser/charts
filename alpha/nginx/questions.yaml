@@ -111,7 +111,7 @@ questions:
     type: boolean
     label: 'nginx ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.nginx.tls
         description: ''
@@ -152,7 +152,7 @@ questions:
       - NodePort
     required: true
     label: 'nginx service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.nginx.nodePorts.http
     description: ''
     type: int
@@ -161,7 +161,7 @@ questions:
     max: 32767
     show_if: service.nginx.type=NodePort&&ingress.nginx.enabled=false
     label: 'nginx http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.nginx.lbPorts.http
     description: ''
     type: int
@@ -170,7 +170,7 @@ questions:
     required: true
     show_if: service.nginx.type=LoadBalancer&&ingress.nginx.enabled=false
     label: 'nginx http lb port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.nginx.repository

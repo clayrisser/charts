@@ -200,7 +200,7 @@ questions:
     type: boolean
     label: 'bitwardenrs ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.bitwardenrs.tls
         default: false
@@ -243,7 +243,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'bitwardenrs service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.bitwardenrs.nodePorts.http
     default:
     description: ''
@@ -253,7 +253,7 @@ questions:
     max: 32767
     show_if: service.bitwardenrs.type=NodePort&&ingress.bitwardenrs.enabled=false
     label: 'bitwardenrs http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.bitwardenrs.lbPorts.http
     default: 80
     description: ''
@@ -263,7 +263,7 @@ questions:
     required: true
     show_if: service.bitwardenrs.type=LoadBalancer&&ingress.bitwardenrs.enabled=false
     label: 'bitwardenrs http lb port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.bitwardenrs.repository

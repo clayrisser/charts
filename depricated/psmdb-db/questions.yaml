@@ -335,7 +335,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'psmdb service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.psmdb.nodePorts.mongo
     default:
     description: ''
@@ -345,7 +345,7 @@ questions:
     max: 32767
     show_if: service.psmdb.type=NodePort
     label: 'psmdb mongo node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.psmdb.lbPorts.mongo
     default: 27017
     description: ''
@@ -355,7 +355,7 @@ questions:
     required: true
     show_if: service.psmdb.type=LoadBalancer
     label: 'psmdb mongo lb port'
-    group: 'Networking'
+    group: Networking
   - variable: ingress.mongoExpress.enabled
     default: true
     description: ''
@@ -363,7 +363,7 @@ questions:
     label: 'mongo express ingress enabled'
     show_if: config.mongoExpress.enabled=true
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.mongoExpress.tls
         default: false
@@ -408,7 +408,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'mongo express service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.mongoExpress.nodePorts.http
     default:
     description: ''
@@ -418,7 +418,7 @@ questions:
     max: 32767
     show_if: service.mongoExpress.type=NodePort&&ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
     label: 'mongo express http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mongoExpress.lbPorts.http
     default: 80
     description: ''
@@ -428,7 +428,7 @@ questions:
     required: true
     show_if: service.mongoExpress.type=LoadBalancer&&ingress.mongoExpress.enabled=false&&config.mongoExpress.enabled=true
     label: 'mongo express http lb port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.psmdb.repository

@@ -216,7 +216,7 @@ questions:
     required: true
     label: 'jicofo service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.jicofo.nodePorts.http
         default: ''
@@ -238,7 +238,7 @@ questions:
     required: true
     label: 'prosody service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.prosody.nodePorts.http
         default: ''
@@ -254,7 +254,7 @@ questions:
     type: boolean
     label: 'web ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.web.tls
         default: false
@@ -304,7 +304,7 @@ questions:
     required: true
     label: 'web service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.web.nodePorts.http
         default: ''
@@ -326,7 +326,7 @@ questions:
     required: true
     label: 'jvb service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.jvb.nodePorts.http
         default: ''

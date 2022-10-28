@@ -382,7 +382,7 @@ questions:
     type: boolean
     label: 'nextcloud ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.nextcloud.tls
         default: false
@@ -432,7 +432,7 @@ questions:
     required: true
     label: 'nextcloud service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.nextcloud.nodePorts.http
         default: ''
@@ -449,7 +449,7 @@ questions:
     show_if: config.pgadmin.enabled=true&&config.postgres.internal=true
     label: 'pgadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.pgadmin.tls
         default: false
@@ -502,7 +502,7 @@ questions:
     required: true
     label: 'pgadmin service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.pgadmin.nodePorts.http
         default: ''
@@ -524,7 +524,7 @@ questions:
     label: 'postgres service type'
     show_if: config.postgres.internal=true
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.postgres.nodePorts.postgres
         default: ''

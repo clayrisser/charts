@@ -123,7 +123,7 @@ questions:
     type: boolean
     label: 'chartmuseum ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: chartmuseum.ingress.hosts.0.tls
         default: false
@@ -154,7 +154,7 @@ questions:
       - NodePort
     required: true
     label: 'chartmuseum service type'
-    group: 'Networking'
+    group: Networking
   - variable: chartmuseum.service.nodePort
     default: ''
     description: ''
@@ -164,7 +164,7 @@ questions:
     max: 32767
     show_if: chartmuseum.service.type=NodePort&&chartmuseum.ingress.enabled=false
     label: 'chartmuseum http node port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: chartmuseum.image.repository

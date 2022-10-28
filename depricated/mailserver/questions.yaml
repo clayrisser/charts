@@ -532,7 +532,7 @@ questions:
     type: boolean
     label: 'rainloop ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.rainloop.tls
         default: false
@@ -575,7 +575,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'rainloop service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.rainloop.ports.http
     default: ''
     description: ''
@@ -584,7 +584,7 @@ questions:
     max: 32767
     show_if: service.rainloop.type!=ClusterIP&&ingress.rainloop.enabled=false
     label: 'rainloop http port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.type
     default: NodePort
     description: ''
@@ -595,7 +595,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'mailserver service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.ports.imap
     default: ''
     description: ''
@@ -604,7 +604,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type!=ClusterIP
     label: 'mailserver imap port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.ports.imapSecure
     default: ''
     description: ''
@@ -613,7 +613,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type!=ClusterIP
     label: 'mailserver imap secure port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.ports.managesieve
     default: ''
     description: ''
@@ -622,7 +622,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type!=ClusterIP
     label: 'mailserver managesieve port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.ports.pop3
     default: ''
     description: ''
@@ -631,7 +631,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type!=ClusterIP
     label: 'mailserver pop3 port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.ports.smtp
     default: ''
     description: ''
@@ -640,7 +640,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type!=ClusterIP&&config.pop3.enabled=true
     label: 'mailserver smtp port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.ports.smtpAuth
     default: ''
     description: ''
@@ -649,7 +649,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type!=ClusterIP
     label: 'mailserver smtp auth port'
-    group: 'Networking'
+    group: Networking
   - variable: service.mailserver.ports.smtpSecure
     default: ''
     description: ''
@@ -658,7 +658,7 @@ questions:
     max: 32767
     show_if: service.mailserver.type!=ClusterIP
     label: 'mailserver smtp secure port'
-    group: 'Networking'
+    group: Networking
 
   # Images
   - variable: images.mailserver.repository

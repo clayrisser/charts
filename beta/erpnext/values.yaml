@@ -1,7 +1,7 @@
 images:
-# erpnext:
-#   repository: tootsuite/erpnext
-#   tag: v3.3.0
+  erpnext:
+    repository: tootsuite/erpnext
+    tag: v3.3.0
 
 config:
   imagePullPolicy: IfNotPresent
@@ -38,7 +38,7 @@ service:
       http: 80
 
 ingress:
-  pgadmin:
+  erpnext:
     certificate: ''
     enabled: false
     hostname: ''

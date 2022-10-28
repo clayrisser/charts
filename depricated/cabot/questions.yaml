@@ -193,7 +193,7 @@ questions:
     type: boolean
     label: 'cabot ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.cabot.tls
         default: false
@@ -238,7 +238,7 @@ questions:
       - NodePort
     required: true
     label: 'cabot service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.cabot.nodePorts.http
     default:
     description: ''
@@ -248,7 +248,7 @@ questions:
     max: 32767
     show_if: service.cabot.type=NodePort&&ingress.cabot.enabled=false
     label: 'cabot http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.cabot.lbPorts.http
     default: 80
     description: ''
@@ -258,7 +258,7 @@ questions:
     required: true
     show_if: service.cabot.type=LoadBalancer&&ingress.cabot.enabled=false
     label: 'cabot http lb port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.cabot.repository

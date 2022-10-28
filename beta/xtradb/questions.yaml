@@ -420,7 +420,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'xtradb service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.xtradb.nodePorts.mysql
     description: ''
     type: int
@@ -429,7 +429,7 @@ questions:
     max: 32767
     show_if: service.xtradb.type=NodePort
     label: 'xtradb mysql node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.xtradb.lbPorts.mysql
     description: ''
     type: int
@@ -438,14 +438,14 @@ questions:
     required: true
     show_if: service.xtradb.type=LoadBalancer
     label: 'xtradb mysql lb port'
-    group: 'Networking'
+    group: Networking
   - variable: service.xtradb.tls.enabled
     description: ''
     type: boolean
     required: true
     label: 'xtradb tls enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.xtradb.tls.certificate
         description: ''
@@ -478,7 +478,7 @@ questions:
     label: 'phpmyadmin ingress enabled'
     show_if: config.phpmyadmin.enabled=true
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.phpmyadmin.tls
         description: ''
@@ -521,7 +521,7 @@ questions:
       - NodePort
     required: true
     label: 'phpmyadmin service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.phpmyadmin.nodePorts.http
     description: ''
     type: int
@@ -530,7 +530,7 @@ questions:
     max: 32767
     show_if: service.phpmyadmin.type=NodePort&&ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
     label: 'phpmyadmin http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.phpmyadmin.lbPorts.http
     description: ''
     type: int
@@ -539,7 +539,7 @@ questions:
     required: true
     show_if: service.phpmyadmin.type=LoadBalancer&&ingress.phpmyadmin.enabled=false&&config.phpmyadmin.enabled=true
     label: 'phpmyadmin http lb port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.xtradb.repository

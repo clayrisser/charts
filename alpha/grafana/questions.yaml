@@ -137,7 +137,7 @@ questions:
     type: boolean
     label: 'grafana ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.grafana.tls
         description: ''
@@ -178,7 +178,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'grafana service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.grafana.nodePorts.http
     description: ''
     type: int
@@ -187,7 +187,7 @@ questions:
     max: 32767
     show_if: service.grafana.type=NodePort&&ingress.grafana.enabled=false
     label: 'grafana http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.grafana.lbPorts.http
     description: ''
     type: int
@@ -196,7 +196,7 @@ questions:
     max: 65535
     show_if: service.grafana.type=LoadBalancer&&ingress.grafana.enabled=false
     label: 'grafana http lb port'
-    group: 'Networking'
+    group: Networking
 
   # Images
   # - variable: images.grafana.repository

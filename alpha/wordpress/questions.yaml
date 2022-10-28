@@ -246,7 +246,7 @@ questions:
     type: boolean
     label: 'wordpress ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.wordpress.tls
         description: ''
@@ -287,7 +287,7 @@ questions:
   #     - NodePort
   #   required: true
   #   label: 'wordpress service type'
-  #   group: 'Networking'
+  #   group: Networking
   # - variable: service.wordpress.nodePorts.http
   #   description: ''
   #   type: int
@@ -296,7 +296,7 @@ questions:
   #   max: 32767
   #   show_if: service.wordpress.type=NodePort&&ingress.wordpress.enabled=false
   #   label: 'wordpress http node port'
-  #   group: 'Networking'
+  #   group: Networking
   # - variable: service.wordpress.lbPorts.http
   #   description: ''
   #   type: int
@@ -305,7 +305,7 @@ questions:
   #   required: true
   #   show_if: service.wordpress.type=LoadBalancer&&ingress.wordpress.enabled=false
   #   label: 'wordpress http lb port'
-  #   group: 'Networking'
+  #   group: Networking
 
 # Images
   - variable: images.wordpress.repository

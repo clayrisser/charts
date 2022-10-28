@@ -179,7 +179,7 @@ questions:
     type: boolean
     label: 'pmm server ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.pmmServer.tls
         default: false
@@ -222,7 +222,7 @@ questions:
       - LoadBalancer
     required: true
     label: 'pmm server service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.pmmServer.nodePorts.http
     default:
     description: ''
@@ -232,7 +232,7 @@ questions:
     max: 32767
     show_if: service.pmmServer.type=NodePort&&ingress.pmmServer.enabled=false
     label: 'pmm server http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.pmmServer.lbPorts.http
     default: 80
     description: ''
@@ -242,7 +242,7 @@ questions:
     required: true
     show_if: service.pmmServer.type=LoadBalancer&&ingress.pmmServer.enabled=false
     label: 'pmm server http lb port'
-    group: 'Networking'
+    group: Networking
 
 # Images
   - variable: images.pmmServer.repository

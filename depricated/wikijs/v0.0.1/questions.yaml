@@ -33,56 +33,56 @@ questions:
     label: DB_TYPE
     group: Config
   - variable: config.dbHost
-    default: 
+    default:
     description: ''
     type: string
     required: true
     label: DB_HOST
     group: Config
   - variable: config.dbPort
-    default: 
+    default:
     description: ''
     type: int
     required: true
     label: DB_PORT
     group: Config
   - variable: config.dbUser
-    default: 
+    default:
     description: ''
     type: string
     required: true
     label: DB_USER
     group: Config
   - variable: config.dbPass
-    default: 
+    default:
     description: ''
     type: password
     required: true
     label: DB_PASS
     group: Config
   - variable: config.dbName
-    default: 
+    default:
     description: ''
     type: string
     required: true
     label: DB_NAME
     group: Config
   - variable: config.dbSsl
-    default: 
+    default:
     description: ''
     type: boolean
     required: false
     label: DB_SSL
     group: Config
   - variable: config.dbPassFile
-    default: 
+    default:
     description: ''
     type: string
     required: false
     label: DB_PASS_FILE
     group: Config
   - variable: config.dbFilepath
-    default: 
+    default:
     description: ''
     type: string
     required: false
@@ -384,7 +384,7 @@ questions:
     type: boolean
     label: 'wiki ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.wiki.tls
         default: false
@@ -434,7 +434,7 @@ questions:
     required: true
     label: 'wiki service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.wiki.nodePorts.http
         default: ''
@@ -451,7 +451,7 @@ questions:
     show_if: config.pgadmin.enabled=true
     label: 'pgadmin ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.pgadmin.tls
         default: false
@@ -504,7 +504,7 @@ questions:
     required: true
     label: 'pgadmin service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.pgadmin.nodePorts.http
         default: ''
@@ -525,7 +525,7 @@ questions:
     required: true
     label: 'postgres service type'
     show_subquestion_if: NodePort
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: service.postgres.nodePorts.postgres
         default: ''

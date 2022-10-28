@@ -286,7 +286,7 @@ questions:
     type: boolean
     label: 'keycloak ingress enabled'
     show_subquestion_if: true
-    group: 'Networking'
+    group: Networking
     subquestions:
       - variable: ingress.keycloak.tls
         description: ''
@@ -327,7 +327,7 @@ questions:
       - NodePort
     required: true
     label: 'keycloak service type'
-    group: 'Networking'
+    group: Networking
   - variable: service.keycloak.nodePorts.http
     description: ''
     type: int
@@ -336,7 +336,7 @@ questions:
     max: 32767
     show_if: service.keycloak.type=NodePort&&ingress.keycloak.enabled=false
     label: 'keycloak http node port'
-    group: 'Networking'
+    group: Networking
   - variable: service.keycloak.lbPorts.http
     description: ''
     type: int
@@ -345,7 +345,7 @@ questions:
     required: true
     show_if: service.keycloak.type=LoadBalancer&&ingress.keycloak.enabled=false
     label: 'keycloak http lb port'
-    group: 'Networking'
+    group: Networking
 
   # Images
   - variable: images.keycloak.repository
