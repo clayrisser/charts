@@ -1,21 +1,35 @@
-apiVersion: helm.fluxcd.io/v1
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: erpnext
+  labels:
+    app.kubernetes.io/name: {{ template "erpnext.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  url: https://helm.erpnext.com
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-release
   labels:
-    app: {{ template "erpnext.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "erpnext.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  forceUpgrade: false
-  helmVersion: v3
+  interval: 5m
   chart:
-    git: https://github.com/nuevesolutions/helm.git
-    ref: master
-    path: erpnext
-  git:
-    timeout: 60s
+    spec:
+      chart: erpnext
+      version: {{ .Release.Version | quote }}
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: erpnext
   values:
     replicaCount: 1
     pythonImage:
@@ -28,8 +42,8 @@ spec:
       pullPolicy: IfNotPresent
     frappePyPort: "8000"
     socketIOPort: "9000"
-    postgresHost: {{ .Values.config.postgres.host }}
-    postgresPort: {{ .Values.config.postgres.port }}
+    # postgresHost: {{ .Values.config.mysql.host }}
+    # postgresPort: {{ .Values.config.mysql.port }}
     serviceAccount:
       create: true
     service:

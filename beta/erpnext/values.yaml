@@ -19,13 +19,13 @@ config:
       limits:
         cpu: 100m
         memory: 800Mi
-  postgres:
+  mysql:
     integration: ''
     database: erpnext
     host: ''
     password: ''
     port: 5432
-    username: postgres
+    username: root
     # url: ''
 
 service:

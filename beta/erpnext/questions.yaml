@@ -80,55 +80,55 @@ questions:
         required: true
         label: 'resources limits memory'
 
-  # Postgres
-  - variable: config.postgres.integration
+  # MySQL
+  - variable: config.mysql.integration
     description: ''
     type: string
     required: false
     label: integration
-    group: Postgres
-  - variable: config.postgres.host
+    group: MySQL
+  - variable: config.mysql.host
     description: ''
     type: string
     required: true
     label: host
-    show_if: config.postgres.integration=
-    group: Postgres
-  - variable: config.postgres.database
+    show_if: config.mysql.integration=
+    group: MySQL
+  - variable: config.mysql.database
     description: 'only letters, digits and _ allowed'
     type: string
     required: true
     label: database
-    group: Postgres
-  - variable: config.postgres.username
+    group: MySQL
+  - variable: config.mysql.username
     description: ''
     type: string
     required: true
     label: username
-    show_if: config.postgres.integration=
-    group: Postgres
-  - variable: config.postgres.password
+    show_if: config.mysql.integration=
+    group: MySQL
+  - variable: config.mysql.password
     description: ''
     type: password
     required: true
     label: password
-    show_if: config.postgres.integration=
-    group: Postgres
-  - variable: config.postgres.port
+    show_if: config.mysql.integration=
+    group: MySQL
+  - variable: config.mysql.port
     description: ''
     type: int
     min: 0
     max: 65535
     required: true
     label: port
-    show_if: config.postgres.integration=
-    group: Postgres
-  # - variable: config.postgres.url
+    show_if: config.mysql.integration=
+    group: MySQL
+  # - variable: config.mysql.url
   #   description: ''
   #   type: string
   #   required: false
   #   label: url
-  #   group: Postgres
+  #   group: MySQL
 
   # Persistence
   - variable: persistence.size.assets
@@ -142,7 +142,6 @@ questions:
     type: string
     required: true
     label: 'replicas system'
-    show_if: config.postgres.hotReplicas!=0
     group: Persistence
   - variable: persistence.storageClass
     description: ''
