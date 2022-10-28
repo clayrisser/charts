@@ -170,8 +170,7 @@ spec:
         enabled: false
         annotations: {}
         path: /
-        hosts:
-          - 'ssl-ldap2.example'
+        hosts: []
       ldap:
         server: ldap://openldap-stack-ha
         searchBase: {{ template "openldap.openldap-dc" . }}

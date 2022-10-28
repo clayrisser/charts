@@ -74,7 +74,6 @@ service:
 
 ingress:
   phpldapadmin:
-    externalDns: true
     certificate: ''
     enabled: false
     hostname: ''

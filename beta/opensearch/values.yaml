@@ -61,7 +61,7 @@ ingress:
     hostname: ''
     tls: false
     issuer:
-      name: letsencrypt-staging
+      name: ''
   opensearchDashboards:
     externalDns: true
     certificate: ''
@@ -69,7 +69,7 @@ ingress:
     hostname: ''
     tls: false
     issuer:
-      name: letsencrypt-staging
+      name: ''
 
 persistence:
   accessMode: ReadWriteOnce

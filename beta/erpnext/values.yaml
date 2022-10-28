@@ -1,0 +1,62 @@
+images:
+# erpnext:
+#   repository: tootsuite/erpnext
+#   tag: v3.3.0
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  debug: false
+  enableIstio: false
+  erpnext:
+    hostname: ''
+    baseUrl: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 10m
+        memory: 600Mi
+      limits:
+        cpu: 100m
+        memory: 800Mi
+  postgres:
+    integration: ''
+    database: erpnext
+    host: ''
+    password: ''
+    port: 5432
+    username: postgres
+    # url: ''
+
+service:
+  erpnext:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  pgadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''
+
+persistence:
+  accessMode: ReadWriteMany
+  size:
+    assets: 1Gi
+    system: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'

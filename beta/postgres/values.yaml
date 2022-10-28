@@ -34,10 +34,10 @@ config:
   enableIstio: false
   wal: false
   passwords:
-    pgbouncer:
-    pguser:
-    postgres:
-    primaryUser:
+    pgbouncer: ''
+    pguser: ''
+    postgres: ''
+    primaryUser: ''
   postgres:
     hostname: ''
     hotReplicas: 0

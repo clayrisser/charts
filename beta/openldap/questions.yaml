@@ -231,13 +231,6 @@ questions:
     show_subquestion_if: true
     group: 'Networking'
     subquestions:
-      - variable: ingress.phpldapadmin.externalDns
-        default: false
-        description: ''
-        type: boolean
-        show_if: config.phpldapadmin.enabled=true
-        required: true
-        label: 'phpldapadmin external dns'
       - variable: ingress.phpldapadmin.tls
         default: false
         description: ''

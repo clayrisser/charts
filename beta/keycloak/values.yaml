@@ -48,16 +48,16 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 500m
+        cpu: 10m
         memory: 600Mi
       limits:
-        cpu: 1500m
-        memory: 1000Mi
+        cpu: 100m
+        memory: 800Mi
   postgres:
     integration: ''
     database: keycloak
     host: ''
-    password: P@ssw0rd
+    password: ''
     port: 5432
     username: postgres
     # url: ''

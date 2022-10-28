@@ -75,4 +75,4 @@ ingress:
     hostname: ''
     tls: false
     issuer:
-      name: letsencrypt-staging
+      name: ''
