@@ -1,5 +1,5 @@
 apiVersion: v2
-name: xtradb-crds
+name: pxc-operator
 home: https://gitlab.com/risserlabs/community/charts
 version: 0.0.1
 appVersion: 1.10.0
@@ -14,8 +14,8 @@ maintainers:
   - name: 'Clay Risser'
     email: email@clayrisser.com
 annotations:
-  catalog.cattle.io/display-name: 'XtraDB Crds'
+  catalog.cattle.io/display-name: 'XtraDB Operator'
   catalog.cattle.io/hidden: 'true'
   catalog.cattle.io/namespace: kube-system
   catalog.cattle.io/os: linux
-  catalog.cattle.io/release-name: xtradb-crds
+  catalog.cattle.io/release-name: pxc-operator
