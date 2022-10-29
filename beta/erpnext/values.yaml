@@ -35,7 +35,7 @@ config:
     database: erpnext
     host: ''
     password: ''
-    port: 5432
+    port: 3306
     username: root
     # url: ''
 
