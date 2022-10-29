@@ -128,7 +128,7 @@ ingress:
       name: ''
 
 persistence:
-  enabled: false
+  enabled: true
   accessMode: ReadWriteOnce
   storageClass: ''
   size:

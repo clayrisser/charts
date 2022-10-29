@@ -22,7 +22,7 @@ config:
     javaOpts: ''
     migrationStrategy: IGNORE_EXISTING
     replicas: 1
-    themeZip: keycloak
+    themeZip: ''
     welcomeTheme: ''
     smtp:
       enabled: false
@@ -43,7 +43,7 @@ config:
       password: ''
       userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson, person, posixAccount, top, arbitrarySlots, extendedPerson'
       tls:
-        enabled: true
+        enabled: false
         ca:
     resources:
       enabled: defaults
