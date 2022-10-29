@@ -48,11 +48,11 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 10m
+        cpu: 500m
         memory: 600Mi
       limits:
-        cpu: 100m
-        memory: 800Mi
+        cpu: 1500m
+        memory: 1000Mi
   postgres:
     integration: ''
     database: keycloak
