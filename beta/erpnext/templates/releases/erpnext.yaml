@@ -226,7 +226,7 @@ spec:
         affinity: {}
       configure:
         enabled: true
-        fixVolume: true
+        fixVolume: false
         backoffLimit: 0
         resources: {}
         nodeSelector: {}
@@ -234,7 +234,7 @@ spec:
         affinity: {}
       createSite:
         enabled: true
-        forceCreate: false
+        forceCreate: true
         siteName: "erp.cluster.local"
         adminPassword: "changeit"
         installApps:
@@ -328,8 +328,47 @@ spec:
           redis: 6379
         persistence:
           enabled: false
-    mariadb:
-      enabled: false
+
+  mariadb:
+    # https://github.com/bitnami/charts/tree/master/bitnami/mariadb
+    enabled: true
+    auth:
+      rootPassword: "changeit"
+      username: "erpnext"
+      password: "changeit"
+      replicationPassword: "changeit"
+    primary:
+      service:
+        ports:
+          mysql: 3306
+      configuration: |-
+        [mysqld]
+        skip-name-resolve
+        explicit_defaults_for_timestamp
+        basedir=/opt/bitnami/mariadb
+        plugin_dir=/opt/bitnami/mariadb/plugin
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        tmpdir=/opt/bitnami/mariadb/tmp
+        max_allowed_packet=16M
+        bind-address=::
+        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+        log-error=/opt/bitnami/mariadb/logs/mysqld.log
+        # Frappe Specific Changes
+        character-set-client-handshake=FALSE
+        character-set-server=utf8mb4
+        collation-server=utf8mb4_unicode_ci
+        [client]
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        plugin_dir=/opt/bitnami/mariadb/plugin
+        # Frappe Specific Changes
+        default-character-set=utf8mb4
+        [manager]
+        port=3306
+        socket=/opt/bitnami/mariadb/tmp/mysql.sock
+        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+
     postgresql:
       enabled: false
 {{- if (not .Values.config.mysql.integration) }}
