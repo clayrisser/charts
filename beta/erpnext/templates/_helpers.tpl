@@ -20,10 +20,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate erpnext certificate
 */}}
 {{- define "erpnext.erpnext-certificate" }}
-{{- if (not (empty .Values.ingress.erpnext.certificate)) }}
-{{- printf .Values.ingress.erpnext.certificate }}
+{{- if (not (empty .Values.ingress.nginx.certificate)) }}
+{{- printf .Values.ingress.nginx.certificate }}
 {{- else }}
-{{- printf "%s-erpnext-letsencrypt" (include "erpnext.fullname" .) }}
+{{- printf "frappe-bench-%s-letsencrypt" (include "erpnext.name" .) }}
 {{- end }}
 {{- end }}
 
@@ -34,10 +34,10 @@ Calculate erpnext hostname
 {{- if (and .Values.config.erpnext.hostname (not (empty .Values.config.erpnext.hostname))) }}
 {{- printf .Values.config.erpnext.hostname }}
 {{- else }}
-{{- if .Values.ingress.erpnext.enabled }}
-{{- printf .Values.ingress.erpnext.hostname }}
+{{- if .Values.ingress.nginx.enabled }}
+{{- printf .Values.ingress.nginx.hostname }}
 {{- else }}
-{{- printf "%s-erpnext" (include "erpnext.fullname" .) }}
+{{- printf "frappe-bench-%s.%s.svc.cluster.local" (include "erpnext.name" .) .Release.Namespace }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -49,9 +49,9 @@ Calculate erpnext base url
 {{- if (and .Values.config.erpnext.baseUrl (not (empty .Values.config.erpnext.baseUrl))) }}
 {{- printf .Values.config.erpnext.baseUrl }}
 {{- else }}
-{{- if .Values.ingress.erpnext.enabled }}
-{{- $hostname := ((empty (include "erpnext.erpnext-hostname" .)) | ternary .Values.ingress.erpnext.hostname (include "erpnext.erpnext-hostname" .)) }}
-{{- $protocol := (.Values.ingress.erpnext.tls | ternary "https" "http") }}
+{{- if .Values.ingress.nginx.enabled }}
+{{- $hostname := ((empty (include "erpnext.erpnext-hostname" .)) | ternary .Values.ingress.nginx.hostname (include "erpnext.erpnext-hostname" .)) }}
+{{- $protocol := (.Values.ingress.nginx.tls | ternary "https" "http") }}
 {{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "erpnext.erpnext-hostname" .) }}

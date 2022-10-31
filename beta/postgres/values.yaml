@@ -31,7 +31,7 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   debug: false
-  enableIstio: false
+  istio: false
   wal: false
   passwords:
     pgbouncer: ''

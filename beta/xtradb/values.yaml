@@ -28,7 +28,7 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: SmartUpdate
   debug: false
-  enableIstio: false
+  istio: false
   passwords:
     clustercheck: ''
     monitor: ''

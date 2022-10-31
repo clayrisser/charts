@@ -1,4 +1,4 @@
-{{- if .Values.config.enableIstio }}
+{{- if .Values.config.istio }}
 apiVersion: patch.risserlabs.com/v1alpha1
 kind: Patch
 metadata:

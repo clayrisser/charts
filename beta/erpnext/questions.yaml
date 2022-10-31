@@ -27,22 +27,78 @@ questions:
     required: true
     label: debug
     group: Config
-  - variable: config.enableIstio
+  - variable: config.istio
     description: ''
     type: boolean
     required: true
-    label: 'enable istio'
+    label: istio
+    group: Config
+  - variable: config.logs
+    description: ''
+    type: boolean
+    required: true
+    label: logs
     group: Config
 
   # Nginx
+  - variable: config.nginx.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Nginx
   - variable: config.nginx.config
     description: 'https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/stable/alpine/20-envsubst-on-templates.sh'
     type: multiline
     required: false
     label: config
     group: Nginx
+  - variable: config.nginx.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Nginx
+    subquestions:
+      - variable: config.nginx.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.nginx.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.nginx.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.nginx.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
 
   # ERPNext
+  - variable: config.erpnext.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: ERPNext
+  - variable: config.erpnext.adminPassword
+    description: ''
+    type: password
+    required: false
+    label: 'admin password'
+    group: ERPNext
   - variable: config.erpnext.hostname
     description: ''
     type: string
@@ -161,7 +217,7 @@ questions:
         description: ''
         type: string
         required: true
-        show_if: config.haproxy.enabled=true
+        show_if: config.logs=true
         label: 'logs size'
       - variable: persistence.velero.enabled
         description: ''
@@ -205,28 +261,28 @@ questions:
         group: Persistence
 
   # Networking
-  - variable: ingress.erpnext.enabled
+  - variable: ingress.nginx.enabled
     description: ''
     type: boolean
-    label: 'erpnext ingress enabled'
+    label: 'nginx ingress enabled'
     show_subquestion_if: true
     group: Networking
     subquestions:
-      - variable: ingress.erpnext.tls
+      - variable: ingress.nginx.tls
         description: ''
         type: boolean
         required: true
-        label: 'erpnext ingress tls'
-      - variable: ingress.erpnext.hostname
+        label: 'nginx ingress tls'
+      - variable: ingress.nginx.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'erpnext ingress hostname'
-      - variable: ingress.erpnext.issuer.name
+        label: 'nginx ingress hostname'
+      - variable: ingress.nginx.issuer.name
         description: ''
         type: enum
-        show_if: ingress.erpnext.tls=true
+        show_if: ingress.nginx.tls=true
         options:
           - none
           - letsencrypt-cloudflare-staging
@@ -234,41 +290,41 @@ questions:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'erpnext ingress issuer name'
-      - variable: ingress.erpnext.certificate
+        label: 'nginx ingress issuer name'
+      - variable: ingress.nginx.certificate
         description: ''
         type: string
-        show_if: ingress.erpnext.tls=true&&ingress.erpnext.issuer.name=none
+        show_if: ingress.nginx.tls=true&&ingress.nginx.issuer.name=none
         required: false
-        label: 'erpnext ingress certificate'
-  - variable: service.erpnext.type
+        label: 'nginx ingress certificate'
+  - variable: service.nginx.type
     description: ''
     type: enum
-    show_if: ingress.erpnext.enabled=false
+    show_if: ingress.nginx.enabled=false
     options:
       - ClusterIP
       - LoadBalancer
       - NodePort
     required: true
-    label: 'erpnext service type'
+    label: 'nginx service type'
     group: Networking
-  - variable: service.erpnext.nodePorts.http
+  - variable: service.nginx.nodePorts.http
     description: ''
     type: int
     required: false
     min: 30000
     max: 32767
-    show_if: service.erpnext.type=NodePort&&ingress.erpnext.enabled=false
-    label: 'erpnext http node port'
+    show_if: service.nginx.type=NodePort&&ingress.nginx.enabled=false
+    label: 'nginx http node port'
     group: Networking
-  - variable: service.erpnext.lbPorts.http
+  - variable: service.nginx.lbPorts.http
     description: ''
     type: int
     min: 0
     max: 65535
     required: true
-    show_if: service.erpnext.type=LoadBalancer&&ingress.erpnext.enabled=false
-    label: 'erpnext http lb port'
+    show_if: service.nginx.type=LoadBalancer&&ingress.nginx.enabled=false
+    label: 'nginx http lb port'
     group: Networking
 
   # Images

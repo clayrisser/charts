@@ -27,11 +27,11 @@ questions:
     required: true
     label: debug
     group: Config
-  - variable: config.enableIstio
+  - variable: config.istio
     description: ''
     type: boolean
     required: true
-    label: 'enable istio'
+    label: istio
     group: Config
 
   # Openldap

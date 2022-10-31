@@ -16,20 +16,32 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   debug: false
-  enableIstio: false
+  istio: false
+  logs: false
   nginx:
+    replicas: 1
     config: ''
-  erpnext:
-    hostname: ''
-    baseUrl: ''
     resources:
       enabled: defaults
       requests:
-        cpu: 10m
-        memory: 600Mi
-      limits:
         cpu: 100m
-        memory: 800Mi
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+  erpnext:
+    replicas: 1
+    hostname: ''
+    baseUrl: ''
+    adminPassword: 'P@ssw0rd'
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
   mysql:
     integration: ''
     database: erpnext
@@ -40,7 +52,7 @@ config:
     # url: ''
 
 service:
-  erpnext:
+  nginx:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
@@ -49,7 +61,7 @@ service:
       http: 80
 
 ingress:
-  erpnext:
+  nginx:
     certificate: ''
     enabled: false
     hostname: ''

@@ -32,7 +32,7 @@ spec:
         name: erpnext
   values:
     nginx:
-      replicaCount: 1
+      replicaCount: {{ .Values.config.nginx.replicas }}
       image:
         repository: {{ .Values.images.nginx.repository | quote }}
         tag: {{ .Values.images.nginx.tag | quote }}
@@ -55,23 +55,29 @@ spec:
         initialDelaySeconds: 5
         periodSeconds: 10
       service:
+        {{- if .Values.ingress.nginx.enabled }}
         type: ClusterIP
-        port: 8080
-        # port: {{ (eq .Values.service.erpnext.type "LoadBalancer") | ternary .Values.service.erpnext.lbPorts.http  ((and (eq .Values.service.erpnext.type "NodePort") (not (empty .Values.service.erpnext.nodePorts.http))) | ternary .Values.service.erpnext.nodePorts.http "80") }}
-      resources: {}
-      nodeSelector: {}
-      tolerations: []
-      affinity: {}
-      envVars: []
-      initContainers: []
-      sidecars: []
+        {{- else }}
+        type: {{ .Values.service.nginx.type }}
+        {{- end }}
+        port: {{ (eq .Values.service.nginx.type "LoadBalancer") | ternary .Values.service.nginx.lbPorts.http  ((and (eq .Values.service.nginx.type "NodePort") (not (empty .Values.service.nginx.nodePorts.http))) | ternary .Values.service.nginx.nodePorts.http "8080") }}
+      resources:
+{{- if (and .Values.config.nginx.resources.enabled (not (eq .Values.config.nginx.resources.enabled "false"))) }}
+        requests:
+{{ toYaml .Values.config.nginx.resources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.nginx.resources.limits | indent 10 }}
+{{- else }}
+        requests: {}
+        limits: {}
+{{- end }}
     worker:
       image:
         repository: {{ .Values.images.worker.repository | quote }}
         tag: {{ .Values.images.worker.tag | quote }}
         pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
       gunicorn:
-        replicaCount: 1
+        replicaCount: {{ .Values.config.erpnext.replicas }}
         livenessProbe:
           tcpSocket:
             port: 8000
@@ -85,10 +91,16 @@ spec:
         service:
           type: ClusterIP
           port: 8000
-        resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
+        resources:
+{{- if (and .Values.config.erpnext.resources.enabled (not (eq .Values.config.erpnext.resources.enabled "false"))) }}
+          requests:
+{{ toYaml .Values.config.erpnext.resources.requests | indent 12 }}
+          limits:
+{{ toYaml .Values.config.erpnext.resources.limits | indent 12 }}
+{{- else }}
+          requests: {}
+          limits: {}
+{{- end }}
         args:
           - /home/frappe/frappe-bench/env/bin/gunicorn
           - --bind=0.0.0.0:8000
@@ -101,69 +113,18 @@ spec:
           - --worker-tmp-dir=/dev/shm
           - --workers=2
           - frappe.app:application
-        envVars: []
-        initContainers: []
-        sidecars: []
       default:
         replicaCount: 1
         resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
-        livenessProbe:
-          override: false
-          probe: {}
-        readinessProbe:
-          override: false
-          probe: {}
-        envVars: []
-        initContainers: []
-        sidecars: []
       short:
         replicaCount: 1
         resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
-        livenessProbe:
-          override: false
-          probe: {}
-        readinessProbe:
-          override: false
-          probe: {}
-        envVars: []
-        initContainers: []
-        sidecars: []
       long:
         replicaCount: 1
         resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
-        livenessProbe:
-          override: false
-          probe: {}
-        readinessProbe:
-          override: false
-          probe: {}
-        envVars: []
-        initContainers: []
-        sidecars: []
       scheduler:
         replicaCount: 1
         resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
-        livenessProbe:
-          override: false
-          probe: {}
-        readinessProbe:
-          override: false
-          probe: {}
-        envVars: []
-        initContainers: []
-        sidecars: []
     socketio:
       replicaCount: 1
       livenessProbe:
@@ -181,82 +142,61 @@ spec:
         tag: v14.13.0
         pullPolicy: IfNotPresent
       resources: {}
-      nodeSelector: {}
-      tolerations: []
-      affinity: {}
       service:
         type: ClusterIP
         port: 9000
-      envVars: []
-      initContainers: []
-      sidecars: []
     persistence:
       worker:
         enabled: {{ .Values.persistence.enabled }}
         size: {{ .Values.persistence.size.worker }}
         storageClass: {{ .Values.persistence.storageClass }}
       logs:
-        enabled: {{ .Values.persistence.enabled }}
+        enabled: {{ (and .Values.config.logs .Values.persistence.enabled) }}
         size: {{ .Values.persistence.size.logs }}
         storageClass: {{ .Values.persistence.storageClass }}
     ingress:
-      # ingressName: ""
-      # className: ""
+      ingressName: {{ printf "frappe-bench-%s" (include "erpnext.name" .) }}
       enabled: false
-      annotations: {}
-        # kubernetes.io/ingress.class: nginx
-        # kubernetes.io/tls-acme: "true"
-        # cert-manager.io/cluster-issuer: letsencrypt-prod
+      annotations:
+        {{- if .Values.ingress.nginx.tls }}
+        {{- if (not .Values.ingress.nginx.certificate) }}
+        kubernetes.io/tls-acme: 'true'
+        {{- if .Values.ingress.nginx.issuer.name }}
+        cert-manager.io/cluster-issuer: {{ .Values.ingress.nginx.issuer.name }}
+        {{- end }}
+        {{- end }}
+        nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+        {{- end }}
       hosts:
-      - host: erp.cluster.local
-        paths:
-        - path: /
-          pathType: ImplementationSpecific
-      tls: []
-      #  - secretName: auth-server-tls
-      #    hosts:
-      #      - auth-server.local
+        - host: '{{ .Values.ingress.nginx.hostname }}'
+          paths:
+          - path: /
+            pathType: ImplementationSpecific
+      {{- if .Values.ingress.nginx.tls }}
+      tls:
+        - secretName: {{ template "postgres.erpnext-certificate" . }}
+          hosts:
+            - '{{ .Values.ingress.nginx.hostname }}'
+      {{- end }}
     jobs:
       volumePermissions:
         enabled: false
-        backoffLimit: 0
-        resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
       configure:
         enabled: true
         fixVolume: false
-        backoffLimit: 0
-        resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
       createSite:
         enabled: true
         forceCreate: true
-        siteName: "erp.cluster.local"
-        adminPassword: "changeit"
+        siteName: '{{ template "erpnext.erpnext-hostname" . }}'
+        adminPassword: {{ .Values.config.erpnext.adminPassword | quote }}
         installApps:
           - erpnext
         dbType: mariadb
-        backoffLimit: 0
-        resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
       dropSite:
         enabled: false
-        forced: false
-        siteName: "erp.cluster.local"
-        backoffLimit: 0
-        resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
       backup:
         enabled: false
-        siteName: "erp.cluster.local"
+        siteName: '{{ template "erpnext.erpnext-hostname" . }}'
         withFiles: true
         push:
           enabled: false
@@ -265,19 +205,9 @@ spec:
           # accessKey: "ACCESSKEY"
           # secretKey: "SECRETKEY"
           # endpoint: http://store.storage.svc.cluster.local
-        backoffLimit: 0
-        resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
       migrate:
         enabled: false
-        siteName: "erp.cluster.local"
-        backoffLimit: 0
-        resources: {}
-        nodeSelector: {}
-        tolerations: []
-        affinity: {}
+        siteName: '{{ template "erpnext.erpnext-hostname" . }}'
     imagePullSecrets: []
     nameOverride: ""
     fullnameOverride: ""
@@ -285,16 +215,10 @@ spec:
       create: true
     podSecurityContext:
       supplementalGroups: [1000]
-      # runAsUser: 991
-      # runAsGroup: 991
-      # fsGroup: 991
     securityContext:
       capabilities:
         add:
         - CAP_CHOWN
-      # readOnlyRootFilesystem: true
-      # runAsNonRoot: true
-      # runAsUser: 1000
     redis-cache:
       enabled: true
       architecture: standalone
@@ -328,47 +252,6 @@ spec:
           redis: 6379
         persistence:
           enabled: false
-
-  mariadb:
-    # https://github.com/bitnami/charts/tree/master/bitnami/mariadb
-    enabled: true
-    auth:
-      rootPassword: "changeit"
-      username: "erpnext"
-      password: "changeit"
-      replicationPassword: "changeit"
-    primary:
-      service:
-        ports:
-          mysql: 3306
-      configuration: |-
-        [mysqld]
-        skip-name-resolve
-        explicit_defaults_for_timestamp
-        basedir=/opt/bitnami/mariadb
-        plugin_dir=/opt/bitnami/mariadb/plugin
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        tmpdir=/opt/bitnami/mariadb/tmp
-        max_allowed_packet=16M
-        bind-address=::
-        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-        log-error=/opt/bitnami/mariadb/logs/mysqld.log
-        # Frappe Specific Changes
-        character-set-client-handshake=FALSE
-        character-set-server=utf8mb4
-        collation-server=utf8mb4_unicode_ci
-        [client]
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        plugin_dir=/opt/bitnami/mariadb/plugin
-        # Frappe Specific Changes
-        default-character-set=utf8mb4
-        [manager]
-        port=3306
-        socket=/opt/bitnami/mariadb/tmp/mysql.sock
-        pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-
     postgresql:
       enabled: false
 {{- if (not .Values.config.mysql.integration) }}

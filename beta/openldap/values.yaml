@@ -10,7 +10,7 @@ config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   debug: false
-  enableIstio: false
+  istio: false
   openldap:
     replicas: 1
     domain: example.org
