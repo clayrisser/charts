@@ -253,7 +253,7 @@ spec:
         persistence:
           enabled: false
     mariadb:
-      enabled: true
+      enabled: false
     postgresql:
       enabled: false
 {{- if (not .Values.config.mysql.integration) }}
