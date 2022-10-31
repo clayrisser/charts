@@ -155,8 +155,8 @@ spec:
         size: {{ .Values.persistence.size.logs }}
         storageClass: {{ .Values.persistence.storageClass }}
     ingress:
-      ingressName: {{ printf "frappe-bench-%s" (include "erpnext.name" .) }}
-      enabled: false
+      ingressName: {{ .Release.Name }}-release
+      enabled: {{ .Values.ingress.nginx.enabled }}
       annotations:
         {{- if .Values.ingress.nginx.tls }}
         {{- if (not .Values.ingress.nginx.certificate) }}
@@ -252,6 +252,8 @@ spec:
           redis: 6379
         persistence:
           enabled: false
+    mariadb:
+      enabled: true
     postgresql:
       enabled: false
 {{- if (not .Values.config.mysql.integration) }}

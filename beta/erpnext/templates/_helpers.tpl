@@ -23,7 +23,7 @@ Calculate erpnext certificate
 {{- if (not (empty .Values.ingress.nginx.certificate)) }}
 {{- printf .Values.ingress.nginx.certificate }}
 {{- else }}
-{{- printf "frappe-bench-%s-letsencrypt" (include "erpnext.name" .) }}
+{{- printf "%s-release-letsencrypt" (include "erpnext.name" .) }}
 {{- end }}
 {{- end }}
 
@@ -37,7 +37,7 @@ Calculate erpnext hostname
 {{- if .Values.ingress.nginx.enabled }}
 {{- printf .Values.ingress.nginx.hostname }}
 {{- else }}
-{{- printf "frappe-bench-%s.%s.svc.cluster.local" (include "erpnext.name" .) .Release.Namespace }}
+{{- printf "%s-release.%s.svc.cluster.local" .Release.Name .Release.Namespace }}
 {{- end }}
 {{- end }}
 {{- end }}
