@@ -174,7 +174,7 @@ spec:
             pathType: ImplementationSpecific
       {{- if .Values.ingress.nginx.tls }}
       tls:
-        - secretName: {{ template "postgres.erpnext-certificate" . }}
+        - secretName: {{ template "erpnext.erpnext-certificate" . }}
           hosts:
             - '{{ .Values.ingress.nginx.hostname }}'
       {{- end }}
