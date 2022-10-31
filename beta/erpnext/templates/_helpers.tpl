@@ -23,7 +23,7 @@ Calculate erpnext certificate
 {{- if (not (empty .Values.ingress.nginx.certificate)) }}
 {{- printf .Values.ingress.nginx.certificate }}
 {{- else }}
-{{- printf "%s-release-letsencrypt" (include "erpnext.name" .) }}
+{{- printf "%s-release-letsencrypt" .Release.Name }}
 {{- end }}
 {{- end }}
 
