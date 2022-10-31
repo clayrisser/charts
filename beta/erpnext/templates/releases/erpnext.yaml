@@ -185,7 +185,7 @@ spec:
         enabled: true
         fixVolume: false
       createSite:
-        enabled: true
+        enabled: {{ not .Values.config.mysql.integration }}
         forceCreate: true
         siteName: '{{ template "erpnext.erpnext-hostname" . }}'
         adminPassword: {{ .Values.config.erpnext.adminPassword | quote }}
