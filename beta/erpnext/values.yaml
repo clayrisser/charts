@@ -1,16 +1,13 @@
 images:
   nginx:
-    repository: frappe/erpnext-nginx
-    tag: v14.4.0
+    repository: registry.gitlab.com/risserlabs/frappe/images/erpnext-nginx
+    tag: latest
   worker:
-    repository: frappe/erpnext-worker
-    tag: v14.4.0
+    repository: registry.gitlab.com/risserlabs/frappe/images/erpnext-worker
+    tag: latest
   socketio:
-    repository: frappe/frappe-socketio
-    tag: v14.4.0
-  erpnext:
-    repository: tootsuite/erpnext
-    tag: v3.3.0
+    repository: registry.gitlab.com/risserlabs/frappe/images/frappe-socketio
+    tag: latest
 
 config:
   imagePullPolicy: IfNotPresent

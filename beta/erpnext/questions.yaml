@@ -352,15 +352,3 @@ questions:
     required: true
     label: 'worker tag'
     group: Images
-  - variable: images.erpnext.repository
-    description: ''
-    type: string
-    required: true
-    label: 'erpnext repository'
-    group: Images
-  - variable: images.erpnext.tag
-    description: ''
-    type: string
-    required: true
-    label: 'erpnext tag'
-    group: Images
