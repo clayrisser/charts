@@ -1,0 +1,23 @@
+{{- if .Values.config.mysql.internal }}
+apiVersion: patch.risserlabs.com/v1alpha1
+kind: Patch
+metadata:
+  name: create-site
+  namespace: {{ .Release.Namespace }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  patches:
+    - id: helm-release
+      target:
+        group: helm.toolkit.fluxcd.io
+        version: v2beta1
+        kind: HelmRelease
+        name: {{ .Release.Name }}-release
+      waitForTimeout: 30
+      waitForResource: true
+      type: json
+      patch: |
+        - op: replace
+          path: /spec/values/jobs/createSite/enabled
+          value: true
+{{- end }}

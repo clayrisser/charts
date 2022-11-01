@@ -185,7 +185,7 @@ spec:
         enabled: true
         fixVolume: false
       createSite:
-        enabled: {{ not .Values.config.mysql.integration }}
+        enabled: {{ not .Values.config.mysql.internal }}
         forceCreate: true
         siteName: '{{ template "erpnext.erpnext-hostname" . }}'
         adminPassword: {{ .Values.config.erpnext.adminPassword | quote }}
@@ -253,10 +253,46 @@ spec:
         persistence:
           enabled: false
     mariadb:
-      enabled: false
+      enabled: true
+      auth:
+        rootPassword: {{ .Values.config.mysql.password | quote }}
+        username: 'erpnext'
+        password: {{ .Values.config.mysql.password | quote }}
+        replicationPassword: {{ .Values.config.mysql.password | quote }}
+      primary:
+        service:
+          ports:
+            mysql: 3306
+        configuration: |-
+          [mysqld]
+          skip-name-resolve
+          explicit_defaults_for_timestamp
+          basedir=/opt/bitnami/mariadb
+          plugin_dir=/opt/bitnami/mariadb/plugin
+          port=3306
+          socket=/opt/bitnami/mariadb/tmp/mysql.sock
+          tmpdir=/opt/bitnami/mariadb/tmp
+          max_allowed_packet=16M
+          bind-address=::
+          pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+          log-error=/opt/bitnami/mariadb/logs/mysqld.log
+          # Frappe Specific Changes
+          character-set-client-handshake=FALSE
+          character-set-server=utf8mb4
+          collation-server=utf8mb4_unicode_ci
+          [client]
+          port=3306
+          socket=/opt/bitnami/mariadb/tmp/mysql.sock
+          plugin_dir=/opt/bitnami/mariadb/plugin
+          # Frappe Specific Changes
+          default-character-set=utf8mb4
+          [manager]
+          port=3306
+          socket=/opt/bitnami/mariadb/tmp/mysql.sock
+          pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
     postgresql:
       enabled: false
-{{- if (not .Values.config.mysql.integration) }}
+{{- if (or (not .Values.config.mysql.integration) (not .Values.config.mysql.internal)) }}
     dbHost: {{ .Values.config.mysql.host | quote }}
     dbPort: {{ .Values.config.mysql.port | quote }}
     dbRootPassword: {{ .Values.config.mysql.password | quote }}

@@ -1,13 +1,13 @@
 images:
   nginx:
-    repository: registry.gitlab.com/risserlabs/frappe/images/erpnext-nginx
+    repository: frappe/erpnext-nginx
     tag: v14.4.0
   worker:
-    repository: registry.gitlab.com/risserlabs/frappe/images/erpnext-worker
+    repository: frappe/erpnext-worker
     tag: v14.4.0
   socketio:
-    repository: registry.gitlab.com/risserlabs/frappe/images/frappe-socketio
-    tag: v14.13.0-risserlabs
+    repository: frappe/frappe-socketio
+    tag: v14.4.0
 
 config:
   imagePullPolicy: IfNotPresent
@@ -40,10 +40,10 @@ config:
         cpu: 200m
         memory: 512Mi
   mysql:
+    internal: true
     integration: ''
-    database: erpnext
     host: ''
-    password: ''
+    password: 'P@ssw0rd'
     port: 3306
     username: root
     # url: ''

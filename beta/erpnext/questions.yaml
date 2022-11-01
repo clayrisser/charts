@@ -144,55 +144,49 @@ questions:
         required: true
         label: 'resources limits memory'
 
-  # MySQL
-  - variable: config.mysql.integration
-    description: ''
-    type: string
-    required: false
-    label: integration
-    group: MySQL
-  - variable: config.mysql.host
-    description: ''
-    type: string
-    required: true
-    label: host
-    show_if: config.mysql.integration=
-    group: MySQL
-  - variable: config.mysql.database
-    description: 'only letters, digits and _ allowed'
-    type: string
-    required: true
-    label: database
-    group: MySQL
-  - variable: config.mysql.username
-    description: ''
-    type: string
-    required: true
-    label: username
-    show_if: config.mysql.integration=
-    group: MySQL
+  # # MySQL
+  # - variable: config.mysql.integration
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: integration
+  #   group: MySQL
+  # - variable: config.mysql.host
+  #   description: ''
+  #   type: string
+  #   required: true
+  #   label: host
+  #   show_if: config.mysql.integration=
+  #   group: MySQL
+  # - variable: config.mysql.username
+  #   description: ''
+  #   type: string
+  #   required: true
+  #   label: username
+  #   show_if: config.mysql.integration=
+  #   group: MySQL
   - variable: config.mysql.password
     description: ''
     type: password
     required: true
     label: password
-    show_if: config.mysql.integration=
+    # show_if: config.mysql.integration=
     group: MySQL
-  - variable: config.mysql.port
-    description: ''
-    type: int
-    min: 0
-    max: 65535
-    required: true
-    label: port
-    show_if: config.mysql.integration=
-    group: MySQL
-  # - variable: config.mysql.url
+  # - variable: config.mysql.port
   #   description: ''
-  #   type: string
-  #   required: false
-  #   label: url
+  #   type: int
+  #   min: 0
+  #   max: 65535
+  #   required: true
+  #   label: port
+  #   show_if: config.mysql.integration=
   #   group: MySQL
+  # # - variable: config.mysql.url
+  # #   description: ''
+  # #   type: string
+  # #   required: false
+  # #   label: url
+  # #   group: MySQL
 
 # Persistence
   - variable: persistence.enabled
