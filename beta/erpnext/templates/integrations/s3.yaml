@@ -1,6 +1,6 @@
 {{- if .Values.config.backup.s3.integration }}
-{{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
-{{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
+{{- $name := (split "." .Values.config.backup.s3.integration)._1 | default "s3" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.backup.s3.integration))._0 }}
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
