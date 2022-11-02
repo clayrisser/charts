@@ -150,53 +150,48 @@ questions:
     type: boolean
     required: true
     label: enabled
+    show_subquestion_if: true
     group: Backup
-  - variable: config.backup.s3.integration
-    description: ''
-    type: string
-    required: false
-    label: 's3 integration'
-    group: Backup
-  - variable: config.backup.s3.endpoint
-    description: ''
-    type: string
-    required: false
-    label: 's3 endpoint'
-    show_if: config.backup.s3.integration=
-    group: Backup
-  - variable: config.backup.s3.bucket
-    description: ''
-    type: string
-    required: false
-    label: 's3 bucket'
-    group: Backup
-  - variable: config.backup.s3.prefix
-    description: ''
-    type: string
-    required: false
-    label: 's3 prefix'
-    group: Backup
-  - variable: config.backup.s3.accessKey
-    description: ''
-    type: string
-    required: false
-    label: 's3 access key'
-    show_if: config.backup.s3.integration=
-    group: Backup
-  - variable: config.backup.s3.secretKey
-    description: ''
-    type: password
-    required: false
-    label: 's3 secret key'
-    show_if: config.backup.s3.integration=
-    group: Backup
-  - variable: config.backup.s3.region
-    description: ''
-    type: string
-    required: false
-    label: 's3 region'
-    show_if: config.backup.s3.integration=
-    group: Backup
+    subquestions:
+      - variable: config.backup.s3.integration
+        description: ''
+        type: string
+        required: false
+        label: 's3 integration'
+      - variable: config.backup.s3.endpoint
+        description: ''
+        type: string
+        required: false
+        label: 's3 endpoint'
+        show_if: config.backup.s3.integration=
+      - variable: config.backup.s3.bucket
+        description: ''
+        type: string
+        required: false
+        label: 's3 bucket'
+      - variable: config.backup.s3.prefix
+        description: ''
+        type: string
+        required: false
+        label: 's3 prefix'
+      - variable: config.backup.s3.accessKey
+        description: ''
+        type: string
+        required: false
+        label: 's3 access key'
+        show_if: config.backup.s3.integration=
+      - variable: config.backup.s3.secretKey
+        description: ''
+        type: password
+        required: false
+        label: 's3 secret key'
+        show_if: config.backup.s3.integration=
+      - variable: config.backup.s3.region
+        description: ''
+        type: string
+        required: false
+        label: 's3 region'
+        show_if: config.backup.s3.integration=
 
   # # MySQL
   # - variable: config.mysql.integration
