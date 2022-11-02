@@ -160,14 +160,14 @@ questions:
   - variable: config.backup.s3.endpoint
     description: ''
     type: string
-    required: true
+    required: false
     label: 's3 endpoint'
     show_if: config.backup.s3.integration=
     group: Backup
   - variable: config.backup.s3.bucket
     description: ''
     type: string
-    required: true
+    required: false
     label: 's3 bucket'
     group: Backup
   - variable: config.backup.s3.prefix
@@ -242,7 +242,7 @@ questions:
   # #   label: url
   # #   group: MySQL
 
-# Persistence
+  # Persistence
   - variable: persistence.enabled
     description: ''
     type: boolean

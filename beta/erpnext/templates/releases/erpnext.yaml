@@ -204,7 +204,7 @@ spec:
           region: {{ .Values.config.backup.s3.region | quote }}
           accessKey: {{ .Values.config.backup.s3.accessKey | quote }}
           secretKey: {{ .Values.config.backup.s3.secretKey | quote }}
-          endpoint: https://{{ .Values.config.backup.s3.endpoint }}/{{ .Values.config.backup.s3.prefix }}
+          endpoint: https://{{ .Values.config.backup.s3.endpoint | ternary .Values.config.backup.s3.endpoint (printf "s3.%s.amazonaws.com" .Values.config.backup.s3.region) }}/{{ .Values.config.backup.s3.prefix }}
       migrate:
         enabled: false
     imagePullSecrets: []

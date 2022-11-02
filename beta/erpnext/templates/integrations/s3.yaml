@@ -48,11 +48,11 @@ spec:
                   path: /spec/values/jobs/backup/push
                   value:
                     enabled: true
-                    bucket: {% .plugConfig.bucket | quote %}
+                    bucket: {% ((empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket) | quote %}
                     region: {% .socketConfig.region | quote %}
                     accessKey: {% .socketConfig.accessKey | quote %}
                     secretKey: {% .socketConfig.secretKey | quote %}
-                    endpoint: 'https://{% .socketConfig.endpoint %}/{% .plugConfig.prefix %}'
+                    endpoint: 'https://{% .socketConfig.endpoint %}/{% (empty .plugConfig.bucket) | ternary .socketConfig.defaultPrefix .plugConfig.prefix %}'
                 - op: replace
                   path: /spec/values/jobs/backup/enabled
                   value: true
