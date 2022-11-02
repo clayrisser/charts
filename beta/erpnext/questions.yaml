@@ -147,7 +147,7 @@ questions:
   # Backup
   - variable: config.backup.enabled
     description: ''
-    type: string
+    type: boolean
     required: true
     label: enabled
     group: Backup
