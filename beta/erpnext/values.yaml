@@ -33,7 +33,7 @@ config:
       bucket: ''
       prefix: ''
       accessKey: ''
-      endpoint: s3.us-west-2.amazonaws.com
+      endpoint: ''
       region: us-west-2
       secretKey: ''
   erpnext:
