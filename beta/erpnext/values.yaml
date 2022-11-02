@@ -26,6 +26,16 @@ config:
       limits:
         cpu: 200m
         memory: 512Mi
+  backup:
+    enabled: false
+    s3:
+      integration: ''
+      bucket: ''
+      prefix: ''
+      accessKey: ''
+      endpoint: s3.us-west-2.amazonaws.com
+      region: us-west-2
+      secretKey: ''
   erpnext:
     replicas: 1
     hostname: ''
@@ -67,11 +77,11 @@ ingress:
       name: ''
 
 persistence:
-  enabled: false
+  enabled: true
   size:
     worker: 1Gi
     logs: 1Gi
-  storageClass: ''
+  storageClass: efs-sc
   velero:
     enabled: false
     restic: true

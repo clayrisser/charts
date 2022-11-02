@@ -1,0 +1,75 @@
+{{- if .Values.config.backup.s3.integration }}
+{{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
+apiVersion: integration.risserlabs.com/v1alpha2
+kind: Plug
+metadata:
+  name: s3
+  labels:
+    app.kubernetes.io/name: {{ template "erpnext.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: s3
+    namespace: {{ $namespace }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    bucket: {{ .Values.config.s3.bucket | quote }}
+    prefix: {{ .Values.config.s3.prefix | quote }}
+    replicate: 'false'
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      resource: |
+        apiVersion: patch.risserlabs.com/v1alpha1
+        kind: Patch
+        metadata:
+          name: create-site
+          namespace: {{ .Release.Namespace }}
+        spec:
+          epoch: {{ now | unixEpoch | quote }}
+          patches:
+            - id: helm-release
+              target:
+                group: helm.toolkit.fluxcd.io
+                version: v2beta1
+                kind: HelmRelease
+                name: {{ .Release.Name }}-release
+              waitForResource: true
+              type: json
+              patch: |
+                - op: replace
+                  path: /spec/values/jobs/backup/push
+                  value:
+                    enabled: true
+                    bucket: {% .plugConfig.bucket | quote %}
+                    region: {% .socketConfig.region | quote %}
+                    accessKey: {% .socketConfig.accessKey | quote %}
+                    secretKey: {% .socketConfig.secretKey | quote %}
+                    endpoint: 'https://{% .socketConfig.endpoint %}/{% .plugConfig.prefix %}'
+                - op: replace
+                  path: /spec/values/jobs/backup/enabled
+                  value: true
+    - when: [decoupled]
+      do: delete
+      resource: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: s3
+            namespace: {{ .Release.Namespace }}
+    - when: [decoupled]
+      do: delete
+      resource: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: s3
+            namespace: {{ .Release.Namespace }}
+{{- end }}

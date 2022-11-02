@@ -186,8 +186,8 @@ spec:
         fixVolume: false
       createSite:
         enabled: {{ not .Values.config.mysql.internal }}
-        forceCreate: true
-        siteName: '{{ template "erpnext.erpnext-hostname" . }}'
+        forceCreate: false
+        siteName: {{ template "erpnext.erpnext-hostname" . }}
         adminPassword: {{ .Values.config.erpnext.adminPassword | quote }}
         installApps:
           - erpnext
@@ -195,19 +195,18 @@ spec:
       dropSite:
         enabled: false
       backup:
-        enabled: false
-        siteName: '{{ template "erpnext.erpnext-hostname" . }}'
+        enabled: {{ (and .Values.config.backup.enabled (not .Values.config.backup.s3.integration)) }}
+        siteName: {{ template "erpnext.erpnext-hostname" . }}
         withFiles: true
         push:
-          enabled: false
-          # bucket: "erpnext"
-          # region: "us-east-1"
-          # accessKey: "ACCESSKEY"
-          # secretKey: "SECRETKEY"
-          # endpoint: http://store.storage.svc.cluster.local
+          enabled: true
+          bucket: {{ .Values.config.backup.s3.bucket | quote }}
+          region: {{ .Values.config.backup.s3.region | quote }}
+          accessKey: {{ .Values.config.backup.s3.accessKey | quote }}
+          secretKey: {{ .Values.config.backup.s3.secretKey | quote }}
+          endpoint: https://{{ .Values.config.backup.s3.endpoint }}/{{ .Values.config.backup.s3.prefix }}
       migrate:
         enabled: false
-        siteName: '{{ template "erpnext.erpnext-hostname" . }}'
     imagePullSecrets: []
     nameOverride: ""
     fullnameOverride: ""

@@ -144,6 +144,60 @@ questions:
         required: true
         label: 'resources limits memory'
 
+  # Backup
+  - variable: config.backup.enabled
+    description: ''
+    type: string
+    required: true
+    label: enabled
+    group: Backup
+  - variable: config.backup.s3.integration
+    description: ''
+    type: string
+    required: false
+    label: 's3 integration'
+    group: Backup
+  - variable: config.backup.s3.endpoint
+    description: ''
+    type: string
+    required: true
+    label: 's3 endpoint'
+    show_if: config.backup.s3.integration=
+    group: Backup
+  - variable: config.backup.s3.bucket
+    description: ''
+    type: string
+    required: true
+    label: 's3 bucket'
+    group: Backup
+  - variable: config.backup.s3.prefix
+    description: ''
+    type: string
+    required: false
+    label: 's3 prefix'
+    group: Backup
+  - variable: config.backup.s3.accessKey
+    description: ''
+    type: string
+    required: false
+    label: 's3 access key'
+    show_if: config.backup.s3.integration=
+    group: Backup
+  - variable: config.backup.s3.secretKey
+    description: ''
+    type: password
+    required: false
+    label: 's3 secret key'
+    show_if: config.backup.s3.integration=
+    group: Backup
+  - variable: config.backup.s3.region
+    description: ''
+    type: string
+    required: false
+    label: 's3 region'
+    show_if: config.backup.s3.integration=
+    group: Backup
+
   # # MySQL
   # - variable: config.mysql.integration
   #   description: ''
