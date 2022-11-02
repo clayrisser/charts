@@ -20,8 +20,8 @@ spec:
     name: {{ $name }}
     namespace: {{ $namespace }}
   config:
-    bucket: {{ .Values.config.s3.bucket | quote }}
-    prefix: {{ .Values.config.s3.prefix | quote }}
+    bucket: {{ .Values.config.backup.s3.bucket | quote }}
+    prefix: {{ .Values.config.backup.s3.prefix | quote }}
     replicate: 'false'
   resources:
     - when: [coupled, updated]
