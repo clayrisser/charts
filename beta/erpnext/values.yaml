@@ -31,7 +31,7 @@ config:
     s3:
       integration: ''
       bucket: ''
-      prefix: ''
+      prefix: erpnext
       accessKey: ''
       endpoint: ''
       region: us-west-2
