@@ -189,7 +189,8 @@ spec:
         forceCreate: false
         siteName: {{ template "erpnext.erpnext-hostname" . }}
         adminPassword: {{ .Values.config.erpnext.adminPassword | quote }}
-        installApps: {{ split "\n" .Values.config.erpnext.initialApps }}
+        installApps:
+{{ toYaml (split "\n" .Values.config.erpnext.initialApps) | indent 10 }}
         dbType: mariadb
       dropSite:
         enabled: false
