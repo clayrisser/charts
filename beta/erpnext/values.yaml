@@ -38,6 +38,9 @@ config:
       secretKey: ''
   erpnext:
     replicas: 1
+    initialApps: |
+      erpnext
+      hrms
     hostname: ''
     baseUrl: ''
     adminPassword: 'P@ssw0rd'

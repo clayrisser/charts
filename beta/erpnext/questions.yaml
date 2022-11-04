@@ -93,6 +93,12 @@ questions:
     required: true
     label: replicas
     group: ERPNext
+  - variable: config.erpnext.initialApps
+    description: 'future apps must be installed with bench'
+    type: multiline
+    required: false
+    label: 'initial apps'
+    group: ERPNext
   - variable: config.erpnext.adminPassword
     description: ''
     type: password
