@@ -4,7 +4,7 @@
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
-  name: {{ template "appname" . }}-postgres
+  name: {{ template "trackableappname" . }}-postgres
 spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'

@@ -120,7 +120,7 @@ spec:
 {{- end }}
 {{- if .Values.redis.managed }}
         - name: REDIS_HOST
-          value: {{ template "appname" . }}-redis-headless
+          value: {{ template "trackableappname" . }}-redis-headless
 {{- end }}
 {{- if .Values.application.database_url }}
         - name: DATABASE_URL
