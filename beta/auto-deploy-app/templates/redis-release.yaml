@@ -1,0 +1,36 @@
+{{- if .Values.redis.managed }}
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: bitnami
+spec:
+  interval: 5m
+  url: https://charts.bitnami.com/bitnami
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: redis-release
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: redis
+      version: {{ .Values.releaseVersion | quote }}
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: bitnami
+  values:
+    auth:
+      enabled: false
+    metrics:
+      enabled: false
+    master:
+      persistence:
+        enabled: false
+    replica:
+      persistence:
+        enabled: false
+      replicaCount: {{ .Values.redis.replicaCount }}
+{{- end }}

@@ -140,6 +140,11 @@ postgresql:
     #   matchLabels:
     #     stack: gitlab (This is an example. The labels should match the labels on the CloudSQLInstanceClass)
 
+redis:
+  managed: false
+  releaseVersion: 7.0.5
+  replicaCount: 0
+
 resources:
 #  limits:
 #    cpu: 100m
