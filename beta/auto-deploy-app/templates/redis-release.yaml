@@ -1,4 +1,5 @@
 {{- if .Values.redis.managed }}
+{{- if (not (lookup "source.toolkit.fluxcd.io/v1beta1" "HelmRepository" .Release.Namespace "bitnami")) }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
@@ -6,11 +7,12 @@ metadata:
 spec:
   interval: 5m
   url: https://charts.bitnami.com/bitnami
+{{- end }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: redis-release
+  name: {{ template "appname" . }}-redis
 spec:
   interval: 5m
   chart:

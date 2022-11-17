@@ -118,6 +118,10 @@ spec:
               name: app-postgres
               key: privateIP
 {{- end }}
+{{- if .Values.redis.managed }}
+        - name: REDIS_HOST
+          value: {{ template "appname" . }}-redis-headless
+{{- end }}
 {{- if .Values.application.database_url }}
         - name: DATABASE_URL
           value: {{ .Values.application.database_url | quote }}
@@ -173,7 +177,7 @@ spec:
             port: {{ .Values.readinessProbe.port | default .Values.service.internalPort }}
 {{- if .Values.readinessProbe.httpHeaders }}
             httpHeaders:
-{{- range $httpHeader := .Values.readinessProbe.httpHeaders }}            
+{{- range $httpHeader := .Values.readinessProbe.httpHeaders }}
             - name: {{ $httpHeader.name }}
               value: {{ $httpHeader.value }}
 {{- end }}

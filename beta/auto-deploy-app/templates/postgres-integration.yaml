@@ -4,7 +4,7 @@
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
-  name: postgres
+  name: {{ template "appname" . }}-postgres
 spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
@@ -26,7 +26,7 @@ spec:
           apiVersion: v1
           kind: Secret
           metadata:
-            name: postgres
+            name: {{ template "appname" . }}-postgres
             namespace: {{ .Release.Namespace }}
           stringData:
             POSTGRES_DATABASE: '{% .plugConfig.database %}'
@@ -40,7 +40,7 @@ spec:
         apiVersion: patch.risserlabs.com/v1alpha1
         kind: Patch
         metadata:
-          name: postgres-coupled-or-updated
+          name: {{ template "appname" . }}-postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
           epoch: {{ now | unixEpoch | quote }}
@@ -62,5 +62,5 @@ spec:
                   path: /spec/template/spec/containers/0/envFrom/-
                   value:
                     secretRef:
-                      name: postgres
+                      name: {{ template "appname" . }}-postgres
 {{- end }}
