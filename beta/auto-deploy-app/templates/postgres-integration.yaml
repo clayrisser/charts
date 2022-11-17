@@ -1,0 +1,66 @@
+{{- if (and .Values.integrations.postgres.name .Values.integrations.postgres.database) }}
+{{- $name := (split "." .Values.integrations.postgres.name)._1 | default "postgres" }}
+{{- $namespace := (split "." (printf "%s." .Values.integrations.postgres.name))._0 }}
+apiVersion: integration.risserlabs.com/v1alpha2
+kind: Plug
+metadata:
+  name: postgres
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: postgres
+    namespace: {{ $namespace }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    database: {{ .Values.integrations.postgres.database | quote }}
+    createdb: 'true'
+    cleanup: 'false'
+    replicate: 'false'
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      resource: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: postgres
+            namespace: {{ .Release.Namespace }}
+          stringData:
+            POSTGRES_DATABASE: '{% .plugConfig.database %}'
+            POSTGRES_HOST: '{% .socketConfig.hostname %}'
+            POSTGRES_PASSWORD: '{% .socketConfig.password %}'
+            POSTGRES_PORT: '{% .socketConfig.port %}'
+            POSTGRES_USER: '{% .socketConfig.username %}'
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: patch.risserlabs.com/v1alpha1
+        kind: Patch
+        metadata:
+          name: postgres-coupled-or-updated
+          namespace: {{ .Release.Namespace }}
+        spec:
+          epoch: {{ now | unixEpoch | quote }}
+          patches:
+            - id: deployment
+              target:
+                group: apps
+                version: v1
+                kind: Deployment
+                name: {{ template "trackableappname" . }}
+              waitForTimeout: 5
+              waitForResource: true
+              type: json
+              skipIf:
+                - jsonPath: /spec/template/spec/containers/0/envFrom/1/secretRef/name
+                  regex: postgres
+              patch: |
+                - op: add
+                  path: /spec/template/spec/containers/0/envFrom/-
+                  value:
+                    - secretRef:
+                        name: postgres
+{{- end }}
