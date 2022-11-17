@@ -25,11 +25,9 @@ spec:
     - {{ template "hostname" .Values.service.commonName }}
 {{- end }}
     - {{ template "hostname" .Values.service.url }}
-{{- if .Values.service.additionalHosts }}
+{{- if (not (empty .Values.service.additionalHosts)) }}
 {{- range $host := .Values.service.additionalHosts }}
-{{- if $host }}
     - {{ template "hostname" $host }}
-{{- end }}
 {{- end -}}
 {{- end }}
 {{- if not .Values.ingress.tls.useDefaultSecret }}
@@ -60,13 +58,11 @@ spec:
     http:
       <<: *httpRule
 {{- end -}}
-{{- if .Values.service.additionalHosts }}
+{{- if (not (empty .Values.service.additionalHosts)) }}
 {{- range $host := .Values.service.additionalHosts }}
-{{- if $host }}
   - host: {{ template "hostname" $host }}
     http:
       <<: *httpRule
-{{- end }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
