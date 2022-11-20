@@ -32,7 +32,7 @@ spec:
           - |
             kubectl proxy
   config:
-    keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
+    keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}/auth
     keycloakRealm: main
   vars:
     - name: BASE64_ENCODED_KEYCLOAK_ADMIN_PASSWORD
