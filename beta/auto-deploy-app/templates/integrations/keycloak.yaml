@@ -33,12 +33,12 @@ spec:
   socket:
     name: keycloak
     namespace: {{ $namespace }}
-  secretConfig: {{ template "trackableappname" . }}-keycloak-plug
   config:
     clientId: {{ .Values.integrations.keycloak.clientId }}
     redirectUris: "*"
     replicate: "false"
     cleanup: "false"
+  configSecretName: {{ template "trackableappname" . }}-keycloak-plug
   resources:
     - when: [coupled, updated]
       do: apply
