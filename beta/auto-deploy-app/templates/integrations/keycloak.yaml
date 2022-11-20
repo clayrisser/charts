@@ -1,24 +1,24 @@
-{{- if (and .Values.integrations.postgres.name .Values.integrations.postgres.database) }}
-{{- $name := (split "." .Values.integrations.postgres.name)._1 | default "postgres" }}
-{{- $namespace := (split "." (printf "%s." .Values.integrations.postgres.name))._0 }}
+{{- if (not (empty .Values.integrations.keycloak.name)) }}
+{{- $name := (split "." .Values.integrations.keycloak.name)._1 | default "keycloak" }}
+{{- $namespace := (split "." (printf "%s." .Values.integrations.keycloak.name))._0 }}
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
-  name: {{ template "trackableappname" . }}-postgres
+  name: {{ template "trackableappname" . }}-keycloak
 spec:
   epoch: {{ now | unixEpoch | quote }}
   interfaceVersions: '*'
   interface:
-    name: postgres
+    name: keycloak
     namespace: {{ $namespace }}
   socket:
-    name: {{ $name }}
+    name: keycloak
     namespace: {{ $namespace }}
   config:
-    database: {{ .Values.integrations.postgres.database | quote }}
-    createdb: 'true'
-    cleanup: 'false'
-    replicate: 'false'
+    clientId: {{ .Values.integrations.keycloak.clientId }}
+    redirectUris: "*"
+    replicate: "false"
+    cleanup: "false"
   resources:
     - when: [coupled, updated]
       do: apply
@@ -26,21 +26,22 @@ spec:
           apiVersion: v1
           kind: Secret
           metadata:
-            name: {{ template "appname" . }}-postgres
+            name: {{ template "trackableappname" . }}-keycloak
             namespace: {{ .Release.Namespace }}
           stringData:
-            POSTGRES_DATABASE: '{% .plugConfig.database %}'
-            POSTGRES_HOST: '{% .socketConfig.hostname %}'
-            POSTGRES_PASSWORD: '{% .socketConfig.password %}'
-            POSTGRES_PORT: '{% .socketConfig.port %}'
-            POSTGRES_USER: '{% .socketConfig.username %}'
+            KEYCLOAK_ADMIN_PASSWORD: '{% .socketConfig.keycloakAdminPassword %}'
+            KEYCLOAK_ADMIN_USERNAME: '{% .socketConfig.keycloakAdminUsername %}'
+            KEYCLOAK_BASE_URL: '{% .socketConfig.keycloakBaseUrl %}'
+            KEYCLOAK_CLIENT_ID: '{% .plugConfig.clientId %}'
+            KEYCLOAK_CLIENT_SECRET: '{% .plugConfig.clientSecret %}'
+            KEYCLOAK_REALM: '{% .socketConfig.keycloakRealm %}'
     - when: [coupled, updated]
       do: recreate
       resource: |
         apiVersion: patch.risserlabs.com/v1alpha1
         kind: Patch
         metadata:
-          name: {{ template "appname" . }}-postgres-coupled-or-updated
+          name: {{ template "trackableappname" . }}-keycloak-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
           epoch: {{ now | unixEpoch | quote }}
@@ -56,11 +57,11 @@ spec:
               type: json
               skipIf:
                 - jsonPath: spec.template.spec.containers[0].envFrom
-                  regex: postgres
+                  regex: keycloak
               patch: |
                 - op: add
                   path: /spec/template/spec/containers/0/envFrom/-
                   value:
                     secretRef:
-                      name: {{ template "appname" . }}-postgres
+                      name: {{ template "trackableappname" . }}-keycloak
 {{- end }}

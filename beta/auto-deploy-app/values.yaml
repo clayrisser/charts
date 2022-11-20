@@ -287,6 +287,9 @@ redis:
   replicaCount: 0
 
 integrations:
+  keycloak:
+    name: ''
+    clientId: ''
   postgres:
     name: ''
     database: ''
