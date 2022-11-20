@@ -288,10 +288,11 @@ redis:
 
 integrations:
   keycloak:
-    name: ''
+    cleanup: true
     clientId: ''
     clientSecret: ''
     clientSecretEnabled: true
+    name: ''
 
   postgres:
     name: ''
