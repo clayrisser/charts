@@ -38,7 +38,9 @@ spec:
     redirectUris: "*"
     replicate: "false"
     cleanup: {{ .Values.integrations.keycloak.cleanup | quote }}
+{{- if .Values.integrations.keycloak.clientSecretEnabled }}
   configSecretName: {{ template "trackableappname" . }}-keycloak-plug
+{{- end }}
   resources:
     - when: [coupled, updated]
       do: apply
