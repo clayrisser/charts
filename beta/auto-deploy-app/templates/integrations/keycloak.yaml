@@ -1,6 +1,6 @@
 {{- if (not (empty .Values.integrations.keycloak.name)) }}
 {{- if .Values.integrations.keycloak.clientSecretEnabled }}
-{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace {{ template "trackableappname" . }}-keycloak-plug }}
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace (printf "%s-keycloak-plug" (include "trackableappname" .)) }}
 apiVersion: v1
 kind: Secret
 metadata:
