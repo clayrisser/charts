@@ -18,6 +18,7 @@ metadata:
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
+    nginx.ingress.kubernetes.io/proxy-buffer-size: '128k'
 spec:
   rules:
     - host: {{ .Values.ingress.keycloak.hostname }}
