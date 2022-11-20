@@ -290,6 +290,9 @@ integrations:
   keycloak:
     name: ''
     clientId: ''
+    clientSecret: ''
+    clientSecretEnabled: true
+
   postgres:
     name: ''
     database: ''

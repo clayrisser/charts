@@ -1,4 +1,23 @@
 {{- if (not (empty .Values.integrations.keycloak.name)) }}
+{{- if .Values.integrations.keycloak.clientSecretEnabled }}
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace {{ template "trackableappname" . }}-keycloak-plug }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "trackableappname" . }}-keycloak-plug
+type: Opaque
+data:
+{{- if (and $existingSecret $existingSecret.data) }}
+{{- if $existingSecret.data.clientSecret }}
+  clientSecret: {{ $existingSecret.data.clientSecret }}
+{{- else }}
+  clientSecret: {{ .Values.integrations.keycloak.clientSecret | default (randAlphaNum 24) | b64enc | quote }}
+{{- end }}
+{{- else }}
+  clientSecret: {{ .Values.integrations.keycloak.clientSecret | default (randAlphaNum 24) | b64enc | quote }}
+{{- end }}
+{{- end }}
+---
 {{- $name := (split "." .Values.integrations.keycloak.name)._1 | default "keycloak" }}
 {{- $namespace := (split "." (printf "%s." .Values.integrations.keycloak.name))._0 }}
 apiVersion: integration.risserlabs.com/v1alpha2
@@ -14,6 +33,7 @@ spec:
   socket:
     name: keycloak
     namespace: {{ $namespace }}
+  secretConfig: {{ template "trackableappname" . }}-keycloak-plug
   config:
     clientId: {{ .Values.integrations.keycloak.clientId }}
     redirectUris: "*"
