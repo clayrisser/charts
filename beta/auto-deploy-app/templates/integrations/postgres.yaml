@@ -43,7 +43,7 @@ spec:
           name: {{ template "trackableappname" . }}-postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
+          epoch: {% now | unixEpoch | quote %}
           patches:
             - id: deployment
               target:
