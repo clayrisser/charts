@@ -48,6 +48,7 @@ spec:
     name: olm
     namespace: olm
 ---
+{{- if (not (lookup "v1" "ConfigMap" .Release.Namespace "install-plan-approved")) }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -108,6 +109,13 @@ spec:
                         path: /spec/approved
                         value: true
               EOF
+              cat <<EOF | kubectl apply -f -
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: install-plan-approved
+                namespace: {{ .Release.Namespace }}
+              EOF
               kubectl get pods -n {{ .Release.Namespace }} \
                 -l job-name=approve-install-plan \
                 --field-selector status.phase=Failed \
@@ -115,3 +123,4 @@ spec:
           env:
             - name: CSV
               value: keycloak-operator.v19.0.2
+{{- end }}
