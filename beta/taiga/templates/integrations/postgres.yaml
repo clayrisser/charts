@@ -58,4 +58,12 @@ spec:
                 - op: replace
                   path: /spec/values/env/postgresUser
                   value: '{% .socketConfig.username %}'
+    - when: [coupled, updated]
+      do: delete
+      resource: |
+        apiVersion: apps/v1
+        kind: StatefulSet
+        metadata:
+          name: {{ .Release.Name }}-release-db
+          namespace: {{ .Release.Namespace }}
 {{- end }}
