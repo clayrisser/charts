@@ -54,3 +54,16 @@ Calculate taiga base url
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Calculate postgres url
+*/}}
+{{- define "taiga.postgres-url" -}}
+{{- $postgres := .Values.config.postgres -}}
+{{- if $postgres.url -}}
+{{- printf $postgres.url -}}
+{{- else -}}
+{{- $credentials := ((or (not $postgres.username) (not $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) -}}
+{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host ($postgres.port | toString) $postgres.database -}}
+{{- end -}}
+{{- end -}}

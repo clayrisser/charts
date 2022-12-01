@@ -33,60 +33,54 @@ spec:
   values:
     persistence:
       media:
-        enabled: false
-        size: '100Mi'
-        storageClassName: 'default'
-        accessMode: 'ReadWriteOnce'
+        enabled: true
+        size: {{ .Values.persistence.size.media | quote }}
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ''
+        {{- else }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+        accessMode: {{ .Values.persistence.accessMode | quote }}
       static:
-        enabled: false
-        size: '100Mi'
-        storageClassName: 'default'
-        accessMode: 'ReadWriteOnce'
-
+        enabled: true
+        size: {{ .Values.persistence.size.static | quote }}
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ''
+        {{- else }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+        accessMode: {{ .Values.persistence.accessMode | quote }}
     env:
-      defaultFromEmail: "no-reply@example.com"
-      emailBackend: "django.core.mail.backends.smtp.EmailBackend"
-      emailHost: "smtp.host.example.com"
-      emailHostPassword: "password"
-      emailHostUser: "user"
-      emailPort: "587"
-      emailUseSSL: "true"
-      emailUseTLS: "true"
-      enableEmail: "false"
-      enableGithubAuth: "false"
-      enableGithubImporter: "false"
-      enableGitlabAuth: "false"
-      enableJiraImporter: "false"
-      enableSlack: "false"
-      enableTelemetry: "true"
-      enableTrelloImporter: "false"
-      githubApiClientID: "github-api-client-id"
-      githubApiClientSecret: "github-api-client-secret"
-      githubImporterClientID: "client-id-from-github"
-      githubImporterClientSecret: "client-secret-from-github"
-      gitlabApiClientSecret: "gitlab-api-client-secret"
-      gitlabClientID: "gitlab-client-id"
-      gitlabURL: "gitlab-url"
-      jiraImporterCert: "cert-from-jira"
-      jiraImporterConsumerKey: "consumer-key-from-jira"
-      jiraImporterPubCert: "pub-cert-from-jira"
-      maxAge: "360"
+      enableEmail: 'false'
+      enableGithubAuth: 'false'
+      enableGithubImporter: 'false'
+      enableGitlabAuth: 'false'
+      enableJiraImporter: 'false'
+      enableSlack: 'false'
+      enableTelemetry: 'true'
+      enableTrelloImporter: 'false'
+      gitlabApiClientSecret: ''
+      gitlabClientID: ''
+      gitlabURL: 'https://gitlab.com'
+      maxAge: '360'
       postgresDB: {{ .Values.config.postgres.database | quote }}
-      postgresHost: {{ .Values.config.postgres.host | quote }}
+      postgresHost: {{ ((empty .Values.config.postgres.integration) | ternary .Values.config.postgres.host "") | quote }}
       postgresPassword: {{ .Values.config.postgres.password | quote }}
       postgresUser: {{ .Values.config.postgres.username | quote }}
-      publicRegisterEnabled: "false"
-      rabbitmqErlangCookie: "secret-erlang-cookie"
-      rabbitmqPass: "taiga"
-      rabbitmqUser: "taiga"
-      rabbitmqVhost: "taiga"
-      taigaSecretKey: "taiga-back-secret-key"
-      taigaSitesDomain: "localhost:9000"
-      taigaSitesScheme: "http"
-      taigaURL: "http://localhost:9000"
-      taigaWebsocketsURL: "ws://localhost:9000"
-      trelloImporterApiKey: "api-key-from-trello"
-      trelloImporterSecretKey: "secret-key-from-trello"
+      publicRegisterEnabled: 'false'
+      rabbitmqErlangCookie: 'secret-erlang-cookie'
+      rabbitmqPass: 'taiga'
+      rabbitmqUser: 'taiga'
+      rabbitmqVhost: 'taiga'
+      taigaSecretKey: 'taiga-back-secret-key'
+      taigaSitesDomain: 'localhost:9000'
+      taigaSitesScheme: 'http'
+      taigaURL: 'http://localhost:9000'
+      taigaWebsocketsURL: 'ws://localhost:9000'
 
     taigaAsyncRabbitmq:
       image:
@@ -95,9 +89,6 @@ spec:
         tag: "3-management-alpine"
       persistence:
         enabled: false
-        size: '100Mi'
-        storageClassName: 'default'
-        accessMode: 'ReadWriteOnce'
       service:
         type: ClusterIP
         port: 5672
@@ -151,9 +142,6 @@ spec:
         tag: {{ .Values.images.rabbitmq.tag | quote }}
       persistence:
         enabled: false
-        size: '100Mi'
-        storageClassName: 'default'
-        accessMode: 'ReadWriteOnce'
       service:
         type: ClusterIP
         port: 5672
@@ -204,16 +192,22 @@ spec:
         tag: {{ .Values.images.nginx.tag | quote }}
       persistence:
         enabled: false
-        size: '100Mi'
-        storageClassName: 'default'
-        accessMode: 'ReadWriteOnce'
       ingress:
-        enable: false
+        enable: {{ .Values.ingress.taiga.enabled }}
         annotations:
+          {{- if .Values.ingress.taiga.tls }}
+          {{- if (not .Values.ingress.taiga.certificate) }}
+          kubernetes.io/tls-acme: 'true'
+          {{- if .Values.ingress.taiga.issuer.name }}
+          cert-manager.io/cluster-issuer: {{ .Values.ingress.taiga.issuer.name }}
+          {{- end }}
+          {{- end }}
+          nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+          {{- end }}
         hosts:
-          - host: taiga.example.com
+          - host: {{ include "taiga.taiga-hostname" . }}
             paths:
-              - "/"
+              - '/'
       service:
         type: ClusterIP
         port: 9000

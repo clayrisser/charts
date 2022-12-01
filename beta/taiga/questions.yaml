@@ -34,66 +34,19 @@ questions:
     label: istio
     group: Config
 
-  # Openldap
-  - variable: config.taiga.replicas
-    description: ''
-    type: int
-    required: true
-    label: replicas
-    group: Openldap
-  - variable: config.taiga.domain
-    description: 'use example.org instead of dc=example,dc=org'
-    type: string
-    required: true
-    label: domain
-    group: Openldap
-  - variable: config.taiga.hashPassword
-    description: ''
-    type: enum
-    options:
-      - SHA512CRYPT
-      - CRYPT
-      - SHA256CRYPT
-      - SSHA
-      - NONE
-    label: 'hash password'
-    group: Openldap
-  - variable: config.taiga.organization
-    description: ''
-    type: string
-    required: true
-    label: organization
-    group: Openldap
-  - variable: config.taiga.organizationalUnits
-    description: ''
-    type: string
-    required: false
-    label: 'organizational units'
-    group: Openldap
-  - variable: config.taiga.passwords.admin
-    description: ''
-    type: password
-    required: false
-    label: 'admin password'
-    group: Openldap
-  - variable: config.taiga.passwords.config
-    description: ''
-    type: password
-    required: false
-    label: 'config password'
-    group: Openldap
-  - variable: config.taiga.dhparam
-    description: ''
-    type: multiline
-    required: false
-    label: dhparam
-    group: Openldap
+  # Taiga
   - variable: config.taiga.hostname
     description: ''
     type: string
     required: false
     label: hostname
-    group: Openldap
+    group: Taiga
+  - variable: config.taiga.baseUrl
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: Taiga
   - variable: config.taiga.resources.enabled
     description: ''
     type: enum
@@ -104,7 +57,7 @@ questions:
     required: true
     label: 'resources defaults'
     show_subquestion_if: custom
-    group: Openldap
+    group: Taiga
     subquestions:
       - variable: config.taiga.resources.requests.cpu
         description: ''
@@ -127,129 +80,105 @@ questions:
         required: true
         label: 'resources limits memory'
 
-  # PhpLdapAdmin
-  - variable: config.phpldapadmin.enabled
-    description: ''
-    type: boolean
-    required: true
-    label: enabled
-    group: PhpLdapAdmin
-    show_subquestion_if: true
-    subquestions:
-      - variable: config.phpldapadmin.hostname
-        description: ''
-        type: string
-        required: false
-        label: hostname
-      - variable: config.phpldapadmin.baseUrl
-        description: ''
-        type: string
-        required: false
-        label: 'base url'
-
   # Persistence
-  - variable: persistence.enabled
+  - variable: persistence.storageClass
+    description: ''
+    type: storageclass
+    required: false
+    label: 'storage class'
+    group: Persistence
+  - variable: persistence.accessMode
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadWriteMany
+      - ReadOnlyMany
+    required: false
+    label: 'access mode'
+    group: Persistence
+  - variable: persistence.size.static
+    description: ''
+    type: string
+    required: true
+    label: 'static size'
+    group: Persistence
+  - variable: persistence.size.media
+    description: ''
+    type: string
+    required: true
+    label: 'media size'
+    group: Persistence
+  - variable: persistence.velero.enabled
     description: ''
     type: boolean
     required: true
-    label: enabled
-    show_subquestion_if: true
+    label: 'velero enabled'
     group: Persistence
+  - variable: persistence.velero.schedule
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: false
+    label: 'velero schedule'
+    group: Persistence
+  - variable: persistence.velero.restic
+    description: ''
+    type: boolean
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero restic'
+    group: Persistence
+  - variable: persistence.velero.ttl
+    description: ''
+    type: string
+    show_if: persistence.velero.enabled=true
+    required: true
+    label: 'velero ttl'
+    group: Persistence
+  - variable: persistence.kanister.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'kanister enabled'
+    group: Persistence
+    show_subquestion_if: true
     subquestions:
-      - variable: persistence.storageClass
-        description: ''
-        type: storageclass
-        required: false
-        label: 'storage class'
-      - variable: persistence.accessMode
-        description: ''
-        type: enum
-        options:
-          - ReadWriteOnce
-          - ReadWriteMany
-          - ReadOnlyMany
-        required: false
-        label: 'access mode'
-      - variable: persistence.existingClaim.taiga
+      - variable: persistence.kanister.schedule
         description: ''
         type: string
         required: false
-        label: 'taiga existing claim'
-      - variable: persistence.size.taiga
-        description: ''
-        type: string
-        required: true
-        label: 'taiga size'
-      - variable: persistence.velero.enabled
-        description: ''
-        type: boolean
-        required: true
-        label: 'velero enabled'
-        group: Persistence
-      - variable: persistence.velero.schedule
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: false
-        label: 'velero schedule'
-        group: Persistence
-      - variable: persistence.velero.restic
-        description: ''
-        type: boolean
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero restic'
-        group: Persistence
-      - variable: persistence.velero.ttl
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero ttl'
-        group: Persistence
-      - variable: persistence.kanister.enabled
-        description: ''
-        type: boolean
-        required: true
-        label: 'kanister enabled'
-        group: Persistence
-        show_subquestion_if: true
-        subquestions:
-          - variable: persistence.kanister.schedule
-            description: ''
-            type: string
-            required: false
-            label: 'kanister schedule'
+        label: 'kanister schedule'
 
   # Networking
-  - variable: ingress.phpldapadmin.enabled
+  - variable: ingress.taiga.enabled
     default: true
     description: ''
     type: boolean
-    label: 'phpldapadmin ingress enabled'
-    show_if: config.phpldapadmin.enabled=true
+    label: 'taiga ingress enabled'
+    show_if: config.taiga.enabled=true
     show_subquestion_if: true
     group: Networking
     subquestions:
-      - variable: ingress.phpldapadmin.tls
+      - variable: ingress.taiga.tls
         default: false
         description: ''
         type: boolean
-        show_if: config.phpldapadmin.enabled=true
+        show_if: config.taiga.enabled=true
         required: true
-        label: 'phpldapadmin ingress tls'
-      - variable: ingress.phpldapadmin.hostname
+        label: 'taiga ingress tls'
+      - variable: ingress.taiga.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.phpldapadmin.enabled=true
+        show_if: config.taiga.enabled=true
         required: true
-        label: 'phpldapadmin ingress hostname'
-      - variable: ingress.phpldapadmin.issuer.name
+        label: 'taiga ingress hostname'
+      - variable: ingress.taiga.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.phpldapadmin.tls=true&&config.phpldapadmin.enabled=true
+        show_if: ingress.taiga.tls=true&&config.taiga.enabled=true
         options:
           - none
           - letsencrypt-cloudflare-staging
@@ -258,156 +187,85 @@ questions:
           - letsencrypt-prod
           - selfsigned
         required: true
-        label: 'phpldapadmin ingress issuer name'
-      - variable: ingress.phpldapadmin.certificate
+        label: 'taiga ingress issuer name'
+      - variable: ingress.taiga.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.phpldapadmin.tls=true&&ingress.phpldapadmin.issuer.name=none&&config.phpldapadmin.enabled=true
+        show_if: ingress.taiga.tls=true&&ingress.taiga.issuer.name=none&&config.taiga.enabled=true
         required: false
-        label: 'phpldapadmin ingress certificate'
-  - variable: service.phpldapadmin.type
-    default: ClusterIP
-    description: ''
-    type: enum
-    show_if: ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
-    options:
-      - ClusterIP
-      - LoadBalancer
-      - NodePort
-    required: true
-    label: 'phpldapadmin service type'
-    group: Networking
-  - variable: service.phpldapadmin.nodePorts.http
-    default: ''
-    description: ''
-    type: int
-    required: false
-    min: 30000
-    max: 32767
-    show_if: service.phpldapadmin.type=NodePort&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
-    label: 'phpldapadmin http node port'
-    group: Networking
-  - variable: service.phpldapadmin.lbPorts.http
-    default: 80
-    description: ''
-    type: int
-    required: true
-    show_if: service.phpldapadmin.type=LoadBalancer&&ingress.phpldapadmin.enabled=false&&config.phpldapadmin.enabled=true
-    label: 'phpldapadmin http lb port'
-    group: Networking
-  - variable: service.taiga.type
-    default: NodePort
-    description: ''
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    label: 'taiga service type'
-    group: Networking
-  - variable: service.taiga.nodePorts.ldap
-    default: ''
-    description: ''
-    type: int
-    required: false
-    min: 30000
-    max: 32767
-    show_if: service.taiga.type=NodePort
-    label: 'taiga ldap node port'
-    group: Networking
-  - variable: service.taiga.lbPorts.ldap
-    default: 389
-    description: ''
-    type: int
-    required: true
-    min: 0
-    max: 65535
-    show_if: service.taiga.type=LoadBalancer
-    label: 'taiga ldap lb port'
-    group: Networking
-  - variable: service.taiga.tls.enabled
-    description: ''
-    type: boolean
-    required: true
-    label: 'taiga tls enabled'
-    show_subquestion_if: true
-    group: Networking
-    subquestions:
-      - variable: service.taiga.tls.enforce
-        description: ''
-        type: boolean
-        required: true
-        label: 'taiga tls enforce'
-      - variable: service.taiga.tls.certificate.name
-        description: 'certificate will be automatically generated if not set'
-        type: string
-        required: false
-        label: 'taiga tls certificate name'
-      - variable: service.taiga.tls.certificate.ca
-        description: ''
-        type: string
-        show_if: service.taiga.tls.certificate.name!=
-        required: false
-        label: 'taiga tls certificate ca'
-      - variable: service.taiga.tls.certificate.issuer.integration
-        description: 'replicates the ca that was used to generate the certificate'
-        type: string
-        show_if: service.taiga.tls.certificate.name=
-        required: true
-        label: 'taiga tls certificate issuer integration'
-      - variable: service.taiga.tls.certificate.issuer.dnsNames
-        description: ''
-        type: string
-        show_if: service.taiga.tls.certificate.name=
-        required: false
-        label: 'taiga tls certificate issuer dns names'
-  - variable: service.taiga.nodePorts.ldaps
-    default: ''
-    description: ''
-    type: int
-    required: false
-    min: 30000
-    max: 32767
-    show_if: service.taiga.type=NodePort&&service.taiga.tls.enabled=true
-    label: 'taiga ldaps node port'
-    group: Networking
-  - variable: service.taiga.lbPorts.ldaps
-    default: 636
-    description: ''
-    type: int
-    required: true
-    min: 0
-    max: 65535
-    show_if: service.taiga.type=LoadBalancer&&service.taiga.tls.enabled=true
-    label: 'taiga ldaps lb port'
-    group: Networking
+        label: 'taiga ingress certificate'
 
   # Images
-  - variable: images.taiga.repository
+  - variable: images.taigaBack.repository
     description: ''
     type: string
     required: true
-    label: 'taiga repository'
+    label: 'taiga back repository'
     group: Images
-  - variable: images.taiga.tag
+  - variable: images.taigaBack.tag
     description: ''
     type: string
     required: true
-    label: 'taiga tag'
+    label: 'taiga back tag'
     group: Images
-  - variable: images.phpldapadmin.repository
+  - variable: images.taigaEvents.repository
     description: ''
     type: string
     required: true
-    show_if: config.phpldapadmin.enabled=true
-    label: 'phpldapadmin repository'
+    label: 'taiga events repository'
     group: Images
-  - variable: images.phpldapadmin.tag
+  - variable: images.taigaEvents.tag
     description: ''
     type: string
     required: true
-    show_if: config.phpldapadmin.enabled=true
-    label: 'phpldapadmin tag'
+    label: 'taiga events tag'
+    group: Images
+  - variable: images.taigaFront.repository
+    description: ''
+    type: string
+    required: true
+    label: 'taiga front repository'
+    group: Images
+  - variable: images.taigaFront.tag
+    description: ''
+    type: string
+    required: true
+    label: 'taiga front tag'
+    group: Images
+  - variable: images.taigaProtected.repository
+    description: ''
+    type: string
+    required: true
+    label: 'taiga protected repository'
+    group: Images
+  - variable: images.taigaProtected.tag
+    description: ''
+    type: string
+    required: true
+    label: 'taiga protected tag'
+    group: Images
+  - variable: images.rabbitmq.repository
+    description: ''
+    type: string
+    required: true
+    label: 'rabbitmq repository'
+    group: Images
+  - variable: images.rabbitmq.tag
+    description: ''
+    type: string
+    required: true
+    label: 'rabbitmq tag'
+    group: Images
+  - variable: images.nginx.repository
+    description: ''
+    type: string
+    required: true
+    label: 'nginx repository'
+    group: Images
+  - variable: images.nginx.tag
+    description: ''
+    type: string
+    required: true
+    label: 'nginx tag'
     group: Images
