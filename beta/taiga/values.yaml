@@ -1,0 +1,79 @@
+images:
+  taigaBack:
+    repository: taigaio/taiga-back
+    tag: 6.5.0
+  taigaEvents:
+    repository: taigaio/taiga-events
+    tag: 6.5.0
+  taigaFront:
+    repository: taigaio/taiga-front
+    tag: 6.5.0
+  taigaProtected:
+    repository: taigaio/taiga-protected
+    tag: 6.5.0
+  rabbitmq:
+    repository: rabbitmq
+    tag: 3-management-alpine
+  nginx:
+    repository: nginx
+    tag: 1.19-alpine
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  istio: false
+  taiga:
+    hostname: ''
+    baseUrl: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  postgres:
+    integration: ''
+    database: keycloak
+    host: ''
+    password: ''
+    port: 5432
+    username: postgres
+    # url: ''
+
+service:
+  taiga:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  phpldapadmin:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: true
+  storageClass: ''
+  existingClaim:
+    taiga: ''
+  size:
+    taiga: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'

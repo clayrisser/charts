@@ -1,0 +1,242 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: nemonik
+  labels:
+    app.kubernetes.io/name: {{ template "taiga.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  url: https://nemonik.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}-release
+  labels:
+    app.kubernetes.io/name: {{ template "taiga.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: taiga
+      version: {{ .Release.Version | quote }}
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: nemonik
+  values:
+    persistence:
+      media:
+        enabled: false
+        size: '100Mi'
+        storageClassName: 'default'
+        accessMode: 'ReadWriteOnce'
+      static:
+        enabled: false
+        size: '100Mi'
+        storageClassName: 'default'
+        accessMode: 'ReadWriteOnce'
+
+    env:
+      defaultFromEmail: "no-reply@example.com"
+      emailBackend: "django.core.mail.backends.smtp.EmailBackend"
+      emailHost: "smtp.host.example.com"
+      emailHostPassword: "password"
+      emailHostUser: "user"
+      emailPort: "587"
+      emailUseSSL: "true"
+      emailUseTLS: "true"
+      enableEmail: "false"
+      enableGithubAuth: "false"
+      enableGithubImporter: "false"
+      enableGitlabAuth: "false"
+      enableJiraImporter: "false"
+      enableSlack: "false"
+      enableTelemetry: "true"
+      enableTrelloImporter: "false"
+      githubApiClientID: "github-api-client-id"
+      githubApiClientSecret: "github-api-client-secret"
+      githubImporterClientID: "client-id-from-github"
+      githubImporterClientSecret: "client-secret-from-github"
+      gitlabApiClientSecret: "gitlab-api-client-secret"
+      gitlabClientID: "gitlab-client-id"
+      gitlabURL: "gitlab-url"
+      jiraImporterCert: "cert-from-jira"
+      jiraImporterConsumerKey: "consumer-key-from-jira"
+      jiraImporterPubCert: "pub-cert-from-jira"
+      maxAge: "360"
+      postgresDB: {{ .Values.config.postgres.database | quote }}
+      postgresHost: {{ .Values.config.postgres.host | quote }}
+      postgresPassword: {{ .Values.config.postgres.password | quote }}
+      postgresUser: {{ .Values.config.postgres.username | quote }}
+      publicRegisterEnabled: "false"
+      rabbitmqErlangCookie: "secret-erlang-cookie"
+      rabbitmqPass: "taiga"
+      rabbitmqUser: "taiga"
+      rabbitmqVhost: "taiga"
+      taigaSecretKey: "taiga-back-secret-key"
+      taigaSitesDomain: "localhost:9000"
+      taigaSitesScheme: "http"
+      taigaURL: "http://localhost:9000"
+      taigaWebsocketsURL: "ws://localhost:9000"
+      trelloImporterApiKey: "api-key-from-trello"
+      trelloImporterSecretKey: "secret-key-from-trello"
+
+    taigaAsyncRabbitmq:
+      image:
+        repository: rabbitmq
+        pullPolicy: IfNotPresent
+        tag: "3-management-alpine"
+      persistence:
+        enabled: false
+        size: '100Mi'
+        storageClassName: 'default'
+        accessMode: 'ReadWriteOnce'
+      service:
+        type: ClusterIP
+        port: 5672
+      podAnnotations: {}
+      podSecurityContext: {}
+      securityContext: {}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+
+    taigaAsync:
+      image:
+        repository: {{ .Values.images.taigaBack.repository | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        tag: {{ .Values.images.taigaBack.tag | quote }}
+      service:
+        type: ClusterIP
+        port: 8000
+      podAnnotations: {}
+      podSecurityContext: {}
+      securityContext: {}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+
+    taigaBack:
+      image:
+        repository: {{ .Values.images.taigaBack.repository | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        tag: {{ .Values.images.taigaBack.tag | quote }}
+      service:
+        type: ClusterIP
+        port: 8000
+      podAnnotations: {}
+      podSecurityContext: {}
+      securityContext: {}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+
+    taigaDB:
+      enable: false
+
+    taigaEventsRabbitmq:
+      image:
+        repository: {{ .Values.images.rabbitmq.repository | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        tag: {{ .Values.images.rabbitmq.tag | quote }}
+      persistence:
+        enabled: false
+        size: '100Mi'
+        storageClassName: 'default'
+        accessMode: 'ReadWriteOnce'
+      service:
+        type: ClusterIP
+        port: 5672
+      podAnnotations: {}
+      podSecurityContext: {}
+      securityContext: {}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+
+    taigaEvents:
+      image:
+        repository: {{ .Values.images.taigaEvents.repository | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        tag: {{ .Values.images.taigaEvents.tag | quote }}
+      service:
+        type: ClusterIP
+        port: 8888
+      podAnnotations: {}
+      podSecurityContext: {}
+      securityContext: {}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+
+    taigaFront:
+      image:
+        repository: {{ .Values.images.taigaFront.repository | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        tag: {{ .Values.images.taigaFront.tag | quote }}
+      service:
+        type: ClusterIP
+        port: 80
+      podAnnotations: {}
+      podSecurityContext: {}
+      securityContext: {}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+
+    taigaGateway:
+      image:
+        repository: {{ .Values.images.nginx.repository | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        tag: {{ .Values.images.nginx.tag | quote }}
+      persistence:
+        enabled: false
+        size: '100Mi'
+        storageClassName: 'default'
+        accessMode: 'ReadWriteOnce'
+      ingress:
+        enable: false
+        annotations:
+        hosts:
+          - host: taiga.example.com
+            paths:
+              - "/"
+      service:
+        type: ClusterIP
+        port: 9000
+      podAnnotations: {}
+      podSecurityContext: {}
+      securityContext: {}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+
+    taigaProtected:
+      image:
+        repository: {{ .Values.images.taigaProtected.repository | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        tag: {{ .Values.images.taigaProtected.tag | quote }}
+      service:
+        type: ClusterIP
+        port: 8003
+      podAnnotations: {}
+      podSecurityContext: {}
+      securityContext: {}
+      resources: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
