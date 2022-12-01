@@ -206,7 +206,6 @@ questions:
     description: ''
     type: boolean
     label: 'taiga ingress enabled'
-    show_if: config.taiga.enabled=true
     show_subquestion_if: true
     group: Networking
     subquestions:
@@ -214,21 +213,19 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: config.taiga.enabled=true
         required: true
         label: 'taiga ingress tls'
       - variable: ingress.taiga.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.taiga.enabled=true
         required: true
         label: 'taiga ingress hostname'
       - variable: ingress.taiga.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.taiga.tls=true&&config.taiga.enabled=true
+        show_if: ingress.taiga.tls=true
         options:
           - none
           - letsencrypt-cloudflare-staging
@@ -242,7 +239,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: ingress.taiga.tls=true&&ingress.taiga.issuer.name=none&&config.taiga.enabled=true
+        show_if: ingress.taiga.tls=true&&ingress.taiga.issuer.name=none
         required: false
         label: 'taiga ingress certificate'
 
