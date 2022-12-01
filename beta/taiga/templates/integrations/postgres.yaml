@@ -1,13 +1,6 @@
 {{- if .Values.config.postgres.integration }}
 {{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
-{{- $existingTaiga := lookup "helm.toolkit.fluxcd.io/v2beta1" "HelmRelease" .Release.Namespace (printf "%s-release" .Release.Name) }}
-{{- $patchTaiga := true }}
-{{- if $existingTaiga }}
-{{- if (not (empty $existingTaiga.spec.values.env.postgresHost)) }}
-{{- $patchTaiga = false }}
-{{- end }}
-{{- end }}
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
@@ -31,7 +24,6 @@ spec:
     createdb: 'true'
     cleanup: 'false'
     replicate: 'false'
-{{- if $patchTaiga }}
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -66,7 +58,4 @@ spec:
                 - op: replace
                   path: /spec/values/env/postgresUser
                   value: '{% .socketConfig.username %}'
-{{- else }}
-  resources: []
-{{- end }}
 {{- end }}
