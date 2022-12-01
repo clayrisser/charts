@@ -80,6 +80,56 @@ questions:
         required: true
         label: 'resources limits memory'
 
+  # Postgres
+  - variable: config.postgres.integration
+    description: ''
+    type: string
+    required: false
+    label: integration
+    group: Postgres
+  - variable: config.postgres.host
+    description: ''
+    type: string
+    required: true
+    label: host
+    show_if: config.postgres.integration=
+    group: Postgres
+  - variable: config.postgres.database
+    description: 'only letters, digits and _ allowed'
+    type: string
+    required: true
+    label: database
+    group: Postgres
+  - variable: config.postgres.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.integration=
+    group: Postgres
+  - variable: config.postgres.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.postgres.integration=
+    group: Postgres
+  - variable: config.postgres.port
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    show_if: config.postgres.integration=
+    group: Postgres
+  # - variable: config.postgres.url
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: url
+  #   group: Postgres
+
   # Persistence
   - variable: persistence.storageClass
     description: ''
