@@ -193,7 +193,7 @@ spec:
       persistence:
         enabled: false
       ingress:
-        enable: {{ .Values.ingress.taiga.enabled }}
+        enabled: {{ .Values.ingress.taiga.enabled }}
         annotations:
           {{- if .Values.ingress.taiga.tls }}
           {{- if (not .Values.ingress.taiga.certificate) }}

@@ -34,7 +34,11 @@ Calculate taiga hostname
 {{- if .Values.config.taiga.hostname -}}
 {{- printf .Values.config.taiga.hostname -}}
 {{- else -}}
-{{- printf "%s-release.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
+{{- if .Values.ingress.taiga.enabled -}}
+{{- printf .Values.ingress.taiga.hostname -}}
+{{- else -}}
+{{- printf "%s-release-gateway.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
