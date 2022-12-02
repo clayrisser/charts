@@ -87,7 +87,7 @@ spec:
       postgresPassword: {{ .Values.config.postgres.password | quote }}
       postgresPort: {{ .Values.config.postgres.port | quote }}
       postgresUser: {{ .Values.config.postgres.username | quote }}
-      publicRegisterEnabled: 'false'
+      publicRegisterEnabled: {{ .Values.config.taiga.registrationEnabled | quote }}
       rabbitmqErlangCookie: 'secret-erlang-cookie'
       rabbitmqPass: 'taiga'
       rabbitmqUser: 'taiga'

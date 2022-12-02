@@ -29,6 +29,7 @@ config:
   taiga:
     hostname: ''
     baseUrl: ''
+    registrationEnabled: false
     resources:
       enabled: defaults
       requests:

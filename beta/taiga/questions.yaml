@@ -47,6 +47,12 @@ questions:
     required: false
     label: 'base url'
     group: Taiga
+  - variable: config.taiga.registrationEnabled
+    description: ''
+    type: boolean
+    required: false
+    label: 'registration enabled'
+    group: Taiga
   - variable: config.taiga.resources.enabled
     description: ''
     type: enum
