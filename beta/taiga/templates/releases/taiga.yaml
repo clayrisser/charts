@@ -1,7 +1,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: HelmRepository
+kind: GitRepository
 metadata:
-  name: nemonik
+  name: taiga-helm
   labels:
     app.kubernetes.io/name: {{ template "taiga.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -9,7 +9,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   interval: 5m
-  url: https://nemonik.github.io/helm-charts
+  url: https://github.com/clayrisser/taiga-helm
+  ref:
+    branch: master
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -28,8 +30,8 @@ spec:
       version: {{ .Release.Version | quote }}
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
-        kind: HelmRepository
-        name: nemonik
+        kind: GitRepository
+        name: taiga-helm
   values:
     persistence:
       media:
@@ -67,6 +69,7 @@ spec:
       gitlabClientID: ''
       gitlabURL: 'https://gitlab.com'
       maxAge: '360'
+      postgresPort: {{ .Values.config.postgres.port | quote }}
       postgresDB: {{ .Values.config.postgres.database | quote }}
       postgresHost: {{ ((empty .Values.config.postgres.integration) | ternary .Values.config.postgres.host "") | quote }}
       postgresPassword: {{ .Values.config.postgres.password | quote }}
