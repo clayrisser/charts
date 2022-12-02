@@ -71,4 +71,7 @@ spec:
                 - op: replace
                   path: /spec/values/env/openidUserUrl
                   value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/userinfo'
+                - op: replace
+                  path: /spec/values/env/openidUrl
+                  value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/auth'
 {{- end }}

@@ -81,6 +81,7 @@ spec:
 {{- end }}
       openidTokenUrl: '{{ .Values.config.keycloak.baseUrl }}/realms/{{ .Values.config.keycloak.realm }}/protocol/openid-connect/token'
       openidUserUrl: '{{ .Values.config.keycloak.baseUrl }}/realms/{{ .Values.config.keycloak.realm }}/protocol/openid-connect/userinfo'
+      openidUrl: '{{ .Values.config.keycloak.baseUrl }}/realms/{{ .Values.config.keycloak.realm }}/protocol/openid-connect/auth'
       postgresDB: {{ .Values.config.postgres.database | quote }}
       postgresHost: {{ ((empty .Values.config.postgres.integration) | ternary .Values.config.postgres.host "") | quote }}
       postgresPassword: {{ .Values.config.postgres.password | quote }}
