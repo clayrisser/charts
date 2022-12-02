@@ -96,7 +96,7 @@ spec:
       taigaSitesDomain: {{ template "taiga.taiga-hostname" . }}
       taigaSitesScheme: {{ .Values.ingress.taiga.tls | ternary "https" "http" }}
       taigaURL: {{ template "taiga.taiga-base-url" . }}
-      taigaWebsocketsURL: {{ (include "taiga.taiga-base-url" .) | replace "^https?://" "ws://" }}
+      taigaWebsocketsURL: {{ (include "taiga.taiga-base-url" .) | replace "^https" "ws" | replace "^http" "ws" }}
 
     taigaAsyncRabbitmq:
       image:
