@@ -118,9 +118,9 @@ spec:
 
     taigaAsync:
       image:
-        repository: {{ .Values.images.taigaBack.repository | quote }}
+        repository: {{ .Values.images.taigaAsync.repository | quote }}
         pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
-        tag: {{ .Values.images.taigaBack.tag | quote }}
+        tag: {{ .Values.images.taigaAsync.tag | quote }}
       service:
         type: ClusterIP
         port: 8000

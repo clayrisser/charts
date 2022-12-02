@@ -2,6 +2,9 @@ images:
   taigaBack:
     repository: robrotheram/taiga-front-openid
     tag: 6.5.1
+  taigaAsync:
+    repository: taigaio/taiga-back
+    tag: 6.5.1
   taigaEvents:
     repository: taigaio/taiga-events
     tag: 6.5.0

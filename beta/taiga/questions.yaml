@@ -369,3 +369,15 @@ questions:
     required: true
     label: 'nginx tag'
     group: Images
+  - variable: images.taigaAsync.repository
+    description: ''
+    type: string
+    required: true
+    label: 'taiga async repository'
+    group: Images
+  - variable: images.taigaAsync.tag
+    description: ''
+    type: string
+    required: true
+    label: 'taiga async tag'
+    group: Images
