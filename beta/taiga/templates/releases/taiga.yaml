@@ -1,3 +1,4 @@
+{{- $existingRelease := lookup "helm.toolkit.fluxcd.io/v2beta1" "HelmRelease" .Release.Namespace (printf "%s-release" .Release.Name) }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
@@ -60,6 +61,7 @@ spec:
       enableGithubImporter: 'false'
       enableGitlabAuth: 'false'
       enableJiraImporter: 'false'
+      enableOpenid: {{ .Values.config.keycloak.enabled | quote }}
       enableSlack: 'false'
       enableTelemetry: 'true'
       enableTrelloImporter: 'false'
@@ -67,10 +69,22 @@ spec:
       gitlabClientID: ''
       gitlabURL: 'https://gitlab.com'
       maxAge: '360'
-      postgresPort: {{ .Values.config.postgres.port | quote }}
+      openidClientId: {{ .Values.config.keycloak.clientId | quote }}
+{{- if (and $existingRelease $existingRelease.spec) }}
+{{- if $existingRelease.spec.values.env.openidClientSecret }}
+      openidClientSecret: {{ $existingRelease.spec.values.env.openidClientSecret | quote }}
+{{- else }}
+      openidClientSecret: {{ .Values.config.keycloak.clientSecret | default (randAlphaNum 24) | quote }}
+{{- end }}
+{{- else }}
+      openidClientSecret: {{ .Values.config.keycloak.clientSecret | default (randAlphaNum 24) | quote }}
+{{- end }}
+      openidTokenUrl: '{{ .Values.config.keycloak.baseUrl }}/realms/{{ .Values.config.keycloak.realm }}/protocol/openid-connect/token'
+      openidUserUrl: '{{ .Values.config.keycloak.baseUrl }}/realms/{{ .Values.config.keycloak.realm }}/protocol/openid-connect/userinfo'
       postgresDB: {{ .Values.config.postgres.database | quote }}
       postgresHost: {{ ((empty .Values.config.postgres.integration) | ternary .Values.config.postgres.host "") | quote }}
       postgresPassword: {{ .Values.config.postgres.password | quote }}
+      postgresPort: {{ .Values.config.postgres.port | quote }}
       postgresUser: {{ .Values.config.postgres.username | quote }}
       publicRegisterEnabled: 'false'
       rabbitmqErlangCookie: 'secret-erlang-cookie'

@@ -130,6 +130,59 @@ questions:
   #   label: url
   #   group: Postgres
 
+# Keycloak Config
+  - variable: config.keycloak.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    group: 'KeyCloak Config'
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.keycloak.autoSignIn
+        description: ''
+        type: boolean
+        required: true
+        label: 'auto sign in'
+      - variable: config.keycloak.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.keycloak.companyName
+        description: ''
+        type: string
+        required: false
+        label: 'company name'
+      - variable: config.keycloak.realmName
+        description: ''
+        type: string
+        required: false
+        label: 'realm name'
+      - variable: config.keycloak.adminPassword
+        description: ''
+        type: password
+        show_if: config.keycloak.integration=
+        required: false
+        label: 'admin password'
+      - variable: config.keycloak.baseUrl
+        description: ''
+        type: string
+        show_if: config.keycloak.integration=
+        required: false
+        label: 'base url'
+      - variable: config.keycloak.clientId
+        description: ''
+        type: string
+        required: false
+        label: 'client id'
+      - variable: config.keycloak.certificate
+        description: ''
+        type: password
+        required: false
+        label: certificate
+        show_if: config.keycloak.integration=
+
   # Persistence
   - variable: persistence.storageClass
     description: ''

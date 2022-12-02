@@ -1,13 +1,13 @@
 images:
   taigaBack:
-    repository: taigaio/taiga-back
-    tag: 6.5.0
+    repository: robrotheram/taiga-front-openid
+    tag: 6.5.1
   taigaEvents:
     repository: taigaio/taiga-events
     tag: 6.5.0
   taigaFront:
-    repository: taigaio/taiga-front
-    tag: 6.5.0
+    repository: robrotheram/taiga-front-openid
+    tag: 6.5.1
   taigaProtected:
     repository: taigaio/taiga-protected
     tag: 6.5.0
@@ -42,6 +42,13 @@ config:
     port: 5432
     username: postgres
     # url: ''
+  keycloak:
+    enabled: true
+    integration: ''
+    baseUrl: ''
+    clientId: ''
+    clientSecret: ''
+    realmName: main
 
 ingress:
   taiga:
