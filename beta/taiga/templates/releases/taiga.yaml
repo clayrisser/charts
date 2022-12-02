@@ -114,7 +114,16 @@ spec:
       resources: {}
       nodeSelector: {}
       tolerations: []
-      affinity: {}
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: topology.kubernetes.io/zone
+              labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                      - {{ .Release.Name }}-release
 
     taigaBack:
       image:
@@ -130,7 +139,16 @@ spec:
       resources: {}
       nodeSelector: {}
       tolerations: []
-      affinity: {}
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: topology.kubernetes.io/zone
+              labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                      - {{ .Release.Name }}-release
 
     taigaDB:
       enable: false
@@ -167,7 +185,16 @@ spec:
       resources: {}
       nodeSelector: {}
       tolerations: []
-      affinity: {}
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: topology.kubernetes.io/zone
+              labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                      - {{ .Release.Name }}-release
 
     taigaFront:
       image:
