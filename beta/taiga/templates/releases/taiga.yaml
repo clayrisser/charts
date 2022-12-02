@@ -1,7 +1,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: GitRepository
+kind: HelmRepository
 metadata:
-  name: taiga-helm
+  name: taiga
   labels:
     app.kubernetes.io/name: {{ template "taiga.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -9,9 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   interval: 5m
-  url: https://github.com/clayrisser/taiga-helm
-  ref:
-    branch: master
+  url: https://risserlabs.gitlab.io/community/taiga-helm
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -30,8 +28,8 @@ spec:
       version: {{ .Release.Version | quote }}
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
-        kind: GitRepository
-        name: taiga-helm
+        kind: HelmRepository
+        name: taiga
   values:
     persistence:
       media:
