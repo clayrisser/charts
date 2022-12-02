@@ -79,8 +79,8 @@ spec:
       taigaSecretKey: 'taiga-back-secret-key'
       taigaSitesDomain: 'localhost:9000'
       taigaSitesScheme: 'http'
-      taigaURL: 'http://localhost:9000'
-      taigaWebsocketsURL: 'ws://localhost:9000'
+      taigaURL: {{ template "taiga.taiga-base-url" . }}
+      taigaWebsocketsURL: {{ (include "taiga.taiga-base-url" .) | replace "^https?://" "ws://" }}
 
     taigaAsyncRabbitmq:
       image:
