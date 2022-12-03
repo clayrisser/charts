@@ -236,21 +236,7 @@ spec:
       persistence:
         enabled: false
       ingress:
-        enabled: {{ .Values.ingress.taiga.enabled }}
-        annotations:
-          {{- if .Values.ingress.taiga.tls }}
-          {{- if (not .Values.ingress.taiga.certificate) }}
-          kubernetes.io/tls-acme: 'true'
-          {{- if .Values.ingress.taiga.issuer.name }}
-          cert-manager.io/cluster-issuer: {{ .Values.ingress.taiga.issuer.name }}
-          {{- end }}
-          {{- end }}
-          nginx.ingress.kubernetes.io/ssl-redirect: 'true'
-          {{- end }}
-        hosts:
-          - host: {{ include "taiga.taiga-hostname" . }}
-            paths:
-              - '/'
+        enabled: false
       service:
         type: ClusterIP
         port: 9000
