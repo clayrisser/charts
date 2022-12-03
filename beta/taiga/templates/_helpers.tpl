@@ -60,6 +60,17 @@ Calculate taiga base url
 {{- end -}}
 
 {{/*
+Calculate taiga certificate
+*/}}
+{{- define "taiga.taiga-certificate" -}}
+{{- if .Values.ingress.taiga.certificate -}}
+{{- printf .Values.ingress.taiga.certificate -}}
+{{- else -}}
+{{- printf "%s-gateway" (include "taiga.name" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Calculate postgres url
 */}}
 {{- define "taiga.postgres-url" -}}
