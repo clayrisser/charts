@@ -20,10 +20,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate taiga certificate
 */}}
 {{- define "taiga.taiga-certificate" -}}
-{{- if .Values.service.taiga.tls.certificate.name -}}
-{{- printf .Values.service.taiga.tls.certificate.name -}}
+{{- if .Values.ingress.taiga.certificate -}}
+{{- printf .Values.ingress.taiga.certificate -}}
 {{- else -}}
-{{- printf "%s-cert" (include "taiga.name" .) -}}
+{{- printf "%s-gateway" (include "taiga.name" .) -}}
 {{- end -}}
 {{- end -}}
 
@@ -56,17 +56,6 @@ Calculate taiga base url
 {{- else -}}
 {{- printf "http://%s" (include "taiga.taiga-hostname" .) -}}
 {{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Calculate taiga certificate
-*/}}
-{{- define "taiga.taiga-certificate" -}}
-{{- if .Values.ingress.taiga.certificate -}}
-{{- printf .Values.ingress.taiga.certificate -}}
-{{- else -}}
-{{- printf "%s-gateway" (include "taiga.name" .) -}}
 {{- end -}}
 {{- end -}}
 
