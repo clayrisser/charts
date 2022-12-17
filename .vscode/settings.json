@@ -2,6 +2,7 @@
   "cSpell.words": [
     "alertmanager",
     "amavis",
+    "amplication",
     "apikey",
     "apiserver",
     "automount",
@@ -49,6 +50,7 @@
     "minio",
     "mkdir",
     "multline",
+    "nestjs",
     "nextcloud",
     "openldap",
     "opensearch",

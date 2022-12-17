@@ -1,9 +1,9 @@
 images:
   nginx:
-    repository: registry.gitlab.com/risserlabs/community/erpnext-images/nginx
+    repository: registry.gitlab.com/risserlabs/community/amplication-images/nginx
     tag: latest
   worker:
-    repository: registry.gitlab.com/risserlabs/community/erpnext-images/worker
+    repository: registry.gitlab.com/risserlabs/community/amplication-images/worker
     tag: latest
   socketio:
     repository: frappe/frappe-socketio
@@ -31,15 +31,15 @@ config:
     s3:
       integration: ''
       bucket: ''
-      prefix: erpnext
+      prefix: amplication
       accessKey: ''
       endpoint: ''
       region: us-west-2
       secretKey: ''
-  erpnext:
+  amplication:
     replicas: 1
     initialApps: |
-      erpnext
+      amplication
       hrms
     hostname: ''
     baseUrl: ''
