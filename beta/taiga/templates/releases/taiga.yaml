@@ -100,9 +100,9 @@ spec:
 
     taigaAsyncRabbitmq:
       image:
-        repository: rabbitmq
-        pullPolicy: IfNotPresent
-        tag: "3-management-alpine"
+        repository: {{ .Values.images.rabbitmq.repository | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+        tag: {{ .Values.images.rabbitmq.tag | quote }}
       persistence:
         enabled: false
       service:
@@ -111,7 +111,13 @@ spec:
       podAnnotations: {}
       podSecurityContext: {}
       securityContext: {}
-      resources: {}
+{{- if (and .Values.config.taiga.rabbitmqResources.enabled (not (eq .Values.config.taiga.rabbitmqResources.enabled "false"))) }}
+      rabbitmqResources:
+        requests:
+{{ toYaml .Values.config.taiga.rabbitmqResources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.taiga.rabbitmqResources.limits | indent 10 }}
+{{- end }}
       nodeSelector: {}
       tolerations: []
       affinity: {}
@@ -127,7 +133,13 @@ spec:
       podAnnotations: {}
       podSecurityContext: {}
       securityContext: {}
-      resources: {}
+{{- if (and .Values.config.taiga.asyncResources.enabled (not (eq .Values.config.taiga.asyncResources.enabled "false"))) }}
+      asyncResources:
+        requests:
+{{ toYaml .Values.config.taiga.asyncResources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.taiga.asyncResources.limits | indent 10 }}
+{{- end }}
       nodeSelector: {}
       tolerations: []
       affinity:
@@ -152,7 +164,13 @@ spec:
       podAnnotations: {}
       podSecurityContext: {}
       securityContext: {}
-      resources: {}
+{{- if (and .Values.config.taiga.backResources.enabled (not (eq .Values.config.taiga.backResources.enabled "false"))) }}
+      backResources:
+        requests:
+{{ toYaml .Values.config.taiga.backResources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.taiga.backResources.limits | indent 10 }}
+{{- end }}
       nodeSelector: {}
       tolerations: []
       affinity:
@@ -182,7 +200,13 @@ spec:
       podAnnotations: {}
       podSecurityContext: {}
       securityContext: {}
-      resources: {}
+{{- if (and .Values.config.taiga.rabbitmqResources.enabled (not (eq .Values.config.taiga.rabbitmqResources.enabled "false"))) }}
+      rabbitmqResources:
+        requests:
+{{ toYaml .Values.config.taiga.rabbitmqResources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.taiga.rabbitmqResources.limits | indent 10 }}
+{{- end }}
       nodeSelector: {}
       tolerations: []
       affinity: {}
@@ -198,7 +222,13 @@ spec:
       podAnnotations: {}
       podSecurityContext: {}
       securityContext: {}
-      resources: {}
+{{- if (and .Values.config.taiga.eventsResources.enabled (not (eq .Values.config.taiga.eventsResources.enabled "false"))) }}
+      eventsResources:
+        requests:
+{{ toYaml .Values.config.taiga.eventsResources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.taiga.eventsResources.limits | indent 10 }}
+{{- end }}
       nodeSelector: {}
       tolerations: []
       affinity:
@@ -223,7 +253,13 @@ spec:
       podAnnotations: {}
       podSecurityContext: {}
       securityContext: {}
-      resources: {}
+{{- if (and .Values.config.taiga.frontResources.enabled (not (eq .Values.config.taiga.frontResources.enabled "false"))) }}
+      frontResources:
+        requests:
+{{ toYaml .Values.config.taiga.frontResources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.taiga.frontResources.limits | indent 10 }}
+{{- end }}
       nodeSelector: {}
       tolerations: []
       affinity: {}
@@ -243,7 +279,13 @@ spec:
       podAnnotations: {}
       podSecurityContext: {}
       securityContext: {}
-      resources: {}
+{{- if (and .Values.config.taiga.gatewayResources.enabled (not (eq .Values.config.taiga.gatewayResources.enabled "false"))) }}
+      gatewayResources:
+        requests:
+{{ toYaml .Values.config.taiga.gatewayResources.requests | indent 10 }}
+        limits:
+{{ toYaml .Values.config.taiga.gatewayResources.limits | indent 10 }}
+{{- end }}
       nodeSelector: {}
       tolerations: []
       affinity: {}

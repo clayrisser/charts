@@ -1,47 +1,72 @@
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
 metadata:
-  name: {{ template "nextcloud.name" . }}
+  name: nextcloud
   labels:
     app.kubernetes.io/name: {{ template "nextcloud.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  forceUpgrade: false
-  helmVersion: v3
-  wait: false
-  git:
-    timeout: 120s
+  interval: 5m
+  url: https://nextcloud.github.io/helm
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}-release
+  labels:
+    app.kubernetes.io/name: {{ template "nextcloud.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
   chart:
-    repository: https://github.com/nextcloud/helm.git
-    ref: nextcloud-2.10.0
-    path: charts/nextcloud
+    spec:
+      chart: nextcloud
+      version: {{ .Release.Version | quote }}
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: nextcloud
   values:
-    replicaCount: {{ .Values.config.nextcloud.replicas }}
-    podAnnotations: {}
-    podLabels: {}
     image:
-      repository: {{ .Values.images.nextcloud.repository | quote }}
-      tag: {{ .Values.images.nextcloud.tag | quote }}
-      pullPolicy: {{ .Values.config.imagePullPolicy }}
+      repository: {{ .Values.images.nextcloud | quote }}
+      tag: {{ .Values.images.tag | quote }}
+      pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    replicaCount: {{ .Values.config.nextcloud.replicas }}
+    ingress:
+      enabled: {{ .Values.ingress.nextcloud.enabled }}
+      annotations:
+        {{- if .Values.ingress.nextcloud.tls }}
+        {{- if (not .Values.ingress.nextcloud.certificate) }}
+        kubernetes.io/tls-acme: 'true'
+        {{- if .Values.ingress.nextcloud.issuer.name }}
+        cert-manager.io/cluster-issuer: {{ .Values.ingress.nextcloud.issuer.name }}
+        {{- end }}
+        {{- end }}
+        nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+        {{- end }}
+      path: /
+      pathType: Prefix
+    phpClientHttpsFix:
+      enabled: {{ .Values.ingress.nextcloud.tls }}
+      protocol: https
     nextcloud:
-      host: {{ .Values.ingress.nextcloud.hostname }}
-      username: {{ .Values.config.nextcloud.username }}
-      password: {{ .Values.config.nextcloud.password }}
-      ## Use an existing secret
+      host: nextcloud.kube.home
+      username: {{ .Values.config.nextcloud.username | quote }}
+      password: {{ .Values.config.nextcloud.password | quote }}
       existingSecret:
-        enabled: false
-        # secretName: nameofsecret
-        # usernameKey: username
-        # passwordKey: password
-        # smtpUsernameKey: smtp_username
-        # smtpPasswordKey: smtp_password
+        enabled: true
+        secretName: nextcloud
+        usernameKey: username
+        passwordKey: password
+        tokenKey: token
+        smtpUsernameKey: smtpUsername
+        smtpPasswordKey: smtpPassword
       update: 0
-      containerPort: 8080
       datadir: /var/www/html/data
-      persistence:
-        subPath:
       mail:
         enabled: false
         fromAddress: user
@@ -53,85 +78,122 @@ spec:
           authtype: LOGIN
           name: user
           password: pass
-      internalDatabase:
-        enabled: false
-        name: ''
-      externalDatabase:
+      phpConfigs: {}
+      defaultConfigs:
+        .htaccess: true
+        redis.config.php: true
+        apache-pretty-urls.config.php: true
+        apcu.config.php: true
+        apps.config.php: true
+        autoconfig.php: true
+        smtp.config.php: true
+      configs:
+        s3.config.php: |-
+          <?php
+          $CONFIG = array (
+            'objectstore' => array(
+              'class' => '\\OC\\Files\\ObjectStore\\S3',
+              'arguments' => array(
+                'bucket'     => 'my-bucket',
+                'autocreate' => true,
+                'key'        => 'xxx',
+                'secret'     => 'xxx',
+                'region'     => 'us-east-1',
+                'use_ssl'    => true
+              )
+            )
+          );
+      strategy:
+        type: Recreate
+      extraEnv: []
+    nginx:
+      enabled: false
+    internalDatabase:
+      enabled: false
+    externalDatabase:
+      enabled: true
+      type: postgresql
+      host:
+      database: nextcloud
+      existingSecret:
+        secretName: postgres
+        usernameKey: username
+        passwordKey: password
+    mariadb:
+      enabled: false
+    postgresql:
+      enabled: false
+    redis:
+      enabled: true
+      auth:
         enabled: true
-        type: {{ .Values.config.nextcloud.externalDatabase.type }}
-        host: {{ .Values.config.nextcloud.externalDatabase.host }}
-        port: {{ .Values.config.nextcloud.externalDatabase.port }}
-        dbname: {{ .Values.config.nextcloud.externalDatabase.dbname }}
-        username: {{ .Values.config.nextcloud.externalDatabase.username }}
-        password: {{ .Values.config.nextcloud.externalDatabase.password }}
-        ## Use a existing secret
-        existingSecret:
-          enabled: false
-          # secretName: nameofsecret
-          # usernameKey: username
-          # passwordKey: password
-      cronjob:
-        enabled: false
-        image: {}
-        schedule: "*/15 * * * *"
+        password: 'P@ssw0rd'
+    cronjob:
+      enabled: true
+    service:
+      type: ClusterIP
+      port: 8080
+      loadBalancerIP: nil
+      nodePort: nil
+
+    persistence:
+      enabled: false
+      annotations: {}
+      storageClass: "-"
+      existingClaim:
+      accessMode: ReadWriteOnce
+      size: 8Gi
+      nextcloudData:
+        enabled: true
+        subPath:
         annotations: {}
-        curlInsecure: false
-        failedJobsHistoryLimit: 5
-        successfulJobsHistoryLimit: 2
-      persistence:
-        enabled: false
+        storageClass: "-"
+        existingClaim:
         accessMode: ReadWriteOnce
         size: 8Gi
 
-      redis:
-        enabled: false
-        usePassword: true
-        password: "pass"
-    session: {}
-      # maxSessionAge:
-      # sessionCookies:
+{{- if (and .Values.config.nextcloud.resources.enabled (not (eq .Values.config.nextcloud.resources.enabled "false"))) }}
+    resources:
+      requests:
+{{ toYaml .Values.config.nextcloud.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.nextcloud.resources.limits | indent 8 }}
+{{- end }}
     livenessProbe:
-      initialDelaySeconds: 120
-      timeoutSeconds: 30
-      failureThreshold: 6
-
-    readinessProbe:
-      initialDelaySeconds: 30
-      timeoutSeconds: 3
-      periodSeconds: 5
-
-    service:
-      name: nextcloud
-      type: ClusterIP
-      externalPort: 80
-      internalPort: 3000
-      nodePort:
-      annotations: {}
-    ingress:
       enabled: true
-      hosts:
-         - {{ .Values.ingress.nextcloud.hostname }}
-      path: /
-      labels:
-        # Used to add custom labels to the Ingress
-        # Useful if for example you have multiple Ingress controllers and want your Ingress controllers to bind to specific Ingresses
-        # traffic: internal
-      annotations:
-         kubernetes.io/ingress.class: nginx
-         kubernetes.io/tls-acme: "true"
-      tls:
-        # Secrets must be manually created in the namespace.
-         - secretName: {{ .Values.ingress.nextcloud.issuer.name }}
-           hosts:
-             - {{ .Values.ingress.nextcloud.hostname }}
-    resources: {}
-      # limits:
-      #  cpu: 100m
-      #  memory: 128Mi
-      # requests:
-      #  cpu: 100m
-      #  memory: 128Mi
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+    startupProbe:
+      enabled: false
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30
+      successThreshold: 1
+    hpa:
+      enabled: false
+      cputhreshold: 60
+      minPods: 1
+      maxPods: 10
     nodeSelector: {}
     tolerations: []
     affinity: {}
-
+    metrics:
+      enabled: false
+      serviceMonitor:
+        enabled: false
+    rbac:
+      enabled: true
+      serviceaccount:
+        create: true
+        name: nextcloud-serviceaccount

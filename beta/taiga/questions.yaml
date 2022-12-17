@@ -53,7 +53,7 @@ questions:
     required: false
     label: 'registration enabled'
     group: Taiga
-  - variable: config.taiga.resources.enabled
+  - variable: config.taiga.rabbitmqResources.enabled
     description: ''
     type: enum
     options:
@@ -61,30 +61,190 @@ questions:
       - custom
       - 'false'
     required: true
-    label: 'resources defaults'
+    label: 'rabbitmq resources defaults'
     show_subquestion_if: custom
     group: Taiga
     subquestions:
-      - variable: config.taiga.resources.requests.cpu
+      - variable: config.taiga.rabbitmqResources.requests.cpu
         description: ''
         type: string
         required: true
-        label: 'resources requests cpu'
-      - variable: config.taiga.resources.requests.memory
+        label: 'rabbitmq resources requests cpu'
+      - variable: config.taiga.rabbitmqResources.requests.memory
         description: ''
         type: string
         required: true
-        label: 'resources requests memory'
-      - variable: config.taiga.resources.limits.cpu
+        label: 'rabbitmq resources requests memory'
+      - variable: config.taiga.rabbitmqResources.limits.cpu
         description: ''
         type: string
         required: true
-        label: 'resources limits cpu'
-      - variable: config.taiga.resources.limits.memory
+        label: 'rabbitmq resources limits cpu'
+      - variable: config.taiga.rabbitmqResources.limits.memory
         description: ''
         type: string
         required: true
-        label: 'resources limits memory'
+        label: 'rabbitmq resources limits memory'
+  - variable: config.taiga.frontResources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'front resources defaults'
+    show_subquestion_if: custom
+    group: Taiga
+    subquestions:
+      - variable: config.taiga.frontResources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'front resources requests cpu'
+      - variable: config.taiga.frontResources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'front resources requests memory'
+      - variable: config.taiga.frontResources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'front resources limits cpu'
+      - variable: config.taiga.frontResources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'front resources limits memory'
+  - variable: config.taiga.backResources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'back resources defaults'
+    show_subquestion_if: custom
+    group: Taiga
+    subquestions:
+      - variable: config.taiga.backResources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'back resources requests cpu'
+      - variable: config.taiga.backResources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'back resources requests memory'
+      - variable: config.taiga.backResources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'back resources limits cpu'
+      - variable: config.taiga.backResources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'back resources limits memory'
+  - variable: config.taiga.gatewayResources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'gateway resources defaults'
+    show_subquestion_if: custom
+    group: Taiga
+    subquestions:
+      - variable: config.taiga.gatewayResources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'gateway resources requests cpu'
+      - variable: config.taiga.gatewayResources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'gateway resources requests memory'
+      - variable: config.taiga.gatewayResources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'gateway resources limits cpu'
+      - variable: config.taiga.gatewayResources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'gateway resources limits memory'
+  - variable: config.taiga.asyncResources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'async resources defaults'
+    show_subquestion_if: custom
+    group: Taiga
+    subquestions:
+      - variable: config.taiga.asyncResources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'async resources requests cpu'
+      - variable: config.taiga.asyncResources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'async resources requests memory'
+      - variable: config.taiga.asyncResources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'async resources limits cpu'
+      - variable: config.taiga.asyncResources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'async resources limits memory'
+  - variable: config.taiga.eventsResources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'events resources defaults'
+    show_subquestion_if: custom
+    group: Taiga
+    subquestions:
+      - variable: config.taiga.eventsResources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'events resources requests cpu'
+      - variable: config.taiga.eventsResources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'events resources requests memory'
+      - variable: config.taiga.eventsResources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'events resources limits cpu'
+      - variable: config.taiga.eventsResources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'events resources limits memory'
 
   # Postgres
   - variable: config.postgres.integration

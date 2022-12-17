@@ -1,62 +1,42 @@
 images:
   nextcloud:
     repository: nextcloud
-    tag: 21.0.5-fpm
+    tag: 24.0.3-apache
 
 config:
-  clusterType: rke
-  imagePullPolicy: Always
-  updateStrategy: Recreate
-  allowIntegrations: true
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
   debug: false
+  istio: false
   nextcloud:
-    host: ''
+    hostname: ''
+    baseUrl: ''
+    replicas: 1
     username: admin
-    password: pass
-    existingSecret:
-      enabled: false
-    update: 0
-    containerPort: 8080
-    datadir: /var/www/html/data
-    persistence:
-      subPath:
-    mail:
-      enabled: false
-      fromAddress: user
-      domain: domain.com
-      smtp:
-        host: domain.com
-        secure: ssl
-        port: 465
-        authtype: LOGIN
-        name: user
-        password: pass
-    internalDatabase:
-      enabled: false
-      name: ''
-    externalDatabase:
-      enabled: true
-      integration: a-postgres
-      type: postgres
-      host: ''
-      port: 5432
-      dbname: a_nextcloud
-      username: postgres
-      password: ''
-      existingSecret:
-        enabled: false
-    cronjob:
-      enabled: false
-      image: {}
-      schedule: '*/15 * * * *'
-      annotations: {}
-      curlInsecure: false
-      failedJobsHistoryLimit: 5
-      successfulJobsHistoryLimit: 2
-    redis:
-      enabled: false
-      usePassword: true
-      password: 'pass'
+    password: 'P@ssw0rd'
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  postgres:
+    integration: ''
+    database: keycloak
+    host: ''
+    password: ''
+    port: 5432
+    username: postgres
+    # url: ''
+  keycloak:
+    enabled: true
+    integration: ''
+    baseUrl: ''
+    clientId: ''
+    clientSecret: ''
+    realmName: main
 
 service:
   nextcloud:
@@ -69,7 +49,6 @@ service:
 
 ingress:
   nextcloud:
-    externalDns: true
     certificate: ''
     enabled: false
     hostname: ''
