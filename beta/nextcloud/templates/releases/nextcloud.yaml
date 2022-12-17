@@ -113,8 +113,8 @@ spec:
     externalDatabase:
       enabled: true
       type: postgresql
-      host:
-      database: nextcloud
+      host: {{ .Values.config.postgres.host | quote }}
+      database: {{ .Values.config.postgres.database | quote }}
       existingSecret:
         secretName: postgres
         usernameKey: username

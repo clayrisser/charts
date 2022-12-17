@@ -13,7 +13,7 @@ config:
     baseUrl: ''
     replicas: 1
     username: admin
-    password: 'P@ssw0rd'
+    password: ''
     resources:
       enabled: defaults
       requests:
@@ -24,11 +24,11 @@ config:
         memory: 256Mi
   postgres:
     integration: ''
-    database: keycloak
+    database: nextcloud
     host: ''
     password: ''
-    port: 5432
     username: postgres
+    # port: 5432
     # url: ''
   keycloak:
     enabled: true
