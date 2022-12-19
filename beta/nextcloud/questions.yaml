@@ -213,11 +213,11 @@ questions:
     required: true
     label: 'nextcloud size'
     group: Persistence
-  - variable: persistence.size.media
+  - variable: persistence.size.data
     description: ''
     type: string
     required: true
-    label: 'media size'
+    label: 'data size'
     group: Persistence
   - variable: persistence.velero.enabled
     description: ''

@@ -30,6 +30,15 @@ config:
     username: postgres
     # port: 5432
     # url: ''
+  s3:
+    enabled: false
+    integration: ''
+    bucket: ''
+    prefix: nextcloud
+    accessKey: ''
+    endpoint: ''
+    region: us-west-2
+    secretKey: ''
   keycloak:
     enabled: true
     integration: ''
@@ -55,3 +64,18 @@ ingress:
     tls: false
     issuer:
       name: ''
+
+persistence:
+  enabled: true
+  size:
+    nextcloud: 1Gi
+    data: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'

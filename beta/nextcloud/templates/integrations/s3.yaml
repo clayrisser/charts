@@ -1,0 +1,66 @@
+{{- if (and .Values.config.s3.enabled .Values.config.s3.integration) }}
+{{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
+apiVersion: integration.risserlabs.com/v1alpha2
+kind: Plug
+metadata:
+  name: s3
+  labels:
+    app.kubernetes.io/name: {{ template "nextcloud.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: s3
+    namespace: {{ $namespace }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    bucket: {{ .Values.config.s3.bucket | quote }}
+    prefix: {{ .Values.config.s3.prefix | quote }}
+    replicate: 'false'
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      resource: |
+        apiVersion: patch.risserlabs.com/v1alpha1
+        kind: Patch
+        metadata:
+          name: create-site
+          namespace: {{ .Release.Namespace }}
+        spec:
+          epoch: {{ now | unixEpoch | quote }}
+          patches:
+            - id: helm-release
+              target:
+                group: source.toolkit.fluxcd.io
+                version: v1beta1
+                kind: HelmRelease
+                name: {{ .Release.Name }}-release
+              waitForResource: true
+              type: json
+              patch: |
+                - op: replace
+                  path: /spec/values/nextcloud/configs/s3.config.php
+                  value: |
+                    <?php
+                    $CONFIG = array (
+                      'objectstore' => array(
+                        'class' => '\\OC\\Files\\ObjectStore\\S3',
+                        'arguments' => array(
+                          'autocreate' => true,
+                          'bucket'     => '{% ((empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket) %}',
+                          'endpoint'   => '{% .socketConfig.endpoint | default (printf "s3.%s.amazonaws.com" .socketConfig.region) %}',
+                          'key'        => '{% .socketConfig.accessKey %}',
+                          'region'     => '{% .socketConfig.region %}',
+                          'secret'     => '{% .socketConfig.secretKey %}',
+                          'use_path_style' => true,
+                          'use_ssl'    => true
+                        )
+                      )
+                    );
+{{- end }}

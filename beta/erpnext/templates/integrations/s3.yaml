@@ -64,12 +64,4 @@ spec:
           metadata:
             name: s3
             namespace: {{ .Release.Namespace }}
-    - when: [decoupled]
-      do: delete
-      resource: |
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: s3
-            namespace: {{ .Release.Namespace }}
 {{- end }}
