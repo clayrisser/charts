@@ -87,7 +87,7 @@ config:
     username: postgres
     # url: ''
   keycloak:
-    enabled: true
+    enabled: false
     integration: ''
     baseUrl: ''
     clientId: ''

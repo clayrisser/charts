@@ -40,7 +40,7 @@ config:
     region: us-west-2
     secretKey: ''
   keycloak:
-    enabled: true
+    enabled: false
     integration: ''
     baseUrl: ''
     clientId: ''
@@ -58,12 +58,12 @@ service:
 
 ingress:
   nextcloud:
-    certificate: ''
     enabled: false
     hostname: ''
-    tls: false
-    issuer:
-      name: ''
+    tls:
+      enabled: false
+      issuer: ''
+      certificate: ''
 
 persistence:
   enabled: true

@@ -154,6 +154,55 @@ questions:
   #   label: url
   #   group: Postgres
 
+  # S3
+  - variable: config.backup.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: S3
+    subquestions:
+      - variable: config.s3.integration
+        description: ''
+        type: string
+        required: false
+        label: 's3 integration'
+      - variable: config.s3.endpoint
+        description: ''
+        type: string
+        required: false
+        label: 's3 endpoint'
+        show_if: config.s3.integration=
+      - variable: config.s3.bucket
+        description: ''
+        type: string
+        required: false
+        label: 's3 bucket'
+      - variable: config.s3.prefix
+        description: ''
+        type: string
+        required: false
+        label: 's3 prefix'
+      - variable: config.s3.accessKey
+        description: ''
+        type: string
+        required: false
+        label: 's3 access key'
+        show_if: config.s3.integration=
+      - variable: config.s3.secretKey
+        description: ''
+        type: password
+        required: false
+        label: 's3 secret key'
+        show_if: config.s3.integration=
+      - variable: config.s3.region
+        description: ''
+        type: string
+        required: false
+        label: 's3 region'
+        show_if: config.s3.integration=
+
 # Keycloak
   - variable: config.keycloak.enabled
     description: ''
@@ -196,16 +245,6 @@ questions:
     type: storageclass
     required: false
     label: 'storage class'
-    group: Persistence
-  - variable: persistence.accessMode
-    description: ''
-    type: enum
-    options:
-      - ReadWriteOnce
-      - ReadWriteMany
-      - ReadOnlyMany
-    required: false
-    label: 'access mode'
     group: Persistence
   - variable: persistence.size.nextcloud
     description: ''
@@ -269,39 +308,40 @@ questions:
     show_subquestion_if: true
     group: Networking
     subquestions:
-      - variable: ingress.nextcloud.tls
-        default: false
-        description: ''
-        type: boolean
-        required: true
-        label: 'nextcloud ingress tls'
       - variable: ingress.nextcloud.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
         label: 'nextcloud ingress hostname'
-      - variable: ingress.nextcloud.issuer.name
-        default: letsencrypt-staging
+      - variable: ingress.nextcloud.tls.enabled
+        default: false
         description: ''
-        type: enum
-        show_if: ingress.nextcloud.tls=true
-        options:
-          - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
-          - letsencrypt-staging
-          - letsencrypt-prod
-          - selfsigned
+        type: boolean
+        show_if: true
         required: true
-        label: 'nextcloud ingress issuer name'
-      - variable: ingress.nextcloud.certificate
-        default: ''
-        description: ''
-        type: string
-        show_if: ingress.nextcloud.tls=true&&ingress.nextcloud.issuer.name=none
-        required: false
-        label: 'nextcloud ingress certificate'
+        label: 'nextcloud ingress tls enabled'
+        subquestions:
+          - variable: ingress.nextcloud.tls.issuer
+            default: letsencrypt-staging
+            description: ''
+            type: enum
+            options:
+              - none
+              - letsencrypt-cloudflare-staging
+              - letsencrypt-cloudflare-prod
+              - letsencrypt-staging
+              - letsencrypt-prod
+              - selfsigned
+            required: true
+            label: 'nextcloud ingress issuer name'
+          - variable: ingress.nextcloud.tls.certificate
+            default: ''
+            description: ''
+            type: string
+            show_if: ingress.nextcloud.tls.issuer=none
+            required: false
+            label: 'nextcloud ingress certificate'
 
   # Images
   - variable: images.nextcloud.repository

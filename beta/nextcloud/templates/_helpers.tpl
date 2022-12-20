@@ -1,62 +1,73 @@
+{{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
 {{- define "nextcloud.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 
 {{/*
 Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this
+(by the DNS naming spec).
 */}}
 {{- define "nextcloud.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 
 {{/*
-Create chart name and version as used by the chart label.
+Calculate nextcloud certificate
 */}}
-{{- define "nextcloud.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- define "nextcloud.nextcloud-certificate" -}}
+{{- if .Values.ingress.nextcloud.certificate -}}
+{{- printf .Values.ingress.nextcloud.certificate -}}
+{{- else -}}
+{{- printf "%s-gateway" (include "nextcloud.name" .) -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
-Common labels
+Calculate nextcloud hostname
 */}}
-{{- define "nextcloud.labels" -}}
-helm.sh/chart: {{ include "nextcloud.chart" . }}
-{{ include "nextcloud.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
+{{- define "nextcloud.nextcloud-hostname" -}}
+{{- if .Values.config.nextcloud.hostname -}}
+{{- printf .Values.config.nextcloud.hostname -}}
+{{- else -}}
+{{- if .Values.ingress.nextcloud.enabled -}}
+{{- printf .Values.ingress.nextcloud.hostname -}}
+{{- else -}}
+{{- printf "%s-release-gateway.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
-Selector labels
+Calculate nextcloud base url
 */}}
-{{- define "nextcloud.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "nextcloud.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
+{{- define "nextcloud.nextcloud-base-url" -}}
+{{- if .Values.config.nextcloud.baseUrl -}}
+{{- printf .Values.config.nextcloud.baseUrl -}}
+{{- else -}}
+{{- if .Values.ingress.nextcloud.enabled -}}
+{{- $hostname := ((not (include "nextcloud.nextcloud-hostname" .)) | ternary .Values.ingress.nextcloud.hostname (include "nextcloud.nextcloud-hostname" .)) -}}
+{{- $protocol := (.Values.ingress.nextcloud.tls | ternary "https" "http") -}}
+{{- printf "%s://%s" $protocol $hostname -}}
+{{- else -}}
+{{- printf "http://%s" (include "nextcloud.nextcloud-hostname" .) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
-Create the name of the service account to use
+Calculate postgres url
 */}}
-{{- define "nextcloud.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "nextcloud.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
+{{- define "nextcloud.postgres-url" -}}
+{{- $postgres := .Values.config.postgres -}}
+{{- if $postgres.url -}}
+{{- printf $postgres.url -}}
+{{- else -}}
+{{- $credentials := ((or (not $postgres.username) (not $postgres.password)) | ternary "" (printf "%s:%s@" $postgres.username $postgres.password)) -}}
+{{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host ($postgres.port | toString) $postgres.database -}}
+{{- end -}}
+{{- end -}}

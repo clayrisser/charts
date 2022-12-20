@@ -39,11 +39,11 @@ spec:
     ingress:
       enabled: {{ .Values.ingress.nextcloud.enabled }}
       annotations:
-        {{- if .Values.ingress.nextcloud.tls }}
-        {{- if (not .Values.ingress.nextcloud.certificate) }}
+        {{- if .Values.ingress.nextcloud.tls.enabled }}
+        {{- if (not .Values.ingress.nextcloud.tls.certificate) }}
         kubernetes.io/tls-acme: 'true'
-        {{- if .Values.ingress.nextcloud.issuer.name }}
-        cert-manager.io/cluster-issuer: {{ .Values.ingress.nextcloud.issuer.name }}
+        {{- if .Values.ingress.nextcloud.tls.issuer }}
+        cert-manager.io/cluster-issuer: {{ .Values.ingress.nextcloud.tls.issuer }}
         {{- end }}
         {{- end }}
         nginx.ingress.kubernetes.io/ssl-redirect: 'true'
@@ -51,7 +51,7 @@ spec:
       path: /
       pathType: Prefix
     phpClientHttpsFix:
-      enabled: {{ .Values.ingress.nextcloud.tls }}
+      enabled: {{ .Values.ingress.nextcloud.tls.enabled }}
       protocol: https
     nextcloud:
       host: nextcloud.kube.home
