@@ -54,7 +54,7 @@ spec:
       enabled: {{ .Values.ingress.nextcloud.tls.enabled }}
       protocol: https
     nextcloud:
-      host: nextcloud.kube.home
+      host: {{ include "nextcloud.nextcloud-hostname" . }}
       username: {{ .Values.config.nextcloud.username | quote }}
       password: {{ .Values.config.nextcloud.password | quote }}
       existingSecret:
