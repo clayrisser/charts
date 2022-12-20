@@ -324,7 +324,7 @@ questions:
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.nextcloud.enabled=true
+        show_if: ingress.nextcloud.tls.enabled=true
         options:
           - none
           - letsencrypt-cloudflare-staging
@@ -338,7 +338,7 @@ questions:
         default: ''
         description: ''
         type: string
-        show_if: ingress.nextcloud.enabled=true&&ingress.nextcloud.tls.issuer=none
+        show_if: ingress.nextcloud.tls.enabled=true&&ingress.nextcloud.tls.issuer=none
         required: false
         label: 'nextcloud ingress certificate'
 
