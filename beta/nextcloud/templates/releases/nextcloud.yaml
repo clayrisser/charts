@@ -32,8 +32,8 @@ spec:
         name: nextcloud
   values:
     image:
-      repository: {{ .Values.images.nextcloud | quote }}
-      tag: {{ .Values.images.tag | quote }}
+      repository: {{ .Values.images.nextcloud.repository | quote }}
+      tag: {{ .Values.images.nextcloud.tag | quote }}
       pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     replicaCount: {{ .Values.config.nextcloud.replicas }}
     ingress:
