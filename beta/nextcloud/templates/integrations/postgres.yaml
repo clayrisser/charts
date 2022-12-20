@@ -65,8 +65,7 @@ spec:
           patches:
             - id: secret
               target:
-                group: core
-                version: v1
+                apiVersion: v1
                 kind: Secret
                 name: postgres
               waitForTimeout: 5
