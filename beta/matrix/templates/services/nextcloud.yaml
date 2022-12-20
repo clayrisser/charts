@@ -1,0 +1,28 @@
+matrixVersion: v1
+kind: Service
+metadata:
+  name: {{ template "matrix.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "matrix.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.matrix.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.matrix.type }}
+  {{- if (eq .Values.service.matrix.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.matrix.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ (eq .Values.service.matrix.type "LoadBalancer") | ternary .Values.service.matrix.lbPorts.http "80" }}
+      targetPort: container
+      {{- if (and (eq .Values.service.matrix.type "NodePort") (not (empty .Values.service.matrix.nodePorts.http))) }}
+      nodePort: {{ .Values.service.matrix.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "matrix.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

@@ -1,0 +1,72 @@
+images:
+  matrix:
+    repository: matrix
+    tag: 24.0.3-apache
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  istio: false
+  matrix:
+    hostname: ''
+    baseUrl: ''
+    replicas: 1
+    username: admin
+    password: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  postgres:
+    integration: ''
+    database: matrix
+    host: ''
+    password: ''
+    username: postgres
+    # port: 5432
+    # url: ''
+  keycloak:
+    enabled: true
+    integration: ''
+    baseUrl: ''
+    clientId: ''
+    clientSecret: ''
+    realmName: main
+
+service:
+  matrix:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  matrix:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''
+
+persistence:
+  enabled: true
+  size:
+    matrix: 1Gi
+    data: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'
