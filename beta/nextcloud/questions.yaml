@@ -318,30 +318,29 @@ questions:
         default: false
         description: ''
         type: boolean
-        show_if: true
         required: true
         label: 'nextcloud ingress tls enabled'
-        subquestions:
-          - variable: ingress.nextcloud.tls.issuer
-            default: letsencrypt-staging
-            description: ''
-            type: enum
-            options:
-              - none
-              - letsencrypt-cloudflare-staging
-              - letsencrypt-cloudflare-prod
-              - letsencrypt-staging
-              - letsencrypt-prod
-              - selfsigned
-            required: true
-            label: 'nextcloud ingress issuer name'
-          - variable: ingress.nextcloud.tls.certificate
-            default: ''
-            description: ''
-            type: string
-            show_if: ingress.nextcloud.tls.issuer=none
-            required: false
-            label: 'nextcloud ingress certificate'
+      - variable: ingress.nextcloud.tls.issuer
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.nextcloud.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - selfsigned
+        required: true
+        label: 'nextcloud ingress issuer name'
+      - variable: ingress.nextcloud.tls.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.nextcloud.enabled=true&&ingress.nextcloud.tls.issuer=none
+        required: false
+        label: 'nextcloud ingress certificate'
 
   # Images
   - variable: images.nextcloud.repository
