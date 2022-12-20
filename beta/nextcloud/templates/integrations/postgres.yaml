@@ -73,9 +73,9 @@ spec:
               type: json
               patch: |
                 - op: replace
-                  path: /spec/data/password
+                  path: /data/password
                   value: '{% .socketConfig.password | b64enc %}'
                 - op: replace
-                  path: /spec/data/username
+                  path: /data/username
                   value: '{% .socketConfig.username | b64enc %}'
 {{- end }}
