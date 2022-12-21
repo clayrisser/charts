@@ -48,6 +48,10 @@ spec:
         {{- end }}
         nginx.ingress.kubernetes.io/ssl-redirect: 'true'
         {{- end }}
+      tls:
+        - secretName: nextcloud-tls
+          hosts:
+            - {{ include "nextcloud.nextcloud-hostname" . }}
       path: /
       pathType: Prefix
     phpClientHttpsFix:
@@ -55,8 +59,6 @@ spec:
       protocol: https
     nextcloud:
       host: {{ include "nextcloud.nextcloud-hostname" . }}
-      username: {{ .Values.config.nextcloud.username | quote }}
-      password: {{ .Values.config.nextcloud.password | quote }}
       existingSecret:
         enabled: true
         secretName: nextcloud
