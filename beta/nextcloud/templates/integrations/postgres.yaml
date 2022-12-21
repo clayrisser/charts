@@ -38,8 +38,8 @@ spec:
           patches:
             - id: helm-release
               target:
-                group: source.toolkit.fluxcd.io
-                version: v1beta1
+                group: helm.toolkit.fluxcd.io
+                version: v2beta1
                 kind: HelmRelease
                 name: {{ .Release.Name }}-release
               waitForTimeout: 5
