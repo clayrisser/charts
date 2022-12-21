@@ -89,8 +89,8 @@ spec:
         apps.config.php: true
         autoconfig.php: true
         smtp.config.php: true
-      configs:
 {{- if (and .Values.config.s3.enabled (not .Values.config.s3.integration)) }}
+      configs:
         s3.config.php: |-
           <?php
           $CONFIG = array (
