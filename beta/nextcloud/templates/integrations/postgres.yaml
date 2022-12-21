@@ -52,17 +52,6 @@ spec:
                 - op: replace
                   path: /spec/values/externalDatabase/host
                   value: '{% .socketConfig.hostname %}'
-    - when: [coupled, updated]
-      do: recreate
-      resource: |
-        apiVersion: patch.risserlabs.com/v1alpha1
-        kind: Patch
-        metadata:
-          name: postgres-coupled-or-updated
-          namespace: {{ .Release.Namespace }}
-        spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
             - id: secret
               target:
                 apiVersion: v1
