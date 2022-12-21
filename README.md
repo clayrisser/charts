@@ -17,6 +17,22 @@ images:
     tag: some-version
 
 config:
+  imagePullPolicy: IfNotPresent|Always
+  updateStrategy: RollingUpdate|Recreate
+  debug: false
+  istio: false
+  [name]:
+    hostname: ''
+    baseUrl: ''
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
 
 services:
   [name]:
@@ -30,12 +46,24 @@ ingresses:
   [name]:
     enabled: false
     hostname: ''
-    tls: true
-    certificate: ''
-    issuer:
-      name: ''
+    tls:
+      enabled: true
+      certificate: ''
+      issuer: ''
 
 persistance:
+  enabled: true
+  size:
+    [name]: 1Gi
+  storageClass: ''
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'
 ```
 
 ## License
