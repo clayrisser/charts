@@ -58,7 +58,8 @@ spec:
       hosts:
         - {{ include "nextcloud.onlyoffice-hostname" . }}
       tls:
-        - hosts:
+        - secretName: onlyoffice-tls
+          hosts:
             - {{ include "nextcloud.onlyoffice-hostname" . }}
     podSecurityPolicy:
       create: true

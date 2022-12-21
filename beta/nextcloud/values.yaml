@@ -33,10 +33,10 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 100m
+        cpu: 300m
         memory: 128Mi
       limits:
-        cpu: 500m
+        cpu: 600m
         memory: 256Mi
   postgres:
     integration: ''
