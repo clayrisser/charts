@@ -41,12 +41,6 @@ questions:
     required: false
     label: hostname
     group: Nextcloud
-  - variable: config.nextcloud.baseUrl
-    description: ''
-    type: string
-    required: false
-    label: 'base url'
-    group: Nextcloud
   - variable: config.nextcloud.replicas
     description: ''
     type: int
@@ -64,12 +58,6 @@ questions:
     type: string
     required: false
     label: password
-    group: Nextcloud
-  - variable: config.nextcloud.registrationEnabled
-    description: ''
-    type: boolean
-    required: false
-    label: 'registration enabled'
     group: Nextcloud
   - variable: config.nextcloud.resources.enabled
     description: ''
@@ -103,6 +91,57 @@ questions:
         type: string
         required: true
         label: 'resources limits memory'
+
+  # OnlyOffice
+  - variable: config.onlyoffice.enabled
+    description: ''
+    type: boolean
+    required: false
+    label: enabled
+    group: OnlyOffice
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.onlyoffice.hostname
+        description: ''
+        type: string
+        required: false
+        label: hostname
+      - variable: config.onlyoffice.replicas
+        description: ''
+        type: int
+        required: true
+        label: replicas
+      - variable: config.onlyoffice.resources.enabled
+        description: ''
+        type: enum
+        options:
+          - defaults
+          - custom
+          - 'false'
+        required: true
+        label: 'resources defaults'
+        show_subquestion_if: custom
+        subquestions:
+          - variable: config.onlyoffice.resources.requests.cpu
+            description: ''
+            type: string
+            required: true
+            label: 'resources requests cpu'
+          - variable: config.onlyoffice.resources.requests.memory
+            description: ''
+            type: string
+            required: true
+            label: 'resources requests memory'
+          - variable: config.onlyoffice.resources.limits.cpu
+            description: ''
+            type: string
+            required: true
+            label: 'resources limits cpu'
+          - variable: config.onlyoffice.resources.limits.memory
+            description: ''
+            type: string
+            required: true
+            label: 'resources limits memory'
 
   # Postgres
   - variable: config.postgres.integration
@@ -332,7 +371,7 @@ questions:
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned
-        required: true
+        required: false
         label: 'nextcloud ingress issuer name'
       - variable: ingress.nextcloud.tls.certificate
         default: ''
@@ -341,6 +380,108 @@ questions:
         show_if: ingress.nextcloud.tls.enabled=true&&ingress.nextcloud.tls.issuer=none
         required: false
         label: 'nextcloud ingress certificate'
+  - variable: service.nextcloud.type
+    description: ''
+    type: enum
+    show_if: ingress.nextcloud.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'nextcloud service type'
+    group: Networking
+  - variable: service.nextcloud.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.nextcloud.type=NodePort&&ingress.nextcloud.enabled=false
+    label: 'nextcloud http node port'
+    group: Networking
+  - variable: service.nextcloud.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.nextcloud.type=LoadBalancer&&ingress.nextcloud.enabled=false
+    label: 'nextcloud http lb port'
+    group: Networking
+  - variable: ingress.onlyoffice.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'onlyoffice ingress enabled'
+    show_if: config.onlyoffice.enabled=true
+    show_subquestion_if: true
+    group: Networking
+    subquestions:
+      - variable: ingress.onlyoffice.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.onlyoffice.enabled=true
+        required: true
+        label: 'onlyoffice ingress hostname'
+      - variable: ingress.onlyoffice.tls.enabled
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.onlyoffice.enabled=true
+        required: true
+        label: 'onlyoffice ingress tls enabled'
+      - variable: ingress.onlyoffice.tls.issuer
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.onlyoffice.enabled=true&&ingress.onlyoffice.tls.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - selfsigned
+        required: false
+        label: 'onlyoffice ingress issuer name'
+      - variable: ingress.onlyoffice.tls.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.onlyoffice.enabled=true&&ingress.onlyoffice.tls.enabled=true&&ingress.onlyoffice.tls.issuer=none
+        required: false
+        label: 'onlyoffice ingress certificate'
+  - variable: service.onlyoffice.type
+    description: ''
+    type: enum
+    show_if: ingress.onlyoffice.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'onlyoffice service type'
+    group: Networking
+  - variable: service.onlyoffice.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.onlyoffice.type=NodePort&&ingress.onlyoffice.enabled=false
+    label: 'onlyoffice http node port'
+    group: Networking
+  - variable: service.onlyoffice.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.onlyoffice.type=LoadBalancer&&ingress.onlyoffice.enabled=false
+    label: 'onlyoffice http lb port'
+    group: Networking
 
   # Images
   - variable: images.nextcloud.repository
@@ -354,4 +495,16 @@ questions:
     type: string
     required: true
     label: 'nextcloud tag'
+    group: Images
+  - variable: images.onlyoffice.repository
+    description: ''
+    type: string
+    required: true
+    label: 'onlyoffice repository'
+    group: Images
+  - variable: images.onlyoffice.tag
+    description: ''
+    type: string
+    required: true
+    label: 'onlyoffice tag'
     group: Images

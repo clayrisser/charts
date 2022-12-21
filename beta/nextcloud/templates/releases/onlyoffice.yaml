@@ -1,0 +1,102 @@
+{{- if .Values.config.onlyoffice.enabled }}
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kfirfer
+  labels:
+    app.kubernetes.io/name: onlyoffice
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  url: https://kfirfer.github.io/helm
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: onlyoffice-release
+  labels:
+    app.kubernetes.io/name: onlyoffice
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: onlyoffice
+      version: '1.2.3'
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: kfirfer
+  values:
+    replicaCount: {{ .Values.config.onlyoffice.replicas }}
+    image:
+      repository: {{ .Values.images.onlyoffice.repository | quote }}
+      tag: {{ .Values.images.onlyoffice.tag | quote }}
+      pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    strategy: {{ .Values.config.updateStrategy | quote }}
+    terminationGracePeriodSeconds: 10
+    service:
+      type: {{ .Values.ingress.onlyoffice.enabled | ternary "ClusterIP" .Values.service.onlyoffice.type }}
+      port: {{ (eq .Values.service.onlyoffice.type "LoadBalancer") | ternary .Values.service.onlyoffice.lbPorts.http "8080" }}
+    ingress:
+      enabled: {{ .Values.ingress.onlyoffice.enabled }}
+      annotations:
+        {{- if .Values.ingress.onlyoffice.tls.enabled }}
+        {{- if (not .Values.ingress.onlyoffice.tls.certificate) }}
+        kubernetes.io/tls-acme: 'true'
+        {{- if .Values.ingress.onlyoffice.tls.issuer }}
+        cert-manager.io/cluster-issuer: {{ .Values.ingress.onlyoffice.tls.issuer }}
+        {{- end }}
+        {{- end }}
+        nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+        {{- end }}
+      paths: ['/']
+      hosts:
+        - {{ include "nextcloud.onlyoffice-hostname" . }}
+      tls:
+          hosts:
+            - {{ include "nextcloud.onlyoffice-hostname" . }}
+    podSecurityPolicy:
+      create: true
+    securitycontext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        add:
+          - MKNOD
+    secretKey: 'P@ssw0rd'
+{{- if (and .Values.config.nextcloud.resources.enabled (not (eq .Values.config.nextcloud.resources.enabled "false"))) }}
+    resources:
+      requests:
+{{ toYaml .Values.config.nextcloud.resources.requests | indent 8 }}
+      limits:
+{{ toYaml .Values.config.nextcloud.resources.limits | indent 8 }}
+{{- end }}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 120
+      timeoutSeconds: 5
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 5
+      scheme: HTTP
+      path: /healthcheck
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      timeoutSeconds: 2
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+      scheme: HTTP
+      path: /healthcheck
+    serviceAccount:
+      automountToken: true
+    podAnnotations: {}
+{{- end }}

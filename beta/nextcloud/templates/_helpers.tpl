@@ -60,6 +60,49 @@ Calculate nextcloud base url
 {{- end -}}
 
 {{/*
+Calculate onlyoffice certificate
+*/}}
+{{- define "nextcloud.onlyoffice-certificate" -}}
+{{- if .Values.ingress.onlyoffice.certificate -}}
+{{- printf .Values.ingress.onlyoffice.certificate -}}
+{{- else -}}
+{{- printf "%s-gateway" (include "nextcloud.name" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate onlyoffice hostname
+*/}}
+{{- define "nextcloud.onlyoffice-hostname" -}}
+{{- if .Values.config.onlyoffice.hostname -}}
+{{- printf .Values.config.onlyoffice.hostname -}}
+{{- else -}}
+{{- if .Values.ingress.onlyoffice.enabled -}}
+{{- printf .Values.ingress.onlyoffice.hostname -}}
+{{- else -}}
+{{- printf "%s-release-gateway.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate onlyoffice base url
+*/}}
+{{- define "nextcloud.onlyoffice-base-url" -}}
+{{- if .Values.config.onlyoffice.baseUrl -}}
+{{- printf .Values.config.onlyoffice.baseUrl -}}
+{{- else -}}
+{{- if .Values.ingress.onlyoffice.enabled -}}
+{{- $hostname := ((not (include "nextcloud.onlyoffice-hostname" .)) | ternary .Values.ingress.onlyoffice.hostname (include "nextcloud.onlyoffice-hostname" .)) -}}
+{{- $protocol := (.Values.ingress.onlyoffice.tls | ternary "https" "http") -}}
+{{- printf "%s://%s" $protocol $hostname -}}
+{{- else -}}
+{{- printf "http://%s" (include "nextcloud.onlyoffice-hostname" .) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Calculate postgres url
 */}}
 {{- define "nextcloud.postgres-url" -}}

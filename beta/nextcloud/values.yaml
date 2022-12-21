@@ -2,6 +2,9 @@ images:
   nextcloud:
     repository: nextcloud
     tag: 24.0.3-apache
+  onlyoffice:
+    repository: onlyoffice/documentserver
+    tag: 7.2.2.56
 
 config:
   imagePullPolicy: IfNotPresent
@@ -14,6 +17,19 @@ config:
     replicas: 1
     username: admin
     password: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  onlyoffice:
+    enabled: true
+    hostname: ''
+    baseUrl: ''
+    replicas: 1
     resources:
       enabled: defaults
       requests:
@@ -55,9 +71,23 @@ service:
       http:
     lbPorts:
       http: 80
+  onlyoffice:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    # nodePorts:
+    #   http:
+    lbPorts:
+      http: 80
 
 ingress:
   nextcloud:
+    enabled: false
+    hostname: ''
+    tls:
+      enabled: false
+      issuer: ''
+      certificate: ''
+  onlyoffice:
     enabled: false
     hostname: ''
     tls:
