@@ -456,7 +456,7 @@ questions:
   - variable: service.onlyoffice.type
     description: ''
     type: enum
-    show_if: ingress.onlyoffice.enabled=false
+    show_if: config.onlyoffice.enabled=true&&ingress.onlyoffice.enabled=false
     options:
       - ClusterIP
       - LoadBalancer
@@ -470,7 +470,7 @@ questions:
     required: false
     min: 30000
     max: 32767
-    show_if: service.onlyoffice.type=NodePort&&ingress.onlyoffice.enabled=false
+    show_if: config.onlyoffice.enabled=true&&service.onlyoffice.type=NodePort&&ingress.onlyoffice.enabled=false
     label: 'onlyoffice http node port'
     group: Networking
   - variable: service.onlyoffice.lbPorts.http
@@ -479,7 +479,7 @@ questions:
     min: 0
     max: 65535
     required: true
-    show_if: service.onlyoffice.type=LoadBalancer&&ingress.onlyoffice.enabled=false
+    show_if: config.onlyoffice.enabled=true&&service.onlyoffice.type=LoadBalancer&&ingress.onlyoffice.enabled=false
     label: 'onlyoffice http lb port'
     group: Networking
 
@@ -500,11 +500,13 @@ questions:
     description: ''
     type: string
     required: true
+    show_if: config.onlyoffice.enabled=true
     label: 'onlyoffice repository'
     group: Images
   - variable: images.onlyoffice.tag
     description: ''
     type: string
     required: true
+    show_if: config.onlyoffice.enabled=true
     label: 'onlyoffice tag'
     group: Images
