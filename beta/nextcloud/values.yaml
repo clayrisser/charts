@@ -30,6 +30,7 @@ config:
     hostname: ''
     baseUrl: ''
     replicas: 1
+    secret: P@ssw0rd
     resources:
       enabled: defaults
       requests:
@@ -109,3 +110,24 @@ persistence:
   kanister:
     enabled: false
     schedule: '0 0 * * *'
+
+sociallogin:
+  update_profile_on_login: 1
+  auto_create_groups: 1
+  # Because of how we import these settings, single quotes (') are not allowed
+  # in any of the values below
+  custom_oidc:
+    name: remote
+    title: Remote login
+    authorizeUrl: https://sso.stackspin.example.net/oauth2/auth
+    tokenUrl: https://sso.stackspin.example.net/oauth2/token
+    userInfoUrl: https://sso.stackspin.example.net/userinfo
+    logoutUrl: ""
+    clientId: nextcloud
+    # clientSecret: YouReallyNeedToChangeThis
+    scope: "openid profile email roles"
+    groupsClaim: "roles"
+    style: ""
+    defaultGroup: ""
+    groupMapping:
+      admin: admin

@@ -68,7 +68,7 @@ spec:
       capabilities:
         add:
           - MKNOD
-    secretKey: 'P@ssw0rd'
+    secretKey: {{ .Values.config.onlyoffice.secret | quote }}
 {{- if (and .Values.config.nextcloud.resources.enabled (not (eq .Values.config.nextcloud.resources.enabled "false"))) }}
     resources:
       requests:

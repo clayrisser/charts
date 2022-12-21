@@ -31,6 +31,7 @@ spec:
         kind: HelmRepository
         name: nextcloud
   values:
+    debug: {{ .Values.config.debug }}
     image:
       repository: {{ .Values.images.nextcloud.repository | quote }}
       tag: {{ .Values.images.nextcloud.tag | quote }}
@@ -125,6 +126,15 @@ spec:
       strategy:
         type: Recreate
       extraEnv: []
+{{- if .Values.config.onlyoffice.enabled }}
+      extraVolumes:
+        - name: nextcloud-onlyoffice
+          configMap:
+            name: nextcloud-onlyoffice
+      extraVolumeMounts:
+        - name: nextcloud-onlyoffice
+          mountPath: /var/local
+{{- end }}
     nginx:
       enabled: false
     internalDatabase:
@@ -144,6 +154,7 @@ spec:
       enabled: false
     redis:
       enabled: true
+      architecture: standalone
       auth:
         enabled: true
         password: 'P@ssw0rd'
@@ -168,7 +179,7 @@ spec:
       nextcloudData:
         enabled: true
         storageclass: {{ (eq "-" .Values.persistence.storageClass) | ternary "" .Values.persistence.storageClass | quote }}
-        # existingClaim:
+        # existingClaim: ''
         accessMode: ReadWriteOnce
         size: {{ .Values.persistence.size.data }}
 {{- if (and .Values.config.nextcloud.resources.enabled (not (eq .Values.config.nextcloud.resources.enabled "false"))) }}
@@ -193,7 +204,7 @@ spec:
       failureThreshold: 3
       successThreshold: 1
     startupProbe:
-      enabled: false
+      enabled: true
       initialDelaySeconds: 30
       periodSeconds: 10
       timeoutSeconds: 5
@@ -216,3 +227,9 @@ spec:
       serviceaccount:
         create: true
         name: nextcloud-serviceaccount
+{{- if .Values.config.onlyoffice.enabled }}
+    lifecycle:
+      postStartCommand:
+        - '/bin/bash'
+        - '/var/local/setup-apps.sh'
+{{- end }}
