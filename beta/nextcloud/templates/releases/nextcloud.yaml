@@ -24,7 +24,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: nextcloud
+      chart: {{ (empty .Values.config.postgres.integration) | ternary "nextcloud" "waiting-for-integration" }}
       version: {{ .Release.Version | quote }}
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
