@@ -32,6 +32,7 @@ spec:
         kind: HelmRepository
         name: kfirfer
   values:
+    fullnameOverride: onlyoffice-{{ .Release.Name }}
     replicaCount: {{ .Values.config.onlyoffice.replicas }}
     image:
       repository: {{ .Values.images.onlyoffice.repository | quote }}
@@ -69,12 +70,12 @@ spec:
         add:
           - MKNOD
     secretKey: {{ .Values.config.onlyoffice.secret | quote }}
-{{- if (and .Values.config.nextcloud.resources.enabled (not (eq .Values.config.nextcloud.resources.enabled "false"))) }}
+{{- if (and .Values.config.onlyoffice.resources.enabled (not (eq .Values.config.onlyoffice.resources.enabled "false"))) }}
     resources:
       requests:
-{{ toYaml .Values.config.nextcloud.resources.requests | indent 8 }}
+{{ toYaml .Values.config.onlyoffice.resources.requests | indent 8 }}
       limits:
-{{ toYaml .Values.config.nextcloud.resources.limits | indent 8 }}
+{{ toYaml .Values.config.onlyoffice.resources.limits | indent 8 }}
 {{- end }}
     nodeSelector: {}
     tolerations: []
