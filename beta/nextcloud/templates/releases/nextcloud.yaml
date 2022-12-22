@@ -233,5 +233,5 @@ spec:
     lifecycle:
       postStartCommand:
         - '/bin/bash'
-        - '/var/local/setup-apps.sh'
+        - '/var/local/entrypoint.sh'
 {{- end }}
