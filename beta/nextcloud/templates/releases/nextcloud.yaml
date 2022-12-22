@@ -144,6 +144,8 @@ spec:
       type: postgresql
       host: {{ .Values.config.postgres.host | quote }}
       database: {{ .Values.config.postgres.database | quote }}
+      user:
+      password:
       existingSecret:
         secretName: postgres
         usernameKey: username
