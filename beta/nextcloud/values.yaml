@@ -121,13 +121,13 @@ apps:
     github_repository: zorn-v/nextcloud-social-login
     version: v5.1.5
     release_filename: release.tar.gz
-  # - name: onlyoffice
-  #   # Line order is important here for renovatebot! first github_repository,
-  #   # then version
-  #   github_repository: ONLYOFFICE/onlyoffice-nextcloud
-  #   version: v7.6.8
-  #   release_filename: onlyoffice.tar.gz
-  #   enabled: true
+  - name: onlyoffice
+    # Line order is important here for renovatebot! first github_repository,
+    # then version
+    github_repository: ONLYOFFICE/onlyoffice-nextcloud
+    version: v7.6.8
+    release_filename: onlyoffice.tar.gz
+    enabled: true
 sociallogin:
   update_profile_on_login: 1
   auto_create_groups: 1
