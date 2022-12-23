@@ -35,10 +35,10 @@ config:
       enabled: defaults
       requests:
         cpu: 500m
-        memory: 128Mi
+        memory: 768Mi
       limits:
-        cpu: 1
-        memory: 256Mi
+        cpu: 2
+        memory: 1Gi
   postgres:
     integration: ''
     database: nextcloud
@@ -111,23 +111,23 @@ persistence:
     enabled: false
     schedule: '0 0 * * *'
 
-apps:
-  - name: sociallogin
-    # apps[0].enabled needs to be set to true if you want to enable login via an external
-    # oauth server. In that case you need to configure all the values in `sociallogin`
-    enabled: false
-    # Line order is important here for renovatebot! first github_repository,
-    # then version
-    github_repository: zorn-v/nextcloud-social-login
-    version: v5.1.5
-    release_filename: release.tar.gz
-  - name: onlyoffice
-    # Line order is important here for renovatebot! first github_repository,
-    # then version
-    github_repository: ONLYOFFICE/onlyoffice-nextcloud
-    version: v7.6.8
-    release_filename: onlyoffice.tar.gz
-    enabled: true
+apps: []
+  # - name: sociallogin
+  #   # apps[0].enabled needs to be set to true if you want to enable login via an external
+  #   # oauth server. In that case you need to configure all the values in `sociallogin`
+  #   enabled: false
+  #   # Line order is important here for renovatebot! first github_repository,
+  #   # then version
+  #   github_repository: zorn-v/nextcloud-social-login
+  #   version: v5.1.5
+  #   release_filename: release.tar.gz
+  # - name: onlyoffice
+  #   # Line order is important here for renovatebot! first github_repository,
+  #   # then version
+  #   github_repository: ONLYOFFICE/onlyoffice-nextcloud
+  #   version: v7.6.8
+  #   release_filename: onlyoffice.tar.gz
+  #   enabled: true
 sociallogin:
   update_profile_on_login: 1
   auto_create_groups: 1
