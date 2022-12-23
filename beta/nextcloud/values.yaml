@@ -1,7 +1,7 @@
 images:
   nextcloud:
     repository: nextcloud
-    tag: 24.0.3-apache
+    tag: 25.0.2-apache
   onlyoffice:
     repository: onlyoffice/documentserver
     tag: 7.2.2.56
