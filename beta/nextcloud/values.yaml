@@ -111,16 +111,16 @@ persistence:
     enabled: false
     schedule: '0 0 * * *'
 
-apps: []
-  # - name: sociallogin
-  #   # apps[0].enabled needs to be set to true if you want to enable login via an external
-  #   # oauth server. In that case you need to configure all the values in `sociallogin`
-  #   enabled: false
-  #   # Line order is important here for renovatebot! first github_repository,
-  #   # then version
-  #   github_repository: zorn-v/nextcloud-social-login
-  #   version: v5.1.5
-  #   release_filename: release.tar.gz
+apps:
+  - name: sociallogin
+    # apps[0].enabled needs to be set to true if you want to enable login via an external
+    # oauth server. In that case you need to configure all the values in `sociallogin`
+    enabled: false
+    # Line order is important here for renovatebot! first github_repository,
+    # then version
+    github_repository: zorn-v/nextcloud-social-login
+    version: v5.1.5
+    release_filename: release.tar.gz
   # - name: onlyoffice
   #   # Line order is important here for renovatebot! first github_repository,
   #   # then version
