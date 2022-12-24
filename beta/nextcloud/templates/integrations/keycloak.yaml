@@ -70,7 +70,7 @@ spec:
                               sh -c "\$1"
                           fi
                       }
-                      su -p "www-data" -s /bin/bash -c "php \$occ config:app:set sociallogin custom_providers --value='"\$(echo \$(echo '{
+                      su -p "www-data" -s /bin/bash -c "php \$occ config:app:set sociallogin custom_providers --value='"'{
                         "custom_oidc": [{
                           "name": "keycloak",
                           "title": "Keycloak Login",
@@ -88,5 +88,5 @@ spec:
                             "admin": "admin"
                           }
                         }]
-                      }'))"'"
+                      }'"'"
 {{- end }}
