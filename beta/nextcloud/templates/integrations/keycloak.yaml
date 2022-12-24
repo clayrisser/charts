@@ -64,13 +64,13 @@ spec:
                       #!/bin/bash
                       occ="/var/www/html/occ"
                       run_as() {
-                          if [ "$(id -u)" = 0 ]; then
-                              su -p "www-data" -s /bin/sh -c "$1"
+                          if [ "\$(id -u)" = 0 ]; then
+                              su -p "www-data" -s /bin/sh -c "\$1"
                           else
-                              sh -c "$1"
+                              sh -c "\$1"
                           fi
                       }
-                      su -p "www-data" -s /bin/bash -c "php $occ config:app:set sociallogin custom_providers --value='"$(echo $(echo '{
+                      su -p "www-data" -s /bin/bash -c "php \$occ config:app:set sociallogin custom_providers --value='"\$(echo \$(echo '{
                         "custom_oidc": [{
                           "name": "keycloak",
                           "title": "Keycloak Login",
