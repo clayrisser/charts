@@ -129,8 +129,12 @@ data:
         "system":{
             "trusted_proxies": ["10.42.0.0/16"],
             "trusted_domains": ["localhost", "{{ include "nextcloud.nextcloud-hostname" . }}"],
+            {{- if .Values.ingress.nextcloud.tls.enabled }}
             "overwriteprotocol": "https",
+            {{- end }}
+            {{- if (not .Values.config.nextcloud.appStoreEnabled) }}
             "appstoreenabled": false,
+            {{- end }}
             "debug": {{ .Values.config.debug | quote }}
         },
         "apps":{
