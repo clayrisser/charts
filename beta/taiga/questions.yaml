@@ -324,7 +324,7 @@ questions:
       - variable: config.keycloak.clientId
         description: ''
         type: string
-        required: false
+        required: true
         label: 'client id'
       - variable: config.keycloak.clientSecret
         description: ''
