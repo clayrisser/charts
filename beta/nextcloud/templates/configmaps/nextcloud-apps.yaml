@@ -56,7 +56,7 @@ data:
         name=$(echo $app | grep -oE '^[^:]+')
         url=$(echo $app | grep -oE ':https?://.+$' | sed 's|^:||g')
         if [ "$name" != "" ]; then
-            if [[ "$app_versions" =~ '"$name"' ]]; then
+            if (echo "$app_versions" | grep -q "$name"); then
                 echo "updating app $name"
                 run_as "php $occ app:update $name --no-interaction"
             else
