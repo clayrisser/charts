@@ -17,6 +17,9 @@ config:
     replicas: 1
     username: admin
     password: ''
+    apps: |
+      onlyoffice:https://github.com/ONLYOFFICE/onlyoffice-nextcloud/releases/download/v7.6.8/onlyoffice.tar.gz
+      sociallogin:https://github.com/zorn-v/nextcloud-social-login/releases/download/v5.1.5/release.tar.gz
     resources:
       enabled: defaults
       requests:
@@ -63,6 +66,8 @@ config:
     clientId: ''
     clientSecret: ''
     realmName: main
+    updateProfileOnLogin: true
+    autoCreateGroups: true
 
 service:
   nextcloud:
@@ -110,41 +115,3 @@ persistence:
   kanister:
     enabled: false
     schedule: '0 0 * * *'
-
-apps:
-  - name: sociallogin
-    # apps[0].enabled needs to be set to true if you want to enable login via an external
-    # oauth server. In that case you need to configure all the values in `sociallogin`
-    enabled: false
-    # Line order is important here for renovatebot! first github_repository,
-    # then version
-    github_repository: zorn-v/nextcloud-social-login
-    version: v5.1.5
-    release_filename: release.tar.gz
-  - name: onlyoffice
-    # Line order is important here for renovatebot! first github_repository,
-    # then version
-    github_repository: ONLYOFFICE/onlyoffice-nextcloud
-    version: v7.6.8
-    release_filename: onlyoffice.tar.gz
-    enabled: true
-sociallogin:
-  update_profile_on_login: 1
-  auto_create_groups: 1
-  # Because of how we import these settings, single quotes (') are not allowed
-  # in any of the values below
-  custom_oidc:
-    name: remote
-    title: Remote login
-    authorizeUrl: https://sso.stackspin.example.net/oauth2/auth
-    tokenUrl: https://sso.stackspin.example.net/oauth2/token
-    userInfoUrl: https://sso.stackspin.example.net/userinfo
-    logoutUrl: ""
-    clientId: nextcloud
-    # clientSecret: YouReallyNeedToChangeThis
-    scope: "openid profile email roles"
-    groupsClaim: "roles"
-    style: ""
-    defaultGroup: ""
-    groupMapping:
-      admin: admin

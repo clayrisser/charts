@@ -126,15 +126,13 @@ spec:
       strategy:
         type: Recreate
       extraEnv: []
-{{- if .Values.config.onlyoffice.enabled }}
       extraVolumes:
-        - name: nextcloud-onlyoffice
+        - name: nextcloud-apps
           configMap:
-            name: nextcloud-onlyoffice
+            name: nextcloud-apps
       extraVolumeMounts:
-        - name: nextcloud-onlyoffice
+        - name: nextcloud-apps
           mountPath: /var/local
-{{- end }}
     nginx:
       enabled: false
     internalDatabase:
@@ -229,9 +227,7 @@ spec:
       serviceaccount:
         create: true
         name: nextcloud-serviceaccount
-{{- if .Values.config.onlyoffice.enabled }}
     lifecycle:
       postStartCommand:
         - '/bin/bash'
         - '/var/local/setup-apps.sh'
-{{- end }}

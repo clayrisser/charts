@@ -1,8 +1,7 @@
-{{- if .Values.config.onlyoffice.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nextcloud-onlyoffice
+  name: nextcloud-apps
   labels:
     app.kubernetes.io/name: {{ template "nextcloud.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -11,26 +10,18 @@ metadata:
 data:
   setup-apps.sh: |
     #!/bin/bash
-
-    # This script gets executed as a postStart command inside the Nextcloud pod.
-    # The script:
-    #
-    #   * Installs all apps declared in the `apps` helm values array
-    #     * Installs all apps
-    #     * Updates pinned apps if their pinned version has changed
-    #     * Always updates unpinned apps to their newest version
-    #   * Runs upgrade routines after installation of a new release or new
-    #     pinned apps.
-    #   * Configures single-sign-on
-    #   * Persists and loads the config.json config file
-    #   * Updates database indices, columns, keys, etc needed after NC upgrade
-    #   * Writes a log to /var/www/tmp/postStart-<date>.log
     set -e
-    exec > /var/www/tmp/postStart-$(date +"%s").log
-    exec 2> /var/www/tmp/postStart-$(date +"%s")_error.log
-
-
-    # Copied from the NC docker entrypoint to run OCC commands
+    exec > /var/log/nextcloud_apps.log
+    exec 2> /var/www/tmp/nextcloud_apps_error.log
+    apps="
+    {{- if .Values.config.onlyoffice.enabled }}
+    onlyoffice:https://github.com/ONLYOFFICE/onlyoffice-nextcloud/releases/download/v7.6.8/onlyoffice.tar.gz
+    {{- end }}
+    {{- if .Values.config.keycloak.enabled }}
+    sociallogin:https://github.com/zorn-v/nextcloud-social-login/releases/download/v5.1.5/release.tar.gz
+    {{- end }}
+{{ .Values.config.nextcloud.apps | indent 4 }}
+    "
     run_as() {
         if [ "$(id -u)" = 0 ]; then
             su -p "www-data" -s /bin/sh -c "$1"
@@ -38,17 +29,10 @@ data:
             sh -c "$1"
         fi
     }
-
-    echo "STARTING SETUP-APPS.SH"
-
-    # Debug: place the json file in a persistent location for reuse
     cp /var/local/config.json /var/www/html/
-
     occ="/var/www/html/occ"
     count=0
     limit=10
-
-    # There's a nextcloud setup process. First, wait for `occ` to exist
     until [ -f "$occ" ] || [ "$count" -gt "$limit" ]
     do
         count=$((count+1))
@@ -56,131 +40,73 @@ data:
         echo "$occ doesn't exist yet, waiting $wait seconds"
         sleep $wait
     done
-
-    echo "$occ now exists!"
-
+    echo "$occ now exists"
     count=0
-
-    # As soon as the $occ command exist, we know that we can run occ, but
-    # Nextcloud might still be initializing, we use `occ` to find out whether
-    # the installation process has finished, and then we continue.
     until [[ $(run_as "php occ status --output json") =~ '"installed":true' ]] || [ "$count" -gt "$limit" ]
     do
         count=$((count+1))
         wait=$((count*10))
-        echo "Nextcloud is not installed yet. Waiting $wait seconds..."
+        echo "nextcloud is not installed yet. waiting $wait seconds"
         sleep $wait
     done
-
-    echo "Nextcloud is now installed, we can do our thing!"
-
-    # Enable app store so we can run `install` and `enable` commands
+    echo "nextcloud is now installed"
     run_as "php $occ config:system:set appstoreenabled --type boolean --value true"
-
-    echo "app store enabled"
-
     app_versions=$(run_as "php $occ app:list --output json")
-
-    echo "app versions found"
-
-    # Install all apps declared in the `apps` helm values array
-    {{- range .Values.apps }}
-    {{- if not .name }}
-      echo "Skipping app {{ . }} without name variable set"
-    {{- else if and .github_repository .version .release_filename }}
-    # Apps with a pinned version number are downloaded from GitHub so we can
-    # update the pin with Renovatebot
-
-    desired_version=$(echo "{{ .version }}" | sed 's/^v//')
-
-    if [[ $app_versions =~ '"{{ .name }}":"$desired_version"' ]]
-    then
-      echo "App {{ .name }} is up-to-date at version {{ .version }}"
-    else
-      echo "No match in ${app_versions} for \"{{ .name }}\":\"$desired_version\","
-      echo "Installing app {{ .github_repository }} version '{{ .version }}'"
-      # Where to install the app
-      target_directory="/var/www/html/custom_apps"
-      # We need to edit $ to be able to use `tpl` inside a `range`,
-      # see https://github.com/helm/helm/issues/5979#issuecomment-518231758
-      # allows us to use version variable in the release_filename
-      {{- $_ := set $ "version" .version}}
-      curl "https://github.com/{{ .github_repository }}/releases/download/{{ .version }}/{{ tpl .release_filename $ }}" -Lo "{{ .name }}.tar.gz"
-      # Remove old version of the app
-      if [[ -d "$target_directory/{{ .name }}" ]]
-      then
-        rm -r "$target_directory/{{ .name }}"
-      fi
-      # Extract app into target directory. The app tars usually contain a folder
-      # named after the app name
-      tar -xf "{{ .name }}.tar.gz" -C "$target_directory"
-      rm "{{ .name }}.tar.gz"
-    fi
-    {{- else }}
-    # Unpinned app
-    if [[ "$app_versions" =~ '"{{ .name }}"' ]]
-    then
-        # Update the app to its latest version
-        echo "Updating app {{ .name }}"
-        run_as "php $occ app:update {{ .name }} --no-interaction"
-    else
-        echo "Installing app {{ .name }}"
-        run_as "php $occ app:install {{ .name }} --keep-disabled --no-interaction"
-    fi
-    {{ end }} # end if and .github_repository .version
-    {{- if .enabled }}
-    # Enable {{ .name }} app
-    run_as "php $occ app:enable {{ .name }}"
-    {{ end }} # end if .enabled
-    {{ end }} # end range .Values.apps
-
-    # Some of the manually installed apps might need to run upgrade scripts, run
-    # them now
+    for app in $apps; do
+        name=$(echo $app | grep -oE '^[^:]+')
+        url=$(echo $app | grep -oE ':https?://.+$' | sed 's|^:||g')
+        if [ "$name" != "" ]; then
+            if [[ "$app_versions" =~ '"$name"' ]]; then
+                echo "updating app $name"
+                run_as "php $occ app:update $name --no-interaction"
+            else
+                echo "installing app $name"
+                if [ "$url" != "" ]; then
+                    target_directory="/var/www/html/custom_apps"
+                    curl "{{ .url }}" -Lo "{{ .name }}.tar.gz"
+                    if [[ -d "$target_directory/{{ .name }}" ]]; then
+                        rm -r "$target_directory/{{ .name }}"
+                    fi
+                    tar -xf "{{ .name }}.tar.gz" -C "$target_directory"
+                    rm "{{ .name }}.tar.gz"
+                else
+                    run_as "php $occ app:install $name --keep-disabled --no-interaction"
+                fi
+            fi
+        fi
+        run_as "php $occ app:enable $name"
+    done
     run_as "php $occ upgrade"
-
-
-    # Config settings from the configmap above
     run_as "php $occ config:import /var/local/config.json"
-
-    echo "Setting custom OIDC provider data"
-
-    # Because of escape hell we can't use run_as here (unless you have amazing
-    # bash-fu)
-    su -p "www-data" -s /bin/bash -c "php $occ config:app:set sociallogin custom_providers --value='"'{"custom_oidc": [{{ .Values.sociallogin.custom_oidc | toJson }}]}'"'"
-
-    echo "Setting other sociallogin data"
-
-    run_as "php $occ config:app:set sociallogin auto_create_groups --value='{{ .Values.sociallogin.auto_create_groups }}'"
-    run_as "php $occ config:app:set sociallogin update_profile_on_login --value='{{ .Values.sociallogin.update_profile_on_login }}'"
-
-    echo "disabling app store"
-
-    # Disable app store again
+    {{- if (and .Values.config.keycloak.enabled (empty .Values.config.keycloak.integration)) }}
+    su -p "www-data" -s /bin/bash -c "php $occ config:app:set sociallogin custom_providers --value='"$(echo '{
+      "custom_oidc": [{
+        "name": "keycloak",
+        "title": "Keycloak Login",
+        "authorizeUrl": "{{ .Values.config.keycloak.baseUrl }}/realms/{{ .Values.config.keycloak.realmName }}/protocol/openid-connect/auth",
+        "tokenUrl": "{{ .Values.config.keycloak.baseUrl }}/realms/{{ .Values.config.keycloak.realmName }}/protocol/openid-connect/token",
+        "userInfoUrl": "{{ .Values.config.keycloak.baseUrl }}/realms/{{ .Values.config.keycloak.realmName }}/protocol/openid-connect/userinfo",
+        "logoutUrl": "",
+        "clientId": "{{ .Values.config.keycloak.clientId }}",
+        "clientSecret": "{{ .Values.config.keycloak.clientSecret }}",
+        "scope": "openid",
+        "groupsClaim": "roles",
+        "style": "",
+        "defaultGroup": "",
+        "groupMapping": {
+          "admin": "admin"
+        }
+      }]
+    }')"'"
+    {{- end }}
+    run_as "php $occ config:app:set sociallogin auto_create_groups --value='{{ .Values.config.keycloak.autoCreateGroups | ternary "1" "0" }}'"
+    run_as "php $occ config:app:set sociallogin update_profile_on_login --value='{{ .Values.config.keycloak.updateProfileOnLogin | ternary "1" "0" }}'"
     run_as "php $occ config:system:set appstoreenabled --type boolean --value false"
-
-    echo "Updating database indices, columns, keys, etc."
     run_as "php $occ db:add-missing-indices --no-interaction"
     run_as "php $occ db:add-missing-columns --no-interaction"
     run_as "php $occ db:add-missing-primary-keys --no-interaction"
     run_as "php $occ db:convert-filecache-bigint --no-interaction"
 
-  #
-  # All values in config.json are applied by the nextcloud occ command
-  #   config:import.
-  # system.trusted_proxies contains a list of proxies that are considered
-  #   to be trusted. 10.42.0.0/16 contains all ip addresses that are
-  #   assigned to kubernetes pods, which includes the ip address of
-  #   the ingress controller that functions as a reverse proxy.
-  # system.trusted_domains is actually also set by the nextcloud docker
-  #   entrypoint script from the `NEXTCLOUD_TRUSTED_DOMAINS` env var which we
-  #   also set, but that fails sometimes for unknown reasons, so we also set it
-  #   here.
-  # system.overwriteprotocol overwrites the protocol of links that are
-  #   generated by nextcloud to HTTPS.
-  # apps.core.backgroundjobs_mode set to cron disables the unreliable ajax
-  #   scheduling that is enabled by default. Ajax scheduling is not needed
-  #   because cronjobs are regularly executed by a kubernetes resource.
-  #
   config.json: |
     {
         "system":{
@@ -210,4 +136,3 @@ data:
             }
         }
     }
-{{- end }}
