@@ -24,14 +24,8 @@ config:
       camerarawpreviews
       forms
       holiday_calendars
-      contacts
-      external
-      externalportal
-      files_3d
       files_zip
       libresign
-      mail
-      video_converter
     resources:
       enabled: defaults
       requests:
@@ -129,3 +123,9 @@ persistence:
     schedule: '0 0 * * *'
 
 # appointments
+# contacts
+# external
+# externalportal
+# files_3d
+# mail
+# video_converter

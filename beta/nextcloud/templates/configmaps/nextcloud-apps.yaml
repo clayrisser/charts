@@ -29,8 +29,8 @@ data:
             sh -c "$1"
         fi
     }
-    cp /var/local/config.json /var/www/html/
     occ="/var/www/html/occ"
+    cp /var/local/config.json /var/www/html/
     count=0
     limit=10
     until [ -f "$occ" ] || [ "$count" -gt "$limit" ]
@@ -85,9 +85,7 @@ data:
     run_as "php $occ config:app:set sociallogin auto_create_groups --value='{{ .Values.config.keycloak.autoCreateGroups | ternary "1" "0" }}'"
     run_as "php $occ config:app:set sociallogin update_profile_on_login --value='{{ .Values.config.keycloak.updateProfileOnLogin | ternary "1" "0" }}'"
     {{- end }}
-    {{- if .Values.config.nextcloud.appStoreEnabled }}
-    run_as "php $occ config:system:set appstoreenabled --type boolean --value false"
-    {{- end }}
+    run_as "php $occ config:system:set appstoreenabled --type boolean --value {{ .Values.config.nextcloud.appStoreEnabled | ternary "true" "false" }}"
     run_as "php $occ db:add-missing-indices --no-interaction"
     run_as "php $occ db:add-missing-columns --no-interaction"
     run_as "php $occ db:add-missing-primary-keys --no-interaction"
@@ -133,9 +131,7 @@ data:
             {{- if .Values.ingress.nextcloud.tls.enabled }}
             "overwriteprotocol": "https",
             {{- end }}
-            {{- if (not .Values.config.nextcloud.appStoreEnabled) }}
-            "appstoreenabled": false,
-            {{- end }}
+            "appstoreenabled": {{ .Values.config.nextcloud.appStoreEnabled | ternary "true" "false" }},
             "debug": {{ .Values.config.debug | quote }}
         },
         "apps":{
