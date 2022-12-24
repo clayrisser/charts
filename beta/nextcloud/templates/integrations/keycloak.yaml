@@ -62,6 +62,7 @@ spec:
                   path: /data/setup-sociallogin.sh
                   value: |
                       #!/bin/bash
+                      occ="/var/www/html/occ"
                       run_as() {
                           if [ "$(id -u)" = 0 ]; then
                               su -p "www-data" -s /bin/sh -c "$1"
@@ -69,7 +70,7 @@ spec:
                               sh -c "$1"
                           fi
                       }
-                      su -p "www-data" -s /bin/bash -c "php $occ config:app:set sociallogin custom_providers --value='"$(echo '{
+                      su -p "www-data" -s /bin/bash -c "php $occ config:app:set sociallogin custom_providers --value='"$(echo $(echo '{
                         "custom_oidc": [{
                           "name": "keycloak",
                           "title": "Keycloak Login",
@@ -87,5 +88,5 @@ spec:
                             "admin": "admin"
                           }
                         }]
-                      }')"'"
+                      }'))"'"
 {{- end }}
