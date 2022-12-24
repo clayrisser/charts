@@ -11,7 +11,7 @@ data:
   setup-apps.sh: |
     #!/bin/bash
     set -e
-    exec > /var/log/nextcloud_apps.log
+    exec > /var/www/tmp/nextcloud_apps.log
     exec 2> /var/www/tmp/nextcloud_apps_error.log
     apps="
     {{- if .Values.config.onlyoffice.enabled }}
@@ -63,12 +63,12 @@ data:
                 echo "installing app $name"
                 if [ "$url" != "" ]; then
                     target_directory="/var/www/html/custom_apps"
-                    curl "{{ .url }}" -Lo "{{ .name }}.tar.gz"
-                    if [[ -d "$target_directory/{{ .name }}" ]]; then
-                        rm -r "$target_directory/{{ .name }}"
+                    curl "$url" -Lo "$name.tar.gz"
+                    if [[ -d "$target_directory/$name" ]]; then
+                        rm -r "$target_directory/$name"
                     fi
-                    tar -xf "{{ .name }}.tar.gz" -C "$target_directory"
-                    rm "{{ .name }}.tar.gz"
+                    tar -xf "$name.tar.gz" -C "$target_directory"
+                    rm "$name.tar.gz"
                 else
                     run_as "php $occ app:install $name --keep-disabled --no-interaction"
                 fi
