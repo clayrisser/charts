@@ -78,7 +78,31 @@ data:
     done
     run_as "php $occ upgrade"
     run_as "php $occ config:import /var/local/config.json"
-    {{- if (and .Values.config.keycloak.enabled (empty .Values.config.keycloak.integration)) }}
+    {{- if .Values.config.keycloak.enabled }}
+    if [ -f /var/local/setup-sociallogin.sh ]; then
+        bash /var/local/setup-sociallogin.sh
+    fi
+    run_as "php $occ config:app:set sociallogin auto_create_groups --value='{{ .Values.config.keycloak.autoCreateGroups | ternary "1" "0" }}'"
+    run_as "php $occ config:app:set sociallogin update_profile_on_login --value='{{ .Values.config.keycloak.updateProfileOnLogin | ternary "1" "0" }}'"
+    {{- end }}
+    {{- if .Values.config.nextcloud.appStoreEnabled }}
+    run_as "php $occ config:system:set appstoreenabled --type boolean --value false"
+    {{- end }}
+    run_as "php $occ db:add-missing-indices --no-interaction"
+    run_as "php $occ db:add-missing-columns --no-interaction"
+    run_as "php $occ db:add-missing-primary-keys --no-interaction"
+    run_as "php $occ db:convert-filecache-bigint --no-interaction"
+
+  {{- if (and .Values.config.keycloak.enabled (empty .Values.config.keycloak.integration)) }}
+  setup-sociallogin.sh: |
+    #!/bin/bash
+    run_as() {
+        if [ "$(id -u)" = 0 ]; then
+            su -p "www-data" -s /bin/sh -c "$1"
+        else
+            sh -c "$1"
+        fi
+    }
     su -p "www-data" -s /bin/bash -c "php $occ config:app:set sociallogin custom_providers --value='"$(echo '{
       "custom_oidc": [{
         "name": "keycloak",
@@ -98,14 +122,7 @@ data:
         }
       }]
     }')"'"
-    {{- end }}
-    run_as "php $occ config:app:set sociallogin auto_create_groups --value='{{ .Values.config.keycloak.autoCreateGroups | ternary "1" "0" }}'"
-    run_as "php $occ config:app:set sociallogin update_profile_on_login --value='{{ .Values.config.keycloak.updateProfileOnLogin | ternary "1" "0" }}'"
-    run_as "php $occ config:system:set appstoreenabled --type boolean --value false"
-    run_as "php $occ db:add-missing-indices --no-interaction"
-    run_as "php $occ db:add-missing-columns --no-interaction"
-    run_as "php $occ db:add-missing-primary-keys --no-interaction"
-    run_as "php $occ db:convert-filecache-bigint --no-interaction"
+  {{- end }}
 
   config.json: |
     {

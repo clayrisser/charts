@@ -59,6 +59,18 @@ questions:
     required: false
     label: password
     group: Nextcloud
+  - variable: config.nextcloud.appStoreEnabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'app store enabled'
+    group: Nextcloud
+  - variable: config.nextcloud.apps
+    description: ''
+    type: multiline
+    required: false
+    label: apps
+    group: Nextcloud
   - variable: config.nextcloud.resources.enabled
     description: ''
     type: enum
@@ -277,6 +289,16 @@ questions:
         type: password
         required: false
         label: 'client secret'
+      - variable: config.keycloak.updateProfileOnLogin
+        description: ''
+        type: boolean
+        required: true
+        label: 'update profile on login'
+      - variable: config.keycloak.autoCreateGroups
+        description: ''
+        type: boolean
+        required: true
+        label: 'auto create groups'
 
   # Persistence
   - variable: persistence.storageClass

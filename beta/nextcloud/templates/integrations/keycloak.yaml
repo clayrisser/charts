@@ -1,0 +1,91 @@
+{{- if (not (empty .Values.config.keycloak.integration)) }}
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace "keycloak-plug" }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-plug
+type: Opaque
+data:
+{{- if (and $existingSecret $existingSecret.data) }}
+{{- if $existingSecret.data.clientSecret }}
+  clientSecret: {{ $existingSecret.data.clientSecret }}
+{{- else }}
+  clientSecret: {{ .Values.config.keycloak.clientSecret | default (randAlphaNum 24) | b64enc | quote }}
+{{- end }}
+{{- else }}
+  clientSecret: {{ .Values.config.keycloak.clientSecret | default (randAlphaNum 24) | b64enc | quote }}
+{{- end }}
+---
+{{- $name := (split "." .Values.config.keycloak.integration)._1 | default "keycloak" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.keycloak.integration))._0 }}
+apiVersion: integration.risserlabs.com/v1alpha2
+kind: Plug
+metadata:
+  name: keycloak
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: keycloak
+    namespace: {{ $namespace }}
+  socket:
+    name: keycloak
+    namespace: {{ $namespace }}
+  config:
+    clientId: {{ .Values.config.keycloak.clientId }}
+    redirectUris: '*'
+    replicate: 'false'
+    cleanup: 'false'
+  configSecretName: keycloak-plug
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      resource: |
+        apiVersion: patch.risserlabs.com/v1alpha1
+        kind: Patch
+        metadata:
+          name: keycloak-coupled-or-updated
+          namespace: {{ .Release.Namespace }}
+        spec:
+          epoch: {% now | unixEpoch | quote %}
+          patches:
+            - id: release
+              target:
+                apiVersion: v1
+                kind: ConfigMap
+                name: nextcloud-apps
+              waitForTimeout: 5
+              waitForResource: true
+              type: json
+              patch: |
+                - op: replace
+                  path: /data/setup-sociallogin.sh
+                  value: |
+                      #!/bin/bash
+                      run_as() {
+                          if [ "$(id -u)" = 0 ]; then
+                              su -p "www-data" -s /bin/sh -c "$1"
+                          else
+                              sh -c "$1"
+                          fi
+                      }
+                      su -p "www-data" -s /bin/bash -c "php $occ config:app:set sociallogin custom_providers --value='"$(echo '{
+                        "custom_oidc": [{
+                          "name": "keycloak",
+                          "title": "Keycloak Login",
+                          "authorizeUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/auth",
+                          "tokenUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/token",
+                          "userInfoUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/userinfo",
+                          "logoutUrl": "",
+                          "clientId": "{% .plugConfig.clientId %}",
+                          "clientSecret": "{% .plugConfig.clientSecret %}",
+                          "scope": "openid",
+                          "groupsClaim": "roles",
+                          "style": "",
+                          "defaultGroup": "",
+                          "groupMapping": {
+                            "admin": "admin"
+                          }
+                        }]
+                      }')"'"
+{{- end }}

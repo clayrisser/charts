@@ -16,10 +16,9 @@ config:
     baseUrl: ''
     replicas: 1
     username: admin
+    appStoreEnabled: false
     password: ''
-    apps: |
-      onlyoffice:https://github.com/ONLYOFFICE/onlyoffice-nextcloud/releases/download/v7.6.8/onlyoffice.tar.gz
-      sociallogin:https://github.com/zorn-v/nextcloud-social-login/releases/download/v5.1.5/release.tar.gz
+    apps: ''
     resources:
       enabled: defaults
       requests:
