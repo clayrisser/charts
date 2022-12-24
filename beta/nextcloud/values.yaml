@@ -18,7 +18,20 @@ config:
     username: admin
     appStoreEnabled: false
     password: ''
-    apps: ''
+    apps: |
+      approval
+      calendar
+      camerarawpreviews
+      forms
+      holiday_calendars
+      contacts
+      external
+      externalportal
+      files_3d
+      files_zip
+      libresign
+      mail
+      video_converter
     resources:
       enabled: defaults
       requests:
@@ -114,3 +127,5 @@ persistence:
   kanister:
     enabled: false
     schedule: '0 0 * * *'
+
+# appointments

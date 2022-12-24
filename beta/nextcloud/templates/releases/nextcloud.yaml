@@ -217,7 +217,15 @@ spec:
       maxPods: 10
     nodeSelector: {}
     tolerations: []
-    affinity: {}
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node.kubernetes.io/instance-type:
+                  operator: NotIn
+                  values:
+                    - t3.medium
     metrics:
       enabled: false
       serviceMonitor:

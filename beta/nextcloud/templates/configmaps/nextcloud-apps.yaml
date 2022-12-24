@@ -15,10 +15,10 @@ data:
     exec 2> /var/www/tmp/nextcloud_apps_error.log
     apps="
     {{- if .Values.config.onlyoffice.enabled }}
-    onlyoffice:https://github.com/ONLYOFFICE/onlyoffice-nextcloud/releases/download/v7.6.8/onlyoffice.tar.gz
+    onlyoffice
     {{- end }}
     {{- if .Values.config.keycloak.enabled }}
-    sociallogin:https://github.com/zorn-v/nextcloud-social-login/releases/download/v5.1.5/release.tar.gz
+    sociallogin
     {{- end }}
 {{ .Values.config.nextcloud.apps | indent 4 }}
     "
