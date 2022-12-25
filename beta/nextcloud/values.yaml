@@ -22,17 +22,12 @@ config:
       admin_audit
       announcementcenter
       appointments
-      apporder
+      apporder:https://github.com/juliushaertl/apporder/releases/download/v0.15.0/apporder.tar.gz
       approval
-      backup
-      calendar
       camerarawpreviews
       checksum
-      contacts
-      external
       externalpassword
       externalportal
-      files_3d (untested)
       files_downloadlimit
       files_linkeditor
       files_lock
@@ -41,10 +36,29 @@ config:
       holiday_calendars
       imageconverter
       libresign
+      passwords
+
+      backup
+      calendar
+      contacts
+      external
+      files_3d
       mail
       metadata
-      passwords
       video_converter
+
+      occweb
+      previewgenerator
+      files_accesscontrol
+      files_archive
+      files_photospheres
+      files_reader
+      bookmarks
+      drawio ??
+      guests
+      flowupload
+      group_everyone
+      duplicatefinder
     resources:
       enabled: defaults
       requests:
