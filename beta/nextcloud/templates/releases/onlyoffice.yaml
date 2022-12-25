@@ -79,7 +79,15 @@ spec:
 {{- end }}
     nodeSelector: {}
     tolerations: []
-    affinity: {}
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node.kubernetes.io/instance-type
+                  operator: NotIn
+                  values:
+                    - t3.medium
     livenessProbe:
       enabled: true
       initialDelaySeconds: 120
