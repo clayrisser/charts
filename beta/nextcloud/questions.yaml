@@ -527,15 +527,15 @@ questions:
     required: true
     label: 'onlyoffice service type'
     group: Networking
-  - variable: service.onlyoffice.nodePorts.http
-    description: ''
-    type: int
-    required: false
-    min: 30000
-    max: 32767
-    show_if: config.onlyoffice.enabled=true&&service.onlyoffice.type=NodePort&&ingress.onlyoffice.enabled=false
-    label: 'onlyoffice http node port'
-    group: Networking
+  # - variable: service.onlyoffice.nodePorts.http
+  #   description: ''
+  #   type: int
+  #   required: false
+  #   min: 30000
+  #   max: 32767
+  #   show_if: config.onlyoffice.enabled=true&&service.onlyoffice.type=NodePort&&ingress.onlyoffice.enabled=false
+  #   label: 'onlyoffice http node port'
+  #   group: Networking
   - variable: service.onlyoffice.lbPorts.http
     description: ''
     type: int
@@ -544,6 +544,79 @@ questions:
     required: true
     show_if: config.onlyoffice.enabled=true&&service.onlyoffice.type=LoadBalancer&&ingress.onlyoffice.enabled=false
     label: 'onlyoffice http lb port'
+    group: Networking
+  - variable: ingress.pdfdraw.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'pdfdraw ingress enabled'
+    show_if: config.pdfdraw.enabled=true
+    show_subquestion_if: true
+    group: Networking
+    subquestions:
+      - variable: ingress.pdfdraw.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.pdfdraw.enabled=true
+        required: true
+        label: 'pdfdraw ingress hostname'
+      - variable: ingress.pdfdraw.tls.enabled
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.pdfdraw.enabled=true
+        required: true
+        label: 'pdfdraw ingress tls enabled'
+      - variable: ingress.pdfdraw.tls.issuer
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.pdfdraw.enabled=true&&ingress.pdfdraw.tls.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - selfsigned
+        required: false
+        label: 'pdfdraw ingress issuer name'
+      - variable: ingress.pdfdraw.tls.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.pdfdraw.enabled=true&&ingress.pdfdraw.tls.enabled=true&&ingress.pdfdraw.tls.issuer=none
+        required: false
+        label: 'pdfdraw ingress certificate'
+  - variable: service.pdfdraw.type
+    description: ''
+    type: enum
+    show_if: config.pdfdraw.enabled=true&&ingress.pdfdraw.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'pdfdraw service type'
+    group: Networking
+  - variable: service.pdfdraw.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: config.pdfdraw.enabled=true&&service.pdfdraw.type=NodePort&&ingress.pdfdraw.enabled=false
+    label: 'pdfdraw http node port'
+    group: Networking
+  - variable: service.pdfdraw.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: config.pdfdraw.enabled=true&&service.pdfdraw.type=LoadBalancer&&ingress.pdfdraw.enabled=false
+    label: 'pdfdraw http lb port'
     group: Networking
 
   # Images

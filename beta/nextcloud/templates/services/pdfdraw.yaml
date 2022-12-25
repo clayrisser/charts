@@ -1,0 +1,33 @@
+{{- if .Values.config.pdfdraw.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: pdfdraw
+  labels:
+    app.kubernetes.io/name: pdfdraw
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- if (eq .Values.service.pdfdraw.type "ClusterIP") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
+spec:
+  {{- if .Values.ingress.pdfdraw.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.pdfdraw.type }}
+  {{- if (eq .Values.service.pdfdraw.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.pdfdraw.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ (eq .Values.service.pdfdraw.type "LoadBalancer") | ternary .Values.service.pdfdraw.lbPorts.http "80" }}
+      targetPort: container
+      {{- if (and (eq .Values.service.pdfdraw.type "NodePort") .Values.service.pdfdraw.nodePorts.http) }}
+      nodePort: {{ .Values.service.pdfdraw.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: pdfdraw
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

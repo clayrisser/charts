@@ -58,7 +58,8 @@ spec:
           image: {{ .Values.images.pdfdraw.repository }}:{{ .Values.images.pdfdraw.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
-            - containerPort: 8080
+            - name: container
+              containerPort: 8080
 {{- if (and .Values.config.pdfdraw.resources.enabled (not (eq .Values.config.pdfdraw.resources.enabled "false"))) }}
           resources:
             requests:

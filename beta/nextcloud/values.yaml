@@ -132,6 +132,13 @@ service:
     #   http:
     lbPorts:
       http: 80
+  pdfdraw:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
 
 ingress:
   nextcloud:
@@ -142,6 +149,13 @@ ingress:
       issuer: ''
       certificate: ''
   onlyoffice:
+    enabled: false
+    hostname: ''
+    tls:
+      enabled: false
+      issuer: ''
+      certificate: ''
+  pdfdraw:
     enabled: false
     hostname: ''
     tls:

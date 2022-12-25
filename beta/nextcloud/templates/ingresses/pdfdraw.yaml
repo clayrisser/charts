@@ -1,0 +1,39 @@
+{{- if (and .Values.ingress.pdfdraw.enabled .Values.config.pdfdraw.enabled) }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pdfdraw
+  labels:
+    app.kubernetes.io/name: pdfdraw
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    {{- if .Values.ingress.pdfdraw.tls }}
+    {{- if (not .Values.ingress.pdfdraw.certificate) }}
+    kubernetes.io/tls-acme: 'true'
+    {{- if .Values.ingress.pdfdraw.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.pdfdraw.issuer.name }}
+    {{- end }}
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.pdfdraw.hostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pdfdraw
+                port:
+                  name: http
+  {{- if .Values.ingress.pdfdraw.tls }}
+  tls:
+    - secretName: {{ template "postgres.pdfdraw-certificate" . }}
+      hosts:
+        - {{ .Values.ingress.pdfdraw.hostname }}
+  {{- end }}
+{{- end }}

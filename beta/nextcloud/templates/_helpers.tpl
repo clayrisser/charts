@@ -103,6 +103,49 @@ Calculate onlyoffice base url
 {{- end -}}
 
 {{/*
+Calculate pdfdraw certificate
+*/}}
+{{- define "nextcloud.pdfdraw-certificate" -}}
+{{- if .Values.ingress.pdfdraw.certificate -}}
+{{- printf .Values.ingress.pdfdraw.certificate -}}
+{{- else -}}
+{{- printf "%s-gateway" (include "nextcloud.name" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate pdfdraw hostname
+*/}}
+{{- define "nextcloud.pdfdraw-hostname" -}}
+{{- if .Values.config.pdfdraw.hostname -}}
+{{- printf .Values.config.pdfdraw.hostname -}}
+{{- else -}}
+{{- if .Values.ingress.pdfdraw.enabled -}}
+{{- printf .Values.ingress.pdfdraw.hostname -}}
+{{- else -}}
+{{- printf "%s-release-gateway.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate pdfdraw base url
+*/}}
+{{- define "nextcloud.pdfdraw-base-url" -}}
+{{- if .Values.config.pdfdraw.baseUrl -}}
+{{- printf .Values.config.pdfdraw.baseUrl -}}
+{{- else -}}
+{{- if .Values.ingress.pdfdraw.enabled -}}
+{{- $hostname := ((not (include "nextcloud.pdfdraw-hostname" .)) | ternary .Values.ingress.pdfdraw.hostname (include "nextcloud.pdfdraw-hostname" .)) -}}
+{{- $protocol := (.Values.ingress.pdfdraw.tls | ternary "https" "http") -}}
+{{- printf "%s://%s" $protocol $hostname -}}
+{{- else -}}
+{{- printf "http://%s" (include "nextcloud.pdfdraw-hostname" .) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Calculate postgres url
 */}}
 {{- define "nextcloud.postgres-url" -}}
