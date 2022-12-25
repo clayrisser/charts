@@ -19,13 +19,32 @@ config:
     appStoreEnabled: false
     password: ''
     apps: |
+      admin_audit
+      announcementcenter
+      appointments
+      apporder
       approval
+      backup
       calendar
       camerarawpreviews
+      checksum
+      contacts
+      external
+      externalpassword
+      externalportal
+      files_3d (untested)
+      files_downloadlimit
+      files_linkeditor
+      files_lock
+      files_zip
       forms
       holiday_calendars
-      files_zip
+      imageconverter
       libresign
+      mail
+      metadata
+      passwords
+      video_converter
     resources:
       enabled: defaults
       requests:
@@ -121,11 +140,3 @@ persistence:
   kanister:
     enabled: false
     schedule: '0 0 * * *'
-
-# appointments
-# contacts
-# external
-# externalportal
-# files_3d
-# mail
-# video_converter

@@ -58,7 +58,7 @@ data:
         if [ "$name" != "" ]; then
             if (echo "$app_versions" | grep -q "$name"); then
                 echo "updating app $name"
-                run_as "php $occ app:update $name --no-interaction"
+                run_as "php $occ app:update $name --no-interaction -vvv --allow-unstable"
             else
                 echo "installing app $name"
                 if [ "$url" != "" ]; then
@@ -70,7 +70,7 @@ data:
                     tar -xf "$name.tar.gz" -C "$target_directory"
                     rm "$name.tar.gz"
                 else
-                    run_as "php $occ app:install $name --keep-disabled --no-interaction"
+                    run_as "php $occ app:install $name --keep-disabled --no-interaction -vvv -f --allow-unstable"
                 fi
             fi
         fi
