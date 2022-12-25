@@ -52,4 +52,5 @@ contacts
 epubreader
 external
 mail
+pdfdraw
 ```

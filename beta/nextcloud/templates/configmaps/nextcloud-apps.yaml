@@ -20,9 +20,6 @@ data:
     {{- if .Values.config.keycloak.enabled }}
     sociallogin
     {{- end }}
-    {{- if .Values.config.pdfdraw.enabled }}
-    pdfdraw
-    {{- end }}
 {{ .Values.config.nextcloud.apps | indent 4 }}
     "
     run_as() {
