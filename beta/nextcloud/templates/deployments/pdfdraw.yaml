@@ -1,0 +1,82 @@
+{{- if .Values.config.pdfdraw.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pdfdraw
+  labels:
+    app.kubernetes.io/name: pdfdraw
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pdfdraw
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pdfdraw
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - pdfdraw
+                    - key: release
+                      operator: In
+                      values:
+                        - {{ .Release.Name }}
+      containers:
+        - name: pdfdraw
+          image: {{ .Values.images.pdfdraw.repository }}:{{ .Values.images.pdfdraw.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          ports:
+            - containerPort: 8080
+{{- if (and .Values.config.pdfdraw.resources.enabled (not (eq .Values.config.pdfdraw.resources.enabled "false"))) }}
+          resources:
+            requests:
+{{ toYaml .Values.config.pdfdraw.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.pdfdraw.resources.limits | indent 14 }}
+{{- end }}
+          env:
+            - name: port
+              value: '8080'
+            - name: secret
+              value: {{ .Values.config.pdfdraw.secret | quote }}
+            # - name: allow_invalid_certificates
+            #   value: 'null'
+            # - name: use_auto_ecdh_curve
+            #   value: 'null'
+            # - name: cmd_pdftk
+            #   value: ''
+            # - name: cmd_svg2pdf
+            #   value: ''
+{{- end }}

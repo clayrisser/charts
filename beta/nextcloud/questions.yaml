@@ -155,6 +155,47 @@ questions:
             required: true
             label: 'resources limits memory'
 
+  # PdfDraw
+  - variable: config.pdfdraw.enabled
+    description: ''
+    type: boolean
+    required: false
+    label: enabled
+    group: PdfDraw
+    show_subquestion_if: true
+    subquestions:
+      - variable: config.pdfdraw.resources.enabled
+        description: ''
+        type: enum
+        options:
+          - defaults
+          - custom
+          - 'false'
+        required: true
+        label: 'resources defaults'
+        show_subquestion_if: custom
+        subquestions:
+          - variable: config.pdfdraw.resources.requests.cpu
+            description: ''
+            type: string
+            required: true
+            label: 'resources requests cpu'
+          - variable: config.pdfdraw.resources.requests.memory
+            description: ''
+            type: string
+            required: true
+            label: 'resources requests memory'
+          - variable: config.pdfdraw.resources.limits.cpu
+            description: ''
+            type: string
+            required: true
+            label: 'resources limits cpu'
+          - variable: config.pdfdraw.resources.limits.memory
+            description: ''
+            type: string
+            required: true
+            label: 'resources limits memory'
+
   # Postgres
   - variable: config.postgres.integration
     description: ''
@@ -531,4 +572,18 @@ questions:
     required: true
     show_if: config.onlyoffice.enabled=true
     label: 'onlyoffice tag'
+    group: Images
+  - variable: images.pdfdraw.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.pdfdraw.enabled=true
+    label: 'pdfdraw repository'
+    group: Images
+  - variable: images.pdfdraw.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.pdfdraw.enabled=true
+    label: 'pdfdraw tag'
     group: Images

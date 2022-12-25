@@ -1,10 +1,13 @@
 images:
   nextcloud:
-    repository: nextcloud
-    tag: 25.0.2-apache
+    repository: registry.gitlab.com/risserlabs/community/images/nextcloud
+    tag: 25.0.2
   onlyoffice:
     repository: onlyoffice/documentserver
     tag: 7.2.2.56
+  pdfdraw:
+    repository: strukturag/pdfdraw
+    tag: 70939ec
 
 config:
   imagePullPolicy: IfNotPresent
@@ -16,49 +19,42 @@ config:
     baseUrl: ''
     replicas: 1
     username: admin
-    appStoreEnabled: false
+    appStoreEnabled: true
     password: ''
     apps: |
       admin_audit
       announcementcenter
       appointments
-      apporder:https://github.com/juliushaertl/apporder/releases/download/v0.15.0/apporder.tar.gz
+      apporder
       approval
       camerarawpreviews
       checksum
+      cloud_py_api
+      drawio
+      duplicatefinder
       externalpassword
       externalportal
+      files_3d
+      files_accesscontrol
+      files_archive
       files_downloadlimit
       files_linkeditor
       files_lock
+      files_photospheres
       files_zip
+      flowupload
       forms
+      group_everyone
+      guests
       holiday_calendars
       imageconverter
       libresign
-      passwords
-
-      backup
-      calendar
-      contacts
-      external
-      files_3d
-      mail
+      mediadc
       metadata
-      video_converter
-
       occweb
+      passwords
       previewgenerator
-      files_accesscontrol
-      files_archive
-      files_photospheres
-      files_reader
-      bookmarks
-      drawio ??
-      guests
-      flowupload
-      group_everyone
-      duplicatefinder
+      video_converter
     resources:
       enabled: defaults
       requests:
@@ -81,6 +77,19 @@ config:
       limits:
         cpu: 2
         memory: 1Gi
+  pdfdraw:
+    enabled: true
+    hostname: ''
+    baseUrl: ''
+    secret: P@ssw0rd
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
   postgres:
     integration: ''
     database: nextcloud
