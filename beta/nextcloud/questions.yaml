@@ -271,11 +271,11 @@ questions:
         type: string
         required: false
         label: 's3 bucket'
-      - variable: config.s3.prefix
-        description: ''
-        type: string
-        required: false
-        label: 's3 prefix'
+      # - variable: config.s3.prefix
+      #   description: ''
+      #   type: string
+      #   required: false
+      #   label: 's3 prefix'
       - variable: config.s3.accessKey
         description: ''
         type: string
