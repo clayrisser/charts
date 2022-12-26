@@ -36,6 +36,8 @@ spec:
       repository: {{ .Values.images.nextcloud.repository | quote }}
       tag: {{ .Values.images.nextcloud.tag | quote }}
       pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    deploymentAnnotations:
+      reloader.stakater.com/auto: 'true'
     replicaCount: {{ .Values.config.nextcloud.replicas }}
     ingress:
       enabled: {{ .Values.ingress.nextcloud.enabled }}
