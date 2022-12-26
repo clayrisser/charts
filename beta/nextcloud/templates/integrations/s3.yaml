@@ -30,7 +30,7 @@ spec:
         apiVersion: patch.risserlabs.com/v1alpha1
         kind: Patch
         metadata:
-          name: create-site
+          name: s3-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
           epoch: {{ now | unixEpoch | quote }}
@@ -38,7 +38,7 @@ spec:
             - id: helm-release
               target:
                 group: source.toolkit.fluxcd.io
-                version: v1beta1
+                version: v2beta1
                 kind: HelmRelease
                 name: {{ .Release.Name }}-release
               waitForResource: true
