@@ -22,6 +22,7 @@ files_3d
 files_accesscontrol
 files_archive
 files_downloadlimit
+files_external
 files_linkeditor
 files_lock
 files_photospheres
