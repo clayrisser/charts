@@ -247,7 +247,7 @@ questions:
   #   group: Postgres
 
   # S3
-  - variable: config.backup.enabled
+  - variable: config.s3.enabled
     description: ''
     type: boolean
     required: true
