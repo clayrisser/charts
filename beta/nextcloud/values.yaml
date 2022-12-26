@@ -31,7 +31,6 @@ config:
       checksum
       cloud_py_api
       drawio
-      duplicatefinder
       externalpassword
       externalportal
       files_3d
@@ -54,6 +53,7 @@ config:
       occweb
       passwords
       previewgenerator
+      user_migration
       video_converter
     resources:
       enabled: defaults
@@ -78,7 +78,7 @@ config:
         cpu: 2
         memory: 1Gi
   pdfdraw:
-    enabled: true
+    enabled: false
     hostname: ''
     baseUrl: ''
     secret: P@ssw0rd

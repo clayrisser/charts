@@ -16,7 +16,6 @@ camerarawpreviews
 checksum
 cloud_py_api
 drawio
-duplicatefinder
 externalpassword
 externalportal
 files_3d
@@ -39,6 +38,7 @@ metadata
 occweb
 passwords
 previewgenerator
+user_migration
 video_converter
 ```
 
