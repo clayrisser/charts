@@ -10,12 +10,8 @@ metadata:
 data:
   setup-apps.sh: |
     #!/bin/bash
-    set -e
-    echo a
     exec > /var/www/tmp/nextcloud_apps.log
-    echo b
     exec 2> /var/www/tmp/nextcloud_apps_error.log
-    echo c
     apps="
     {{- if .Values.config.onlyoffice.enabled }}
     onlyoffice
@@ -38,7 +34,6 @@ data:
         fi
     }
     occ="/var/www/html/occ"
-    echo d
     cp /var/local/config.json /var/www/html/
     count=0
     limit=10
@@ -49,7 +44,6 @@ data:
         echo "$occ doesn't exist yet, waiting $wait seconds"
         sleep $wait
     done
-    echo e
     echo "$occ now exists"
     count=0
     until [[ $(run_as "php occ status --output json") =~ '"installed":true' ]] || [ "$count" -gt "$limit" ]
