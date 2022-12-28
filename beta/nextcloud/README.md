@@ -51,7 +51,6 @@ the following apps work but the occ install doesn't work
 backup
 calendar
 contacts
-epubreader
 external
 mail
 ```
@@ -67,6 +66,7 @@ the following apps are broken but may work in the future
 
 ```
 apporder
+epubreader
 pdfdraw
 printer
 ```
