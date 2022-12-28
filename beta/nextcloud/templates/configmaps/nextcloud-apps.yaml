@@ -10,6 +10,7 @@ metadata:
 data:
   setup-apps.sh: |
     #!/bin/bash
+    set -e
     exec > /var/www/tmp/nextcloud_apps.log
     exec 2> /var/www/tmp/nextcloud_apps_error.log
     apps="
@@ -21,10 +22,6 @@ data:
     sociallogin
     {{- end }}
 {{ .Values.config.nextcloud.apps | indent 4 }}
-    "
-    echo "=== APPS ===
-    $apps
-    === APPS ===
     "
     run_as() {
         if [ "$(id -u)" = 0 ]; then
