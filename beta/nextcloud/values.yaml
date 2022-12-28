@@ -20,6 +20,7 @@ config:
     replicas: 1
     username: admin
     appStoreEnabled: true
+    updateApps: false
     password: ''
     apps: |
       admin_audit

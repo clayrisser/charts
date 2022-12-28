@@ -57,8 +57,10 @@ data:
         url=$(echo $app | grep -oE ':https?://.+$' | sed 's|^:||g')
         if [ "$name" != "" ]; then
             if (echo "$app_versions" | grep -q "$name"); then
+    {{- if .Values.config.nextcloud.updateApps }}
                 echo "updating app $name"
                 run_as "php $occ app:update -vvv --no-interaction $name"
+    {{- end }}
             else
                 echo "installing app $name"
                 if [ "$url" != "" ]; then

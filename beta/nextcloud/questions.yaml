@@ -65,6 +65,12 @@ questions:
     required: true
     label: 'app store enabled'
     group: Nextcloud
+  - variable: config.nextcloud.updateApps
+    description: ''
+    type: boolean
+    required: true
+    label: 'update apps'
+    group: Nextcloud
   - variable: config.nextcloud.apps
     description: ''
     type: multiline
