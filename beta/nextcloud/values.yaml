@@ -22,34 +22,7 @@ config:
     appStoreEnabled: true
     updateApps: false
     password: ''
-    apps: |
-      admin_audit
-      announcementcenter
-      appointments
-      approval
-      checksum
-      cloud_py_api
-      drawio
-      externalportal
-      files_accesscontrol
-      files_archive
-      files_downloadlimit
-      files_external
-      files_linkeditor
-      files_lock
-      files_zip
-      forms
-      group_everyone
-      guests
-      holiday_calendars
-      imageconverter
-      libresign
-      metadata
-      occweb
-      passwords
-      previewgenerator
-      user_migration
-      video_converter
+    apps: ''
     resources:
       enabled: defaults
       requests:
