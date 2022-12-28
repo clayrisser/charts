@@ -1,3 +1,0 @@
-# clay
-
-> example deployment

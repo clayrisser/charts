@@ -1,3 +1,0 @@
-# hk
-
-> sample deployment

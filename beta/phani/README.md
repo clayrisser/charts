@@ -1,3 +1,0 @@
-# Phani
-
-> example deployment
