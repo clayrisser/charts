@@ -26,31 +26,24 @@ config:
       admin_audit
       announcementcenter
       appointments
-      apporder
       approval
-      camerarawpreviews
       checksum
       cloud_py_api
       drawio
-      externalpassword
       externalportal
-      files_3d
       files_accesscontrol
       files_archive
       files_downloadlimit
       files_external
       files_linkeditor
       files_lock
-      files_photospheres
       files_zip
-      flowupload
       forms
       group_everyone
       guests
       holiday_calendars
       imageconverter
       libresign
-      mediadc
       metadata
       occweb
       passwords

@@ -18,6 +18,7 @@ data:
     onlyoffice
     {{- end }}
     {{- if .Values.config.keycloak.enabled }}
+    externalpassword
     sociallogin
     {{- end }}
 {{ .Values.config.nextcloud.apps | indent 4 }}
