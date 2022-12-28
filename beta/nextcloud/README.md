@@ -4,7 +4,7 @@
 
 ## Default Apps
 
-the following apps are installed by default
+the following apps recommended
 
 ```
 admin_audit
