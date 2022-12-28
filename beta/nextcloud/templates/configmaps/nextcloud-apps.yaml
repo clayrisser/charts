@@ -61,6 +61,8 @@ data:
     {{- if .Values.config.nextcloud.updateApps }}
                 echo "updating app $name"
                 run_as "php $occ app:update -vvv --no-interaction $name"
+    {{- else }}
+                true
     {{- end }}
             else
                 echo "installing app $name"
