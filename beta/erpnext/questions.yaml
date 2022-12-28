@@ -401,3 +401,15 @@ questions:
     required: true
     label: 'worker tag'
     group: Images
+  - variable: images.mariadb.repository
+    description: ''
+    type: string
+    required: true
+    label: 'mariadb repository'
+    group: Images
+  - variable: images.mariadb.tag
+    description: ''
+    type: string
+    required: true
+    label: 'mariadb tag'
+    group: Images

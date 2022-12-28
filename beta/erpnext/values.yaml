@@ -8,6 +8,9 @@ images:
   socketio:
     repository: frappe/frappe-socketio
     tag: v14.4.0
+  mariadb:
+    repository: bitnami/mariadb
+    tag: 10.6.11-debian-11-r12
 
 config:
   imagePullPolicy: IfNotPresent

@@ -140,7 +140,7 @@ spec:
       image:
         repository: frappe/frappe-socketio
         tag: v14.13.0
-        pullPolicy: IfNotPresent
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
       resources: {}
       service:
         type: ClusterIP
@@ -253,6 +253,11 @@ spec:
           enabled: false
     mariadb:
       enabled: true
+        image:
+          registry: docker.io
+          repository: {{ .Values.images.mariadb.repository | quote }}
+          tag: {{ .Values.images.mariadb.tag | quote }}
+          pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
       auth:
         rootPassword: {{ .Values.config.mysql.password | quote }}
         username: 'erpnext'
