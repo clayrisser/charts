@@ -106,8 +106,8 @@ spec:
           <ifModule mod_autoindex.c>
           IndexIgnore *
           </ifModule>
-          upload_max_filesize = 16G
-          post_max_size = 16G
+          php_value upload_max_filesize = 16G
+          php_value post_max_size = 16G
 {{- if (and .Values.config.s3.enabled (not .Values.config.s3.integration)) }}
         s3.config.php: |-
           <?php
