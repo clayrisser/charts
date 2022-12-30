@@ -138,7 +138,16 @@ spec:
         - name: nextcloud-apps
           mountPath: /var/local
     nginx:
-      enabled: false
+      enabled: true
+      image:
+        repository: nginx
+        tag: alpine
+        pullPolicy: IfNotPresent
+      config:
+        default: true
+        # custom: |
+        #     worker_processes  1;..
+      resources: {}
     internalDatabase:
       enabled: false
     externalDatabase:
