@@ -136,9 +136,15 @@ spec:
         - name: nextcloud-apps
           configMap:
             name: nextcloud-apps
+        - name: upload-max-filesize
+          configMap:
+            name: upload-max-filesize
       extraVolumeMounts:
         - name: nextcloud-apps
           mountPath: /var/local
+        - name: upload-max-filesize
+          mountPath: /usr/local/etc/php/conf.d/upload-max-filesize.ini
+          subPath: upload-max-filesize.ini
     nginx:
       enabled: false
     internalDatabase:
