@@ -106,8 +106,6 @@ spec:
           <ifModule mod_autoindex.c>
           IndexIgnore *
           </ifModule>
-          php_value upload_max_filesize = 16G
-          php_value post_max_size = 16G
 {{- if (and .Values.config.s3.enabled (not .Values.config.s3.integration)) }}
         s3.config.php: |-
           <?php
@@ -129,7 +127,11 @@ spec:
 {{- end }}
       strategy:
         type: Recreate
-      extraEnv: []
+      extraEnv:
+        - name: PHP_UPLOAD_LIMIT
+          value: 16G
+        - name: PHP_MEMORY_LIMIT
+          value: 16G
       extraVolumes:
         - name: nextcloud-apps
           configMap:
@@ -138,16 +140,7 @@ spec:
         - name: nextcloud-apps
           mountPath: /var/local
     nginx:
-      enabled: true
-      image:
-        repository: nginx
-        tag: alpine
-        pullPolicy: IfNotPresent
-      config:
-        default: true
-        # custom: |
-        #     worker_processes  1;..
-      resources: {}
+      enabled: false
     internalDatabase:
       enabled: false
     externalDatabase:
