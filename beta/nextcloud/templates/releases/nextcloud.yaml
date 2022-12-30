@@ -106,6 +106,8 @@ spec:
           <ifModule mod_autoindex.c>
           IndexIgnore *
           </ifModule>
+          upload_max_filesize = 16G
+          post_max_size = 16G
 {{- if (and .Values.config.s3.enabled (not .Values.config.s3.integration)) }}
         s3.config.php: |-
           <?php
@@ -136,13 +138,7 @@ spec:
         - name: nextcloud-apps
           mountPath: /var/local
     nginx:
-      enabled: true
-      image:
-        repository: nginx
-        tag: alpine
-        pullPolicy: IfNotPresent
-      config:
-        default: true
+      enabled: false
     internalDatabase:
       enabled: false
     externalDatabase:
