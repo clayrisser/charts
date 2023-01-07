@@ -25,7 +25,7 @@ spec:
   chart:
     spec:
       chart: {{ (empty .Values.config.postgres.integration) | ternary "nextcloud" "waiting-for-integration" }}
-      version: {{ .Release.Version | quote }}
+      version: {{ .Chart.Version | quote }}
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
         kind: HelmRepository

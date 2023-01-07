@@ -27,7 +27,7 @@ spec:
   chart:
     spec:
       chart: helm/charts/amplication
-      version: {{ .Release.Version | quote }}
+      version: {{ .Chart.Version | quote }}
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
         kind: GitRepository

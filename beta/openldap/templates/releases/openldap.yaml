@@ -25,7 +25,7 @@ spec:
   chart:
     spec:
       chart: openldap-stack-ha
-      version: {{ .Release.Version | quote }}
+      version: {{ .Chart.Version | quote }}
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
         kind: HelmRepository

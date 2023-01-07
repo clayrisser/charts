@@ -1,7 +1,7 @@
 images:
   openldap:
     repository: registry.gitlab.com/silicon-hills/community/docker-openldap
-    tag: 0.0.1
+    tag: 0.0.2
   phpldapadmin:
     repository: osixia/phpldapadmin
     tag: 0.9.0
