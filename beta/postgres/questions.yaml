@@ -637,24 +637,28 @@ questions:
     description: ''
     type: string
     required: true
+    show_if: config.backup.enabled=true
     label: 'backup repository'
     group: Images
   - variable: images.backup.tag
     description: ''
     type: string
     required: true
+    show_if: config.backup.enabled=true
     label: 'backup tag'
     group: Images
   - variable: images.backrestRepo.repository
     description: ''
     type: string
     required: true
+    show_if: config.backup.enabled=true
     label: 'backrestRepo repository'
     group: Images
   - variable: images.backrestRepo.tag
     description: ''
     type: string
     required: true
+    show_if: config.backup.enabled=true
     label: 'backrestRepo tag'
     group: Images
   - variable: images.pgBouncer.repository
