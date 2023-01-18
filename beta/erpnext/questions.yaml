@@ -377,29 +377,17 @@ questions:
     group: Networking
 
   # Images
-  - variable: images.nginx.repository
+  - variable: images.erpnext.repository
     description: ''
     type: string
     required: true
-    label: 'nginx repository'
+    label: 'erpnext repository'
     group: Images
-  - variable: images.nginx.tag
+  - variable: images.erpnext.tag
     description: ''
     type: string
     required: true
-    label: 'nginx tag'
-    group: Images
-  - variable: images.worker.repository
-    description: ''
-    type: string
-    required: true
-    label: 'worker repository'
-    group: Images
-  - variable: images.worker.tag
-    description: ''
-    type: string
-    required: true
-    label: 'worker tag'
+    label: 'erpnext tag'
     group: Images
   - variable: images.mariadb.repository
     description: ''

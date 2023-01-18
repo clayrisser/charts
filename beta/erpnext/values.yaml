@@ -1,13 +1,7 @@
 images:
-  nginx:
-    repository: registry.gitlab.com/risserlabs/community/erpnext-images/nginx
-    tag: latest
-  worker:
-    repository: registry.gitlab.com/risserlabs/community/erpnext-images/worker
-    tag: latest
-  socketio:
-    repository: frappe/frappe-socketio
-    tag: v14.4.0
+  erpnext:
+    repository: registry.gitlab.com/risserlabs/community/erpnext-images/erpnext
+    tag: 0.0.1
   mariadb:
     repository: bitnami/mariadb
     tag: 10.6.11-debian-11-r12

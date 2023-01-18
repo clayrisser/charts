@@ -31,12 +31,12 @@ spec:
         kind: HelmRepository
         name: erpnext
   values:
+    image:
+      repository: {{ .Values.images.erpnext.repository | quote }}
+      tag: {{ .Values.images.erpnext.tag | quote }}
+      pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     nginx:
       replicaCount: {{ .Values.config.nginx.replicas }}
-      image:
-        repository: {{ .Values.images.nginx.repository | quote }}
-        tag: {{ .Values.images.nginx.tag | quote }}
-        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
       config: |
         {{ .Values.config.nginx.config }}
       environment:
@@ -72,10 +72,6 @@ spec:
         limits: {}
 {{- end }}
     worker:
-      image:
-        repository: {{ .Values.images.worker.repository | quote }}
-        tag: {{ .Values.images.worker.tag | quote }}
-        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
       gunicorn:
         replicaCount: {{ .Values.config.erpnext.replicas }}
         livenessProbe:
@@ -137,10 +133,6 @@ spec:
           port: 9000
         initialDelaySeconds: 5
         periodSeconds: 10
-      image:
-        repository: frappe/frappe-socketio
-        tag: v14.13.0
-        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
       resources: {}
       service:
         type: ClusterIP
