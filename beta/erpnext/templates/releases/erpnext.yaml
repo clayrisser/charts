@@ -167,6 +167,7 @@ spec:
         {{- end }}
         nginx.ingress.kubernetes.io/ssl-redirect: 'true'
         {{- end }}
+        nginx.ingress.kubernetes.io/proxy-body-size: 4G
       hosts:
         - host: '{{ .Values.ingress.nginx.hostname }}'
           paths:
