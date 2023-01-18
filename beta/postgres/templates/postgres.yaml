@@ -72,9 +72,7 @@ spec:
       {{- end }}
     expose:
       serviceType: ClusterIP
-    {{- if .Values.config.postgres.config }}
     customconfig: {{ template "postgres.name" . }}
-    {{- end }}
   pmm:
     enabled: false
     image: {{ .Values.images.pmm.repository }}:{{ .Values.images.pmm.tag }}
@@ -96,7 +94,7 @@ spec:
     affinity:
       antiAffinityType: preferred
     backrestRepoImage: {{ .Values.images.backrestRepo.repository }}:{{ .Values.images.backrestRepo.tag }}
-    image: {{ .Values.images.backup.repository }}:{{ .Values.images.backup.tag }}
+    image: {{ .Values.config.backup.enabled | ternary (printf "%s:%s" .Values.images.backup.repository .Values.images.backup.tag) "busybox:latest" }}
     imagePullPolicy: {{ .Values.config.imagePullPolicy | quote }}
     resources:
 {{- if (and .Values.config.backup.resources.enabled (not (eq .Values.config.backup.resources.enabled "false"))) }}

@@ -1,4 +1,3 @@
-{{- if .Values.config.postgres.config }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,5 +9,11 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   postgres-ha.yaml: |
-    {{ .Values.config.postgres.config }}
-{{- end }}
+    bootstrap:
+      dcs:
+        postgresql:
+          parameters:
+            {{- if (not .Values.config.backup.enabled) }}
+            archive_mode: 'off'
+            {{- end }}
+{{ .Values.config.postgres.config | indent 12 }}
