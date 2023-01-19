@@ -44,10 +44,10 @@ config:
     resources:
       enabled: defaults
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 300m
+        memory: 256Mi
       limits:
-        cpu: 200m
+        cpu: 600m
         memory: 512Mi
   mysql:
     internal: true

@@ -98,16 +98,6 @@ spec:
           limits: {}
 {{- end }}
         args: []
-        affinity:
-          nodeAffinity:
-            preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 1
-                preference:
-                  matchExpressions:
-                    - key: node.kubernetes.io/instance-type
-                      operator: NotIn
-                      values:
-                        - t3.medium
       default:
         replicaCount: 1
         resources: {}
