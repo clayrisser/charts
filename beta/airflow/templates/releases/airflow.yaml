@@ -223,7 +223,7 @@ spec:
     kerberos:
       enabled: false
     workers:
-      replicas: {{ .Values.config.airflow.workers | quote }}
+      replicas: {{ .Values.config.airflow.workers }}
       revisionHistoryLimit: ~
       command: ~
       args:
