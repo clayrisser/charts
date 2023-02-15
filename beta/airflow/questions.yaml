@@ -68,24 +68,6 @@ questions:
     required: false
     label: password
     group: Airflow
-  - variable: config.airflow.appStoreEnabled
-    description: ''
-    type: boolean
-    required: true
-    label: 'app store enabled'
-    group: Airflow
-  - variable: config.airflow.updateApps
-    description: ''
-    type: boolean
-    required: true
-    label: 'update apps'
-    group: Airflow
-  - variable: config.airflow.apps
-    description: ''
-    type: multiline
-    required: false
-    label: apps
-    group: Airflow
   - variable: config.airflow.resources.enabled
     description: ''
     type: enum
@@ -125,7 +107,7 @@ questions:
     type: boolean
     required: false
     label: internal
-    show_subquestion_if: true
+    show_subquestion_if: false
     group: Postgres
     subquestions:
       - variable: config.postgres.integration
@@ -171,31 +153,31 @@ questions:
       #   label: url
 
   # Networking
-  - variable: ingress.nextcloud.enabled
+  - variable: ingress.airflow.enabled
     default: true
     description: ''
     type: boolean
-    label: 'nextcloud ingress enabled'
+    label: 'airflow ingress enabled'
     show_subquestion_if: true
     group: Networking
     subquestions:
-      - variable: ingress.nextcloud.hostname
+      - variable: ingress.airflow.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
-        label: 'nextcloud ingress hostname'
-      - variable: ingress.nextcloud.tls.enabled
+        label: 'airflow ingress hostname'
+      - variable: ingress.airflow.tls.enabled
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'nextcloud ingress tls enabled'
-      - variable: ingress.nextcloud.tls.issuer
+        label: 'airflow ingress tls enabled'
+      - variable: ingress.airflow.tls.issuer
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.nextcloud.tls.enabled=true
+        show_if: ingress.airflow.tls.enabled=true
         options:
           - none
           - letsencrypt-cloudflare-staging
@@ -204,82 +186,54 @@ questions:
           - letsencrypt-prod
           - selfsigned
         required: false
-        label: 'nextcloud ingress issuer name'
-      - variable: ingress.nextcloud.tls.certificate
+        label: 'airflow ingress issuer name'
+      - variable: ingress.airflow.tls.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.nextcloud.tls.enabled=true&&ingress.nextcloud.tls.issuer=none
+        show_if: ingress.airflow.tls.enabled=true&&ingress.airflow.tls.issuer=none
         required: false
-        label: 'nextcloud ingress certificate'
-  - variable: service.nextcloud.type
+        label: 'airflow ingress certificate'
+  - variable: service.airflow.type
     description: ''
     type: enum
-    show_if: ingress.nextcloud.enabled=false
+    show_if: ingress.airflow.enabled=false
     options:
       - ClusterIP
       - LoadBalancer
       - NodePort
     required: true
-    label: 'nextcloud service type'
+    label: 'airflow service type'
     group: Networking
-  - variable: service.nextcloud.nodePorts.http
+  - variable: service.airflow.nodePorts.http
     description: ''
     type: int
     required: false
     min: 30000
     max: 32767
-    show_if: service.nextcloud.type=NodePort&&ingress.nextcloud.enabled=false
-    label: 'nextcloud http node port'
+    show_if: service.airflow.type=NodePort&&ingress.airflow.enabled=false
+    label: 'airflow http node port'
     group: Networking
-  - variable: service.nextcloud.lbPorts.http
+  - variable: service.airflow.lbPorts.http
     description: ''
     type: int
     min: 0
     max: 65535
     required: true
-    show_if: service.nextcloud.type=LoadBalancer&&ingress.nextcloud.enabled=false
-    label: 'nextcloud http lb port'
+    show_if: service.airflow.type=LoadBalancer&&ingress.airflow.enabled=false
+    label: 'airflow http lb port'
     group: Networking
 
   # Images
-  - variable: images.nextcloud.repository
+  - variable: images.airflow.repository
     description: ''
     type: string
     required: true
-    label: 'nextcloud repository'
+    label: 'airflow repository'
     group: Images
-  - variable: images.nextcloud.tag
+  - variable: images.airflow.tag
     description: ''
     type: string
     required: true
-    label: 'nextcloud tag'
-    group: Images
-  - variable: images.onlyoffice.repository
-    description: ''
-    type: string
-    required: true
-    show_if: config.onlyoffice.enabled=true
-    label: 'onlyoffice repository'
-    group: Images
-  - variable: images.onlyoffice.tag
-    description: ''
-    type: string
-    required: true
-    show_if: config.onlyoffice.enabled=true
-    label: 'onlyoffice tag'
-    group: Images
-  - variable: images.pdfdraw.repository
-    description: ''
-    type: string
-    required: true
-    show_if: config.pdfdraw.enabled=true
-    label: 'pdfdraw repository'
-    group: Images
-  - variable: images.pdfdraw.tag
-    description: ''
-    type: string
-    required: true
-    show_if: config.pdfdraw.enabled=true
-    label: 'pdfdraw tag'
+    label: 'airflow tag'
     group: Images
