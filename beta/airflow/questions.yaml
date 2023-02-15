@@ -1,0 +1,285 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: istio
+    group: Config
+
+  # Airflow
+  - variable: config.airflow.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Airflow
+  - variable: config.airflow.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Airflow
+  - variable: config.airflow.executor
+    description: ''
+    type: enum
+    options:
+      - CeleryExecutor
+      - CeleryKubernetesExecutor
+      - KubernetesExecutor
+      - LocalExecutor
+      - LocalKubernetesExecutor
+  - variable: config.airflow.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: Airflow
+  - variable: config.airflow.password
+    description: ''
+    type: string
+    required: false
+    label: password
+    group: Airflow
+  - variable: config.airflow.appStoreEnabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'app store enabled'
+    group: Airflow
+  - variable: config.airflow.updateApps
+    description: ''
+    type: boolean
+    required: true
+    label: 'update apps'
+    group: Airflow
+  - variable: config.airflow.apps
+    description: ''
+    type: multiline
+    required: false
+    label: apps
+    group: Airflow
+  - variable: config.airflow.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources defaults'
+    show_subquestion_if: custom
+    group: Airflow
+    subquestions:
+      - variable: config.airflow.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.airflow.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.airflow.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.airflow.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+  # Postgres
+  - variable: config.postgres.internal
+    description: ''
+    type: string
+    required: false
+    label: internal
+    show_subquestion_if: true
+    group: Postgres
+    subquestions:
+      - variable: config.postgres.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.postgres.host
+        description: ''
+        type: string
+        required: true
+        label: host
+        show_if: config.postgres.integration=
+      - variable: config.postgres.database
+        description: 'only letters, digits and _ allowed'
+        type: string
+        required: true
+        label: database
+      - variable: config.postgres.username
+        description: ''
+        type: string
+        required: true
+        label: username
+        show_if: config.postgres.integration=
+      - variable: config.postgres.password
+        description: ''
+        type: password
+        required: true
+        label: password
+        show_if: config.postgres.integration=
+      - variable: config.postgres.port
+        description: ''
+        type: int
+        min: 0
+        max: 65535
+        required: true
+        label: port
+        show_if: config.postgres.integration=
+      # - variable: config.postgres.url
+      #   description: ''
+      #   type: string
+      #   required: false
+      #   label: url
+
+  # Networking
+  - variable: ingress.nextcloud.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'nextcloud ingress enabled'
+    show_subquestion_if: true
+    group: Networking
+    subquestions:
+      - variable: ingress.nextcloud.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'nextcloud ingress hostname'
+      - variable: ingress.nextcloud.tls.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'nextcloud ingress tls enabled'
+      - variable: ingress.nextcloud.tls.issuer
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.nextcloud.tls.enabled=true
+        options:
+          - none
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - selfsigned
+        required: false
+        label: 'nextcloud ingress issuer name'
+      - variable: ingress.nextcloud.tls.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.nextcloud.tls.enabled=true&&ingress.nextcloud.tls.issuer=none
+        required: false
+        label: 'nextcloud ingress certificate'
+  - variable: service.nextcloud.type
+    description: ''
+    type: enum
+    show_if: ingress.nextcloud.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'nextcloud service type'
+    group: Networking
+  - variable: service.nextcloud.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.nextcloud.type=NodePort&&ingress.nextcloud.enabled=false
+    label: 'nextcloud http node port'
+    group: Networking
+  - variable: service.nextcloud.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.nextcloud.type=LoadBalancer&&ingress.nextcloud.enabled=false
+    label: 'nextcloud http lb port'
+    group: Networking
+
+  # Images
+  - variable: images.nextcloud.repository
+    description: ''
+    type: string
+    required: true
+    label: 'nextcloud repository'
+    group: Images
+  - variable: images.nextcloud.tag
+    description: ''
+    type: string
+    required: true
+    label: 'nextcloud tag'
+    group: Images
+  - variable: images.onlyoffice.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.onlyoffice.enabled=true
+    label: 'onlyoffice repository'
+    group: Images
+  - variable: images.onlyoffice.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.onlyoffice.enabled=true
+    label: 'onlyoffice tag'
+    group: Images
+  - variable: images.pdfdraw.repository
+    description: ''
+    type: string
+    required: true
+    show_if: config.pdfdraw.enabled=true
+    label: 'pdfdraw repository'
+    group: Images
+  - variable: images.pdfdraw.tag
+    description: ''
+    type: string
+    required: true
+    show_if: config.pdfdraw.enabled=true
+    label: 'pdfdraw tag'
+    group: Images

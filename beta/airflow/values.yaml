@@ -1,0 +1,53 @@
+images:
+  airflow:
+    repository: apache/airflow
+    tag: 2.5.1
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  istio: false
+  airflow:
+    hostname: ''
+    baseUrl: ''
+    replicas: 1
+    executor: CeleryExecutor
+    workers: 1
+    username: admin
+    password: 'P@ssw0rd'
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  postgres:
+    internal: true
+    integration: ''
+    database: nextcloud
+    host: ''
+    password: ''
+    username: postgres
+    port: 5432
+    # url: ''
+
+service:
+  airflow:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  airflow:
+    enabled: false
+    hostname: ''
+    tls:
+      enabled: false
+      issuer: ''
+      certificate: ''
