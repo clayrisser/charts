@@ -27,7 +27,7 @@ config:
   postgres:
     internal: true
     integration: ''
-    database: nextcloud
+    database: airflow
     host: ''
     password: ''
     username: postgres

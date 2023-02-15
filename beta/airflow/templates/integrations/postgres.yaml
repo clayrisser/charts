@@ -6,7 +6,7 @@ kind: Plug
 metadata:
   name: postgres
   labels:
-    app.kubernetes.io/name: {{ template "nextcloud.name" . }}
+    app.kubernetes.io/name: {{ template "airflow.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
