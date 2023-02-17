@@ -403,7 +403,7 @@ spec:
       affinity: {}
       tolerations: []
       topologySpreadConstraints: []
-      useHelmHooks: true
+      useHelmHooks: false
       applyCustomEnv: true
       env: []
       resources:
