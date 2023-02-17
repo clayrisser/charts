@@ -443,7 +443,7 @@ spec:
       affinity: {}
       tolerations: []
       topologySpreadConstraints: []
-      useHelmHooks: true
+      useHelmHooks: false
       applyCustomEnv: true
     webserver:
       allowPodLogReading: true
