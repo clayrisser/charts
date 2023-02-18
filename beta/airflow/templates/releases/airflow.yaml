@@ -32,4 +32,54 @@ spec:
         name: apache-airflow
   install:
     disableWait: true
-  values: {}
+  values:
+    defaultAirflowRepository: {{ .Values.images.airflow.repository | quote }}
+    defaultAirflowTag: {{ .Values.images.airflow.tag | quote }}
+    airflowVersion: {{ .Values.images.airflow.tag | quote }}
+    images:
+      airflow:
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      pod_template:
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      flower:
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      statsd:
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      redis:
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      pgbouncer:
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      pgbouncerExporter:
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+      gitSync:
+        pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    executor: {{ .Values.config.airflow.executor | quote }}
+    data:
+      {{- if .Values.config.postgres.internal }}
+      metadataConnection:
+        user: postgres
+        pass: postgres
+        protocol: postgresql
+        host: ~
+        port: 5432
+        db: postgres
+        sslmode: disable
+      {{- else }}
+      metadataSecretName: {{ template "airflow.name" . }}-metadata
+      {{- end }}
+    workers:
+      replicas: {{ .Values.config.airflow.workers }}
+    webserver:
+      defaultUser:
+        enabled: true
+        role: Admin
+        username: {{ .Values.config.airflow.username | quote }}
+        email: admin@example.com
+        firstName: admin
+        lastName: user
+        password: {{ .Values.config.airflow.password | quote }}
+    pgbouncer:
+      enabled: false
+    logs:
+      persistence:
+        enabled: false
