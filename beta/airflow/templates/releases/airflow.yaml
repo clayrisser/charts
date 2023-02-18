@@ -30,4 +30,6 @@ spec:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
         kind: HelmRepository
         name: apache-airflow
+  install:
+    disableWait: true
   values: {}
