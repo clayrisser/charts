@@ -11,14 +11,14 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: pgadmin
+      app.kubernetes.io/name: pgadmin
       app.kubernetes.io/instance: {{ .Release.Name }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
-        app: pgadmin
+        app.kubernetes.io/name: pgadmin
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       affinity:
