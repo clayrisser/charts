@@ -1,7 +1,7 @@
 images:
   erpnext:
     repository: registry.gitlab.com/risserlabs/community/erpnext-images/erpnext
-    tag: 14.13.0
+    tag: 14.19.0
   mariadb:
     repository: bitnami/mariadb
     tag: 10.6.11-debian-11-r12
