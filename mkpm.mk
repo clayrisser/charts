@@ -22,3 +22,5 @@ $(PROJECT_ROOT)/.mkpm/.bootstrap.mk:
 			echo wget --content-on-error -O) \
 		$@ $(MKPM_BOOTSTRAP) >$(NULL)
 ############## MKPM BOOTSTRAP SCRIPT END ##############
+
+export TMPDIR := /tmp

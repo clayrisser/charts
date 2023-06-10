@@ -5,8 +5,8 @@ olm:
 
 images:
   keycloak:
-    repository: jboss/keycloak
-    tag: 19.0.2
+    repository: registry.gitlab.com/bitspur/internal/siwe-keycloak
+    tag: 21.1.0
 
 config:
   imagePullPolicy: IfNotPresent
