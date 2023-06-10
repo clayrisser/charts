@@ -1,6 +1,6 @@
 export MKPM_PACKAGES_DEFAULT := \
-	gnu=0.0.3 \
-	patch=0.0.1
+	patch=0.0.3 \
+	gnu=0.0.3
 
 export MKPM_REPO_DEFAULT := \
 	https://gitlab.com/risserlabs/community/mkpm-stable.git
@@ -22,5 +22,3 @@ $(PROJECT_ROOT)/.mkpm/.bootstrap.mk:
 			echo wget --content-on-error -O) \
 		$@ $(MKPM_BOOTSTRAP) >$(NULL)
 ############## MKPM BOOTSTRAP SCRIPT END ##############
-
-export TMPDIR := /tmp

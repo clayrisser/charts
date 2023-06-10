@@ -1,7 +1,7 @@
 olm:
   keycloak:
-    channel: alpha
-    version: 19.0.2
+    channel: fast
+    version: 21.1.1
 
 images:
   keycloak:

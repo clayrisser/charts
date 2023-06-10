@@ -1,9 +1,9 @@
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: {{ template "keycloak.name" . }}
+  name: {{ template "postgres.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "keycloak.name" . }}
+    app.kubernetes.io/name: {{ template "postgres.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -14,27 +14,27 @@ spec:
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: {{ template "keycloak.name" . }}
+  name: {{ template "postgres.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "keycloak.name" . }}
+    app.kubernetes.io/name: {{ template "postgres.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   # https://olm.operatorframework.io/docs/tasks/install-operator-with-olm/#example-install-a-specific-version-of-an-operator
-  channel: {{ .Values.olm.keycloak.channel }}
+  channel: {{ .Values.olm.postgres.channel }}
   installPlanApproval: Manual
-  name: keycloak-operator
+  name: percona-postgresql-operator
   source: operatorhubio-catalog
   sourceNamespace: olm
-  startingCSV: keycloak-operator.v{{ .Values.olm.keycloak.version }}
+  startingCSV: percona-postgresql-operator.v{{ .Values.olm.postgres.version }}
 ---
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
   name: olm
   labels:
-    app.kubernetes.io/name: {{ template "keycloak.name" . }}
+    app.kubernetes.io/name: {{ template "postgres.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -122,5 +122,5 @@ spec:
                 -o yaml | kubectl delete -f -
           env:
             - name: CSV
-              value: keycloak-operator.v{{ .Values.olm.keycloak.version }}
+              value: percona-postgresql-operator.v{{ .Values.olm.postgres.version }}
 {{- end }}
