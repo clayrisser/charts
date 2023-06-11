@@ -1,36 +1,36 @@
 olm:
   postgres:
     channel: stable
-    version: 1.4.0
+    version: 1.3.0
 
 images:
   deployer:
     repository: percona/percona-postgresql-operator
-    tag: 1.4.0-pgo-deployer
+    tag: 1.3.0-pgo-deployer
   pgo:
     repository: percona/percona-postgresql-operator
-    tag: 1.4.0
+    tag: 1.3.0
   pgadmin:
     repository: dpage/pgadmin4
     tag: '7.3'
   postgres:
     repository: percona/percona-postgresql-operator
-    tag: 1.4.0-ppg14-postgres-ha
+    tag: 1.3.0-ppg14-postgres-ha
   pmm:
     repository: percona/pmm-client
     tag: 2.37.1
   backup:
     repository: percona/percona-postgresql-operator
-    tag: 1.4.0-ppg14-pgbackrest
+    tag: 1.3.0-ppg14-pgbackrest
   backrestRepo:
     repository: percona/percona-postgresql-operator
-    tag: 1.4.0-ppg14-pgbackrest-repo
+    tag: 1.3.0-ppg14-pgbackrest-repo
   pgBouncer:
     repository: percona/percona-postgresql-operator
-    tag: 1.4.0-ppg14-pgbouncer
+    tag: 1.3.0-ppg14-pgbouncer
   pgBadger:
     repository: percona/percona-postgresql-operator
-    tag: 1.4.0-ppg14-pgbadger
+    tag: 1.3.0-ppg14-pgbadger
 
 config:
   imagePullPolicy: IfNotPresent

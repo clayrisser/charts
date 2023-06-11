@@ -63,7 +63,7 @@ spec:
           hosts:
             - {{ include "nextcloud.onlyoffice-hostname" . }}
     podSecurityPolicy:
-      create: true
+      create: false
     securitycontext:
       allowPrivilegeEscalation: false
       capabilities:
