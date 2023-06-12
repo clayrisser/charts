@@ -1,0 +1,45 @@
+images:
+  sentryTunnel:
+    repository: sigalen/sentry_tunnel
+    tag: latest
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  istio: false
+  sentryTunnel:
+    replicas: 1
+    baseUrl: ''
+    hostname: ''
+    remoteHost: ''
+    projectIds: ''
+    listenPort: 7878
+    path: /tunnel
+    ip: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 50m
+        memory: 50Mi
+      limits:
+        cpu: 200m
+        memory: 200Mi
+
+service:
+  sentryTunnel:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+    lbPorts:
+      http: 80
+
+ingress:
+  sentryTunnel:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''

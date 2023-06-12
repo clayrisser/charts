@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "sentry-tunnel.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "sentry-tunnel.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.config.sentryTunnel.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "sentry-tunnel.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ template "sentry-tunnel.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - {{ template "sentry-tunnel.name" . }}
+      containers:
+        - name: {{ template "sentry-tunnel.name" . }}
+          image: {{ .Values.images.sentryTunnel.repository }}:{{ .Values.images.sentryTunnel.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+{{- if (and .Values.config.sentryTunnel.resources.enabled (not (eq .Values.config.sentryTunnel.resources.enabled "false"))) }}
+            requests:
+{{ toYaml .Values.config.sentryTunnel.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.sentryTunnel.resources.limits | indent 14 }}
+{{- else }}
+            requests: {}
+            limits: {}
+{{- end }}
+          ports:
+            - name: container
+              containerPort: 8055
+          env:
+            - name: TUNNEL_REMOTE_HOST
+              value: {{ .Values.config.sentryTunnel.remoteHost | quote }}
+            - name: TUNNEL_PROJECT_IDS
+              value: {{ .Values.config.sentryTunnel.projectIds | quote }}
+            - name: TUNNEL_LISTEN_PORT
+              value: {{ .Values.config.sentryTunnel.listenPort | quote }}
+            - name: TUNNEL_PATH
+              value: {{ .Values.config.sentryTunnel.path | quote }}
+            - name: TUNNEL_IP
+              value: {{ .Values.config.sentryTunnel.ip | quote }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1

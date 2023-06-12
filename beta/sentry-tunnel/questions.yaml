@@ -1,0 +1,199 @@
+categories:
+  - Server
+questions:
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: istio
+    group: Config
+
+  # Sentry Tunnel
+  - variable: config.sentryTunnel.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: 'Sentry Tunnel'
+  - variable: config.sentryTunnel.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: 'Sentry Tunnel'
+  - variable: config.sentryTunnel.baseUrl
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: 'Sentry Tunnel'
+  - variable: config.sentryTunnel.remoteHost
+    description: ''
+    type: string
+    required: false
+    label: 'remote host'
+    group: 'Sentry Tunnel'
+  - variable: config.sentryTunnel.projectIds
+    description: ''
+    type: string
+    required: false
+    label: 'project ids'
+    group: 'Sentry Tunnel'
+  - variable: config.sentryTunnel.listenPort
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    label: 'listen port'
+    group: 'Sentry Tunnel'
+  - variable: config.sentryTunnel.path
+    description: ''
+    type: string
+    required: false
+    label: 'path'
+    group: 'Sentry Tunnel'
+  - variable: config.sentryTunnel.ip
+    description: ''
+    type: string
+    required: false
+    label: 'ip'
+    group: 'Sentry Tunnel'
+  - variable: config.sentryTunnel.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources defaults'
+    show_subquestion_if: custom
+    group: 'Sentry Tunnel'
+    subquestions:
+      - variable: config.sentryTunnel.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.sentryTunnel.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.sentryTunnel.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.sentryTunnel.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+  # Networking
+  - variable: ingress.sentryTunnel.enabled
+    description: ''
+    type: boolean
+    label: 'sentryTunnel ingress enabled'
+    show_subquestion_if: true
+    group: Networking
+    subquestions:
+      - variable: ingress.sentryTunnel.tls
+        description: ''
+        type: boolean
+        required: true
+        label: 'sentryTunnel ingress tls'
+      - variable: ingress.sentryTunnel.hostname
+        default: nip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'sentryTunnel ingress hostname'
+      - variable: ingress.sentryTunnel.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.sentryTunnel.tls=true
+        options:
+          - letsencrypt-cloudflare-staging
+          - letsencrypt-cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - selfsigned
+        required: false
+        label: 'sentryTunnel ingress issuer name'
+      - variable: ingress.sentryTunnel.certificate
+        description: ''
+        type: string
+        show_if: ingress.sentryTunnel.tls=true&&ingress.sentryTunnel.issuer.name=
+        required: false
+        label: 'sentryTunnel ingress certificate'
+  - variable: service.sentryTunnel.type
+    description: ''
+    type: enum
+    show_if: ingress.sentryTunnel.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'sentryTunnel service type'
+    group: Networking
+  - variable: service.sentryTunnel.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.sentryTunnel.type=NodePort&&ingress.sentryTunnel.enabled=false
+    label: 'sentryTunnel http node port'
+    group: Networking
+  - variable: service.sentryTunnel.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.sentryTunnel.type=LoadBalancer&&ingress.sentryTunnel.enabled=false
+    label: 'sentryTunnel http lb port'
+    group: Networking
+
+  # Images
+  - variable: images.sentryTunnel.repository
+    description: ''
+    type: string
+    required: true
+    label: 'sentryTunnel repository'
+    group: Images
+  - variable: images.sentryTunnel.tag
+    description: ''
+    type: string
+    required: true
+    label: 'sentryTunnel tag'
+    group: Images
