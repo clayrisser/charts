@@ -1,11 +1,5 @@
-{{- $existingKeycloak := lookup "keycloak.org/v1alpha1" "Keycloak" .Release.Namespace (include "keycloak.name" .) }}
-{{- $externalDatabaseEnabled := false }}
-{{- if $existingKeycloak }}
-{{- if $existingKeycloak.spec.externalDatabase.enabled }}
-{{- $externalDatabaseEnabled = true }}
-{{- end }}
-{{- end }}
-apiVersion: keycloak.org/v1alpha1
+{{- $postgres := .Values.config.postgres }}
+apiVersion: k8s.keycloak.org/v2alpha1
 kind: Keycloak
 metadata:
   name: {{ template "keycloak.name" . }}
@@ -16,303 +10,68 @@ metadata:
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 spec:
   instances: {{ .Values.config.keycloak.replicas }}
-  extensions: []
-  externalAccess:
+  image: {{ .Values.images.keycloak.repository }}:{{ .Values.images.keycloak.tag }}
+  # imagePullSecrets:
+  #   - name: string
+  db:
+    vendor: postgres
+    database: {{ $postgres.database | quote }}
+    host: {{ $postgres.host | quote }}
+    port: {{ $postgres.port }}
+    usernameSecret:
+      name: {{ template "keycloak.name" . }}-db-secret
+      key: POSTGRES_USERNAME
+    passwordSecret:
+      name: {{ template "keycloak.name" . }}-db-secret
+      key: POSTGRES_PASSWORD
+  features:
+    disabled: []
+    enabled: []
+  ingress:
     enabled: false
-  external:
-    enabled: false
-  externalDatabase:
-{{- if $externalDatabaseEnabled }}
-    enabled: true
-{{- else }}
-    # set to `true` from postgres integration
-    enabled: {{ (not .Values.config.postgres.integration) | ternary "true" "false" }}
-{{- end }}
-  keycloakDeploymentSpec:
-    experimental:
-      command:
-        - sh
-        - -c
-        - |
-            mkdir -p /opt/jboss/keycloak/providers
-            {{- if .Values.config.keycloak.ldap.enabled }}
-            if [ "$LDAP_TLS_CRT" != "" ]; then
-              mkdir -p /opt/jboss/certs
-              echo "-----BEGIN CERTIFICATE-----" > /opt/jboss/certs/ldap-ca.crt
-              echo $LDAP_TLS_CRT | sed 's/ \?-\{5\}[A-Z]\+ [A-Z]\+-\{5\} \?//g' | \
-                sed 's/ /\n/g' >> /opt/jboss/certs/ldap-ca.crt
-              echo "-----END CERTIFICATE-----" >> /opt/jboss/certs/ldap-ca.crt
-              echo >> /opt/jboss/certs/ldap-ca.crt
-            fi
-            {{- end }}
-            {{- if .Values.config.keycloak.ldap.enabled }}
-            if [ "$KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL" != "" ]; then
-              mkdir -p /opt/jboss/keycloak/secrets
-              echo -n $KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL > /opt/jboss/keycloak/secrets/main_bindCredential
-            fi
-            {{- end }}
-            {{- if .Values.config.keycloak.themeZip }}
-            export CWD=$(pwd)
-            mkdir -p /opt/jboss/keycloak/injected-themes
-            cd /opt/jboss/keycloak/injected-themes
-            curl -O {{ .Values.config.keycloak.themeZip }}
-            tar xf *.tar.gz
-            rm -rf *.tar.gz
-            cp -r /opt/jboss/keycloak/injected-themes/* /opt/jboss/keycloak/themes 2>/dev/null | true
-            cd $CWD
-            {{- end }}
-            exec /opt/jboss/tools/docker-entrypoint.sh
-      env:
-        {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.tls.ca) }}
-        - name: LDAP_TLS_CRT
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.config.keycloak.ldap.tls.ca | quote }}
-              key: tls.crt
-        {{- else }}
-        - name: LDAP_TLS_CRT
-          value: ''
-        {{- end }}
-        - name: PROXY_ADDRESS_FORWARDING
-          value: 'true'
-        {{- if .Values.config.debug }}
-        - name: KEYCLOAK_LOGLEVEL
-          value: ALL
-        - name: ROOT_LOGLEVEL
-          value: ALL
-        {{- end }}
-        - name: KEYCLOAK_HOSTNAME
-          value: {{ template "keycloak.keycloak-hostname" . }}
-        - name: KEYCLOAK_DEFAULT_THEME
-          value: {{ .Values.config.keycloak.defaultTheme | quote }}
-        - name: KEYCLOAK_WELCOME_THEME
-          value: {{ .Values.config.keycloak.welcomeTheme | quote }}
-        - name: JAVA_OPTS_APPEND
-          value: '{{ .Values.config.keycloak.enablePreview | ternary "-Dkeycloak.profile=preview" "" }} {{ .Values.config.keycloak.javaOpts | default "" }}'
-        - name: X509_CA_BUNDLE
-          value: '/var/run/secrets/kubernetes.io/serviceaccount/*.crt /opt/jboss/certs/ldap-ca.crt'
-        {{- if .Values.config.keycloak.ldap.enabled }}
-        - name: KEYCLOAK_VAULT_MAIN_BIND_CREDENTIAL
-          valueFrom:
-            secretKeyRef:
-              name: keycloak-vault
-              key: main_bindCredential
-        {{- end }}
-{{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
-    resources:
-      requests:
-{{ toYaml .Values.config.keycloak.resources.requests | indent 8 }}
-      limits:
-{{ toYaml .Values.config.keycloak.resources.limits | indent 8 }}
-{{- end }}
-  migration:
-    backups:
-      enabled: false
-  podDisruptionBudget:
-    enabled: false
-  unmanaged: false
----
-apiVersion: keycloak.org/v1alpha1
-kind: KeycloakRealm
-metadata:
-  name: {{ template "keycloak.name" . }}
-  labels:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ template "keycloak.name" . }}
-    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-spec:
-  realm:
-    id: main
-    realm: main
-    enabled: true
-    displayName: 'Main Realm'
-    {{- if .Values.config.keycloak.smtp.enabled }}
-    smtpServer:
-      password: '${vault.smtpPassword}'
-      starttls: 'true'
-      auth: 'true'
-      port: {{ .Values.config.keycloak.smtp.port | quote }}
-      host: {{ .Values.config.keycloak.smtp.hostname | quote }}
-      from: {{ .Values.config.keycloak.smtp.from | quote }}
-      fromDisplayName: {{ .Values.config.keycloak.smtp.from | quote }}
-      ssl: 'true'
-      user: {{ .Values.config.keycloak.smtp.username | quote }}
-    {{- end }}
-    {{- if .Values.config.keycloak.ldap.enabled }}
-    userFederationProviders:
-      - displayName: ldap
-        providerName: ldap
-        config:
-          allowKerberosAuthentication: 'false'
-          authType: simple
-          batchSizeForSync: '1000'
-          bindCredential: '${vault.bindCredential}'
-          bindDn: cn={{ .Values.config.keycloak.ldap.username }},{{ template "keycloak.ldap-dc" . }}
-          cachePolicy: DEFAULT
-          changedSyncPeriod: '-1'
-          connectionPooling: 'true'
-          connectionUrl: ldap{{ .Values.config.keycloak.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.keycloak.ldap.hostname }}
-          debug: 'false'
-          editMode: WRITABLE
-          enabled: 'true'
-          fullSyncPeriod: '-1'
-          importEnabled: 'true'
-          pagination: 'true'
-          priority: '0'
-          rdnLDAPAttribute: uid
-          searchScope: '1'
-          searchScope: '1'
-          startTls: 'false'
-          syncRegistrations: 'true'
-          trustEmail: 'true'
-          useKerberosForPasswordAuthentication: 'false'
-          useTruststoreSpi: ldapsOnly
-          userObjectClasses: {{ .Values.config.keycloak.ldap.userObjectClasses | quote }}
-          usernameLDAPAttribute: uid
-          usersDn: ou=people,{{ template "keycloak.ldap-dc" . }}
-          uuidLDAPAttribute: entryUUID
-          validatePasswordPolicy: 'false'
-          vendor: 'rhds'
-    # https://aput.net/~jheiss/samba/ldap.shtml
-    userFederationMappers:
-      - name: groups
-        federationProviderDisplayName: ldap
-        federationMapperType: group-ldap-mapper
-        config:
-          drop.non.existing.groups.during.sync: 'false'
-          group.name.ldap.attribute: cn
-          group.object.classes: groupOfNames
-          groups.dn: ou=groups,{{ template "keycloak.ldap-dc" . }}
-          groups.path: '/'
-          ignore.missing.groups: 'false'
-          memberof.ldap.attribute: memberOf
-          membership.attribute.type: DN
-          membership.ldap.attribute: member
-          membership.user.ldap.attribute: uid
-          mode: LDAP_ONLY
-          preserve.group.inheritance: 'true'
-          user.roles.retrieve.strategy: LOAD_GROUPS_BY_MEMBER_ATTRIBUTE
-      - name: username
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          always.read.value.from.ldap: 'false'
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'true'
-          ldap.attribute: uid
-          read.only: 'false'
-          user.model.attribute: username
-      - name: email
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          always.read.value.from.ldap: 'false'
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'true'
-          ldap.attribute: mail
-          read.only: 'false'
-          user.model.attribute: email
-      - name: 'first name'
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          always.read.value.from.ldap: 'true'
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'true'
-          ldap.attribute: givenName
-          read.only: 'false'
-          user.model.attribute: firstName
-      - name: 'last name'
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          always.read.value.from.ldap: 'true'
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'true'
-          ldap.attribute: sn
-          read.only: 'false'
-          user.model.attribute: lastName
-      - name: cn
-        federationProviderDisplayName: ldap
-        federationMapperType: full-name-ldap-mapper
-        config:
-          read.only: 'false'
-          write.only: 'true'
-          ldap.full.name.attribute: cn
-      - name: 'display name'
-        federationProviderDisplayName: ldap
-        federationMapperType: full-name-ldap-mapper
-        config:
-          read.only: 'false'
-          write.only: 'true'
-          ldap.full.name.attribute: displayName
-      - name: 'create timestamp'
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          always.read.value.from.ldap: 'true'
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'false'
-          ldap.attribute: createTimestamp
-          read.only: 'true'
-          user.model.attribute: CREATE_TIMESTAMP
-      - name: 'mail enabled'
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          attribute.default.value: 'TRUE'
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'false'
-          ldap.attribute: mailEnabled
-          read.only: 'false'
-          user.model.attribute: MAIL_ENABLED
-      - name: 'date of birth'
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'false'
-          ldap.attribute: dob
-          read.only: 'false'
-          user.model.attribute: dob
-      - name: 'gender'
-        federationProviderDisplayName: ldap
-        federationMapperType: user-attribute-ldap-mapper
-        config:
-          is.binary.attribute: 'false'
-          is.mandatory.in.ldap: 'false'
-          ldap.attribute: gender
-          read.only: 'false'
-          user.model.attribute: gender
-      - name: 'home directory'
-        federationProviderDisplayName: ldap
-        federationMapperType: hardcoded-ldap-attribute-mapper
-        config:
-          ldap.attribute.value: '/home/user'
-          ldap.attribute.name: homeDirectory
-      - name: 'gid number'
-        federationProviderDisplayName: ldap
-        federationMapperType: hardcoded-ldap-attribute-mapper
-        config:
-          ldap.attribute.value: '5000'
-          ldap.attribute.name: gidNumber
-      - name: 'uid number'
-        federationProviderDisplayName: ldap
-        federationMapperType: hardcoded-ldap-attribute-mapper
-        config:
-          ldap.attribute.value: '5000'
-          ldap.attribute.name: uidNumber
-      - name: 'login shell'
-        federationProviderDisplayName: ldap
-        federationMapperType: hardcoded-ldap-attribute-mapper
-        config:
-          ldap.attribute.value: '/bin/bash'
-          ldap.attribute.name: loginShell
-    {{- end }}
-  instanceSelector:
-    matchLabels:
-{{- if (or (not .Values.config.keycloak.ldap.enabled) (empty .Values.config.keycloak.ldap.integration)) }}
-      app.kubernetes.io/name: {{ template "keycloak.name" . }}
-{{- end }}
-      app.kubernetes.io/name: 'null'
+  unsupported:
+    podTemplate:
+      spec:
+        containers:
+          - command:
+              - sh
+              - -c
+              - |
+                  mkdir -p /opt/keycloak/certs
+                  for CERT in /opt/keycloak/certs/*.crt; do
+                    if [ -f "$CERT" ]; then
+                      ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
+                      keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                    fi
+                  done
+                  mkdir -p /opt/keycloak/secrets
+                  for e in $(env); do
+                    if echo $e | grep -qE '^main_'; then
+                      key="$(echo $e | sed 's|=.*$||g')"
+                      value="$(echo $e | sed 's|^.*=||g')"
+                      echo "$value" > /opt/keycloak/secrets/$key
+                    fi
+                  done
+                  echo AT ARGS $@
+                  exec /usr/local/bin/entrypoint start-dev
+            args: ['start-dev']
+            env:
+              - name: KC_VAULT_DIR
+                value: /opt/keycloak/secrets
+              - name: KC_SPI_TRUSTSTORE_FILE_FILE
+                value: /opt/keycloak/truststore.jks
+              - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
+                value: ANY
+              - name: KC_SPI_TRUSTSTORE_FILE_PASSWORD
+                value: keycloak
+              {{- if .Values.config.debug }}
+              - name: KEYCLOAK_LOGLEVEL
+                value: ALL
+              - name: ROOT_LOGLEVEL
+                value: ALL
+              {{- end }}
+            envFrom:
+              - secretRef:
+                  name: keycloak-vault
+              - secretRef:
+                  name: {{ template "keycloak.name" . }}

@@ -1,13 +1,6 @@
 {{- if .Values.config.postgres.integration }}
 {{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
-{{- $existingKeycloak := lookup "keycloak.org/v1alpha1" "Keycloak" .Release.Namespace (include "keycloak.name" .) }}
-{{- $patchKeycloak := true }}
-{{- if $existingKeycloak }}
-{{- if $existingKeycloak.spec.externalDatabase.enabled }}
-{{- $patchKeycloak = false }}
-{{- end }}
-{{- end }}
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
@@ -35,24 +28,14 @@ spec:
     - when: [coupled, updated]
       do: apply
       resource: |
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: keycloak-db-secret
-            namespace: {{ .Release.Namespace }}
-            labels:
-              app: {{ template "keycloak.name" . }}
-              helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-              app.kubernetes.io/instance: {{ .Release.Name }}
-              app.kubernetes.io/managed-by: {{ .Release.Service }}
-          stringData:
-            POSTGRES_DATABASE: '{% .plugConfig.database %}'
-            POSTGRES_EXTERNAL_ADDRESS: '{% .socketConfig.hostname %}'
-            POSTGRES_EXTERNAL_PORT: '{% .socketConfig.port %}'
-            POSTGRES_PASSWORD: '{% .socketConfig.password %}'
-            POSTGRES_SUPERUSER: 'true'
-            POSTGRES_USERNAME: '{% .socketConfig.username %}'
-{{- if $patchKeycloak }}
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: keycloak-db-secret
+          namespace: {{ .Release.Namespace }}
+        stringData:
+          POSTGRES_PASSWORD: {% .socketConfig.password | quote %}
+          POSTGRES_USERNAME: {% .socketConfig.username | quote %}
     - when: [coupled, updated]
       do: recreate
       resource: |
@@ -66,16 +49,20 @@ spec:
           patches:
             - id: keycloak
               target:
-                group: keycloak.org
-                version: v1alpha1
+                group: k8s.keycloak.org
+                version: v2alpha1
                 kind: Keycloak
                 name: {{ template "keycloak.name" . }}
-              waitForTimeout: 5
               waitForResource: true
               type: json
               patch: |-
                 - op: replace
-                  path: /spec/externalDatabase/enabled
-                  value: true
-{{- end }}
+                  path: /spec/db/database
+                  value: {% .plugConfig.database | quote %}
+                - op: replace
+                  path: /spec/db/host
+                  value: {% .socketConfig.hostname | quote %}
+                - op: replace
+                  path: /spec/db/port
+                  value: {% .socketConfig.port %}
 {{- end }}

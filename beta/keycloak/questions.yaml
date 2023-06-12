@@ -71,11 +71,11 @@ questions:
     required: false
     label: 'admin password'
     group: Keycloak
-  - variable: config.keycloak.themeZip
+  - variable: config.keycloak.providers
     description: ''
-    type: string
+    type: multiline
     required: false
-    label: 'theme zip'
+    label: providers
     group: Keycloak
   - variable: config.keycloak.defaultTheme
     description: ''

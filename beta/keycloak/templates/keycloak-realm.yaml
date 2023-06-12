@@ -1,0 +1,198 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: KeycloakRealmImport
+metadata:
+  name: {{ template "keycloak.name" . }}
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "keycloak.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+ keycloakCRName: {{ template "keycloak.name" . }}
+ realm:
+    realm: main
+    enabled: true
+    displayName: 'Main Realm'
+    {{- if .Values.config.keycloak.smtp.enabled }}
+    smtpServer:
+      password: '${vault.smtpPassword}'
+      starttls: 'true'
+      auth: 'true'
+      port: {{ .Values.config.keycloak.smtp.port | quote }}
+      host: {{ .Values.config.keycloak.smtp.hostname | quote }}
+      from: {{ .Values.config.keycloak.smtp.from | quote }}
+      fromDisplayName: {{ .Values.config.keycloak.smtp.from | quote }}
+      ssl: 'true'
+      user: {{ .Values.config.keycloak.smtp.username | quote }}
+    {{- end }}
+    {{- if .Values.config.keycloak.ldap.enabled }}
+    userFederationProviders:
+      - displayName: ldap
+        providerName: ldap
+        config:
+          allowKerberosAuthentication: 'false'
+          authType: simple
+          batchSizeForSync: '1000'
+          bindCredential: '${vault.bindCredential}'
+          bindDn: cn={{ .Values.config.keycloak.ldap.username }},{{ template "keycloak.ldap-dc" . }}
+          cachePolicy: DEFAULT
+          changedSyncPeriod: '-1'
+          connectionPooling: 'true'
+          connectionUrl: ldap{{ .Values.config.keycloak.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.keycloak.ldap.hostname }}
+          debug: 'false'
+          editMode: WRITABLE
+          enabled: 'true'
+          fullSyncPeriod: '-1'
+          importEnabled: 'true'
+          pagination: 'true'
+          priority: '0'
+          rdnLDAPAttribute: uid
+          searchScope: '1'
+          searchScope: '1'
+          startTls: 'false'
+          syncRegistrations: 'true'
+          trustEmail: 'true'
+          useKerberosForPasswordAuthentication: 'false'
+          useTruststoreSpi: ldapsOnly
+          userObjectClasses: {{ .Values.config.keycloak.ldap.userObjectClasses | quote }}
+          usernameLDAPAttribute: uid
+          usersDn: ou=people,{{ template "keycloak.ldap-dc" . }}
+          uuidLDAPAttribute: entryUUID
+          validatePasswordPolicy: 'false'
+          vendor: 'rhds'
+    # https://aput.net/~jheiss/samba/ldap.shtml
+    userFederationMappers:
+      - name: groups
+        federationProviderDisplayName: ldap
+        federationMapperType: group-ldap-mapper
+        config:
+          drop.non.existing.groups.during.sync: 'false'
+          group.name.ldap.attribute: cn
+          group.object.classes: groupOfNames
+          groups.dn: ou=groups,{{ template "keycloak.ldap-dc" . }}
+          groups.path: '/'
+          ignore.missing.groups: 'false'
+          memberof.ldap.attribute: memberOf
+          membership.attribute.type: DN
+          membership.ldap.attribute: member
+          membership.user.ldap.attribute: uid
+          mode: LDAP_ONLY
+          preserve.group.inheritance: 'true'
+          user.roles.retrieve.strategy: LOAD_GROUPS_BY_MEMBER_ATTRIBUTE
+      - name: username
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'false'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'true'
+          ldap.attribute: uid
+          read.only: 'false'
+          user.model.attribute: username
+      - name: email
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'false'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'true'
+          ldap.attribute: mail
+          read.only: 'false'
+          user.model.attribute: email
+      - name: 'first name'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'true'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'true'
+          ldap.attribute: givenName
+          read.only: 'false'
+          user.model.attribute: firstName
+      - name: 'last name'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'true'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'true'
+          ldap.attribute: sn
+          read.only: 'false'
+          user.model.attribute: lastName
+      - name: cn
+        federationProviderDisplayName: ldap
+        federationMapperType: full-name-ldap-mapper
+        config:
+          read.only: 'false'
+          write.only: 'true'
+          ldap.full.name.attribute: cn
+      - name: 'display name'
+        federationProviderDisplayName: ldap
+        federationMapperType: full-name-ldap-mapper
+        config:
+          read.only: 'false'
+          write.only: 'true'
+          ldap.full.name.attribute: displayName
+      - name: 'create timestamp'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          always.read.value.from.ldap: 'true'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: createTimestamp
+          read.only: 'true'
+          user.model.attribute: CREATE_TIMESTAMP
+      - name: 'mail enabled'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          attribute.default.value: 'TRUE'
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: mailEnabled
+          read.only: 'false'
+          user.model.attribute: MAIL_ENABLED
+      - name: 'date of birth'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: dob
+          read.only: 'false'
+          user.model.attribute: dob
+      - name: 'gender'
+        federationProviderDisplayName: ldap
+        federationMapperType: user-attribute-ldap-mapper
+        config:
+          is.binary.attribute: 'false'
+          is.mandatory.in.ldap: 'false'
+          ldap.attribute: gender
+          read.only: 'false'
+          user.model.attribute: gender
+      - name: 'home directory'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '/home/user'
+          ldap.attribute.name: homeDirectory
+      - name: 'gid number'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '5000'
+          ldap.attribute.name: gidNumber
+      - name: 'uid number'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '5000'
+          ldap.attribute.name: uidNumber
+      - name: 'login shell'
+        federationProviderDisplayName: ldap
+        federationMapperType: hardcoded-ldap-attribute-mapper
+        config:
+          ldap.attribute.value: '/bin/bash'
+          ldap.attribute.name: loginShell
+    {{- end }}

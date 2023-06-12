@@ -5,8 +5,8 @@ olm:
 
 images:
   keycloak:
-    repository: registry.gitlab.com/bitspur/internal/siwe-keycloak
-    tag: 21.1.0
+    repository: quay.io/keycloak/keycloak
+    tag: 21.1
 
 config:
   imagePullPolicy: IfNotPresent
@@ -22,7 +22,7 @@ config:
     javaOpts: ''
     migrationStrategy: IGNORE_EXISTING
     replicas: 1
-    themeZip: ''
+    providers: ''
     welcomeTheme: ''
     smtp:
       enabled: false
