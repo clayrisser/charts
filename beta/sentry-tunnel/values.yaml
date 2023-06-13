@@ -1,7 +1,7 @@
 images:
   sentryTunnel:
-    repository: sigalen/sentry_tunnel
-    tag: latest
+    repository: registry.gitlab.com/risserlabs/community/images/sentry-tunnel
+    tag: 0.0.1
 
 config:
   imagePullPolicy: IfNotPresent
@@ -12,9 +12,8 @@ config:
     replicas: 1
     baseUrl: ''
     hostname: ''
-    remoteHost: ''
+    remoteUrl: ''
     projectIds: ''
-    path: /tunnel
     resources:
       enabled: defaults
       requests:

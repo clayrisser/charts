@@ -58,16 +58,17 @@ spec:
 {{- end }}
           ports:
             - name: container
-              containerPort: 7878
+              containerPort: 5000
           env:
-            - name: TUNNEL_REMOTE_HOST
-              value: {{ .Values.config.sentryTunnel.remoteHost | quote }}
+            - name: TUNNEL_REMOTE_URL
+              value: {{ .Values.config.sentryTunnel.remoteUrl | quote }}
             - name: TUNNEL_PROJECT_IDS
               value: {{ .Values.config.sentryTunnel.projectIds | quote }}
-            - name: TUNNEL_PATH
-              value: {{ .Values.config.sentryTunnel.path | quote }}
+            - name: CORS_ORIGINS
+              value: '*'
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: container
             initialDelaySeconds: 120
             periodSeconds: 10
@@ -75,7 +76,8 @@ spec:
             failureThreshold: 6
             successThreshold: 1
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: container
             initialDelaySeconds: 30
             periodSeconds: 10

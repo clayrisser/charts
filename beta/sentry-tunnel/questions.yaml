@@ -52,23 +52,17 @@ questions:
     required: false
     label: 'base url'
     group: 'Sentry Tunnel'
-  - variable: config.sentryTunnel.remoteHost
+  - variable: config.sentryTunnel.remoteUrl
     description: ''
     type: string
     required: false
-    label: 'remote host'
+    label: 'remote url'
     group: 'Sentry Tunnel'
   - variable: config.sentryTunnel.projectIds
     description: ''
     type: string
     required: false
     label: 'project ids'
-    group: 'Sentry Tunnel'
-  - variable: config.sentryTunnel.path
-    description: ''
-    type: string
-    required: false
-    label: 'path'
     group: 'Sentry Tunnel'
   - variable: config.sentryTunnel.resources.enabled
     description: ''
