@@ -64,25 +64,11 @@ questions:
     required: false
     label: 'project ids'
     group: 'Sentry Tunnel'
-  - variable: config.sentryTunnel.listenPort
-    description: ''
-    type: int
-    required: false
-    min: 30000
-    max: 32767
-    label: 'listen port'
-    group: 'Sentry Tunnel'
   - variable: config.sentryTunnel.path
     description: ''
     type: string
     required: false
     label: 'path'
-    group: 'Sentry Tunnel'
-  - variable: config.sentryTunnel.ip
-    description: ''
-    type: string
-    required: false
-    label: 'ip'
     group: 'Sentry Tunnel'
   - variable: config.sentryTunnel.resources.enabled
     description: ''

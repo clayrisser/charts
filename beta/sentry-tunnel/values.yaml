@@ -14,9 +14,7 @@ config:
     hostname: ''
     remoteHost: ''
     projectIds: ''
-    listenPort: 7878
     path: /tunnel
-    ip: ''
     resources:
       enabled: defaults
       requests:

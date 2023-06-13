@@ -58,18 +58,14 @@ spec:
 {{- end }}
           ports:
             - name: container
-              containerPort: 8055
+              containerPort: 7878
           env:
             - name: TUNNEL_REMOTE_HOST
               value: {{ .Values.config.sentryTunnel.remoteHost | quote }}
             - name: TUNNEL_PROJECT_IDS
               value: {{ .Values.config.sentryTunnel.projectIds | quote }}
-            - name: TUNNEL_LISTEN_PORT
-              value: {{ .Values.config.sentryTunnel.listenPort | quote }}
             - name: TUNNEL_PATH
               value: {{ .Values.config.sentryTunnel.path | quote }}
-            - name: TUNNEL_IP
-              value: {{ .Values.config.sentryTunnel.ip | quote }}
           livenessProbe:
             httpGet:
               path: /
