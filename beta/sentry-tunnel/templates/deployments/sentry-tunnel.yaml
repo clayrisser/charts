@@ -64,8 +64,6 @@ spec:
               value: {{ .Values.config.sentryTunnel.remoteUrl | quote }}
             - name: TUNNEL_PROJECT_IDS
               value: {{ .Values.config.sentryTunnel.projectIds | quote }}
-            - name: CORS_ORIGINS
-              value: '*'
           livenessProbe:
             httpGet:
               path: /healthz
