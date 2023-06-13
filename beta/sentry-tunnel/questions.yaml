@@ -107,7 +107,7 @@ questions:
   - variable: ingress.sentryTunnel.enabled
     description: ''
     type: boolean
-    label: 'sentryTunnel ingress enabled'
+    label: 'sentry tunnel ingress enabled'
     show_subquestion_if: true
     group: Networking
     subquestions:
@@ -115,13 +115,13 @@ questions:
         description: ''
         type: boolean
         required: true
-        label: 'sentryTunnel ingress tls'
+        label: 'sentry tunnel ingress tls'
       - variable: ingress.sentryTunnel.hostname
         default: nip.io
         description: ''
         type: hostname
         required: true
-        label: 'sentryTunnel ingress hostname'
+        label: 'sentry tunnel ingress hostname'
       - variable: ingress.sentryTunnel.issuer.name
         description: ''
         type: enum
@@ -133,13 +133,13 @@ questions:
           - letsencrypt-prod
           - selfsigned
         required: false
-        label: 'sentryTunnel ingress issuer name'
+        label: 'sentry tunnel ingress issuer name'
       - variable: ingress.sentryTunnel.certificate
         description: ''
         type: string
         show_if: ingress.sentryTunnel.tls=true&&ingress.sentryTunnel.issuer.name=
         required: false
-        label: 'sentryTunnel ingress certificate'
+        label: 'sentry tunnel ingress certificate'
   - variable: service.sentryTunnel.type
     description: ''
     type: enum
@@ -149,7 +149,7 @@ questions:
       - LoadBalancer
       - NodePort
     required: true
-    label: 'sentryTunnel service type'
+    label: 'sentry tunnel service type'
     group: Networking
   - variable: service.sentryTunnel.nodePorts.http
     description: ''
@@ -158,7 +158,7 @@ questions:
     min: 30000
     max: 32767
     show_if: service.sentryTunnel.type=NodePort&&ingress.sentryTunnel.enabled=false
-    label: 'sentryTunnel http node port'
+    label: 'sentry tunnel http node port'
     group: Networking
   - variable: service.sentryTunnel.lbPorts.http
     description: ''
@@ -167,7 +167,7 @@ questions:
     max: 65535
     required: true
     show_if: service.sentryTunnel.type=LoadBalancer&&ingress.sentryTunnel.enabled=false
-    label: 'sentryTunnel http lb port'
+    label: 'sentry tunnel http lb port'
     group: Networking
 
   # Images
@@ -175,11 +175,11 @@ questions:
     description: ''
     type: string
     required: true
-    label: 'sentryTunnel repository'
+    label: 'sentry tunnel repository'
     group: Images
   - variable: images.sentryTunnel.tag
     description: ''
     type: string
     required: true
-    label: 'sentryTunnel tag'
+    label: 'sentry tunnel tag'
     group: Images
