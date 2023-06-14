@@ -1,0 +1,100 @@
+<mxfile host="65bd71144e">
+    <diagram name="Page-1" id="gTxA8c3cJvXhcYCdIpbz">
+        <mxGraphModel dx="778" dy="735" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="V9y77vayFFn9dXwwl7Hc-4" target="V9y77vayFFn9dXwwl7Hc-12" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="585" y="280" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="585" y="190"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-10" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;sketch=1;curveFitting=1;jiggle=2;" parent="V9y77vayFFn9dXwwl7Hc-5" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3688" relative="1" as="geometry">
+                        <mxPoint x="-10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="V9y77vayFFn9dXwwl7Hc-4" target="V9y77vayFFn9dXwwl7Hc-11" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="225" y="330" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="265" y="190"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-8" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;sketch=1;curveFitting=1;jiggle=2;" parent="V9y77vayFFn9dXwwl7Hc-7" vertex="1" connectable="0">
+                    <mxGeometry x="-0.7159" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-23" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-4" value="Operator?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=16;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="140" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="V9y77vayFFn9dXwwl7Hc-11" target="V9y77vayFFn9dXwwl7Hc-23" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-28" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;sketch=1;curveFitting=1;jiggle=2;" parent="V9y77vayFFn9dXwwl7Hc-26" vertex="1" connectable="0">
+                    <mxGeometry x="-0.4182" y="-2" relative="1" as="geometry">
+                        <mxPoint x="-18" y="-2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="V9y77vayFFn9dXwwl7Hc-11" target="V9y77vayFFn9dXwwl7Hc-14" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="160" y="320"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-29" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;sketch=1;curveFitting=1;jiggle=2;" parent="V9y77vayFFn9dXwwl7Hc-27" vertex="1" connectable="0">
+                    <mxGeometry x="-0.7697" y="-3" relative="1" as="geometry">
+                        <mxPoint x="-11" y="3" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-11" value="OLM?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=16;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="215" y="270" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="V9y77vayFFn9dXwwl7Hc-12" target="V9y77vayFFn9dXwwl7Hc-24" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="725" y="430" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-20" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;sketch=1;curveFitting=1;jiggle=2;" parent="V9y77vayFFn9dXwwl7Hc-18" vertex="1" connectable="0">
+                    <mxGeometry x="-0.497" y="3" relative="1" as="geometry">
+                        <mxPoint x="-11" y="3" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="V9y77vayFFn9dXwwl7Hc-12" target="V9y77vayFFn9dXwwl7Hc-22" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="435" y="440" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="480" y="320"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-21" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;sketch=1;curveFitting=1;jiggle=2;" parent="V9y77vayFFn9dXwwl7Hc-19" vertex="1" connectable="0">
+                    <mxGeometry x="-0.6297" y="-2" relative="1" as="geometry">
+                        <mxPoint x="1" y="2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-12" value="Helm?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=16;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="535" y="270" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-14" value="create subscription" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="135" y="430" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-22" value="create a helm release" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="455" y="430" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-23" value="create crds and operator deployment" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="295" y="430" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="V9y77vayFFn9dXwwl7Hc-24" value="create resources from scratch" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="615" y="430" width="100" height="100" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
