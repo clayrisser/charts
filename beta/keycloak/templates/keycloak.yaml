@@ -41,7 +41,8 @@ spec:
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
-                      keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      echo ALIAS $ALIAS
+                      # keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
                   mkdir -p /opt/keycloak/secrets
