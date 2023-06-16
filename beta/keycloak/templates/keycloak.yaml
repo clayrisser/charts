@@ -52,9 +52,7 @@ spec:
                       echo "$value" > /opt/keycloak/secrets/$key
                     fi
                   done
-                  echo AT ARGS $@
-                  exec /usr/local/bin/entrypoint start-dev
-            args: ['start-dev']
+                  exec /opt/keycloak/bin/kc.sh start-dev
             env:
               - name: KC_VAULT_DIR
                 value: /opt/keycloak/secrets
