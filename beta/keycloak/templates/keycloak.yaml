@@ -38,11 +38,17 @@ spec:
               - -c
               - |
                   mkdir -p /opt/keycloak/certs
+                  if [ ! -f "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" ]; then
+                    keytool -importkeystore \
+                      -srckeystore /etc/alternatives/jre/lib/security/cacerts \
+                      -srcstorepass changeit \
+                      -destkeystore "$KC_SPI_TRUSTSTORE_FILE_FILE" \
+                      -deststorepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD"
+                  fi
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
-                      echo ALIAS $ALIAS
-                      # keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
                   mkdir -p /opt/keycloak/secrets
