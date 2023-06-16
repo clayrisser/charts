@@ -38,13 +38,6 @@ spec:
               - -c
               - |
                   mkdir -p /opt/keycloak/certs
-                  if [ ! -f "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" ]; then
-                    keytool -importkeystore \
-                      -srckeystore /etc/alternatives/jre/lib/security/cacerts \
-                      -srcstorepass changeit \
-                      -destkeystore "$KC_SPI_TRUSTSTORE_FILE_FILE" \
-                      -deststorepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD"
-                  fi
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
@@ -64,11 +57,11 @@ spec:
               - name: KC_VAULT_DIR
                 value: /opt/keycloak/secrets
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
-                value: /opt/keycloak/truststore.jks
+                value: /etc/alternatives/jre/lib/security/cacerts
               - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
                 value: ANY
               - name: KC_SPI_TRUSTSTORE_FILE_PASSWORD
-                value: keycloak
+                value: changeit
               {{- if .Values.config.debug }}
               - name: KEYCLOAK_LOGLEVEL
                 value: ALL
