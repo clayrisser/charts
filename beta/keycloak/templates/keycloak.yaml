@@ -13,6 +13,8 @@ spec:
   image: {{ .Values.images.keycloak.repository }}:{{ .Values.images.keycloak.tag }}
   # imagePullSecrets:
   #   - name: string
+  hostname:
+    hostname: {{ template "keycloak.keycloak-hostname" . }}
   db:
     vendor: postgres
     database: {{ $postgres.database | quote }}
