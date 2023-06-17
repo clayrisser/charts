@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/name: {{ template "keycloak.name" $ }}
     helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
 spec:
-  keycloakCRName: {{ template "keycloak.name" $ }}-{{ $realm }}
+  keycloakCRName: {{ template "keycloak.name" $ }}
   realm:
     realm: {{ $realm }}
     enabled: true
