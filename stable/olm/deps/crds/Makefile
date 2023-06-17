@@ -7,7 +7,7 @@ export PATCHES :=
 include $(MKPM)/patch
 
 export CURL ?= curl
-export OPERATOR_VERSION ?= 0.21.2
+export OPERATOR_VERSION ?= 0.25.0
 
 .PHONY: prepack
 prepack: | \
