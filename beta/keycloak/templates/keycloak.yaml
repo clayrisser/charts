@@ -11,8 +11,8 @@ metadata:
 spec:
   instances: {{ .Values.config.keycloak.replicas }}
   image: {{ .Values.images.keycloak.repository }}:{{ .Values.images.keycloak.tag }}
-  # imagePullSecrets:
-  #   - name: string
+  imagePullSecrets:
+    - name: registry
   hostname:
     hostname: {{ template "keycloak.keycloak-hostname" . }}
   db:
