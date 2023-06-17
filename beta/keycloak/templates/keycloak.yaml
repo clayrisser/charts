@@ -73,5 +73,3 @@ spec:
             envFrom:
               - secretRef:
                   name: keycloak-vault
-              - secretRef:
-                  name: {{ template "keycloak.name" . }}
