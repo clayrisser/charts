@@ -5,8 +5,8 @@ olm:
 
 images:
   keycloak:
-    repository: quay.io/keycloak/keycloak
-    tag: 21.1
+    repository: registry.gitlab.com/risserlabs/community/images/keycloak
+    tag: 21.1.0
 
 config:
   imagePullPolicy: IfNotPresent
