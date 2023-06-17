@@ -38,6 +38,7 @@ spec:
     redirectUris: "*"
     replicate: "false"
     cleanup: {{ .Values.integrations.keycloak.cleanup | quote }}
+    realm: {{ .Values.integrations.keycloak.realm | quote }}
 {{- if .Values.integrations.keycloak.clientSecretEnabled }}
   configSecretName: {{ template "trackableappname" . }}-keycloak-plug
 {{- end }}
@@ -56,7 +57,7 @@ spec:
             KEYCLOAK_BASE_URL: '{% .socketConfig.keycloakBaseUrl %}'
             KEYCLOAK_CLIENT_ID: '{% .plugConfig.clientId %}'
             KEYCLOAK_CLIENT_SECRET: '{% .plugConfig.clientSecret %}'
-            KEYCLOAK_REALM: '{% .socketConfig.keycloakRealm %}'
+            KEYCLOAK_REALM: '{% .plugConfig.realm | default .socketConfig.keycloakRealm %}'
     - when: [coupled, updated]
       do: recreate
       resource: |
