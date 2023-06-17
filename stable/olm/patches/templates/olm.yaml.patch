@@ -1,5 +1,5 @@
---- templates/olm.yaml	2023-06-17 10:53:34.951035808 -0400
-+++ templates/olm.yaml.tmp	2023-06-17 10:55:32.535713372 -0400
+--- templates/olm.yaml	2023-06-17 11:03:46.859789679 -0400
++++ templates/olm.yaml.tmp	2023-06-17 11:04:47.898464867 -0400
 @@ -2,18 +2,6 @@
  apiVersion: v1
  kind: Namespace
@@ -19,3 +19,23 @@
    name: operators
    labels:
      pod-security.kubernetes.io/enforce: baseline
+@@ -95,7 +83,7 @@
+           - $(OPERATOR_NAMESPACE)
+           - --writeStatusName
+           - ""
+-          image: quay.io/operator-framework/olm@sha256:163bacd69001fea0c666ecf8681e9485351210cde774ee345c06f80d5a651473
++          image: "{{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}"
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 8080
+@@ -164,7 +152,9 @@
+           - --util-image
+           -  quay.io/operator-framework/olm@sha256:163bacd69001fea0c666ecf8681e9485351210cde774ee345c06f80d5a651473
+           - --set-workload-user-id=true
+-          image: quay.io/operator-framework/olm@sha256:163bacd69001fea0c666ecf8681e9485351210cde774ee345c06f80d5a651473
++          - --opmImage
++          - "{{ .Values.images.opm.repository }}:{{ .Values.images.opm.tag }}"
++          image: "{{ .Values.images.catalog.repository }}:{{ .Values.images.catalog.tag }}"
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 8080
