@@ -11,12 +11,12 @@ export OPERATOR_VERSION ?= 0.25.0
 
 .PHONY: prepack
 prepack: | \
-	templates/olm.yaml \
+	$(PATCHES) \
 	patch-apply
 
-templates/olm.yaml:
+templates/%:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
-		https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/v$(OPERATOR_VERSION)/deploy/upstream/quickstart/olm.yaml
+		https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v$(OPERATOR_VERSION)/$(@F)
 
 endif

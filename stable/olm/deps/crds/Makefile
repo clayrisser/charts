@@ -15,9 +15,9 @@ prepack: | \
 	$(PATCHES) \
 	patch-apply
 
-templates/crds.yaml:
+templates/%:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
-		https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/v$(OPERATOR_VERSION)/deploy/upstream/quickstart/crds.yaml
+		https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v$(OPERATOR_VERSION)/$(@F)
 
 endif
