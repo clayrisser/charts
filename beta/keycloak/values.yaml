@@ -14,16 +14,11 @@ config:
   debug: false
   istio: false
   keycloak:
-    adminPassword: ''
-    baseUrl: ''
-    defaultTheme: keycloak
-    enablePreview: true
-    hostname: ''
-    javaOpts: ''
-    migrationStrategy: IGNORE_EXISTING
     replicas: 1
-    providers: ''
-    welcomeTheme: ''
+    hostname: ''
+    baseUrl: ''
+    adminPassword: ''
+    additionalRealms: ''
     smtp:
       enabled: false
       integration: ''

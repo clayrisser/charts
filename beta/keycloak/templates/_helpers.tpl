@@ -82,3 +82,10 @@ Calculate ldap dc
 {{- printf "" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Title case
+*/}}
+{{- define "titleCase" -}}
+{{- print (upper (substr 0 1 .)) (substr 1 (len .) .) -}}
+{{- end -}}

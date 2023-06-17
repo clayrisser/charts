@@ -41,18 +41,6 @@ questions:
     required: true
     label: replicas
     group: Keycloak
-  - variable: config.keycloak.enablePreview
-    description: ''
-    type: boolean
-    required: false
-    label: 'enable preview'
-    group: Keycloak
-  - variable: config.keycloak.javaOpts
-    description: ''
-    type: string
-    required: false
-    label: 'java opts'
-    group: Keycloak
   - variable: config.keycloak.hostname
     description: ''
     type: string
@@ -71,32 +59,11 @@ questions:
     required: false
     label: 'admin password'
     group: Keycloak
-  - variable: config.keycloak.providers
+  - variable: config.keycloak.additionalRealms
     description: ''
     type: multiline
     required: false
-    label: providers
-    group: Keycloak
-  - variable: config.keycloak.defaultTheme
-    description: ''
-    type: string
-    required: false
-    label: 'default theme'
-    group: Keycloak
-  - variable: config.keycloak.welcomeTheme
-    description: ''
-    type: string
-    required: false
-    label: 'welcome theme'
-    group: Keycloak
-  - variable: config.keycloak.migrationStrategy
-    description: ''
-    type: enum
-    options:
-      - IGNORE_EXISTING
-      - OVERWRITE_EXISTING
-    required: true
-    label: 'migration strategy'
+    label: 'additional realms'
     group: Keycloak
   - variable: config.keycloak.resources.enabled
     description: ''
