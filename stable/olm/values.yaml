@@ -1,1 +1,10 @@
-{}
+images:
+  olm:
+    repository: registry.gitlab.com/bitspur/community/operator-lifecycle-manager
+    tag: v0.21.2
+  packageserver:
+    repository: registry.gitlab.com/bitspur/community/operator-lifecycle-manager
+    tag: v0.21.2
+  catalog:
+    repository: registry.gitlab.com/bitspur/community/operator-lifecycle-manager
+    tag: v0.21.2

@@ -1,5 +1,5 @@
---- templates/olm.yaml	2022-06-11 09:40:54.422481492 -0500
-+++ templates/olm.yaml.tmp	2022-06-27 15:09:51.070995391 -0500
+--- templates/olm.yaml	2023-06-17 07:21:38.641414637 -0400
++++ templates/olm.yaml.tmp	2023-06-17 07:21:46.169385321 -0400
 @@ -2,11 +2,6 @@
  apiVersion: v1
  kind: Namespace
@@ -12,3 +12,36 @@
    name: operators
  ---
  kind: ServiceAccount
+@@ -66,9 +61,11 @@
+           args:
+           - --namespace
+           - $(OPERATOR_NAMESPACE)
++          - --opmImage
++          - "{{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}"
+           - --writeStatusName
+           - ""
+-          image: quay.io/operator-framework/olm@sha256:e74b2ac57963c7f3ba19122a8c31c9f2a0deb3c0c5cac9e5323ccffd0ca198ed
++          image: "{{ .Values.images.olm.repository }}:{{ .Values.images.olm.tag }}"
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 8080
+@@ -127,8 +124,8 @@
+           - olm
+           - -configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
+           - -util-image
+-          -  quay.io/operator-framework/olm@sha256:e74b2ac57963c7f3ba19122a8c31c9f2a0deb3c0c5cac9e5323ccffd0ca198ed
+-          image: quay.io/operator-framework/olm@sha256:e74b2ac57963c7f3ba19122a8c31c9f2a0deb3c0c5cac9e5323ccffd0ca198ed
++          - "{{ .Values.images.catalog.repository }}:{{ .Values.images.catalog.tag }}"
++          image: "{{ .Values.images.catalog.repository }}:{{ .Values.images.catalog.tag }}"
+           imagePullPolicy: IfNotPresent
+           ports:
+             - containerPort: 8080
+@@ -291,7 +288,7 @@
+                 - "5443"
+                 - --global-namespace
+                 - olm
+-                image: quay.io/operator-framework/olm@sha256:e74b2ac57963c7f3ba19122a8c31c9f2a0deb3c0c5cac9e5323ccffd0ca198ed
++                image: "{{ .Values.images.packageserver.repository }}:{{ .Values.images.packageserver.tag }}"
+                 imagePullPolicy: Always
+                 ports:
+                 - containerPort: 5443
