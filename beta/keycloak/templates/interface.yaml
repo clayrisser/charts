@@ -23,6 +23,7 @@ spec:
           implicitFlowEnabled: {}
           name: {}
           protocol: {}
+          realm: {}
           redirectUris: {}
           replicate: {}
       socketDefinition:
@@ -31,6 +32,6 @@ spec:
             required: true
           keycloakBaseUrl:
             required: true
-          keycloakRealm:
+          defaultRealm:
             required: true
           keycloakAdminUsername: {}

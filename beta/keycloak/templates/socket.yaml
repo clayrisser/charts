@@ -16,7 +16,7 @@ spec:
   apparatus:
     endpoint: /socket
     containers:
-      - image: registry.gitlab.com/risserlabs/community/keycloak-integration-apparatus:0.0.3
+      - image: registry.gitlab.com/risserlabs/community/keycloak-integration-apparatus:0.1.0
         imagePullPolicy: Always
         name: apparatus
         ports:
@@ -33,21 +33,24 @@ spec:
             kubectl proxy
   config:
     keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}/auth
-    keycloakRealm: main
+    defaultRealm: main
+  configMapper:
+    keycloakAdminPassword: '{% .vars.BASE64_ENCODED_KEYCLOAK_ADMIN_PASSWORD | b64dec %}'
+    keycloakAdminUsername: '{% .vars.BASE64_ENCODED_KEYCLOAK_ADMIN_USERNAME | b64dec %}'
   vars:
     - name: BASE64_ENCODED_KEYCLOAK_ADMIN_PASSWORD
       objref:
         version: v1
         kind: Secret
-        name: credential-keycloak
+        name: {{ template "keycloak.name" . }}-initial-admin
         namespace: {{ .Release.Namespace }}
       fieldref:
-        fieldPath: data.ADMIN_PASSWORD
+        fieldPath: data.password
     - name: BASE64_ENCODED_KEYCLOAK_ADMIN_USERNAME
       objref:
         version: v1
         kind: Secret
-        name: credential-keycloak
+        name: {{ template "keycloak.name" . }}-initial-admin
         namespace: {{ .Release.Namespace }}
       fieldref:
-        fieldPath: data.ADMIN_USERNAME
+        fieldPath: data.username
