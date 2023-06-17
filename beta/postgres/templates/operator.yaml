@@ -29,25 +29,6 @@ spec:
   sourceNamespace: olm
   startingCSV: percona-postgresql-operator.v{{ .Values.olm.postgres.version }}
 ---
-apiVersion: integration.risserlabs.com/v1alpha2
-kind: Plug
-metadata:
-  name: olm
-  labels:
-    app.kubernetes.io/name: {{ template "postgres.name" . }}
-    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-spec:
-  epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: olm
-    namespace: olm
-  socket:
-    name: olm
-    namespace: olm
----
 {{- if (not (lookup "v1" "ConfigMap" .Release.Namespace "install-plan-approved")) }}
 apiVersion: batch/v1
 kind: Job
