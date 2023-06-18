@@ -34,11 +34,12 @@ spec:
     name: keycloak
     namespace: {{ $namespace }}
   config:
+    cleanup: {{ .Values.integrations.keycloak.cleanup | quote }}
     clientId: {{ .Values.integrations.keycloak.clientId }}
+    realm: {{ .Values.integrations.keycloak.realm | quote }}
     redirectUris: "*"
     replicate: "false"
-    cleanup: {{ .Values.integrations.keycloak.cleanup | quote }}
-    realm: {{ .Values.integrations.keycloak.realm | quote }}
+    webOrigins: "*"
 {{- if .Values.integrations.keycloak.clientSecretEnabled }}
   configSecretName: {{ template "trackableappname" . }}-keycloak-plug
 {{- end }}

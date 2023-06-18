@@ -26,6 +26,7 @@ spec:
           realm: {}
           redirectUris: {}
           replicate: {}
+          webOrigins: {}
       socketDefinition:
         properties:
           keycloakAdminPassword:
