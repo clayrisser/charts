@@ -59,33 +59,4 @@ spec:
             KEYCLOAK_CLIENT_ID: '{% .plugConfig.clientId %}'
             KEYCLOAK_CLIENT_SECRET: '{% .plugConfig.clientSecret %}'
             KEYCLOAK_REALM: '{% .plugConfig.realm | default .socketConfig.keycloakRealm %}'
-    - when: [coupled, updated]
-      do: recreate
-      resource: |
-        apiVersion: patch.risserlabs.com/v1alpha1
-        kind: Patch
-        metadata:
-          name: {{ template "trackableappname" . }}-keycloak-coupled-or-updated
-          namespace: {{ .Release.Namespace }}
-        spec:
-          epoch: {% now | unixEpoch | quote %}
-          patches:
-            - id: deployment
-              target:
-                group: apps
-                version: v1
-                kind: Deployment
-                name: {{ template "trackableappname" . }}
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              skipIf:
-                - jsonPath: spec.template.spec.containers[0].envFrom
-                  regex: keycloak
-              patch: |
-                - op: add
-                  path: /spec/template/spec/containers/0/envFrom/-
-                  value:
-                    secretRef:
-                      name: {{ template "trackableappname" . }}-keycloak
 {{- end }}

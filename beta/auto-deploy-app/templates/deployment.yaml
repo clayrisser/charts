@@ -100,6 +100,14 @@ spec:
         - secretRef:
             name: {{ .Values.application.secretName }}
         {{- end }}
+        {{- if (not (empty .Values.integrations.keycloak.name)) }}
+        - secretRef:
+            name: {{ template "trackableappname" . }}-keycloak
+        {{- end }}
+        {{- if (and .Values.integrations.postgres.name .Values.integrations.postgres.database) }}
+        - secretRef:
+            name: {{ template "trackableappname" . }}-postgres
+        {{- end }}
         env:
 {{- if .Values.postgresql.managed }}
         - name: POSTGRES_USER

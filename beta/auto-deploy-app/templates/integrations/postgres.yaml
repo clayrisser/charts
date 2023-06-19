@@ -34,33 +34,4 @@ spec:
             POSTGRES_PASSWORD: '{% .socketConfig.password %}'
             POSTGRES_PORT: '{% .socketConfig.port %}'
             POSTGRES_USER: '{% .socketConfig.username %}'
-    - when: [coupled, updated]
-      do: recreate
-      resource: |
-        apiVersion: patch.risserlabs.com/v1alpha1
-        kind: Patch
-        metadata:
-          name: {{ template "trackableappname" . }}-postgres-coupled-or-updated
-          namespace: {{ .Release.Namespace }}
-        spec:
-          epoch: {% now | unixEpoch | quote %}
-          patches:
-            - id: deployment
-              target:
-                group: apps
-                version: v1
-                kind: Deployment
-                name: {{ template "trackableappname" . }}
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              skipIf:
-                - jsonPath: spec.template.spec.containers[0].envFrom
-                  regex: postgres
-              patch: |
-                - op: add
-                  path: /spec/template/spec/containers/0/envFrom/-
-                  value:
-                    secretRef:
-                      name: {{ template "trackableappname" . }}-postgres
 {{- end }}
