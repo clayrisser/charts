@@ -55,8 +55,8 @@ config:
         cpu: 100m
         memory: 128Mi
       limits:
-        cpu: 200m
-        memory: 512Mi
+        cpu: 150m
+        memory: 256Mi
   pmm:
     enabled: false
     resources:
