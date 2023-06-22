@@ -12,8 +12,6 @@ config:
     hostname: ''
     baseUrl: ''
     replicas: 1
-    # email: admin@example.com
-    # password: ''
     resources:
       enabled: defaults
       requests:
@@ -22,6 +20,14 @@ config:
       limits:
         cpu: 500m
         memory: 512Mi
+  mysql:
+    integration: ''
+    database: zentao
+    host: ''
+    password: ''
+    port: 3306
+    username: root
+    # url: ''
 
 service:
   zentao:
@@ -40,22 +46,3 @@ ingress:
     tls: false
     issuer:
       name: ''
-
-
-mysql:
-  image: mysql:5.7.38-debian
-  containerName: mysql
-  environment:
-    MYSQL_ROOT_PASSWORD: pass4zenTao
-  volumes:
-    - /data/mysql:/var/lib/mysql
-  ports:
-    - 3306:3306
-
-redis:
-  image: redis:3.2.12-alpine3.8
-  containerName: redis
-  volumes:
-    - /data/redis:/data
-  ports:
-    - 6379:6379

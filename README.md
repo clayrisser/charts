@@ -27,6 +27,7 @@ config:
     hostname: ''
     baseUrl: ''
     replicas: 1
+    [...additionalConfig]
     resources:
       enabled: defaults
       requests:

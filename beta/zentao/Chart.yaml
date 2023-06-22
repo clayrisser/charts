@@ -1,19 +1,19 @@
 apiVersion: v2
 name: zentao
 home: https://gitlab.com/risserlabs/community/charts
-version: 1.3.0
-appVersion: 14.0.0
+version: 0.0.1
+appVersion: 12.3.1
 type: application
 icon: https://cdn-1.webcatalog.io/catalog/zentao/zentao-icon-filled.png
 description: 'create and manage mysql clusters running in kubernetes'
 keywords:
-  - database
+  - project-management
 sources:
-  - https://gitlab.com/risserlabs/community/charts
+  - https://github.com/quicklyon/zentao-docker
+  - https://github.com/easysoft/zentaopms
 maintainers:
   - name: 'HariKrishna'
     email: harikrishnasetti9999.com
 annotations:
-  # catalog.cattle.io/auto-install: postgres-crds=match
   catalog.cattle.io/display-name: Zentao
   catalog.cattle.io/os: linux
