@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zentao
+  labels:
+    app.kubernetes.io/name: zentao
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- if (eq .Values.service.zentao.type "ClusterIP") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
+spec:
+  {{- if .Values.ingress.zentao.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.zentao.type }}
+  {{- if (eq .Values.service.zentao.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.zentao.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ (eq .Values.service.zentao.type "LoadBalancer") | ternary .Values.service.zentao.lbPorts.http "80" }}
+      targetPort: container
+      {{- if (and (eq .Values.service.zentao.type "NodePort") .Values.service.zentao.nodePorts.http) }}
+      nodePort: {{ .Values.service.zentao.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: zentao
+    app.kubernetes.io/instance: {{ .Release.Name }}
+
