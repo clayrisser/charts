@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zentao
+  labels:
+    app.kubernetes.io/name: zentao
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: zentao
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: zentao
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - zentao
+                    - key: release
+                      operator: In
+                      values:
+                        - {{ .Release.Name }}
+      containers:
+        - name: zentao
+          image: {{ .Values.images.zentao.repository }}:{{ .Values.images.zentao.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+{{- if (and .Values.config.zentao.resources.enabled (not (eq .Values.config.zentao.resources.enabled "false"))) }}
+          resources:
+            requests:
+{{ toYaml .Values.config.zentao.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.zentao.resources.limits | indent 14 }}
+{{- end }}
+          ports:
+            - name: container
+              containerPort: 80
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          env:
+            - name: zentao_SERVER_JSON_FILE
+              value: /config/servers.json
+            - name: zentao_DEFAULT_EMAIL
+              value: {{ .Values.config.zentao.email | quote }}
+            - name: zentao_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: zentao
+                  key: password
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+            initialDelaySeconds: 240
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+            initialDelaySeconds: 180
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+      volumes:
+        - name: config
+          configMap:
+            name: zentao
