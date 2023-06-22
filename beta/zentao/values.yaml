@@ -1,0 +1,62 @@
+images:
+  zentao:
+    repository: easysoft/quickon-zentao
+    tag: 12.3.1
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  debug: false
+  istio: false
+  wal: false
+  zentao:
+    hostname: ''
+    baseUrl: ''
+    enabled: false
+    email: admin@example.com
+    password: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+service:
+  zentao:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: 80
+    lbPorts:
+      http: 8088
+
+ingress:
+  zentao:
+    enabled: false
+    hostname: ''
+    certificate: ''
+    tls: false
+    issuer:
+      name: ''
+
+
+mysql:
+  image: mysql:5.7.38-debian
+  containerName: mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: pass4zenTao
+  volumes:
+    - /data/mysql:/var/lib/mysql
+  ports:
+    - 3306:3306
+
+redis:
+  image: redis:3.2.12-alpine3.8
+  containerName: redis
+  volumes:
+    - /data/redis:/data
+  ports:
+    - 6379:6379
