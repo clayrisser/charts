@@ -8,21 +8,20 @@ config:
   updateStrategy: Recreate
   debug: false
   istio: false
-  wal: false
   zentao:
     hostname: ''
     baseUrl: ''
-    enabled: false
-    email: admin@example.com
-    password: ''
+    replicas: 1
+    # email: admin@example.com
+    # password: ''
     resources:
       enabled: defaults
       requests:
-        cpu: 10m
-        memory: 64Mi
+        cpu: 200m
+        memory: 256Mi
       limits:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 500m
+        memory: 512Mi
 
 service:
   zentao:
