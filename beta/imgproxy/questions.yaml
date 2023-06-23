@@ -1,0 +1,354 @@
+categories:
+  - Server
+questions:
+
+   # Images
+  - variable: images.imgproxy.repository
+    description: ''
+    type: string
+    required: true
+    label: 'imgproxy repository'
+    group: Images
+  - variable: images.imgproxy.tag
+    description: ''
+    type: string
+    required: true
+    label: 'imgproxy tag'
+    group: Images
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: istio
+    group: Config
+  - variable: config.imgproxy.replicas
+    description: ''
+    type: integer
+    required: true
+    label: replicas
+    group: Config
+  - variable: config.imgproxy.domain
+    description: ''
+    type: string
+    required: true
+    label: domain
+    group: Config
+  - variable: config.imgproxy.hashPassword
+    description: ''
+    type: string
+    required: false
+    label: hash password
+    group: Config
+  - variable: config.imgproxy.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Config
+  - variable: config.imgproxy.organization
+    description: ''
+    type: string
+    required: false
+    label: organization
+    group: Config
+  - variable: config.imgproxy.organizationalUnits
+    description: ''
+    type: string
+    required: false
+    label: organizational units
+    group: Config
+  - variable: config.imgproxy.passwords.admin
+    description: ''
+    type: string
+    required: false
+    label: admin password
+    group: Config
+  - variable: config.imgproxy.passwords.config
+    description: ''
+    type: string
+    required: false
+    label: config password
+    group: Config
+  - variable: config.imgproxy.resources.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: resources enabled
+    group: Config
+  - variable: config.imgproxy.resources.requests.cpu
+    description: ''
+    type: string
+    required: false
+    label: cpu requests
+    group: Config
+  - variable: config.imgproxy.resources.requests.memory
+    description: ''
+    type: string
+    required: false
+    label: memory requests
+    group: Config
+  - variable: config.imgproxy.resources.limits.cpu
+    description: ''
+    type: string
+    required: false
+    label: cpu limits
+    group: Config
+  - variable: config.imgproxy.resources.limits.memory
+    description: ''
+    type: string
+    required: false
+    label: memory limits
+    group: Config
+
+  #Service
+  - variable: service.imgproxy.type
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+    required: true
+    label: 'service type'
+    group: Service
+  - variable: service.imgproxy.externaltrafficpolicy
+    description: ''
+    type: enum
+    options:
+      - Cluster
+      - Local
+    required: true
+    label: 'external traffic policy'
+    group: Service
+  - variable: service.imgproxy.loadbalancerip
+    description: ''
+    type: string
+    required: false
+    label: 'load balancer ip'
+    group: Service
+  - variable: service.imgproxy.loadbalancerSourceRanges
+    description: ''
+    type: string
+    required: false
+    label: 'load balancer source ranges'
+    group: Service
+  - variable: service.imgproxy.tls
+    description: ''
+    type: boolean
+    required: true
+    label: 'tls'
+    group: Service
+  - variable: service.imgproxy.tls.enforce
+    description: ''
+    type: boolean
+    required: true
+    label: 'tls enforce'
+    group: Service
+  - variable: service.imgproxy.tls.certificate.name
+    description: ''
+    type: string
+    required: false
+    label: 'tls certificate name'
+    group: Service
+  - variable: service.imgproxy.tls.certificate.ca
+    description: ''
+    type: string
+    required: false
+    label: 'tls certificate ca'
+    group: Service
+  - variable: service.imgproxy.tls.certificate.issuer.integration
+    description: ''
+    type: string
+    required: false
+    label: 'tls certificate issuer integration'
+    group: Service
+  - variable: service.imgproxy.tls.certificate.issuer.dnsNames
+    description: ''
+    type: string
+    required: false
+    label: 'tls certificate issuer dns names'
+    group: Service
+  - variable: service.imgproxy.nodePorts.http
+    description: ''
+    type: integer
+    required: false
+    label: 'service node port'
+    group: Service
+
+  # Ingress
+  - variable: ingress.imgproxy.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'ingress enabled'
+    group: Ingress
+  - variable: ingress.imgproxy.certificate
+    description: ''
+    type: string
+    required: false
+    label: 'ingress certificate'
+    group: Ingress
+  - variable: ingress.imgproxy.hostname
+    description: ''
+    type: string
+    required: false
+    label: 'ingress hostname'
+    group: Ingress
+  - variable: ingress.imgproxy.tls
+    description: ''
+    type: boolean
+    required: true
+    label: 'ingress tls'
+    group: Ingress
+  - variable: ingress.imgproxy.issuer.name
+    description: ''
+    type: string
+    required: false
+    label: 'ingress issuer name'
+    group: Ingress
+
+  # Persistence
+  - variable: persistence.imgproxy.accessMode
+    description: ''
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadOnlyMany
+      - ReadWriteMany
+    required: true
+    label: 'persistence access mode'
+    group: Persistence
+  - variable: persistence.imgproxy.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'persistence enabled'
+    group: Persistence
+  - variable: persistence.imgproxy.storageClass
+    description: ''
+    type: string
+    required: false
+    label: 'persistence storage class'
+    group: Persistence
+  - variable: persistence.imgproxy.existingClaim
+    description: ''
+    type: string
+    required: false
+    label: 'persistence existing claim'
+    group: Persistence
+  - variable: persistence.imgproxy.size
+    description: ''
+    type: string
+    required: false
+    label: 'persistence size'
+    group: Persistence
+  - variable: persistence.imgproxy.velero.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'persistence velero enabled'
+    group: Persistence
+  - variable: persistence.imgproxy.velero.restic
+    description: ''
+    type: boolean
+    required: true
+    label: 'persistence velero restic'
+    group: Persistence
+  - variable: persistence.imgproxy.velero.schedule
+    description: ''
+    type: string
+    required: false
+    label: 'persistence velero schedule'
+    group: Persistence
+  - variable: persistence.imgproxy.velero.ttl
+    description: ''
+    type: string
+    required: false
+    label: 'persistence velero ttl'
+    group: Persistence
+  - variable: persistence.imgproxy.kanister.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'persistence kanister enabled'
+    group: Persistence
+  - variable: persistence.imgproxy.kanister.schedule
+    description: ''
+    type: string
+    required: false
+    label: 'persistence kanister schedule'
+    group: Persistence
+
+
+  # AWS
+  - variable: aws.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'aws enabled'
+    group: AWS
+  - variable: aws.accountId
+    description: ''
+    type: string
+    required: false
+    label: 'aws account id'
+    group: AWS
+  - variable: aws.accessKeyId
+    description: ''
+    type: string
+    required: false
+    label: 'aws access key id'
+    group: AWS
+  - variable: aws.secretAccessKey
+    description: ''
+    type: string
+    required: false
+    label: 'aws secret access key'
+    group: AWS
+  - variable: aws.iamRoleName
+    description: ''
+    type: string
+    required: false
+    label: 'aws iam role name'
+    group: AWS
+  - variable: aws.s3Region
+    description: ''
+    type: string
+    required: false
+    label: 'aws s3 region'
+    group: AWS
+  - variable: aws.s3Endpoint
+    description: ''
+    type: string
+    required: false
+    label: 'aws s3 endpoint'
+    group: AWS
+
+
+
+

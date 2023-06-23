@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: HelmRepository
+metadata:
+  name: imgproxy
+  labels:
+    app.kubernetes.io/name: {{ template "imgproxy.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  url: https://helm.imgproxy.net
+---
+apiVersion: v1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}-release
+  labels:
+    app.kubernetes.io/name: {{ template "imgproxy.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: imgproxy
+      version: {{ .Chart.Version | quote }}
+      sourceRef:
+        apiVersion: v1
+        kind: HelmRepository
+        name: imgproxy
