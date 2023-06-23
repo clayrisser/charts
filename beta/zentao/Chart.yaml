@@ -13,7 +13,7 @@ sources:
   - https://github.com/easysoft/zentaopms
 maintainers:
   - name: 'HariKrishna'
-    email: harikrishnasetti9999.com
+    email: harikrishnasetti9999@gmail.com
 annotations:
   catalog.cattle.io/display-name: Zentao
   catalog.cattle.io/os: linux

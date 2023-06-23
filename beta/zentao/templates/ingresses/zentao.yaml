@@ -32,7 +32,7 @@ spec:
                   name: http
   {{- if .Values.ingress.zentao.tls }}
   tls:
-    - secretName: {{ template "postgres.zentao-certificate" . }}
+    - secretName: {{ template "zentao-certificate" . }}
       hosts:
         - {{ .Values.ingress.zentao.hostname }}
   {{- end }}

@@ -49,17 +49,23 @@ questions:
     required: true
     label: istio
     group: Config
-  - variable: config.wal
-    description: ''
-    type: boolean
-    required: true
-    label: wal
-    group: Config
   - variable: config.zentao.hostname
     description: ''
     type: string
     required: false
     label: hostname
+    group: Config
+  - variable: config.zentao.baseUrl
+    label: "Zentao base URL"
+    type: string
+    required: false
+    default: ''
+    group: Config
+  - variable: config.zentao.replicas
+    label: "Zentao replicas"
+    type: int
+    required: true
+    default: 1
     group: Config
   - variable: config.zentao.resources.enabled
     description: ''
@@ -93,150 +99,112 @@ questions:
         type: string
         required: true
         label: 'resources limits memory'
+      - variable: config.mysql.integration
+        description: ''
+        type: string
+        required: true
+        label: 'mysql integration'
+        group: Config
+      - variable: config.mysql.database
+        description: ''
+        type: string
+        required: true
+        label: 'mysql database'
+        group: Config
+      - variable: config.mysql.host
+        description: ''
+        type: string
+        required: true
+        label: 'mysql host'
+        group: Config
+      - variable: config.mysql.password
+        description: ''
+        type: string
+        required: true
+        label: 'mysql password'
+        group: Config
+      - variable: config.mysql.port
+        description: ''
+        type: int
+        required: true
+        label: 'mysql port'
+        group: Config
+      - variable: config.mysql.username
+        description: ''
+        type: string
+        required: true
+        label: 'mysql username'
+        group: Config
 
-
-  # Networking
-  - variable: ingress.zentao.enabled
-    description: ''
-    type: boolean
-    label: 'zentao ingress enabled'
-    show_if: config.zentao.enabled=true
-    show_subquestion_if: true
-    group: Networking
-    subquestions:
-      - variable: ingress.zentao.tls
-        description: ''
-        type: boolean
-        show_if: config.zentao.enabled=true
-        required: true
-        label: 'zentao ingress tls'
-      - variable: ingress.zentao.hostname
-        default: xip.io
-        description: ''
-        type: hostname
-        show_if: config.zentao.enabled=true
-        required: true
-        label: 'zentao ingress hostname'
-      - variable: ingress.zentao.issuer.name
-        description: ''
-        type: enum
-        show_if: ingress.zentao.tls=true&&config.zentao.enabled=true
-        options:
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
-          - letsencrypt-staging
-          - letsencrypt-prod
-          - selfsigned
-        required: true
-        label: 'zentao ingress issuer name'
+  # Service
   - variable: service.zentao.type
     description: ''
     type: enum
-    show_if: ingress.zentao.enabled=false&&config.zentao.enabled=true
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
     label: 'zentao service type'
-    group: Networking
+    group: Service
+  - variable: service.zentao.externalTrafficPolicy
+    description: ''
+    type: enum
+    options:
+      - Cluster
+      - Local
+    required: true
+    label: 'zentao service external traffic policy'
+    group: Service
   - variable: service.zentao.nodePorts.http
     description: ''
     type: int
-    required: false
-    show_if: service.zentao.type=NodePort&&ingress.zentao.enabled=false&&config.zentao.enabled=true
-    label: 'zentao http node port'
-    group: Networking
+    required: true
+    label: 'zentao service node ports http'
+    group: Service
   - variable: service.zentao.lbPorts.http
     description: ''
     type: int
     required: true
-    show_if: service.zentao.type=LoadBalancer&&ingress.zentao.enabled=false&&config.zentao.enabled=true
-    label: 'zentao http lb port'
-    group: Networking
-  - variable: service.zentao.type
-    description: ''
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    label: 'zentao service type'
-    group: Networking
-  - variable: service.zentao.nodePorts.postgres
-    description: ''
-    type: int
-    required: false
-    show_if: service.zentao.type=NodePort
-    label: 'zentao node port'
-    group: Networking
-  - variable: service.zentao.lbPorts.postgres
-    description: ''
-    type: int
-    required: true
-    show_if: service.zentao.type=LoadBalancer
-    label: 'zentao lb port'
-    group: Networking
-  - variable: service.zentao.tls.enabled
+    label: 'zentao service node ports https'
+    group: Service
+
+  # Ingress
+  - variable: ingress.zentao.enabled
     description: ''
     type: boolean
     required: true
-    label: 'zentao tls enabled'
-    group: Networking
+    label: 'zentao ingress enabled'
+    group: Ingress
+  - variable: ingress.zentao.hostname
+    description: ''
+    type: string
+    required: true
+    label: 'zentao ingress hostname'
+    group: Ingress
+  - variable: ingress.zentao.certificate
+    description: ''
+    type: string
+    required: true
+    label: 'zentao ingress certificate'
+    group: Ingress
+  - variable: ingress.zentao.tls
+    description: ''
+    type: boolean
+    required: true
+    label: 'zentao ingress tls'
+    group: Ingress
+  - variable: ingress.zentao.issuer
+    description: ''
+    type: string
+    required: true
+    label: 'zentao ingress issuer'
+    group: Ingress
 
-  - variable: mysql.image
-    label: MySQL Image
-    description: "Docker image for the MySQL service"
-    type: string
-    required: true
-    default: "mysql:5.7.38-debian"
-  - variable: mysql.containerName
-    label: MySQL Container Name
-    description: "Container name for the MySQL service"
-    type: string
-    required: true
-    default: "mysql"
-  - variable: mysql.environment.MYSQL_ROOT_PASSWORD
-    label: MySQL Root Password
-    description: "Root password for the MySQL service"
-    type: password
-    required: true
-  - variable: mysql.volumes
-    label: MySQL Volumes
-    description: "Volume for the MySQL service"
-    type: storage
-    required: true
-    default: "/data/mysql:/var/lib/mysql"
-  - variable: mysql.ports
-    label: MySQL Ports
-    description: "Ports for the MySQL service"
-    type: int
-    required: true
-    default: "3306"
 
-  - variable: redis.image
-    description: "Docker image for the Redis service"
-    type: string
-    required: true
-    default: "redis:3.2.12-alpine3.8"
-  - variable: redis.containerName
-    label: Redis Container Name
-    description: "Container name for the Redis service"
-    type: string
-    required: true
-    default: "redis"
-  - variable: redis.volumes
-    label: Redis Volumes
-    description: "Volume for the Redis service"
-    type: storage
-    required: true
-    default: "/data/redis:/data"
-  - variable: redis.ports
-    label: Redis Ports
-    description: "Ports for the Redis service"
-    type: int
-    required: true
-    default: "6379"
+
+
+
+
 
 
