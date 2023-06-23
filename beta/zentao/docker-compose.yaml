@@ -1,0 +1,31 @@
+version: '3'
+services:
+  zentao:
+    image: easysoft/quickon-zentao:latest
+    container_name: zentao
+    ports:
+      - 8088:80
+    volumes:
+      - /data/zentao:/data
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=pass4zenTao
+      - MYSQL_DB=zentao
+      - PHP_SESSION_TYPE=redis
+      - PHP_SESSION_PATH=tcp://redis:6379
+      - PHP_MAX_EXECUTION_TIME=300
+      - PHP_POST_MAX_SIZE=512M
+      - PHP_UPLOAD_MAX_FILESIZE=512M
+      - IS_CONTAINER=true
+
+  mysql:
+    image: mysql:5.7.38-debian
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass4zenTao
+    volumes:
+      - /data/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306

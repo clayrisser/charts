@@ -8,21 +8,26 @@ config:
   updateStrategy: Recreate
   debug: false
   istio: false
-  wal: false
   zentao:
     hostname: ''
     baseUrl: ''
-    enabled: false
-    email: admin@example.com
-    password: ''
+    replicas: 1
     resources:
       enabled: defaults
       requests:
-        cpu: 10m
-        memory: 64Mi
+        cpu: 200m
+        memory: 256Mi
       limits:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 500m
+        memory: 512Mi
+  mysql:
+    integration: ''
+    database: zentao
+    host: ''
+    password: ''
+    port: 3306
+    username: root
+    # url: ''
 
 service:
   zentao:
@@ -41,22 +46,3 @@ ingress:
     tls: false
     issuer:
       name: ''
-
-
-mysql:
-  image: mysql:5.7.38-debian
-  containerName: mysql
-  environment:
-    MYSQL_ROOT_PASSWORD: pass4zenTao
-  volumes:
-    - /data/mysql:/var/lib/mysql
-  ports:
-    - 3306:3306
-
-redis:
-  image: redis:3.2.12-alpine3.8
-  containerName: redis
-  volumes:
-    - /data/redis:/data
-  ports:
-    - 6379:6379
