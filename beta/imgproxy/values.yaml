@@ -1,0 +1,84 @@
+images:
+  imgproxy:
+    repository: darthsim/imgproxy
+    tag: v3.15.0
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  istio: false
+  imgproxy:
+    replicas: 1
+    domain: example.org
+    hashPassword:
+    hostname: ''
+    organization: 'Example Organization'
+    organizationalUnits: people,groups
+    passwords:
+      admin:
+      config:
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 300m
+        memory: 400Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+service:
+  imgproxy:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    loadBalancerIP: ''
+    loadBalancerSourceRanges:
+    tls:
+      enabled: true
+      enforce: false
+      certificate:
+        name: ''
+        ca: ''
+        issuer:
+          integration: kube-system
+          dnsNames: ''
+    nodePorts:
+      http: 80
+    # TODO: test load balancer
+    # lbPorts:
+    #   http:
+
+ingress:
+  imgproxy:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: true
+  storageClass: ''
+  existingClaim:
+    imgproxy: ''
+  size:
+    imgproxy: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'
+
+aws:
+    enabled: false
+    accountId: ""
+    accessKeyId: ""
+    secretAccessKey: ""
+    iamRoleName: ""
+    s3Region: ""
+    s3Endpoint: ""
