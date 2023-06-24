@@ -1,0 +1,21 @@
+images:
+  easyOlmOperator:
+    repository: registry.gitlab.com/bitspur/community/easy-olm-operator
+    tag: 0.0.1
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  replicas: 1
+  maxConcurrentReconciles: 3
+  crdAutoDelete: true
+  easyOlmOperator:
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 20Mi
+      limits:
+        cpu: 200m
+        memory: 60Mi

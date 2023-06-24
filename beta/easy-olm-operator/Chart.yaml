@@ -1,0 +1,19 @@
+name: easy-olm-operator
+apiVersion: v1
+home: https://gitlab.com/bitspur/community/easy-olm-operator
+icon: ""
+version: 0.0.1
+appVersion: 0.0.1
+description: "an operator that makes olm easy to use outside of openshift"
+keywords:
+  - controller
+  - olm
+  - operator
+sources:
+  - https://gitlab.com/bitspur/community/easy-olm-operator.git
+maintainers:
+  - name: "Clay Risser"
+    email: email@clayrisser.com
+annotations:
+  catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/release-name: easy-olm-operator

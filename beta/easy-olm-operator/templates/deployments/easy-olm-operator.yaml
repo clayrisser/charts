@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "easy-olm-operator.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "easy-olm-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "easy-olm-operator.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.config.replicas }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "easy-olm-operator.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ template "easy-olm-operator.name" . }}
+      imagePullSecrets:
+        - name: registry
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 89
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - stateless
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "easy-olm-operator.name" . }}
+                    - key: release
+                      operator: In
+                      values:
+                        - {{ .Release.Name }}
+      containers:
+        - name: {{ template "easy-olm-operator.name" . }}
+          image: {{ .Values.images.easyOlmOperator.repository }}:{{ .Values.images.easyOlmOperator.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          args:
+            - '--leader-elect'
+            - '--health-probe-bind-address=:8081'
+          resources:
+{{- if (and .Values.config.easyOlmOperator.resources.enabled (not (eq .Values.config.easyOlmOperator.resources.enabled "false"))) }}
+            requests:
+{{ toYaml .Values.config.easyOlmOperator.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.easyOlmOperator.resources.limits | indent 14 }}
+{{- else }}
+            requests: {}
+            limits: {}
+{{- end }}
+          {{- if .Values.config.debug }}
+          env:
+            - name: DEBUG_OPERATOR
+              value: 'true'
+            - name: MAX_CONCURRENT_RECONCILES
+              value: {{ .Values.config.maxConcurrentReconciles | quote }}
+            - name: CRD_AUTO_DELETE
+              value: {{ .Values.config.crdAutoDelete | ternary "1" "0" }}
+          {{- else }}
+          env: []
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10

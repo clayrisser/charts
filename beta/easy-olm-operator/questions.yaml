@@ -1,0 +1,93 @@
+categories:
+  - Operators
+questions:
+  # Config
+  - variable: config.imagePullPolicy
+    description: ""
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: "pull policy"
+    group: Config
+  - variable: config.updateStrategy
+    description: ""
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+      - OnDelete
+    required: true
+    label: "update strategy"
+    group: Config
+  - variable: config.debug
+    description: ""
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.replicas
+    description: ""
+    type: int
+    required: true
+    label: "replicas"
+    group: Config
+  - variable: config.maxConcurrentReconciles
+    description: ""
+    type: int
+    required: true
+    label: "max concurrent reconciles"
+    group: Config
+  - variable: config.crdAutoDelete
+    description: ""
+    type: boolean
+    required: true
+    label: "crd auto delete"
+    group: Config
+  - variable: config.easyOlmOperator.resources.enabled
+    description: ""
+    type: enum
+    options:
+      - defaults
+      - custom
+      - "false"
+    required: true
+    label: "easy olm operator resources enabled"
+    show_subquestion_if: custom
+    group: Config
+    subquestions:
+      - variable: config.easyOlmOperator.resources.requests.cpu
+        description: ""
+        type: string
+        required: true
+        label: "easy olm operator resources requests cpu"
+      - variable: config.easyOlmOperator.resources.requests.memory
+        description: ""
+        type: string
+        required: true
+        label: "easy olm operator resources requests memory"
+      - variable: config.easyOlmOperator.resources.limits.cpu
+        description: ""
+        type: string
+        required: true
+        label: "easy olm operator resources limits cpu"
+      - variable: config.easyOlmOperator.resources.limits.memory
+        description: ""
+        type: string
+        required: true
+        label: "easy olm operator resources limits memory"
+
+  # Images
+  - variable: images.easyOlmOperator.repository
+    description: ""
+    type: string
+    required: true
+    label: "easy olm operator repository"
+    group: Images
+  - variable: images.easyOlmOperator.tag
+    description: ""
+    type: string
+    required: true
+    label: "easy olm operator tag"
+    group: Images
