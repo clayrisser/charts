@@ -99,42 +99,42 @@ questions:
         type: string
         required: true
         label: 'resources limits memory'
-      - variable: config.mysql.integration
-        description: ''
-        type: string
-        required: true
-        label: 'mysql integration'
-        group: Config
-      - variable: config.mysql.database
-        description: ''
-        type: string
-        required: true
-        label: 'mysql database'
-        group: Config
-      - variable: config.mysql.host
-        description: ''
-        type: string
-        required: true
-        label: 'mysql host'
-        group: Config
-      - variable: config.mysql.password
-        description: ''
-        type: string
-        required: true
-        label: 'mysql password'
-        group: Config
-      - variable: config.mysql.port
-        description: ''
-        type: int
-        required: true
-        label: 'mysql port'
-        group: Config
-      - variable: config.mysql.username
-        description: ''
-        type: string
-        required: true
-        label: 'mysql username'
-        group: Config
+  - variable: config.mysql.integration
+    description: ''
+    type: string
+    required: true
+    label: 'mysql integration'
+    group: Config
+  - variable: config.mysql.database
+    description: ''
+    type: string
+    required: true
+    label: 'mysql database'
+    group: Config
+  - variable: config.mysql.host
+    description: ''
+    type: string
+    required: true
+    label: 'mysql host'
+    group: Config
+  - variable: config.mysql.password
+    description: ''
+    type: string
+    required: true
+    label: 'mysql password'
+    group: Config
+  - variable: config.mysql.port
+    description: ''
+    type: int
+    required: true
+    label: 'mysql port'
+    group: Config
+  - variable: config.mysql.username
+    description: ''
+    type: string
+    required: true
+    label: 'mysql username'
+    group: Config
 
   # Service
   - variable: service.zentao.type
