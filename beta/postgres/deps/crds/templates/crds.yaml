@@ -1,0 +1,14 @@
+{{- range .Values.crds }}
+---
+apiVersion: cache.bitspur.com/v1alpha1
+kind: CrdRef
+metadata:
+  name: {{ . }}
+  labels:
+    app.kubernetes.io/name: {{ template "postgres-crds.name" $ }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  crd: https://raw.githubusercontent.com/k8s-operatorhub/community-operators/main/operators/percona-postgresql-operator/{{ $.Values.operatorVersion }}/manifests/{{ . }}.yaml
+{{- end }}

@@ -1,1 +1,7 @@
-{}
+operatorVersion: 1.3.0
+crds:
+  - perconapgclusters.pg.percona.com.crd
+  - pgclusters.pg.percona.com.crd
+  - pgpolicies.pg.percona.com.crd
+  - pgreplicas.pg.percona.com.crd
+  - pgtasks.pg.percona.com.crd
