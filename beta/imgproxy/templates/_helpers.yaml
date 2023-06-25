@@ -1,0 +1,61 @@
+{{/* vim: set filetype=mustache: */}}
+{{/**
+Expand the name of the chart.
+*/}}
+{{- define "imgproxy.name" }}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/**
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this
+(by the DNS naming spec).
+*/}}
+{{- define "imgproxy.fullname" }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Calculate imgproxy certificate
+*/}}
+{{- define "imgproxy.imgproxy-certificate" -}}
+{{- if .Values.ingress.imgproxy.certificate -}}
+{{- printf .Values.ingress.imgproxy.certificate -}}
+{{- else -}}
+{{- printf "%s-discovery-letsencrypt" (include "imgproxy.name" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate imgproxy hostname
+*/}}
+{{- define "imgproxy.imgproxy-hostname" -}}
+{{- if .Values.config.imgproxy.hostname -}}
+{{- printf .Values.config.imgproxy.hostname -}}
+{{- else -}}
+{{- if .Values.ingress.imgproxy.enabled -}}
+{{- printf .Values.ingress.imgproxy.hostname -}}
+{{- else -}}
+{{- printf "%s-discovery.%s.svc.cluster.local" (include "imgproxy.name" .) .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate imgproxy base url
+*/}}
+{{- define "imgproxy.imgproxy-base-url" -}}
+{{- if .Values.config.imgproxy.baseUrl -}}
+{{- printf .Values.config.imgproxy.baseUrl -}}
+{{- else -}}
+{{- if .Values.ingress.imgproxy.enabled -}}
+{{- $hostname := ((not (include "imgproxy.imgproxy-hostname" .)) | ternary .Values.ingress.imgproxy.hostname (include "imgproxy.imgproxy-hostname" .)) -}}
+{{- $protocol := (.Values.ingress.imgproxy.tls | ternary "https" "http") -}}
+{{- printf "%s://%s" $protocol $hostname -}}
+{{- else -}}
+{{- printf "http://%s" (include "imgproxy.imgproxy-hostname" .) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
