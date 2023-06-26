@@ -1,76 +1,87 @@
 categories:
   - Server
 questions:
-
   # Config
   - variable: config.imagePullPolicy
-    description: ''
+    description: ""
     type: enum
     options:
       - IfNotPresent
       - Always
     required: true
-    label: 'pull policy'
+    label: "pull policy"
     group: Config
   - variable: config.updateStrategy
-    description: ''
+    description: ""
     type: enum
     options:
       - RollingUpdate
       - Recreate
       - OnDelete
     required: true
-    label: 'update strategy'
+    label: "update strategy"
     group: Config
   - variable: config.debug
-    description: ''
+    description: ""
     type: boolean
     required: true
     label: debug
     group: Config
+  - variable: config.replicas
+    description: ""
+    type: int
+    required: true
+    label: "replicas"
+    group: Config
+  - variable: config.maxConcurrentReconciles
+    description: ""
+    type: int
+    required: true
+    label: "max concurrent reconciles"
+    group: Config
   - variable: config.patchOperator.resources.enabled
-    description: ''
+    description: ""
     type: enum
     options:
       - defaults
       - custom
-      - 'false'
+      - "false"
     required: true
-    label: 'patch operator resources enabled'
+    label: "patch operator resources enabled"
     show_subquestion_if: custom
     group: Config
     subquestions:
       - variable: config.patchOperator.resources.requests.cpu
-        description: ''
+        description: ""
         type: string
         required: true
-        label: 'patch operator resources requests cpu'
+        label: "patch operator resources requests cpu"
       - variable: config.patchOperator.resources.requests.memory
-        description: ''
+        description: ""
         type: string
         required: true
-        label: 'patch operator resources requests memory'
+        label: "patch operator resources requests memory"
       - variable: config.patchOperator.resources.limits.cpu
-        description: ''
+        description: ""
         type: string
         required: true
-        label: 'patch operator resources limits cpu'
+        label: "patch operator resources limits cpu"
       - variable: config.patchOperator.resources.limits.memory
-        description: ''
+        description: ""
         type: string
         required: true
-        label: 'patch operator resources limits memory'
+        label: "patch operator resources limits memory"
 
   # Images
   - variable: images.patchOperator.repository
-    description: ''
+    description: ""
     type: string
     required: true
-    label: 'patch operator repository'
+    label: "patch operator repository"
     group: Images
   - variable: images.patchOperator.tag
-    description: ''
+    description: ""
     type: string
     required: true
-    label: 'patch operator tag'
+    label: "patch operator tag"
     group: Images

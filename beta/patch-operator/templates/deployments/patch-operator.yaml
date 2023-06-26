@@ -3,22 +3,23 @@ kind: Deployment
 metadata:
   name: {{ template "patch-operator.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "patch-operator.name" . }}
-    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app: {{ template "patch-operator.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
       app: {{ template "patch-operator.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      release: {{ .Release.Name }}
+  replicas: {{ .Values.config.replicas }}
   strategy:
     type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
         app: {{ template "patch-operator.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        release: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ template "patch-operator.name" . }}
       affinity:
@@ -53,6 +54,9 @@ spec:
         - name: {{ template "patch-operator.name" . }}
           image: {{ .Values.images.patchOperator.repository }}:{{ .Values.images.patchOperator.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          args:
+            - '--leader-elect'
+            - '--health-probe-bind-address=:8081'
           {{- if (and .Values.config.patchOperator.resources.enabled (not (eq .Values.config.patchOperator.resources.enabled "false"))) }}
           resources:
             requests:
@@ -62,10 +66,20 @@ spec:
           {{- else }}
           resources: {}
           {{- end }}
-          {{- if .Values.config.debug }}
           env:
             - name: DEBUG_OPERATOR
-              value: '{{ .Values.config.debug }}'
-          {{- else }}
-          env: []
-          {{- end }}
+              value: {{ .Values.config.debug | ternary "1" "0" }}
+            - name: MAX_CONCURRENT_RECONCILES
+              value: {{ .Values.config.maxConcurrentReconciles | quote }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10

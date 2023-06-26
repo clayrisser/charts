@@ -1,6 +1,6 @@
 images:
   easyOlmOperator:
-    repository: registry.gitlab.com/bitspur/community/easy-olm-operator
+    repository: registry.gitlab.com/bitspur/rock8s/easy-olm-operator
     tag: 0.0.1
 
 config:
@@ -9,7 +9,7 @@ config:
   debug: false
   replicas: 1
   maxConcurrentReconciles: 3
-  crdAutoDelete: true
+  crdAutoDelete: false
   easyOlmOperator:
     resources:
       enabled: defaults

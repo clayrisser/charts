@@ -5,20 +5,21 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.1
   creationTimestamp: null
-  name: crdrefs.cache.bitspur.com
+  name: manualsubscriptions.easyolm.rock8s.com
 spec:
-  group: cache.bitspur.com
+  group: easyolm.rock8s.com
   names:
-    kind: CrdRef
-    listKind: CrdRefList
-    plural: crdrefs
-    singular: crdref
+    kind: ManualSubscription
+    listKind: ManualSubscriptionList
+    plural: manualsubscriptions
+    singular: manualsubscription
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: CrdRef is the Schema for the crdrefs API
+        description: ManualSubscription is the Schema for the manualsubscriptions
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,14 +34,21 @@ spec:
           metadata:
             type: object
           spec:
-            description: CrdRefSpec defines the desired state of CrdRef
+            description: ManualSubscriptionSpec defines the desired state of ManualSubscription
             properties:
-              crd:
-                description: crd url or yaml
+              channel:
+                type: string
+              name:
+                type: string
+              source:
+                type: string
+              sourceNamespace:
+                type: string
+              startingCsv:
                 type: string
             type: object
           status:
-            description: CrdRefStatus defines the observed state of CrdRef
+            description: ManualSubscriptionStatus defines the observed state of ManualSubscription
             properties:
               conditions:
                 items:
@@ -113,7 +121,7 @@ spec:
               observedGeneration:
                 format: int64
                 type: integer
-              subscriptionStatus:
+              subscriptionRef:
                 type: string
             type: object
         type: object

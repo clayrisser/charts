@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ template "easy-olm-operator.name" . }}
+  name: {{ template "integration-operator.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "easy-olm-operator.name" . }}
+    app.kubernetes.io/name: {{ template "integration-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -15,9 +15,9 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "easy-olm-operator.name" . }}
+  name: {{ template "integration-operator.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "easy-olm-operator.name" . }}
+    app.kubernetes.io/name: {{ template "integration-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -28,88 +28,22 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "easy-olm-operator.name" . }}
+  name: {{ template "integration-operator.name" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "easy-olm-operator.name" . }}
+    name: {{ template "integration-operator.name" . }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "easy-olm-operator.name" . }}
+  name: {{ template "integration-operator.name" . }}
   labels:
-    app.kubernetes.io/name: {{ template "easy-olm-operator.name" . }}
+    app.kubernetes.io/name: {{ template "integration-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - namespaces/status
-  verbs:
-  - get
-- apiGroups:
-  - cache.bitspur.com
-  resources:
-  - crdrefs
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - cache.bitspur.com
-  resources:
-  - crdrefs/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - cache.bitspur.com
-  resources:
-  - crdrefs/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - cache.bitspur.com
-  resources:
-  - manualsubscriptions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - cache.bitspur.com
-  resources:
-  - manualsubscriptions/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - cache.bitspur.com
-  resources:
-  - manualsubscriptions/status
-  verbs:
-  - get
-  - patch
-  - update
 - apiGroups:
   - coordination.k8s.io
   resources:
@@ -123,27 +57,80 @@ rules:
   - update
   - watch
 - apiGroups:
-  - operators.coreos.com
+  - integration.rock8s.com
   resources:
-  - installplans
+  - interfaces
   verbs:
+  - create
+  - delete
   - get
   - list
   - patch
   - update
   - watch
 - apiGroups:
-  - operators.coreos.com
+  - integration.rock8s.com
   resources:
-  - installplans/status
+  - interfaces/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - integration.rock8s.com
+  resources:
+  - interfaces/status
   verbs:
   - get
+  - patch
+  - update
 - apiGroups:
-  - operators.coreos.com
+  - integration.rock8s.com
   resources:
-  - operatorgroups
+  - plugs
   verbs:
   - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
+- apiGroups:
+  - integration.rock8s.com
+  resources:
+  - plugs/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - integration.rock8s.com
+  resources:
+  - plugs/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - integration.rock8s.com
+  resources:
+  - sockets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - integration.rock8s.com
+  resources:
+  - sockets/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - integration.rock8s.com
+  resources:
+  - sockets/status
+  verbs:
+  - get
+  - patch
+  - update

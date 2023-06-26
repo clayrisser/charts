@@ -5,21 +5,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.1
   creationTimestamp: null
-  name: manualsubscriptions.cache.bitspur.com
+  name: crdrefs.easyolm.rock8s.com
 spec:
-  group: cache.bitspur.com
+  group: easyolm.rock8s.com
   names:
-    kind: ManualSubscription
-    listKind: ManualSubscriptionList
-    plural: manualsubscriptions
-    singular: manualsubscription
+    kind: CrdRef
+    listKind: CrdRefList
+    plural: crdrefs
+    singular: crdref
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: ManualSubscription is the Schema for the manualsubscriptions
-          API
+        description: CrdRef is the Schema for the crdrefs API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -34,21 +33,14 @@ spec:
           metadata:
             type: object
           spec:
-            description: ManualSubscriptionSpec defines the desired state of ManualSubscription
+            description: CrdRefSpec defines the desired state of CrdRef
             properties:
-              channel:
-                type: string
-              name:
-                type: string
-              source:
-                type: string
-              sourceNamespace:
-                type: string
-              startingCsv:
+              crd:
+                description: crd url or yaml
                 type: string
             type: object
           status:
-            description: ManualSubscriptionStatus defines the observed state of ManualSubscription
+            description: CrdRefStatus defines the observed state of CrdRef
             properties:
               conditions:
                 items:
@@ -118,11 +110,11 @@ spec:
                   - type
                   type: object
                 type: array
+              crdRef:
+                type: string
               observedGeneration:
                 format: int64
                 type: integer
-              subscriptionRef:
-                type: string
             type: object
         type: object
     served: true

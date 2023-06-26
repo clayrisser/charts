@@ -1,20 +1,20 @@
+images:
+  patchOperator:
+    repository: registry.gitlab.com/bitspur/rock8s/patch-operator
+    tag: 0.1.0
+
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate
   debug: false
-  patchOperator:
-    baseUrl: ""
-    hostname: ""
+  replicas: 1
+  maxConcurrentReconciles: 3
+  integrationOperator:
     resources:
       enabled: defaults
       requests:
-        cpu: 1m
-        memory: 16Mi
+        cpu: 100m
+        memory: 20Mi
       limits:
-        cpu: 50m
-        memory: 128Mi
-
-images:
-  patchOperator:
-    repository: registry.gitlab.com/risserlabs/community/patch-operator
-    tag: 0.1.0
+        cpu: 200m
+        memory: 60Mi

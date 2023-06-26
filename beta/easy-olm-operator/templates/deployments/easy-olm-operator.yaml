@@ -73,17 +73,13 @@ spec:
             requests: {}
             limits: {}
 {{- end }}
-          {{- if .Values.config.debug }}
           env:
             - name: DEBUG_OPERATOR
-              value: 'true'
+              value: {{ .Values.config.debug | ternary "1" "0" }}
             - name: MAX_CONCURRENT_RECONCILES
               value: {{ .Values.config.maxConcurrentReconciles | quote }}
             - name: CRD_AUTO_DELETE
               value: {{ .Values.config.crdAutoDelete | ternary "1" "0" }}
-          {{- else }}
-          env: []
-          {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz
