@@ -1,4 +1,4 @@
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Socket
 metadata:
   name: ldap
@@ -20,9 +20,9 @@ spec:
     port: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
   configMapper:
-    bindPassword: '{% .vars.b64BindPassword | b64dec %}'
+    bindPassword: '{% .vars.BASE64_ENCODED_LDAP_ADMIN_PASSWORD | b64dec %}'
   vars:
-    - name: b64BindPassword
+    - name: BASE64_ENCODED_LDAP_ADMIN_PASSWORD
       fieldref:
         fieldPath: data.LDAP_ADMIN_PASSWORD
       objref:
@@ -30,113 +30,3 @@ spec:
         kind: Secret
         name: {{ template "openldap.name" . }}
         namespace: {{ .Release.Namespace }}
-  resources:
-    - when: [coupled, updated]
-      do: recreate
-      resource: |
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: {{ template "openldap.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %}
-        spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            metadata:
-              annotations:
-                sidecar.istio.io/inject: 'false'
-            spec:
-              automountServiceAccountToken: true
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
-                  command:
-                    - sh
-                    - -c
-                    - |
-                      sleep 10
-{{- if .Values.service.openldap.tls.enabled }}
-{{- if (or (not .Values.service.openldap.tls.certificate.name) .Values.service.openldap.tls.certificate.ca) }}
-                      {%- if (not (eq .plugConfig.replicateCa "false")) %}
-                      kubectl get secret {{ template "openldap.openldap-ca" . }} \
-                        -n {{ .Release.Namespace }} -o yaml | \
-                        sed 's|^\(\s*name:\s*\){{ template "openldap.openldap-ca" . }}|\1ca-{% .plug.metadata.name %}|g' | \
-                        grep -v '^\s*namespace:\s*{{ .Release.Namespace }}' | \
-                        kubectl apply -f - --namespace={% .plug.metadata.namespace %}
-                      {%- end %}
-{{- end }}
-{{- end }}
-                      {%- if (not (eq .plugConfig.replicate "false")) %}
-                      cat <<EOF | kubectl apply -f -
-                      apiVersion: v1
-                      kind: Secret
-                      metadata:
-                        name: {{ template "openldap.name" . }}-{% .plug.metadata.name %}
-                        namespace: '{% .plug.metadata.namespace %}'
-                      type: Opaque
-                      stringData:
-                        bindDN: '{% .socketConfig.bindDN %}'
-                        bindPassword: '{% .socketConfig.bindPassword %}'
-                        domain: '{% .socketConfig.domain %}'
-                        hostname: '{% .socketConfig.hostname %}'
-                        port: '{% .socketConfig.port %}'
-                        protocol: '{% .socketConfig.protocol %}'
-                      EOF
-                      {%- end %}
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "openldap.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -
-    - when: [decoupled]
-      do: recreate
-      resource: |
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: {{ template "openldap.name" . }}-decoupled-{% .plug.metadata.namespace %}
-        spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            metadata:
-              annotations:
-                sidecar.istio.io/inject: 'false'
-            spec:
-              automountServiceAccountToken: true
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
-                  command:
-                    - sh
-                    - -c
-                    - |
-                      kubectl delete secret {{ template "openldap.name" . }}-{% .plug.metadata.name %} \
-                        -n {% .plug.metadata.namespace %}
-                      kubectl delete secret {{ template "openldap.openldap-certificate" . }}-{% .plug.metadata.name %} \
-                        -n {% .plug.metadata.namespace %}
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "openldap.name" . }}-decoupled-{% .plug.metadata.namespace %} \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -

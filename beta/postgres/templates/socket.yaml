@@ -148,8 +148,6 @@ spec:
                       chmod 600 $PGPASSFILE
                       dropdb -h $POSTGRES_HOSTNAME -U $POSTGRES_USERNAME -p $POSTGRES_PORT -w $POSTGRES_DATABASE || true
                       {%- end %}
-                      kubectl delete secret {{ template "postgres.name" . }}-{% .plug.metadata.name %} \
-                        -n {% .plug.metadata.namespace %}
                       kubectl get pods -n {{ .Release.Namespace }} \
                         -l job-name={{ template "postgres.name" . }}-decoupled-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \

@@ -24,7 +24,7 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: patch.risserlabs.com/v1alpha1
+        apiVersion: patch.rock8s.com/v1alpha1
         kind: Patch
         metadata:
           name: ldap-coupled-or-updated

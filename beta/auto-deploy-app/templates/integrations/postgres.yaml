@@ -1,7 +1,7 @@
 {{- if (and .Values.integrations.postgres.name .Values.integrations.postgres.database) }}
 {{- $name := (split "." .Values.integrations.postgres.name)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.integrations.postgres.name))._0 }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: {{ template "trackableappname" . }}-postgres
@@ -18,7 +18,6 @@ spec:
     database: {{ .Values.integrations.postgres.database | quote }}
     createdb: 'true'
     cleanup: 'false'
-    replicate: 'false'
   resources:
     - when: [coupled, updated]
       do: apply

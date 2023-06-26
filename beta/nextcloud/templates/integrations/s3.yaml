@@ -1,7 +1,7 @@
 {{- if (and .Values.config.s3.enabled .Values.config.s3.integration) }}
 {{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: s3
@@ -22,12 +22,11 @@ spec:
   config:
     bucket: {{ .Values.config.s3.bucket | quote }}
     prefix: {{ .Values.config.s3.prefix | quote }}
-    replicate: 'false'
   resources:
     - when: [coupled, updated]
       do: apply
       resource: |
-        apiVersion: patch.risserlabs.com/v1alpha1
+        apiVersion: patch.rock8s.com/v1alpha1
         kind: Patch
         metadata:
           name: s3-coupled-or-updated

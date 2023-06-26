@@ -20,7 +20,7 @@ data:
 ---
 {{- $name := (split "." .Values.integrations.keycloak.name)._1 | default "keycloak" }}
 {{- $namespace := (split "." (printf "%s." .Values.integrations.keycloak.name))._0 }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: {{ template "trackableappname" . }}-keycloak
@@ -38,7 +38,6 @@ spec:
     clientId: {{ .Values.integrations.keycloak.clientId }}
     realm: {{ .Values.integrations.keycloak.realm | quote }}
     redirectUris: "*"
-    replicate: "false"
     webOrigins: "*"
 {{- if .Values.integrations.keycloak.clientSecretEnabled }}
   configSecretName: {{ template "trackableappname" . }}-keycloak-plug

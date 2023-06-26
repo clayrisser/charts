@@ -1,7 +1,7 @@
 {{- if (and .Values.service.openldap.tls.enabled (not .Values.service.openldap.tls.certificate.name)) }}
 {{- $name := (split "." .Values.service.openldap.tls.certificate.issuer.integration)._1 | default "ca-replicator" }}
 {{- $namespace := (split "." (printf "%s." .Values.service.openldap.tls.certificate.issuer.integration))._0 }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: ca-replicator
