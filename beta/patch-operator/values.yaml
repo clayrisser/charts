@@ -9,7 +9,7 @@ config:
   debug: false
   replicas: 1
   maxConcurrentReconciles: 3
-  integrationOperator:
+  patchOperator:
     resources:
       enabled: defaults
       requests:

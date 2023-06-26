@@ -58,4 +58,3 @@ Calculate imgproxy base url
 {{- end -}}
 {{- end -}}
 {{- end -}}
-
