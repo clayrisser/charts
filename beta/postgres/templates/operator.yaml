@@ -1,4 +1,4 @@
-apiVersion: cache.bitspur.com/v1alpha1
+apiVersion: easyolm.rock8s.com/v1alpha1
 kind: ManualSubscription
 metadata:
   name: {{ template "postgres.name" . }}
