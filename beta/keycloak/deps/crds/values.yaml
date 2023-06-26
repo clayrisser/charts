@@ -1,1 +1,4 @@
-{}
+operatorVersion: 21.1.1
+crds:
+  - keycloakrealmimports.k8s.keycloak.org-v1
+  - keycloaks.k8s.keycloak.org-v1

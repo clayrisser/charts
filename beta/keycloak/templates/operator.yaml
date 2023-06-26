@@ -1,5 +1,5 @@
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
+apiVersion: easyolm.rock8s.com/v1alpha1
+kind: ManualSubscription
 metadata:
   name: {{ template "keycloak.name" . }}
   labels:
@@ -8,100 +8,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  targetNamespaces:
-    - {{ .Release.Namespace }}
----
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: {{ template "keycloak.name" . }}
-  labels:
-    app.kubernetes.io/name: {{ template "keycloak.name" . }}
-    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-spec:
-  # https://olm.operatorframework.io/docs/tasks/install-operator-with-olm/#example-install-a-specific-version-of-an-operator
   channel: {{ .Values.olm.keycloak.channel }}
-  installPlanApproval: Manual
   name: keycloak-operator
   source: operatorhubio-catalog
   sourceNamespace: olm
   startingCSV: keycloak-operator.v{{ .Values.olm.keycloak.version }}
----
-{{- if (not (lookup "v1" "ConfigMap" .Release.Namespace "install-plan-approved")) }}
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: approve-install-plan
-spec:
-  activeDeadlineSeconds: 360
-  backoffLimit: 6
-  ttlSecondsAfterFinished: 360
-  template:
-    metadata:
-      annotations:
-        sidecar.istio.io/inject: 'false'
-    spec:
-      automountServiceAccountToken: true
-      restartPolicy: Never
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - amd64
-      containers:
-        - name: kubectl
-          image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
-          imagePullPolicy: Always
-          command:
-            - sh
-            - -c
-            - |
-              sleep 5
-              export NAME=$(kubectl get installplans.operators.coreos.com -n {{ .Release.Namespace }} | grep "$CSV" | cut -d' ' -f1 | grep -vE '^NAME$' | head -n1)
-              if [ "$NAME" = "" ]; then
-                exit 1
-              fi
-              cat <<EOF | kubectl apply -f -
-              apiVersion: patch.risserlabs.com/v1alpha1
-              kind: Patch
-              metadata:
-                name: approve-install-plan
-                namespace: {{ .Release.Namespace }}
-              spec:
-                epoch: '$(date +%s)'
-                patches:
-                  - id: approve
-                    target:
-                      group: operators.coreos.com
-                      version: v1alpha1
-                      kind: InstallPlan
-                      name: ${NAME}
-                    waitForTimeout: 5
-                    waitForResource: true
-                    type: json
-                    patch: |
-                      - op: add
-                        path: /spec/approved
-                        value: true
-              EOF
-              cat <<EOF | kubectl apply -f -
-              apiVersion: v1
-              kind: ConfigMap
-              metadata:
-                name: install-plan-approved
-                namespace: {{ .Release.Namespace }}
-              EOF
-              kubectl get pods -n {{ .Release.Namespace }} \
-                -l job-name=approve-install-plan \
-                --field-selector status.phase=Failed \
-                -o yaml | kubectl delete -f -
-          env:
-            - name: CSV
-              value: keycloak-operator.v{{ .Values.olm.keycloak.version }}
-{{- end }}

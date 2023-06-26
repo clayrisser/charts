@@ -1,7 +1,7 @@
 {{- if .Values.config.postgres.integration }}
 {{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: postgres
@@ -23,7 +23,6 @@ spec:
     database: {{ .Values.config.postgres.database | quote }}
     createdb: 'true'
     cleanup: 'false'
-    replicate: 'false'
   resources:
     - when: [coupled, updated]
       do: apply

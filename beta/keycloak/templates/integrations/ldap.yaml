@@ -1,7 +1,7 @@
 {{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.integration) }}
 {{- $name := (split "." .Values.config.keycloak.ldap.integration)._1 | default "ldap" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.integration))._0 }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: ldap
@@ -19,9 +19,7 @@ spec:
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
-  config:
-    replicate: 'false'
-    replicateCa: 'true'
+  config: {}
   resources:
     - when: [coupled, updated]
       do: recreate
