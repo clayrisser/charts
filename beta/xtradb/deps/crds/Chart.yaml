@@ -1,0 +1,8 @@
+apiVersion: v2
+name: xtradb-crds
+version: 1.12.0
+annotations:
+  catalog.cattle.io/hidden: 'true'
+  catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: xtradb-crds

@@ -1,7 +1,7 @@
 apiVersion: v2
 name: xtradb
 home: https://gitlab.com/risserlabs/community/charts
-version: 0.0.1
+version: 1.12.0
 appVersion: 0.71.0
 type: application
 description: 'enterprise MySQL'
@@ -14,6 +14,6 @@ maintainers:
   - name: 'Clay Risser'
     email: email@clayrisser.com
 annotations:
-  catalog.cattle.io/auto-install: pxc-operator=match
+  catalog.cattle.io/auto-install: xtradb-crds=match
   catalog.cattle.io/display-name: XtraDB
   catalog.cattle.io/os: linux

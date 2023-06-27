@@ -8,7 +8,7 @@ Please ★ this repo if you found it useful ★ ★ ★
 
 ## Guide
 
-![](/assets//deployment-decision.svg)
+![](/assets//deployment-decision.jpg)
 
 ### Values Schema
 

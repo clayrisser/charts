@@ -1,0 +1,5 @@
+operatorVersion: 1.12.0
+crds:
+  - perconaxtradbclusterbackups.pxc.percona.com.crd
+  - perconaxtradbclusterrestores.pxc.percona.com.crd
+  - perconaxtradbclusters.pxc.percona.com.crd

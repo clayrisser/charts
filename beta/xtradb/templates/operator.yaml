@@ -1,0 +1,15 @@
+apiVersion: easyolm.rock8s.com/v1alpha1
+kind: ManualSubscription
+metadata:
+  name: {{ template "xtradb.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "xtradb.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  channel: {{ .Values.olm.xtradb.channel }}
+  name: percona-xtradb-cluster-operator
+  source: operatorhubio-catalog
+  sourceNamespace: olm
+  startingCSV: percona-xtradb-cluster-operator.v{{ .Values.olm.xtradb.version }}
