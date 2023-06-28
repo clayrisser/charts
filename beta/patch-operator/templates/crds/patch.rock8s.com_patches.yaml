@@ -121,6 +121,9 @@ spec:
                   - target
                   type: object
                 type: array
+              serviceAccountName:
+                description: service account name used in the job
+                type: string
             type: object
           status:
             description: PatchStatus defines the observed state of Patch
