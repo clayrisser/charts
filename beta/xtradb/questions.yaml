@@ -64,6 +64,12 @@ questions:
     required: false
     label: 'xtrabackup password'
     group: Config
+  - variable: config.passwords.replication
+    description: ''
+    type: password
+    required: false
+    label: 'replication password'
+    group: Config
   - variable: config.logcollector.enabled
     description: ''
     type: boolean
@@ -72,11 +78,11 @@ questions:
     group: Config
 
 # XtraDB
-  - variable: config.xtradb.size
+  - variable: config.xtradb.replicas
     description: ''
     type: int
     required: true
-    label: size
+    label: replicas
     group: XtraDB
   - variable: config.xtradb.pause
     description: ''

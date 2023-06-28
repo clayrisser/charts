@@ -20,15 +20,39 @@ spec:
   updateStrategy: {{ (and (eq .Values.config.updateStrategy "SmartUpdate") (and (not .Values.config.haproxy.enabled) (not .Values.config.proxysql.enabled))) | ternary "Recreate" .Values.config.updateStrategy }}
   initImage: '{{ .Values.images.xtradbOperator.repository }}:{{ .Values.images.xtradbOperator.tag }}'
   upgradeOptions:
-    versionServiceEndpoint: https://check.percona.com/versions
+    versionServiceEndpoint: https://check.percona.com
     apply: {{ .Values.config.xtradb.upgrade.apply }}
     schedule: {{ .Values.config.xtradb.upgrade.schedule }}
   pxc:
-    size: {{ .Values.config.xtradb.size }}
+    size: {{ .Values.config.xtradb.replicas }}
     image: '{{ .Values.images.xtradb.repository }}:{{ .Values.images.xtradb.tag }}'
     readinessDelaySec: 15
-    livenessDelaySec: 300
+    livenessDelaySec: 600
     autoRecovery: true
+    # expose:
+    #   enabled: true
+    #   type: LoadBalancer
+    #   trafficPolicy: Local
+    #   loadBalancerSourceRanges:
+    #     - 10.0.0.0/8
+    #   annotations:
+    #     networking.gke.io/load-balancer-type: "Internal"
+    # replicationChannels:
+    # - name: pxc1_to_pxc2
+    #   isSource: true
+    # - name: pxc2_to_pxc1
+    #   isSource: false
+    #   configuration:
+    #     sourceRetryCount: 3
+    #     sourceConnectRetry: 60
+    #     ssl: false
+    #     sslSkipVerify: true
+    #     ca: '/etc/mysql/ssl/ca.crt'
+    #   sourcesList:
+    #   - host: 10.95.251.101
+    #     port: 3306
+    #     weight: 100
+    # schedulerName: mycustom-scheduler
 {{- if .Values.config.xtradb.mysqlConfig }}
     configuration: |
 {{ .Values.config.xtradb.mysqlConfig | nindent 6 }}

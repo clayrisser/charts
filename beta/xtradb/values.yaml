@@ -9,7 +9,7 @@ images:
     tag: 1.12.0
   xtradb:
     repository: percona/percona-xtradb-cluster
-    tag: 8.0.27-18.1
+    tag: 8.0.29-21.1
   haproxy:
     repository: percona/percona-xtradb-cluster-operator
     tag: 1.12.0-haproxy
@@ -40,12 +40,13 @@ config:
     operator: ''
     root: ''
     xtrabackup: ''
+    replication: ''
   xtradb:
     hostname: ''
-    size: 1
+    replicas: 1
     pause: false
     upgrade:
-      apply: Disabled
+      apply: disabled
       schedule: '0 4 * * *'
     mysqlConfig: ''
     resources:
