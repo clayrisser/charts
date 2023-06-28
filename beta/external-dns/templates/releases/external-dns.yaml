@@ -1,19 +1,35 @@
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
 metadata:
-  name: {{ template "external-dns.name" . }}
+  name: external-dns
   labels:
     app.kubernetes.io/name: {{ template "external-dns.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  forceUpgrade: false
-  helmVersion: v3
+  interval: 5m
+  url: https://charts.bitnami.com/bitnami
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}-release
+  labels:
+    app.kubernetes.io/name: {{ template "external-dns.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
   chart:
-    repository: https://charts.bitnami.com/bitnami
-    name: external-dns
-    version: 6.5.5
+    spec:
+      chart: openldap-stack-ha
+      version: {{ .Chart.Version | quote }}
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: external-dns
   values:
     image:
       repository: {{ .Values.images.externalDns.repository | quote }}
