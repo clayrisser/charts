@@ -1,0 +1,17 @@
+apiVersion: s3.services.k8s.aws/v1alpha1
+kind: Bucket
+metadata:
+  name: {{ template "s3.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "s3.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  name: {{ .Values.bucket.name | quote }}
+  {{- if .Values.bucket.encryption }}
+  encryption:
+    rules:
+      applyServerSideEncryptionByDefault:
+        sseAlgorithm: "AES256"
+  {{- end }}
