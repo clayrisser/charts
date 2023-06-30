@@ -59,6 +59,10 @@ spec:
                       value: {% .plugConfig.resourceIdentifier | quote %}
                     - name: RESOURCE_NAME
                       value: {% .plugConfig.resourceName %}
+                    - name: AWS_SHARED_CREDENTIALS_FILE
+                      value: /var/run/secrets/aws/credentials
+                    - name: AWS_PROFILE
+                      value: default
                   command:
                     - sh
                     - -c
@@ -120,6 +124,14 @@ spec:
                         -l job-name={{ template "aws-creds.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
+                  volumeMounts:
+                    - name: aws-creds
+                      mountPath: /var/run/secrets/aws
+                      readOnly: true
+              volumes:
+                - name: aws-creds
+                  secret:
+                    secretName: aws-creds
     - when: [decoupled]
       do: recreate
       resource: |
