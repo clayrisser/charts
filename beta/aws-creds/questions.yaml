@@ -1,0 +1,17 @@
+categories:
+  - Server
+questions:
+
+  # AWS
+  - variable: config.aws.accessKey
+    description: ''
+    type: string
+    required: true
+    label: 'access key'
+    group: AWS
+  - variable: config.aws.secretKey
+    description: ''
+    type: password
+    required: true
+    label: 'secret key'
+    group: AWS

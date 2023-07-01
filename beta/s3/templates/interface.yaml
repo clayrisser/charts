@@ -13,16 +13,11 @@ spec:
       plugDefinition:
         properties:
           bucket: {}
-          prefix: {}
       socketDefinition:
         properties:
           endpoint:
             required: true
           accessKey: {}
-          defaultBucket: {}
-          defaultPrefix: {}
-          pathStyle: {}
-          region: {}
           secretKey: {}
+          region: {}
           tls: {}
-          url: {}
