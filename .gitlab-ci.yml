@@ -1,6 +1,6 @@
 image:
   name: registry.gitlab.com/bitspur/rock8s/images/kube-commands:0.0.1
-  entrypoint: ["/bin/sh", "-c"]
+  entrypoint: ['']
 
 variables:
   GITLAB_TOKEN: ''
