@@ -14,16 +14,16 @@ spec:
     name: s3
     namespace: {{ .Release.Namespace }}
   config:
-    accessKey: {{ .Values.config.s3.accessKey | quote }}
-    defaultBucket: {{ .Values.config.s3.defaultBucket | quote }}
-    defaultPrefix: {{ .Values.config.s3.defaultPrefix | quote }}
-    pathStyle: {{ .Values.config.s3.pathStyle | quote }}
-    region: {{ .Values.config.s3.region | quote }}
+    # accessKey: {\{ .Values.config.s3.accessKey | quote }}
+    # defaultBucket: {\{ .Values.config.s3.defaultBucket | quote }}
+    # defaultPrefix: {\{ .Values.config.s3.defaultPrefix | quote }}
+    # pathStyle: {\{ .Values.config.s3.pathStyle | quote }}
+    # region: {\{ .Values.config.s3.region | quote }}
   configMapper:
     endpoint: '{% .data.endpoint %}'
     tls: '{% .data.tls %}'
     url: '{% (empty .data.endpoint) | ternary "" (printf "http%s://%s" ((eq .data.tls "true") | ternary "s" "") .data.endpoint) %}'
   data:
-    endpoint: {{ .Values.config.s3.endpoint | quote }}
-    tls: {{ .Values.config.s3.tls | quote }}
+    # endpoint: {\{ .Values.config.s3.endpoint | quote }}
+    # tls: {\{ .Values.config.s3.tls | quote }}
   configSecretName: {{ template "s3.name" . }}
