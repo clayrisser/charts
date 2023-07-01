@@ -50,7 +50,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/risserlabs/community/images/kube-commands-psql:0.0.1
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands-aws:0.0.1
                   imagePullPolicy: Always
                   env:
                     - name: PLUG_NAMESPACE
@@ -161,7 +161,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/risserlabs/community/images/kube-commands-psql:0.0.1
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands-aws:0.0.1
                   imagePullPolicy: Always
                   env:
                     - name: PLUG_NAMESPACE

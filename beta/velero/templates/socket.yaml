@@ -43,7 +43,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:0.0.1
                   command:
                     - sh
                     - -c
@@ -95,7 +95,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:0.0.1
                   command:
                     - sh
                     - -c
