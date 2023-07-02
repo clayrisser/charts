@@ -15,10 +15,9 @@ spec:
     namespace: {{ .Release.Namespace }}
   config: {}
   configMapper:
-    endpoint: '{% printf "s3.%s.amazonaws.com" .vars.REGION %}'
+    endpoint: '{% printf "%s.s3.%s.amazonaws.com" .plug.spec.config.bucket .vars.REGION %}'
     region: '{% .vars.REGION %}'
-    tls: '{% .data.tls %}'
-    url: '{% (printf "http%s://s3-accesspoint.%s.amazonaws.com" ((eq .data.tls "1") | ternary "s" "") .vars.REGION) %}'
+    tls: '{% .socketData.tls %}'
   data:
     tls: '1'
   configSecretName: {{ template "s3.name" . }}-aws-creds

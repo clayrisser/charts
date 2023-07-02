@@ -21,8 +21,6 @@ spec:
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.s3.bucket | quote }}
-    prefix: {{ .Values.config.s3.prefix | quote }}
-    replicate: 'false'
   resources:
     - when: [coupled, updated]
       do: apply
@@ -33,8 +31,8 @@ spec:
             name: {{ template "kanister.name" . }}-s3
             namespace: {{ .Release.Namespace }}
           stringData:
-            ACCESS_KEY: '{% .socketConfig.accessKey %}'
-            SECRET_KEY: '{% .socketConfig.secretKey %}'
+            ACCESS_KEY: {% .socketConfig.accessKey | quote %}
+            SECRET_KEY: {% .socketConfig.secretKey | quote %}
     - when: [coupled, updated]
       do: apply
       resource: |
@@ -45,10 +43,10 @@ spec:
             namespace: {{ .Release.Namespace }}
           location:
             type: s3Compliant
-            bucket: '{% .plugConfig.bucket %}'
-            endpoint: '{% .socketConfig.endpoint %}'
-            prefix: '{% .plugConfig.prefix %}'
-            region: '{% .socketConfig.region %}'
+            bucket: {% .plugConfig.bucket | quote %}
+            endpoint: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
+            prefix: {{ .Values.config.s3.prefix | quote }}
+            region: {% .socketConfig.region | quote %}
           credential:
             type: keyPair
             keyPair:
@@ -60,14 +58,6 @@ spec:
                 name: {{ template "kanister.name" . }}-s3
                 namespace: {{ .Release.Namespace }}
           skipSSLVerify: true
-    - when: [decoupled]
-      do: delete
-      resource: |
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: s3
-            namespace: {{ .Release.Namespace }}
     - when: [decoupled]
       do: delete
       resource: |

@@ -21,8 +21,6 @@ spec:
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.s3.buckets.artifacts | quote }}
-    prefix: ''
-    replicate: 'false'
   resources:
     - when: [coupled, updated]
       do: apply

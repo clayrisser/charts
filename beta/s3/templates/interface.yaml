@@ -21,4 +21,3 @@ spec:
           secretKey: {}
           region: {}
           tls: {}
-          url: {}
