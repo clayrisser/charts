@@ -113,13 +113,17 @@ spec:
                           - key: namespace
                             value: $PLUG_NAMESPACE
                       EOF
-                      OUT=$(aws iam create-access-key --user-name $USERNAME --query 'AccessKey.[AccessKeyId,SecretAccessKey]' --output text)
-                      ACCESS_KEY=$(echo $OUT | cut -f1)
-                      SECRET_KEY=$(echo $OUT | cut -f2)
-                      kubectl create secret generic $RESOURCE_IDENTIFIER-aws-creds \
-                        --from-literal=accessKey=$ACCESS_KEY \
-                        --from-literal=secretKey=$SECRET_KEY \
-                        --namespace=$PLUG_NAMESPACE
+                      if kubectl get secret $RESOURCE_IDENTIFIER-aws-creds --namespace=$PLUG_NAMESPACE >/dev/null 2>&1; then
+                        echo "secret/$RESOURCE_IDENTIFIER-aws-creds already exists in namespace $PLUG_NAMESPACE"
+                      else
+                        OUT=$(aws iam create-access-key --user-name $USERNAME --query 'AccessKey.[AccessKeyId,SecretAccessKey]' --output text)
+                        ACCESS_KEY=$(echo $OUT | cut -f1)
+                        SECRET_KEY=$(echo $OUT | cut -f2)
+                        kubectl create secret generic $RESOURCE_IDENTIFIER-aws-creds \
+                          --from-literal=accessKey=$ACCESS_KEY \
+                          --from-literal=secretKey=$SECRET_KEY \
+                          --namespace=$PLUG_NAMESPACE
+                      fi
                       kubectl get pods -n {{ .Release.Namespace }} \
                         -l job-name={{ template "aws-creds.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
