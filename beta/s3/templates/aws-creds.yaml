@@ -1,6 +1,5 @@
-# {\{- if .Values.config.awsCreds }}
-# {\{- $name := (split "." .Values.config.awsCreds)._1 | default "kube-system" }}
-# {\{- $namespace := (split "." (printf "%s." .Values.config.awsCreds))._0 }}
+{{- $name := (split "." .Values.awsCreds)._1 | default "aws-creds" }}
+{{- $namespace := (split "." (printf "%s." .Values.awsCreds))._0 }}
 apiVersion: integration.risserlabs.com/v1alpha2
 kind: Plug
 metadata:
@@ -15,23 +14,10 @@ spec:
   interfaceVersions: '*'
   interface:
     name: aws-creds
-    # namespace: {\{ $namespace }}
+    namespace: {{ $namespace }}
   socket:
-    # name: {\{ $name }}
-    # namespace: {\{ $namespace }}
+    name: {{ $name }}
+    namespace: {{ $namespace }}
   config:
-    username: {{ template "s3.username" . }}
-    # bucket: {\{ .Values.config.bucket | quote }}
-  resources:
-    - when: [coupled, updated]
-      do: recreate
-      resource: |
-        apiVersion: patch.risserlabs.com/v1alpha1
-        kind: Secret
-        metadata:
-          name: postgres-coupled-or-updated
-          namespace: {{ .Release.Namespace }}
-        stringData:
-          AWS_ACCESS_KEY: {% .socket.config.accessKey %}
-# {\{- end }}
-
+    resourceIdentifier: buckets.s3.services.k8s.aws.v1alpha1
+    resourceName: {{ template "s3.name" . }}

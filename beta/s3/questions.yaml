@@ -1,47 +1,18 @@
 categories:
-  - Server
+  - AWS
+  - S3
 questions:
 
-  # S3 Config
-  - variable: config.s3.endpoint
+  # Bucket
+  - variable: bucket.name
     description: ''
     type: string
     required: true
-    label: endpoint
-    group: 'S3 Config'
-  - variable: config.s3.accessKey
-    description: ''
-    type: string
-    required: false
-    label: 'access key'
-    group: 'S3 Config'
-  - variable: config.s3.secretKey
-    description: ''
-    type: password
-    required: false
-    label: 'secret key'
-    group: 'S3 Config'
-  - variable: config.s3.region
-    description: ''
-    type: string
-    required: false
-    label: region
-    group: 'S3 Config'
-  - variable: config.s3.pathStyle
+    label: name
+    group: Bucket
+  - variable: bucket.encrypted
     description: ''
     type: boolean
     required: true
-    label: 'path style'
-    group: 'S3 Config'
-  - variable: config.s3.defaultBucket
-    description: ''
-    type: string
-    required: false
-    label: 'default bucket'
-    group: 'S3 Config'
-  - variable: config.s3.defaultPrefix
-    description: ''
-    type: string
-    required: false
-    label: 'default prefix'
-    group: 'S3 Config'
+    label: encrypted
+    group: Bucket

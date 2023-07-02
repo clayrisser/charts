@@ -1,3 +1,5 @@
+awsCreds: ack-system
+
 bucket:
   name: ''
   encrypted: true

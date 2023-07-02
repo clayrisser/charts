@@ -116,7 +116,7 @@ spec:
                       OUT=$(aws iam create-access-key --user-name $USERNAME --query 'AccessKey.[AccessKeyId,SecretAccessKey]' --output text)
                       ACCESS_KEY=$(echo $OUT | cut -f1)
                       SECRET_KEY=$(echo $OUT | cut -f2)
-                      kubectl create secret generic $USERNAME \
+                      kubectl create secret generic $RESOURCE_IDENTIFIER-aws-creds \
                         --from-literal=accessKey=$ACCESS_KEY \
                         --from-literal=secretKey=$SECRET_KEY \
                         --namespace=$PLUG_NAMESPACE
@@ -188,7 +188,7 @@ spec:
                         name: $USERNAME
                         namespace: {{ .Release.Namespace }}
                       EOF
-                      kubectl delete secret generic $USERNAME \
+                      kubectl delete secret generic $RESOURCE_IDENTIFIER-aws-creds \
                         --namespace=$PLUG_NAMESPACE
                       kubectl get pods -n {{ .Release.Namespace }} \
                         -l job-name={{ template "aws-creds.name" . }}-decoupled-{% .plug.metadata.namespace %} \
