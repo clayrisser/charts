@@ -21,7 +21,6 @@ spec:
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.s3.bucket | quote }}
-    prefix: {{ .Values.config.s3.prefix | quote }}
   resources:
     - when: [coupled, updated]
       do: apply
@@ -51,14 +50,14 @@ spec:
                       'objectstore' => array(
                         'class' => '\\OC\\Files\\ObjectStore\\S3',
                         'arguments' => array(
-                          'autocreate' => true,
-                          'bucket'     => '{% ((empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket) %}',
-                          'endpoint'   => '{% .socketConfig.endpoint | default (printf "s3.%s.amazonaws.com" .socketConfig.region) %}',
-                          'key'        => '{% .socketConfig.accessKey %}',
-                          'region'     => '{% .socketConfig.region %}',
-                          'secret'     => '{% .socketConfig.secretKey %}',
-                          'use_path_style' => true,
-                          'use_ssl'    => true
+                          'autocreate'     => false,
+                          'bucket'         => '{% .plugConfig.bucket %}',
+                          'endpoint'       => '{% .socketConfig.endpoint %}',
+                          'key'            => '{% .socketConfig.accessKey %}',
+                          'region'         => '{% .socketConfig.region %}',
+                          'secret'         => '{% .socketConfig.secretKey %}',
+                          'use_path_style' => false,
+                          'use_ssl'        => {% (.socketConfig.tls "1") | ternary "true" "false" %},
                         )
                       )
                     );

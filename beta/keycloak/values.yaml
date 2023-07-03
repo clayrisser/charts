@@ -5,7 +5,7 @@ olm:
 
 images:
   keycloak:
-    repository: registry.gitlab.com/risserlabs/community/images/keycloak
+    repository: registry.gitlab.com/bitspur/rock8s/images/keycloak
     tag: 21.1.0
 
 config:

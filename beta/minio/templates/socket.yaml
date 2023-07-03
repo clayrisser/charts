@@ -19,9 +19,9 @@ spec:
     defaultBucket: {{ .Values.config.defaultBucket | quote }}
     defaultPrefix: {{ .Values.config.defaultPrefix | quote }}
   configMapper:
-    endpoint: '{% .data.endpoint %}'
-    tls: '{% .data.tls %}'
-    url: '{% (empty .data.endpoint) | ternary "" (printf "http%s://%s" ((eq .data.tls "true") | ternary "s" "") .data.endpoint) %}'
+    endpoint: '{% .socketData.endpoint %}'
+    tls: '{% .socketData.tls %}'
+    url: '{% (empty .socketData.endpoint) | ternary "" (printf "http%s://%s" ((eq .socketData.tls "true") | ternary "s" "") .socketData.endpoint) %}'
   data:
     # TODO: set endpoint
     endpoint: ''
@@ -56,7 +56,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/risserlabs/community/images/kube-commands:0.0.1
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:0.0.1
                   env:
                     - name: S3_BUCKET
                       value: '{% (empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket %}'

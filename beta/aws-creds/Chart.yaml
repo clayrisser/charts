@@ -14,5 +14,7 @@ maintainers:
   - name: 'Clay Risser'
     email: email@clayrisser.com
 annotations:
+  catalog.cattle.io/display-name: 'AWS Creds'
   catalog.cattle.io/namespace: ack-system
+  catalog.cattle.io/os: linux
   catalog.cattle.io/release-name: aws-creds

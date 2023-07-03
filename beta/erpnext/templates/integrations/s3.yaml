@@ -21,7 +21,6 @@ spec:
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.backup.s3.bucket | quote }}
-    prefix: {{ .Values.config.backup.s3.prefix | quote }}
   resources:
     - when: [coupled, updated]
       do: apply
@@ -47,11 +46,11 @@ spec:
                   path: /spec/values/jobs/backup/push
                   value:
                     enabled: true
-                    bucket: {% ((empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket) | quote %}
+                    bucket: {% .plugConfig.bucket | quote %}
                     region: {% .socketConfig.region | quote %}
                     accessKey: {% .socketConfig.accessKey | quote %}
                     secretKey: {% .socketConfig.secretKey | quote %}
-                    endpoint: 'https://{% .socketConfig.endpoint %}/{% (empty .plugConfig.bucket) | ternary .socketConfig.defaultPrefix .plugConfig.prefix %}'
+                    endpoint: '{% printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint %}/{{ .Values.config.backup.s3.prefix }}'
                 - op: replace
                   path: /spec/values/jobs/backup/enabled
                   value: true

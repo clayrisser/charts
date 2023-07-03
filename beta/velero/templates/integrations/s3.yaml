@@ -21,8 +21,6 @@ spec:
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.s3.bucket | quote }}
-    prefix: {{ .Values.config.s3.prefix | quote }}
-    replicate: 'false'
   resources:
     - when: [coupled, updated]
       do: apply
@@ -59,11 +57,9 @@ spec:
                   values:
                     configuration:
                       backupStorageLocation:
-                        bucket: {% (empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket %}
-                        prefix: {% (empty .plugConfig.bucket) | ternary .socketConfig.defaultPrefix .plugConfig.prefix %}
+                        bucket: {% .plugConfig.bucket %}
+                        prefix: {{ .Values.config.s3.prefix | quote }}
                         config:
                           region: {% .socketConfig.region %}
-                          {%- if .socketConfig.url %}
-                          s3Url: {% .socketConfig.url %}
-                          {%- end %}
+                          s3Url: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
 {{- end }}
