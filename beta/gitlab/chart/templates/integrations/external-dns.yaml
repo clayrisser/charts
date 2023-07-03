@@ -1,5 +1,5 @@
 {{- if .Values.ingress.gitlab.enabled }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: ingress-target

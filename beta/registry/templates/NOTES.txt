@@ -3,7 +3,7 @@ add the following yaml to use this registry
 **plug.yaml**
 _the plug replicates the `{{ .Release.Namespace }}-{{ template "registry.name" . }}` secret_
 ```yaml
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 spec:
   interface:

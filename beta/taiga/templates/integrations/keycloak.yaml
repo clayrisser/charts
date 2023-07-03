@@ -18,7 +18,7 @@ data:
 ---
 {{- $name := (split "." .Values.config.keycloak.integration)._1 | default "keycloak" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.integration))._0 }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: keycloak
@@ -41,7 +41,7 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: patch.risserlabs.com/v1alpha1
+        apiVersion: patch.rock8s.com/v1alpha1
         kind: Patch
         metadata:
           name: keycloak-coupled-or-updated
