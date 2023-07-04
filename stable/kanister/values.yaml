@@ -5,6 +5,5 @@ config:
     prefix: ''
     accessKey: ''
     endpoint: ''
-    pathStyle: true
     region: ''
     secretKey: ''

@@ -26,7 +26,6 @@ config:
     integration: ''
     bucket: ''
     endpoint: ''
-    pathStyle: true
     prefix: velero
     region: us-east-2
     tls: true

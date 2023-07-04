@@ -49,10 +49,3 @@ questions:
     label: region
     show_if: config.s3.integration=
     group: S3
-  - variable: config.s3.pathStyle
-    description: ''
-    type: boolean
-    required: true
-    label: 'path style'
-    show_if: config.s3.integration=
-    group: S3

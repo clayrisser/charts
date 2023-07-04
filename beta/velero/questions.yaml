@@ -67,13 +67,6 @@ questions:
     required: false
     label: region
     group: 'S3 Config'
-  - variable: config.s3.pathStyle
-    description: ''
-    type: boolean
-    show_if: config.s3.integration=
-    required: true
-    label: 'path style'
-    group: 'S3 Config'
 
 # Snapshots
   - variable: velero.snapshotsEnabled
