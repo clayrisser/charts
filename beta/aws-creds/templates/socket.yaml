@@ -93,20 +93,20 @@ spec:
                         namespace: {{ .Release.Namespace }}
                       spec:
                         name: $USERNAME
-                        policies:
-                          - |
-                              {
-                                "Version": "2012-10-17",
-                                "Statement": [
-                                  {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                      "$SERVICE:*"
-                                    ],
-                                    "Resource": "$ARN/*"
-                                  }
-                                ]
-                              }
+                        inlinePolicies:
+                          policy: |
+                            {
+                              "Version": "2012-10-17",
+                              "Statement": [
+                                {
+                                  "Effect": "Allow",
+                                  "Action": [
+                                    "$SERVICE:*"
+                                  ],
+                                  "Resource": "$ARN/*"
+                                }
+                              ]
+                            }
                         tags:
                           - key: resourceIdentifier
                             value: $RESOURCE_IDENTIFIER
