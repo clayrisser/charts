@@ -1,22 +1,35 @@
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
 metadata:
-  name: {{ template "kanister-operator.name" . }}
+  name: kanister
   labels:
     app.kubernetes.io/name: {{ template "kanister-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  forceUpgrade: false
-  helmVersion: v3
-  timeout: 1200
+  interval: 5m
+  url: http://charts.kanister.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}-release
+  labels:
+    app.kubernetes.io/name: {{ template "kanister-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
   chart:
-    repository: http://charts.kanister.io
-    name: kanister-operator
-    version: 0.71.0
-  git:
-    timeout: 60s
+    spec:
+      chart: kanister-operator
+      version: {{ .Chart.Version }}
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: kanister
   values:
     image:
       repository: {{ .Values.images.kanister.repository | quote }}
