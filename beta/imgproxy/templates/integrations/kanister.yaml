@@ -1,0 +1,26 @@
+{{- if (and .Values.persistence.enabled .Values.persistence.kanister.enabled) }}
+apiVersion: integration.rock8s.com/v1alpha2
+kind: Plug
+metadata:
+  name: kanister-imgproxy
+  labels:
+    app.kubernetes.io/name: {{ template "imgproxy.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: kanister
+    namespace: kanister
+  socket:
+    name: kanister
+    namespace: kanister
+  config:
+    schedule: {{ .Values.persistence.kanister.schedule | quote }}
+    blueprint: imgproxy
+    statefulset: {{ .Release.Name }}-release
+    secrets: imgproxy={{ .Release.Namespace }}/{{ template "imgproxy.name" . }}
+
+{{- end }}

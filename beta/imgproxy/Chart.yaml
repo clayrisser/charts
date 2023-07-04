@@ -3,7 +3,7 @@ name: imgproxy
 home: https://imgproxy.net/
 icon: https://cdn.rawgit.com/imgproxy/imgproxy/master/logo.svg
 version: 0.8.30
-appVersion: 3.15.0
+appVersion: 3.18.1
 description: 'A fast and secure standalone server for resizing and converting remote images. The main principles of imgproxy are simplicity, speed, and security.'
 keywords:
     - imgproxy
