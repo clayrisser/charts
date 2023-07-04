@@ -1,0 +1,37 @@
+{{- if (and .Values.persistence.enabled .Values.persistence.velero.enabled) }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ template "imgproxy.fullname" . }}-{{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "imgproxy.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  schedule: {{ .Values.persistence.velero.schedule | quote }}
+  template:
+    includedNamespaces:
+      - {{ .Release.Namespace }}
+    ttl: {{ .Values.persistence.velero.ttl | quote }}
+---
+apiVersion: integration.rock8s.com/v1alpha2
+kind: Plug
+metadata:
+  name: velero-schedule-replicator
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interfaceVersions: '*'
+  interface:
+    name: replicator
+    namespace: velero
+  socket:
+    name: velero-schedule-replicator
+    namespace: velero
+  config:
+    name: {{ template "imgproxy.fullname" . }}-{{ .Release.Namespace }}
+{{- end }}
