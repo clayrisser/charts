@@ -1,6 +1,6 @@
 {{- range .Values.crds }}
 ---
-apiVersion: cache.rock8s.com/v1alpha1
+apiVersion: easyolm.rock8s.com/v1alpha1
 kind: CrdRef
 metadata:
   name: {{ . }}
