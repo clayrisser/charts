@@ -76,7 +76,9 @@ spec:
                       echo SERVICE $SERVICE
                       ARN=""
                       while [ "$ARN" = "" ]; do
-                        ARN=$(kubectl get $RESOURCE_IDENTIFIER $RESOURCE_NAME -n $PLUG_NAMESPACE -o jsonpath='{.status.ackResourceMetadata.arn}')
+                        if [ "$(kubectl get $RESOURCE_IDENTIFIER $RESOURCE_NAME -n $PLUG_NAMESPACE -o jsonpath='{.status.conditions[0].type}')" = "ACK.ResourceSynced" ]; then
+                          ARN="arn:aws:$SERVICE:::$(kubectl get $RESOURCE_IDENTIFIER $RESOURCE_NAME -n $PLUG_NAMESPACE -o jsonpath='{.spec.name}')"
+                        fi
                         if [ "$ARN" = "" ]; then
                           echo "arn not available yet. Retrying in 5 seconds..."
                           sleep 5
