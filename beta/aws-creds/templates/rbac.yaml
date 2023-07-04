@@ -4,14 +4,33 @@ metadata:
   name: {{ template "aws-creds.name" . }}-coupled-or-updated
 rules:
 - apiGroups:
+    - ''
+  resources:
+    - pods
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
     - s3.services.k8s.aws
   resources:
     - buckets
   verbs:
     - get
     - list
+    - watch
+- apiGroups:
+    - iam.services.k8s.aws
+  resources:
+    - users
+  verbs:
+    - delete
+    - create
+    - get
+    - list
     - update
     - watch
+    - patch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

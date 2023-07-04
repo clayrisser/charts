@@ -70,8 +70,8 @@ spec:
                       echo PLUG_NAMESPACE $PLUG_NAMESPACE
                       echo RESOURCE_IDENTIFIER $RESOURCE_IDENTIFIER
                       echo RESOURCE_NAME $RESOURCE_NAME
-                      USERNAME=$RESOURCE_NAME-$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws\/.\+||g' | sed 's|\.|-|g')-$PLUG_NAMESPACE
-                      SERVICE=$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws\/.\+||g' | sed 's|.\+\.||g')
+                      USERNAME=$RESOURCE_NAME-$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|\.|-|g')-$PLUG_NAMESPACE
+                      SERVICE=$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|.\+\.||g')
                       echo USERNAME $USERNAME
                       echo SERVICE $SERVICE
                       ARN=""
