@@ -19,5 +19,5 @@ spec:
     name: {{ $name }}
     namespace: {{ $namespace }}
   config:
-    resourceIdentifier: buckets.s3.services.k8s.aws.v1alpha1
+    resourceIdentifier: buckets.s3.services.k8s.aws
     resourceName: {{ template "s3.name" . }}

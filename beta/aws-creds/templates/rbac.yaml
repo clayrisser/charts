@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "aws-creds.name" . }}-coupled-or-updated
+rules:
+- apiGroups:
+    - s3.services.k8s.aws
+  resources:
+    - buckets
+  verbs:
+    - get
+    - list
+    - update
+    - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "aws-creds.name" . }}-coupled-or-updated
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ template "aws-creds.name" . }}-coupled-or-updated
+  apiGroup: rbac.authorization.k8s.io
