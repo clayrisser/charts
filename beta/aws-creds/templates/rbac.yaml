@@ -20,6 +20,18 @@ rules:
     - list
     - watch
 - apiGroups:
+    - ''
+  resources:
+    - secrets
+  verbs:
+    - delete
+    - create
+    - get
+    - list
+    - update
+    - watch
+    - patch
+- apiGroups:
     - iam.services.k8s.aws
   resources:
     - users

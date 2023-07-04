@@ -119,8 +119,8 @@ spec:
                         echo "secret/$RESOURCE_IDENTIFIER-aws-creds already exists in namespace $PLUG_NAMESPACE"
                       else
                         OUT=$(aws iam create-access-key --user-name $USERNAME --query 'AccessKey.[AccessKeyId,SecretAccessKey]' --output text)
-                        ACCESS_KEY=$(echo $OUT | cut -f1)
-                        SECRET_KEY=$(echo $OUT | cut -f2)
+                        ACCESS_KEY=$(echo $OUT | cut -d' ' -f1)
+                        SECRET_KEY=$(echo $OUT | cut -d' ' -f2)
                         kubectl create secret generic $RESOURCE_IDENTIFIER-aws-creds \
                           --from-literal=accessKey=$ACCESS_KEY \
                           --from-literal=secretKey=$SECRET_KEY \
