@@ -1,6 +1,6 @@
 {{- $name := (split "." .Values.awsCreds)._1 | default "aws-creds" }}
 {{- $namespace := (split "." (printf "%s." .Values.awsCreds))._0 }}
-apiVersion: integration.risserlabs.com/v1alpha2
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: aws-creds

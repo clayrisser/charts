@@ -1,5 +1,5 @@
 {{- if .Values.config.istio }}
-apiVersion: patch.risserlabs.com/v1alpha1
+apiVersion: patch.rock8s.com/v1alpha1
 kind: Patch
 metadata:
   name: enable-istio
