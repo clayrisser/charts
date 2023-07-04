@@ -5,10 +5,10 @@ kind: CrdRef
 metadata:
   name: {{ . }}
   labels:
-    app.kubernetes.io/name: {{ template "keycloak-crds.name" $ }}
+    app.kubernetes.io/name: {{ template "kanister-operator.name" $ }}
     helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
     app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
 spec:
-  crd: https://raw.githubusercontent.com/k8s-operatorhub/community-operators/main/operators/keycloak-operator/{{ $.Values.operatorVersion }}/manifests/{{ . }}.yml
+  crd: https://raw.githubusercontent.com/kanisterio/kanister/{{ $.Values.operatorVersion }}/pkg/customresource/{{ . }}.yaml
 {{- end }}
