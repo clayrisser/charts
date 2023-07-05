@@ -1,0 +1,11 @@
+apiVersion: easyolm.rock8s.com/v1alpha1
+kind: CrdRef
+metadata:
+  name: {{ template "olm-crds.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "olm-crds.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  crd: https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v{{ .Chart.Version }}/crds.yaml
