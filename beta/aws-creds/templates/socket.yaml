@@ -70,7 +70,7 @@ spec:
                       echo PLUG_NAMESPACE $PLUG_NAMESPACE
                       echo RESOURCE_IDENTIFIER $RESOURCE_IDENTIFIER
                       echo RESOURCE_NAME $RESOURCE_NAME
-                      USER_RESOURCE_NAME=$RESOURCE_NAME.$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|\.|-|g').$PLUG_NAMESPACE
+                      USER_RESOURCE_NAME=$RESOURCE_NAME.$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g').$PLUG_NAMESPACE
                       USERNAME=$USER_RESOURCE_NAME.{{ template "aws-creds.cluster-name" . }}
                       SERVICE=$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|.\+\.||g')
                       echo USERNAME $USERNAME
@@ -184,7 +184,7 @@ spec:
                       echo PLUG_NAMESPACE $PLUG_NAMESPACE
                       echo RESOURCE_IDENTIFIER $RESOURCE_IDENTIFIER
                       echo RESOURCE_NAME $RESOURCE_NAME
-                      USER_RESOURCE_NAME=$RESOURCE_NAME.$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|\.|-|g').$PLUG_NAMESPACE
+                      USER_RESOURCE_NAME=$RESOURCE_NAME.$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g').$PLUG_NAMESPACE
                       USERNAME=$USER_RESOURCE_NAME.{{ template "aws-creds.cluster-name" . }}
                       SERVICE=$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws\/.\+||g' | sed 's|.\+\.||g')
                       echo USERNAME $USERNAME
