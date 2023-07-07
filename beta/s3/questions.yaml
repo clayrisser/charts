@@ -18,12 +18,6 @@ questions:
     group: Bucket
 
   # Config
-  - variable: config.context
-    description: ''
-    type: string
-    required: true
-    label: context
-    group: Config
   - variable: config.awsCreds
     description: ''
     type: string

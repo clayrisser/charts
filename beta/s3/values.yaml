@@ -4,4 +4,3 @@ bucket:
 
 config:
   awsCreds: ack-system
-  context: local
