@@ -109,12 +109,14 @@ spec:
                               ]
                             }
                         tags:
-                          - key: resourceIdentifier
+                          - key: resource-identifier
                             value: $RESOURCE_IDENTIFIER
-                          - key: resourceName
+                          - key: resource-name
                             value: $RESOURCE_NAME
                           - key: namespace
                             value: $PLUG_NAMESPACE
+                          - key: cluster-name
+                            value: {{ template "aws-creds.cluster-name" . }}
                       EOF
                       if kubectl get secret $RESOURCE_NAME.$RESOURCE_IDENTIFIER --namespace=$PLUG_NAMESPACE >/dev/null 2>&1; then
                         echo "secret/$RESOURCE_NAME.$RESOURCE_IDENTIFIER already exists in namespace $PLUG_NAMESPACE"
