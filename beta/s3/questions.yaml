@@ -16,3 +16,17 @@ questions:
     required: true
     label: encrypted
     group: Bucket
+
+  # Config
+  - variable: config.context
+    description: ''
+    type: string
+    required: true
+    label: context
+    group: Config
+  - variable: config.awsCreds
+    description: ''
+    type: string
+    required: true
+    label: 'aws creds'
+    group: Config

@@ -37,13 +37,13 @@ questions:
   - variable: config.s3.bucket
     description: ''
     type: string
-    required: true
+    required: false
     label: bucket
     group: 'S3 Config'
   - variable: config.s3.prefix
     description: ''
     type: string
-    required: true
+    required: false
     label: prefix
     group: 'S3 Config'
   - variable: config.s3.endpoint

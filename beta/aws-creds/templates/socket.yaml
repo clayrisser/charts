@@ -1,3 +1,4 @@
+{{- $clusterInfo := lookup "v1" "ConfigMap" "rock8s-global" "cluster-info" }}
 {{- $serviceAccount := lookup "v1" "ServiceAccount" .Release.Namespace "aws-elevated" }}
 apiVersion: integration.rock8s.com/v1alpha2
 kind: Socket
@@ -70,7 +71,8 @@ spec:
                       echo PLUG_NAMESPACE $PLUG_NAMESPACE
                       echo RESOURCE_IDENTIFIER $RESOURCE_IDENTIFIER
                       echo RESOURCE_NAME $RESOURCE_NAME
-                      USERNAME=$RESOURCE_NAME-$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|\.|-|g')-$PLUG_NAMESPACE
+                      USER_RESOURCE_NAME=$RESOURCE_NAME.$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|\.|-|g').$PLUG_NAMESPACE
+                      USERNAME=$USER_RESOURCE_NAME.{{ $clusterInfo.data.clusterName }}
                       SERVICE=$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|.\+\.||g')
                       echo USERNAME $USERNAME
                       echo SERVICE $SERVICE
@@ -89,7 +91,7 @@ spec:
                       apiVersion: iam.services.k8s.aws/v1alpha1
                       kind: User
                       metadata:
-                        name: $USERNAME
+                        name: $USER_RESOURCE_NAME
                         namespace: {{ .Release.Namespace }}
                       spec:
                         name: $USERNAME
@@ -115,13 +117,13 @@ spec:
                           - key: namespace
                             value: $PLUG_NAMESPACE
                       EOF
-                      if kubectl get secret $RESOURCE_IDENTIFIER-aws-creds --namespace=$PLUG_NAMESPACE >/dev/null 2>&1; then
-                        echo "secret/$RESOURCE_IDENTIFIER-aws-creds already exists in namespace $PLUG_NAMESPACE"
+                      if kubectl get secret $RESOURCE_NAME.$RESOURCE_IDENTIFIER --namespace=$PLUG_NAMESPACE >/dev/null 2>&1; then
+                        echo "secret/$RESOURCE_NAME.$RESOURCE_IDENTIFIER already exists in namespace $PLUG_NAMESPACE"
                       else
                         OUT=$(aws iam create-access-key --user-name $USERNAME --query 'AccessKey.[AccessKeyId,SecretAccessKey]' --output text)
                         ACCESS_KEY=$(echo $OUT | cut -d' ' -f1)
                         SECRET_KEY=$(echo $OUT | cut -d' ' -f2)
-                        kubectl create secret generic $RESOURCE_IDENTIFIER-aws-creds \
+                        kubectl create secret generic $RESOURCE_NAME.$RESOURCE_IDENTIFIER \
                           --from-literal=accessKey=$ACCESS_KEY \
                           --from-literal=secretKey=$SECRET_KEY \
                           --namespace=$PLUG_NAMESPACE
@@ -183,7 +185,8 @@ spec:
                       echo PLUG_NAMESPACE $PLUG_NAMESPACE
                       echo RESOURCE_IDENTIFIER $RESOURCE_IDENTIFIER
                       echo RESOURCE_NAME $RESOURCE_NAME
-                      USERNAME=$RESOURCE_NAME-$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws\/.\+||g' | sed 's|\.|-|g')-$PLUG_NAMESPACE
+                      USER_RESOURCE_NAME=$RESOURCE_NAME.$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws$||g' | sed 's|\.|-|g').$PLUG_NAMESPACE
+                      USERNAME=$USER_RESOURCE_NAME.{{ $clusterInfo.data.clusterName }}
                       SERVICE=$(echo $RESOURCE_IDENTIFIER | sed 's|\.services\.k8s\.aws\/.\+||g' | sed 's|.\+\.||g')
                       echo USERNAME $USERNAME
                       echo SERVICE $SERVICE
@@ -191,7 +194,7 @@ spec:
                       apiVersion: iam.services.k8s.aws/v1alpha1
                       kind: User
                       metadata:
-                        name: $USERNAME
+                        name: $USER_RESOURCE_NAME
                         namespace: {{ .Release.Namespace }}
                       EOF
                       kubectl delete secret generic $RESOURCE_IDENTIFIER-aws-creds \

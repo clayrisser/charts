@@ -19,7 +19,7 @@ questions:
   - variable: config.s3.bucket
     description: ''
     type: string
-    required: true
+    required: false
     label: bucket
     group: S3
   - variable: config.s3.prefix

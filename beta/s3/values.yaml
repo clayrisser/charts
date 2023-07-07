@@ -1,5 +1,7 @@
-awsCreds: ack-system
-
 bucket:
   name: ''
   encrypted: true
+
+config:
+  awsCreds: ack-system
+  context: local

@@ -15,3 +15,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- $clusterInfo := lookup "v1" "ConfigMap" "rock8s-global" "cluster-info" }}
+{{- define "s3.bucket-name" -}}
+{{- printf "%s.%s" .Values.bucket.name ($clusterInfo.data.clusterName | default "local") -}}
+{{- end -}}

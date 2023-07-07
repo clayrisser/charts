@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  name: {{ .Values.bucket.name | quote }}
+  name: {{ template "s3.bucket-name" . }}
   {{- if .Values.bucket.encryption }}
   encryption:
     rules:

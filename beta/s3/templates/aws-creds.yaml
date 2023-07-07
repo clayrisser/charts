@@ -1,5 +1,5 @@
-{{- $name := (split "." .Values.awsCreds)._1 | default "aws-creds" }}
-{{- $namespace := (split "." (printf "%s." .Values.awsCreds))._0 }}
+{{- $name := (split "." .Values.config.awsCreds)._1 | default "aws-creds" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.awsCreds))._0 }}
 apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:

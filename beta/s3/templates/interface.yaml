@@ -17,6 +17,8 @@ spec:
         properties:
           endpoint:
             required: true
+          bucket:
+            required: true
           accessKey: {}
           secretKey: {}
           region: {}

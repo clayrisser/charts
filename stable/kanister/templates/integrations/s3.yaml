@@ -43,7 +43,7 @@ spec:
             namespace: {{ .Release.Namespace }}
           location:
             type: s3Compliant
-            bucket: {% .plugConfig.bucket | quote %}
+            bucket: {% .socketConfig.bucket | quote %}
             endpoint: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
             prefix: {{ .Values.config.s3.prefix | quote }}
             region: {% .socketConfig.region | quote %}

@@ -57,7 +57,7 @@ spec:
                   values:
                     configuration:
                       backupStorageLocation:
-                        bucket: {% .plugConfig.bucket %}
+                        bucket: {% .socketConfig.bucket %}
                         prefix: {{ .Values.config.s3.prefix | quote }}
                         config:
                           region: {% .socketConfig.region %}

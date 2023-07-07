@@ -15,12 +15,13 @@ spec:
     namespace: {{ .Release.Namespace }}
   config: {}
   configMapper:
-    endpoint: '{% printf "%s.s3.%s.amazonaws.com" .plug.spec.config.bucket .vars.REGION %}'
+    endpoint: '{% printf "%s.s3.%s.amazonaws.com" (.plug.spec.config.bucket | default "{{ template "s3.bucket-name" . }}") .vars.REGION %}'
     region: '{% .vars.REGION %}'
     tls: '{% .socketData.tls %}'
+    bucket: '{% .plug.spec.config.bucket | default "{{ template "s3.bucket-name" . }}" %}'
   data:
     tls: '1'
-  configSecretName: {{ template "s3.name" . }}-aws-creds
+  configSecretName: {{ template "s3.name" . }}.buckets.s3.services.k8s.aws
   vars:
     - name: REGION
       objref:
