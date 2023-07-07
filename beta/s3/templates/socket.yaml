@@ -25,8 +25,7 @@ spec:
   vars:
     - name: REGION
       objref:
-        group: s3.services.k8s.aws
-        version: v1alpha1
+        apiVersion: s3.services.k8s.aws/v1alpha1
         kind: Bucket
         name: {{ template "s3.name" . }}
         namespace: {{ .Release.Namespace }}
