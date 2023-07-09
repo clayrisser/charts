@@ -1,7 +1,7 @@
 apiVersion: v2
 name: kanister-operator
 home: https://gitlab.com/risserlabs/community/charts
-version: 0.2.3
+version: 0.93.0
 appVersion: 0.93.0
 type: application
 description: 'kubernetes operator for kanister'
