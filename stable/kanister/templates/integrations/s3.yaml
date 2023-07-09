@@ -25,45 +25,45 @@ spec:
     - when: [coupled, updated]
       do: apply
       resource: |
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: {{ template "kanister.name" . }}-s3
-            namespace: {{ .Release.Namespace }}
-          stringData:
-            ACCESS_KEY: {% .socketConfig.accessKey | quote %}
-            SECRET_KEY: {% .socketConfig.secretKey | quote %}
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: {{ template "kanister.name" . }}-s3
+          namespace: {{ .Release.Namespace }}
+        stringData:
+          ACCESS_KEY: {% .socketConfig.accessKey | quote %}
+          SECRET_KEY: {% .socketConfig.secretKey | quote %}
     - when: [coupled, updated]
       do: apply
       resource: |
-          apiVersion: cr.kanister.io/v1alpha1
-          kind: Profile
-          metadata:
-            name: {{ template "kanister.name" . }}-s3
-            namespace: {{ .Release.Namespace }}
-          location:
-            type: s3Compliant
-            bucket: {% .socketConfig.bucket | quote %}
-            endpoint: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
-            prefix: {{ .Values.config.s3.prefix | quote }}
-            region: {% .socketConfig.region | quote %}
-          credential:
-            type: keyPair
-            keyPair:
-              idField: ACCESS_KEY
-              secretField: SECRET_KEY
-              secret:
-                apiVersion: v1
-                kind: Secret
-                name: {{ template "kanister.name" . }}-s3
-                namespace: {{ .Release.Namespace }}
-          skipSSLVerify: true
+        apiVersion: cr.kanister.io/v1alpha1
+        kind: Profile
+        metadata:
+          name: {{ template "kanister.name" . }}-s3
+          namespace: {{ .Release.Namespace }}
+        location:
+          type: s3Compliant
+          bucket: {% .socketConfig.bucket | quote %}
+          endpoint: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
+          prefix: {{ .Values.config.s3.prefix | quote }}
+          region: {% .socketConfig.region | quote %}
+        credential:
+          type: keyPair
+          keyPair:
+            idField: ACCESS_KEY
+            secretField: SECRET_KEY
+            secret:
+              apiVersion: v1
+              kind: Secret
+              name: {{ template "kanister.name" . }}-s3
+              namespace: {{ .Release.Namespace }}
+        skipSSLVerify: true
     - when: [decoupled]
       do: delete
       resource: |
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: s3
-            namespace: {{ .Release.Namespace }}
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: s3
+          namespace: {{ .Release.Namespace }}
 {{- end }}

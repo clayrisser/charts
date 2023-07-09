@@ -306,3 +306,15 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - cr.kanister.io
+  resources:
+  - profiles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
