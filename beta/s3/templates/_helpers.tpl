@@ -24,5 +24,5 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 
 {{- define "s3.bucket-name" -}}
-{{- (replace (printf "%s-%s" .Values.bucket.name (include "s3.cluster-name" .)) "." "-") -}}
+{{- (printf "%s-%s" .Values.bucket.name (replace (include "s3.cluster-name" .) "." "-")) -}}
 {{- end -}}
