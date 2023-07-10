@@ -104,7 +104,10 @@ spec:
                                   "Action": [
                                     "$SERVICE:*"
                                   ],
-                                  "Resource": "$ARN/*"
+                                  "Resource": [
+                                    "$ARN",
+                                    "$ARN/*"
+                                  ]
                                 }
                               ]
                             }
