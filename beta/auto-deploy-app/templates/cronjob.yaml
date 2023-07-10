@@ -6,7 +6,7 @@ items:
 {{- if $.Capabilities.APIVersions.Has "batch/v1" }}
 - apiVersion: "batch/v1"
 {{- else }}
-- apiVersion: "batch/v1beta1"
+- apiVersion: "batch/v1"
 {{- end }}
   kind: CronJob
   metadata:
@@ -70,13 +70,13 @@ items:
               image: "{{ template "cronjobimagename" (dict "job" . "glob" $.Values) }}"
               imagePullPolicy: {{ $.Values.image.pullPolicy }}
               {{- if $jobConfig.command }}
-              command: 
+              command:
               {{- range $jobConfig.command }}
               - {{ . }}
               {{- end }}
               {{- end }}
               {{- if $jobConfig.command }}
-              args: 
+              args:
               {{- range $jobConfig.args }}
               - {{ . }}
               {{- end }}
