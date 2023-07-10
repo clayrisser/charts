@@ -61,5 +61,9 @@ spec:
                         prefix: {{ .Values.config.s3.prefix | quote }}
                         config:
                           region: {% .socketConfig.region %}
+                          {%- if (contains "amazonaws.com" .socketConfig.endpoint) %}
+                          s3Url: {% (printf "http%s://s3.%s.amazonaws.com" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.region) | quote %}
+                          {%- else %}
                           s3Url: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
+                          {%- end %}
 {{- end }}
