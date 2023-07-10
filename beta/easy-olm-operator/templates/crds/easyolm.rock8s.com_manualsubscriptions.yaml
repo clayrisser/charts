@@ -44,7 +44,7 @@ spec:
                 type: string
               sourceNamespace:
                 type: string
-              startingCsv:
+              startingCSV:
                 type: string
             type: object
           status:
