@@ -8,7 +8,7 @@ velero:
     provider: aws
     backupStorageLocation:
       bucket: ''
-      prefix: velero
+      prefix: ''
       config:
         profile: default
         region: sfo2
@@ -26,6 +26,6 @@ config:
     integration: ''
     bucket: ''
     endpoint: ''
-    prefix: velero
+    prefix: ''
     region: us-east-2
     tls: true
