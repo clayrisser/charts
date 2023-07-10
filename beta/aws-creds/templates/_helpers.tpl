@@ -20,5 +20,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- $clusterInfo := lookup "v1" "ConfigMap" "rock8s-global" "cluster-info" }}
 {{- if (and $clusterInfo $clusterInfo.data) -}}
 {{- $clusterInfo.data.clusterName | default "local" -}}
+{{- else -}}
+{{- "local" -}}
 {{- end -}}
 {{- end -}}
