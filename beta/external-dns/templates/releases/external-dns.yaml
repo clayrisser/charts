@@ -24,7 +24,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: openldap-stack-ha
+      chart: external-dns
       version: {{ .Chart.Version | quote }}
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1
