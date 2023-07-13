@@ -32,7 +32,7 @@ spec:
         name: jp-gouin
   values:
     global:
-      ldapDomain: {{ .Values.config.openldap.domain | quote }}
+      ldapDomain: {{ .Values.config.openldap.root | quote }}
       existingSecret: {{ template "openldap.name" . }}
       {{- if (eq .Values.service.openldap.type "LoadBalancer") }}
       ldapPort: {{ .Values.service.openldap.lbPorts.openldap }}
