@@ -81,94 +81,94 @@ spec:
       LDAP_CONFIG_ADMIN_ENABLED: "yes"
       LDAP_CONFIG_ADMIN_USERNAME: "admin"
       LDAP_SKIP_DEFAULT_TREE: "yes"
-{{- if .Values.config.openldap.organizationalUnits }}
-customLdifFiles:
-  10-organizational-units.ldif: |
-    {{- range (splitList "," .Values.config.openldap.organizationalUnits) }}
-    dn: ou={{ . }},{{ $.Values.config.openldap.root }}
-    objectclass: top
-    objectclass: organizationalUnit
-    ou: {{ . }}
-    {{- printf "\n" }}
+    {{- if .Values.config.openldap.organizationalUnits }}
+    customLdifFiles:
+      10-organizational-units.ldif: |
+        {{- range (splitList "," .Values.config.openldap.organizationalUnits) }}
+        dn: ou={{ . }},{{ $.Values.config.openldap.root }}
+        objectclass: top
+        objectclass: organizationalUnit
+        ou: {{ . }}
+        {{- printf "\n" }}
+        {{- end }}
     {{- end }}
-{{- end }}
-replication:
-  enabled: true
-  clusterName: "cluster.local"
-  retry: 60
-  timeout: 1
-  interval: 00:00:00:10
-  starttls: "critical"
-  tls_reqcert: "never"
-persistence:
-  enabled: {{ .Values.persistence.enabled }}
-  {{- if .Values.persistence.storageClass }}
-  {{- if (eq "-" .Values.persistence.storageClass) }}
-  storageClass: ''
-  {{- else }}
-  storageClass: {{ .Values.persistence.storageClass | quote }}
-  {{- end }}
-  {{- end }}
-  accessModes:
-    - {{ .Values.persistence.accessMode | quote }}
-  size: {{ .Values.persistence.size.openldap | quote }}
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/arch
-              operator: In
-              values:
-                - amd64
-{{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) }}
-resources:
-  requests:
-{{ toYaml .Values.config.openldap.resources.requests | indent 4 }}
-  limits:
-{{ toYaml .Values.config.openldap.resources.limits | indent 4 }}
-{{- else }}
-resources: {}
-{{- end }}
-nodeSelector: {}
-tolerations: []
-test:
-  enabled: false
-  image:
-    repository: dduportal/bats
-    tag: 0.4.0
-    pullPolicy: {{ .Values.config.imagePullPolicy }}
-ltb-passwd:
-  enabled: false
-phpldapadmin:
-  enabled: {{ .Values.config.phpldapadmin.enabled }}
-  image:
-    repository: {{ .Values.images.phpldapadmin.repository | quote }}
-    tag: {{ .Values.images.phpldapadmin.tag | quote }}
-    pullPolicy: {{ .Values.config.imagePullPolicy }}
-  env:
-    PHPLDAPADMIN_HTTPS: 'false'
-    PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: 'never'
-    PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
-  ingress:
-    enabled: {{ .Values.ingress.phpldapadmin.enabled }}
-    annotations:
-      {{- if .Values.ingress.phpldapadmin.tls }}
-      {{- if (not .Values.ingress.phpldapadmin.certificate) }}
-      kubernetes.io/tls-acme: 'true'
-      {{- if .Values.ingress.phpldapadmin.issuer.name }}
-      cert-manager.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
+    replication:
+      enabled: true
+      clusterName: "cluster.local"
+      retry: 60
+      timeout: 1
+      interval: 00:00:00:10
+      starttls: "critical"
+      tls_reqcert: "never"
+    persistence:
+      enabled: {{ .Values.persistence.enabled }}
+      {{- if .Values.persistence.storageClass }}
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClass: ''
+      {{- else }}
+      storageClass: {{ .Values.persistence.storageClass | quote }}
       {{- end }}
       {{- end }}
-      nginx.ingress.kubernetes.io/ssl-redirect: 'true'
-      {{- end }}
-    path: /
-    pathType: Prefix
-    hosts:
-      - {{ .Values.ingress.phpldapadmin.hostname }}
-    {{- if .Values.ingress.phpldapadmin.tls }}
-    tls:
-      - secretName: {{ template "openldap.phpldapadmin-certificate" . }}
+      accessModes:
+        - {{ .Values.persistence.accessMode | quote }}
+      size: {{ .Values.persistence.size.openldap | quote }}
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                    - amd64
+    {{- if (and .Values.config.openldap.resources.enabled (not (eq .Values.config.openldap.resources.enabled "false"))) }}
+    resources:
+      requests:
+    {{ toYaml .Values.config.openldap.resources.requests | indent 4 }}
+      limits:
+    {{ toYaml .Values.config.openldap.resources.limits | indent 4 }}
+    {{- else }}
+    resources: {}
+    {{- end }}
+    nodeSelector: {}
+    tolerations: []
+    test:
+      enabled: false
+      image:
+        repository: dduportal/bats
+        tag: 0.4.0
+        pullPolicy: {{ .Values.config.imagePullPolicy }}
+    ltb-passwd:
+      enabled: false
+    phpldapadmin:
+      enabled: {{ .Values.config.phpldapadmin.enabled }}
+      image:
+        repository: {{ .Values.images.phpldapadmin.repository | quote }}
+        tag: {{ .Values.images.phpldapadmin.tag | quote }}
+        pullPolicy: {{ .Values.config.imagePullPolicy }}
+      env:
+        PHPLDAPADMIN_HTTPS: 'false'
+        PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: 'never'
+        PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
+      ingress:
+        enabled: {{ .Values.ingress.phpldapadmin.enabled }}
+        annotations:
+          {{- if .Values.ingress.phpldapadmin.tls }}
+          {{- if (not .Values.ingress.phpldapadmin.certificate) }}
+          kubernetes.io/tls-acme: 'true'
+          {{- if .Values.ingress.phpldapadmin.issuer.name }}
+          cert-manager.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
+          {{- end }}
+          {{- end }}
+          nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+          {{- end }}
+        path: /
+        pathType: Prefix
         hosts:
           - {{ .Values.ingress.phpldapadmin.hostname }}
-    {{- end }}
+        {{- if .Values.ingress.phpldapadmin.tls }}
+        tls:
+          - secretName: {{ template "openldap.phpldapadmin-certificate" . }}
+            hosts:
+              - {{ .Values.ingress.phpldapadmin.hostname }}
+        {{- end }}
