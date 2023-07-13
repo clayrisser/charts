@@ -1,0 +1,20 @@
+{{- if .Values.config.phpldapadmin.enabled }}
+apiVersion: patch.rock8s.com/v1alpha1
+kind: Patch
+metadata:
+  name: enable-istio
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  patches:
+    - id: patch-namespace
+      target:
+        apiVersion: v1
+        kind: Configmap
+        name: {{ .Release.Name }}-release-phpldapadmin
+      waitForResource: true
+      type: json
+      patch: |
+        - op: replace
+          path: /data/PHPLDAPADMIN_LDAP_HOSTS
+          value: "#PYTHON2BASH:[{ 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-release:{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}': [{'login': [{'bind_id': 'cn=admin,{{ .Values.config.openldap.root }}'  }]}]}]"
+{{- end }}
