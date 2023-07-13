@@ -92,7 +92,7 @@ spec:
         {{- end }}
     {{- end }}
     replication:
-      enabled: true
+      enabled: {{ (gt .Values.config.openldap.replicas 1) | ternary "true" "false" }}
       clusterName: "cluster.local"
       retry: 60
       timeout: 1
