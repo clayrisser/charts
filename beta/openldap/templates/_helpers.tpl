@@ -50,13 +50,6 @@ Calculate openldap hostname
 {{- end -}}
 
 {{/*
-Calculate openldap dc
-*/}}
-{{- define "openldap.openldap-dc" -}}
-{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.openldap.domain -1) 0) (index (regexSplit "\\." .Values.config.openldap.domain -1) 1) -}}
-{{- end -}}
-
-{{/*
 Calculate phpldapadmin certificate
 */}}
 {{- define "openldap.phpldapadmin-certificate" -}}

@@ -41,28 +41,24 @@ questions:
     required: true
     label: replicas
     group: Openldap
-  - variable: config.openldap.domain
-    description: 'use example.org instead of dc=example,dc=org'
+  - variable: config.openldap.root
+    description: ''
     type: string
     required: true
-    label: domain
+    label: root
     group: Openldap
   - variable: config.openldap.hashPassword
     description: ''
     type: enum
     options:
       - SHA512CRYPT
-      - CRYPT
-      - SHA256CRYPT
-      - SSHA
       - NONE
+      - SSHA
+      - MD5
+      - CRYPT
+      - MD5CRYPT
+      - SHA256CRYPT
     label: 'hash password'
-    group: Openldap
-  - variable: config.openldap.organization
-    description: ''
-    type: string
-    required: true
-    label: organization
     group: Openldap
   - variable: config.openldap.organizationalUnits
     description: ''
@@ -81,12 +77,6 @@ questions:
     type: password
     required: false
     label: 'config password'
-    group: Openldap
-  - variable: config.openldap.dhparam
-    description: ''
-    type: multiline
-    required: false
-    label: dhparam
     group: Openldap
   - variable: config.openldap.hostname
     description: ''
@@ -335,11 +325,6 @@ questions:
     show_subquestion_if: true
     group: Networking
     subquestions:
-      - variable: service.openldap.tls.enforce
-        description: ''
-        type: boolean
-        required: true
-        label: 'openldap tls enforce'
       - variable: service.openldap.tls.certificate.name
         description: 'certificate will be automatically generated if not set'
         type: string

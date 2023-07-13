@@ -1,7 +1,7 @@
 images:
   openldap:
-    repository: registry.gitlab.com/silicon-hills/community/docker-openldap
-    tag: 0.0.2
+    repository: registry.gitlab.com/bitspur/rock8s/docker-openldap
+    tag: 2.4.57
   phpldapadmin:
     repository: osixia/phpldapadmin
     tag: 0.9.0
@@ -13,20 +13,10 @@ config:
   istio: false
   openldap:
     replicas: 1
-    domain: example.org
+    root: dc=example,dc=org
     hashPassword: SHA512CRYPT
     hostname: ''
-    organization: 'Example Organization'
     organizationalUnits: people,groups
-    dhparam: |-
-      -----BEGIN DH PARAMETERS-----
-      MIIBCAKCAQEA7adhygsX/CvbcQBlSEKBmm0D0+hVfIttcftyFTuDPNok4yDJUBUF
-      zzc7X/i3PUMzANhShBrngBaXbOhVk3QcjMC623TPhFmILx0r236+aQEUGnlwN73M
-      RUFM6EblYgH4+E4nv+JLwzHdO72+qMAd92rtzVMiaDlCWghH6wdAFoasTsT6Posc
-      F5T8WCkzFAZeVhNGRKPP6k3l2BjvRJzkwYMMJrxaIYznMEK6H5CYIqZcpeAB3d2B
-      NaZXLxFCemLrSS16UHrH1modEe8yjrOaE5+ZesGAA9onsNRZkAJp0x/pRaO/+rHn
-      Q5QVCQCzxY16UsLzH0q/P80xPMU7BMoocwIBAg==
-      -----END DH PARAMETERS-----
     passwords:
       admin:
       config:
@@ -49,7 +39,6 @@ service:
     externalTrafficPolicy: Cluster
     tls:
       enabled: true
-      enforce: false
       certificate:
         name: ''
         ca: ''
