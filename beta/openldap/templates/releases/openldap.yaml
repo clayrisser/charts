@@ -72,7 +72,6 @@ spec:
       # loadBalancerSourceRanges: []
       type: {{ .Values.service.openldap.type | quote }}
     env:
-      LDAP_LOG_LEVEL: {{ .Values.config.debug | ternary "-1" "256" | quote }}
       BITNAMI_DEBUG: "true"
       LDAP_HASH_PASSWORD: {{ .Values.config.openldap.hashPassword | quote }}
       LDAP_TLS_ENFORCE: "false"
@@ -146,19 +145,19 @@ spec:
         repository: {{ .Values.images.phpldapadmin.repository | quote }}
         tag: {{ .Values.images.phpldapadmin.tag | quote }}
         pullPolicy: {{ .Values.config.imagePullPolicy }}
-      env:
-        PHPLDAPADMIN_HTTPS: 'false'
+      env: {}
+        # PHPLDAPADMIN_HTTPS: 'false'
         # PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: 'never'
         # PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
-        PHPLDAPADMIN_LDAP_HOSTS: |
-          #PYTHON2BASH:[
-            {'openldap': [
-              {'server': [
-                {'host': 'ldap://{{ .Release.Name }}-release:389'}
-              ]},
-              {'login': [{'bind_id': 'cn=admin,{{ .Values.config.openldap.root }}'}]}
-            ]}
-          ]
+        # PHPLDAPADMIN_LDAP_HOSTS: |
+        #   #PYTHON2BASH:[
+        #     {'openldap': [
+        #       {'server': [
+        #         {'host': 'ldap://{{ .Release.Name }}-release:389'}
+        #       ]},
+        #       {'login': [{'bind_id': 'cn=admin,{{ .Values.config.openldap.root }}'}]}
+        #     ]}
+        #   ]
       ingress:
         enabled: {{ .Values.ingress.phpldapadmin.enabled }}
         annotations:
