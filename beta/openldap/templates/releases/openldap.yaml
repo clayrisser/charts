@@ -148,8 +148,17 @@ spec:
         pullPolicy: {{ .Values.config.imagePullPolicy }}
       env:
         PHPLDAPADMIN_HTTPS: 'false'
-        PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: 'never'
-        PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
+        # PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: 'never'
+        # PHPLDAPADMIN_TRUST_PROXY_SSL: 'true'
+        PHPLDAPADMIN_LDAP_HOSTS: |
+          #PYTHON2BASH:[
+            {'openldap': [
+              {'server': [
+                {'host': 'ldap://{{ .Release.Name }}-release:389'}
+              ]},
+              {'login': [{'bind_id': 'cn=admin,{{ .Values.config.openldap.root }}'}]}
+            ]}
+          ]
       ingress:
         enabled: {{ .Values.ingress.phpldapadmin.enabled }}
         annotations:
