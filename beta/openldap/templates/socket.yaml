@@ -22,7 +22,7 @@ spec:
   configMapper:
     adminPassword: '{% .vars.BASE64_ENCODED_LDAP_ADMIN_PASSWORD | b64dec %}'
 {{- if .Values.service.openldap.tls.enabled }}
-  configSecret: {{ .Values.service.openldap.tls.certificate.name | default (printf "%s-cert" (include "openldap.name" . )) }}
+  configSecretName: {{ .Values.service.openldap.tls.certificate.name | default (printf "%s-cert" (include "openldap.name" . )) }}
 {{- end  }}
   vars:
     - name: BASE64_ENCODED_LDAP_ADMIN_PASSWORD
