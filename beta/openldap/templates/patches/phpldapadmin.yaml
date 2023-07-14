@@ -9,7 +9,7 @@ spec:
     - id: patch-phpldapadmin-configmap
       target:
         apiVersion: v1
-        kind: Configmap
+        kind: ConfigMap
         name: {{ .Release.Name }}-release-phpldapadmin
       waitForResource: true
       type: json
