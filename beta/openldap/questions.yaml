@@ -66,6 +66,12 @@ questions:
     required: false
     label: 'organizational units'
     group: Openldap
+  - variable: config.openldap.schemas
+    description: ''
+    type: string
+    required: false
+    label: schemas
+    group: Openldap
   - variable: config.openldap.passwords.admin
     description: ''
     type: password

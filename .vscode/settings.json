@@ -96,6 +96,7 @@
     "postgres",
     "postgresql",
     "postgrey",
+    "ppolicy",
     "previewgenerator",
     "primaryuser",
     "printf",

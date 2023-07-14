@@ -17,6 +17,7 @@ config:
     hashPassword: SHA512CRYPT
     hostname: ''
     organizationalUnits: people,groups
+    schemas: ppolicy
     passwords:
       admin:
       config:

@@ -80,6 +80,7 @@ spec:
       LDAP_CONFIG_ADMIN_ENABLED: "yes"
       LDAP_CONFIG_ADMIN_USERNAME: "admin"
       LDAP_SKIP_DEFAULT_TREE: "yes"
+      LDAP_SCHEMAS: {{ .Values.config.openldap.schemas | quote }}
     {{- if .Values.config.openldap.organizationalUnits }}
     customLdifFiles:
       10-organizational-units.ldif: |
