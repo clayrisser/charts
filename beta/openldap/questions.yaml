@@ -336,18 +336,6 @@ questions:
         type: string
         required: false
         label: 'openldap tls certificate name'
-      - variable: service.openldap.tls.certificate.ca
-        description: ''
-        type: string
-        show_if: service.openldap.tls.certificate.name!=
-        required: false
-        label: 'openldap tls certificate ca'
-      - variable: service.openldap.tls.certificate.issuer.integration
-        description: 'replicates the ca that was used to generate the certificate'
-        type: string
-        show_if: service.openldap.tls.certificate.name=
-        required: true
-        label: 'openldap tls certificate issuer integration'
       - variable: service.openldap.tls.certificate.issuer.dnsNames
         description: ''
         type: string

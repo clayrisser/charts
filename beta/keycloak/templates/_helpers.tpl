@@ -76,8 +76,8 @@ Calculate postgres url
 Calculate ldap dc
 */}}
 {{- define "keycloak.ldap-dc" -}}
-{{- if .Values.config.keycloak.ldap.domain -}}
-{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.keycloak.ldap.domain -1) 0) (index (regexSplit "\\." .Values.config.keycloak.ldap.domain -1) 1) -}}
+{{- if .Values.config.ldap.domain -}}
+{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.ldap.domain -1) 0) (index (regexSplit "\\." .Values.config.ldap.domain -1) 1) -}}
 {{- else -}}
 {{- printf "" -}}
 {{- end -}}

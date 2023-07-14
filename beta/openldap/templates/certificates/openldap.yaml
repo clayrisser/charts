@@ -15,7 +15,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  secretName: openldap-cert
+  secretName: {{ template "openldap.name" . }}-cert
   isCA: false
   commonName: {{ $serviceName | quote }}
   subject:

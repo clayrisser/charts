@@ -14,13 +14,16 @@ spec:
     name: ldap
     namespace: {{ .Release.Namespace }}
   config:
-    bindDN: cn=admin,{{ .Values.config.openldap.root }}
-    dc: {{ .Values.config.openldap.root | quote }}
+    adminDN: cn=admin,{{ .Values.config.openldap.root }}
+    rootDN: {{ .Values.config.openldap.root | quote }}
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
   configMapper:
-    bindPassword: '{% .vars.BASE64_ENCODED_LDAP_ADMIN_PASSWORD | b64dec %}'
+    adminPassword: '{% .vars.BASE64_ENCODED_LDAP_ADMIN_PASSWORD | b64dec %}'
+{{- if .Values.service.openldap.tls.enabled }}
+  configSecret: {{ .Values.service.openldap.tls.certificate.name | default (printf "%s-cert" (include "openldap.name" . )) }}
+{{- end  }}
   vars:
     - name: BASE64_ENCODED_LDAP_ADMIN_PASSWORD
       fieldref:

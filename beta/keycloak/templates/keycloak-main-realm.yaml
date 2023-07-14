@@ -8,24 +8,24 @@ metadata:
     app.kubernetes.io/name: {{ template "keycloak.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 spec:
- keycloakCRName: {{ template "keycloak.name" . }}
- realm:
+  keycloakCRName: {{ template "keycloak.name" . }}
+  realm:
     realm: main
     enabled: true
     displayName: 'Main Realm'
-    {{- if .Values.config.keycloak.smtp.enabled }}
+    {{- if .Values.config.smtp.enabled }}
     smtpServer:
       password: '${vault.smtpPassword}'
       starttls: 'true'
       auth: 'true'
-      port: {{ .Values.config.keycloak.smtp.port | quote }}
-      host: {{ .Values.config.keycloak.smtp.hostname | quote }}
-      from: {{ .Values.config.keycloak.smtp.from | quote }}
-      fromDisplayName: {{ .Values.config.keycloak.smtp.from | quote }}
+      port: {{ .Values.config.smtp.port | quote }}
+      host: {{ .Values.config.smtp.hostname | quote }}
+      from: {{ .Values.config.smtp.from | quote }}
+      fromDisplayName: {{ .Values.config.smtp.from | quote }}
       ssl: 'true'
-      user: {{ .Values.config.keycloak.smtp.username | quote }}
+      user: {{ .Values.config.smtp.username | quote }}
     {{- end }}
-    {{- if .Values.config.keycloak.ldap.enabled }}
+    {{- if .Values.config.ldap.enabled }}
     userFederationProviders:
       - displayName: ldap
         providerName: ldap
@@ -34,11 +34,11 @@ spec:
           authType: simple
           batchSizeForSync: '1000'
           bindCredential: '${vault.bindCredential}'
-          bindDn: cn={{ .Values.config.keycloak.ldap.username }},{{ template "keycloak.ldap-dc" . }}
+          bindDn: cn={{ .Values.config.ldap.username }},{{ template "keycloak.ldap-dc" . }}
           cachePolicy: DEFAULT
           changedSyncPeriod: '-1'
           connectionPooling: 'true'
-          connectionUrl: ldap{{ .Values.config.keycloak.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.keycloak.ldap.hostname }}
+          connectionUrl: ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}://{{ .Values.config.ldap.hostname }}
           debug: 'false'
           editMode: WRITABLE
           enabled: 'true'
@@ -54,7 +54,7 @@ spec:
           trustEmail: 'true'
           useKerberosForPasswordAuthentication: 'false'
           useTruststoreSpi: ldapsOnly
-          userObjectClasses: {{ .Values.config.keycloak.ldap.userObjectClasses | quote }}
+          userObjectClasses: {{ .Values.config.ldap.userObjectClasses | quote }}
           usernameLDAPAttribute: uid
           usersDn: ou=people,{{ template "keycloak.ldap-dc" . }}
           uuidLDAPAttribute: entryUUID

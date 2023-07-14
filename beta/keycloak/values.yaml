@@ -19,27 +19,6 @@ config:
     baseUrl: ''
     adminPassword: ''
     additionalRealms: ''
-    smtp:
-      enabled: false
-      integration: ''
-      from: ''
-      hostname: ''
-      password: ''
-      port: ''
-      username: ''
-      tls:
-        enabled: false
-    ldap:
-      enabled: false
-      integration: ''
-      hostname: ''
-      domain: ''
-      username: admin
-      password: ''
-      userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson, person, posixAccount, top, arbitrarySlots, extendedPerson'
-      tls:
-        enabled: false
-        ca:
     resources:
       enabled: defaults
       requests:
@@ -48,6 +27,17 @@ config:
       limits:
         cpu: 1500m
         memory: 1000Mi
+  ldap:
+    enabled: false
+    integration: ''
+    hostname: ''
+    domain: ''
+    username: admin
+    password: ''
+    userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson, person, posixAccount, top, arbitrarySlots, extendedPerson'
+    tls:
+      enabled: false
+      certificate: ''
   postgres:
     integration: ''
     database: keycloak
@@ -56,6 +46,16 @@ config:
     port: 5432
     username: postgres
     # url: ''
+  smtp:
+    enabled: false
+    integration: ''
+    from: ''
+    hostname: ''
+    password: ''
+    port: ''
+    username: ''
+    tls:
+      enabled: false
 
 service:
   keycloak:

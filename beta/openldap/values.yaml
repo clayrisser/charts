@@ -42,9 +42,7 @@ service:
       enabled: true
       certificate:
         name: ''
-        ca: ''
         issuer:
-          integration: kube-system
           dnsNames: ''
     nodePorts:
       ldap:

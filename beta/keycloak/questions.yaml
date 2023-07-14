@@ -99,7 +99,7 @@ questions:
         label: 'resources limits memory'
 
   # Ldap Config
-  - variable: config.keycloak.ldap.enabled
+  - variable: config.ldap.enabled
     description: ''
     type: boolean
     required: true
@@ -107,54 +107,54 @@ questions:
     show_subquestion_if: true
     group: 'Ldap Config'
     subquestions:
-      - variable: config.keycloak.ldap.integration
+      - variable: config.ldap.integration
         description: ''
         type: string
         required: false
         label: integration
-      - variable: config.keycloak.ldap.hostname
+      - variable: config.ldap.hostname
         description: ''
         type: string
         required: true
         label: hostname
-        show_if: config.keycloak.ldap.integration=
-      - variable: config.keycloak.ldap.domain
+        show_if: config.ldap.integration=
+      - variable: config.ldap.domain
         description: 'use example.org instead of dc=example,dc=org'
         type: string
         required: true
         label: domain
-        show_if: config.keycloak.ldap.integration=
-      - variable: config.keycloak.ldap.username
+        show_if: config.ldap.integration=
+      - variable: config.ldap.username
         description: ''
         type: string
         required: true
         label: username
-        show_if: config.keycloak.ldap.integration=
-      - variable: config.keycloak.ldap.password
+        show_if: config.ldap.integration=
+      - variable: config.ldap.password
         description: ''
         type: password
         required: true
         label: password
-        show_if: config.keycloak.ldap.integration=
-      - variable: config.keycloak.ldap.userObjectClasses
+        show_if: config.ldap.integration=
+      - variable: config.ldap.userObjectClasses
         description: ''
         type: string
         required: true
         label: 'user object classes'
-      - variable: config.keycloak.ldap.tls.enabled
+      - variable: config.ldap.tls.enabled
         description: ''
         type: boolean
         required: true
         label: 'tls enabled'
-      - variable: config.keycloak.ldap.tls.ca
+      - variable: config.ldap.tls.certificate
         description: ''
         type: string
         required: false
-        show_if: config.keycloak.ldap.tls.enabled=true&&config.keycloak.ldap.integration=
-        label: 'tls ca'
+        show_if: config.ldap.tls.enabled=true&&config.ldap.integration=
+        label: certificate
 
   # Smtp
-  - variable: config.keycloak.smtp.enabled
+  - variable: config.smtp.enabled
     description: ''
     type: boolean
     required: true
@@ -162,40 +162,40 @@ questions:
     show_subquestion_if: true
     group: Smtp
     subquestions:
-      - variable: config.keycloak.smtp.integration
+      - variable: config.smtp.integration
         description: ''
         type: string
         required: false
         label: integration
-      - variable: config.keycloak.smtp.from
+      - variable: config.smtp.from
         description: ''
         type: string
         required: true
         label: from
-      - variable: config.keycloak.smtp.hostname
+      - variable: config.smtp.hostname
         description: ''
         type: string
         required: true
         label: hostname
-        show_if: config.keycloak.smtp.integration=
-      - variable: config.keycloak.smtp.port
+        show_if: config.smtp.integration=
+      - variable: config.smtp.port
         description: ''
         type: int
         required: true
         label: port
-        show_if: config.keycloak.smtp.integration=
-      - variable: config.keycloak.smtp.username
+        show_if: config.smtp.integration=
+      - variable: config.smtp.username
         description: ''
         type: string
         required: true
         label: username
-        show_if: config.keycloak.smtp.integration=
-      - variable: config.keycloak.smtp.password
+        show_if: config.smtp.integration=
+      - variable: config.smtp.password
         description: ''
         type: password
         required: true
         label: password
-        show_if: config.keycloak.smtp.integration=
+        show_if: config.smtp.integration=
 
   # Postgres
   - variable: config.postgres.integration

@@ -1,6 +1,6 @@
-{{- if .Values.config.keycloak.smtp.integration }}
-{{- $name := (split "." .Values.config.keycloak.smtp.integration)._1 | default "postgres" }}
-{{- $namespace := (split "." (printf "%s." .Values.config.keycloak.smtp.integration))._0 }}
+{{- if .Values.config.smtp.integration }}
+{{- $name := (split "." .Values.config.smtp.integration)._1 | default "postgres" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.smtp.integration))._0 }}
 apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
@@ -20,7 +20,7 @@ spec:
     name: {{ $name }}
     namespace: {{ $namespace }}
   config:
-    from: {{ .Values.config.keycloak.smtp.from | quote }}
+    from: {{ .Values.config.smtp.from | quote }}
   resources:
     - when: [coupled, updated]
       do: recreate

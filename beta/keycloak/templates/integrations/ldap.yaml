@@ -1,6 +1,6 @@
-{{- if (and .Values.config.keycloak.ldap.enabled .Values.config.keycloak.ldap.integration) }}
-{{- $name := (split "." .Values.config.keycloak.ldap.integration)._1 | default "ldap" }}
-{{- $namespace := (split "." (printf "%s." .Values.config.keycloak.ldap.integration))._0 }}
+{{- if (and .Values.config.ldap.enabled .Values.config.ldap.integration) }}
+{{- $name := (split "." .Values.config.ldap.integration)._1 | default "ldap" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.ldap.integration))._0 }}
 apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
@@ -22,6 +22,20 @@ spec:
   config: {}
   resources:
     - when: [coupled, updated]
+      do: apply
+      resource: |
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: ldap-cert
+          namespace: {{ .Release.Namespace }}
+        type: kubernetes.io/tls
+        stringData:
+          tls.crt: ''
+            {% (index .socketConfig "crt.tls") default "" %}
+          ca.crt: |
+            {% (index .socketConfig "ca.tls") default "" %}
+    - when: [coupled, updated]
       do: recreate
       resource: |
         apiVersion: patch.rock8s.com/v1alpha1
@@ -32,35 +46,11 @@ spec:
         spec:
           epoch: {{ now | unixEpoch | quote }}
           patches:
-            {{- if .Values.config.keycloak.ldap.tls.enabled }}
-            {%- if (not (eq .plugConfig.replicateCa "false")) %}
-            {%- if (eq .socketConfig.protocol "ldaps") %}
-            - id: keycloak
-              target:
-                group: keycloak.org
-                version: v1alpha1
-                kind: Keycloak
-                name: {{ template "keycloak.name" . }}
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |
-                - op: replace
-                  path: /spec/keycloakDeploymentSpec/experimental/env/0
-                  value:
-                    name: LDAP_TLS_CRT
-                    valueFrom:
-                      secretKeyRef:
-                        name: ca-ldap
-                        key: tls.crt
-            {%- end %}
-            {%- end %}
-            {{- end }}
             - id: keycloak-realm
               target:
-                group: keycloak.org
-                version: v1alpha1
-                kind: KeycloakRealm
+                group: k8s.keycloak.org
+                version: v2alpha1
+                kind: KeycloakRealmImport
                 name: {{ template "keycloak.name" . }}
               waitForTimeout: 5
               waitForResource: true
@@ -68,20 +58,20 @@ spec:
               patch: |-
                 - op: replace
                   path: /spec/realm/userFederationProviders/0/config/bindDn
-                  value: {% .socketConfig.bindDN | quote %}
+                  value: {% .socketConfig.adminDN | quote %}
                 - op: replace
                   path: /spec/realm/userFederationProviders/0/config/connectionUrl
-                  {%- if (eq .socketConfig.protocol "ldap{{ .Values.config.keycloak.ldap.tls.enabled | ternary "s" "" }}") %}
+                  {%- if (eq .socketConfig.protocol "ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}") %}
                   value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
                   {%- else %}
-                  value: ldap{{ .Values.config.keycloak.ldap.tls.enabled | ternary "s" "" }}://{% .socketConfig.hostname %}
+                  value: ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}://{% .socketConfig.hostname %}
                   {%- end %}
                 - op: replace
                   path: /spec/realm/userFederationProviders/0/config/usersDn
-                  value: ou=people,{% .socketConfig.dc %}
+                  value: ou=people,{% .socketConfig.root %}
                 - op: replace
                   path: /spec/realm/userFederationMappers/0/config/groups.dn
-                  value: ou=groups,{% .socketConfig.dc %}
+                  value: ou=groups,{% .socketConfig.root %}
                 - op: replace
                   path: /spec/instanceSelector/matchLabels/app.kubernetes.io~1name
                   value: {{ template "keycloak.name" . }}

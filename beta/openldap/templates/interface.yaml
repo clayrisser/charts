@@ -14,9 +14,9 @@ spec:
         properties: {}
       socketDefinition:
         properties:
-          bindDN:
+          adminDN:
             required: true
-          bindPassword:
+          adminPassword:
             required: true
           hostname:
             required: true
@@ -24,6 +24,7 @@ spec:
             required: true
           protocol:
             required: true
-          dc:
+          rootDN:
             required: true
-          starttls: {}
+          ca.crt: {}
+          tls.crt: {}
