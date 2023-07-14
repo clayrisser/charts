@@ -2,11 +2,11 @@
 apiVersion: patch.rock8s.com/v1alpha1
 kind: Patch
 metadata:
-  name: enable-istio
+  name: phpldapadmin
 spec:
   epoch: {{ now | unixEpoch | quote }}
   patches:
-    - id: patch-namespace
+    - id: patch-phpldapadmin-configmap
       target:
         apiVersion: v1
         kind: Configmap
