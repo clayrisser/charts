@@ -31,10 +31,8 @@ spec:
           namespace: {{ .Release.Namespace }}
         type: Opaque
         stringData:
-          tls.crt: ''
-            {% .socketConfig.tlsCrt | default "" %}
-          ca.crt: |
-            {% .socketConfig.caCrt | default "" %}
+          tls.crt: {% (not .socketConfig.tlsCrt) | ternary "" (.socketConfig.tlsCrt | b64enc) %}
+          ca.crt: {% (not .socketConfig.caCrt) | ternary "" (.socketConfig.caCrt | b64enc) %}
     - when: [coupled, updated]
       do: recreate
       resource: |
