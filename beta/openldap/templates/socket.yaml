@@ -21,9 +21,8 @@ spec:
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
   configMapper:
     adminPassword: '{% .vars.BASE64_ENCODED_LDAP_ADMIN_PASSWORD | b64dec %}'
-{{- if .Values.service.openldap.tls.enabled }}
-  configSecretName: {{ .Values.service.openldap.tls.certificate.name | default (printf "%s-cert" (include "openldap.name" . )) }}
-{{- end  }}
+    tlsCrt: '{% .vars.BASE64_ENCODED_TLS_CRT | ternary (.vars.BASE64_ENCODED_TLS_CRT | b64dec) "" %}'
+    caCrt: '{% .vars.BASE64_ENCODED_CA_CRT | ternary (.vars.BASE64_ENCODED_CA_CRT | b64dec) "" %}'
   vars:
     - name: BASE64_ENCODED_LDAP_ADMIN_PASSWORD
       fieldref:
@@ -33,3 +32,21 @@ spec:
         kind: Secret
         name: {{ template "openldap.name" . }}
         namespace: {{ .Release.Namespace }}
+    {{- if .Values.service.openldap.tls.enabled }}
+    - name: BASE64_ENCODED_TLS_CRT
+      fieldref:
+        fieldPath: data.tls\.crt
+      objref:
+        apiVersion: v1
+        kind: Secret
+        name: {{ .Values.service.openldap.tls.certificate.name | default (printf "%s-cert" (include "openldap.name" . )) }}
+        namespace: {{ .Release.Namespace }}
+    - name: BASE64_ENCODED_CA_CRT
+      fieldref:
+        fieldPath: data.ca\.crt
+      objref:
+        apiVersion: v1
+        kind: Secret
+        name: {{ .Values.service.openldap.tls.certificate.name | default (printf "%s-cert" (include "openldap.name" . )) }}
+        namespace: {{ .Release.Namespace }}
+    {{- end  }}

@@ -26,5 +26,5 @@ spec:
             required: true
           rootDN:
             required: true
-          ca.crt: {}
-          tls.crt: {}
+          caCrt: {}
+          tlsCrt: {}
