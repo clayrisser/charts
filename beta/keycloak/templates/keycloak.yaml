@@ -88,4 +88,4 @@ spec:
         volumes:
           - name: ldap-cert
             secret:
-              secretName: {{ .Values.config.tls.certificate | default "ldap-cert" }}
+              secretName: {{ .Values.config.ldap.tls.certificate | default "ldap-cert" }}
