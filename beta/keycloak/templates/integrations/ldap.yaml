@@ -86,5 +86,5 @@ spec:
               patch: |-
                 - op: replace
                   path: /data/main_bindCredential
-                  value: {% .socketConfig.bindPassword | b64enc | quote %}
+                  value: {% .socketConfig.adminPassword | b64enc | quote %}
 {{- end }}
