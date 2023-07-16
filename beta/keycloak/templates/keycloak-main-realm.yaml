@@ -8,7 +8,11 @@ metadata:
     app.kubernetes.io/name: {{ template "keycloak.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 spec:
+  {{- if (and .Values.config.ldap.enabled .Values.config.ldap.integration) }}
+  keycloakCRName: waiting-for-ldap-integration
+  {{- else }}
   keycloakCRName: {{ template "keycloak.name" . }}
+  {{- end }}
   realm:
     realm: main
     enabled: true

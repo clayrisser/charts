@@ -73,7 +73,7 @@ spec:
                   path: /spec/realm/userFederationMappers/0/config/groups.dn
                   value: ou=groups,{% .socketConfig.root %}
                 - op: replace
-                  path: /spec/instanceSelector/matchLabels/app.kubernetes.io~1name
+                  path: /spec/keycloakCRName
                   value: {{ template "keycloak.name" . }}
             - id: keycloak-vault
               target:
