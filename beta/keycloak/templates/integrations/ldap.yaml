@@ -30,7 +30,7 @@ spec:
           name: ldap-cert
           namespace: {{ .Release.Namespace }}
         type: Opaque
-        stringData:
+        data:
           tls.crt: {% (not .socketConfig.tlsCrt) | ternary "" (.socketConfig.tlsCrt | b64enc) %}
           ca.crt: {% (not .socketConfig.caCrt) | ternary "" (.socketConfig.caCrt | b64enc) %}
     - when: [coupled, updated]
