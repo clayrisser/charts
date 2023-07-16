@@ -32,9 +32,9 @@ spec:
         type: kubernetes.io/tls
         stringData:
           tls.crt: ''
-            {% (index .socketConfig "crt.tls") default "" %}
+            {% (index .socketConfig "crt.tls") | default "" %}
           ca.crt: |
-            {% (index .socketConfig "ca.tls") default "" %}
+            {% (index .socketConfig "ca.tls") | default "" %}
     - when: [coupled, updated]
       do: recreate
       resource: |
