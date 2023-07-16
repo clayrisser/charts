@@ -74,10 +74,12 @@ spec:
             envFrom:
               - secretRef:
                   name: keycloak-vault
+            {{- if .Values.config.ldap.tls.enabled }}
             volumeMounts:
               - name: ldap-cert
                 mountPath: /opt/keycloak/certs
                 readOnly: true
+            {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
             resources:
               requests:
@@ -85,7 +87,9 @@ spec:
               limits:
 {{ toYaml .Values.config.keycloak.resources.limits | indent 16 }}
 {{- end }}
+        {{- if .Values.config.ldap.tls.enabled }}
         volumes:
           - name: ldap-cert
             secret:
               secretName: {{ .Values.config.ldap.tls.certificate | default "ldap-cert" }}
+        {{- end }}
