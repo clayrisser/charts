@@ -29,7 +29,7 @@ spec:
         metadata:
           name: ldap-cert
           namespace: {{ .Release.Namespace }}
-        type: kubernetes.io/tls
+        type: Opaque
         stringData:
           tls.crt: ''
             {% (index .socketConfig "crt.tls") | default "" %}
