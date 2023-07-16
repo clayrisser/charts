@@ -32,9 +32,9 @@ spec:
         type: Opaque
         stringData:
           tls.crt: ''
-            {% (index .socketConfig "crt.tls") | default "" %}
+            {% (index .socketConfig "tls.crt") | default "" %}
           ca.crt: |
-            {% (index .socketConfig "ca.tls") | default "" %}
+            {% (index .socketConfig "ca.crt") | default "" %}
     - when: [coupled, updated]
       do: recreate
       resource: |
