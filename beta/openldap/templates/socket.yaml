@@ -21,8 +21,8 @@ spec:
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
   configMapper:
     adminPassword: '{% .vars.BASE64_ENCODED_LDAP_ADMIN_PASSWORD | b64dec %}'
-    tlsCrt: '{% .vars.BASE64_ENCODED_TLS_CRT | ternary (.vars.BASE64_ENCODED_TLS_CRT | b64dec) "" %}'
-    caCrt: '{% .vars.BASE64_ENCODED_CA_CRT | ternary (.vars.BASE64_ENCODED_CA_CRT | b64dec) "" %}'
+    tlsCrt: '{% (not .vars.BASE64_ENCODED_TLS_CRT) | "" ternary (.vars.BASE64_ENCODED_TLS_CRT | b64dec) %}'
+    caCrt: '{% (not .vars.BASE64_ENCODED_CA_CRT) | "" ternary (.vars.BASE64_ENCODED_CA_CRT | b64dec) %}'
   vars:
     - name: BASE64_ENCODED_LDAP_ADMIN_PASSWORD
       fieldref:
