@@ -74,7 +74,7 @@ spec:
             envFrom:
               - secretRef:
                   name: keycloak-vault
-            {{- if .Values.config.ldap.tls.enabled }}
+            {{- if .Values.config.ldap.enabled }}
             volumeMounts:
               - name: ldap-cert
                 mountPath: /opt/keycloak/certs
@@ -87,7 +87,7 @@ spec:
               limits:
 {{ toYaml .Values.config.keycloak.resources.limits | indent 16 }}
 {{- end }}
-        {{- if .Values.config.ldap.tls.enabled }}
+        {{- if .Values.config.ldap.enabled }}
         volumes:
           - name: ldap-cert
             secret:
