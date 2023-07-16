@@ -41,8 +41,9 @@ spec:
               - |
                   mkdir -p /opt/keycloak/certs
                   for CERT in /opt/keycloak/certs/*.crt; do
-                    if [ -f "$CERT" ]; then
+                    if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
+                      echo keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                       keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
@@ -73,17 +74,10 @@ spec:
             envFrom:
               - secretRef:
                   name: keycloak-vault
-            {{- if .Values.config.ldap.tls.enabled }}
             volumeMounts:
               - name: ldap-cert
-                mountPath: /opt/keycloak/certs/tls.crt
-                subPath: tls.crt
+                mountPath: /opt/keycloak/certs
                 readOnly: true
-              - name: ldap-cert
-                mountPath: /opt/keycloak/certs/ca.crt
-                subPath: ca.crt
-                readOnly: true
-            {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
             resources:
               requests:
@@ -91,9 +85,7 @@ spec:
               limits:
 {{ toYaml .Values.config.keycloak.resources.limits | indent 16 }}
 {{- end }}
-        {{- if .Values.config.ldap.tls.enabled }}
         volumes:
           - name: ldap-cert
             secret:
               secretName: {{ .Values.config.tls.certificate | default "ldap-cert" }}
-        {{- end }}
