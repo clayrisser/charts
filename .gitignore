@@ -3,7 +3,4 @@
 /*.tgz
 /index.yaml
 /public
-.mkpm/*
-**/.mkpm/*
-!/.mkpm/.cache.tar.gz
-!/.mkpm/.bootstrap.mk
+/.mkpm/mkpm

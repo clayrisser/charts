@@ -1,5 +1,4 @@
-include ../../../../mkpm.mk
-ifneq (,$(MKPM_READY))
+include $(MKPM)/mkpm
 include $(MKPM)/gnu
 
 export PATCHES :=
@@ -19,5 +18,3 @@ templates/%:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
 		https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v$(OPERATOR_VERSION)/$(@F)
-
-endif

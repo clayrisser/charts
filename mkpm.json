@@ -1,0 +1,11 @@
+{
+  "packages": {
+    "default": {
+      "gnu": "0.1.0",
+      "patch": "0.0.5"
+    }
+  },
+  "repos": {
+    "default": "https://gitlab.com/bitspur/mkpm/packages.git"
+  }
+}

@@ -14,10 +14,14 @@ trim_trailing_whitespace = false
 [*.yaml]
 quote_type = single
 
-[{m,M}akefile{,.*}]
+[Mkpmfile]
 charset = utf-8
-indent_style = tab
 indent_size = 4
+indent_style = tab
+[{M,m}akefile{,.*}]
+charset = utf-8
+indent_size = 4
+indent_style = tab
 [*.mk]
 charset = utf-8
 indent_style = tab

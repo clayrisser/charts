@@ -1,5 +1,4 @@
-include ../../../mkpm.mk
-ifneq (,$(MKPM_READY))
+include $(MKPM)/mkpm
 include $(MKPM)/gnu
 
 export PATCHES := templates/operator.yaml
@@ -16,5 +15,3 @@ templates/operator.yaml:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
 		https://gitlab.com/api/v4/projects/18899486/packages/generic/gitlab-operator/$(OPERATOR_VERSION)/gitlab-operator-kubernetes-$(OPERATOR_VERSION).yaml
-
-endif

@@ -1,5 +1,4 @@
-include ../../mkpm.mk
-ifneq (,$(MKPM_READY))
+include $(MKPM)/mkpm
 include $(MKPM)/gnu
 
 export PATCHES := templates/operator.yaml
@@ -16,5 +15,3 @@ templates/operator.yaml:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
 		https://raw.githubusercontent.com/percona/percona-postgresql-operator/v$(OPERATOR_VERSION)/deploy/operator.yaml
-
-endif

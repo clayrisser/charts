@@ -1,5 +1,4 @@
-include ../../../mkpm.mk
-ifneq (,$(MKPM_READY))
+include $(MKPM)/mkpm
 include $(MKPM)/gnu
 
 export PATCHES :=
@@ -16,5 +15,3 @@ templates/crds.yaml:
 	@$(MKDIR) -p $(@D)
 	@$(CURL) -Lo $@ \
 		https://github.com/jetstack/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.crds.yaml
-
-endif
