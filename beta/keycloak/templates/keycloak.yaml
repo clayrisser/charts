@@ -47,7 +47,7 @@ spec:
                       keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
-                  exec /opt/keycloak/bin/kc.sh start-dev --vault=/opt/keycloak/secrets
+                  exec /opt/keycloak/bin/kc.sh start-dev --vault-dir=/opt/keycloak/secrets
             env:
               - name: KC_VAULT_DIR
                 value: /opt/keycloak/secrets
