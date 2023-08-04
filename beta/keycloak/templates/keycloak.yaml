@@ -35,7 +35,7 @@ spec:
     - name: vault-dir
       value: /opt/keycloak/secrets
     - name: spi-truststore-file-file
-      value: /etc/alternatives/jre/lib/security/cacerts
+      value: /opt/keycloak/server.truststore
     - name: spi-truststore-file-hostname-verification-policy
       value: ANY
     - name: spi-truststore-file-password
@@ -59,11 +59,11 @@ spec:
                   exec /opt/keycloak/bin/kc.sh start-dev \
                     --spi-truststore-file-file=$KC_SPI_TRUSTSTORE_FILE_FILE \
                     --spi-truststore-file-password=$KC_SPI_TRUSTSTORE_FILE_PASSWORD \
-                    --vault-dir=/opt/keycloak/secrets \
-                    --spi-truststore-file-hostname-verification-policy=ANY
+                    --spi-truststore-file-hostname-verification-policy=ANY \
+                    --vault-dir=/opt/keycloak/secrets
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
-                value: /etc/alternatives/jre/lib/security/cacerts
+                value: /opt/keycloak/server.truststore
               - name: KC_SPI_TRUSTSTORE_FILE_PASSWORD
                 value: changeit
               {{- if .Values.config.debug }}
