@@ -47,15 +47,7 @@ spec:
                       keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
-                  mkdir -p /opt/keycloak/secrets
-                  for e in $(env); do
-                    if echo $e | grep -qE '^main_'; then
-                      key="$(echo $e | sed 's|=.*$||g')"
-                      value="$(echo $e | sed 's|^.*=||g')"
-                      echo "$value" > /opt/keycloak/secrets/$key
-                    fi
-                  done
-                  exec /opt/keycloak/bin/kc.sh start-dev
+                  exec /opt/keycloak/bin/kc.sh start-dev --vault=/opt/keycloak/secrets
             env:
               - name: KC_VAULT_DIR
                 value: /opt/keycloak/secrets
@@ -79,6 +71,9 @@ spec:
               - name: ldap-cert
                 mountPath: /opt/keycloak/certs
                 readOnly: true
+              - name: keycloak-vault
+                mountPath: /opt/keycloak/secrets
+                readOnly: true
             {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
             resources:
@@ -92,4 +87,7 @@ spec:
           - name: ldap-cert
             secret:
               secretName: {{ .Values.config.ldap.tls.certificate | default "ldap-cert" }}
+          - name: keycloak-vault
+            secret:
+              secretName: {{ template "keycloak.name" . }}-vault
         {{- end }}
