@@ -31,15 +31,6 @@ spec:
     enabled: []
   ingress:
     enabled: false
-  additionalOptions:
-    - name: vault-dir
-      value: /opt/keycloak/secrets
-    - name: spi-truststore-file-file
-      value: /etc/alternatives/jre/lib/security/cacerts
-    - name: spi-truststore-file-hostname-verification-policy
-      value: ANY
-    - name: spi-truststore-file-password
-      value: changeit
   unsupported:
     podTemplate:
       spec:
@@ -62,6 +53,10 @@ spec:
                 value: /etc/alternatives/jre/lib/security/cacerts
               - name: KC_SPI_TRUSTSTORE_FILE_PASSWORD
                 value: changeit
+              - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
+                value: ANY
+              - name: KC_VAULT_DIR
+                value: /opt/keycloak/secrets
               {{- if .Values.config.debug }}
               - name: KEYCLOAK_LOGLEVEL
                 value: ALL
