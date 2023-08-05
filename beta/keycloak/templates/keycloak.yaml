@@ -47,7 +47,7 @@ spec:
                       keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
-                  exec /opt/keycloak/bin/kc.sh start-dev
+                  exec /opt/keycloak/bin/kc.sh start-dev --log-level=$KEYCLOAK_LOGLEVEL
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
                 value: /etc/alternatives/jre/lib/security/cacerts
@@ -57,12 +57,8 @@ spec:
                 value: ANY
               - name: KC_VAULT_DIR
                 value: /opt/keycloak/secrets
-              {{- if .Values.config.debug }}
               - name: KEYCLOAK_LOGLEVEL
-                value: ALL
-              - name: ROOT_LOGLEVEL
-                value: ALL
-              {{- end }}
+                value: {{ .Values.config.debug | ternary "ALL" "INFO" | quote }}
             envFrom:
               - secretRef:
                   name: keycloak-vault
