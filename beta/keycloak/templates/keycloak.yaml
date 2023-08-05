@@ -35,7 +35,7 @@ spec:
     - name: vault-dir
       value: /opt/keycloak/secrets
     - name: spi-truststore-file-file
-      value: /opt/keycloak/server.truststore
+      value: /etc/alternatives/jre/lib/security/cacerts
     - name: spi-truststore-file-hostname-verification-policy
       value: ANY
     - name: spi-truststore-file-password
@@ -52,8 +52,8 @@ spec:
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
-                      echo keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
-                      keytool -import -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      echo keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
                   exec /opt/keycloak/bin/kc.sh start-dev \
@@ -63,7 +63,7 @@ spec:
                     --vault-dir=/opt/keycloak/secrets
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
-                value: /opt/keycloak/server.truststore
+                value: /etc/alternatives/jre/lib/security/cacerts
               - name: KC_SPI_TRUSTSTORE_FILE_PASSWORD
                 value: changeit
               {{- if .Values.config.debug }}
