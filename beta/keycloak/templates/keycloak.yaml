@@ -39,7 +39,6 @@ spec:
               - sh
               - -c
               - |
-                  cp -r /tmp/secrets /opt/keycloak/secrets
                   mkdir -p /opt/keycloak/certs
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
@@ -65,15 +64,15 @@ spec:
             envFrom:
               - secretRef:
                   name: keycloak-vault
-            {{- if .Values.config.ldap.enabled }}
             volumeMounts:
+              - name: keycloak-vault
+                mountPath: /opt/keycloak/secrets
+                readOnly: true
+              {{- if .Values.config.ldap.enabled }}
               - name: ldap-cert
                 mountPath: /opt/keycloak/certs
                 readOnly: true
-              - name: keycloak-vault
-                mountPath: /tmp/secrets
-                readOnly: true
-            {{- end }}
+              {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
             resources:
               requests:
@@ -81,12 +80,12 @@ spec:
               limits:
 {{ toYaml .Values.config.keycloak.resources.limits | indent 16 }}
 {{- end }}
-        {{- if .Values.config.ldap.enabled }}
         volumes:
-          - name: ldap-cert
-            secret:
-              secretName: {{ .Values.config.ldap.tls.certificate | default "ldap-cert" }}
           - name: keycloak-vault
             secret:
               secretName: {{ template "keycloak.name" . }}-vault
-        {{- end }}
+          {{- if .Values.config.ldap.enabled }}
+          - name: ldap-cert
+            secret:
+              secretName: {{ .Values.config.ldap.tls.certificate | default "ldap-cert" }}
+          {{- end }}
