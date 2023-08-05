@@ -39,15 +39,16 @@ spec:
               - sh
               - -c
               - |
+                  cp -r /tmp/secrets /opt/keycloak/secrets
                   mkdir -p /opt/keycloak/certs
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
-                      echo keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
-                      keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      echo keytool -import -trustcacerts -file "$CERT" -cacerts -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      keytool -import -trustcacerts -file "$CERT" -cacerts -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
-                  exec /opt/keycloak/bin/kc.sh start-dev --log-level=$KEYCLOAK_LOGLEVEL
+                  exec /opt/keycloak/bin/kc.sh start-dev
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
                 value: /etc/alternatives/jre/lib/security/cacerts
@@ -56,8 +57,10 @@ spec:
               - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
                 value: ANY
               - name: KC_VAULT_DIR
+                value: file
+              - name: KC_VAULT_DIR
                 value: /opt/keycloak/secrets
-              - name: KEYCLOAK_LOGLEVEL
+              - name: KC_LOG_LEVEL
                 value: {{ .Values.config.debug | ternary "ALL" "INFO" | quote }}
             envFrom:
               - secretRef:
@@ -68,7 +71,7 @@ spec:
                 mountPath: /opt/keycloak/certs
                 readOnly: true
               - name: keycloak-vault
-                mountPath: /opt/keycloak/secrets
+                mountPath: /tmp/secrets
                 readOnly: true
             {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
