@@ -17,7 +17,7 @@ metadata:
 spec:
   secretName: {{ template "openldap.name" . }}-cert
   isCA: false
-  commonName: {{ $serviceName | quote }}
+  commonName: {{ (printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace) | quote }}
   subject:
     organizations:
       - selfsigned
