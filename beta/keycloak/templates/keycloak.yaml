@@ -56,11 +56,7 @@ spec:
                       keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
-                  exec /opt/keycloak/bin/kc.sh start-dev \
-                    --spi-truststore-file-file=$KC_SPI_TRUSTSTORE_FILE_FILE \
-                    --spi-truststore-file-password=$KC_SPI_TRUSTSTORE_FILE_PASSWORD \
-                    --spi-truststore-file-hostname-verification-policy=ANY \
-                    --vault-dir=/opt/keycloak/secrets
+                  exec /opt/keycloak/bin/kc.sh start-dev
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
                 value: /etc/alternatives/jre/lib/security/cacerts
