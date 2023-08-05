@@ -55,7 +55,7 @@ spec:
                 value: changeit
               - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
                 value: ANY
-              - name: KC_VAULT_DIR
+              - name: KC_VAULT
                 value: file
               - name: KC_VAULT_DIR
                 value: /opt/keycloak/secrets
