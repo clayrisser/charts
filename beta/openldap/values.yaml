@@ -18,10 +18,7 @@ config:
     hostname: ''
     organizationalUnits: people,groups
     schemas: |
-      cosine
-      inetorgperson
       misc
-      nis
       ppolicy
     passwords:
       admin:
