@@ -54,6 +54,15 @@ spec:
                       echo keytool -import -file "$CERT" -keystore "$KC_HTTPS_KEY_STORE_FILE" -alias "$ALIAS" -storepass "$KC_HTTPS_KEY_STORE_PASSWORD" -noprompt
                     fi
                   done
+                  if [ ! -f "$KC_SPI_TRUSTSTORE_FILE_FILE" ]; then
+                    unset KC_SPI_TRUSTSTORE_FILE_FILE
+                    unset KC_SPI_TRUSTSTORE_FILE_PASSWORD
+                    unset KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
+                  fi
+                  if [ ! -f "$KC_HTTPS_KEY_STORE_FILE" ]; then
+                    unset KC_HTTPS_KEY_STORE_FILE
+                    unset KC_HTTPS_KEY_STORE_PASSWORD
+                  fi
                   exec /opt/keycloak/bin/kc.sh start
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
@@ -77,7 +86,7 @@ spec:
               - name: KC_HOSTNAME_STRICT_BACKCHANNEL
                 value: 'false'
               - name: KC_HTTP_ENABLED
-                value: {{ (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) | ternary "true" "false" | quote }}
+                value: 'true'
             envFrom:
               - secretRef:
                   name: keycloak-vault
