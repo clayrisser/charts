@@ -49,8 +49,6 @@ spec:
               - |
                   mkdir -p /opt/keycloak/cacerts
                   mkdir -p /opt/keycloak/certs
-                  echo ls /opt/keycloak/cacerts/*.crt
-                  ls /opt/keycloak/cacerts/*.crt
                   for CERT in $(ls /opt/keycloak/cacerts/*.crt); do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')

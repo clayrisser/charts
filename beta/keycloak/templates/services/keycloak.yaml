@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "keycloak.name" . }}
+  labels:
+    app.kubernetes.io/name: keycloak
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- if (eq .Values.service.keycloak.type "ClusterIP") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
+spec:
+  {{- if .Values.ingress.keycloak.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.keycloak.type }}
+  {{- if (eq .Values.service.keycloak.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.keycloak.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ (eq .Values.service.keycloak.type "LoadBalancer") | ternary .Values.service.keycloak.lbPorts.http "8080" }}
+      targetPort: 8080
+      protocol: TCP
+      {{- if (and (eq .Values.service.keycloak.type "NodePort") .Values.service.keycloak.nodePorts.http) }}
+      nodePort: {{ .Values.service.keycloak.nodePorts.http }}
+      {{- end }}
+    {{- if (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) }}
+    - name: https
+      port: 8443
+      targetPort: 8443
+      protocol: TCP
+    {{- end }}
+  selector:
+    app: {{ template "keycloak.name" . }}
+    app.kubernetes.io/managed-by: keycloak-operator

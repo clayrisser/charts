@@ -28,9 +28,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: keycloak-service
+                name: {{ template "keycloak.name" . }}
                 port:
-                  number: {{ (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) | ternary "8443" "8080" }}
+                  number: {{ (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) | ternary "https" "http" }}
   {{- if .Values.ingress.keycloak.tls }}
   tls:
     - secretName: {{ template "keycloak.keycloak-certificate" . }}
