@@ -68,7 +68,7 @@ questions:
     group: Openldap
   - variable: config.openldap.schemas
     description: ''
-    type: string
+    type: multiline
     required: false
     label: schemas
     group: Openldap

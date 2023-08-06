@@ -17,7 +17,12 @@ config:
     hashPassword: SHA512CRYPT
     hostname: ''
     organizationalUnits: people,groups
-    schemas: ppolicy
+    schemas: |
+      cosine
+      inetorgperson
+      misc
+      nis
+      ppolicy
     passwords:
       admin:
       config:
