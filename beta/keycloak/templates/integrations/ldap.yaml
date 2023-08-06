@@ -30,13 +30,9 @@ spec:
           name: ldap-cert
           namespace: {{ .Release.Namespace }}
         type: Opaque
-        {%- if .socketConfig.tlsCrt %}
         data:
-          tls.crt: {% .socketConfig.tlsCrt | b64enc %}
-          {%- if .socketConfig.caCrt %}
-          ca.crt: {% .socketConfig.caCrt | b64enc %}
-          {%- end %}
-        {%- end %}
+          tls.crt: {% .socketConfig.tlsCrt | default "" | b64enc %}
+          ca.crt: {% .socketConfig.caCrt | default "" | b64enc %}
     - when: [coupled, updated]
       do: recreate
       resource: |

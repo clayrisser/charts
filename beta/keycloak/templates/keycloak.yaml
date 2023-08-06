@@ -43,14 +43,14 @@ spec:
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
-                      echo keytool -import -trustcacerts -file "$CERT" -cacerts -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
-                      keytool -import -trustcacerts -file "$CERT" -cacerts -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      echo keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
                   exec /opt/keycloak/bin/kc.sh start
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
-                value: /etc/alternatives/jre/lib/security/cacerts
+                value: /opt/keycloak/conf/server.keystore
               - name: KC_SPI_TRUSTSTORE_FILE_PASSWORD
                 value: changeit
               - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
@@ -74,9 +74,16 @@ spec:
               - name: keycloak-vault
                 mountPath: /opt/keycloak/secrets
                 readOnly: true
+              {{- if (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) }}
+              - name: keycloak-discovery-letsencrypt
+                mountPath: /opt/keycloak/certs/https.crt
+                subPath: tls.crt
+                readOnly: true
+              {{- end }}
               {{- if .Values.config.ldap.enabled }}
               - name: ldap-cert
-                mountPath: /opt/keycloak/certs
+                mountPath: /opt/keycloak/certs/ldap-ca.crt
+                subPath: ca.crt
                 readOnly: true
               {{- end }}
 {{- if (and .Values.config.keycloak.resources.enabled (not (eq .Values.config.keycloak.resources.enabled "false"))) }}
@@ -90,6 +97,11 @@ spec:
           - name: keycloak-vault
             secret:
               secretName: {{ template "keycloak.name" . }}-vault
+          {{- if (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) }}
+          - name: keycloak-discovery-letsencrypt
+            secret:
+              secretName: keycloak-discovery-letsencrypt
+          {{- end }}
           {{- if .Values.config.ldap.enabled }}
           - name: ldap-cert
             secret:
