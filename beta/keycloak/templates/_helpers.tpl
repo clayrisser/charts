@@ -77,9 +77,24 @@ Calculate ldap dc
 */}}
 {{- define "keycloak.ldap-dc" -}}
 {{- if .Values.config.ldap.domain -}}
+{{- if contains "." .Values.config.ldap.domain -}}
 {{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.ldap.domain -1) 0) (index (regexSplit "\\." .Values.config.ldap.domain -1) 1) -}}
 {{- else -}}
 {{- printf "" -}}
+{{- end -}}
+{{- else -}}
+{{- printf "%s" .Values.config.ldap.domain -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate ldap certificate
+*/}}
+{{- define "keycloak.ldap-certificate" -}}
+{{- if (empty .Values.config.ldap.tls.certificate) -}}
+{{- printf "%s" .Values.config.ldap.tls.certificate -}}
+{{- else -}}
+{{- printf "ldap-cert" -}}
 {{- end -}}
 {{- end -}}
 

@@ -19,6 +19,9 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/proxy-buffer-size: '128k'
+    {{- if (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) }}
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    {{- end }}
 spec:
   rules:
     - host: {{ .Values.ingress.keycloak.hostname }}
@@ -30,7 +33,7 @@ spec:
               service:
                 name: {{ template "keycloak.name" . }}
                 port:
-                  name: {{ (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) | ternary "https" "http" }}
+                  number: {{ (and .Values.ingress.keycloak.enabled .Values.ingress.keycloak.tls) | ternary "8443" "8080" }}
   {{- if .Values.ingress.keycloak.tls }}
   tls:
     - secretName: {{ template "keycloak.keycloak-certificate" . }}

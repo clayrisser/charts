@@ -75,13 +75,13 @@ spec:
                   exec /opt/keycloak/bin/kc.sh start --optimized
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
-                value: /opt/keycloak/conf/server.truststore
+                value: /opt/keycloak/conf/ca.truststore
               - name: KC_SPI_TRUSTSTORE_FILE_PASSWORD
                 value: changeit
               - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
                 value: ANY
               - name: KC_HTTPS_KEY_STORE_FILE
-                value: /opt/keycloak/conf/server.keystore
+                value: /opt/keycloak/conf/https.keystore
               - name: KC_HTTPS_KEY_STORE_PASSWORD
                 value: changeit
               - name: KC_VAULT
@@ -107,7 +107,7 @@ spec:
                 subPath: tls.crt
                 readOnly: true
               {{- end }}
-              {{- if .Values.config.ldap.enabled }}
+              {{- if (and .Values.config.ldap.enabled .Values.config.ldap.tls.enabled) }}
               - name: ldap-cert
                 mountPath: /opt/keycloak/cacerts/ldap-ca.crt
                 subPath: ca.crt
@@ -129,8 +129,8 @@ spec:
             secret:
               secretName: keycloak-discovery-letsencrypt
           {{- end }}
-          {{- if .Values.config.ldap.enabled }}
+          {{- if (and .Values.config.ldap.enabled .Values.config.ldap.tls.enabled) }}
           - name: ldap-cert
             secret:
-              secretName: {{ .Values.config.ldap.tls.certificate | default "ldap-cert" }}
+              secretName: {{ template "keycloak.ldap-certificate" . }}
           {{- end }}
