@@ -91,7 +91,7 @@ Calculate ldap dc
 Calculate ldap certificate
 */}}
 {{- define "keycloak.ldap-certificate" -}}
-{{- if (empty .Values.config.ldap.tls.certificate) -}}
+{{- if .Values.config.ldap.tls.certificate -}}
 {{- printf "%s" .Values.config.ldap.tls.certificate -}}
 {{- else -}}
 {{- printf "ldap-cert" -}}
