@@ -51,8 +51,7 @@ spec:
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
-                      echo keytool -import -file "$CERT" -keystore "KC_CONFIG_KEYSTORE" -alias "$ALIAS" -storepass "$KC_CONFIG_KEYSTORE_PASSWORD" -noprompt
-                      keytool -import -file "$CERT" -keystore "KC_CONFIG_KEYSTORE" -alias "$ALIAS" -storepass "$KC_CONFIG_KEYSTORE_PASSWORD" -noprompt
+                      echo keytool -import -file "$CERT" -keystore "$KC_HTTPS_KEY_STORE_FILE" -alias "$ALIAS" -storepass "$KC_HTTPS_KEY_STORE_PASSWORD" -noprompt
                     fi
                   done
                   exec /opt/keycloak/bin/kc.sh start
@@ -63,9 +62,9 @@ spec:
                 value: changeit
               - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
                 value: ANY
-              - name: KC_CONFIG_KEYSTORE
+              - name: KC_HTTPS_KEY_STORE_FILE
                 value: /opt/keycloak/conf/server.keystore
-              - name: KC_CONFIG_KEYSTORE_PASSWORD
+              - name: KC_HTTPS_KEY_STORE_PASSWORD
                 value: changeit
               - name: KC_VAULT
                 value: file
