@@ -15,6 +15,12 @@ spec:
     - name: registry
   hostname:
     hostname: {{ template "keycloak.keycloak-hostname" . }}
+    strict: true
+    strictBackchannel: true
+  http:
+    httpEnabled: true
+    httpPort: 8080
+    httpsPort: 8443
   db:
     vendor: postgres
     database: {{ $postgres.database | quote }}
@@ -26,6 +32,8 @@ spec:
     passwordSecret:
       name: {{ template "keycloak.name" . }}-db-secret
       key: POSTGRES_PASSWORD
+  transaction:
+    xaEnabled: true
   features:
     disabled: []
     enabled: []
@@ -41,14 +49,16 @@ spec:
               - |
                   mkdir -p /opt/keycloak/cacerts
                   mkdir -p /opt/keycloak/certs
-                  for CERT in /opt/keycloak/cacerts/*.crt; do
+                  echo ls /opt/keycloak/cacerts/*.crt
+                  ls /opt/keycloak/cacerts/*.crt
+                  for CERT in $(ls /opt/keycloak/cacerts/*.crt); do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
                       echo keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                       keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
                     fi
                   done
-                  for CERT in /opt/keycloak/certs/*.crt; do
+                  for CERT in $(ls /opt/keycloak/certs/*.crt); do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
                       echo keytool -import -file "$CERT" -keystore "$KC_HTTPS_KEY_STORE_FILE" -alias "$ALIAS" -storepass "$KC_HTTPS_KEY_STORE_PASSWORD" -noprompt
@@ -83,10 +93,8 @@ spec:
               - name: KC_LOG_LEVEL
                 value: {{ .Values.config.debug | ternary "ALL" "INFO" | quote }}
               - name: KC_HOSTNAME_STRICT
-                value: 'false'
+                value: 'true'
               - name: KC_HOSTNAME_STRICT_BACKCHANNEL
-                value: 'false'
-              - name: KC_HTTP_ENABLED
                 value: 'true'
             envFrom:
               - secretRef:
