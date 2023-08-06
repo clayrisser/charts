@@ -8,9 +8,6 @@ metadata:
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    {{- if (eq .Values.service.phpmyadmin.type "ClusterIP") }}
-    kubernetes.io/cluster-service: 'true'
-    {{- end }}
 spec:
   {{- if .Values.ingress.phpmyadmin.enabled }}
   type: ClusterIP

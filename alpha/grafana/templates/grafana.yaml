@@ -30,10 +30,6 @@ spec:
     tlsSecretName: {{ template "grafana.grafana-certificate" . }}
   {{- end }}
   service:
-    {{- if (eq .Values.service.grafana.type "ClusterIP") }}
-    labels:
-      kubernetes.io/cluster-service: 'true'
-    {{- end }}
     ports:
       - name: http
         port: {{ (eq .Values.service.grafana.type "LoadBalancer") | ternary .Values.service.grafana.lbPorts.http "3000" }}
