@@ -39,22 +39,34 @@ spec:
               - sh
               - -c
               - |
+                  mkdir -p /opt/keycloak/cacerts
                   mkdir -p /opt/keycloak/certs
+                  for CERT in /opt/keycloak/cacerts/*.crt; do
+                    if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
+                      ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
+                      echo keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      keytool -import -trustcacerts -file "$CERT" -keystore "$KC_SPI_TRUSTSTORE_FILE_FILE" -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                    fi
+                  done
                   for CERT in /opt/keycloak/certs/*.crt; do
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
-                      echo keytool -import -trustcacerts -file "$CERT" -cacerts -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
-                      keytool -import -trustcacerts -file "$CERT" -cacerts -alias "$ALIAS" -storepass "$KC_SPI_TRUSTSTORE_FILE_PASSWORD" -noprompt
+                      echo keytool -import -file "$CERT" -keystore "KC_CONFIG_KEYSTORE" -alias "$ALIAS" -storepass "$KC_CONFIG_KEYSTORE_PASSWORD" -noprompt
+                      keytool -import -file "$CERT" -keystore "KC_CONFIG_KEYSTORE" -alias "$ALIAS" -storepass "$KC_CONFIG_KEYSTORE_PASSWORD" -noprompt
                     fi
                   done
                   exec /opt/keycloak/bin/kc.sh start
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
-                value: /etc/alternatives/jre/lib/security/cacerts
+                value: /opt/keycloak/conf/server.truststore
               - name: KC_SPI_TRUSTSTORE_FILE_PASSWORD
                 value: changeit
               - name: KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY
                 value: ANY
+              - name: KC_CONFIG_KEYSTORE
+                value: /opt/keycloak/conf/server.keystore
+              - name: KC_CONFIG_KEYSTORE_PASSWORD
+                value: changeit
               - name: KC_VAULT
                 value: file
               - name: KC_VAULT_DIR
@@ -82,7 +94,7 @@ spec:
               {{- end }}
               {{- if .Values.config.ldap.enabled }}
               - name: ldap-cert
-                mountPath: /opt/keycloak/certs/ldap-ca.crt
+                mountPath: /opt/keycloak/cacerts/ldap-ca.crt
                 subPath: ca.crt
                 readOnly: true
               {{- end }}
