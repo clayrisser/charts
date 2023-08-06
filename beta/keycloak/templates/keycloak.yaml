@@ -52,6 +52,7 @@ spec:
                     if [ -f "$CERT" ] && [ "$(cat $CERT)" != "" ]; then
                       ALIAS=$(keytool -printcert -file "$CERT" | grep -E '^Owner: CN=' | head -n1 | sed 's|Owner: CN=||g')
                       echo keytool -import -file "$CERT" -keystore "$KC_HTTPS_KEY_STORE_FILE" -alias "$ALIAS" -storepass "$KC_HTTPS_KEY_STORE_PASSWORD" -noprompt
+                      keytool -import -file "$CERT" -keystore "$KC_HTTPS_KEY_STORE_FILE" -alias "$ALIAS" -storepass "$KC_HTTPS_KEY_STORE_PASSWORD" -noprompt
                     fi
                   done
                   if [ ! -f "$KC_SPI_TRUSTSTORE_FILE_FILE" ]; then
@@ -63,7 +64,7 @@ spec:
                     unset KC_HTTPS_KEY_STORE_FILE
                     unset KC_HTTPS_KEY_STORE_PASSWORD
                   fi
-                  exec /opt/keycloak/bin/kc.sh start
+                  exec /opt/keycloak/bin/kc.sh start --optimized
             env:
               - name: KC_SPI_TRUSTSTORE_FILE_FILE
                 value: /opt/keycloak/conf/server.truststore
