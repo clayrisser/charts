@@ -57,10 +57,10 @@ Calculate ldap root dn
 {{- if contains "." .Values.config.openldap.rootDN -}}
 {{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.openldap.rootDN -1) 0) (index (regexSplit "\\." .Values.config.openldap.rootDN -1) 1) -}}
 {{- else -}}
-{{- printf "" -}}
+{{- printf "%s" .Values.config.openldap.rootDN -}}
 {{- end -}}
 {{- else -}}
-{{- printf "%s" .Values.config.openldap.rootDN -}}
+{{- printf "" -}}
 {{- end -}}
 {{- end -}}
 
