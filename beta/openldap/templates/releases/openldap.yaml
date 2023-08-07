@@ -32,7 +32,7 @@ spec:
         name: jp-gouin
   values:
     global:
-      ldapDomain: {{ .Values.config.openldap.root | quote }}
+      ldapDomain: {{ template "openldap.openldap-root-dn" . }}
       existingSecret: {{ template "openldap.name" . }}
       {{- if (eq .Values.service.openldap.type "LoadBalancer") }}
       ldapPort: {{ .Values.service.openldap.lbPorts.openldap }}
@@ -81,11 +81,12 @@ spec:
       LDAP_CONFIG_ADMIN_USERNAME: "admin"
       LDAP_SKIP_DEFAULT_TREE: "yes"
       LDAP_SCHEMAS: {{ join "," (splitList "\n" (trim .Values.config.openldap.schemas)) | quote }}
+    {{- $rootDN := (include "openldap.openldap-root-dn" .) }}
     {{- if .Values.config.openldap.organizationalUnits }}
     customLdifFiles:
       10-organizational-units.ldif: |
         {{- range (splitList "," .Values.config.openldap.organizationalUnits) }}
-        dn: ou={{ . }},{{ $.Values.config.openldap.root }}
+        dn: ou={{ . }},{{ $rootDN }}
         objectclass: top
         objectclass: organizationalUnit
         ou: {{ . }}

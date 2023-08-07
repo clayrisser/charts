@@ -72,10 +72,10 @@ spec:
                   {%- end %}
                 - op: replace
                   path: /spec/realm/userFederationProviders/0/config/usersDn
-                  value: ou=people,{% .socketConfig.root %}
+                  value: ou=people,{% .socketConfig.rootDN %}
                 - op: replace
                   path: /spec/realm/userFederationMappers/0/config/groups.dn
-                  value: ou=groups,{% .socketConfig.root %}
+                  value: ou=groups,{% .socketConfig.rootDN %}
                 - op: replace
                   path: /spec/keycloakCRName
                   value: {{ template "keycloak.name" . }}

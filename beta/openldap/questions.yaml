@@ -41,11 +41,11 @@ questions:
     required: true
     label: replicas
     group: Openldap
-  - variable: config.openldap.root
-    description: ''
+  - variable: config.openldap.rootDN
+    description: 'use example.org or dc=example,dc=org'
     type: string
     required: true
-    label: root
+    label: 'root dn'
     group: Openldap
   - variable: config.openldap.hashPassword
     description: ''

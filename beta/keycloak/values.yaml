@@ -31,12 +31,12 @@ config:
     enabled: false
     integration: ''
     hostname: ''
-    domain: ''
+    rootDN: ''
     username: admin
     password: ''
     userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson, person, posixAccount, top, arbitrarySlots, extendedPerson'
     tls:
-      enabled: false
+      enabled: true
       certificate: ''
   postgres:
     integration: ''

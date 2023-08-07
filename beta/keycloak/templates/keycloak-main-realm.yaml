@@ -38,7 +38,7 @@ spec:
           authType: simple
           batchSizeForSync: '1000'
           bindCredential: '${vault.bindCredential}'
-          bindDn: cn={{ .Values.config.ldap.username }},{{ template "keycloak.ldap-dc" . }}
+          bindDn: cn={{ .Values.config.ldap.username }},{{ template "keycloak.ldap-root-dn" . }}
           cachePolicy: DEFAULT
           changedSyncPeriod: '-1'
           connectionPooling: 'true'
@@ -47,7 +47,7 @@ spec:
           editMode: WRITABLE
           enabled: 'true'
           fullSyncPeriod: '-1'
-          importEnabled: 'true'
+          importEnabled: 'false'
           pagination: 'true'
           priority: '0'
           rdnLDAPAttribute: uid
@@ -60,7 +60,7 @@ spec:
           useTruststoreSpi: ldapsOnly
           userObjectClasses: {{ .Values.config.ldap.userObjectClasses | quote }}
           usernameLDAPAttribute: uid
-          usersDn: ou=people,{{ template "keycloak.ldap-dc" . }}
+          usersDn: ou=people,{{ template "keycloak.ldap-root-dn" . }}
           uuidLDAPAttribute: entryUUID
           validatePasswordPolicy: 'false'
           vendor: 'rhds'
@@ -73,7 +73,7 @@ spec:
           drop.non.existing.groups.during.sync: 'false'
           group.name.ldap.attribute: cn
           group.object.classes: groupOfNames
-          groups.dn: ou=groups,{{ template "keycloak.ldap-dc" . }}
+          groups.dn: ou=groups,{{ template "keycloak.ldap-root-dn" . }}
           groups.path: '/'
           ignore.missing.groups: 'false'
           memberof.ldap.attribute: memberOf

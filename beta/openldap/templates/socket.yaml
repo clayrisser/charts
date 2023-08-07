@@ -14,8 +14,8 @@ spec:
     name: ldap
     namespace: {{ .Release.Namespace }}
   config:
-    adminDN: cn=admin,{{ .Values.config.openldap.root }}
-    rootDN: {{ .Values.config.openldap.root | quote }}
+    adminDN: cn=admin,{{ template "openldap.openldap-root-dn" . }}
+    rootDN: {{ template "openldap.openldap-root-dn" . }}
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}

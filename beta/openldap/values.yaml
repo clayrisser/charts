@@ -13,7 +13,7 @@ config:
   istio: false
   openldap:
     replicas: 1
-    root: dc=example,dc=org
+    rootDN: dc=example,dc=org
     hashPassword: SHA512CRYPT
     hostname: ''
     organizationalUnits: people,groups

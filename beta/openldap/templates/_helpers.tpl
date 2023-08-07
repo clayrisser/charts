@@ -50,6 +50,21 @@ Calculate openldap hostname
 {{- end -}}
 
 {{/*
+Calculate ldap root dn
+*/}}
+{{- define "openldap.openldap-root-dn" -}}
+{{- if .Values.config.openldap.rootDN -}}
+{{- if contains "." .Values.config.openldap.rootDN -}}
+{{- printf "dc=%s,dc=%s" (index (regexSplit "\\." .Values.config.openldap.rootDN -1) 0) (index (regexSplit "\\." .Values.config.openldap.rootDN -1) 1) -}}
+{{- else -}}
+{{- printf "" -}}
+{{- end -}}
+{{- else -}}
+{{- printf "%s" .Values.config.openldap.rootDN -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Calculate phpldapadmin certificate
 */}}
 {{- define "openldap.phpldapadmin-certificate" -}}

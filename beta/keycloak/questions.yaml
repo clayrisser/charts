@@ -118,11 +118,11 @@ questions:
         required: true
         label: hostname
         show_if: config.ldap.integration=
-      - variable: config.ldap.domain
-        description: 'use example.org instead of dc=example,dc=org'
+      - variable: config.ldap.rootDN
+        description: 'use example.org or dc=example,dc=org'
         type: string
         required: true
-        label: domain
+        label: 'root dn'
         show_if: config.ldap.integration=
       - variable: config.ldap.username
         description: ''
