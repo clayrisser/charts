@@ -47,7 +47,7 @@ spec:
           editMode: WRITABLE
           enabled: 'true'
           fullSyncPeriod: '-1'
-          importEnabled: 'false'
+          importEnabled: 'true'
           pagination: 'true'
           priority: '0'
           rdnLDAPAttribute: uid
