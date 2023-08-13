@@ -1,6 +1,6 @@
 images:
   erpnext:
-    repository: registry.gitlab.com/risserlabs/community/erpnext-images/erpnext
+    repository: registry.gitlab.com/bitspur/rock8s/erpnext/images/erpnext
     tag: 14.19.0
   mariadb:
     repository: bitnami/mariadb
