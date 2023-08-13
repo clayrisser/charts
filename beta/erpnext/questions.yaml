@@ -252,11 +252,16 @@ questions:
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: persistence.storageClass
+      - variable: persistence.storageClass.erpnext
         description: ''
         type: storageclass
         required: false
-        label: 'storage class'
+        label: 'erpnext storage class'
+      - variable: persistence.storageClass.mariadb
+        description: ''
+        type: storageclass
+        required: false
+        label: 'mariadb storage class'
       - variable: persistence.size.worker
         description: ''
         type: string

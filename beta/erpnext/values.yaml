@@ -81,7 +81,10 @@ persistence:
   size:
     worker: 1Gi
     logs: 1Gi
-  storageClass: efs-sc
+    mariadb: 1Gi
+  storageClass:
+    erpnext: efs-sc
+    mariadb: ''
   velero:
     enabled: false
     restic: true

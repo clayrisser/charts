@@ -130,11 +130,11 @@ spec:
       worker:
         enabled: {{ .Values.persistence.enabled }}
         size: {{ .Values.persistence.size.worker }}
-        storageClass: {{ .Values.persistence.storageClass }}
+        storageClass: {{ .Values.persistence.storageClass.erpnext }}
       logs:
         enabled: {{ (and .Values.config.logs .Values.persistence.enabled) }}
         size: {{ .Values.persistence.size.logs }}
-        storageClass: {{ .Values.persistence.storageClass }}
+        storageClass: {{ .Values.persistence.storageClass.erpnext }}
     ingress:
       ingressName: {{ .Release.Name }}-release
       enabled: {{ .Values.ingress.nginx.enabled }}
@@ -249,6 +249,10 @@ spec:
         service:
           ports:
             mysql: 3306
+        persistence:
+          enabled: {{ .Values.persistence.enabled }}
+          size: {{ .Values.persistence.size.mariadb }}
+          storageClass: {{ .Values.persistence.storageClass.mariadb }}
         configuration: |-
           [mysqld]
           skip-name-resolve
