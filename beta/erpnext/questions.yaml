@@ -273,6 +273,11 @@ questions:
         required: true
         show_if: config.logs=true
         label: 'logs size'
+      - variable: persistence.size.mariadb
+        description: ''
+        type: string
+        required: true
+        label: 'mariadb size'
       - variable: persistence.velero.enabled
         description: ''
         type: boolean
