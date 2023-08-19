@@ -1,0 +1,319 @@
+categories:
+  - Server
+questions:
+
+ # Images
+  - variable: images.supabase.repository
+    description: ''
+    type: string
+    required: true
+    label: 'supabase repository'
+    group: Images
+  - variable: images.supabase.tag
+    description: ''
+    type: string
+    required: true
+    label: 'supabase tag'
+    group: Images
+  - variable: images.jwt.repository
+    description: 'The repository for the JWT image'
+    type: string
+    required: true
+    label: 'JWT Repository'
+    group: Images
+  - variable: images.jwt.tag
+    description: 'The tag for the JWT image'
+    type: string
+    required: true
+    label: 'JWT Tag'
+    group: Images
+
+ # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - OnDelete
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: istio
+    group: Config
+
+ # Supabase
+  - variable: config.supabase.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Supabase
+  - variable: config.supabase.rootDN
+    description: 'use example.org or dc=example,dc=org'
+    type: string
+    required: true
+    label: 'root dn'
+    group: Supabase
+  - variable: config.supabase.hashPassword
+    description: ''
+    type: enum
+    options:
+      - SHA512CRYPT
+      - NONE
+      - SSHA
+      - MD5
+      - CRYPT
+      - MD5CRYPT
+      - SHA256CRYPT
+    label: 'hash password'
+    group: Supabase
+  - variable: config.supabase.organizationalUnits
+    description: ''
+    type: string
+    required: false
+    label: 'organizational units'
+    group: Supabase
+  - variable: config.supabase.schemas
+    description: ''
+    type: multiline
+    required: false
+    label: schemas
+    group: Supabase
+  - variable: config.supabase.passwords.admin
+    description: ''
+    type: password
+    required: false
+    label: 'admin password'
+    group: Supabase
+  - variable: config.supabase.passwords.config
+    description: ''
+    type: password
+    required: false
+    label: 'config password'
+    group: Supabase
+  - variable: config.supabase.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Supabase
+  - variable: config.supabase.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources defaults'
+    show_subquestion_if: custom
+    group: Supabase
+    subquestions:
+      - variable: config.supabase.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.supabase.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.supabase.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.supabase.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+  # Service
+  - variable: service.supabase.type
+    description: 'the type of service for supabase'
+    type: enum
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'supabase service type'
+    group: Service
+  - variable: service.supabase.externalTrafficPolicy
+    description: 'External traffic policy for the Supabase service'
+    type: string
+    required: true
+    label: 'Supabase External Traffic Policy'
+    group: Service
+
+  - variable: service.supabase.tls.enabled
+    description: 'Enable TLS for Supabase service'
+    type: boolean
+    required: true
+    label: 'Enable TLS for Supabase'
+    group: Service
+
+  - variable: service.supabase.tls.certificate.name
+    description: 'Name of the TLS certificate for Supabase'
+    type: string
+    required: false
+    label: 'Supabase TLS Certificate Name'
+    group: Service
+
+  - variable: service.supabase.tls.certificate.issuer.dnsNames
+    description: 'DNS names for the TLS certificate issuer'
+    type: string
+    required: false
+    label: 'TLS Certificate Issuer DNS Names'
+    group: Service
+
+  - variable: service.supabase.nodePorts.http
+    description: 'Node port for HTTP for Supabase'
+    type: integer
+    required: true
+    label: 'Supabase Node Port for HTTP'
+    group: Service
+
+  - variable: service.supabase.lbPorts.http
+    description: 'Load balancer port for HTTP for Supabase'
+    type: integer
+    required: true
+    label: 'Supabase Load Balancer Port for HTTP'
+    group: Service
+
+  # Ingress
+  - variable: ingress.supabase.certificate
+    description: 'Certificate name for Supabase ingress'
+    type: string
+    required: false
+    label: 'Supabase Ingress Certificate'
+    group: Ingress
+
+  - variable: ingress.supabase.enabled
+    description: 'Enable ingress for Supabase'
+    type: boolean
+    required: true
+    label: 'Enable Ingress for Supabase'
+    group: Ingress
+
+  - variable: ingress.supabase.hostname
+    description: 'Hostname for Supabase ingress'
+    type: string
+    required: false
+    label: 'Supabase Ingress Hostname'
+    group: Ingress
+
+  - variable: ingress.supabase.tls
+    description: 'Enable TLS for Supabase ingress'
+    type: boolean
+    required: true
+    label: 'Enable TLS for Supabase Ingress'
+    group: Ingress
+
+  - variable: ingress.supabase.issuer.name
+    description: 'Name of the issuer for Supabase ingress'
+    type: string
+    required: false
+    label: 'Supabase Ingress Issuer Name'
+    group: Ingress
+
+ # persistence:
+  - variable: persistence.accessMode
+    description: 'Access mode for the persistence volume'
+    type: string
+    required: true
+    label: 'Persistence Access Mode'
+    group: Persistence
+
+  - variable: persistence.enabled
+    description: 'Enable persistence for the application'
+    type: boolean
+    required: true
+    label: 'Enable Persistence'
+    group: Persistence
+
+  - variable: persistence.storageClass
+    description: 'Storage class for the persistence volume'
+    type: string
+    required: false
+    label: 'Persistence Storage Class'
+    group: Persistence
+
+  - variable: persistence.existingClaim.supabase
+    description: 'Name of an existing claim for Supabase persistence'
+    type: string
+    required: false
+    label: 'Supabase Existing Persistence Claim'
+    group: Persistence
+
+  - variable: persistence.size.supabase
+    description: 'Size of the persistence volume for Supabase'
+    type: string
+    required: true
+    label: 'Supabase Persistence Volume Size'
+    group: Persistence
+
+  - variable: persistence.velero.enabled
+    description: 'Enable Velero for backup'
+    type: boolean
+    required: true
+    label: 'Enable Velero Backup'
+    group: Persistence
+
+  - variable: persistence.velero.restic
+    description: 'Enable Restic for Velero backup'
+    type: boolean
+    required: true
+    label: 'Enable Restic for Velero Backup'
+    group: Persistence
+
+  - variable: persistence.velero.schedule
+    description: 'Backup schedule for Velero'
+    type: string
+    required: true
+    label: 'Velero Backup Schedule'
+    group: Persistence
+
+  - variable: persistence.velero.ttl
+    description: 'Time to live for Velero backups'
+    type: string
+    required: true
+    label: 'Velero Backup TTL'
+    group: Persistence
+
+  - variable: persistence.kanister.enabled
+    description: 'Enable Kanister for backup'
+    type: boolean
+    required: true
+    label: 'Enable Kanister Backup'
+    group: Persistence
+
+  - variable: persistence.kanister.schedule
+    description: 'Backup schedule for Kanister'
+    type: string
+    required: true
+    label: 'Kanister Backup Schedule'
+    group: Persistence
+
+

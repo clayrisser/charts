@@ -1,0 +1,74 @@
+images:
+  supabase:
+    repository: bitnami/gotrue
+    tag:  1.0.1-debian-11-r165
+  jwt:
+    repository: bitnami/jwt-cli
+    tag: 5.0.3-debian-11-r162
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  istio: false
+  supabase:
+    replicas: 1
+    rootDN: dc=example,dc=org
+    hashPassword: SHA512CRYPT
+    hostname: ''
+    organizationalUnits: people,groups
+    schemas: |
+      misc
+      ppolicy
+    passwords:
+      admin:
+      config:
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+service:
+  supabase:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    tls:
+      enabled: true
+      certificate:
+        name: ''
+        issuer:
+          dnsNames: ''
+    nodePorts:
+      http: 80
+    lbPorts:
+      http:
+
+ingress:
+  supabase:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''
+
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: true
+  storageClass: ''
+  existingClaim:
+    supabase: ''
+  size:
+    supabase: 1Gi
+  velero:
+    enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'

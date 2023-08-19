@@ -1,0 +1,124 @@
+apiVersion: v2
+kind: HelmRepository
+metadata:
+  name: supabase
+  labels:
+    app.kubernetes.io/name: {{ template "supabase.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  url: https://github.com/bitnami/charts/tree/main/bitnami/supabase
+---
+apiVersion: v2
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}-release
+  labels:
+    app.kubernetes.io/name: {{ template "supabase.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: supabase
+      version: {{ .Chart.Version | quote }}
+      sourceRef:
+        apiVersion: v1
+        kind: HelmRepository
+        name: supabase
+  values:
+    image:
+      repository: {{ .Values.images.supabase.repository | quote }}
+      tag: {{ .Values.images.supabase.tag | quote }}
+      pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    jwt:
+      autoGenerate:
+        annotations: null
+    auth:
+      image:
+        repository: supabase/gotrue
+        tag: v2.91.0
+    kong:
+      service:
+        type: ClusterIP
+      ingress:
+        enabled: true
+        hostname: example.bitspur.com
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          cert-manager.io/cluster-issuer: letsencrypt-prod
+        tls: true
+    studio:
+      publicURL: https://example.bitspur.com
+      ingress:
+        enabled: true
+        hostname: example.bitspur.com
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          cert-manager.io/cluster-issuer: letsencrypt-prod
+        tls: true
+      default:
+        replicaCount: 1
+        resources: {}
+      short:
+        replicaCount: 1
+        resources: {}
+      long:
+        replicaCount: 1
+        resources: {}
+      scheduler:
+        replicaCount: 1
+        resources: {}
+    socketio:
+      replicaCount: 1
+      livenessProbe:
+        tcpSocket:
+          port:
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      readinessProbe:
+        tcpSocket:
+          port:
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      resources: {}
+      service:
+        type: ClusterIP
+        port:
+    persistence:
+      enabled: {{ .Values.persistence.enabled }}
+      {{- if .Values.persistence.storageClass }}
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClass: ''
+      {{- else }}
+      storageClass: {{ .Values.persistence.storageClass | quote }}
+      {{- end }}
+      {{- end }}
+    ingress:
+      ingressName: {{ .Release.Name }}-release
+      enabled: {{ .Values.ingress.enabled }}
+      annotations:
+        {{- if .Values.ingress.tls }}
+        {{- if (not .Values.ingress.certificate) }}
+        kubernetes.io/tls-acme: 'true'
+        {{- if .Values.ingress.issuer.name }}
+        cert-manager.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+      hosts:
+        - host: '{{ .Values.ingress.hostname }}'
+          paths:
+          - path: /
+            pathType: ImplementationSpecific
+      {{- if .Values.ingress.tls }}
+      tls:
+        - secretName: {{ template "supabase.supabase-certificate" . }}
+          hosts:
+            - '{{ .Values.ingress.hostname }}'
+      {{- end }}
+
