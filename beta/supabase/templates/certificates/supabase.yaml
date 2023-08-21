@@ -1,0 +1,36 @@
+{{- if (and .Values.service.supabase.tls.enabled (not .Values.service.supabase.tls.certificate.name)) }}
+{{- $serviceName := (printf "%s-release" .Release.Name) }}
+{{- $customDnsNames := list }}
+{{- if .Values.service.supabase.tls.certificate.issuer.dnsNames }}
+{{- $customDnsNames = (splitList " " .Values.service.supabase.tls.issuer.dnsNames) }}
+{{- end }}
+{{- $dnsNames := (concat $customDnsNames (list $serviceName (printf "%s.%s" $serviceName .Release.Namespace) (printf "%s.%s.svc" $serviceName .Release.Namespace) (printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace))) }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "supabase.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "supabase.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  secretName: {{ template "supabase.name" . }}-cert
+  isCA: false
+  commonName: {{ (printf "%s.%s.svc.cluster.local" $serviceName .Release.Namespace) | quote }}
+  subject:
+    organizations:
+      - selfsigned
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+  {{- range $dnsNames }}
+    - {{ . }}
+  {{- end }}
+{{- end }}

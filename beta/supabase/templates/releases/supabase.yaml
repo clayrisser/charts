@@ -88,7 +88,7 @@ spec:
       resources: {}
       service:
         type: ClusterIP
-        port:
+        port: 9999
     persistence:
       enabled: {{ .Values.persistence.enabled }}
       {{- if .Values.persistence.storageClass }}
@@ -98,6 +98,33 @@ spec:
       storageClass: {{ .Values.persistence.storageClass | quote }}
       {{- end }}
       {{- end }}
+    # environment:
+    # DB_HOST: DATABASE.NAMESPACE.svc.cluster.local
+    # DB_PORT: "5432"
+    # DB_DRIVER: postgres
+    # DB_NAME: postgres
+    # DB_SSL: allow # disable, allow, prefer, require, verify-ca, verify-full
+    # GOTRUE_API_HOST: "0.0.0.0"
+    # GOTRUE_API_PORT: "9999"
+    # GOTRUE_SITE_URL: https://STUDIO.EXAMPLE.COM
+    # GOTRUE_URI_ALLOW_LIST: "*"
+    # GOTRUE_DISABLE_SIGNUP: "false"
+    # GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+    # GOTRUE_JWT_ADMIN_ROLES: service_role
+    # GOTRUE_JWT_AUD: authenticated
+    # GOTRUE_JWT_EXP: "3600"
+    # GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+    # GOTRUE_MAILER_AUTOCONFIRM: "true"
+    # GOTRUE_SMTP_ADMIN_EMAIL: "SMTP_ADMIN_MAIL"
+    # GOTRUE_SMTP_HOST: "SMTP_HOST"
+    # GOTRUE_SMTP_PORT: "SMTP_PORT"
+    # GOTRUE_SMTP_SENDER_NAME: "SMTP_SENDER_NAME"
+    # GOTRUE_EXTERNAL_PHONE_ENABLED: "false"
+    # GOTRUE_SMS_AUTOCONFIRM: "false"
+    # GOTRUE_MAILER_URLPATHS_INVITE: "https://API.EXAMPLE.COM/auth/v1/verify"
+    # GOTRUE_MAILER_URLPATHS_CONFIRMATION: "https://API.EXAMPLE.COM/auth/v1/verify"
+    # GOTRUE_MAILER_URLPATHS_RECOVERY: "https://API.EXAMPLE.COM/auth/v1/verify"
+    # GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: "https://API.EXAMPLE.COM/auth/v1/verify"
     ingress:
       ingressName: {{ .Release.Name }}-release
       enabled: {{ .Values.ingress.enabled }}
