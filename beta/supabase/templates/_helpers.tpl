@@ -20,8 +20,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 Calculate supabase certificate
 */}}
 {{- define "supabase.supabase-certificate" }}
-{{- if (not (empty .Values.ingress.nginx.certificate)) }}
-{{- printf .Values.ingress.nginx.certificate }}
+{{- if (not (empty .Values.ingress.certificate)) }}
+{{- printf .Values.ingress.certificate }}
 {{- else }}
 {{- printf "%s-release-letsencrypt" .Release.Name }}
 {{- end }}

@@ -30,11 +30,26 @@ spec:
         apiVersion: v1
         kind: HelmRepository
         name: supabase
-  values:
+values:
+  global:
     image:
       repository: {{ .Values.images.supabase.repository | quote }}
       tag: {{ .Values.images.supabase.tag | quote }}
       pullPolicy: {{ .Values.config.imagePullPolicy | quote }}
+    logLevel: {{ .Values.config.debug | ternary "debug" "info" }}
+    customTLS:
+      enabled: {{ .Values.service.supabase.tls.enabled }}
+      secret: {{ template "supabase.supabase-certificate" . }}
+    {{- if .Values.persistence.velero.enabled }}
+    podAnnotations:
+      backup.velero.io/backup-volumes: data
+      pre.hook.backup.velero.io/timeout: 3m
+    {{- else }}
+    podAnnotations: {}
+    {{- end }}
+    replicaCount: {{ .Values.config.supabase.replicas }}
+    updateStrategy:
+    type: {{ .Values.config.updateStrategy | quote }}
     jwt:
       autoGenerate:
         annotations: null
@@ -50,7 +65,7 @@ spec:
         hostname: example.bitspur.com
         annotations:
           kubernetes.io/ingress.class: nginx
-          cert-manager.io/cluster-issuer: letsencrypt-prod
+          cert-manager.io/cluster-issuer: letsencryopenldappt-prod
         tls: true
     studio:
       publicURL: https://example.bitspur.com
@@ -89,6 +104,24 @@ spec:
       service:
         type: ClusterIP
         port: 9999
+    service:
+      annotations: {}
+      {{- if (eq .Values.service.supabase.type "NodePort") }}
+      NodePort: {{ .Values.service.supabase.nodePorts }}
+      LbPortNodePort: {{ .Values.service.supabase.lbPorts }}
+      {{- end }}
+      externalIPs: []
+      # loadBalancerIP:
+      # loadBalancerSourceRanges: []
+      type: {{ .Values.service.supabase.type | quote }}
+    replication:
+      enabled: {{ (gt (.Values.config.supabase.replicas | int64) 1) | ternary "true" "false" }}
+      clusterName: "cluster.local"
+      retry: 60
+      timeout: 1
+      interval: 00:00:00:10
+      starttls: "critical"
+      tls_reqcert: "never"
     persistence:
       enabled: {{ .Values.persistence.enabled }}
       {{- if .Values.persistence.storageClass }}
