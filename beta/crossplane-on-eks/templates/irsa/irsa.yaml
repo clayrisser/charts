@@ -93,7 +93,7 @@ spec:
                       "Action": "sts:AssumeRoleWithWebIdentity",
                       "Condition": {
                         "StringEquals": {
-                          "%s:aud": "amazonaws.com",
+                          "%s:aud": "{{ .Values.audience }}",
                           "%s:sub": "system:serviceaccount:%s:%s"
                         }
                       }
