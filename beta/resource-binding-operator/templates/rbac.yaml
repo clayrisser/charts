@@ -86,38 +86,6 @@ rules:
 
 # role.yaml
 - apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - coordination.k8s.io
-  resources:
-  - leases
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
-
-- apiGroups:
   - resourcebinding.rock8s.com
   resources:
   - resourcebindings
@@ -143,3 +111,13 @@ rules:
   - get
   - patch
   - update
+
+# read all
+- apiGroups:
+  - "*"
+  resources:
+  - "*"
+  verbs:
+  - get
+  - list
+  - watch
