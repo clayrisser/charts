@@ -1,20 +1,24 @@
 {{- if .Values.config.phpldapadmin.enabled }}
-apiVersion: patch.rock8s.com/v1alpha1
-kind: Patch
+apiVersion: kyverno.io/v1
+kind: Policy
 metadata:
   name: phpldapadmin
 spec:
-  epoch: {{ now | unixEpoch | quote }}
-  patches:
-    - id: patch-phpldapadmin-configmap
-      target:
-        apiVersion: v1
-        kind: ConfigMap
-        name: {{ .Release.Name }}-release-phpldapadmin
-      waitForResource: true
-      type: json
-      patch: |
-        - op: replace
-          path: /data/PHPLDAPADMIN_LDAP_HOSTS
-          value: "#PYTHON2BASH:[{ 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-release:{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}': [{'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-root-dn" . }}'  }]}]}]"
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: config-map
+      match:
+        all:
+          resources:
+            kinds:
+              - core/*/ConfigMap
+            names:
+              - {{ .Release.Name }}-release-phpldapadmin
+      mutate:
+        patchesJson6902: |-
+          - op: replace
+            path: /data/PHPLDAPADMIN_LDAP_HOSTS
+            value: "#PYTHON2BASH:[{ 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-release:{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}': [{'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-root-dn" . }}'  }]}]}]"
+
 {{- end }}

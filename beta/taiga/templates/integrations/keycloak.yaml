@@ -41,37 +41,38 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: keycloak-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {% now | unixEpoch | quote %}
-          patches:
-            - id: release
-              target:
-                group: helm.toolkit.fluxcd.io
-                version: v2beta1
-                kind: HelmRelease
-                name: {{ .Release.Name }}-release
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |
-                - op: replace
-                  path: /spec/values/env/openidClientId
-                  value: {% .plugConfig.clientId | quote %}
-                - op: replace
-                  path: /spec/values/env/openidClientSecret
-                  value: {% .plugConfig.clientSecret | quote %}
-                - op: replace
-                  path: /spec/values/env/openidTokenUrl
-                  value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/token'
-                - op: replace
-                  path: /spec/values/env/openidUserUrl
-                  value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/userinfo'
-                - op: replace
-                  path: /spec/values/env/openidUrl
-                  value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/auth'
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: helm-release
+              match:
+                all:
+                  resources:
+                    kinds:
+                      - helm.toolkit.fluxcd.io/*/HelmRelease
+                    names:
+                      - {{ .Release.Name }}-release
+              mutate:
+                patchesJson6902: |-
+                  - op: replace
+                    path: /spec/values/env/openidClientId
+                    value: {% .plugConfig.clientId | quote %}
+                  - op: replace
+                    path: /spec/values/env/openidClientSecret
+                    value: {% .plugConfig.clientSecret | quote %}
+                  - op: replace
+                    path: /spec/values/env/openidTokenUrl
+                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/token'
+                  - op: replace
+                    path: /spec/values/env/openidUserUrl
+                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/userinfo'
+                  - op: replace
+                    path: /spec/values/env/openidUrl
+                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/auth'
 {{- end }}

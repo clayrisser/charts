@@ -19,24 +19,25 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: ingress-target-coupled-or-updated-{% .plug.metadata.namespace %}
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: ingress
-              target:
-                group: networking.k8s.io
-                version: v1
-                kind: Ingress
-                name: {% .plugConfig.ingressName %}
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |-
-                - op: add
-                  path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
-                  value: {% .socketConfig.target %}
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: ingress
+              match:
+                all:
+                  resources:
+                    kinds:
+                      - networking.k8s.io/*/Ingress
+                    names:
+                      - {% .plugConfig.ingressName %}
+              mutate:
+                patchesJson6902: |-
+                  - op: add
+                    path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
+                    value: {% .socketConfig.target %}

@@ -27,46 +27,48 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: secret
-              target:
-                apiVersion: v1
-                kind: Secret
-                name: postgres
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |
-                - op: replace
-                  path: /data/password
-                  value: '{% .socketConfig.password | b64enc %}'
-                - op: replace
-                  path: /data/username
-                  value: '{% .socketConfig.username | b64enc %}'
-            - id: helm-release
-              target:
-                group: helm.toolkit.fluxcd.io
-                version: v2beta1
-                kind: HelmRelease
-                name: {{ .Release.Name }}-release
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |
-                - op: replace
-                  path: /spec/values/externalDatabase/database
-                  value: '{% .plugConfig.database %}'
-                - op: replace
-                  path: /spec/values/externalDatabase/host
-                  value: '{% .socketConfig.hostname %}'
-                - op: replace
-                  path: /spec/chart/spec/chart
-                  value: nextcloud
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: secret
+              match:
+                all:
+                  resources:
+                    kinds:
+                      - core/*/Secret
+                    names:
+                      - postgres
+              mutate:
+                patchesJson6902: |-
+                  - op: replace
+                    path: /data/password
+                    value: '{% .socketConfig.password | b64enc %}'
+                  - op: replace
+                    path: /data/username
+                    value: '{% .socketConfig.username | b64enc %}'
+            - name: helm-release
+              match:
+                all:
+                  resources:
+                    kinds:
+                      - helm.toolkit.fluxcd.io/*/HelmRelease
+                    names:
+                      - {{ .Release.Name }}-release
+              mutate:
+                patchesJson6902: |-
+                  - op: replace
+                    path: /spec/values/externalDatabase/database
+                    value: '{% .plugConfig.database %}'
+                  - op: replace
+                    path: /spec/values/externalDatabase/host
+                    value: '{% .socketConfig.hostname %}'
+                  - op: replace
+                    path: /spec/chart/spec/chart
+                    value: nextcloud
 {{- end }}

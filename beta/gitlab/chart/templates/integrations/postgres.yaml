@@ -40,34 +40,37 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: strategic
-              target:
-                version: v1
-                kind: ConfigMap
-                name: gitlab
-              waitForTimeout: 5
-              waitForResource: true
-              patch: |-
-                spec:
-                  chart:
-                    values:
-                      global:
-                        psql:
-                          host: '{% .socketConfig.hostname %}'
-                          port: '{% .socketConfig.port %}'
-                          username: '{% .socketConfig.username %}'
-                          database: '{% .plugConfig.database %}'
-                          password:
-                            useSecret: true
-                            secret: postgres
-                            key: POSTGRES_PASSWORD
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: strategic
+              match:
+                all:
+                  resources:
+                    kinds:
+                      - v1/*/ConfigMap
+                    names:
+                      - gitlab
+              mutate:
+                patchStrategicMerge:
+                  spec:
+                    chart:
+                      values:
+                        global:
+                          psql:
+                            host: '{% .socketConfig.hostname %}'
+                            port: '{% .socketConfig.port %}'
+                            username: '{% .socketConfig.username %}'
+                            database: '{% .plugConfig.database %}'
+                            password:
+                              useSecret: true
+                              secret: postgres
+                              key: POSTGRES_PASSWORD
 {{- end }}
 {{- end }}

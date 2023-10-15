@@ -28,24 +28,26 @@ spec:
     - when: [coupled, updated]
       do: recreate
       resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: secret
-              target:
-                apiVersion: v1
-                kind: Secret
-                name: {{ template "airflow.name" . }}-metadata
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |
-                - op: replace
-                  path: /data/connection
-                  value: {% (printf "postgresql://%s:%s@%s:%s/%s?sslmode=disable" .socketConfig.username .socketConfig.password .socketConfig.hostname .socketConfig.port .plugConfig.database) | b64enc | quote %}
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: secret
+              match:
+                all:
+                  resources:
+                    kinds:
+                      - core/*/Secret
+                    names:
+                      - {{ template "airflow.name" . }}-metadata
+              mutate:
+                patchesJson6902: |-
+                  - op: replace
+                    path: /data/connection
+                    value: {% (printf "postgresql://%s:%s@%s:%s/%s?sslmode=disable" .socketConfig.username .socketConfig.password .socketConfig.hostname .socketConfig.port .plugConfig.database) | b64enc | quote %}
 {{- end }}

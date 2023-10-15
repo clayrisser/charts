@@ -25,40 +25,42 @@ spec:
     - when: [coupled, updated]
       do: apply
       resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: s3-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: helm-release
-              target:
-                group: helm.toolkit.fluxcd.io
-                version: v2beta1
-                kind: HelmRelease
-                name: {{ .Release.Name }}-release
-              waitForResource: true
-              type: json
-              patch: |
-                - op: replace
-                  path: /spec/values/nextcloud/configs/s3.config.php
-                  value: |
-                    <?php
-                    \$CONFIG = array (
-                      'objectstore' => array(
-                        'class' => '\\OC\\Files\\ObjectStore\\S3',
-                        'arguments' => array(
-                          'autocreate'     => false,
-                          'bucket'         => '{% .plugConfig.bucket %}',
-                          'endpoint'       => '{% .socketConfig.endpoint %}',
-                          'key'            => '{% .socketConfig.accessKey %}',
-                          'region'         => '{% .socketConfig.region %}',
-                          'secret'         => '{% .socketConfig.secretKey %}',
-                          'use_path_style' => false,
-                          'use_ssl'        => {% (.socketConfig.tls "1") | ternary "true" "false" %},
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: helm-release
+              match:
+                all:
+                  resources:
+                    kinds:
+                      - helm.toolkit.fluxcd.io/*/HelmRelease
+                    names:
+                      - {{ .Release.Name }}-release
+              mutate:
+                patchesJson6902: |-
+                  - op: replace
+                    path: /spec/values/nextcloud/configs/s3.config.php
+                    value: |
+                      <?php
+                      \$CONFIG = array (
+                        'objectstore' => array(
+                          'class' => '\\OC\\Files\\ObjectStore\\S3',
+                          'arguments' => array(
+                            'autocreate'     => false,
+                            'bucket'         => '{% .plugConfig.bucket %}',
+                            'endpoint'       => '{% .socketConfig.endpoint %}',
+                            'key'            => '{% .socketConfig.accessKey %}',
+                            'region'         => '{% .socketConfig.region %}',
+                            'secret'         => '{% .socketConfig.secretKey %}',
+                            'use_path_style' => false,
+                            'use_ssl'        => {% (.socketConfig.tls "1") | ternary "true" "false" %},
+                          )
                         )
-                      )
-                    );
+                      );
 {{- end }}
