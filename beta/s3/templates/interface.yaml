@@ -13,11 +13,11 @@ spec:
       plugDefinition:
         properties:
           bucket: {}
+        create: {}
+        cleanup: {}
       socketDefinition:
         properties:
           endpoint:
-            required: true
-          bucket:
             required: true
           accessKey: {}
           secretKey: {}

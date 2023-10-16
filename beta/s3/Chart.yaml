@@ -3,7 +3,7 @@ name: s3
 home: https://gitlab.com/risserlabs/community/charts
 version: 0.0.1
 appVersion: latest
-description: 's3 credentials integration socket'
+description: 's3 integration socket'
 keywords:
   - mail
   - email
