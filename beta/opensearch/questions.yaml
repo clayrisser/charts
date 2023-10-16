@@ -231,8 +231,8 @@ questions:
         show_if: ingress.opensearch.tls=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned
@@ -304,8 +304,8 @@ questions:
         show_if: ingress.opensearchDashboards.tls=true&&config.opensearchDashboards.enabled=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned

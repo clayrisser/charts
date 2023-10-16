@@ -249,8 +249,8 @@ questions:
         show_if: ingress.mastodon.tls=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
         required: true

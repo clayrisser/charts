@@ -173,8 +173,8 @@ questions:
         show_if: ingress.checkmk.tls=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
