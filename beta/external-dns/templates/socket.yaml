@@ -30,12 +30,11 @@ spec:
           rules:
             - name: ingress
               match:
-                all:
-                  resources:
-                    kinds:
-                      - networking.k8s.io/*/Ingress
-                    names:
-                      - {% .plugConfig.ingressName %}
+                resources:
+                  kinds:
+                    - networking.k8s.io/*/Ingress
+                  names:
+                    - {% .plugConfig.ingressName %}
               mutate:
                 patchesJson6902: |-
                   - op: add

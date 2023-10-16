@@ -9,10 +9,11 @@ spec:
   rules:
     - name: enable-istio
       match:
-        all:
-          resources:
-            kinds:
-              - core/*/Namespace
+        resources:
+          kinds:
+            - core/*/Namespace
+          names:
+            - {{ .Release.Namespace }}
       mutate:
         patchStrategicMerge:
           metadata:

@@ -39,12 +39,11 @@ spec:
           rules:
             - name: secret
               match:
-                all:
-                  resources:
-                    kinds:
-                      - core/*/Secret
-                    names:
-                      - {{ template "airflow.name" . }}-metadata
+                resources:
+                  kinds:
+                    - core/*/Secret
+                  names:
+                    - {{ template "airflow.name" . }}-metadata
               mutate:
                 patchesJson6902: |-
                   - op: replace

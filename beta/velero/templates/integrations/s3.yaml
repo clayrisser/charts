@@ -36,12 +36,11 @@ spec:
           rules:
             - name: secret
               match:
-                all:
-                  resources:
-                    kinds:
-                      - core/*/Secret
-                    names:
-                      - cloud-credentials
+                resources:
+                  kinds:
+                    - core/*/Secret
+                  names:
+                    - cloud-credentials
               mutate:
                 patchesJson6902: |-
                   - op: replace

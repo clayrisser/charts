@@ -39,12 +39,11 @@ spec:
           rules:
             - name: helm-release
               match:
-                all:
-                  resources:
-                    kinds:
-                      - source.toolkit.fluxcd.io/*/HelmRelease
-                    names:
-                      - {{ .Release.Name }}-release
+                resources:
+                  kinds:
+                    - source.toolkit.fluxcd.io/*/HelmRelease
+                  names:
+                    - {{ .Release.Name }}-release
               mutate:
                 patchesJson6902: |-
                   - op: replace
@@ -55,12 +54,11 @@ spec:
                     value: '{% .socketConfig.hostname %}'
             - name: secret
               match:
-                all:
-                  resources:
-                    kinds:
-                      - core/*/Secret
-                    names:
-                      - postgres
+                resources:
+                  kinds:
+                    - core/*/Secret
+                  names:
+                    - postgres
               mutate:
                 patchesJson6902: |-
                   - op: replace

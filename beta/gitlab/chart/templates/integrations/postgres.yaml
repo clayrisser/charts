@@ -51,12 +51,11 @@ spec:
           rules:
             - name: strategic
               match:
-                all:
-                  resources:
-                    kinds:
-                      - v1/*/ConfigMap
-                    names:
-                      - gitlab
+                resources:
+                  kinds:
+                    - v1/*/ConfigMap
+                  names:
+                    - gitlab
               mutate:
                 patchStrategicMerge:
                   spec:

@@ -53,12 +53,11 @@ spec:
           rules:
             - name: keycloak-realm
               match:
-                all:
-                  resources:
-                    kinds:
-                      - k8s.keycloak.org/*/KeycloakRealmImport
-                    names:
-                      - {{ template "keycloak.name" . }}
+                resources:
+                  kinds:
+                    - k8s.keycloak.org/*/KeycloakRealmImport
+                  names:
+                    - {{ template "keycloak.name" . }}
               mutate:
                 patchesJson6902: |-
                   - op: replace

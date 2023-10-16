@@ -49,12 +49,11 @@ spec:
           rules:
             - name: keycloak
               match:
-                all:
-                  resources:
-                    kinds:
-                      - k8s.keycloak.org/*/Keycloak
-                    names:
-                      - {{ template "keycloak.name" . }}
+                resources:
+                  kinds:
+                    - k8s.keycloak.org/*/Keycloak
+                  names:
+                    - {{ template "keycloak.name" . }}
               mutate:
                 patchesJson6902: |-
                   - op: replace

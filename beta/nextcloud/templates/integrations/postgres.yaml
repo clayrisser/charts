@@ -38,12 +38,11 @@ spec:
           rules:
             - name: secret
               match:
-                all:
-                  resources:
-                    kinds:
-                      - core/*/Secret
-                    names:
-                      - postgres
+                resources:
+                  kinds:
+                    - core/*/Secret
+                  names:
+                    - postgres
               mutate:
                 patchesJson6902: |-
                   - op: replace

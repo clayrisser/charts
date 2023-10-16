@@ -9,12 +9,11 @@ spec:
   rules:
     - name: config-map
       match:
-        all:
-          resources:
-            kinds:
-              - core/*/ConfigMap
-            names:
-              - {{ .Release.Name }}-release-phpldapadmin
+        resources:
+          kinds:
+            - core/*/ConfigMap
+          names:
+            - {{ .Release.Name }}-release-phpldapadmin
       mutate:
         patchesJson6902: |-
           - op: replace

@@ -51,12 +51,11 @@ spec:
           rules:
             - name: config-map
               match:
-                all:
-                  resources:
-                    kinds:
-                      - core/*/ConfigMap
-                    names:
-                      - nextcloud-apps
+                resources:
+                  kinds:
+                    - core/*/ConfigMap
+                  names:
+                    - nextcloud-apps
               mutate:
                 patchesJson6902: |-
                   - op: replace
