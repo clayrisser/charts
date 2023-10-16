@@ -25,6 +25,7 @@ spec:
     - when: [coupled, updated]
       do: apply
       resource: |
+        {%- if .socketConfig.accessKey %}
         apiVersion: v1
         kind: Secret
         metadata:
@@ -33,6 +34,7 @@ spec:
         stringData:
           ACCESS_KEY: {% .socketConfig.accessKey | quote %}
           SECRET_KEY: {% .socketConfig.secretKey | quote %}
+        {%- end %}
     - when: [coupled, updated]
       do: apply
       resource: |
@@ -43,10 +45,11 @@ spec:
           namespace: {{ .Release.Namespace }}
         location:
           type: s3Compliant
-          bucket: {% .socketConfig.bucket | quote %}
+          bucket: {% .plugConfig.bucket | quote %}
           endpoint: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
           prefix: {{ .Values.config.s3.prefix | quote }}
           region: {% .socketConfig.region | quote %}
+        {%- if .socketConfig.accessKey %}
         credential:
           type: keyPair
           keyPair:
@@ -57,6 +60,7 @@ spec:
               kind: Secret
               name: {{ template "kanister.name" . }}-s3
               namespace: {{ .Release.Namespace }}
+        {%- end %}
         skipSSLVerify: true
     - when: [decoupled]
       do: delete
