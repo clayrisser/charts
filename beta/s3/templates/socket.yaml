@@ -53,11 +53,11 @@ spec:
                   imagePullPolicy: Always
                   env:
                     - name: S3_BUCKET
-                      value: '{% .socketConfig.protocol %}'
+                      value: '{% .plugConfig.bucket %}'
                     - name: S3_AWS_REGION
-                      value: '{% .socketConfig.username %}'
+                      value: '{{ template "s3.aws-region" . }}'
                     - name: S3_CLUSTER_NAME
-                      value: '{% .socketConfig.hostname %}'
+                      value: '{{ template "s3.cluster-name" . }}'
                   command:
                     - sh
                     - -c
@@ -117,7 +117,7 @@ spec:
                   imagePullPolicy: Always
                   env:
                     - name: S3_BUCKET
-                      value: '{% .socketConfig.protocol %}'
+                      value: '{% .plugConfig.bucket %}'
                   command:
                     - sh
                     - -c
