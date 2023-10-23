@@ -59,3 +59,15 @@ rules:
       - sockets/finalizers
     verbs:
       - update
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
