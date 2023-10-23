@@ -1,3 +1,3 @@
 # integration-operator
 
-> kubernetes operator to integrate deployments
+> bind a resource to a resource

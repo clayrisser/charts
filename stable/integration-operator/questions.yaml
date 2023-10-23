@@ -1,5 +1,5 @@
 categories:
-  - Operators
+  - Server
 questions:
   # Config
   - variable: config.imagePullPolicy
@@ -39,7 +39,7 @@ questions:
     required: true
     label: "max concurrent reconciles"
     group: Config
-  - variable: config.integrationOperator.resources.enabled
+  - variable: config.resourceBindingOperator.resources.enabled
     description: ""
     type: enum
     options:
@@ -47,41 +47,41 @@ questions:
       - custom
       - "false"
     required: true
-    label: "integration operator resources enabled"
+    label: "resource binding operator resources enabled"
     show_subquestion_if: custom
     group: Config
     subquestions:
-      - variable: config.integrationOperator.resources.requests.cpu
+      - variable: config.resourceBindingOperator.resources.requests.cpu
         description: ""
         type: string
         required: true
-        label: "integration operator resources requests cpu"
-      - variable: config.integrationOperator.resources.requests.memory
+        label: "resource binding operator resources requests cpu"
+      - variable: config.resourceBindingOperator.resources.requests.memory
         description: ""
         type: string
         required: true
-        label: "integration operator resources requests memory"
-      - variable: config.integrationOperator.resources.limits.cpu
+        label: "resource binding operator resources requests memory"
+      - variable: config.resourceBindingOperator.resources.limits.cpu
         description: ""
         type: string
         required: true
-        label: "integration operator resources limits cpu"
-      - variable: config.integrationOperator.resources.limits.memory
+        label: "resource binding operator resources limits cpu"
+      - variable: config.resourceBindingOperator.resources.limits.memory
         description: ""
         type: string
         required: true
-        label: "integration operator resources limits memory"
+        label: "resource binding operator resources limits memory"
 
   # Images
-  - variable: images.integrationOperator.repository
+  - variable: images.resourceBindingOperator.repository
     description: ""
     type: string
     required: true
-    label: "integration operator repository"
+    label: "resource binding operator repository"
     group: Images
-  - variable: images.integrationOperator.tag
+  - variable: images.resourceBindingOperator.tag
     description: ""
     type: string
     required: true
-    label: "integration operator tag"
+    label: "resource binding operator tag"
     group: Images

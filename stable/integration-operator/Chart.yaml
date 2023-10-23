@@ -2,18 +2,15 @@ name: integration-operator
 apiVersion: v1
 home: https://gitlab.com/bitspur/rock8s/integration-operator
 icon: ""
-version: 0.2.0
-appVersion: 0.2.0
-description: "kubernetes operator to integrate deployments"
+version: 0.1.0
+appVersion: 0.1.0
+description: "bind a resource to a resource"
 keywords:
   - controller
-  - integration
   - operator
+  - crossplane
 sources:
   - https://gitlab.com/bitspur/rock8s/integration-operator.git
 maintainers:
   - name: "Clay Risser"
     email: email@clayrisser.com
-annotations:
-  catalog.cattle.io/namespace: kube-system
-  catalog.cattle.io/release-name: integration-operator
