@@ -1,7 +1,7 @@
 apiVersion: v1
 name: s3
-home: https://gitlab.com/risserlabs/community/charts
-version: 0.0.1
+home: https://gitlab.com/bitspur/rock8s/charts
+version: 0.0.2
 appVersion: latest
 description: 's3 integration socket'
 keywords:
