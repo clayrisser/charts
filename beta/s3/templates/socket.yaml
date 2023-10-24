@@ -33,7 +33,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      template: |
+      template:
         {%- if (eq .plugConfig.create "1") %}
         apiVersion: batch/v1
         kind: Job
@@ -97,7 +97,7 @@ spec:
         {%- end %}
     - when: [decoupled]
       do: recreate
-      template: |
+      template:
         {%- if (and (eq .plugConfig.create "1") (eq .plugConfig.cleanup "1")) %}
         apiVersion: batch/v1
         kind: Job
@@ -149,7 +149,7 @@ spec:
         {%- end %}
     - when: [coupled, updated]
       do: apply
-      template: |
+      template:
         apiVersion: awsblueprints.io/v1alpha1
         kind: DelegateS3IRSA
         metadata:

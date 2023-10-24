@@ -21,7 +21,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      template: |
+      template:
         apiVersion: batch/v1
         kind: Job
         metadata:
@@ -69,7 +69,7 @@ spec:
                         -o yaml | kubectl delete -f -
     - when: [coupled, updated]
       do: recreate
-      template: |
+      template:
         {%- if .plugConfig.schedule %}
         apiVersion: batch/v1
         kind: CronJob
@@ -121,14 +121,14 @@ spec:
         {%- end %}
     - when: [decoupled]
       do: delete
-      template: |
+      template:
         apiVersion: batch/v1
         kind: CronJob
         metadata:
           name: {{ template "kanister.name" . }}-{% .plug.metadata.namespace %}
     - when: [decoupled]
       do: delete
-      template: |
+      template:
         apiVersion: cr.kanister.io/v1alpha1
         kind: Blueprint
         metadata:

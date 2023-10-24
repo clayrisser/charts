@@ -20,7 +20,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      template: |
+      template:
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:
@@ -53,7 +53,7 @@ spec:
                     value: true
     - when: [decoupled]
       do: delete
-      template: |
+      template:
           apiVersion: v1
           kind: Secret
           metadata:

@@ -24,7 +24,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      template: |
+      template:
           apiVersion: v1
           kind: Secret
           metadata:
@@ -35,7 +35,7 @@ spec:
 {{- if $patchGitlab }}
     - when: [coupled, updated]
       do: recreate
-      template: |
+      template:
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:

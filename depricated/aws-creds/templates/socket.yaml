@@ -22,7 +22,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      template: |
+      template:
         apiVersion: batch/v1
         kind: Job
         metadata:
@@ -150,7 +150,7 @@ spec:
                     secretName: aws-creds
     - when: [decoupled]
       do: recreate
-      template: |
+      template:
         apiVersion: batch/v1
         kind: Job
         metadata:

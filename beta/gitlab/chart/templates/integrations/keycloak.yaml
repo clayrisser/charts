@@ -24,7 +24,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      template: |
+      template:
         apiVersion: batch/v1
         kind: Job
         metadata:
