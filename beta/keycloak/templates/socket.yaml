@@ -55,7 +55,7 @@ spec:
   config:
     keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
     defaultRealm: main
-  configMapper:
+  configTemplate:
     keycloakAdminPassword: '{% .vars.BASE64_ENCODED_KEYCLOAK_ADMIN_PASSWORD | b64dec %}'
     keycloakAdminUsername: '{% .vars.BASE64_ENCODED_KEYCLOAK_ADMIN_USERNAME | b64dec %}'
   vars:

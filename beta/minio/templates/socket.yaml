@@ -31,7 +31,7 @@ spec:
     region: ''
     defaultBucket: {{ .Values.config.defaultBucket | quote }}
     defaultPrefix: {{ .Values.config.defaultPrefix | quote }}
-  configMapper:
+  configTemplate:
     endpoint: '{% .socketData.endpoint %}'
     tls: '{% .socketData.tls %}'
     url: '{% (empty .socketData.endpoint) | ternary "" (printf "http%s://%s" ((eq .socketData.tls "true") | ternary "s" "") .socketData.endpoint) %}'

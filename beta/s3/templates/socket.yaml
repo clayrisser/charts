@@ -28,7 +28,7 @@ spec:
   config:
     tls: '1'
     region: '{{ template "s3.aws-region" . }}'
-  configMapper:
+  configTemplate:
     endpoint: '{% printf "%s.s3.%s.amazonaws.com" .plugConfig.bucket "{{ template "s3.aws-region" . }}" %}'
   resources:
     - when: [coupled, updated]
