@@ -43,7 +43,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      template: |
+      stringTemplate: |
         apiVersion: batch/v1
         kind: Job
         metadata:
