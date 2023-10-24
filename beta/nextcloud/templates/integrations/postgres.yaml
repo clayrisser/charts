@@ -1,7 +1,7 @@
 {{- if .Values.config.postgres.integration }}
 {{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: postgres
@@ -12,10 +12,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: postgres
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}

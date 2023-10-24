@@ -18,16 +18,12 @@ data:
 ---
 {{- $name := (split "." .Values.config.keycloak.integration)._1 | default "keycloak" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: keycloak
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: keycloak
-    namespace: {{ $namespace }}
   socket:
     name: keycloak
     namespace: {{ $namespace }}

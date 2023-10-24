@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: {{ template "kanister.name" . }}
@@ -9,10 +9,15 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: kanister
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        blueprint: {}
+        deployment: {}
+        schedule: {}
+        secrets: {}
+        statefulset: {}
+      socket: {}
   resources:
     - when: [coupled, updated]
       do: recreate

@@ -15,7 +15,7 @@ spec:
       - {{ .Release.Namespace }}
     ttl: {{ .Values.persistence.velero.ttl | quote }}
 ---
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: velero-schedule-replicator
@@ -25,10 +25,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  interfaceVersions: '*'
-  interface:
-    name: replicator
-    namespace: velero
   socket:
     name: velero-schedule-replicator
     namespace: velero

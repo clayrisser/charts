@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: mysql
@@ -9,10 +9,25 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: mysql
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        database:
+          required: true
+        cleanup: {}
+        replicate: {}
+        createdb: {}
+      socket:
+        protocol:
+          required: true
+        username:
+          required: true
+        password:
+          required: true
+        hostname:
+          required: true
+        port:
+          required: true
   config:
     protocol: mysql
     username: root

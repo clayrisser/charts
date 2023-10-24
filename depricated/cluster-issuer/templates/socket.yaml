@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: ca-replicator
@@ -9,10 +9,12 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: ca-replicator
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        caName: {}
+        includeTlsKey: {}
+      socket: {}
   resources:
     - when: [coupled, updated]
       do: recreate

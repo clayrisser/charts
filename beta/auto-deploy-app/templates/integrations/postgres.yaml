@@ -1,16 +1,12 @@
 {{- if (and .Values.integrations.postgres.name .Values.integrations.postgres.database) }}
 {{- $name := (split "." .Values.integrations.postgres.name)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.integrations.postgres.name))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: {{ template "trackableappname" . }}-postgres
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: postgres
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}

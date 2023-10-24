@@ -1,7 +1,7 @@
 {{- if .Values.config.smtp.integration }}
 {{- $name := (split "." .Values.config.smtp.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.smtp.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: smtp
@@ -12,10 +12,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: smtp
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}

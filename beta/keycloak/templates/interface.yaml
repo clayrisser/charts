@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Interface
 metadata:
   name: keycloak
@@ -9,29 +9,3 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   schemas:
-    - version: v0.0.1
-      plugDefinition:
-        properties:
-          clientId:
-            required: true
-          attributes: {}
-          cleanup: {}
-          clientSecret: {}
-          consentRequired: {}
-          description: {}
-          directAccessGrantsEnabled: {}
-          implicitFlowEnabled: {}
-          name: {}
-          protocol: {}
-          realm: {}
-          redirectUris: {}
-          webOrigins: {}
-      socketDefinition:
-        properties:
-          keycloakAdminPassword:
-            required: true
-          keycloakBaseUrl:
-            required: true
-          defaultRealm:
-            required: true
-          keycloakAdminUsername: {}

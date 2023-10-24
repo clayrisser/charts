@@ -1,7 +1,7 @@
 {{- if (and .Values.service.imgproxy.tls.enabled (not .Values.service.imgproxy.tls.certificate.name)) }}
 {{- $name := (split "." .Values.service.imgproxy.tls.certificate.issuer.integration)._1 | default "ca-replicator" }}
 {{- $namespace := (split "." (printf "%s." .Values.service.imgproxy.tls.certificate.issuer.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: ca-replicator
@@ -11,10 +11,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  interfaceVersions: '*'
-  interface:
-    name: ca-replicator
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}

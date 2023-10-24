@@ -1,5 +1,5 @@
 {{- $serviceAccount := lookup "v1" "ServiceAccount" .Release.Namespace "aws-elevated" }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: aws-creds
@@ -10,10 +10,14 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: aws-creds
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        resourceIdentifier:
+          required: true
+        resourceName:
+          required: true
+      socket: {}
   config: {}
   resources:
     - when: [coupled, updated]

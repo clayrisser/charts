@@ -1,7 +1,7 @@
 {{- if .Values.config.s3.integration }}
 {{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: s3
@@ -12,10 +12,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: s3
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
