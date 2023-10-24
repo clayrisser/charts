@@ -22,7 +22,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      resource: |
+      template: |
         apiVersion: v1
         kind: Secret
         metadata:
@@ -33,7 +33,7 @@ spec:
           POSTGRES_USERNAME: {% .socketConfig.username | quote %}
     - when: [coupled, updated]
       do: recreate
-      resource: |
+      template: |
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:

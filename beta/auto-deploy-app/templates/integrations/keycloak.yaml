@@ -41,7 +41,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      resource: |
+      template: |
           apiVersion: v1
           kind: Secret
           metadata:

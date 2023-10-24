@@ -20,7 +20,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      resource: |
+      template: |
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:
