@@ -4,6 +4,12 @@ metadata:
   name: {{ template "s3.name" . }}
 rules:
 - apiGroups:
+    - ''
+  resources:
+    - pods
+  verbs:
+    - '*'
+- apiGroups:
     - batch
   resources:
     - jobs

@@ -17,6 +17,8 @@ spec:
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.s3.bucket | quote }}
+    create: '1'
+    cleanup: '0'
   resources:
     - when: [coupled, updated]
       do: apply
