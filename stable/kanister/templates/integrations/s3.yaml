@@ -20,7 +20,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      template:
+      stringTemplate: |
         {%- if .socketConfig.accessKey %}
         apiVersion: v1
         kind: Secret
@@ -33,7 +33,7 @@ spec:
         {%- end %}
     - when: [coupled, updated]
       do: apply
-      template:
+      stringTemplate: |
         apiVersion: cr.kanister.io/v1alpha1
         kind: Profile
         metadata:
