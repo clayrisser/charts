@@ -160,3 +160,7 @@ spec:
             namespace: {% .plug.metadata.namespace %}
             s3irsa:
               name: {% .plugConfig.bucket %}
+          resourceConfig:
+            providerConfigName: aws-provider-config
+            name: {% .plugConfig.bucket %}
+            region: {% .socketConfig.bucket %}
