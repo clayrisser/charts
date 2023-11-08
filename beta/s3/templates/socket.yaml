@@ -22,6 +22,9 @@ spec:
         secretKey: {}
         region: {}
         tls: {}
+    result:
+      socket:
+        roleArn: {}
     response:
       plug:
         arn: {}
@@ -30,6 +33,17 @@ spec:
     region: '{{ template "s3.aws-region" . }}'
   configTemplate:
     endpoint: '{% printf "%s.s3.%s.amazonaws.com" .plug.spec.config.bucket "{{ template "s3.aws-region" . }}" %}'
+  resultTemplate:
+    roleArn: '{% .vars.roleArn %}'
+  resultVars:
+    - name: roleArn
+      fieldref:
+        fieldPath: metadata.annotations['eks.amazonaws.com/role-arn']
+      objref:
+        apiVersion: v1
+        kind: ServiceAccount
+        name: '{% .plug.metadata.name %}-{% .plug.metadata.namespace %}'
+        namespace: {{ .Release.Namespace }}
   resources:
     - when: [coupled, updated]
       do: apply
@@ -60,26 +74,3 @@ spec:
           resourceConfig:
             providerConfigName: aws-provider-config
             region: {{ template "s3.aws-region" . }}
-  resultResources:
-    - do: apply
-      template:
-        apiVersion: kyverno.io/v1
-        kind: Policy
-        metadata:
-          name: s3-coupled-or-updated
-        spec:
-          validationFailureAction: enforce
-          background: true
-          rules:
-            - name: serviceaccount
-              match:
-                resources:
-                  kinds:
-                    - core/*/ServiceAccount
-                  names:
-                    - default
-              mutate:
-                patchStrategicMerge:
-                  metadata:
-                    annotations:
-                      eks.amazonaws.com/role-arn: 'ABC'

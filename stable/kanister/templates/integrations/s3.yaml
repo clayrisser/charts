@@ -60,4 +60,27 @@ spec:
               namespace: {{ .Release.Namespace }}
         {%- end %}
         skipSSLVerify: true
+  resultResources:
+    - do: apply
+      template:
+        apiVersion: kyverno.io/v1
+        kind: Policy
+        metadata:
+          name: s3-coupled-or-updated
+        spec:
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: serviceaccount
+              match:
+                resources:
+                  kinds:
+                    - core/*/ServiceAccount
+                  names:
+                    - kanister-operator-release
+              mutate:
+                patchStrategicMerge:
+                  metadata:
+                    annotations:
+                      eks.amazonaws.com/role-arn: '{% .socketResult.roleArn %}'
 {{- end }}
