@@ -60,12 +60,4 @@ spec:
               namespace: {{ .Release.Namespace }}
         {%- end %}
         skipSSLVerify: true
-    - when: [decoupled]
-      do: delete
-      template:
-        apiVersion: v1
-        kind: Secret
-        metadata:
-          name: s3
-          namespace: {{ .Release.Namespace }}
 {{- end }}
