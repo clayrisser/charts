@@ -77,7 +77,7 @@ spec:
                   kinds:
                     - core/*/ServiceAccount
                   names:
-                    - {{ template "airflow.name" . }}-metadata
+                    - default
               mutate:
                 patchStrategicMerge:
                   metadata:
