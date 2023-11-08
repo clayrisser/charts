@@ -89,5 +89,7 @@ spec:
                   type: string
                 roleName:
                   type: string
+                roleArn:
+                  type: string
               type: object
           type: object
