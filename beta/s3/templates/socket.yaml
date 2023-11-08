@@ -32,121 +32,18 @@ spec:
     endpoint: '{% printf "%s.s3.%s.amazonaws.com" .plugConfig.bucket "{{ template "s3.aws-region" . }}" %}'
   resources:
     - when: [coupled, updated]
-      do: recreate
+      do: apply
       stringTemplate: |
         {%- if (eq .plugConfig.create "1") %}
-        apiVersion: batch/v1
-        kind: Job
+        apiVersion: awsblueprints.io/v1alpha1
+        kind: S3IRSA
         metadata:
-          name: {{ template "s3.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %}
+          name: {% .plugConfig.bucket %}
+          namespace: {{ .Release.Namespace }}
         spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            metadata:
-              annotations:
-                sidecar.istio.io/inject: 'false'
-            spec:
-              automountServiceAccountToken: true
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands-psql:0.0.1
-                  imagePullPolicy: Always
-                  env:
-                    - name: S3_BUCKET
-                      value: '{% .plugConfig.bucket %}'
-                    - name: S3_AWS_REGION
-                      value: '{{ template "s3.aws-region" . }}'
-                    - name: S3_CLUSTER_NAME
-                      value: '{{ template "s3.cluster-name" . }}'
-                  command:
-                    - sh
-                    - -c
-                    - |
-                      if ! kubectl get s3irsas.awsblueprints.io $S3_BUCKET -n {{ .Release.Namespace }}; then
-                        cat <<EOF | kubectl apply -f -
-                      apiVersion: awsblueprints.io/v1alpha1
-                      kind: S3IRSA
-                      metadata:
-                        name: $S3_BUCKET
-                        namespace: {{ .Release.Namespace }}
-                      spec:
-                        resourceConfig:
-                          providerConfigName: aws-provider-config
-                          name: $S3_BUCKET
-                          region: $S3_AWS_REGION
-                          tags:
-                            - key: Cluster
-                              value: $S3_CLUSTER_NAME
-                      EOF
-                      fi
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "s3.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -
-        {%- end %}
-    - when: [decoupled]
-      do: recreate
-      stringTemplate: |
-        {%- if (and (eq .plugConfig.create "1") (eq .plugConfig.cleanup "1")) %}
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: {{ template "s3.name" . }}-decoupled-{% .plug.metadata.namespace %}
-        spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            metadata:
-              annotations:
-                sidecar.istio.io/inject: 'false'
-            spec:
-              automountServiceAccountToken: true
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands-psql:0.0.1
-                  imagePullPolicy: Always
-                  env:
-                    - name: S3_BUCKET
-                      value: '{% .plugConfig.bucket %}'
-                  command:
-                    - sh
-                    - -c
-                    - |
-                      cat <<EOF | kubectl delete -f -
-                      apiVersion: awsblueprints.io/v1alpha1
-                      kind: S3IRSA
-                      metadata:
-                        name: $S3_BUCKET
-                        namespace: {{ .Release.Namespace }}
-                      EOF
-                      {%- end %}
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "s3.name" . }}-decoupled-{% .plug.metadata.namespace %} \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -
+          resourceConfig:
+            providerConfigName: aws-provider-config
+            region: {{ template "s3.aws-region" . }}
         {%- end %}
     - when: [coupled, updated]
       do: apply
