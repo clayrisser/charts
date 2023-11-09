@@ -75,7 +75,7 @@ spec:
               match:
                 resources:
                   kinds:
-                    - core/*/ServiceAccount
+                    - v1/ServiceAccount
                   names:
                     - kanister-operator-release
               mutate:
