@@ -20,12 +20,16 @@ data:
 ---
 {{- $name := (split "." .Values.integrations.keycloak.name)._1 | default "keycloak" }}
 {{- $namespace := (split "." (printf "%s." .Values.integrations.keycloak.name))._0 }}
-apiVersion: integration.rock8s.com/v1beta1
+apiVersion: integration.rock8s.com/v1alpha2
 kind: Plug
 metadata:
   name: {{ template "trackableappname" . }}-keycloak
 spec:
   epoch: {{ now | unixEpoch | quote }}
+  interfaceVersions: '*'
+  interface:
+    name: keycloak
+    namespace: {{ $namespace }}
   socket:
     name: keycloak
     namespace: {{ $namespace }}
@@ -41,7 +45,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      template:
+      resource: |
           apiVersion: v1
           kind: Secret
           metadata:
