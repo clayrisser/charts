@@ -25,9 +25,6 @@ spec:
     result:
       socket:
         roleArn: {}
-    response:
-      plug:
-        arn: {}
   config:
     tls: '1'
     region: '{{ template "s3.aws-region" . }}'
