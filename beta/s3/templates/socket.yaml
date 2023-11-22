@@ -39,7 +39,7 @@ spec:
       objref:
         apiVersion: awsblueprints.io/v1alpha1
         kind: DelegateS3IRSA
-        name: '{% .plug.metadata.name %}-{% .plug.metadata.namespace %}'
+        templateName: '{% .plug.metadata.name %}-{% .plug.metadata.namespace %}'
         namespace: {{ .Release.Namespace }}
   resources:
     - when: [coupled, updated]
