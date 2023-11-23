@@ -14,7 +14,6 @@ spec:
       plug:
         bucket: {}
         create: {}
-        cleanup: {}
       socket:
         endpoint:
           required: true
@@ -24,7 +23,8 @@ spec:
         tls: {}
     result:
       socket:
-        roleArn: {}
+        roleArn:
+          required: true
   config:
     tls: '1'
     region: '{{ template "s3.aws-region" . }}'
