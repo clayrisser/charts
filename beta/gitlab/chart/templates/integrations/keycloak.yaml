@@ -1,7 +1,7 @@
 {{- if (not (empty .Values.config.keycloak.integration)) }}
 {{- $name := (split "." .Values.config.keycloak.integration)._1 | default "keycloak" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.keycloak.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: gitlab-omniauth-plug
@@ -13,10 +13,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: "1646238016"
-  interfaceVersions: '*'
-  interface:
-    name: keycloak
-    namespace: {{$namespace}}
   socket:
     name: keycloak
     namespace: {{$namespace}}
@@ -28,7 +24,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      resource: |
+      template:
         apiVersion: batch/v1
         kind: Job
         metadata:

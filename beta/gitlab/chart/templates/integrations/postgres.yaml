@@ -2,7 +2,7 @@
 {{- $name := (split "." .Values.config.postgres.integration)._1 | default "s3" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
 {{- $patchGitlab := true }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: postgres
@@ -13,10 +13,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: postgres
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
@@ -28,7 +24,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      resource: |
+      template:
           apiVersion: v1
           kind: Secret
           metadata:
@@ -39,35 +35,37 @@ spec:
 {{- if $patchGitlab }}
     - when: [coupled, updated]
       do: recreate
-      resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+      template:
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: strategic
-              target:
-                version: v1
-                kind: ConfigMap
-                name: gitlab
-              waitForTimeout: 5
-              waitForResource: true
-              patch: |-
-                spec:
-                  chart:
-                    values:
-                      global:
-                        psql:
-                          host: '{% .socketConfig.hostname %}'
-                          port: '{% .socketConfig.port %}'
-                          username: '{% .socketConfig.username %}'
-                          database: '{% .plugConfig.database %}'
-                          password:
-                            useSecret: true
-                            secret: postgres
-                            key: POSTGRES_PASSWORD
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: strategic
+              match:
+                resources:
+                  kinds:
+                    - v1/*/ConfigMap
+                  names:
+                    - gitlab
+              mutate:
+                patchStrategicMerge:
+                  spec:
+                    chart:
+                      values:
+                        global:
+                          psql:
+                            host: '{% .socketConfig.hostname %}'
+                            port: '{% .socketConfig.port %}'
+                            username: '{% .socketConfig.username %}'
+                            database: '{% .plugConfig.database %}'
+                            password:
+                              useSecret: true
+                              secret: postgres
+                              key: POSTGRES_PASSWORD
 {{- end }}
 {{- end }}

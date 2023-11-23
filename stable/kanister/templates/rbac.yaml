@@ -74,7 +74,8 @@ rules:
       - list
       - patch
       - update
-  - apiGroups: ['cr.kanister.io']
+  - apiGroups:
+      - cr.kanister.io
     resources:
       - '*'
     verbs:

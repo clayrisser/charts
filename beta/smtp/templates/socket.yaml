@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: {{ template "smtp.name" . }}
@@ -9,10 +9,19 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: smtp
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        from:
+          required: true
+      socket:
+        hostname:
+          required: true
+        password: {}
+        port: {}
+        starttls: {}
+        tls: {}
+        username: {}
   config:
     hostname: {{ .Values.config.hostname | quote }}
     port: {{ .Values.config.port | quote }}

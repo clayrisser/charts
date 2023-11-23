@@ -1,20 +1,20 @@
 images:
-  integrationOperator:
+  resourceBindingOperator:
     repository: registry.gitlab.com/bitspur/rock8s/integration-operator
-    tag: 0.2.0
+    tag: 1.1.0
 
 config:
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Always
   updateStrategy: RollingUpdate
   debug: false
   replicas: 1
   maxConcurrentReconciles: 3
-  integrationOperator:
+  resourceBindingOperator:
     resources:
       enabled: defaults
       requests:
         cpu: 100m
-        memory: 20Mi
+        memory: 50Mi
       limits:
         cpu: 200m
-        memory: 60Mi
+        memory: 100Mi

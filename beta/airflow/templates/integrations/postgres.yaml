@@ -1,7 +1,7 @@
 {{- if .Values.config.postgres.integration }}
 {{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: postgres
@@ -12,10 +12,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: postgres
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
@@ -27,25 +23,26 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+      template:
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: secret
-              target:
-                apiVersion: v1
-                kind: Secret
-                name: {{ template "airflow.name" . }}-metadata
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |
-                - op: replace
-                  path: /data/connection
-                  value: {% (printf "postgresql://%s:%s@%s:%s/%s?sslmode=disable" .socketConfig.username .socketConfig.password .socketConfig.hostname .socketConfig.port .plugConfig.database) | b64enc | quote %}
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: secret
+              match:
+                resources:
+                  kinds:
+                    - core/*/Secret
+                  names:
+                    - {{ template "airflow.name" . }}-metadata
+              mutate:
+                patchesJson6902: |-
+                  - op: replace
+                    path: /data/connection
+                    value: {% (printf "postgresql://%s:%s@%s:%s/%s?sslmode=disable" .socketConfig.username .socketConfig.password .socketConfig.hostname .socketConfig.port .plugConfig.database) | b64enc | quote %}
 {{- end }}

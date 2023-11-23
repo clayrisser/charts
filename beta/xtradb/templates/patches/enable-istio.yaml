@@ -1,20 +1,22 @@
 {{- if .Values.config.istio }}
-apiVersion: patch.rock8s.com/v1alpha1
-kind: Patch
+apiVersion: kyverno.io/v1
+kind: Policy
 metadata:
   name: enable-istio
 spec:
-  epoch: {{ now | unixEpoch | quote }}
-  patches:
-    - id: patch-namespace
-      target:
-        apiVersion: v1
-        kind: Namespace
-        name: {{ .Release.Namespace }}
-      waitForResource: true
-      type: merge
-      patch: |
-        metadata:
-          labels:
-            istio-injection: enabled
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: enable-istio
+      match:
+        resources:
+          kinds:
+            - core/*/Namespace
+          names:
+            - {{ .Release.Namespace }}
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              istio-injection: enabled
 {{- end }}

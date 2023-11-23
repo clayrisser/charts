@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: {{ template "kanister.name" . }}
@@ -9,14 +9,19 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: kanister
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        blueprint: {}
+        deployment: {}
+        schedule: {}
+        secrets: {}
+        statefulset: {}
+      socket: {}
   resources:
     - when: [coupled, updated]
       do: recreate
-      resource: |
+      stringTemplate: |
         apiVersion: batch/v1
         kind: Job
         metadata:
@@ -64,7 +69,7 @@ spec:
                         -o yaml | kubectl delete -f -
     - when: [coupled, updated]
       do: recreate
-      resource: |
+      stringTemplate: |
         {%- if .plugConfig.schedule %}
         apiVersion: batch/v1
         kind: CronJob
@@ -116,15 +121,15 @@ spec:
         {%- end %}
     - when: [decoupled]
       do: delete
-      resource: |
+      template:
         apiVersion: batch/v1
         kind: CronJob
         metadata:
           name: {{ template "kanister.name" . }}-{% .plug.metadata.namespace %}
     - when: [decoupled]
       do: delete
-      resource: |
+      template:
         apiVersion: cr.kanister.io/v1alpha1
         kind: Blueprint
         metadata:
-          name: {% .plug.metadata.name %}-{% .plug.metadata.namespace %}
+          name: '{% .plug.metadata.name %}-{% .plug.metadata.namespace %}'

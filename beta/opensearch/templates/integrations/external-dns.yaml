@@ -1,5 +1,5 @@
 {{- if .Values.ingress.opensearch.enabled }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: ingress-target
@@ -10,10 +10,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: ingress-target
-    namespace: external-dns
   socket:
     name: ingress-target
     namespace: external-dns
@@ -22,7 +18,7 @@ spec:
 {{- end }}
 ---
 {{- if (and .Values.config.opensearchDashboards.enabled .Values.ingress.opensearchDashboards.enabled) }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: dashboards-ingress-target
@@ -33,10 +29,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: ingress-target
-    namespace: external-dns
   socket:
     name: ingress-target
     namespace: external-dns

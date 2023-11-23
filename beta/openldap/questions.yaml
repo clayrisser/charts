@@ -248,8 +248,8 @@ questions:
         show_if: ingress.phpldapadmin.tls=true&&config.phpldapadmin.enabled=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned

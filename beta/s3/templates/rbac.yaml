@@ -1,0 +1,37 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "s3.name" . }}
+rules:
+- apiGroups:
+    - ''
+  resources:
+    - pods
+  verbs:
+    - '*'
+- apiGroups:
+    - batch
+  resources:
+    - jobs
+  verbs:
+    - '*'
+- apiGroups:
+    - awsblueprints.io
+  resources:
+    - s3irsas
+    - delegates3irsas
+  verbs:
+    - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "s3.name" . }}
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ template "s3.name" . }}

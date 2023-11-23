@@ -1,7 +1,7 @@
 {{- if .Values.config.s3.integration }}
 {{- $name := (split "." .Values.config.s3.integration)._1 | default "s3" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.s3.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: s3
@@ -12,19 +12,18 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: s3
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.s3.bucket | quote }}
+    create: '1'
+    cleanup: '0'
   resources:
     - when: [coupled, updated]
       do: apply
-      resource: |
+      stringTemplate: |
+        {%- if .socketConfig.accessKey %}
         apiVersion: v1
         kind: Secret
         metadata:
@@ -33,9 +32,10 @@ spec:
         stringData:
           ACCESS_KEY: {% .socketConfig.accessKey | quote %}
           SECRET_KEY: {% .socketConfig.secretKey | quote %}
+        {%- end %}
     - when: [coupled, updated]
       do: apply
-      resource: |
+      stringTemplate: |
         apiVersion: cr.kanister.io/v1alpha1
         kind: Profile
         metadata:
@@ -43,10 +43,11 @@ spec:
           namespace: {{ .Release.Namespace }}
         location:
           type: s3Compliant
-          bucket: {% .socketConfig.bucket | quote %}
+          bucket: {% .plugConfig.bucket | quote %}
           endpoint: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
           prefix: {{ .Values.config.s3.prefix | quote }}
           region: {% .socketConfig.region | quote %}
+        {%- if .socketConfig.accessKey %}
         credential:
           type: keyPair
           keyPair:
@@ -57,13 +58,29 @@ spec:
               kind: Secret
               name: {{ template "kanister.name" . }}-s3
               namespace: {{ .Release.Namespace }}
+        {%- end %}
         skipSSLVerify: true
-    - when: [decoupled]
-      do: delete
-      resource: |
-        apiVersion: v1
-        kind: Secret
+  resultResources:
+    - do: apply
+      template:
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
-          name: s3
-          namespace: {{ .Release.Namespace }}
+          name: s3-coupled-or-updated
+        spec:
+          validationFailureAction: enforce
+          background: true
+          rules:
+            - name: serviceaccount
+              match:
+                resources:
+                  kinds:
+                    - v1/ServiceAccount
+                  names:
+                    - kanister-operator-release
+              mutate:
+                patchStrategicMerge:
+                  metadata:
+                    annotations:
+                      eks.amazonaws.com/role-arn: '{% .socketResult.roleArn %}'
 {{- end }}

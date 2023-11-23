@@ -461,8 +461,8 @@ questions:
         type: enum
         show_if: ingress.pgadmin.tls=true&&config.pgadmin.enabled=true
         options:
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned

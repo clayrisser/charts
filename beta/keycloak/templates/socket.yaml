@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: {{ template "keycloak.name" . }}
@@ -9,10 +9,31 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: keycloak
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        clientId:
+          required: true
+        attributes: {}
+        cleanup: {}
+        clientSecret: {}
+        consentRequired: {}
+        description: {}
+        directAccessGrantsEnabled: {}
+        implicitFlowEnabled: {}
+        name: {}
+        protocol: {}
+        realm: {}
+        redirectUris: {}
+        webOrigins: {}
+      socket:
+        keycloakAdminPassword:
+          required: true
+        keycloakBaseUrl:
+          required: true
+        defaultRealm:
+          required: true
+        keycloakAdminUsername: {}
   apparatus:
     endpoint: /socket
     containers:
@@ -34,7 +55,7 @@ spec:
   config:
     keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
     defaultRealm: main
-  configMapper:
+  configTemplate:
     keycloakAdminPassword: '{% .vars.BASE64_ENCODED_KEYCLOAK_ADMIN_PASSWORD | b64dec %}'
     keycloakAdminUsername: '{% .vars.BASE64_ENCODED_KEYCLOAK_ADMIN_USERNAME | b64dec %}'
   vars:
