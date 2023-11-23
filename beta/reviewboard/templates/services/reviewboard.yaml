@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: reviewboard
+  labels:
+    app.kubernetes.io/name: reviewboard
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.reviewboard.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.reviewboard.type }}
+  {{- if (eq .Values.service.reviewboard.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.reviewboard.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ (eq .Values.service.reviewboard.type "LoadBalancer") | ternary .Values.service.reviewboard.lbPorts.http "80" }}
+      targetPort: container
+      {{- if (and (eq .Values.service.reviewboard.type "NodePort") .Values.service.reviewboard.nodePorts.http) }}
+      nodePort: {{ .Values.service.reviewboard.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: reviewboard
+    app.kubernetes.io/instance: {{ .Release.Name }}

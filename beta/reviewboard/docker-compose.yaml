@@ -1,0 +1,66 @@
+version: '3.7'
+
+services:
+  reviewboard:
+    image: beanbag/reviewboard:6.0
+    container_name: reviewboard
+    ports:
+      - 80:80
+    volumes:
+      - sitedir:/site
+    depends_on:
+      - postgres
+      - mysql
+      - memcached
+
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=reviewboard
+      - POSTGRES_RB_USER=reviewboard
+      - POSTGRES_RB_PASSWORD=reviewboard123
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+      - ./postgres/init-reviewboard-db.sh:/docker-entrypoint-initdb.d/init-reviewboard-db.sh
+    restart: 'on-failure'
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      - MYSQL_DATABASE=reviewboard
+      - MYSQL_USER=reviewboard
+      - MYSQL_PASSWORD=reviewboard123
+      - MYSQL_ROOT_PASSWORD=admin123
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: 'on-failure'
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    depends_on:
+      - reviewboard
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    ports:
+      - 80:80
+    volumes:
+      - sitedir:/var/www/reviewboard
+      - ./nginx_templates:/etc/nginx/templates
+
+  memcached:
+    image: memcached:alpine
+    restart: 'on-failure'
+    entrypoint:
+      - memcached
+
+volumes:
+  sitedir:
+  db_data:
+
+
+

@@ -1,0 +1,58 @@
+images:
+  reviewboard:
+    repository: beanbag/reviewboard
+    tag: latest
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  debug: false
+  istio: false
+  reviewboard:
+    hostname: ''
+    baseUrl: ''
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  postgresql:
+    integration: ''
+    database: reviewboard
+    host: ''
+    password: ''
+    port: 5432
+    username: postgres
+    # url: ''
+
+  mysql:
+    integration: ''
+    database: reviewboard
+    host: ''
+    password: ''
+    port: 3306
+    username: root
+    # url: ''
+
+service:
+  reviewboard:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: 80
+    lbPorts:
+      http: 80
+
+ingress:
+  reviewboard:
+    enabled: false
+    hostname: ''
+    certificate: ''
+    tls: false
+    issuer:
+      name: ''

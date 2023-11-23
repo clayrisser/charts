@@ -1,0 +1,249 @@
+categories:
+  - Database
+questions:
+
+   # Images
+  - variable: images.reviewboard.repository
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard repository'
+    group: Images
+  - variable: images.reviewboard.tag
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard tag'
+    group: Images
+
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: string
+    required: true
+    label: 'imagePullPolicy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: string
+    required: true
+    label: 'updateStrategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: 'debug'
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: 'istio'
+    group: Config
+  - variable: config.reviewboard.hostname
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard hostname'
+    group: Config
+  - variable: config.reviewboard.baseUrl
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard baseUrl'
+    group: Config
+  - variable: config.reviewboard.replicas
+    description: ''
+    type: integer
+    required: true
+    label: 'reviewboard replicas'
+    group: Config
+  - variable: config.reviewboard.resources.enabled
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources enabled'
+    group: Config
+  - variable: config.reviewboard.resources.requests.cpu
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources requests cpu'
+    group: Config
+  - variable: config.reviewboard.resources.requests.memory
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources requests memory'
+    group: Config
+  - variable: config.reviewboard.resources.limits.cpu
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources limits cpu'
+    group: Config
+  - variable: config.reviewboard.resources.limits.memory
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources limits memory'
+    group: Config
+  - variable: config.postgresql.integration
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql integration'
+    group: Config
+  - variable: config.postgresql.database
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql database'
+    group: Config
+  - variable: config.postgresql.host
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql host'
+    group: Config
+  - variable: config.postgresql.password
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql password'
+    group: Config
+  - variable: config.postgresql.port
+    description: ''
+    type: integer
+    required: true
+    label: 'postgresql port'
+    group: Config
+  - variable: config.postgresql.username
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql username'
+    group: Config
+  - variable: config.postgresql.url
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql url'
+    group: Config
+  - variable: config.mysql.integration
+    description: ''
+    type: string
+    required: true
+    label: 'mysql integration'
+    group: Config
+  - variable: config.mysql.database
+    description: ''
+    type: string
+    required: true
+    label: 'mysql database'
+    group: Config
+  - variable: config.mysql.host
+    description: ''
+    type: string
+    required: true
+    label: 'mysql host'
+    group: Config
+  - variable: config.mysql.password
+    description: ''
+    type: string
+    required: true
+    label: 'mysql password'
+    group: Config
+  - variable: config.mysql.port
+    description: ''
+    type: integer
+    required: true
+    label: 'mysql port'
+    group: Config
+  - variable: config.mysql.username
+    description: ''
+    type: string
+    required: true
+    label: 'mysql username'
+    group: Config
+  - variable: config.mysql.url
+    description: ''
+    type: string
+    required: true
+    label: 'mysql url'
+    group: Config
+
+
+  # Service
+  - variable: service.reviewboard.type
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard type'
+    group: Service
+  - variable: service.reviewboard.externalTrafficPolicy
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard externalTrafficPolicy'
+    group: Service
+  - variable: service.reviewboard.nodePorts.http
+    description: ''
+    type: integer
+    required: true
+    label: 'reviewboard nodePorts http'
+    group: Service
+  - variable: service.reviewboard.lbPorts.http
+    description: ''
+    type: integer
+    required: true
+    label: 'reviewboard lbPorts http'
+    group: Service
+
+
+  # Ingress
+  - variable: ingress.reviewboard.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'reviewboard enabled'
+    group: Ingress
+  - variable: ingress.reviewboard.hostname
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard hostname'
+    group: Ingress
+  - variable: ingress.reviewboard.certificate
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard certificate'
+    group: Ingress
+  - variable: ingress.reviewboard.tls
+    description: ''
+    type: boolean
+    required: true
+    label: 'reviewboard tls'
+    group: Ingress
+  - variable: ingress.reviewboard.issuer.name
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard issuer name'
+    group: Ingress
+
+
+
+
+
+
+
+
+
+
+
+
+
