@@ -1,0 +1,20 @@
+apiVersion: v2
+name: reviewboard
+home: https://gitlab.com/bitspur/rock8s/charts
+version: 0.0.1
+appVersion: 6.0.1
+type: application
+icon: https://avatars.githubusercontent.com/u/118199?s=280&v=4
+description: 'An extensible and friendly code review tool for projects and companies of all sizes.'
+keywords:
+  - project-management
+  - code-review
+  - reviewboard
+sources:
+  - https://github.com/reviewboard/reviewboard
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
+annotations:
+  catalog.cattle.io/display-name: reviewboard
+  catalog.cattle.io/os: linux
