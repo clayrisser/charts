@@ -30,17 +30,21 @@ spec:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          validationFailureAction: enforce
+          mutateExistingOnPolicyUpdate: true
           background: true
           rules:
             - name: secret
               match:
                 resources:
                   kinds:
-                    - core/*/Secret
+                    - /*/Secret
                   names:
                     - {{ template "airflow.name" . }}-metadata
               mutate:
+                targets:
+                  - apiVersion: v1
+                    kind: Secret
+                    name: {{ template "airflow.name" . }}-metadata
                 patchesJson6902: |-
                   - op: replace
                     path: /data/connection

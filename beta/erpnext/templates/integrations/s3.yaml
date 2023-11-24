@@ -27,7 +27,7 @@ spec:
           name: create-site
           namespace: {{ .Release.Namespace }}
         spec:
-          validationFailureAction: enforce
+          mutateExistingOnPolicyUpdate: true
           background: true
           rules:
             - name: helm-release

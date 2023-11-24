@@ -30,7 +30,7 @@ spec:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          validationFailureAction: enforce
+          mutateExistingOnPolicyUpdate: true
           background: true
           rules:
             - name: helm-release
@@ -52,10 +52,14 @@ spec:
               match:
                 resources:
                   kinds:
-                    - core/*/Secret
+                    - /*/Secret
                   names:
                     - postgres
               mutate:
+                targets:
+                  - apiVersion: v1
+                    kind: Secret
+                    name: postgres
                 patchesJson6902: |-
                   - op: replace
                     path: /spec/data/password
