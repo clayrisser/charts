@@ -4,17 +4,21 @@ kind: Policy
 metadata:
   name: phpldapadmin
 spec:
-  validationFailureAction: enforce
+  mutateExistingOnPolicyUpdate: true
   background: true
   rules:
     - name: config-map
       match:
         resources:
           kinds:
-            - core/*/ConfigMap
+            - /*/ConfigMap
           names:
             - {{ .Release.Name }}-release-phpldapadmin
       mutate:
+        targets:
+          - apiVersion: v1
+            kind: ConfigMap
+            name: {{ .Release.Name }}-release-phpldapadmin
         patchesJson6902: |-
           - op: replace
             path: /data/PHPLDAPADMIN_LDAP_HOSTS

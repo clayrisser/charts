@@ -4,17 +4,21 @@ kind: Policy
 metadata:
   name: enable-istio
 spec:
-  validationFailureAction: enforce
+  mutateExistingOnPolicyUpdate: true
   background: true
   rules:
     - name: enable-istio
       match:
         resources:
           kinds:
-            - core/*/Namespace
+            - /*/Namespace
           names:
             - {{ .Release.Namespace }}
       mutate:
+        targets:
+          - apiVersion: v1
+            kind: Namespace
+            name: {{ .Release.Namespace }}
         patchStrategicMerge:
           metadata:
             labels:

@@ -42,17 +42,21 @@ spec:
           name: keycloak-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          validationFailureAction: enforce
+          mutateExistingOnPolicyUpdate: true
           background: true
           rules:
             - name: config-map
               match:
                 resources:
                   kinds:
-                    - core/*/ConfigMap
+                    - /*/ConfigMap
                   names:
                     - nextcloud-apps
               mutate:
+                targets:
+                  - apiVersion: v1
+                    kind: ConfigMap
+                    name: nextcloud-apps
                 patchesJson6902: |-
                   - op: replace
                     path: /data/setup-sociallogin.sh
