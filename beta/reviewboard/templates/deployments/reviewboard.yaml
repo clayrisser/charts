@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviewboard
+  labels:
+    app.kubernetes.io/name: reviewboard
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.config.reviewboard.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reviewboard
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: reviewboard
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    env:
+      DATABASE_TYPE: {{ .Values.config.reviewboard.database.type }}
+      COMPANY: {{ .Values.config.reviewboard.company }}
+      DATABASE_SERVER: {{ .Values.config.reviewboard.database.server }}
+      DATABASE_USERNAME: {{ .Values.config.reviewboard.database.username }}
+      DATABASE_PASSWORD: {{ .Values.config.reviewboard.database.password }}
+      DOMAIN: {{ .Values.config.reviewboard.domain }}
+
+      containers:
+        - name: reviewboard
+          image: {{ .Values.images.reviewboard.repository }}:{{ .Values.images.reviewboard.tag }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+{{- if (and .Values.config.reviewboard.resources.enabled (not (eq .Values.config.reviewboard.resources.enabled "false"))) }}
+          resources:
+            requests:
+{{ toYaml .Values.config.reviewboard.resources.requests | indent 14 }}
+            limits:
+{{ toYaml .Values.config.reviewboard.resources.limits | indent 14 }}
+{{- end }}
+          ports:
+            - name: container
+              containerPort: 80
+          volumeMounts:
+            - name: sitedata
+              mountPath: /site
+            # TODO: put this in the nginx deployment
+            # - name: config
+            #   mountPath: /etc/nginx/conf.d/default.conf
+            #   subPath: default.conf
+
+      volumes:
+        - name: sitedata
+          persistentVolumeClaim:
+            claimName: reviewboard
+        # TODO: put this in the nginx deployment
+        # - name: config
+        #   configMap:
+        #     name: nginx
