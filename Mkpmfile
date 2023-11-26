@@ -58,17 +58,17 @@ else
 endif
 
 .PHONY: package
-package: $(CHARTS) ## package helm charts
-	@mkdir -p ./public
-	@mv ./public/*.tgz ./ 2>/dev/null || true
-	@echo "User-Agent: *\nDisallow: /" > ./public/robots.txt
+package: #$(CHARTS) ## package helm charts
+	@$(MKDIR) -p ./public
+	@$(MV) ./public/*.tgz ./ 2>/dev/null || true
+	@$(ECHO) "User-Agent: *\nDisallow: /" > ./public/robots.txt
 	@$(HELM) package $(CHARTS) --destination .
 	@$(HELM) repo index --url $(HELM_REPO_URL) .
-	@mv *.tgz ./public
-	@mv index.yaml ./public
-	@cp -r ./public-overlay/* ./public
-	@cat ./public-overlay/index.html | $(SED) 's|{{HELM_REPO_INDEX}}|$(HELM_REPO_INDEX)|g' > \
-		./public/index.html
+	@$(HELM) repo-html -i index.yaml -o index.html -t index.tpl
+	@$(MV) *.tgz ./public
+	@$(MV) index.yaml ./public
+	@$(MV) index.html ./public
+	@$(CP) -r ./public-overlay/* ./public
 
 .PHONY: prev-artifacts
 prev-artifacts: ## load previous artifacts
