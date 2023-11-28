@@ -46,6 +46,10 @@ spec:
             value: {{ .Values.config.reviewboard.database.password }}
           - name: DOMAIN
             value: {{ .Values.config.reviewboard.domain }}
+          - name: DATABASE_NAME
+            value: {{ .Values.config.reviewboard.database.name }}
+          - name: MEMCACHED_SERVER
+            value: {{ .Values.config.reviewboard.memcached.server }}
         ports:
           - name: container
             containerPort: 8080

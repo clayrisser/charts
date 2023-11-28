@@ -16,6 +16,11 @@ config:
       server: postgres
       username: admin
       password: admin123
+      name: postgres
+      port: 5432
+    memcached:
+      server: memcached
+      port: 11211
     company: Docker Compose Test
     domain: localhost
     replicas: 1
@@ -71,9 +76,43 @@ service:
       http: 80
     lbPorts:
       http: 80
+  nginx:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:  # {{- if .Values.ingress.nginx.tls }}
+  # tls:
+  #   - hosts:
+  #       - {{ .Values.ingress.nginx.hostname }}
+  #     secretName: {{ .Values.ingress.nginx.certificate }}
+  # {{- end }}
+      http: 80
+    lbPorts:
+      http: 80
+  memcached:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: 11211
+    lbPorts:
+      http: 11211
+
 
 ingress:
   reviewboard:
+    enabled: true
+    hostname: ''
+    certificate: ''
+    tls: false
+    issuer:
+      name: ''
+  nginx:
+    enabled: true
+    hostname: ''
+    certificate: ''
+    tls: true
+    issuer:
+      name: letsencrypt-prod
+  memcached:
     enabled: false
     hostname: ''
     certificate: ''
