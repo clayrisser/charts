@@ -55,7 +55,7 @@ actions:
               export BACKUP_FILE_PATH='{{ .Release.Namespace }}/{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}.ldap'
               ldapsearch -x -D "$BIND_ID" -w $BIND_PASSWORD  -b "{{ template "openldap.openldap-dc" . }}" -H ldap://$HOST -LLL | kando location push --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_FILE_PATH}" -
               kando output backupLocation "${BACKUP_FILE_PATH}"
-          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:0.0.1
+          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
           namespace: {{ .Release.Namespace }}
   restore:
     secretNames:
@@ -82,6 +82,6 @@ actions:
               BACKUP_LOCATION={{"{{"}} .ArtifactsIn.cloudObject.KeyValue.backupLocation {{"}}"}}
               kando location pull --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_LOCATION}" > openldapbkp.ldap
               ldapadd x -D "$BIND_ID" -w $PASSWORD  -H ldap://$HOST -f openldapbkp.ldap
-          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:0.0.1
+          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
           namespace: {{ .Release.Namespace }}
 {{- end }}
