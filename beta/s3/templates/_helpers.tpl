@@ -17,14 +17,19 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 
 {{- define "s3.cluster-name" -}}
-{{- $clusterInfo := lookup "v1" "ConfigMap" "rock8s-global" "cluster-info" }}
-{{- if (and $clusterInfo $clusterInfo.data) -}}
-{{- $clusterInfo.data.clusterName | default "local" -}}
+{{- $clusterEnvironment := lookup "v1" "ConfigMap" "global" "cluster-environment" }}
+{{- if (and $clusterEnvironment $clusterEnvironment.data) -}}
+{{- $clusterEnvironment.data.clusterName | default "local" -}}
 {{- else -}}
 {{- "local" -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "s3.bucket-name" -}}
-{{- ((printf "%s.%s" .Values.bucket.name (include "s3.cluster-name" .)) | replace "." "-") -}}
+{{- define "s3.aws-region" -}}
+{{- $clusterEnvironment := lookup "v1" "ConfigMap" "global" "cluster-environment" }}
+{{- if (and $clusterEnvironment $clusterEnvironment.data) -}}
+{{- $clusterEnvironment.data.awsRegion | default "us-east-1" -}}
+{{- else -}}
+{{- "us-east-1" -}}
+{{- end -}}
 {{- end -}}

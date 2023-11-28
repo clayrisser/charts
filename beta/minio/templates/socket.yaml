@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: {{ template "minio.name" . }}
@@ -9,16 +9,29 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: s3
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        bucket: {}
+        prefix: {}
+        replicate: {}
+      socket:
+        endpoint:
+          required: true
+        accessKey: {}
+        pathStyle: {}
+        region: {}
+        secretKey: {}
+        defaultBucket: {}
+        defaultPrefix: {}
+        tls: {}
+        url: {}
   config:
     pathStyle: 'true'
     region: ''
     defaultBucket: {{ .Values.config.defaultBucket | quote }}
     defaultPrefix: {{ .Values.config.defaultPrefix | quote }}
-  configMapper:
+  configTemplate:
     endpoint: '{% .socketData.endpoint %}'
     tls: '{% .socketData.tls %}'
     url: '{% (empty .socketData.endpoint) | ternary "" (printf "http%s://%s" ((eq .socketData.tls "true") | ternary "s" "") .socketData.endpoint) %}'
@@ -30,7 +43,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      resource: |
+      stringTemplate: |
         apiVersion: batch/v1
         kind: Job
         metadata:

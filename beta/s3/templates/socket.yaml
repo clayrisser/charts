@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: {{ template "s3.name" . }}
@@ -9,25 +9,65 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: s3
-    namespace: {{ .Release.Namespace }}
-  config: {}
-  configMapper:
-    endpoint: '{% printf "%s.s3.%s.amazonaws.com" (.plug.spec.config.bucket | default "{{ template "s3.bucket-name" . }}") .vars.REGION %}'
-    region: '{% .vars.REGION %}'
-    tls: '{% .socketData.tls %}'
-    bucket: '{% .plug.spec.config.bucket | default "{{ template "s3.bucket-name" . }}" %}'
-  data:
+    config:
+      plug:
+        bucket: {}
+        create: {}
+      socket:
+        endpoint:
+          required: true
+        accessKey: {}
+        secretKey: {}
+        region: {}
+        tls: {}
+    result:
+      socket:
+        roleArn:
+          required: true
+  config:
     tls: '1'
-  configSecretName: {{ template "s3.name" . }}.buckets.s3.services.k8s.aws
-  vars:
-    - name: REGION
-      objref:
-        apiVersion: s3.services.k8s.aws/v1alpha1
-        kind: Bucket
-        name: {{ template "s3.name" . }}
-        namespace: {{ .Release.Namespace }}
+    region: '{{ template "s3.aws-region" . }}'
+  configTemplate:
+    endpoint: '{% printf "%s.s3.%s.amazonaws.com" .plug.spec.config.bucket "{{ template "s3.aws-region" . }}" %}'
+  resultTemplate:
+    roleArn: '{% .vars.roleArn %}'
+  resultVars:
+    - name: roleArn
       fieldref:
-        fieldPath: status.ackResourceMetadata.region
+        fieldPath: status.roleArn
+      objref:
+        apiVersion: awsblueprints.io/v1alpha1
+        kind: DelegateS3IRSA
+        templateName: '{% .plug.metadata.name %}-{% .plug.metadata.namespace %}'
+        namespace: {{ .Release.Namespace }}
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      stringTemplate: |
+        {%- if (eq .plugConfig.create "1") %}
+        apiVersion: awsblueprints.io/v1alpha1
+        kind: S3IRSA
+        metadata:
+          name: {% .plugConfig.bucket %}
+          namespace: {{ .Release.Namespace }}
+        spec:
+          resourceConfig:
+            providerConfigName: aws-provider-config
+            region: {{ template "s3.aws-region" . }}
+        {%- end %}
+    - when: [coupled, updated]
+      do: apply
+      template:
+        apiVersion: awsblueprints.io/v1alpha1
+        kind: DelegateS3IRSA
+        metadata:
+          name: '{% .plug.metadata.name %}-{% .plug.metadata.namespace %}'
+        spec:
+          delegate:
+            namespace: '{% .plug.metadata.namespace %}'
+            s3irsa:
+              name: '{% .plugConfig.bucket %}'
+          resourceConfig:
+            providerConfigName: aws-provider-config
+            region: {{ template "s3.aws-region" . }}

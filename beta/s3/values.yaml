@@ -1,6 +1,1 @@
-bucket:
-  name: ''
-  encrypted: true
-
-config:
-  awsCreds: ack-system
+{}

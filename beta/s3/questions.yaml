@@ -1,26 +1,4 @@
 categories:
   - AWS
   - S3
-questions:
-
-  # Bucket
-  - variable: bucket.name
-    description: ''
-    type: string
-    required: true
-    label: name
-    group: Bucket
-  - variable: bucket.encrypted
-    description: ''
-    type: boolean
-    required: true
-    label: encrypted
-    group: Bucket
-
-  # Config
-  - variable: config.awsCreds
-    description: ''
-    type: string
-    required: true
-    label: 'aws creds'
-    group: Config
+questions: []

@@ -10,6 +10,8 @@ stages:
 
 pages:
   stage: publish
+  before_script:
+    - helm plugin install https://github.com/halkeye/helm-repo-html
   script:
     # - make -s prev-artifacts
     - make -s package

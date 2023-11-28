@@ -1,5 +1,5 @@
 {{- if (and .Values.persistence.enabled .Values.persistence.kanister.enabled) }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: kanister-openldap
@@ -10,10 +10,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: kanister
-    namespace: kanister
   socket:
     name: kanister
     namespace: kanister

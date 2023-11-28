@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: ldap
@@ -9,17 +9,31 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: ldap
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug: {}
+      socket:
+        adminDN:
+          required: true
+        adminPassword:
+          required: true
+        hostname:
+          required: true
+        port:
+          required: true
+        protocol:
+          required: true
+        rootDN:
+          required: true
+        caCrt: {}
+        tlsCrt: {}
   config:
     adminDN: cn=admin,{{ template "openldap.openldap-root-dn" . }}
     rootDN: {{ template "openldap.openldap-root-dn" . }}
     hostname: {{ template "openldap.openldap-hostname" . }}
     port: {{ .Values.service.openldap.tls.enabled | ternary "636" "389" | quote }}
     protocol: {{ .Values.service.openldap.tls.enabled | ternary "ldaps" "ldap" | quote }}
-  configMapper:
+  configTemplate:
     adminPassword: '{% .vars.BASE64_ENCODED_LDAP_ADMIN_PASSWORD | default "" | b64dec %}'
     tlsCrt: '{% .vars.BASE64_ENCODED_TLS_CRT | default "" | b64dec %}'
     caCrt: '{% .vars.BASE64_ENCODED_CA_CRT | default "" | b64dec %}'

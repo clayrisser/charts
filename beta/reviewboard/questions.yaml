@@ -1,0 +1,360 @@
+categories:
+  - Database
+questions:
+
+   # Images
+  - variable: images.reviewboard.repository
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard repository'
+    group: Images
+  - variable: images.reviewboard.tag
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard tag'
+    group: Images
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: string
+    required: true
+    label: 'imagePullPolicy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: string
+    required: true
+    label: 'updateStrategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: 'debug'
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: 'istio'
+    group: Config
+  - variable: config.reviewboard.hostname
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard hostname'
+    group: Config
+  - variable: config.reviewboard.baseUrl
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard baseUrl'
+    group: Config
+  - variable: config.reviewboard.database.type
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard database type'
+    group: Config
+  - variable: config.reviewboard.database.server
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard database server'
+    group: Config
+  - variable: config.reviewboard.database.username
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard database username'
+    group: Config
+  - variable: config.reviewboard.database.password
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard database password'
+    group: Config
+  - variable: config.reviewboard.company
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard company'
+    group: Config
+  - variable: config.reviewboard.domain
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard domain'
+    group: Config
+  - variable: config.reviewboard.replicas
+    description: ''
+    type: integer
+    required: true
+    label: 'reviewboard replicas'
+    group: Config
+  - variable: config.reviewboard.resources.enabled
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources enabled'
+    group: Config
+  - variable: config.reviewboard.resources.requests.cpu
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources requests cpu'
+    group: Config
+  - variable: config.reviewboard.resources.requests.memory
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources requests memory'
+    group: Config
+  - variable: config.reviewboard.resources.limits.cpu
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources limits cpu'
+    group: Config
+  - variable: config.reviewboard.resources.limits.memory
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard resources limits memory'
+    group: Config
+
+#   memcached:
+  - variable: config.memcached.replicas
+    description: ''
+    type: integer
+    required: true
+    label: 'memcached replicas'
+    group: Config
+  - variable: config.memcached.resources.enabled
+    description: ''
+    type: string
+    required: true
+    label: 'memcached resources enabled'
+    group: Config
+  - variable: config.memcached.resources.requests.cpu
+    description: ''
+    type: string
+    required: true
+    label: 'memcached resources requests cpu'
+    group: Config
+  - variable: config.memcached.resources.requests.memory
+    description: ''
+    type: string
+    required: true
+    label: 'memcached resources requests memory'
+    group: Config
+  - variable: config.memcached.resources.limits.cpu
+    description: ''
+    type: string
+    required: true
+    label: 'memcached resources limits cpu'
+    group: Config
+  - variable: config.memcached.resources.limits.memory
+    description: ''
+    type: string
+    required: true
+    label: 'memcached resources limits memory'
+    group: Config
+
+
+#  postgresql
+  - variable: config.postgresql.integration
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql integration'
+    group: Config
+  - variable: config.postgresql.database
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql database'
+    group: Config
+  - variable: config.postgresql.host
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql host'
+    group: Config
+  - variable: config.postgresql.password
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql password'
+    group: Config
+  - variable: config.postgresql.port
+    description: ''
+    type: integer
+    required: true
+    label: 'postgresql port'
+    group: Config
+  - variable: config.postgresql.username
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql username'
+    group: Config
+  - variable: config.postgresql.url
+    description: ''
+    type: string
+    required: true
+    label: 'postgresql url'
+    group: Config
+
+# nginx
+  - variable: config.nginx.replicas
+    description: ''
+    type: integer
+    required: true
+    label: 'nginx replicas'
+    group: Config
+  - variable: config.nginx.image.repository
+    description: ''
+    type: string
+    required: true
+    label: 'nginx image repository'
+    group: Config
+  - variable: config.nginx.image.tag
+    description: ''
+    type: string
+    required: true
+    label: 'nginx image tag'
+    group: Config
+  - variable: config.nginx.resources.enabled
+    description: ''
+    type: string
+    required: true
+    label: 'nginx resources enabled'
+    group: Config
+  - variable: config.nginx.resources.requests.cpu
+    description: ''
+    type: string
+    required: true
+    label: 'nginx resources requests cpu'
+    group: Config
+  - variable: config.nginx.resources.requests.memory
+    description: ''
+    type: string
+    required: true
+    label: 'nginx resources requests memory'
+    group: Config
+  - variable: config.nginx.resources.limits.cpu
+    description: ''
+    type: string
+    required: true
+    label: 'nginx resources limits cpu'
+    group: Config
+  - variable: config.nginx.resources.limits.memory
+    description: ''
+    type: string
+    required: true
+    label: 'nginx resources limits memory'
+    group: Config
+
+
+# service
+  - variable: service.reviewboard.type
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard service type'
+    group: Service
+  - variable: service.reviewboard.externalTrafficPolicy
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard service externalTrafficPolicy'
+    group: Service
+  - variable: service.reviewboard.nodePorts.http
+    description: ''
+    type: integer
+    required: true
+    label: 'reviewboard service nodePorts http'
+    group: Service
+  - variable: service.reviewboard.lbPorts.http
+    description: ''
+    type: integer
+    required: true
+    label: 'reviewboard service lbPorts http'
+    group: Service
+
+# ingress
+  - variable: ingress.reviewboard.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'reviewboard ingress enabled'
+    group: Ingress
+  - variable: ingress.reviewboard.hostname
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard ingress hostname'
+    group: Ingress
+  - variable: ingress.reviewboard.certificate
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard ingress certificate'
+    group: Ingress
+  - variable: ingress.reviewboard.tls
+    description: ''
+    type: boolean
+    required: true
+    label: 'reviewboard ingress tls'
+    group: Ingress
+  - variable: ingress.reviewboard.issuer.name
+    description: ''
+    type: string
+    required: true
+    label: 'reviewboard ingress issuer name'
+    group: Ingress
+
+# persistence
+  - variable: persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'persistence enabled'
+    group: Persistence
+  - variable: persistence.accessModes
+    description: ''
+    type: string
+    required: true
+    label: 'persistence accessModes'
+    group: Persistence
+  - variable: persistence.size
+    description: ''
+    type: string
+    required: true
+    label: 'persistence size'
+    group: Persistence
+  - variable: persistence.storageClass
+    description: ''
+    type: string
+    required: true
+    label: 'persistence storageClass'
+    group: Persistence
+  - variable: persistence.existingClaim.reviewboard
+    description: ''
+    type: string
+    required: true
+    label: 'persistence existingClaim reviewboard'
+    group: Persistence
+
+
+
+
+
+
+
+
+

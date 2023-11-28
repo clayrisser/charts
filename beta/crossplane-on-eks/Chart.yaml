@@ -1,0 +1,20 @@
+apiVersion: v1
+name: crossplane-on-eks
+home: https://github.com/awslabs/crossplane-on-eks
+icon: https://avatars.githubusercontent.com/u/3299148?s=256&v=4
+version: 0.1.0
+appVersion: 0.1.0
+description: |
+  crossplane compositions for eks
+keywords:
+  - crossplane
+  - eks
+  - aws
+sources:
+  - https://github.com/awslabs/crossplane-on-eks
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
+annotations:
+  catalog.cattle.io/release-name: crossplane-on-eks
+  catalog.cattle.io/namespace: crossplane-system

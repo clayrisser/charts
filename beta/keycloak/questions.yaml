@@ -271,8 +271,8 @@ questions:
         type: enum
         show_if: ingress.keycloak.tls=true
         options:
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned

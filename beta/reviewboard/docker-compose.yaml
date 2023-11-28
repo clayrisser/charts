@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  reviewboard:
+    image: beanbag/reviewboard:6.0
+    container_name: reviewboard
+    ports:
+      - 8080:80
+    volumes:
+      - sitedir:/site
+    depends_on:
+      - postgres
+      - memcached
+
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=reviewboard
+      - POSTGRES_RB_USER=reviewboard
+      - POSTGRES_RB_PASSWORD=reviewboard123
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    restart: 'on-failure'
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    depends_on:
+      - reviewboard
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    ports:
+      - 8080:80
+    volumes:
+      - sitedir:/var/www/reviewboard
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+
+  memcached:
+    image: memcached:alpine
+    restart: 'on-failure'
+    entrypoint:
+      - memcached
+
+volumes:
+  sitedir: {}
+  db_data: {}
+
+
+

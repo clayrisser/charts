@@ -1,7 +1,7 @@
 {{- if (and .Values.config.ldap.enabled .Values.config.ldap.integration) }}
 {{- $name := (split "." .Values.config.ldap.integration)._1 | default "ldap" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.ldap.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: ldap
@@ -12,10 +12,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: ldap
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
@@ -24,7 +20,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      resource: |
+      template:
         apiVersion: batch/v1
         kind: Job
         metadata:

@@ -1,0 +1,130 @@
+images:
+  reviewboard:
+    repository: beanbag/reviewboard
+    tag: latest
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  debug: false
+  istio: false
+  reviewboard:
+    hostname: ''
+    baseUrl: ''
+    database:
+      type: postgresql
+      server: postgres
+      username: admin
+      password: admin123
+      name: postgres
+      port: 5432
+    memcached:
+      server: memcached
+      port: 11211
+    company: Docker Compose Test
+    domain: localhost
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  memcached:
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+  postgresql:
+    integration: ''
+    database: reviewboard
+    host: ''
+    password: ''
+    port: 5432
+    username: postgres
+    # url: ''
+
+  nginx:
+    replicas: 1
+    image:
+      repository: nginx
+      tag: latest
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+
+service:
+  reviewboard:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: 80
+    lbPorts:
+      http: 80
+  nginx:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:  # {{- if .Values.ingress.nginx.tls }}
+  # tls:
+  #   - hosts:
+  #       - {{ .Values.ingress.nginx.hostname }}
+  #     secretName: {{ .Values.ingress.nginx.certificate }}
+  # {{- end }}
+      http: 80
+    lbPorts:
+      http: 80
+  memcached:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: 11211
+    lbPorts:
+      http: 11211
+
+
+ingress:
+  reviewboard:
+    enabled: true
+    hostname: ''
+    certificate: ''
+    tls: false
+    issuer:
+      name: ''
+  nginx:
+    enabled: true
+    hostname: ''
+    certificate: ''
+    tls: true
+    issuer:
+      name: letsencrypt-prod
+  memcached:
+    enabled: false
+    hostname: ''
+    certificate: ''
+    tls: false
+    issuer:
+      name: ''
+
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  storageClass: ''
+  existingClaim:
+    reviewboard: ''

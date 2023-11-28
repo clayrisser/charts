@@ -1,4 +1,4 @@
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Socket
 metadata:
   name: opensearch
@@ -9,10 +9,11 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
   interface:
-    name: opensearch
-    namespace: {{ .Release.Namespace }}
+    config:
+      plug:
+        replicate: {}
+      socket: {}
   config:
     username: admin
     password: pass
@@ -21,7 +22,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      resource: |
+      template:
         apiVersion: batch/v1
         kind: Job
         metadata:
@@ -59,7 +60,7 @@ spec:
                         -o yaml | kubectl delete -f -
     - when: [decoupled]
       do: recreate
-      resource: |
+      template:
         apiVersion: batch/v1
         kind: Job
         metadata:

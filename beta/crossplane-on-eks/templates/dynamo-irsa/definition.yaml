@@ -1,0 +1,163 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xdynamoirsas.awsblueprints.io
+spec:
+  claimNames:
+    kind: DynamoIRSA
+    plural: dynamoirsas
+  group: awsblueprints.io
+  names:
+    kind: XDynamoIRSA
+    plural: xdynamoirsas
+  connectionSecretKeys:
+    - tableName
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: DYNAMOIRSA is the Schema for the dynamoirsas API
+          properties:
+            spec:
+              type: object
+              properties:
+                policyArns:
+                  items:
+                    type: string
+                  type: array
+                resourceConfig:
+                  properties:
+                    deletionPolicy:
+                      description: Defaults to Delete
+                      enum:
+                      - Delete
+                      - Orphan
+                      type: string
+                    name:
+                      type: string
+                    providerConfigName:
+                      type: string
+                      default: aws-provider-config
+                    region:
+                      type: string
+                    tags:
+                      additionalProperties:
+                        type: string
+                      description: Key-value map of resource tags.
+                      type: object
+                  required:
+                  - region
+                  type: object
+                dynamoConfig:
+                  properties:
+                    attribute: #required for hashKey and/or rangeKey
+                      items:
+                        properties:
+                          name: #name of the hashKey and/or rangeKey
+                            type: string
+                          type:
+                            enum:
+                            - B #binary
+                            - N #number
+                            - S #string
+                            type: string
+                        required:
+                        - name
+                        - type
+                        type: object
+                      type: array
+                    hashKey:
+                      type: string
+                    rangeKey:
+                      type: string
+                    billingMode:
+                      type: string
+                      default: PAY_PER_REQUEST
+                    readCapacity:
+                      type: number
+                    writeCapacity:
+                      type: number              
+                    globalSecondaryIndex:
+                      items:
+                        properties:
+                          hashKey:
+                            type: string
+                          name:
+                            type: string  
+                          rangeKey:
+                            type: string
+                          readCapacity:
+                            type: number
+                          writeCapacity:
+                            type: number
+                          projectionType:
+                            type: string
+                          nonKeyAttributes: #required for gsi
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                        required:
+                          - hashKey
+                          - name
+                          - rangeKey
+                          - readCapacity
+                          - writeCapacity
+                          - projectionType
+                          - nonKeyAttributes
+                      type: array
+                    localSecondaryIndex:
+                      items:
+                        properties:
+                          name:
+                            type: string  
+                          rangeKey:
+                            type: string
+                          projectionType:
+                            type: string
+                          nonKeyAttributes: #required for lsi
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                        required:
+                          - name
+                          - rangeKey
+                          - projectionType
+                          - nonKeyAttributes
+                      type: array
+                    providerConfigName:
+                      type: string
+                      default: aws-provider-config
+                    region:
+                      type: string
+                    tags:
+                      additionalProperties:
+                        type: string
+                      description: Key-value map of resource tags.
+                      type: object
+                  required:
+                  - attribute
+                  - hashKey
+                  type: object
+              required:
+              - resourceConfig 
+              - dynamoConfig    
+            status:
+              type: object
+              description: DYNAMOIRSAStatus defines the observed state of DYNAMOIRSA
+              properties:
+                roleName:
+                  type: string
+                tableArn:
+                  type: string
+                tableName:
+                  type: string
+          required:
+          - spec

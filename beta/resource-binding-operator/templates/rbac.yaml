@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "resource-binding-operator.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "resource-binding-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "resource-binding-operator.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "resource-binding-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "resource-binding-operator.name" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "resource-binding-operator.name" . }}
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "resource-binding-operator.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "resource-binding-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+rules:
+
+# auth_proxy_role.yaml
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+
+# leader_election_role.yaml
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+
+# role.yaml
+- apiGroups:
+  - resourcebinding.rock8s.com
+  resources:
+  - resourcebindings
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - resourcebinding.rock8s.com
+  resources:
+  - resourcebindings/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - resourcebinding.rock8s.com
+  resources:
+  - resourcebindings/status
+  verbs:
+  - get
+  - patch
+  - update
+
+# read all
+- apiGroups:
+  - "*"
+  resources:
+  - "*"
+  verbs:
+  - get
+  - list
+  - watch

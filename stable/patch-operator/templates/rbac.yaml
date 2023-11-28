@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "patch-operator.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "patch-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "patch-operator.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "patch-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "patch-operator.name" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "patch-operator.name" . }}
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "patch-operator.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "patch-operator.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - patch.rock8s.com
+  resources:
+  - patches
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - patch.rock8s.com
+  resources:
+  - patches/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - patch.rock8s.com
+  resources:
+  - patches/status
+  verbs:
+  - get
+  - patch
+  - update

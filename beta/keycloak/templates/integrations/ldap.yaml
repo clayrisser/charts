@@ -1,7 +1,7 @@
 {{- if (and .Values.config.ldap.enabled .Values.config.ldap.integration) }}
 {{- $name := (split "." .Values.config.ldap.integration)._1 | default "ldap" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.ldap.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: ldap
@@ -12,10 +12,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: ldap
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
@@ -23,7 +19,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      resource: |
+      template:
         apiVersion: v1
         kind: Secret
         metadata:
@@ -41,54 +37,55 @@ spec:
         {%- end %}
     - when: [coupled, updated]
       do: recreate
-      resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+      template:
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
           name: ldap-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: keycloak-realm
-              target:
-                group: k8s.keycloak.org
-                version: v2alpha1
-                kind: KeycloakRealmImport
-                name: {{ template "keycloak.name" . }}
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |-
-                - op: replace
-                  path: /spec/realm/userFederationProviders/0/config/bindDn
-                  value: {% .socketConfig.adminDN | quote %}
-                - op: replace
-                  path: /spec/realm/userFederationProviders/0/config/connectionUrl
-                  {%- if (eq .socketConfig.protocol "ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}") %}
-                  value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
-                  {%- else %}
-                  value: ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}://{% .socketConfig.hostname %}
-                  {%- end %}
-                - op: replace
-                  path: /spec/realm/userFederationProviders/0/config/usersDn
-                  value: ou=people,{% .socketConfig.rootDN %}
-                - op: replace
-                  path: /spec/realm/userFederationMappers/0/config/groups.dn
-                  value: ou=groups,{% .socketConfig.rootDN %}
-                - op: replace
-                  path: /spec/keycloakCRName
-                  value: {{ template "keycloak.name" . }}
-            - id: keycloak-vault
-              target:
-                version: v1
-                kind: Secret
-                name: keycloak-vault
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |-
-                - op: replace
-                  path: /data/main_bindCredential
-                  value: {% .socketConfig.adminPassword | b64enc | quote %}
+          mutateExistingOnPolicyUpdate: true
+          background: true
+          rules:
+            - name: keycloak-realm
+              match:
+                resources:
+                  kinds:
+                    - k8s.keycloak.org/*/KeycloakRealmImport
+                  names:
+                    - {{ template "keycloak.name" . }}
+              mutate:
+                patchesJson6902: |-
+                  - op: replace
+                    path: /spec/realm/userFederationProviders/0/config/bindDn
+                    value: {% .socketConfig.adminDN | quote %}
+                  - op: replace
+                    path: /spec/realm/userFederationProviders/0/config/connectionUrl
+                    {%- if (eq .socketConfig.protocol "ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}") %}
+                    value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
+                    {%- else %}
+                    value: ldap{{ .Values.config.ldap.tls.enabled | ternary "s" "" }}://{% .socketConfig.hostname %}
+                    {%- end %}
+                  - op: replace
+                    path: /spec/realm/userFederationProviders/0/config/usersDn
+                    value: ou=people,{% .socketConfig.rootDN %}
+                  - op: replace
+                    path: /spec/realm/userFederationMappers/0/config/groups.dn
+                    value: ou=groups,{% .socketConfig.rootDN %}
+                  - op: replace
+                    path: /spec/keycloakCRName
+                    value: {{ template "keycloak.name" . }}
+            - name: keycloak-vault
+              match:
+                all:
+                  resources:
+                    kinds:
+                      - k8s.keycloak.org/*/Secret
+                    names:
+                      - keycloak-vault
+              mutate:
+                patchesJson6902: |-
+                  - op: replace
+                    path: /data/main_bindCredential
+                    value: {% .socketConfig.adminPassword | b64enc | quote %}
 {{- end }}

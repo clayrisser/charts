@@ -2,7 +2,7 @@
 
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/risserlabs)](https://artifacthub.io/packages/search?repo=risserlabs)
 
-> risserlabs community helm charts
+> rock8s community helm charts
 
 Please ★ this repo if you found it useful ★ ★ ★
 
@@ -73,4 +73,4 @@ persistance:
 
 [MIT License](/LICENSE)
 
-[Risser Labs LLC](https://risserlabs.com) © 2018-2022
+[BitSpur](https://bitspur.com) © 2018-2023

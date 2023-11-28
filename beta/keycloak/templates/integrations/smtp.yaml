@@ -1,7 +1,7 @@
 {{- if .Values.config.smtp.integration }}
 {{- $name := (split "." .Values.config.smtp.integration)._1 | default "postgres" }}
 {{- $namespace := (split "." (printf "%s." .Values.config.smtp.integration))._0 }}
-apiVersion: integration.rock8s.com/v1alpha2
+apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
   name: smtp
@@ -12,10 +12,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   epoch: {{ now | unixEpoch | quote }}
-  interfaceVersions: '*'
-  interface:
-    name: smtp
-    namespace: {{ $namespace }}
   socket:
     name: {{ $name }}
     namespace: {{ $namespace }}
@@ -24,44 +20,24 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      resource: |
-        apiVersion: patch.rock8s.com/v1alpha1
-        kind: Patch
+      template:
+        apiVersion: kyverno.io/v1
+        kind: Policy
         metadata:
-          name: postgres-coupled-or-updated
+          name: smtp-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          epoch: {{ now | unixEpoch | quote }}
-          patches:
-            - id: keycloak-realm
-              target:
-                group: keycloak.org
-                version: v1alpha1
-                kind: KeycloakRealm
-                name: {{ template "keycloak.name" . }}
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |-
-                - op: replace
-                  path: /spec/realm/userFederationProviders/0/config/bindDn
-                  value: {% .socketConfig.bindDN | quote %}
-                - op: replace
-                  path: /spec/realm/userFederationProviders/0/config/connectionUrl
-                  value: {% .socketConfig.protocol %}://{% .socketConfig.hostname %}:{% .socketConfig.port %}
-                - op: replace
-                  path: /spec/realm/userFederationProviders/0/config/usersDn
-                  value: ou=people,{% .socketConfig.domain %}
-            - id: keycloak-vault
-              target:
-                version: v1
-                kind: Secret
-                name: keycloak-vault
-              waitForTimeout: 5
-              waitForResource: true
-              type: json
-              patch: |-
-                - op: replace
-                  path: /data/main_smtpPassword
-                  value: {% .socketConfig.password | b64enc | quote %}
+          mutateExistingOnPolicyUpdate: true
+          background: true
+          rules:
+            - name: keycloak
+              match:
+                resources:
+                  kinds:
+                    - k8s.keycloak.org/*/Keycloak
+                  names:
+                    - {{ template "keycloak.name" . }}
+              mutate:
+                patchesJson6902: |-
+                  # TODO
 {{- end }}

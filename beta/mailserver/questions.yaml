@@ -839,8 +839,8 @@ questions:
         show_if: ingress.rainloop.tls=true&&config.rainloop.enabled=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned
@@ -908,8 +908,8 @@ questions:
         show_if: ingress.sendmailAnalyzer.tls=true&&config.sendmailAnalyzer.enabled=true
         options:
           - none
-          - letsencrypt-cloudflare-staging
-          - letsencrypt-cloudflare-prod
+          - cloudflare-staging
+          - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
           - selfsigned

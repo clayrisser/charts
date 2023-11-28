@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviewboard
+  labels:
+    app.kubernetes.io/name: reviewboard
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.config.reviewboard.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reviewboard
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: reviewboard
+        app.kubernetes.io/instance: {{ .Release.Name }}
+
+    spec:
+      containers:
+      - name: reviewboard
+        image: {{ .Values.images.reviewboard.repository }}:{{ .Values.images.reviewboard.tag }}
+        imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+        {{- if (and .Values.config.reviewboard.resources.enabled (not (eq .Values.config.reviewboard.resources.enabled "false"))) }}
+        resources:
+          requests:
+{{ toYaml .Values.config.reviewboard.resources.requests | indent 12 }}
+          limits:
+{{ toYaml .Values.config.reviewboard.resources.limits | indent 12 }}
+        {{- end }}
+        env:
+          - name: DATABASE_TYPE
+            value: {{ .Values.config.reviewboard.database.type }}
+          - name: COMPANY
+            value: {{ .Values.config.reviewboard.company }}
+          - name: DATABASE_SERVER
+            value: {{ .Values.config.reviewboard.database.server }}
+          - name: DATABASE_USERNAME
+            value: {{ .Values.config.reviewboard.database.username }}
+          - name: DATABASE_PASSWORD
+            value: {{ .Values.config.reviewboard.database.password }}
+          - name: DOMAIN
+            value: {{ .Values.config.reviewboard.domain }}
+          - name: DATABASE_NAME
+            value: {{ .Values.config.reviewboard.database.name }}
+          - name: MEMCACHED_SERVER
+            value: {{ .Values.config.reviewboard.memcached.server }}
+        ports:
+          - name: container
+            containerPort: 8080
+        volumeMounts:
+          - name: sitedata
+            mountPath: /site
+
+      volumes:
+        - name: sitedata
+          persistentVolumeClaim:
+            claimName: reviewboard
+
