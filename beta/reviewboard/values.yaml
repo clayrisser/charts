@@ -11,16 +11,6 @@ config:
   reviewboard:
     hostname: ''
     baseUrl: ''
-    database:
-      type: postgresql
-      server: postgres
-      username: admin
-      password: admin123
-      name: postgres
-      port: 5432
-    memcached:
-      server: memcached
-      port: 11211
     company: Docker Compose Test
     domain: localhost
     replicas: 1
@@ -34,6 +24,7 @@ config:
         memory: 512Mi
 
   memcached:
+    server: memcached
     replicas: 1
     resources:
       enabled: defaults
@@ -79,12 +70,7 @@ service:
   nginx:
     type: ClusterIP
     externalTrafficPolicy: Cluster
-    nodePorts:  # {{- if .Values.ingress.nginx.tls }}
-  # tls:
-  #   - hosts:
-  #       - {{ .Values.ingress.nginx.hostname }}
-  #     secretName: {{ .Values.ingress.nginx.certificate }}
-  # {{- end }}
+    nodePorts:
       http: 80
     lbPorts:
       http: 80

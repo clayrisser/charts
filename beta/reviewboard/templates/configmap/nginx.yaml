@@ -5,7 +5,7 @@ metadata:
 data:
   default.conf: |
     upstream reviewboard {
-        server reviewboard:8080;
+        server reviewboard:80;
     }
 
     server {

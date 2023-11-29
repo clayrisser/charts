@@ -127,6 +127,13 @@ questions:
     group: Config
 
 #   memcached:
+
+  - variable: config.memcached.server
+    description: ''
+    type: string
+    required: true
+    label: 'memcached server'
+    group: Config
   - variable: config.memcached.replicas
     description: ''
     type: integer
@@ -259,7 +266,6 @@ questions:
     label: 'nginx resources limits memory'
     group: Config
 
-
 # service
   - variable: service.reviewboard.type
     description: ''
@@ -284,6 +290,54 @@ questions:
     type: integer
     required: true
     label: 'reviewboard service lbPorts http'
+    group: Service
+  - variable: service.nginx.type
+    description: ''
+    type: string
+    required: true
+    label: 'nginx service type'
+    group: Service
+  - variable: service.nginx.externalTrafficPolicy
+    description: ''
+    type: string
+    required: true
+    label: 'nginx service externalTrafficPolicy'
+    group: Service
+  - variable: service.nginx.nodePorts.http
+    description: ''
+    type: integer
+    required: true
+    label: 'nginx service nodePorts http'
+    group: Service
+  - variable: service.nginx.lbPorts.http
+    description: ''
+    type: integer
+    required: true
+    label: 'nginx service lbPorts http'
+    group: Service
+  - variable: service.memcached.type
+    description: ''
+    type: string
+    required: true
+    label: 'memcached service type'
+    group: Service
+  - variable: service.memcached.externalTrafficPolicy
+    description: ''
+    type: string
+    required: true
+    label: 'memcached service externalTrafficPolicy'
+    group: Service
+  - variable: service.memcached.nodePorts.http
+    description: ''
+    type: integer
+    required: true
+    label: 'memcached service nodePorts http'
+    group: Service
+  - variable: service.memcached.lbPorts.http
+    description: ''
+    type: integer
+    required: true
+    label: 'memcached service lbPorts http'
     group: Service
 
 # ingress
@@ -316,6 +370,66 @@ questions:
     type: string
     required: true
     label: 'reviewboard ingress issuer name'
+    group: Ingress
+  - variable: ingress.nginx.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'nginx ingress enabled'
+    group: Ingress
+  - variable: ingress.nginx.hostname
+    description: ''
+    type: string
+    required: true
+    label: 'nginx ingress hostname'
+    group: Ingress
+  - variable: ingress.nginx.certificate
+    description: ''
+    type: string
+    required: true
+    label: 'nginx ingress certificate'
+    group: Ingress
+  - variable: ingress.nginx.tls
+    description: ''
+    type: boolean
+    required: true
+    label: 'nginx ingress tls'
+    group: Ingress
+  - variable: ingress.nginx.issuer.name
+    description: ''
+    type: string
+    required: true
+    label: 'nginx ingress issuer name'
+    group: Ingress
+  - variable: ingress.memcached.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'memcached ingress enabled'
+    group: Ingress
+  - variable: ingress.memcached.hostname
+    description: ''
+    type: string
+    required: true
+    label: 'memcached ingress hostname'
+    group: Ingress
+  - variable: ingress.memcached.certificate
+    description: ''
+    type: string
+    required: true
+    label: 'memcached ingress certificate'
+    group: Ingress
+  - variable: ingress.memcached.tls
+    description: ''
+    type: boolean
+    required: true
+    label: 'memcached ingress tls'
+    group: Ingress
+  - variable: ingress.memcached.issuer.name
+    description: ''
+    type: string
+    required: true
+    label: 'memcached ingress issuer name'
     group: Ingress
 
 # persistence

@@ -15,8 +15,8 @@ services:
   postgres:
     image: postgres:13-alpine
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=o8Yoemoy2H
       - POSTGRES_DB=reviewboard
       - POSTGRES_RB_USER=reviewboard
       - POSTGRES_RB_PASSWORD=reviewboard123
