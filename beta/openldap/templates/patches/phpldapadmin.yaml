@@ -14,16 +14,13 @@ spec:
             - /*/ConfigMap
           names:
             - {{ .Release.Name }}-release-phpldapadmin
-      preconditions:
-        - key: '{{ "{{" }} request.object.data.PHPLDAPADMIN_LDAP_HOSTS }}'
-          operator: NotExists
       mutate:
         targets:
           - apiVersion: v1
             kind: ConfigMap
             name: {{ .Release.Name }}-release-phpldapadmin
-        patchesJson6902: |-
-          - op: add
-            path: /data/PHPLDAPADMIN_LDAP_HOSTS
-            value: "#PYTHON2BASH:[{ 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-release:{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}': [{'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-root-dn" . }}'  }]}]}]"
+        patchStrategicMerge:
+          data:
+            PHPLDAPADMIN_LDAP_HOSTS: |
+              #PYTHON2BASH:[{ 'ldap{{ .Values.service.openldap.tls.enabled | ternary "s" "" }}://{{ .Release.Name }}-release:{{ .Values.service.openldap.tls.enabled | ternary "636" "389" }}': [{'login': [{'bind_id': 'cn=admin,{{ template "openldap.openldap-root-dn" . }}'  }]}]}]
 {{- end }}
