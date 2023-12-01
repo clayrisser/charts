@@ -15,7 +15,7 @@ spec:
           names:
             - {{ .Release.Name }}-release-phpldapadmin
       preconditions:
-        - key: "{{request.object.data.PHPLDAPADMIN_LDAP_HOSTS}}"
+        - key: '{{ "{{" }} request.object.data.PHPLDAPADMIN_LDAP_HOSTS }}'
           operator: NotExists
       mutate:
         targets:
