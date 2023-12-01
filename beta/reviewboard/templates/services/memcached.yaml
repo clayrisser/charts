@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: memcached
+  labels:
+    app.kubernetes.io/name: memcached
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.memcached.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.memcached.type }}
+  {{- if (eq .Values.service.memcached.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.memcached.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: memcached
+      port: 11211
+      targetPort: 11211
+      {{- if (and (eq .Values.service.memcached.type "NodePort") .Values.service.memcached.nodePorts.memcached) }}
+      nodePort: {{ .Values.service.memcached.nodePorts.memcached }}
+      {{- end }}
+  selector:
+    app.kubernetes.io/name: reviewboard
+    app.kubernetes.io/instance: {{ .Release.Name }}

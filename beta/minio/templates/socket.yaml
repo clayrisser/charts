@@ -69,7 +69,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:0.0.1
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:3.18
                   env:
                     - name: S3_BUCKET
                       value: '{% (empty .plugConfig.bucket) | ternary .socketConfig.defaultBucket .plugConfig.bucket %}'
