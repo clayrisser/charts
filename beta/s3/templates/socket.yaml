@@ -70,5 +70,6 @@ spec:
             s3irsa:
               name: '{% .plugConfig.bucket %}'
           resourceConfig:
+            name: '{% .plugConfig.bucket %}'
             providerConfigName: aws-provider-config
             region: {{ template "s3.aws-region" . }}
