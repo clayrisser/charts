@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: replicate-blueprints
+spec:
+  generateExisting: true
+  rules:
+    - name: replicate-blueprints
+      match:
+        resources:
+          kinds:
+            - 'cr.kanister.io/*/Blueprint'
+      generate:
+        synchronize: true
+        apiVersion: cr.kanister.io/v1alpha1
+        kind: Blueprint
+        name: '{{ "{{" }} request.object.metadata.name }}'
+        namespace: '{{ "{{" }} request.namespace }}'
+        data:
+          clone:
+            name: '{{ "{{" }} request.namespace }}.{{ "{{" }} request.object.metadata.name }}'
+            namespace: '{{ .Release.Namespace }}'

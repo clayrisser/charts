@@ -155,8 +155,9 @@ spec:
           {{- if .Values.ingress.phpldapadmin.tls }}
           {{- if (not .Values.ingress.phpldapadmin.certificate) }}
           kubernetes.io/tls-acme: 'true'
-          {{- if .Values.ingress.phpldapadmin.issuer.name }}
-          cert-manager.io/cluster-issuer: {{ .Values.ingress.phpldapadmin.issuer.name }}
+          {{- $issuerName := (eq .Values.ingress.phpldapadmin.issuer.name "custom") | ternary .Values.ingress.phpldapadmin.issuer.customName .Values.ingress.phpldapadmin.issuer.name }}
+          {{- if $issuerName }}
+          cert-manager.io/cluster-issuer: {{ $issuerName }}
           {{- end }}
           {{- end }}
           nginx.ingress.kubernetes.io/ssl-redirect: 'true'

@@ -22,54 +22,6 @@ spec:
     - when: [coupled, updated]
       do: recreate
       stringTemplate: |
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: {{ template "kanister.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %}
-        spec:
-          activeDeadlineSeconds: 360
-          backoffLimit: 6
-          ttlSecondsAfterFinished: 360
-          template:
-            metadata:
-              annotations:
-                sidecar.istio.io/inject: 'false'
-            spec:
-              automountServiceAccountToken: true
-              restartPolicy: Never
-              affinity:
-                nodeAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    nodeSelectorTerms:
-                      - matchExpressions:
-                          - key: kubernetes.io/arch
-                            operator: In
-                            values:
-                              - amd64
-              containers:
-                - name: kubectl
-                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:3.18
-                  command:
-                    - sh
-                    - -c
-                    - |
-                      cat <<EOF | kubectl get -f - -o yaml | \
-                        sed 's|^\(\s*name:\s*\).\+|\1{% .plug.metadata.name %}-{% .plug.metadata.namespace %}|g' | \
-                        grep -v '^\s*namespace:\s' | \
-                        kubectl apply -f - --namespace={{ .Release.Namespace }}
-                      apiVersion: cr.kanister.io/v1alpha1
-                      kind: Blueprint
-                      metadata:
-                        name: {% .plugConfig.blueprint | default .plug.metadata.name | quote %}
-                        namespace: {% .plug.metadata.namespace | quote %}
-                      EOF
-                      kubectl get pods -n {{ .Release.Namespace }} \
-                        -l job-name={{ template "kanister.name" . }}-coupled-or-updated-{% .plug.metadata.namespace %} \
-                        --field-selector status.phase=Failed \
-                        -o yaml | kubectl delete -f -
-    - when: [coupled, updated]
-      do: recreate
-      stringTemplate: |
         {%- if .plugConfig.schedule %}
         apiVersion: batch/v1
         kind: CronJob
@@ -119,17 +71,3 @@ spec:
                             --profile {{ template "kanister.name" . }}-s3 \
                             --action backup
         {%- end %}
-    - when: [decoupled]
-      do: delete
-      template:
-        apiVersion: batch/v1
-        kind: CronJob
-        metadata:
-          name: {{ template "kanister.name" . }}-{% .plug.metadata.namespace %}
-    - when: [decoupled]
-      do: delete
-      template:
-        apiVersion: cr.kanister.io/v1alpha1
-        kind: Blueprint
-        metadata:
-          name: '{% .plug.metadata.name %}-{% .plug.metadata.namespace %}'

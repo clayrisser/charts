@@ -70,6 +70,7 @@ ingress:
     tls: false
     issuer:
       name: ''
+      customName: ''
 
 persistence:
   accessMode: ReadWriteOnce

@@ -248,13 +248,24 @@ questions:
         show_if: ingress.phpldapadmin.tls=true&&config.phpldapadmin.enabled=true
         options:
           - none
+          - custom
           - cloudflare-staging
           - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - route53-staging
+          - route53-prod
           - selfsigned
         required: true
         label: 'phpldapadmin ingress issuer name'
+        show_subquestion_if: custom
+        subquestions:
+          - variable: ingress.phpldapadmin.issuer.customName
+            default: ''
+            description: ''
+            type: string
+            required: false
+            label: 'phpldapadmin ingress issuer custom name'
       - variable: ingress.phpldapadmin.certificate
         default: ''
         description: ''
