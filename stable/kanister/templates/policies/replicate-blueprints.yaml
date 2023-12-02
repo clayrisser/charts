@@ -15,8 +15,8 @@ spec:
         apiVersion: cr.kanister.io/v1alpha1
         kind: Blueprint
         name: '{{"{{"}} request.namespace }}.{{"{{"}} request.object.metadata.name }}'
-        namespace: '{{"{{"}} request.namespace }}'
+        namespace: '{{ .Release.Namespace }}'
         data:
           clone:
             name: '{{"{{"}} request.object.metadata.name }}'
-            namespace: '{{ .Release.Namespace }}'
+            namespace: '{{"{{"}} request.namespace }}'

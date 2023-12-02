@@ -59,7 +59,7 @@ spec:
                         - |
                           kanctl create actionset \
                             --namespace {{ .Release.Namespace }} \
-                            --blueprint {% .plug.metadata.name %}-{% .plug.metadata.namespace %} \
+                            --blueprint {% .plug.metadata.namespace %}.{% .plugConfig.blueprint %} \
                             {%- if .plugConfig.deployment %}
                             --deployment {% .plug.metadata.namespace %}/{% .plugConfig.deployment %} \
                             {%- else if .plugConfig.statefulset %}
