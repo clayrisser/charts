@@ -46,7 +46,7 @@ actions:
             - -c
             - |
               export HOST='{{ template "openldap.openldap-hostname" . }}'
-              export BIND_ID='cn=admin,{{ template "openldap.openldap-dc" . }}'
+              export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               export BIND_PASSWORD={{"{{"}} .Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
               export BACKUP_FILE_PATH='{{ .Release.Namespace }}/{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}.ldap'
               ldapsearch -x -D "$BIND_ID" -w $BIND_PASSWORD  -b "{{ template "openldap.openldap-dc" . }}" -H ldap://$HOST -LLL | kando location push --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_FILE_PATH}" -

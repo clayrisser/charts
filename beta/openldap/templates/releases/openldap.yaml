@@ -72,14 +72,14 @@ spec:
       # loadBalancerSourceRanges: []
       type: {{ .Values.service.openldap.type | quote }}
     env:
-      BITNAMI_DEBUG: "true"
+      BITNAMI_DEBUG: 'true'
       LDAP_HASH_PASSWORD: {{ .Values.config.openldap.hashPassword | quote }}
-      LDAP_TLS_ENFORCE: "false"
-      LDAPTLS_REQCERT: "never"
+      LDAP_TLS_ENFORCE: 'false'
+      LDAPTLS_REQCERT: 'never'
       LDAP_ENABLE_TLS: {{ .Values.service.openldap.tls.enabled | ternary "yes" "no" | quote }}
-      LDAP_CONFIG_ADMIN_ENABLED: "yes"
-      LDAP_CONFIG_ADMIN_USERNAME: "admin"
-      LDAP_SKIP_DEFAULT_TREE: "yes"
+      LDAP_CONFIG_ADMIN_ENABLED: 'yes'
+      LDAP_CONFIG_ADMIN_USERNAME: admin
+      LDAP_SKIP_DEFAULT_TREE: 'yes'
       LDAP_SCHEMAS: {{ join "," (splitList "\n" (trim .Values.config.openldap.schemas)) | quote }}
     {{- $rootDN := (include "openldap.openldap-root-dn" .) }}
     {{- if .Values.config.openldap.organizationalUnits }}
