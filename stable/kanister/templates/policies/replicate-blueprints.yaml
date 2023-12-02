@@ -16,7 +16,6 @@ spec:
         kind: Blueprint
         name: '{{"{{"}} request.namespace }}.{{"{{"}} request.object.metadata.name }}'
         namespace: '{{ .Release.Namespace }}'
-        data:
-          clone:
-            name: '{{"{{"}} request.object.metadata.name }}'
-            namespace: '{{"{{"}} request.namespace }}'
+        clone:
+          name: '{{"{{"}} request.object.metadata.name }}'
+          namespace: '{{"{{"}} request.namespace }}'
