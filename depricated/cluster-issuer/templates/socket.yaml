@@ -46,7 +46,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: codejamninja/kube-commands:0.0.2
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:3.18
                   env:
                     - name: CA_TLS_CRT
                       valueFrom:
@@ -117,7 +117,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: codejamninja/kube-commands:0.0.2
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:3.18
                   command:
                     - sh
                     - -c

@@ -33,7 +33,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: kubectl
-          image: codejamninja/kube-commands:0.0.2
+          image: registry.gitlab.com/bitspur/rock8s/images/kube-commands:3.18
           imagePullPolicy: Always
           command:
             - /bin/sh
