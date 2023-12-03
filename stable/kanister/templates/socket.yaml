@@ -17,7 +17,6 @@ spec:
         schedule: {}
         secrets: {}
         statefulset: {}
-      socket: {}
   resources:
     - when: [coupled, updated]
       do: recreate

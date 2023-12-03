@@ -1,9 +1,8 @@
 config:
   s3:
-    integration: ''
     bucket: ''
     prefix: ''
     accessKey: ''
-    endpoint: ''
+    endpoint: aws.us-east-1.amazonaws.com
     region: ''
     secretKey: ''

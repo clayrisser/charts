@@ -3,23 +3,16 @@ categories:
 questions:
 
 # S3
-  - variable: config.s3.integration
-    description: ''
-    type: string
-    required: false
-    label: integration
-    group: S3
   - variable: config.s3.endpoint
     description: ''
     type: string
     required: true
     label: endpoint
-    show_if: config.s3.integration=
     group: S3
   - variable: config.s3.bucket
     description: ''
     type: string
-    required: false
+    required: true
     label: bucket
     group: S3
   - variable: config.s3.prefix
@@ -31,21 +24,18 @@ questions:
   - variable: config.s3.accessKey
     description: ''
     type: string
-    required: false
+    required: true
     label: 'access key'
-    show_if: config.s3.integration=
     group: S3
   - variable: config.s3.secretKey
     description: ''
     type: password
-    required: false
+    required: true
     label: 'secret key'
-    show_if: config.s3.integration=
     group: S3
   - variable: config.s3.region
     description: ''
     type: string
     required: false
     label: region
-    show_if: config.s3.integration=
     group: S3

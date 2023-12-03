@@ -1,4 +1,3 @@
-{{- if (empty .Values.config.s3.integration) }}
 apiVersion: cr.kanister.io/v1alpha1
 kind: Profile
 metadata:
@@ -15,14 +14,10 @@ location:
   prefix: {{ .Values.config.s3.prefix | quote }}
   region: {{ .Values.config.s3.region | quote }}
 credential:
-  type: keyPair
-  keyPair:
-    idField: ACCESS_KEY
-    secretField: SECRET_KEY
-    secret:
-      apiVersion: v1
-      kind: Secret
-      name: {{ template "kanister.name" . }}-s3
-      namespace: {{ .Release.Namespace }}
+  type: secret
+  secret:
+    apiVersion: v1
+    kind: Secret
+    name: {{ template "kanister.name" . }}-s3
+    namespace: {{ .Release.Namespace }}
 skipSSLVerify: true
-{{- end }}
