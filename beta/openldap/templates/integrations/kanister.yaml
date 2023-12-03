@@ -31,16 +31,6 @@ spec:
           phases:
             - func: KubeTask
               name: ldapdump
-              podOverride:
-                metadata:
-                  annotations:
-                    eks.amazonaws.com/role-arn: ''
-                containers:
-                  - env:
-                      - name: AWS_ROLE_ARN
-                        value: ''
-                      - name: AWS_WEB_IDENTITY_TOKEN_FILE
-                        value: /var/run/secrets/eks.amazonaws.com/serviceaccount/token
               args:
                 command:
                   - /bin/bash
@@ -54,7 +44,7 @@ spec:
                     export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
                     export BIND_PASSWORD={{"{{"}} .Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
                     export BACKUP_FILE_PATH='{{ .Release.Namespace }}/{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}.ldap'
-                    ldapsearch -x -D "$BIND_ID" -w $BIND_PASSWORD  -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL | kando location push --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_FILE_PATH}" -
+                    ldapsearch -x -D "$BIND_ID" -w $BIND_PASSWORD -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL | kando location push --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_FILE_PATH}" -
                     kando output backupLocation "${BACKUP_FILE_PATH}"
                 image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
                 namespace: {{ .Release.Namespace }}
