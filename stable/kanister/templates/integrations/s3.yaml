@@ -27,6 +27,7 @@ spec:
         metadata:
           name: {{ template "kanister.name" . }}-creds
           namespace: {{ .Release.Namespace }}
+        type: secrets.kanister.io/aws
         stringData:
           # AWS_ACCESS_KEY_ID: {% .socketConfig.accessKey | quote %}
           # AWS_SECRET_ACCESS_KEY: {% .socketConfig.secretKey | quote %}
@@ -46,15 +47,20 @@ spec:
           prefix: {{ .Values.config.s3.prefix | quote }}
           region: {% .socketConfig.region | quote %}
         credential:
-          type: keyPair
-          keyPair:
-            # idField: AWS_ACCESS_KEY_ID
-            # secretField: AWS_SECRET_ACCESS_KEY
-            secret:
-              apiVersion: v1
-              kind: Secret
-              name: {{ template "kanister.name" . }}-creds
-              namespace: {{ .Release.Namespace }}
+          type: secret
+          secret:
+            apiVersion: v1
+            kind: Secret
+            name: {{ template "kanister.name" . }}-creds
+            namespace: {{ .Release.Namespace }}
+          # keyPair:
+          #   idField: AWS_ACCESS_KEY_ID
+          #   secretField: AWS_SECRET_ACCESS_KEY
+          #   secret:
+          #     apiVersion: v1
+          #     kind: Secret
+          #     name: {{ template "kanister.name" . }}-creds
+          #     namespace: {{ .Release.Namespace }}
         skipSSLVerify: true
     - do: apply
       template:
