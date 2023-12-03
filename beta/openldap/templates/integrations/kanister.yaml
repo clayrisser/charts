@@ -15,7 +15,7 @@ spec:
     namespace: kanister
   config:
     schedule: {{ .Values.persistence.kanister.schedule | quote }}
-    blueprint: openldap
+    blueprint: kanister-openldap
     statefulset: {{ .Release.Name }}-release
     secrets: openldap={{ .Release.Namespace }}/{{ template "openldap.name" . }}
 ---
