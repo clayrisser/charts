@@ -1,7 +1,7 @@
 apiVersion: cr.kanister.io/v1alpha1
 kind: Profile
 metadata:
-  name: {{ template "kanister.name" . }}-s3
+  name: {{ template "kanister.name" . }}
   labels:
     app.kubernetes.io/name: {{ template "kanister.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -18,6 +18,6 @@ credential:
   secret:
     apiVersion: v1
     kind: Secret
-    name: {{ template "kanister.name" . }}-s3
+    name: {{ template "kanister.name" . }}-creds
     namespace: {{ .Release.Namespace }}
 skipSSLVerify: true

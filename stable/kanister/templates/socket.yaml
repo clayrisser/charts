@@ -115,7 +115,7 @@ spec:
                             {%- if .plugConfig.secrets %}
                             --secrets {% .plugConfig.secrets %} \
                             {%- end %}
-                            --profile {{ template "kanister.name" . }}-s3 \
+                            --profile {{ template "kanister.name" . }} \
                             --action backup
         {%- end %}
     - when: [decoupled]
