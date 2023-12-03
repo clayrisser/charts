@@ -22,7 +22,7 @@ spec:
 apiVersion: cr.kanister.io/v1alpha1
 kind: Blueprint
 metadata:
-  name: openldap
+  name: kanister-openldap
   labels:
     app.kubernetes.io/name: {{ template "openldap.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}

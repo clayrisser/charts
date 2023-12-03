@@ -22,16 +22,14 @@ spec:
     - when: [coupled, updated]
       do: apply
       stringTemplate: |
-        {%- if .socketConfig.accessKey %}
         apiVersion: v1
         kind: Secret
         metadata:
-          name: {{ template "kanister.name" . }}-s3
+          name: {{ template "kanister.name" . }}-creds
           namespace: {{ .Release.Namespace }}
         stringData:
-          ACCESS_KEY: {% .socketConfig.accessKey | quote %}
-          SECRET_KEY: {% .socketConfig.secretKey | quote %}
-        {%- end %}
+          aws_access_key_id: {% .socketConfig.accessKey | quote %}
+          aws_secret_access_key: {% .socketConfig.secretKey | quote %}
     - when: [coupled, updated]
       do: apply
       stringTemplate: |
@@ -46,18 +44,16 @@ spec:
           endpoint: {% (printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint) | quote %}
           prefix: {{ .Values.config.s3.prefix | quote }}
           region: {% .socketConfig.region | quote %}
-        {%- if .socketConfig.accessKey %}
         credential:
           type: keyPair
           keyPair:
-            idField: ACCESS_KEY
-            secretField: SECRET_KEY
+            idField: aws_access_key_id
+            secretField: aws_secret_access_key
             secret:
               apiVersion: v1
               kind: Secret
-              name: {{ template "kanister.name" . }}-s3
+              name: {{ template "kanister.name" . }}-creds
               namespace: {{ .Release.Namespace }}
-        {%- end %}
         skipSSLVerify: true
   resultResources:
     - do: apply
