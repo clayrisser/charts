@@ -53,9 +53,9 @@ spec:
                     - sh
                     - -c
                     - |
-                      cat <<EOF | kubectl get -f - -o yaml | \
-                        sed 's|^\(\s\sname:\s*\).\+|\1{% .plug.metadata.namespace %}.{% .plug.metadata.name %}|g' | \
-                        grep -v '^\s\snamespace:\s' | \
+                      cat <<EOF | kubectl get -f - -o json | \
+                        jq '.items[0].metadata.name = "{% .plug.metadata.namespace %}.{% .plug.metadata.name %}"' | \
+                        jq '.items[0].metadata.namespace = ""' \
                         kubectl apply -f - --namespace={{ .Release.Namespace }}
                       apiVersion: cr.kanister.io/v1alpha1
                       kind: Blueprint
