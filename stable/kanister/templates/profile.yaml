@@ -14,10 +14,13 @@ location:
   prefix: {{ .Values.config.s3.prefix | quote }}
   region: {{ .Values.config.s3.region | quote }}
 credential:
-  type: secret
-  secret:
-    apiVersion: v1
-    kind: Secret
-    name: {{ template "kanister.name" . }}-creds
-    namespace: {{ .Release.Namespace }}
+  type: keyPair
+  idField: AWS_ACCESS_KEY_ID
+  secretField: AWS_SECRET_ACCESS_KEY
+  keyPair:
+    secret:
+      apiVersion: v1
+      kind: Secret
+      name: {{ template "kanister.name" . }}-creds
+      namespace: {{ .Release.Namespace }}
 skipSSLVerify: true
