@@ -28,7 +28,7 @@ actions:
     outputArtifacts:
       backup:
         keyValue:
-          kopiaRoot: "{{ .Phases.ldapdump.Output.kopiaRoot }}"
+          kopiaRoot: "{{"{{"}} .Phases.ldapdump.Output.kopiaRoot {{"}}"}}"
     phases:
       - func: KubeTask
         name: ldapdump
@@ -51,7 +51,7 @@ actions:
               alias kopia="kanister-kopia '{{"{{"}} toJson .Profile {{"}}"}}' '{{ .Release.Namespace }}/{{ template "openldap.name" . }}'"
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
-              export BIND_PASSWORD={{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
+              export BIND_PASSWORD="{{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}"
               ldapsearch -x -D "$BIND_ID" -w "$BIND_PASSWORD" -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL > ldapdump.ldif
               kopia snapshot create ldapdump.ldif
               rm ldapdump.ldif
@@ -82,9 +82,9 @@ actions:
               alias kopia="kanister-kopia '{{"{{"}} toJson .Profile {{"}}"}}' '{{ .Release.Namespace }}/{{ template "openldap.name" . }}'"
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export USER='openldap'
-              export BIND_PASSWORD={{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
+              export BIND_PASSWORD="{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}"
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
-              KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}'
+              KOPIA_ROOT="{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}"
               if [ "$KOPIA_ROOT" != "" ]; then
                 kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               else
