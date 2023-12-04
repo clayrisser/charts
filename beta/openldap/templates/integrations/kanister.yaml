@@ -17,7 +17,6 @@ spec:
     schedule: {{ .Values.persistence.kanister.schedule | quote }}
     blueprint: kanister-openldap
     statefulset: {{ .Release.Name }}-release
-    secrets: openldap={{ .Release.Namespace }}/{{ template "openldap.name" . }}
 ---
 apiVersion: cr.kanister.io/v1alpha1
 kind: Blueprint
@@ -25,13 +24,22 @@ metadata:
   name: kanister-openldap
 actions:
   backup:
-    secretNames:
-      - openldap
-    kind: deployment
+    kind: Deployment
+    outputArtifacts:
+      backup:
+        keyValue:
+          kopiaRoot: "{{ .Phases.ldapdump.Output.kopiaRoot }}"
     phases:
       - func: KubeTask
         name: ldapdump
+        objects:
+          openldap:
+            kind: Secret
+            name: '{{ template "openldap.name" . }}'
+            namespace: '{{ .Release.Namespace }}'
         args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
+          namespace: {{ .Release.Namespace }}
           command:
             - /bin/bash
             - -o
@@ -40,24 +48,29 @@ actions:
             - pipefail
             - -c
             - |
+              alias kopia="kanister-kopia '{{"{{"}} toJson .Profile {{"}}"}}' '{{ .Release.Namespace }}/{{ template "openldap.name" . }}'"
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
-              export BIND_PASSWORD={{"{{"}} .Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
-              export BACKUP_FILE_PATH='{{ .Release.Namespace }}/{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}.ldap'
-              ldapsearch -x -D "$BIND_ID" -w $BIND_PASSWORD -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL | kando location push --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_FILE_PATH}" -
-              kando output backupLocation "${BACKUP_FILE_PATH}"
-          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
-          namespace: {{ .Release.Namespace }}
+              export BIND_PASSWORD={{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
+              ldapsearch -x -D "$BIND_ID" -w "$BIND_PASSWORD" -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL > ldapdump.ldif
+              kopia snapshot create ldapdump.ldif
+              rm ldapdump.ldif
+              kando output kopiaRoot "$(kopia snapshot list --json -n1 ldapdump.ldif | jq -r '.[0].rootEntry.obj')"
   restore:
-    secretNames:
-      - openldap
     inputArtifactNames:
-      - ldapBackup
+      - backup
     kind: deployment
     phases:
       - func: KubeTask
         name: ldaprestore
+        objects:
+          openldap:
+            kind: Secret
+            name: '{{ template "openldap.name" . }}'
+            namespace: '{{ .Release.Namespace }}'
         args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
+          namespace: {{ .Release.Namespace }}
           command:
             - bash
             - -o
@@ -66,13 +79,17 @@ actions:
             - pipefail
             - -c
             - |
+              alias kopia="kanister-kopia '{{"{{"}} toJson .Profile {{"}}"}}' '{{ .Release.Namespace }}/{{ template "openldap.name" . }}'"
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export USER='openldap'
-              export PASSWORD={{"{{"}} .Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
+              export BIND_PASSWORD={{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
-              BACKUP_LOCATION={{"{{"}} .ArtifactsIn.cloudObject.KeyValue.backupLocation {{"}}"}}
-              kando location pull --profile '{{"{{"}} toJson .Profile {{"}}"}}' --path "${BACKUP_LOCATION}" > openldapbkp.ldap
-              ldapadd x -D "$BIND_ID" -w $PASSWORD  -H ldap://$HOST -f openldapbkp.ldap
-          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
-          namespace: {{ .Release.Namespace }}
+              KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}'
+              if [ "$KOPIA_ROOT" != "" ]; then
+                kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
+              else
+                kopia snapshot restore --snapshot-time=latest ldapdump.ldif
+              fi
+              ldapadd x -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
+              rm ldapdump.ldif
 {{- end }}

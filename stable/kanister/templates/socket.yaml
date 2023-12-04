@@ -15,7 +15,6 @@ spec:
         blueprint: {}
         deployment: {}
         schedule: {}
-        secrets: {}
         statefulset: {}
   resources:
     - when: [coupled, updated]
@@ -111,9 +110,6 @@ spec:
                             --deployment {% .plug.metadata.namespace %}/{% .plugConfig.deployment %} \
                             {%- else if .plugConfig.statefulset %}
                             --statefulset {% .plug.metadata.namespace %}/{% .plugConfig.statefulset %} \
-                            {%- end %}
-                            {%- if .plugConfig.secrets %}
-                            --secrets {% .plugConfig.secrets %} \
                             {%- end %}
                             --profile {{ template "kanister.name" . }} \
                             --action backup
