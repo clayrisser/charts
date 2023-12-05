@@ -13,9 +13,8 @@ spec:
     config:
       plug:
         blueprint: {}
-        deployment: {}
         schedule: {}
-        statefulset: {}
+        workload: {}
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -98,21 +97,15 @@ spec:
                                   - amd64
                   containers:
                     - name: backup
-                      image: registry.gitlab.com/shri178/kanctl:latest
+                      image: registry.gitlab.com/bitspur/rock8s/images/kanukopia:bookworm
                       command:
                         - /bin/sh
                         - -c
                         - |
-                          kanctl create actionset \
-                            --namespace {{ .Release.Namespace }} \
-                            --blueprint {% .plug.metadata.namespace %}.{% .plugConfig.blueprint %} \
-                            {%- if .plugConfig.deployment %}
-                            --deployment {% .plug.metadata.namespace %}/{% .plugConfig.deployment %} \
-                            {%- else if .plugConfig.statefulset %}
-                            --statefulset {% .plug.metadata.namespace %}/{% .plugConfig.statefulset %} \
-                            {%- end %}
-                            --profile {{ template "kanister.name" . }} \
-                            --action backup
+                          kanukopia backup \
+                            '{% .plugConfig.blueprint %}' \
+                            '{% .plugConfig.workload %}' \
+                            '{% .plug.metadata.namespace %}'
         {%- end %}
     - when: [decoupled]
       do: delete

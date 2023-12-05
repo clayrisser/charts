@@ -14,14 +14,14 @@ spec:
     name: kanister
     namespace: kanister
   config:
+    blueprint: openldap
     schedule: {{ .Values.persistence.kanister.schedule | quote }}
-    blueprint: kanister-openldap
-    statefulset: {{ template "openldap.name" . }}-release
+    workload: {{ template "openldap.name" . }}-release
 ---
 apiVersion: cr.kanister.io/v1alpha1
 kind: Blueprint
 metadata:
-  name: kanister-openldap
+  name: openldap
 actions:
   backup:
     kind: Deployment
@@ -55,9 +55,9 @@ actions:
               export BIND_PASSWORD='{{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
               cd /tmp
               ldapsearch -x -D "$BIND_ID" -w "$BIND_PASSWORD" -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL > ldapdump.ldif
-              kanukopia snapshot create ldapdump.ldif
+              kanukopia kopia snapshot create ldapdump.ldif
               rm ldapdump.ldif
-              KOPIA_ROOT="$(kanukopia snapshot list --json -n1 ldapdump.ldif | jq -r '.[0].rootEntry.obj')"
+              KOPIA_ROOT="$(kanukopia kopia snapshot list --json -n1 ldapdump.ldif | jq -r '.[0].rootEntry.obj')"
               kando output kopiaRoot "$KOPIA_ROOT"
   restore:
     inputArtifactNames:
@@ -90,9 +90,9 @@ actions:
               KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}'
               cd /tmp
               if [ "$KOPIA_ROOT" = "" ]; then
-                kanukopia snapshot restore --snapshot-time=latest ldapdump.ldif
+                kanukopia kopia snapshot restore --snapshot-time=latest ldapdump.ldif
               else
-                kanukopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
+                kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               fi
               ldapadd x -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
               rm ldapdump.ldif
