@@ -57,7 +57,8 @@ actions:
               ldapsearch -x -D "$BIND_ID" -w "$BIND_PASSWORD" -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL > ldapdump.ldif
               kanukopia snapshot create ldapdump.ldif
               rm ldapdump.ldif
-              kando output kopiaRoot "$(kanukopia snapshot list --json -n1 ldapdump.ldif | jq -r '.[0].rootEntry.obj')"
+              KOPIA_ROOT="$(kanukopia snapshot list --json -n1 ldapdump.ldif | jq -r '.[0].rootEntry.obj')"
+              kando output kopiaRoot "$KOPIA_ROOT"
   restore:
     inputArtifactNames:
       - backup
@@ -81,10 +82,9 @@ actions:
             - pipefail
             - -c
             - |
-              export JSON_PROFILE='{{"{{"}} toJson .Profile {{"}}"}}'
+              export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
               export PREFIX='{{ .Release.Namespace }}/{{ template "openldap.name" . }}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
-              export USER='openldap'
               export BIND_PASSWORD='{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}'
