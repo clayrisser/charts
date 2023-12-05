@@ -34,11 +34,10 @@ rules:
     verbs:
       - '*'
 ---
-{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" (printf "%s-%s-default" (include "kanister.name" .) .Release.Namespace))) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "kanister.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ .Release.Namespace }}.{{ template "kanister.name" . }}
   labels:
     app.kubernetes.io/name: {{ template "kanister.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -47,32 +46,42 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "kanister.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ .Release.Namespace }}.{{ template "kanister.name" . }}
 subjects:
   - kind: ServiceAccount
     name: default
     namespace: {{ .Release.Namespace }}
-{{- end }}
-{{- if (not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" (printf "%s-%s-default" (include "kanister.name" .) .Release.Namespace))) }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "kanister.name" . }}-{{ .Release.Namespace }}-default
+  name: {{ .Release.Namespace }}.{{ template "kanister.name" . }}
   labels:
     app.kubernetes.io/name: {{ template "kanister.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 rules:
-  - apiGroups: ['']
+  - apiGroups:
+      - apps
     resources:
-      - secrets
+      - statefulsets
+      - deployments
+      - daemonsets
+      - replicasets
     verbs:
       - create
       - get
       - list
       - patch
+      - update
+      - watch
+  - apiGroups: ['']
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
       - update
   - apiGroups:
       - cr.kanister.io
@@ -80,4 +89,9 @@ rules:
       - '*'
     verbs:
       - '*'
-{{- end }}
+  - apiGroups:
+      - cr.kanister.io
+    resources:
+      - '*'
+    verbs:
+      - '*'
