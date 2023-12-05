@@ -14,7 +14,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ .Release.Name }}-release
+  name: {{ template "openldap.name" . }}-release
   labels:
     app.kubernetes.io/name: {{ template "openldap.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -52,15 +52,7 @@ spec:
     customTLS:
       enabled: {{ .Values.service.openldap.tls.enabled }}
       secret: {{ template "openldap.openldap-certificate" . }}
-    {{- if .Values.persistence.velero.enabled }}
-    podAnnotations:
-      backup.velero.io/backup-volumes: data
-      pre.hook.backup.velero.io/timeout: 3m
-      pre.hook.backup.velero.io/command: |
-        ["/bin/bash", "-c", "cd /var/lib/ldap && rm -rf *.ldif && slapcat -n0 -l config.ldif && slapcat -n2 -l data.ldif"]
-    {{- else }}
     podAnnotations: {}
-    {{- end }}
     service:
       annotations: {}
       {{- if (eq .Values.service.openldap.type "NodePort") }}

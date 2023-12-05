@@ -16,7 +16,7 @@ spec:
   config:
     schedule: {{ .Values.persistence.kanister.schedule | quote }}
     blueprint: kanister-openldap
-    statefulset: {{ .Release.Name }}-release
+    statefulset: {{ template "openldap.name" . }}-release
 ---
 apiVersion: cr.kanister.io/v1alpha1
 kind: Blueprint
@@ -38,7 +38,7 @@ actions:
             name: '{{ template "openldap.name" . }}'
             namespace: '{{ .Release.Namespace }}'
         args:
-          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-openldap:2.4.57
           namespace: {{ .Release.Namespace }}
           command:
             - /bin/bash
@@ -48,15 +48,16 @@ actions:
             - pipefail
             - -c
             - |
-              alias kopia="kanister-kopia '{{"{{"}} toJson .Profile {{"}}"}}' '{{ .Release.Namespace }}/{{ template "openldap.name" . }}'"
+              export JSON_PROFILE='{{"{{"}} toJson .Profile {{"}}"}}'
+              export PREFIX='{{ .Release.Namespace }}/{{ template "openldap.name" . }}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
-              export BIND_PASSWORD="{{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}"
-              cd /bitnami/openldap
+              export BIND_PASSWORD='{{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
+              cd /tmp
               ldapsearch -x -D "$BIND_ID" -w "$BIND_PASSWORD" -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL > ldapdump.ldif
-              kopia snapshot create ldapdump.ldif
+              kanukopia snapshot create ldapdump.ldif
               rm ldapdump.ldif
-              kando output kopiaRoot "$(kopia snapshot list --json -n1 ldapdump.ldif | jq -r '.[0].rootEntry.obj')"
+              kando output kopiaRoot "$(kanukopia snapshot list --json -n1 ldapdump.ldif | jq -r '.[0].rootEntry.obj')"
   restore:
     inputArtifactNames:
       - backup
@@ -70,7 +71,7 @@ actions:
             name: '{{ template "openldap.name" . }}'
             namespace: '{{ .Release.Namespace }}'
         args:
-          image: registry.gitlab.com/bitspur/rock8s/images/kando-openldap:2.4.57
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-openldap:2.4.57
           namespace: {{ .Release.Namespace }}
           command:
             - bash
@@ -80,17 +81,18 @@ actions:
             - pipefail
             - -c
             - |
-              alias kopia="kanister-kopia '{{"{{"}} toJson .Profile {{"}}"}}' '{{ .Release.Namespace }}/{{ template "openldap.name" . }}'"
+              export JSON_PROFILE='{{"{{"}} toJson .Profile {{"}}"}}'
+              export PREFIX='{{ .Release.Namespace }}/{{ template "openldap.name" . }}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export USER='openldap'
-              export BIND_PASSWORD="{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}"
+              export BIND_PASSWORD='{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
-              KOPIA_ROOT="{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}"
-              cd /bitnami/openldap
-              if [ "$KOPIA_ROOT" != "" ]; then
-                kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
+              KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}'
+              cd /tmp
+              if [ "$KOPIA_ROOT" = "" ]; then
+                kanukopia snapshot restore --snapshot-time=latest ldapdump.ldif
               else
-                kopia snapshot restore --snapshot-time=latest ldapdump.ldif
+                kanukopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               fi
               ldapadd x -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
               rm ldapdump.ldif

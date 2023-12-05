@@ -1,5 +1,5 @@
 {{- if (and .Values.service.openldap.tls.enabled (not .Values.service.openldap.tls.certificate.name)) }}
-{{- $serviceName := (printf "%s-release" .Release.Name) }}
+{{- $serviceName := (printf "%s-release" (include "openldap.name" .)) }}
 {{- $customDnsNames := list }}
 {{- if .Values.service.openldap.tls.certificate.issuer.dnsNames }}
 {{- $customDnsNames = (splitList " " .Values.service.openldap.tls.issuer.dnsNames) }}
