@@ -52,6 +52,7 @@ actions:
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               export BIND_PASSWORD="{{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}"
+              cd /bitnami/openldap
               ldapsearch -x -D "$BIND_ID" -w "$BIND_PASSWORD" -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL > ldapdump.ldif
               kopia snapshot create ldapdump.ldif
               rm ldapdump.ldif
@@ -85,6 +86,7 @@ actions:
               export BIND_PASSWORD="{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}"
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               KOPIA_ROOT="{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}"
+              cd /bitnami/openldap
               if [ "$KOPIA_ROOT" != "" ]; then
                 kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               else
