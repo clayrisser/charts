@@ -29,6 +29,7 @@ actions:
       backup:
         keyValue:
           kopiaRoot: "{{"{{"}} .Phases.ldapdump.Output.kopiaRoot {{"}}"}}"
+          rootDN: "{{"{{"}} .Phases.ldapdump.Output.rootDN {{"}}"}}"
     phases:
       - func: KubeTask
         name: ldapdump
@@ -59,6 +60,7 @@ actions:
               rm ldapdump.ldif
               KOPIA_ROOT="$(kanukopia kopia snapshot list --json -n1 ldapdump.ldif | jq -r '.[0].rootEntry.obj')"
               kando output kopiaRoot "$KOPIA_ROOT"
+              kando output rootDN '{{ template "openldap.openldap-root-dn" . }}'
   restore:
     inputArtifactNames:
       - backup
@@ -94,6 +96,6 @@ actions:
               else
                 kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               fi
-              ldapadd x -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
+              ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
               rm ldapdump.ldif
 {{- end }}
