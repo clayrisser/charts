@@ -48,7 +48,7 @@ actions:
             - pipefail
             - -c
             - |
-              export JSON_PROFILE='{{"{{"}} toJson .Profile {{"}}"}}'
+              export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
               export PREFIX='{{ .Release.Namespace }}/{{ template "openldap.name" . }}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
