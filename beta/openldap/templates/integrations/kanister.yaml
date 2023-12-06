@@ -24,7 +24,7 @@ metadata:
   name: openldap
 actions:
   backup:
-    kind: Deployment
+    kind: StatefulSet
     outputArtifacts:
       backup:
         keyValue:
@@ -62,7 +62,7 @@ actions:
   restore:
     inputArtifactNames:
       - backup
-    kind: deployment
+    kind: StatefulSet
     phases:
       - func: KubeTask
         name: ldaprestore
