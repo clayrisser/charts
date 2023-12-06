@@ -97,7 +97,7 @@ spec:
                                   - amd64
                   containers:
                     - name: backup
-                      image: registry.gitlab.com/bitspur/rock8s/images/kanukopia:bookworm
+                      image: registry.gitlab.com/bitspur/rock8s/images/kanukopia:0.100.0-bookworm
                       command:
                         - /bin/sh
                         - -c
