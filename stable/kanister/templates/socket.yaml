@@ -12,9 +12,11 @@ spec:
   interface:
     config:
       plug:
-        blueprint: {}
+        blueprint:
+          required: true
+        workload:
+          required: true
         schedule: {}
-        workload: {}
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -51,13 +53,13 @@ spec:
                     - -c
                     - |
                       cat <<EOF | kubectl get -f - -o json | \
-                        jq '.items[0].metadata.name = "{% .plug.metadata.namespace %}.{% .plug.metadata.name %}"' | \
+                        jq '.items[0].metadata.name = "{% .plug.metadata.namespace %}.{% .plugConfig.blueprint %}"' | \
                         jq '.items[0].metadata.namespace = ""' | \
                         kubectl apply -f - --namespace={{ .Release.Namespace }}
                       apiVersion: cr.kanister.io/v1alpha1
                       kind: Blueprint
                       metadata:
-                        name: {% .plugConfig.blueprint | default .plug.metadata.name | quote %}
+                        name: {% .plugConfig.blueprint | quote %}
                         namespace: {% .plug.metadata.namespace | quote %}
                       EOF
                       kubectl get pods -n {{ .Release.Namespace }} \
@@ -113,4 +115,4 @@ spec:
         apiVersion: cr.kanister.io/v1alpha1
         kind: Blueprint
         metadata:
-          name: '{% .plug.metadata.namespace %}.{% .plug.metadata.name %}'
+          name: '{% .plug.metadata.namespace %}.{% .plugConfig.blueprint %}'
