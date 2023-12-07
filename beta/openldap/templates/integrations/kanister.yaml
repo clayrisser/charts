@@ -49,12 +49,14 @@ actions:
             - pipefail
             - -c
             - |
+              export KOPIA_PASSWORD='{{"{{"}} .Options.kopiaPassword | default "" | toString {{"}}"}}'
+              export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "openldap.name" . }}" | toString {{"}}"}}'
               export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
-              export PREFIX='{{ .Release.Namespace }}/{{ template "openldap.name" . }}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               export BIND_PASSWORD='{{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
               cd /tmp
+              rm ldapdump.ldif
               ldapsearch -x -D "$BIND_ID" -w "$BIND_PASSWORD" -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL > ldapdump.ldif
               kanukopia kopia snapshot create ldapdump.ldif
               rm ldapdump.ldif
@@ -84,15 +86,18 @@ actions:
             - pipefail
             - -c
             - |
+              export KOPIA_PASSWORD='{{"{{"}} .Options.kopiaPassword | default "" | toString {{"}}"}}'
+              export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "openldap.name" . }}" | toString {{"}}"}}'
               export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
-              export PREFIX='{{ .Release.Namespace }}/{{ template "openldap.name" . }}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export BIND_PASSWORD='{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
-              KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot {{"}}"}}'
               cd /tmp
+              rm ldapdump.ldif
+              KOPIA_ROOT='{{"{{"}} .Options.kopiaRoot | default .ArtifactsIn.backup.KeyValue.kopiaRoot | toString {{"}}"}}'
+              SNAPSHOT_TIME='{{"{{"}} .Options.snapshotTime | default "latest" | toString {{"}}"}}'
               if [ "$KOPIA_ROOT" = "" ]; then
-                kanukopia kopia snapshot restore --snapshot-time=latest ldapdump.ldif
+                kanukopia kopia snapshot restore --snapshot-time="$SNAPSHOT_TIME" ldapdump.ldif
               else
                 kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               fi
