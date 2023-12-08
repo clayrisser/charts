@@ -92,14 +92,14 @@ actions:
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               cd /tmp
               rm ldapdump.ldif 2>/dev/null || true
-              KOPIA_ROOT='{{"{{"}} .Options.kopiaRoot | "" | toString {{"}}"}}'
+              KOPIA_ROOT='{{"{{"}} .Options.kopiaRoot | default "" | toString {{"}}"}}'
               SNAPSHOT_TIME='{{"{{"}} .Options.snapshotTime | default "latest" | toString {{"}}"}}'
               if [ "$KOPIA_ROOT" = "" ]; then
                 kanukopia kopia snapshot restore --snapshot-time="$SNAPSHOT_TIME" ldapdump.ldif
               else
                 kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               fi
-              ROOT_DN=$(grep -oP '(?<=dn: ).*' ldapdump.ldif)
+              ROOT_DN=$(grep -oP '(?<=dn: ).*' ldapdump.ldif | head -n 1)
               ldapdelete -r -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST "$ROOT_DN" || true
               ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
               rm ldapdump.ldif
@@ -136,7 +136,7 @@ actions:
               rm ldapdump.ldif 2>/dev/null || true
               KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot | toString {{"}}"}}'
               kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
-              ROOT_DN=$(grep -oP '(?<=dn: ).*' ldapdump.ldif)
+              ROOT_DN=$(grep -oP '(?<=dn: ).*' ldapdump.ldif | head -n 1)
               ldapdelete -r -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST "$ROOT_DN" || true
               ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
               rm ldapdump.ldif
