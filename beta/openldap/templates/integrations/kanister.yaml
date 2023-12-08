@@ -28,8 +28,8 @@ actions:
     outputArtifacts:
       backup:
         keyValue:
-          kopiaRoot: "{{"{{"}} .Phases.ldapdump.Output.kopiaRoot {{"}}"}}"
-          rootDN: "{{"{{"}} .Phases.ldapdump.Output.rootDN {{"}}"}}"
+          kopiaRoot: "{{"{{"}} .Phases.backup.Output.kopiaRoot {{"}}"}}"
+          rootDN: "{{"{{"}} .Phases.backup.Output.rootDN {{"}}"}}"
     phases:
       - func: KubeTask
         name: backup
@@ -54,7 +54,7 @@ actions:
               export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
-              export BIND_PASSWORD='{{"{{"}} .Phases.ldapdump.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
+              export BIND_PASSWORD='{{"{{"}} .Phases.backup.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
               cd /tmp
               rm ldapdump.ldif 2>/dev/null || true
               ldapsearch -x -D "$BIND_ID" -w "$BIND_PASSWORD" -b '{{ template "openldap.openldap-root-dn" . }}' -H ldap://$HOST -LLL > ldapdump.ldif
@@ -88,7 +88,7 @@ actions:
               export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "openldap.name" . }}" | toString {{"}}"}}'
               export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
-              export BIND_PASSWORD='{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
+              export BIND_PASSWORD='{{"{{"}} .Phases.restore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               cd /tmp
               rm ldapdump.ldif 2>/dev/null || true
@@ -128,7 +128,7 @@ actions:
               export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "openldap.name" . }}" | toString {{"}}"}}'
               export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
               export HOST='{{ template "openldap.openldap-hostname" . }}'
-              export BIND_PASSWORD='{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
+              export BIND_PASSWORD='{{"{{"}} .Phases.restorefrom.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               cd /tmp
               rm ldapdump.ldif 2>/dev/null || true
