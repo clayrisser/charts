@@ -93,15 +93,14 @@ actions:
               cd /tmp
               rm ldapdump.ldif 2>/dev/null || true
               KOPIA_ROOT='{{"{{"}} .Options.kopiaRoot | default "" | toString {{"}}"}}'
-              SNAPSHOT_TIME='{{"{{"}} .Options.snapshotTime | default "latest" | toString {{"}}"}}'
               if [ "$KOPIA_ROOT" = "" ]; then
-                kanukopia kopia snapshot restore --snapshot-time="$SNAPSHOT_TIME" ldapdump.ldif
-              else
-                kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
+                SNAPSHOT_TIME='{{"{{"}} .Options.snapshotTime | default "latest" | toString {{"}}"}}'
+                KOPIA_ROOT="$(kanukopia find-snapshot "$SNAPSHOT_TIME")"
               fi
+              kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               ROOT_DN=$(grep -oP '(?<=dn: ).*' ldapdump.ldif | head -n 1)
-              ldapdelete -r -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST "$ROOT_DN" || true
-              ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
+              sed -i "s|$ROOT_DN|{{ template "openldap.openldap-root-dn" . }}|g" ldapdump.ldif
+              ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif || true
               rm ldapdump.ldif
   restorefrom:
     inputArtifactNames:
@@ -137,7 +136,7 @@ actions:
               KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot | toString {{"}}"}}'
               kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               ROOT_DN=$(grep -oP '(?<=dn: ).*' ldapdump.ldif | head -n 1)
-              ldapdelete -r -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST "$ROOT_DN" || true
-              ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
+              sed -i "s|$ROOT_DN|{{ template "openldap.openldap-root-dn" . }}|g" ldapdump.ldif
+              ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif || true
               rm ldapdump.ldif
 {{- end }}
