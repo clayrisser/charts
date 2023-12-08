@@ -64,6 +64,44 @@ actions:
               kando output kopiaRoot "$KOPIA_ROOT"
               kando output rootDN '{{ template "openldap.openldap-root-dn" . }}'
   restore:
+    kind: StatefulSet
+    phases:
+      - func: KubeTask
+        name: ldaprestore
+        objects:
+          openldap:
+            kind: Secret
+            name: '{{ template "openldap.name" . }}'
+            namespace: '{{ .Release.Namespace }}'
+        args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-openldap:2.4.57
+          namespace: {{ .Release.Namespace }}
+          command:
+            - bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              export KOPIA_PASSWORD='{{"{{"}} .Options.kopiaPassword | default "" | toString {{"}}"}}'
+              export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "openldap.name" . }}" | toString {{"}}"}}'
+              export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
+              export HOST='{{ template "openldap.openldap-hostname" . }}'
+              export BIND_PASSWORD='{{"{{"}} .Phases.ldaprestore.Secrets.openldap.Data.LDAP_ADMIN_PASSWORD | toString {{"}}"}}'
+              export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
+              cd /tmp
+              rm ldapdump.ldif 2>/dev/null || true
+              KOPIA_ROOT='{{"{{"}} .Options.kopiaRoot | "" | toString {{"}}"}}'
+              SNAPSHOT_TIME='{{"{{"}} .Options.snapshotTime | default "latest" | toString {{"}}"}}'
+              if [ "$KOPIA_ROOT" = "" ]; then
+                kanukopia kopia snapshot restore --snapshot-time="$SNAPSHOT_TIME" ldapdump.ldif
+              else
+                kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
+              fi
+              ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
+              rm ldapdump.ldif
+  restorefrom:
     inputArtifactNames:
       - backup
     kind: StatefulSet
@@ -94,13 +132,8 @@ actions:
               export BIND_ID='cn=admin,{{ template "openldap.openldap-root-dn" . }}'
               cd /tmp
               rm ldapdump.ldif 2>/dev/null || true
-              KOPIA_ROOT='{{"{{"}} .Options.kopiaRoot | default .ArtifactsIn.backup.KeyValue.kopiaRoot | toString {{"}}"}}'
-              SNAPSHOT_TIME='{{"{{"}} .Options.snapshotTime | default "latest" | toString {{"}}"}}'
-              if [ "$KOPIA_ROOT" = "" ]; then
-                kanukopia kopia snapshot restore --snapshot-time="$SNAPSHOT_TIME" ldapdump.ldif
-              else
-                kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
-              fi
+              KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot | toString {{"}}"}}'
+              kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
               rm ldapdump.ldif
 {{- end }}
