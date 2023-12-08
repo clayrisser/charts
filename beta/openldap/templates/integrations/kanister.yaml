@@ -32,7 +32,7 @@ actions:
           rootDN: "{{"{{"}} .Phases.ldapdump.Output.rootDN {{"}}"}}"
     phases:
       - func: KubeTask
-        name: ldapdump
+        name: backup
         objects:
           openldap:
             kind: Secret
@@ -67,7 +67,7 @@ actions:
     kind: StatefulSet
     phases:
       - func: KubeTask
-        name: ldaprestore
+        name: restore
         objects:
           openldap:
             kind: Secret
@@ -107,7 +107,7 @@ actions:
     kind: StatefulSet
     phases:
       - func: KubeTask
-        name: ldaprestore
+        name: restorefrom
         objects:
           openldap:
             kind: Secret
