@@ -99,6 +99,8 @@ actions:
               else
                 kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
               fi
+              ROOT_DN=$(grep -oP '(?<=dn: ).*' ldapdump.ldif)
+              ldapdelete -r -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST "$ROOT_DN" || true
               ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
               rm ldapdump.ldif
   restorefrom:
@@ -134,6 +136,8 @@ actions:
               rm ldapdump.ldif 2>/dev/null || true
               KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot | toString {{"}}"}}'
               kanukopia kopia snapshot restore "$KOPIA_ROOT" ldapdump.ldif
+              ROOT_DN=$(grep -oP '(?<=dn: ).*' ldapdump.ldif)
+              ldapdelete -r -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST "$ROOT_DN" || true
               ldapadd -c -D "$BIND_ID" -w "$BIND_PASSWORD" -H ldap://$HOST -f ldapdump.ldif
               rm ldapdump.ldif
 {{- end }}
