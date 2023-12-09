@@ -21,7 +21,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- if (and $clusterEnvironment $clusterEnvironment.data) -}}
 {{- $clusterEnvironment.data.clusterName | default "local" -}}
 {{- else -}}
-{{- "local" -}}
+{{- "cluster.local" -}}
 {{- end -}}
 {{- end -}}
 
