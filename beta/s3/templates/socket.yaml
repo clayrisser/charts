@@ -14,6 +14,7 @@ spec:
       plug:
         bucket: {}
         create: {}
+        preserve: {}
       socket:
         endpoint:
           required: true
@@ -58,6 +59,9 @@ spec:
             region: {{ template "s3.aws-region" . }}
             tags:
               KubernetesCluster: {{ template "s3.cluster-name" . }}
+              {%- if (eq .plugConfig.create "1") %}
+              Preserve: '1'
+              {%- end %}
         {%- end %}
     - when: [coupled, updated]
       do: apply
