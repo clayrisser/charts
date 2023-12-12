@@ -24,7 +24,7 @@ metadata:
   name: postgres
 actions:
   backup:
-    kind: StatefulSet
+    kind: Deployment
     outputArtifacts:
       backup:
         keyValue:
@@ -62,7 +62,7 @@ actions:
               KOPIA_ROOT="$(kanukopia kopia snapshot list --json -n1 "$BACKUP_FILE" | jq -r '.[0].rootEntry.obj')"
               kando output kopiaRoot "$KOPIA_ROOT"
   restore:
-    kind: StatefulSet
+    kind: Deployment
     phases:
       - func: KubeTask
         name: restore
@@ -101,7 +101,7 @@ actions:
   restorefrom:
     inputArtifactNames:
       - backup
-    kind: StatefulSet
+    kind: Deployment
     phases:
       - func: KubeTask
         name: restorefrom
