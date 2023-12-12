@@ -1,4 +1,4 @@
-{{- if .Values.persistence.kanister.enabled }}
+{{- if (and .Values.persistence.enabled .Values.persistence.kanister.enabled) }}
 apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
@@ -9,31 +9,37 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
+  epoch: {{ now | unixEpoch | quote }}
   socket:
     name: kanister
     namespace: kanister
   config:
-    schedule: {{ .Values.persistence.kanister.schedule | quote }}
     blueprint: postgres
-    deployment: postgres
-    secrets: postgres={{ .Release.Namespace }}/postgres-postgres-secret
+    schedule: {{ .Values.persistence.kanister.schedule | quote }}
+    workload: {{ template "postgres.name" . }}
 ---
 apiVersion: cr.kanister.io/v1alpha1
 kind: Blueprint
 metadata:
   name: postgres
-  labels:
-    app.kubernetes.io/name: {{ template "postgres.name" . }}
-    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
 actions:
   backup:
-    secretNames:
-      - postgres
-    kind: deployment
+    kind: StatefulSet
+    outputArtifacts:
+      backup:
+        keyValue:
+          kopiaRoot: "{{"{{"}} .Phases.backup.Output.kopiaRoot {{"}}"}}"
     phases:
-      - args:
+      - func: KubeTask
+        name: backup
+        objects:
+          postgres:
+            kind: Secret
+            name: {{ template "postgres.name" . }}-users
+            namespace: '{{ .Release.Namespace }}'
+        args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:2.4.57
+          namespace: {{ .Release.Namespace }}
           command:
             - /bin/bash
             - -o
@@ -42,37 +48,89 @@ actions:
             - pipefail
             - -c
             - |
+              BACKUP_FILE=dump.sql
+              export KOPIA_PASSWORD='{{"{{"}} .Options.kopiaPassword | default "" | toString {{"}}"}}'
+              export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "postgres.name" . }}" | toString {{"}}"}}'
+              export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
+              rm "$BACKUP_FILE" 2>/dev/null || true
               export PGHOST="{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local"
               export PGUSER='postgres'
-              export PGPASSWORD={{"{{"}} .Secrets.postgres.Data.password | toString {{"}}"}}
-              backup_file_path='{{"{{"}} toDate "2006-01-02T15:04:05.999999999Z07:00" .Time  | date "2006-01-02T15-04-05" {{"}}"}}pgsql.sql'
-              pg_dumpall --clean -U $PGUSER | kando location push --profile '{{ toJson .Profile }}' --path "${backup_file_path}" -
-          image: ghcr.io/kanisterio/kanister-tools:0.71.0
-          namespace: {{ .Release.Namespace }}
-        func: KubeTask
-        name: pgDump
+              export PGPASSWORD='{{"{{"}} .Phases.backup.Secrets.postgres.Data.postgres | toString {{"}}"}}'
+              pg_dumpall --clean -U $PGUSER > $BACKUP_FILE
+              kanukopia kopia snapshot create "$BACKUP_FILE"
+              rm "$BACKUP_FILE"
+              KOPIA_ROOT="$(kanukopia kopia snapshot list --json -n1 "$BACKUP_FILE" | jq -r '.[0].rootEntry.obj')"
+              kando output kopiaRoot "$KOPIA_ROOT"
   restore:
-    secretNames:
-      - postgres
-    inputArtifactNames:
-      - pgBackup
-    kind: deployment
+    kind: StatefulSet
     phases:
-      - args:
+      - func: KubeTask
+        name: restore
+        objects:
+          postgres:
+            kind: Secret
+            name: {{ template "postgres.name" . }}-users
+            namespace: '{{ .Release.Namespace }}'
+        args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:2.4.57
+          namespace: {{ .Release.Namespace }}
           command:
-            - /bin/bash
+            - bash
             - -o
             - errexit
             - -o
             - pipefail
             - -c
             - |
+              BACKUP_FILE=dump.sql
+              export KOPIA_PASSWORD='{{"{{"}} .Options.kopiaPassword | default "" | toString {{"}}"}}'
+              export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "postgres.name" . }}" | toString {{"}}"}}'
+              export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
+              rm "$BACKUP_FILE" 2>/dev/null || true
+              KOPIA_ROOT='{{"{{"}} .Options.kopiaRoot | default "" | toString {{"}}"}}'
+              if [ "$KOPIA_ROOT" = "" ]; then
+                SNAPSHOT_TIME='{{"{{"}} .Options.snapshotTime | default "latest" | toString {{"}}"}}'
+                KOPIA_ROOT="$(kanukopia find-snapshot "$SNAPSHOT_TIME")"
+              fi
+              kanukopia kopia snapshot restore "$KOPIA_ROOT" "$BACKUP_FILE"
               export PGHOST="{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local"
               export PGUSER='postgres'
-              export PGPASSWORD={{"{{"}} .Secrets.postgres.Data.password | toString {{"}}"}}
-              backup_file_path="backup.sql"
-          image: ghcr.io/kanisterio/kanister-tools:0.71.0
+              export PGPASSWORD='{{"{{"}} .Phases.restore.Secrets.postgres.Data.postgres | toString {{"}}"}}'
+              psql -U $PGUSER --set ON_ERROR_STOP=off < $BACKUP_FILE
+              rm "$BACKUP_FILE"
+  restorefrom:
+    inputArtifactNames:
+      - backup
+    kind: StatefulSet
+    phases:
+      - func: KubeTask
+        name: restorefrom
+        objects:
+          postgres:
+            kind: Secret
+            name: {{ template "postgres.name" . }}-users
+            namespace: '{{ .Release.Namespace }}'
+        args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:2.4.57
           namespace: {{ .Release.Namespace }}
-        func: KubeTask
-        name: pgRestore
+          command:
+            - bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              BACKUP_FILE=dump.sql
+              export KOPIA_PASSWORD='{{"{{"}} .Options.kopiaPassword | default "" | toString {{"}}"}}'
+              export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "postgres.name" . }}" | toString {{"}}"}}'
+              export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
+              rm "$BACKUP_FILE" 2>/dev/null || true
+              KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot | toString {{"}}"}}'
+              kanukopia kopia snapshot restore "$KOPIA_ROOT" "$BACKUP_FILE"
+              export PGHOST="{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local"
+              export PGUSER='postgres'
+              export PGPASSWORD='{{"{{"}} .Phases.restore.Secrets.postgres.Data.postgres | toString {{"}}"}}'
+              psql -U $PGUSER --set ON_ERROR_STOP=off < $BACKUP_FILE
+              rm "$BACKUP_FILE"
 {{- end }}

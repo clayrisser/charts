@@ -147,11 +147,6 @@ persistence:
     replicas: 1Gi
     wal: 1Gi
   storageClass: ''
-  velero:
-    enabled: false
-    restic: true
-    schedule: '@midnight'
-    ttl: 2160h0m00s
   kanister:
     enabled: false
     schedule: '0 0 * * *'
