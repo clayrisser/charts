@@ -105,6 +105,7 @@ spec:
                         - -c
                         - |
                           kanukopia backup \
+                            -n {% .plug.metadata.namespace %} \
                             '{% .plugConfig.blueprint %}' \
                             '{% .plugConfig.workload %}' \
                             '{% .plug.metadata.namespace %}'
