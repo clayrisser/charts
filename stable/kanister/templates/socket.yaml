@@ -105,10 +105,8 @@ spec:
                         - -c
                         - |
                           kanukopia backup \
-                            -n {% .plug.metadata.namespace %} \
-                            '{% .plugConfig.blueprint %}' \
-                            '{% .plugConfig.workload %}' \
-                            '{% .plug.metadata.namespace %}'
+                            -n '{% .plug.metadata.namespace %}' \
+                            '{% .plugConfig.blueprint %}'
         {%- end %}
     - when: [decoupled]
       do: delete
