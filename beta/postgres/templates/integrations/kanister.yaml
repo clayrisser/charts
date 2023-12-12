@@ -1,4 +1,4 @@
-{{- if (and .Values.persistence.enabled .Values.persistence.kanister.enabled) }}
+{{- if .Values.persistence.kanister.enabled }}
 apiVersion: integration.rock8s.com/v1beta1
 kind: Plug
 metadata:
