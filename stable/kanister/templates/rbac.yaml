@@ -90,8 +90,8 @@ rules:
     verbs:
       - '*'
   - apiGroups:
-      - cr.kanister.io
+      - integration.rock8s.com
     resources:
-      - '*'
+      - plugs
     verbs:
       - '*'

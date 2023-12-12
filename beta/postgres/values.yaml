@@ -116,7 +116,6 @@ service:
         name: ''
         ca: ''
         issuer:
-          integration: kube-system
           dnsNames: ''
     nodePorts:
       postgres:
