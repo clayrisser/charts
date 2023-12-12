@@ -53,7 +53,7 @@ actions:
               export PREFIX='{{"{{"}} .Options.prefix | default "{{ .Release.Namespace }}/{{ template "postgres.name" . }}" | toString {{"}}"}}'
               export PROFILE_JSON='{{"{{"}} toJson .Profile {{"}}"}}'
               rm "$BACKUP_FILE" 2>/dev/null || true
-              export PGHOST="{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local"
+              export PGHOST="{{ template "postgres.name" . }}.{{ .Release.Namespace }}.svc.cluster.local"
               export PGUSER='postgres'
               export PGPASSWORD='{{"{{"}} .Phases.backup.Secrets.postgres.Data.postgres | toString {{"}}"}}'
               pg_dumpall --clean -U $PGUSER > $BACKUP_FILE
@@ -93,7 +93,7 @@ actions:
                 KOPIA_ROOT="$(kanukopia find-snapshot "$SNAPSHOT_TIME")"
               fi
               kanukopia kopia snapshot restore "$KOPIA_ROOT" "$BACKUP_FILE"
-              export PGHOST="{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local"
+              export PGHOST="{{ template "postgres.name" . }}.{{ .Release.Namespace }}.svc.cluster.local"
               export PGUSER='postgres'
               export PGPASSWORD='{{"{{"}} .Phases.restore.Secrets.postgres.Data.postgres | toString {{"}}"}}'
               psql -U $PGUSER --set ON_ERROR_STOP=off < $BACKUP_FILE
@@ -128,7 +128,7 @@ actions:
               rm "$BACKUP_FILE" 2>/dev/null || true
               KOPIA_ROOT='{{"{{"}} .ArtifactsIn.backup.KeyValue.kopiaRoot | toString {{"}}"}}'
               kanukopia kopia snapshot restore "$KOPIA_ROOT" "$BACKUP_FILE"
-              export PGHOST="{{ template "postgres.name" . }}-postgres.{{ .Release.Namespace }}.svc.cluster.local"
+              export PGHOST="{{ template "postgres.name" . }}.{{ .Release.Namespace }}.svc.cluster.local"
               export PGUSER='postgres'
               export PGPASSWORD='{{"{{"}} .Phases.restore.Secrets.postgres.Data.postgres | toString {{"}}"}}'
               psql -U $PGUSER --set ON_ERROR_STOP=off < $BACKUP_FILE
