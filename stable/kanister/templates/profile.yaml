@@ -15,9 +15,9 @@ location:
   region: {{ .Values.config.s3.region | quote }}
 credential:
   type: keyPair
-  idField: AWS_ACCESS_KEY_ID
-  secretField: AWS_SECRET_ACCESS_KEY
   keyPair:
+    idField: AWS_ACCESS_KEY_ID
+    secretField: AWS_SECRET_ACCESS_KEY
     secret:
       apiVersion: v1
       kind: Secret
