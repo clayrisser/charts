@@ -38,7 +38,7 @@ actions:
             name: {{ template "postgres.name" . }}-users
             namespace: '{{ .Release.Namespace }}'
         args:
-          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:2.4.57
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:0.100.0-bookworm
           namespace: {{ .Release.Namespace }}
           command:
             - /bin/bash
@@ -72,7 +72,7 @@ actions:
             name: {{ template "postgres.name" . }}-users
             namespace: '{{ .Release.Namespace }}'
         args:
-          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:2.4.57
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:0.100.0-bookworm
           namespace: {{ .Release.Namespace }}
           command:
             - bash
@@ -111,7 +111,7 @@ actions:
             name: {{ template "postgres.name" . }}-users
             namespace: '{{ .Release.Namespace }}'
         args:
-          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:2.4.57
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-postgres:0.100.0-bookworm
           namespace: {{ .Release.Namespace }}
           command:
             - bash
