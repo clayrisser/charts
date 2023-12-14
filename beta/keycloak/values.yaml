@@ -1,12 +1,12 @@
 olm:
   keycloak:
     channel: fast
-    version: 21.1.1
+    version: 22.0.5
 
 images:
   keycloak:
     repository: registry.gitlab.com/bitspur/rock8s/images/keycloak
-    tag: 21.1.0
+    tag: 22.0.5
 
 config:
   imagePullPolicy: IfNotPresent

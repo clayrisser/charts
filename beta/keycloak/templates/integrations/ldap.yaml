@@ -19,7 +19,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      template:
+      stringTemplate: |
         apiVersion: v1
         kind: Secret
         metadata:
@@ -55,7 +55,7 @@ spec:
                   names:
                     - {{ template "keycloak.name" . }}
               mutate:
-                patchesJson6902: |-
+                patchesJson6902: |
                   - op: replace
                     path: /spec/realm/userFederationProviders/0/config/bindDn
                     value: {% .socketConfig.adminDN | quote %}
