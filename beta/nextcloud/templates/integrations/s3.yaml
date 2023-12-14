@@ -17,18 +17,20 @@ spec:
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.s3.bucket | quote }}
+    create: '1'
+    preserve: '1'
   resources:
     - when: [coupled, updated]
       do: apply
-      template:
+      stringTemplate: |
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:
           name: s3-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          mutateExistingOnPolicyUpdate: true
           background: true
+          mutateExistingOnPolicyUpdate: true
           rules:
             - name: helm-release
               match:

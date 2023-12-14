@@ -51,11 +51,10 @@ spec:
         {{- end }}
         nginx.ingress.kubernetes.io/ssl-redirect: 'true'
         {{- end }}
-        nginx.ingress.kubernetes.io/proxy-body-size: 4G
-        nginx.ingress.kubernetes.io/server-snippet: |-
+        nginx.ingress.kubernetes.io/proxy-body-size: {{ .Values.config.nextcloud.maxUploadSize | quote }}
+        nginx.ingress.kubernetes.io/server-snippet: |
           server_tokens off;
           proxy_hide_header X-Powered-By;
-
           rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
           rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
           rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
@@ -108,7 +107,12 @@ spec:
           authtype: LOGIN
           name: user
           password: pass
-      phpConfigs: {}
+      phpConfigs:
+        upload-max-filesize.ini: |
+          upload_max_filesize {{ .Values.config.nextcloud.maxUploadSize }}
+          post_max_size {{ .Values.config.nextcloud.maxUploadSize }}
+          max_input_time 3600
+          max_execution_time 3600
       defaultConfigs:
         .htaccess: false
         redis.config.php: true
@@ -118,7 +122,7 @@ spec:
         autoconfig.php: true
         smtp.config.php: false
       configs:
-        .htaccess: |-
+        .htaccess: |
           # line below if for Apache 2.4
           <ifModule mod_authz_core.c>
           Require all denied
@@ -153,23 +157,19 @@ spec:
       strategy:
         type: Recreate
       extraEnv:
+        - name: APACHE_BODY_LIMIT
+          value: {{ .Values.config.nextcloud.maxUploadSize | quote }}
         - name: PHP_UPLOAD_LIMIT
-          value: 16G
+          value: {{ .Values.config.nextcloud.maxUploadSize | quote }}
         - name: PHP_MEMORY_LIMIT
-          value: 16G
+          value: {{ .Values.config.nextcloud.resources.limits.memory | quote }}
       extraVolumes:
         - name: nextcloud-apps
           configMap:
             name: nextcloud-apps
-        - name: upload-max-filesize
-          configMap:
-            name: upload-max-filesize
       extraVolumeMounts:
         - name: nextcloud-apps
           mountPath: /var/local
-        - name: upload-max-filesize
-          mountPath: /usr/local/etc/php/conf.d/upload-max-filesize.ini
-          subPath: upload-max-filesize.ini
     nginx:
       enabled: false
     internalDatabase:
@@ -193,8 +193,7 @@ spec:
       enabled: true
       architecture: standalone
       auth:
-        enabled: true
-        password: 'P@ssw0rd'
+        enabled: false
     cronjob:
       enabled: true
     service:
@@ -254,16 +253,7 @@ spec:
       maxPods: 10
     nodeSelector: {}
     tolerations: []
-    affinity:
-      nodeAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-                - key: node.kubernetes.io/instance-type
-                  operator: NotIn
-                  values:
-                    - t3.medium
+    affinity: {}
     metrics:
       enabled: false
       serviceMonitor:

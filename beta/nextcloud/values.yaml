@@ -23,14 +23,15 @@ config:
     updateApps: false
     password: ''
     apps: ''
+    maxUploadSize: 16G
     resources:
       enabled: defaults
       requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
         cpu: 500m
-        memory: 256Mi
+        memory: 512Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
   onlyoffice:
     enabled: true
     hostname: ''
@@ -137,11 +138,6 @@ persistence:
     nextcloud: 1Gi
     data: 1Gi
   storageClass: ''
-  velero:
-    enabled: false
-    restic: true
-    schedule: '@midnight'
-    ttl: 2160h0m00s
   kanister:
     enabled: false
     schedule: '0 0 * * *'

@@ -17,8 +17,8 @@ spec:
     namespace: {{ $namespace }}
   config:
     database: {{ .Values.config.postgres.database | quote }}
-    createdb: 'true'
-    cleanup: 'false'
+    create: '1'
+    preserve: '1'
   resources:
     - when: [coupled, updated]
       do: apply

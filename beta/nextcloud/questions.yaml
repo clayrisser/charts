@@ -1,7 +1,6 @@
 categories:
   - Server
 questions:
-
   # Config
   - variable: config.imagePullPolicy
     description: ''
@@ -76,6 +75,12 @@ questions:
     type: multiline
     required: false
     label: apps
+    group: Nextcloud
+  - variable: config.nextcloud.maxUploadSize
+    description: ''
+    type: string
+    required: true
+    label: 'max upload size'
     group: Nextcloud
   - variable: config.nextcloud.resources.enabled
     description: ''
@@ -301,7 +306,7 @@ questions:
         label: 's3 region'
         show_if: config.s3.integration=
 
-# Keycloak
+  # Keycloak
   - variable: config.keycloak.enabled
     description: ''
     type: boolean
@@ -365,33 +370,6 @@ questions:
     type: string
     required: true
     label: 'data size'
-    group: Persistence
-  - variable: persistence.velero.enabled
-    description: ''
-    type: boolean
-    required: true
-    label: 'velero enabled'
-    group: Persistence
-  - variable: persistence.velero.schedule
-    description: ''
-    type: string
-    show_if: persistence.velero.enabled=true
-    required: false
-    label: 'velero schedule'
-    group: Persistence
-  - variable: persistence.velero.restic
-    description: ''
-    type: boolean
-    show_if: persistence.velero.enabled=true
-    required: true
-    label: 'velero restic'
-    group: Persistence
-  - variable: persistence.velero.ttl
-    description: ''
-    type: string
-    show_if: persistence.velero.enabled=true
-    required: true
-    label: 'velero ttl'
     group: Persistence
   - variable: persistence.kanister.enabled
     description: ''

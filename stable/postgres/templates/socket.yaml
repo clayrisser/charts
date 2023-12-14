@@ -15,7 +15,7 @@ spec:
         database:
           required: true
         cleanup: {}
-        createdb: {}
+        create: {}
       socket:
         protocol:
           required: true
@@ -85,7 +85,7 @@ spec:
                     - sh
                     - -c
                     - |
-                      if [ "{% .plugConfig.createdb %}" != "false" ]; then
+                      if [ "{% .plugConfig.create %}" != "0" ]; then
                         export PGPASSFILE="/tmp/.pgpass"
                         export STDOUT="/tmp/createdb.out"
                         echo "*:*:*:*:$POSTGRES_PASSWORD" > $PGPASSFILE
@@ -156,7 +156,7 @@ spec:
                     - sh
                     - -c
                     - |
-                      {%- if (and (not (eq .plugConfig.createdb "false")) (eq .plugConfig.cleanup "true")) %}
+                      {%- if (and (not (eq .plugConfig.create "0")) (eq .plugConfig.preserve "0")) %}
                       export PGPASSFILE="/tmp/.pgpass"
                       echo "*:*:*:*:$POSTGRES_PASSWORD" > $PGPASSFILE
                       chmod 600 $PGPASSFILE

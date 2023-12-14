@@ -35,15 +35,15 @@ spec:
   resources:
     - when: [coupled, updated]
       do: recreate
-      template:
+      stringTemplate: |
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:
           name: keycloak-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          mutateExistingOnPolicyUpdate: true
           background: true
+          mutateExistingOnPolicyUpdate: true
           rules:
             - name: config-map
               match:

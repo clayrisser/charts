@@ -17,20 +17,20 @@ spec:
     namespace: {{ $namespace }}
   config:
     database: {{ .Values.config.postgres.database | quote }}
-    createdb: 'true'
-    cleanup: 'false'
+    create: '1'
+    preserve: '1'
   resources:
     - when: [coupled, updated]
       do: recreate
-      template:
+      stringTemplate: |
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          mutateExistingOnPolicyUpdate: true
           background: true
+          mutateExistingOnPolicyUpdate: true
           rules:
             - name: secret
               match:
