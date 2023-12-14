@@ -55,6 +55,10 @@ spec:
                   names:
                     - {{ template "keycloak.name" . }}
               mutate:
+                targets:
+                  - apiVersion: k8s.keycloak.org/v2alpha1
+                    kind: KeycloakRealmImport
+                    name: {{ template "keycloak.name" . }}
                 patchesJson6902: |
                   - op: replace
                     path: /spec/realm/userFederationProviders/0/config/bindDn
@@ -79,14 +83,14 @@ spec:
               match:
                 resources:
                   kinds:
-                    - k8s.keycloak.org/*/Secret
+                    - /*/Secret
                   names:
                     - keycloak-vault
               mutate:
                 targets:
-                  - apiVersion: k8s.keycloak.org/v2alpha1
-                    kind: Keycloak
-                    name: {{ template "keycloak.name" . }}
+                  - apiVersion: v1
+                    kind: Secret
+                    name: keycloak-vault
                 patchesJson6902: |
                   - op: replace
                     path: /data/main_bindCredential
