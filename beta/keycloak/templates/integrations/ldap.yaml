@@ -46,6 +46,7 @@ spec:
         spec:
           background: true
           mutateExistingOnPolicyUpdate: true
+          schemaValidation: false
           rules:
             - name: keycloak-realm
               match:
