@@ -89,3 +89,13 @@ rules:
       - patch
       - update
       - watch
+# TODO: put in operator
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
