@@ -1,3 +1,0 @@
-# externaldb-connection
-
-> externaldb connection

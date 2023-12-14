@@ -4,6 +4,7 @@ home: https://gitlab.com/bitspur/rock8s/patch-operator
 icon: ""
 version: 0.1.0
 appVersion: 0.1.0
+deprecated: true
 description: "kubernetes operator that patches resources"
 keywords:
   - controller

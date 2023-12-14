@@ -1,8 +1,0 @@
-apiVersion: v2
-name: olm-crds
-version: 0.25.0
-annotations:
-  catalog.cattle.io/hidden: 'true'
-  catalog.cattle.io/namespace: kube-system
-  catalog.cattle.io/os: linux
-  catalog.cattle.io/release-name: olm-crds

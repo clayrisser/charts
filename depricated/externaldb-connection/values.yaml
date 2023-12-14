@@ -1,8 +1,0 @@
-config:
-  engine: mysql
-  hostname:
-  name:
-  password:
-  port:
-  url:
-  username:

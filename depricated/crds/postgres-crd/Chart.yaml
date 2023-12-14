@@ -1,8 +1,0 @@
-apiVersion: v1
-version: 0.0.1
-description: installs the crds for postgres
-name: postgres-crd
-annotations:
-  catalog.cattle.io/hidden: 'true'
-  catalog.cattle.io/namespace: kube-system
-  catalog.cattle.io/release-name: postgres-crd

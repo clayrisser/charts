@@ -1,3 +1,0 @@
-# jitsi
-
-> open-source videoconferencing

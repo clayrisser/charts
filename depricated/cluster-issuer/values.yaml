@@ -1,4 +1,0 @@
-config:
-  cloudflareApiKey: ''
-  clusterType: rke
-  email: ''

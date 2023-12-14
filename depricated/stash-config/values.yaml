@@ -1,9 +1,0 @@
-config:
-  awsAccessKey: ''
-  awsSecretKey: ''
-  azureAccountKey: ''
-  azureAccountName: ''
-  googleProjectId: ''
-  googleServiceKey: ''
-  resticPassword: pass
-  type: s3

@@ -1,3 +1,0 @@
-# sks
-
-> an openpgp keyserver

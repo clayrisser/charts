@@ -1,8 +1,0 @@
-apiVersion: v1
-version: v1.5.4
-description: Installs the CRDs for cert-manager.
-name: cert-manager-crd
-annotations:
-  catalog.cattle.io/hidden: 'true'
-  catalog.cattle.io/release-name: cert-manager-crd
-  catalog.cattle.io/namespace: kube-system
