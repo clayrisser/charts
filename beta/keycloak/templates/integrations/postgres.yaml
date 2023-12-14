@@ -40,8 +40,8 @@ spec:
           name: postgres-coupled-or-updated
           namespace: {{ .Release.Namespace }}
         spec:
-          mutateExistingOnPolicyUpdate: true
           background: true
+          mutateExistingOnPolicyUpdate: true
           rules:
             - name: keycloak
               match:
@@ -51,7 +51,11 @@ spec:
                   names:
                     - {{ template "keycloak.name" . }}
               mutate:
-                patchesJson6902: |-
+                targets:
+                  - apiVersion: k8s.keycloak.org/v2alpha1
+                    kind: Keycloak
+                    name: {{ template "keycloak.name" . }}
+                patchesJson6902: |
                   - op: replace
                     path: /spec/db/database
                     value: {% .plugConfig.database | quote %}

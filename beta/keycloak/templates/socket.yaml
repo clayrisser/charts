@@ -50,8 +50,7 @@ spec:
         command:
           - /bin/sh
           - -c
-          - |
-            kubectl proxy
+          - kubectl proxy
   config:
     keycloakBaseUrl: {{ include "keycloak.keycloak-base-url" . }}
     defaultRealm: main
