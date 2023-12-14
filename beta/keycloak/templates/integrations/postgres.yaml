@@ -33,7 +33,7 @@ spec:
           POSTGRES_USERNAME: {% .socketConfig.username | quote %}
     - when: [coupled, updated]
       do: recreate
-      template:
+      stringTemplate: |
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:

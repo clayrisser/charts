@@ -37,7 +37,7 @@ spec:
         {%- end %}
     - when: [coupled, updated]
       do: recreate
-      template:
+      stringTemplate: |
         apiVersion: kyverno.io/v1
         kind: Policy
         metadata:
