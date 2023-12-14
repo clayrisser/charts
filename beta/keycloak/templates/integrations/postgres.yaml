@@ -22,7 +22,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      template:
+      stringTemplate: |
         apiVersion: v1
         kind: Secret
         metadata:
