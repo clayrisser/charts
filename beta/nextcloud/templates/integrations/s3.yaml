@@ -41,7 +41,7 @@ spec:
                     - {{ .Release.Name }}-release
               mutate:
                 targets:
-                  - apiVersion: source.toolkit.fluxcd.io/v1beta1
+                  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
                     kind: HelmRelease
                     name: {{ .Release.Name }}-release
                 patchesJson6902: |-
