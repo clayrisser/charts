@@ -57,36 +57,35 @@ spec:
                   - apiVersion: v1
                     kind: ConfigMap
                     name: nextcloud-apps
-                patchesJson6902: |-
-                  - op: replace
-                    path: /data/setup-sociallogin.sh
-                    value: |
-                        #!/bin/bash
-                        occ="/var/www/html/occ"
-                        run_as() {
-                            if [ "\$(id -u)" = 0 ]; then
-                                su -p "www-data" -s /bin/sh -c "\$1"
-                            else
-                                sh -c "\$1"
-                            fi
-                        }
-                        su -p "www-data" -s /bin/bash -c "php \$occ config:app:set sociallogin custom_providers --value='"'{
-                          "custom_oidc": [{
-                            "name": "keycloak",
-                            "title": "Keycloak Login",
-                            "authorizeUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/auth",
-                            "tokenUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/token",
-                            "userInfoUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/userinfo",
-                            "logoutUrl": "",
-                            "clientId": "{% .plugConfig.clientId %}",
-                            "clientSecret": "{% .plugConfig.clientSecret %}",
-                            "scope": "openid",
-                            "groupsClaim": "roles",
-                            "style": "",
-                            "defaultGroup": "",
-                            "groupMapping": {
-                              "admin": "admin"
-                            }
-                          }]
-                        }'"'"
+                patchStrategicMerge:
+                  data:
+                    setup-sociallogin.sh: |
+                      #!/bin/bash
+                      occ="/var/www/html/occ"
+                      run_as() {
+                          if [ "$(id -u)" = 0 ]; then
+                              su -p "www-data" -s /bin/sh -c "$1"
+                          else
+                              sh -c "$1"
+                          fi
+                      }
+                      su -p "www-data" -s /bin/bash -c "php $occ config:app:set sociallogin custom_providers --value='"'{
+                        "custom_oidc": [{
+                          "name": "keycloak",
+                          "title": "Keycloak Login",
+                          "authorizeUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/auth",
+                          "tokenUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/token",
+                          "userInfoUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/userinfo",
+                          "logoutUrl": "",
+                          "clientId": "{% .plugConfig.clientId %}",
+                          "clientSecret": "{% .plugConfig.clientSecret %}",
+                          "scope": "openid",
+                          "groupsClaim": "roles",
+                          "style": "",
+                          "defaultGroup": "",
+                          "groupMapping": {
+                            "admin": "admin"
+                          }
+                        }]
+                      }'"'"
 {{- end }}

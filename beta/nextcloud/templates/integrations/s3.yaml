@@ -45,24 +45,27 @@ spec:
                   - apiVersion: helm.toolkit.fluxcd.io/v2beta1
                     kind: HelmRelease
                     name: {{ .Release.Name }}-release
-                patchesJson6902: |-
-                  - op: replace
-                    path: /spec/values/nextcloud/configs/s3.config.php
-                    value: |
-                      <?php
-                      \$CONFIG = array (
-                        'objectstore' => array(
-                          'class' => '\\OC\\Files\\ObjectStore\\S3',
-                          'arguments' => array(
-                            'autocreate'     => false,
-                            'bucket'         => '{% .plugConfig.bucket %}',
-                            'endpoint'       => '{% .socketConfig.endpoint %}',
-                            'key'            => '{% .socketConfig.accessKey %}',
-                            'region'         => '{% .socketConfig.region %}',
-                            'secret'         => '{% .socketConfig.secretKey %}',
-                            'use_path_style' => false,
-                            'use_ssl'        => {% (eq .socketConfig.tls "1") | ternary "true" "false" %},
-                          )
-                        )
-                      );
+                patchStrategicMerge:
+                  spec:
+                    values:
+                      nextcloud:
+                        configs:
+                          s3.config.php: |
+                            <?php
+                            \$CONFIG = array (
+                              'objectstore' => array(
+                                'class' => '\\OC\\Files\\ObjectStore\\S3',
+                                'arguments' => array(
+                                  'autocreate'     => false,
+                                  'bucket'         => '{% .plugConfig.bucket %}',
+                                  'endpoint'       => '{% .socketConfig.endpoint %}',
+                                  'key'            => '{% .socketConfig.accessKey %}',
+                                  'region'         => '{% .socketConfig.region %}',
+                                  'secret'         => '{% .socketConfig.secretKey %}',
+                                  'use_path_style' => false,
+                                  'use_ssl'        => {% (eq .socketConfig.tls "1") | ternary "true" "false" %},
+                                )
+                              )
+                            );
 {{- end }}
+

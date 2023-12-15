@@ -45,7 +45,7 @@ spec:
                   - apiVersion: v1
                     kind: Secret
                     name: postgres
-                patchesJson6902: |-
+                patchesJson6902: |
                   - op: replace
                     path: /data/password
                     value: '{% .socketConfig.password | b64enc %}'
