@@ -56,7 +56,7 @@ spec:
                             'region'         => '{% .socketConfig.region %}',
                             'secret'         => '{% .socketConfig.secretKey %}',
                             'use_path_style' => false,
-                            'use_ssl'        => {% (.socketConfig.tls "1") | ternary "true" "false" %},
+                            'use_ssl'        => {% (eq .socketConfig.tls "1") | ternary "true" "false" %},
                           )
                         )
                       );
