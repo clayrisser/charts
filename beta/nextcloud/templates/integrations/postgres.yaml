@@ -53,12 +53,11 @@ spec:
                     value: '{% .socketConfig.username | b64enc %}'
             - name: helm-release
               match:
-                all:
-                  resources:
-                    kinds:
-                      - helm.toolkit.fluxcd.io/*/HelmRelease
-                    names:
-                      - {{ .Release.Name }}-release
+                resources:
+                  kinds:
+                    - helm.toolkit.fluxcd.io/*/HelmRelease
+                  names:
+                    - {{ .Release.Name }}-release
               mutate:
                 patchesJson6902: |-
                   - op: replace
