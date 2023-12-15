@@ -40,6 +40,10 @@ spec:
                   names:
                     - {{ .Release.Name }}-release
               mutate:
+                targets:
+                  - apiVersion: source.toolkit.fluxcd.io/v1beta1
+                    kind: HelmRelease
+                    name: {{ .Release.Name }}-release
                 patchesJson6902: |-
                   - op: replace
                     path: /spec/values/nextcloud/configs/s3.config.php
