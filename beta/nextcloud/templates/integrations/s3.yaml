@@ -31,6 +31,7 @@ spec:
         spec:
           background: true
           mutateExistingOnPolicyUpdate: true
+          schemaValidation: false
           rules:
             - name: helm-release
               match:
