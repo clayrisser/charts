@@ -271,6 +271,12 @@ questions:
         type: string
         required: false
         label: 's3 integration'
+      - variable: config.s3.preserve
+        description: ''
+        type: boolean
+        required: true
+        label: 's3 preserve'
+        show_if: config.s3.integration!=
       - variable: config.s3.endpoint
         description: ''
         type: string
