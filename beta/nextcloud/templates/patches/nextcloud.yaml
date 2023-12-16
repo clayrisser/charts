@@ -15,8 +15,9 @@ spec:
             - {{ .Release.Name }}-release
       preconditions:
         any:
-          - key: "{{"{{"}} request.object.spec.template.spec.containers[0].command {{"}}"}}"
-            operator: NotExists
+          - key: "{{"{{"}} request.object.spec.template.spec.containers[0].command || '' {{"}}"}}"
+            operator: Equals
+            value: ""
       mutate:
         targets:
           - apiVersion: apps/v1
