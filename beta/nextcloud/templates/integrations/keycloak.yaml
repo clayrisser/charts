@@ -33,8 +33,7 @@ spec:
     cleanup: 'false'
   configSecretName: keycloak-plug
   resources:
-    - when: [coupled, updated]
-      do: recreate
+    - do: recreate
       stringTemplate: |
         apiVersion: kyverno.io/v1
         kind: Policy
