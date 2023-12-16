@@ -11,8 +11,6 @@ data:
   setup-apps.sh: |
     #!/bin/bash
     set -e
-    exec > /var/www/tmp/nextcloud_apps.log
-    exec 2> /var/www/tmp/nextcloud_apps_error.log
     apps="
     {{- if .Values.config.onlyoffice.enabled }}
     onlyoffice
