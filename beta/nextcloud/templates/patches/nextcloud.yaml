@@ -1,0 +1,35 @@
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: nextcloud
+spec:
+  background: true
+  mutateExistingOnPolicyUpdate: true
+  schemaValidation: false
+  rules:
+    - name: deployment
+      match:
+        resources:
+          kinds:
+            - apps/*/Deployment
+          names:
+            - {{ .Release.Name }}-release
+      preconditions:
+        any:
+          - key: "{{"{{"}} request.object.spec.template.spec.containers[0].command || '' {{"}}"}}"
+            operator: Equals
+            value: ""
+      mutate:
+        targets:
+          - apiVersion: apps/v1
+            kind: Deployment
+            name: {{ .Release.Name }}-release
+        patchesJson6902: |
+          - op: add
+            path: /spec/template/spec/containers/0/command
+            value:
+              - /bin/sh
+              - -c
+              - |
+                /bin/bash /var/local/setup-apps.sh &
+                /bin/sh /entrypoint.sh apache2-foreground
