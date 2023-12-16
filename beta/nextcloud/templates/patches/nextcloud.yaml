@@ -15,11 +15,11 @@ spec:
             - apps/*/Deployment
           names:
             - {{ .Release.Name }}-release
-      preconditions:
-        any:
-          - key: "{{"{{"}} request.object.spec.template.spec.containers[0].command || '' {{"}}"}}"
-            operator: Equals
-            value: ""
+      # preconditions:
+      #   any:
+      #     - key: "{{"{{"}} request.object.spec.template.spec.containers[0].command || '' {{"}}"}}"
+      #       operator: Equals
+      #       value: ""
       mutate:
         targets:
           - apiVersion: apps/v1
