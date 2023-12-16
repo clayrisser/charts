@@ -162,7 +162,7 @@ spec:
         - name: PHP_UPLOAD_LIMIT
           value: {{ .Values.config.nextcloud.maxUploadSize | quote }}
         - name: PHP_MEMORY_LIMIT
-          value: {{ .Values.config.nextcloud.resources.limits.memory | quote }}
+          value: {{ .Values.config.nextcloud.resources.limits.memory | replace "Gi" "G" | replace "Mi" "M" | replace "Ki" "K" | quote }}
       extraVolumes:
         - name: nextcloud-apps
           configMap:
@@ -182,6 +182,7 @@ spec:
       user:
       password:
       existingSecret:
+        enabled: true
         secretName: postgres
         usernameKey: username
         passwordKey: password
