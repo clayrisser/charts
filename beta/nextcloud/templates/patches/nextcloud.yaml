@@ -2,6 +2,10 @@ apiVersion: kyverno.io/v1
 kind: Policy
 metadata:
   name: nextcloud
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: '5'
+    helm.sh/hook-delete-policy: hook-succeeded
 spec:
   background: true
   mutateExistingOnPolicyUpdate: true
