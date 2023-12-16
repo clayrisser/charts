@@ -19,9 +19,9 @@ spec:
     bucket: {{ .Values.config.s3.bucket | quote }}
     create: '1'
     preserve: {{ .Values.config.s3.preserve | ternary "1" "0" | quote }}
-  resources:
+  resultResources:
     - when: [coupled, updated]
-      do: apply
+      do: recreate
       stringTemplate: |
         apiVersion: kyverno.io/v1
         kind: Policy
