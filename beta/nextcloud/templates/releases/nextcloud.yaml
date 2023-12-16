@@ -158,7 +158,7 @@ spec:
         type: Recreate
       extraEnv:
         - name: APACHE_BODY_LIMIT
-          value: {{ .Values.config.nextcloud.maxUploadSize | quote }}
+          value: '0'
         - name: PHP_UPLOAD_LIMIT
           value: {{ .Values.config.nextcloud.maxUploadSize | quote }}
         - name: PHP_MEMORY_LIMIT
