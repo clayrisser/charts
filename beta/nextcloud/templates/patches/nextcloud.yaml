@@ -6,6 +6,7 @@ spec:
   background: true
   mutateExistingOnPolicyUpdate: true
   schemaValidation: false
+  validationFailureAction: Audit
   rules:
     - name: deployment
       match:
