@@ -15,7 +15,7 @@ spec:
             - {{ .Release.Name }}-release
       preconditions:
         any:
-          - key: "{{ request.object.spec.template.spec.containers[0].command }}"
+          - key: "{{"{{"}} request.object.spec.template.spec.containers[0].command {{"}}"}}"
             operator: NotExists
       mutate:
         targets:
