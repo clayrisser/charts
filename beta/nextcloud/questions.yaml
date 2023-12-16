@@ -275,7 +275,7 @@ questions:
         description: ''
         type: boolean
         required: true
-        label: 's3 preserve'
+        label: preserve
         show_if: config.s3.integration!=
       - variable: config.s3.endpoint
         description: ''
