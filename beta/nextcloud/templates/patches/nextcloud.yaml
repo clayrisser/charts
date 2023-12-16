@@ -20,7 +20,7 @@ spec:
           - apiVersion: apps/v1
             kind: Deployment
             name: {{ .Release.Name }}-release
-        patchesStrategicMerge:
+        patchStrategicMerge:
           - spec:
               template:
                 spec:
