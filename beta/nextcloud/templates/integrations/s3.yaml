@@ -33,7 +33,7 @@ spec:
           mutateExistingOnPolicyUpdate: true
           schemaValidation: false
           rules:
-            - name: helm-release
+            - name: helmrelease
               match:
                 resources:
                   kinds:
@@ -59,13 +59,32 @@ spec:
                                   'autocreate'     => false,
                                   'bucket'         => '{% .plugConfig.bucket %}',
                                   'endpoint'       => '{% .socketConfig.endpoint %}',
-                                  'key'            => '{% .socketConfig.accessKey %}',
                                   'region'         => '{% .socketConfig.region %}',
-                                  'secret'         => '{% .socketConfig.secretKey %}',
                                   'use_path_style' => false,
                                   'use_ssl'        => {% (eq .socketConfig.tls "1") | ternary "true" "false" %},
+                                  {%- if .socketConfig.accessKey %}
+                                  'key'            => '{% .socketConfig.accessKey %}',
+                                  {%- end %}
+                                  {%- if .socketConfig.secretKey %}
+                                  'secret'         => '{% .socketConfig.secretKey %}',
+                                  {%- end %}
                                 )
                               )
                             );
+            - name: serviceaccount
+              match:
+                resources:
+                  kinds:
+                    - /*/ServiceAccount
+                  names:
+                    - nextcloud-serviceaccount
+              mutate:
+                targets:
+                  - apiVersion: v1
+                    kind: ServiceAccount
+                    name: nextcloud-serviceaccount
+                patchStrategicMerge:
+                  metadata:
+                    annotations:
+                      eks.amazonaws.com/role-arn: {% .socketResult.roleArn | quote %}
 {{- end }}
-
