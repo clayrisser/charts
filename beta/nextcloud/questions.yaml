@@ -571,6 +571,8 @@ questions:
           - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - route53-staging
+          - route53-prod
           - selfsigned
         required: false
         label: 'pdfdraw ingress issuer name'

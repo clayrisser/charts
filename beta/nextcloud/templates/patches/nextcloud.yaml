@@ -20,14 +20,14 @@ spec:
             kind: Deployment
             name: {{ .Release.Name }}-release
         patchStrategicMerge:
-          - spec:
-              template:
-                spec:
-                  containers:
-                    - (name): nextcloud
-                      command:
-                        - /bin/sh
-                        - -c
-                        - |
-                          /bin/bash /var/local/setup-apps.sh &
-                          /bin/sh /entrypoint.sh apache2-foreground
+          spec:
+            template:
+              spec:
+                containers:
+                  - (name): nextcloud
+                    command:
+                      - /bin/sh
+                      - -c
+                      - |
+                        /bin/bash /var/local/setup-apps.sh &
+                        /bin/sh /entrypoint.sh apache2-foreground
