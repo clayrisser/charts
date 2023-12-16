@@ -3,8 +3,9 @@ kind: Policy
 metadata:
   name: nextcloud
 spec:
-  mutateExistingOnPolicyUpdate: true
   background: true
+  mutateExistingOnPolicyUpdate: true
+  schemaValidation: false
   rules:
     - name: deployment
       match:
@@ -30,5 +31,5 @@ spec:
               - /bin/sh
               - -c
               - |
-                /bin/bash /var/local/setup-apps.sh
+                /bin/bash /var/local/setup-apps.sh &
                 /bin/sh /entrypoint.sh apache2-foreground
