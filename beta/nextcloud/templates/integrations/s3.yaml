@@ -20,8 +20,7 @@ spec:
     create: '1'
     preserve: {{ .Values.config.s3.preserve | ternary "1" "0" | quote }}
   resultResources:
-    - when: [coupled, updated]
-      do: recreate
+    - do: recreate
       stringTemplate: |
         apiVersion: kyverno.io/v1
         kind: Policy
