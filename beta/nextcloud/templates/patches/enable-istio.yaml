@@ -7,7 +7,6 @@ spec:
   mutateExistingOnPolicyUpdate: true
   background: true
   schemaValidation: false
-  validationFailureAction: Audit
   rules:
     - name: enable-istio
       match:
