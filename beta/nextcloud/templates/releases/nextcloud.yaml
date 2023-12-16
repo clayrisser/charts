@@ -264,4 +264,7 @@ spec:
       serviceaccount:
         create: true
         name: nextcloud-serviceaccount
-    lifecycle: {}
+    lifecycle:
+      postStartCommand:
+        - '/bin/bash'
+        - '/var/local/setup-apps.sh'
