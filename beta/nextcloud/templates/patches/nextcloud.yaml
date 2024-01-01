@@ -1,5 +1,5 @@
-apiVersion: kyverno.io/v1
-kind: Policy
+apiVersion: integration.rock8s.com/v1beta1
+kind: DeferredResource
 metadata:
   name: nextcloud
   annotations:
@@ -7,31 +7,45 @@ metadata:
     helm.sh/hook-weight: '5'
     helm.sh/hook-delete-policy: hook-succeeded
 spec:
-  background: true
-  mutateExistingOnPolicyUpdate: true
-  schemaValidation: false
-  rules:
-    - name: deployment
-      match:
-        resources:
-          kinds:
-            - apps/*/Deployment
-          names:
-            - {{ .Release.Name }}-release
-      mutate:
-        targets:
-          - apiVersion: apps/v1
-            kind: Deployment
-            name: {{ .Release.Name }}-release
-        patchStrategicMerge:
-          spec:
-            template:
+  waitFor:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: {{ .Release.Name }}-release
+  resource:
+    apiVersion: kyverno.io/v1
+    kind: Policy
+    metadata:
+      name: nextcloud
+      annotations:
+        helm.sh/hook: post-install
+        helm.sh/hook-weight: '5'
+        helm.sh/hook-delete-policy: hook-succeeded
+    spec:
+      background: true
+      mutateExistingOnPolicyUpdate: true
+      schemaValidation: false
+      rules:
+        - name: deployment
+          match:
+            resources:
+              kinds:
+                - apps/*/Deployment
+              names:
+                - {{ .Release.Name }}-release
+          mutate:
+            targets:
+              - apiVersion: apps/v1
+                kind: Deployment
+                name: {{ .Release.Name }}-release
+            patchStrategicMerge:
               spec:
-                containers:
-                  - (name): nextcloud
-                    command:
-                      - /bin/sh
-                      - -c
-                      - |
-                        /bin/bash /var/local/setup-apps.sh &
-                        /bin/sh /entrypoint.sh apache2-foreground
+                template:
+                  spec:
+                    containers:
+                      - (name): nextcloud
+                        command:
+                          - /bin/sh
+                          - -c
+                          - |
+                            /bin/bash /var/local/setup-apps.sh &
+                            /bin/sh /entrypoint.sh apache2-foreground
