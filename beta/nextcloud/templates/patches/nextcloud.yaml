@@ -6,7 +6,7 @@ spec:
   waitFor:
     - apiVersion: apps/v1
       kind: Deployment
-      name: release
+      name: {{ .Release.Name }}-release
   resource:
     apiVersion: kyverno.io/v1
     kind: Policy
