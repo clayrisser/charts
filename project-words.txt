@@ -8,6 +8,7 @@ apikey
 apiserver
 apporder
 audioplayer
+autocreate
 automount
 bitnami
 bitspur
@@ -22,6 +23,7 @@ crds
 creds
 crossplane
 crunchydata
+curlopt
 digitalocean
 digitaloceanspaces
 documentserver
@@ -49,6 +51,7 @@ imaps
 imgproxy
 inet
 inetorgperson
+irsa
 istio
 jboss
 kanister
@@ -76,6 +79,7 @@ mkdir
 multline
 nestjs
 nextcloud
+objectstore
 occweb
 onlyoffice
 openldap
@@ -94,6 +98,7 @@ pguser
 phpldapadmin
 phpmyadmin
 posix
+postfields
 postgres
 postgresql
 postgrey
@@ -109,6 +114,7 @@ rabbitmq
 rainloop
 repositoryserver
 restic
+returntransfer
 risser
 risserlabs
 robrotheram
@@ -118,6 +124,7 @@ selfsigned
 sendgrid
 sendinblue
 sendmailanalyzer
+serviceaccount
 shortcircuit
 sigalen
 signin
