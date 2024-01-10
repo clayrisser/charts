@@ -67,21 +67,25 @@ spec:
                                     'Action' => 'AssumeRoleWithWebIdentity',
                                     'RoleArn' => "{% .socketResult.roleArn %}",
                                     'RoleSessionName' => "NextCloudSession",
-                                    'WebIdentityToken' => file_get_contents('/var/run/secrets/kubernetes.io/serviceaccount/token'),
+                                    'WebIdentityToken' => file_get_contents('/var/run/secrets/eks.amazonaws.com/serviceaccount/token'),
                                     'Version' => '2011-06-15'
                                   ])
                                 ]);
                                 $response = curl_exec($ch);
                                 curl_close ($ch);
                                 if ($response !== false) {
-                                  $xml = simplexml_load_string($response);
-                                  $credentials = [
-                                    'AccessKeyId' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->AccessKeyId,
-                                    'SecretAccessKey' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->SecretAccessKey,
-                                    'SessionToken' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->SessionToken,
-                                    'Expiration' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->Expiration
-                                  ];
-                                  apcu_store('irsaCredentials', $credentials);
+                                  if (curl_getinfo($ch, CURLINFO_HTTP_CODE) != 200) {
+                                    error_log($response);
+                                  } else {
+                                    $xml = simplexml_load_string($response);
+                                    $credentials = [
+                                      'AccessKeyId' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->AccessKeyId,
+                                      'SecretAccessKey' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->SecretAccessKey,
+                                      'SessionToken' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->SessionToken,
+                                      'Expiration' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->Expiration
+                                    ];
+                                    apcu_store('irsaCredentials', $credentials);
+                                  }
                                 }
                               } catch (Exception $e) {
                                 error_log($e->getMessage());
