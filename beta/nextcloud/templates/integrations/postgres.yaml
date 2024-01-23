@@ -45,13 +45,10 @@ spec:
                   - apiVersion: v1
                     kind: Secret
                     name: postgres
-                patchesJson6902: |
-                  - op: replace
-                    path: /data/password
-                    value: '{% .socketConfig.password | b64enc %}'
-                  - op: replace
-                    path: /data/username
-                    value: '{% .socketConfig.username | b64enc %}'
+                patchStrategicMerge:
+                  data:
+                    password: '{% .socketConfig.password | b64enc %}'
+                    username: '{% .socketConfig.username | b64enc %}'
             - name: helm-release
               match:
                 resources:
@@ -64,14 +61,13 @@ spec:
                   - apiVersion: helm.toolkit.fluxcd.io/v2beta1
                     kind: HelmRelease
                     name: {{ .Release.Name }}-release
-                patchesJson6902: |-
-                  - op: replace
-                    path: /spec/values/externalDatabase/database
-                    value: '{% .plugConfig.database %}'
-                  - op: replace
-                    path: /spec/values/externalDatabase/host
-                    value: '{% .socketConfig.hostname %}'
-                  - op: replace
-                    path: /spec/chart/spec/chart
-                    value: nextcloud
+                patchStrategicMerge:
+                  spec:
+                    values:
+                      externalDatabase:
+                        database: '{% .plugConfig.database %}'
+                        host: '{% .socketConfig.hostname %}'
+                      chart:
+                        spec:
+                          chart: nextcloud
 {{- end }}
