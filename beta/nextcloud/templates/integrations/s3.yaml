@@ -51,47 +51,6 @@ spec:
                         configs:
                           s3.config.php: |
                             <?php
-                            {%- if (not (and .socketConfig.accessKey .socketConfig.secretKey)) %}
-                            $credentials = apcu_exists('irsaCredentials') ? apcu_fetch('irsaCredentials') : [];
-                            $current_time = new DateTime();
-                            $expiration_time = isset($credentials['Expiration']) ? new DateTime($credentials['Expiration']) : $current_time;
-                            if ($current_time >= $expiration_time) $credentials = [];
-                            if (empty($credentials)) {
-                              try {
-                                $ch = curl_init();
-                                curl_setopt_array($ch, [
-                                  CURLOPT_URL => 'https://sts.amazonaws.com/',
-                                  CURLOPT_POST => true,
-                                  CURLOPT_RETURNTRANSFER => true,
-                                  CURLOPT_POSTFIELDS => http_build_query([
-                                    'Action' => 'AssumeRoleWithWebIdentity',
-                                    'RoleArn' => "{% .socketResult.roleArn %}",
-                                    'RoleSessionName' => "NextCloudSession",
-                                    'WebIdentityToken' => file_get_contents('/var/run/secrets/eks.amazonaws.com/serviceaccount/token'),
-                                    'Version' => '2011-06-15'
-                                  ])
-                                ]);
-                                $response = curl_exec($ch);
-                                curl_close ($ch);
-                                if ($response !== false) {
-                                  if (curl_getinfo($ch, CURLINFO_HTTP_CODE) != 200) {
-                                    error_log($response);
-                                  } else {
-                                    $xml = simplexml_load_string($response);
-                                    $credentials = [
-                                      'AccessKeyId' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->AccessKeyId,
-                                      'SecretAccessKey' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->SecretAccessKey,
-                                      'SessionToken' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->SessionToken,
-                                      'Expiration' => (string) $xml->AssumeRoleWithWebIdentityResult->Credentials->Expiration
-                                    ];
-                                    apcu_store('irsaCredentials', $credentials);
-                                  }
-                                }
-                              } catch (Exception $e) {
-                                error_log($e->getMessage());
-                              }
-                            }
-                            {%- end %}
                             $CONFIG = [
                               'objectstore' => [
                                 'class' => '\\OC\\Files\\ObjectStore\\S3',
@@ -100,33 +59,16 @@ spec:
                                   'bucket'         => '{% .plugConfig.bucket %}',
                                   'endpoint'       => '{% .socketConfig.endpoint %}',
                                   'region'         => '{% .socketConfig.region %}',
-                                  'use_path_style' => false,
                                   'use_ssl'        => {% (eq .socketConfig.tls "1") | ternary "true" "false" %},
                                   {%- if (and .socketConfig.accessKey .socketConfig.secretKey) %}
                                   'key'            => '{% .socketConfig.accessKey %}',
                                   'secret'         => '{% .socketConfig.secretKey %}',
-                                  {%- else %}
-                                  'key'            => isset($credentials['AccessKeyId']) ? $credentials['AccessKeyId'] : '',
-                                  'secret'         => isset($credentials['SecretAccessKey']) ? $credentials['SecretAccessKey'] : '',
-                                  'token'          => isset($credentials['SessionToken']) ? $credentials['SessionToken'] : '',
                                   {%- end %}
                                 ]
                               ]
                             ];
-            - name: serviceaccount
-              match:
-                resources:
-                  kinds:
-                    - /*/ServiceAccount
-                  names:
-                    - nextcloud-serviceaccount
-              mutate:
-                targets:
-                  - apiVersion: v1
-                    kind: ServiceAccount
-                    name: nextcloud-serviceaccount
-                patchStrategicMerge:
-                  metadata:
-                    annotations:
-                      eks.amazonaws.com/role-arn: {% .socketResult.roleArn | quote %}
+                      rbac:
+                        serviceaccount:
+                          annotations:
+                            eks.amazonaws.com/role-arn: {% .socketResult.roleArn | quote %}
 {{- end }}

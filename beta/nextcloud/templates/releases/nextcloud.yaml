@@ -145,10 +145,13 @@ spec:
                 'autocreate' => true,
                 'bucket'     => '{{ .Values.config.s3.bucket }}',
                 'endpoint'   => '{{ .Values.config.s3.endpoint | default (printf "s3.%s.amazonaws.com" .Values.config.s3.region) }}',
+                {{- if .Values.config.s3.accessKey }}
                 'key'        => '{{ .Values.config.s3.accessKey }}',
+                {{- end }}
                 'region'     => '{{ .Values.config.s3.region }}',
+                {{- if .Values.config.s3.secretKey }}
                 'secret'     => '{{ .Values.config.s3.secretKey }}',
-                'use_path_style' => true,
+                {{- end }}
                 'use_ssl'    => true
               )
             )
