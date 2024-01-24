@@ -33,18 +33,6 @@ spec:
           mutateExistingOnPolicyUpdate: true
           schemaValidation: false
           rules:
-            - name: service-account
-              match:
-                resources:
-                  kinds:
-                    - /*/ServiceAccount
-                  names:
-                    - nextcloud-serviceaccount
-              mutate:
-                patchStrategicMerge:
-                  metadata:
-                    annotations:
-                      eks.amazonaws.com/role-arn: {% .socketResult.roleArn | quote %}
             - name: helm-release
               match:
                 resources:
