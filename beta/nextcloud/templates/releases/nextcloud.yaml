@@ -24,7 +24,11 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: {{ (empty .Values.config.postgres.integration) | ternary "nextcloud" "waiting-for-integration" }}
+      {{- if (or .Values.config.postgres.integration (or (and .Values.config.keycloak.enabled .Values.config.keycloak.integration) (and .Values.config.s3.enabled .Values.config.s3.integration))) }}
+      chart: waiting-for-ready
+      {{- else }}
+      chart: nextcloud
+      {{- end }}
       version: {{ .Chart.Version | quote }}
       sourceRef:
         apiVersion: source.toolkit.fluxcd.io/v1beta1

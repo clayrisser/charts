@@ -1,3 +1,4 @@
+{{- if (or .Values.config.postgres.integration (or (and .Values.config.keycloak.enabled .Values.config.keycloak.integration) (and .Values.config.s3.enabled .Values.config.s3.integration))) }}
 apiVersion: integration.rock8s.com/v1beta1
 kind: DeferredResource
 metadata:
@@ -30,3 +31,4 @@ spec:
               - op: replace
                 path: /spec/chart/spec/chart
                 value: nextcloud
+{{- end }}

@@ -1,4 +1,4 @@
-{{- if (not (empty .Values.config.keycloak.integration)) }}
+{{- if (and .Values.config.keycloak.enabled .Values.config.keycloak.integration) }}
 {{- $existingSecret := lookup "v1" "Secret" .Release.Namespace "keycloak-plug" }}
 apiVersion: v1
 kind: Secret
