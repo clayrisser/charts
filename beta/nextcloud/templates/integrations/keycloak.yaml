@@ -74,9 +74,9 @@ spec:
                         "custom_oidc": [{
                           "name": "keycloak",
                           "title": "Keycloak Login",
-                          "authorizeUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/auth",
-                          "tokenUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/token",
-                          "userInfoUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/userinfo",
+                          "authorizeUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.defaultRealm %}/protocol/openid-connect/auth",
+                          "tokenUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.defaultRealm %}/protocol/openid-connect/token",
+                          "userInfoUrl": "{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.defaultRealm %}/protocol/openid-connect/userinfo",
                           "logoutUrl": "",
                           "clientId": "{% .plugConfig.clientId %}",
                           "clientSecret": "{% .plugConfig.clientSecret %}",

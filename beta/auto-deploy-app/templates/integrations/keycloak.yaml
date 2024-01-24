@@ -45,7 +45,7 @@ spec:
   resources:
     - when: [coupled, updated]
       do: apply
-      resource: |
+      stringTemplate: |
           apiVersion: v1
           kind: Secret
           metadata:
@@ -57,5 +57,5 @@ spec:
             KEYCLOAK_BASE_URL: '{% .socketConfig.keycloakBaseUrl %}'
             KEYCLOAK_CLIENT_ID: '{% .plugConfig.clientId %}'
             KEYCLOAK_CLIENT_SECRET: '{% .plugConfig.clientSecret %}'
-            KEYCLOAK_REALM: '{% .plugConfig.realm | default .socketConfig.keycloakRealm %}'
+            KEYCLOAK_REALM: '{% .plugConfig.realm | default .socketConfig.defaultRealm %}'
 {{- end }}

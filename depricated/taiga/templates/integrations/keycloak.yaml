@@ -63,11 +63,11 @@ spec:
                     value: {% .plugConfig.clientSecret | quote %}
                   - op: replace
                     path: /spec/values/env/openidTokenUrl
-                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/token'
+                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.defaultRealm %}/protocol/openid-connect/token'
                   - op: replace
                     path: /spec/values/env/openidUserUrl
-                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/userinfo'
+                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.defaultRealm %}/protocol/openid-connect/userinfo'
                   - op: replace
                     path: /spec/values/env/openidUrl
-                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.keycloakRealm %}/protocol/openid-connect/auth'
+                    value: '{% .socketConfig.keycloakBaseUrl %}/realms/{% .socketConfig.defaultRealm %}/protocol/openid-connect/auth'
 {{- end }}
