@@ -1,0 +1,32 @@
+apiVersion: integration.rock8s.com/v1beta1
+kind: DeferredResource
+metadata:
+  name: ready
+spec:
+  timeout: 300
+  resource:
+    apiVersion: kyverno.io/v1
+    kind: Policy
+    metadata:
+      name: ready
+    spec:
+      background: true
+      mutateExistingOnPolicyUpdate: true
+      schemaValidation: false
+      rules:
+        - name: helm-release
+          match:
+            resources:
+              kinds:
+                - helm.toolkit.fluxcd.io/*/HelmRelease
+              names:
+                - {{ .Release.Name }}-release
+          mutate:
+            targets:
+              - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+                kind: HelmRelease
+                name: {{ .Release.Name }}-release
+            patchesJson6902: |-
+              - op: replace
+                path: /spec/chart/spec/chart
+                value: nextcloud

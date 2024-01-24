@@ -71,7 +71,4 @@ spec:
                   - op: replace
                     path: /spec/values/externalDatabase/host
                     value: '{% .socketConfig.hostname %}'
-                  - op: replace
-                    path: /spec/chart/spec/chart
-                    value: nextcloud
 {{- end }}
