@@ -4,7 +4,7 @@ kind: DeferredResource
 metadata:
   name: ready
 spec:
-  timeout: 300
+  timeout: 180
   resource:
     apiVersion: kyverno.io/v1
     kind: Policy
