@@ -15,6 +15,7 @@ spec:
         bucket: {}
         create: {}
         preserve: {}
+        serviceAccountName: {}
       socket:
         endpoint:
           required: true
@@ -67,6 +68,7 @@ spec:
         metadata:
           name: '{% .plug.metadata.name %}-{% .plug.metadata.namespace %}'
         spec:
+          serviceAccountName: '{% .plugConfig.serviceAccountName | default "default" %}'
           delegate:
             namespace: '{% .plug.metadata.namespace %}'
             s3irsa:

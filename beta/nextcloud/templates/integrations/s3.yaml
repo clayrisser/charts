@@ -19,6 +19,7 @@ spec:
     bucket: {{ .Values.config.s3.bucket | quote }}
     create: '1'
     preserve: {{ .Values.config.s3.preserve | ternary "1" "0" | quote }}
+    serviceAccountName: nextcloud-serviceaccount
   resultResources:
     - do: recreate
       stringTemplate: |

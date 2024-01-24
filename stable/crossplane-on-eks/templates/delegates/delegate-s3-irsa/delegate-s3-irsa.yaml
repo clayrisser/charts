@@ -64,7 +64,7 @@ spec:
           fromFieldPath: spec.delegate.namespace
           toFieldPath: spec.delegate.namespace
         - type: FromCompositeFieldPath
-          fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          fromFieldPath: spec.serviceAccountName
           toFieldPath: spec.serviceAccountName
         - type: ToCompositeFieldPath
           fromFieldPath: status.roleName
