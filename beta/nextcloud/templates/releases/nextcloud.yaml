@@ -269,6 +269,6 @@ spec:
     rbac:
       enabled: true
       serviceaccount:
-        create: true
+        create: false
         name: nextcloud-serviceaccount
     lifecycle: {}
