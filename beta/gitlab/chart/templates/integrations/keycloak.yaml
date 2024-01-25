@@ -12,10 +12,10 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  epoch: "1646238016"
+  epoch: {{ now | unixEpoch | quote }}
   socket:
     name: keycloak
-    namespace: {{$namespace}}
+    namespace: {{ $namespace }}
   config:
     clientId: {{ .Values.config.keycloak.clientId }}
     redirectUris: "*"
