@@ -2,6 +2,29 @@
 
 > a safe home for all your data
 
+## Maintenance
+
+Use the following to run the `occ` command
+
+```sh
+su -p www-data -s /bin/sh -c "./occ"
+```
+
+### Upgrade App
+
+_upgrade single app_
+```sh
+su -p www-data -s /bin/sh -c "./occ app:update -vvv --no-interaction <APP_NAME>"
+su -p www-data -s /bin/sh -c "./occ app:update -vvv maintenance:repair"
+```
+
+_upgrade all apps_
+
+```sh
+su -p www-data -s /bin/sh -c "./occ app:update -vvv --no-interaction --all"
+su -p www-data -s /bin/sh -c "./occ maintenance:repair -vvv"
+```
+
 ## Default Apps
 
 the following apps recommended
