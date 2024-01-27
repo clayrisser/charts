@@ -354,6 +354,8 @@ questions:
           - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - route53-staging
+          - route53-prod
         required: true
         label: 'nginx ingress issuer name'
       - variable: ingress.nginx.certificate
