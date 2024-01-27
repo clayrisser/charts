@@ -28,6 +28,7 @@ config:
     s3:
       integration: ''
       bucket: ''
+      preserve: true
       prefix: erpnext
       accessKey: ''
       endpoint: ''

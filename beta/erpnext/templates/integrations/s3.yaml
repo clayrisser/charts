@@ -17,6 +17,9 @@ spec:
     namespace: {{ $namespace }}
   config:
     bucket: {{ .Values.config.backup.s3.bucket | quote }}
+    create: '1'
+    preserve: {{ .Values.config.backup.s3.preserve | ternary "1" "0" | quote }}
+    serviceAccountName: {{ .Release.Name }}-release
   resources:
     - when: [coupled, updated]
       do: apply
@@ -29,6 +32,7 @@ spec:
         spec:
           mutateExistingOnPolicyUpdate: true
           background: true
+          schemaValidation: false
           rules:
             - name: helm-release
               match:
@@ -45,18 +49,12 @@ spec:
                       enabled: true
                       bucket: {% .socketConfig.bucket | quote %}
                       region: {% .socketConfig.region | quote %}
+                      endpoint: '{% printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint %}/{{ .Values.config.backup.s3.prefix }}'
+                      {%- if (and .socketConfig.accessKey .socketConfig.secretKey) %}
                       accessKey: {% .socketConfig.accessKey | quote %}
                       secretKey: {% .socketConfig.secretKey | quote %}
-                      endpoint: '{% printf "http%s://%s" ((eq .socketConfig.tls "1") | ternary "s" "") .socketConfig.endpoint %}/{{ .Values.config.backup.s3.prefix }}'
+                      {%- end %}
                   - op: replace
                     path: /spec/values/jobs/backup/enabled
                     value: true
-    - when: [decoupled]
-      do: delete
-      template:
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: s3
-            namespace: {{ .Release.Namespace }}
 {{- end }}

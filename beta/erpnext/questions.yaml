@@ -164,6 +164,12 @@ questions:
         type: string
         required: false
         label: 's3 integration'
+      - variable: config.backup.s3.preserve
+        description: ''
+        type: boolean
+        required: true
+        label: preserve
+        show_if: config.backup.s3.integration!=
       - variable: config.backup.s3.endpoint
         description: ''
         type: string
