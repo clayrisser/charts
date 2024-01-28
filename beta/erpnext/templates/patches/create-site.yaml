@@ -21,6 +21,10 @@ spec:
           names:
             - {{ .Release.Name }}-release
       mutate:
+        targets:
+          - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+            kind: HelmRelease
+            name: {{ .Release.Name }}-release
         patchesJson6902: |
           - op: replace
             path: /spec/values/jobs/createSite/enabled
