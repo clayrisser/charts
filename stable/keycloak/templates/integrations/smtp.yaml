@@ -38,6 +38,6 @@ spec:
                   names:
                     - {{ template "keycloak.name" . }}
               mutate:
-                patchesJson6902: |-
+                patchesJson6902: |
                   # TODO
 {{- end }}

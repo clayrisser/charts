@@ -54,7 +54,7 @@ spec:
                   names:
                     - {{ .Release.Name }}-release
               mutate:
-                patchesJson6902: |-
+                patchesJson6902: |
                   - op: replace
                     path: /spec/values/env/openidClientId
                     value: {% .plugConfig.clientId | quote %}

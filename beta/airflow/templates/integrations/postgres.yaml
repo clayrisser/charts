@@ -45,7 +45,7 @@ spec:
                   - apiVersion: v1
                     kind: Secret
                     name: {{ template "airflow.name" . }}-metadata
-                patchesJson6902: |-
+                patchesJson6902: |
                   - op: replace
                     path: /data/connection
                     value: {% (printf "postgresql://%s:%s@%s:%s/%s?sslmode=disable" .socketConfig.username .socketConfig.password .socketConfig.hostname .socketConfig.port .plugConfig.database) | b64enc | quote %}

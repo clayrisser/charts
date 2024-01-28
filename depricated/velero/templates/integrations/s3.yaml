@@ -42,7 +42,7 @@ spec:
                   - apiVersion: v1
                     kind: Secret
                     name: cloud-credentials
-                patchesJson6902: |-
+                patchesJson6902: |
                   - op: replace
                     path: /data/cloud
                     value: {% printf "[default]\naws_access_key_id=%s\naws_secret_access_key=%s" .socketConfig.accessKey .socketConfig.secretKey | b64enc | quote %}

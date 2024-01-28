@@ -3,10 +3,15 @@ apiVersion: kyverno.io/v1
 kind: Policy
 metadata:
   name: create-site
-  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "erpnext.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   mutateExistingOnPolicyUpdate: true
   background: true
+  schemaValidation: false
   rules:
     - name: helm-release
       match:
@@ -16,7 +21,7 @@ spec:
           names:
             - {{ .Release.Name }}-release
       mutate:
-        patchesJson6902: |-
+        patchesJson6902: |
           - op: replace
             path: /spec/values/jobs/createSite/enabled
             value: true

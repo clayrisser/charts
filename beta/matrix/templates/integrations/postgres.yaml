@@ -41,7 +41,7 @@ spec:
                   names:
                     - {{ .Release.Name }}-release
               mutate:
-                patchesJson6902: |-
+                patchesJson6902: |
                   - op: replace
                     path: /spec/values/externalDatabase/database
                     value: '{% .plugConfig.database %}'
@@ -60,7 +60,7 @@ spec:
                   - apiVersion: v1
                     kind: Secret
                     name: postgres
-                patchesJson6902: |-
+                patchesJson6902: |
                   - op: replace
                     path: /spec/data/password
                     value: '{% .socketConfig.password | b64enc %}'
