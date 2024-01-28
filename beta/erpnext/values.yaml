@@ -23,17 +23,6 @@ config:
       limits:
         cpu: 200m
         memory: 512Mi
-  backup:
-    enabled: false
-    s3:
-      integration: ''
-      bucket: ''
-      preserve: true
-      prefix: erpnext
-      accessKey: ''
-      endpoint: ''
-      region: us-west-2
-      secretKey: ''
   erpnext:
     replicas: 1
     initialApps: |
