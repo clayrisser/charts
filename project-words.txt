@@ -87,6 +87,8 @@ opensearch
 opensearchproject
 osixia
 pdfdraw
+penpot
+penpotapp
 percona
 perconalab
 pflogsumm

@@ -6,7 +6,7 @@ kind: Plug
 metadata:
   name: postgres
   labels:
-    app.kubernetes.io/name: {{ template "keycloak.name" . }}
+    app.kubernetes.io/name: {{ template "penpot.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -26,11 +26,11 @@ spec:
         apiVersion: v1
         kind: Secret
         metadata:
-          name: keycloak-db-secret
+          name: postgres
           namespace: {{ .Release.Namespace }}
         stringData:
-          POSTGRES_PASSWORD: {% .socketConfig.password | quote %}
-          POSTGRES_USERNAME: {% .socketConfig.username | quote %}
+          password: {% .socketConfig.password | quote %}
+          username: {% .socketConfig.username | quote %}
     - when: [coupled, updated]
       do: recreate
       stringTemplate: |
@@ -44,26 +44,26 @@ spec:
           mutateExistingOnPolicyUpdate: true
           schemaValidation: false
           rules:
-            - name: keycloak
+            - name: penpot
               match:
                 resources:
                   kinds:
-                    - k8s.keycloak.org/*/Keycloak
+                    - helm.toolkit.fluxcd.io/*/HelmRelease
                   names:
-                    - {{ template "keycloak.name" . }}
+                    - {{ template "penpot.name" . }}
               mutate:
                 targets:
-                  - apiVersion: k8s.keycloak.org/v2alpha1
-                    kind: Keycloak
-                    name: {{ template "keycloak.name" . }}
+                  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+                    kind: HelmRelease
+                    name: {{ .Release.Name }}-release
                 patchesJson6902: |
                   - op: replace
-                    path: /spec/db/database
+                    path: /spec/values/config/postgresql/database
                     value: {% .plugConfig.database | quote %}
                   - op: replace
-                    path: /spec/db/host
+                    path: /spec/values/config/postgresql/host
                     value: {% .socketConfig.hostname | quote %}
                   - op: replace
-                    path: /spec/db/port
+                    path: /spec/values/config/postgresql/port
                     value: {% .socketConfig.port %}
 {{- end }}

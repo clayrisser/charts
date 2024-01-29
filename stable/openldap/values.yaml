@@ -73,13 +73,13 @@ ingress:
       customName: ''
 
 persistence:
-  accessMode: ReadWriteOnce
   enabled: true
+  accessMode: ReadWriteOnce
   storageClass: ''
   existingClaim:
-    openldap: ''
+    penpot: ''
   size:
-    openldap: 1Gi
+    penpot: 1Gi
   kanister:
     enabled: false
     schedule: '0 0 * * *'

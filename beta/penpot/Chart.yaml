@@ -1,0 +1,14 @@
+apiVersion: v1
+name: penpot
+home: https://penpot.app
+icon: https://site-assets.plasmic.app/5a092f8c015ea24a9c0953e5ca065580.svg
+version: 1.0.10
+appVersion: 1.19.3
+description: 'open-source design and prototyping platform'
+keywords:
+  - design
+sources:
+  - https://github.com/tootsuite/erpnext
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com

@@ -1,0 +1,82 @@
+images:
+  penpot:
+    repository: penpotapp/backend
+    tag: 1.19.3
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  debug: false
+  istio: false
+  penpot:
+    host: ''
+  backend:
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+  frontend:
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+  exporter:
+    enabled: false
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+  postgres:
+    integration: ''
+    database: penpot
+    host: ''
+    password: 'P@ssw0rd'
+    port: 3306
+    username: root
+    # url: ''
+
+service:
+  penpot:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
+ingress:
+  penpot:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''
+
+persistence:
+  enabled: true
+  size:
+    worker: 1Gi
+    logs: 1Gi
+    mariadb: 1Gi
+  storageClass:
+    erpnext: efs-sc
+    mariadb: ''
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'

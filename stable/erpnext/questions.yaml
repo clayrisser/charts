@@ -1,0 +1,339 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: istio
+    group: Config
+  - variable: config.logs
+    description: ''
+    type: boolean
+    required: true
+    label: logs
+    group: Config
+
+  # Nginx
+  - variable: config.nginx.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Nginx
+  - variable: config.nginx.config
+    description: 'https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/stable/alpine/20-envsubst-on-templates.sh'
+    type: multiline
+    required: false
+    label: config
+    group: Nginx
+  - variable: config.nginx.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Nginx
+    subquestions:
+      - variable: config.nginx.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.nginx.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.nginx.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.nginx.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+  # ERPNext
+  - variable: config.erpnext.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: ERPNext
+  - variable: config.erpnext.initialApps
+    description: 'future apps must be installed with bench'
+    type: multiline
+    required: false
+    label: 'initial apps'
+    group: ERPNext
+  - variable: config.erpnext.adminPassword
+    description: ''
+    type: password
+    required: false
+    label: 'admin password'
+    group: ERPNext
+  - variable: config.erpnext.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: ERPNext
+  - variable: config.erpnext.baseUrl
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: ERPNext
+  - variable: config.erpnext.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: ERPNext
+    subquestions:
+      - variable: config.erpnext.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.erpnext.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.erpnext.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.erpnext.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+  # # MySQL
+  # - variable: config.mysql.integration
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: integration
+  #   group: MySQL
+  # - variable: config.mysql.host
+  #   description: ''
+  #   type: string
+  #   required: true
+  #   label: host
+  #   show_if: config.mysql.integration=
+  #   group: MySQL
+  # - variable: config.mysql.username
+  #   description: ''
+  #   type: string
+  #   required: true
+  #   label: username
+  #   show_if: config.mysql.integration=
+  #   group: MySQL
+  - variable: config.mysql.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    # show_if: config.mysql.integration=
+    group: MySQL
+  # - variable: config.mysql.port
+  #   description: ''
+  #   type: int
+  #   min: 0
+  #   max: 65535
+  #   required: true
+  #   label: port
+  #   show_if: config.mysql.integration=
+  #   group: MySQL
+  # # - variable: config.mysql.url
+  # #   description: ''
+  # #   type: string
+  # #   required: false
+  # #   label: url
+  # #   group: MySQL
+
+  # Persistence
+  - variable: persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass.erpnext
+        description: ''
+        type: storageclass
+        required: false
+        label: 'erpnext storage class'
+      - variable: persistence.storageClass.mariadb
+        description: ''
+        type: storageclass
+        required: false
+        label: 'mariadb storage class'
+      - variable: persistence.size.worker
+        description: ''
+        type: string
+        required: true
+        label: 'worker size'
+      - variable: persistence.size.logs
+        description: ''
+        type: string
+        required: true
+        show_if: config.logs=true
+        label: 'logs size'
+      - variable: persistence.size.mariadb
+        description: ''
+        type: string
+        required: true
+        label: 'mariadb size'
+      - variable: persistence.kanister.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'kanister enabled'
+        group: Persistence
+      - variable: persistence.kanister.schedule
+        description: ''
+        type: string
+        show_if: persistence.kanister.enabled=true
+        required: false
+        label: 'kanister schedule'
+        group: Persistence
+
+  # Networking
+  - variable: ingress.nginx.enabled
+    description: ''
+    type: boolean
+    label: 'nginx ingress enabled'
+    show_subquestion_if: true
+    group: Networking
+    subquestions:
+      - variable: ingress.nginx.tls
+        description: ''
+        type: boolean
+        required: true
+        label: 'nginx ingress tls'
+      - variable: ingress.nginx.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'nginx ingress hostname'
+      - variable: ingress.nginx.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.nginx.tls=true
+        options:
+          - none
+          - cloudflare-staging
+          - cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - route53-staging
+          - route53-prod
+        required: true
+        label: 'nginx ingress issuer name'
+      - variable: ingress.nginx.certificate
+        description: ''
+        type: string
+        show_if: ingress.nginx.tls=true&&ingress.nginx.issuer.name=none
+        required: false
+        label: 'nginx ingress certificate'
+  - variable: service.nginx.type
+    description: ''
+    type: enum
+    show_if: ingress.nginx.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'nginx service type'
+    group: Networking
+  - variable: service.nginx.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.nginx.type=NodePort&&ingress.nginx.enabled=false
+    label: 'nginx http node port'
+    group: Networking
+  - variable: service.nginx.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.nginx.type=LoadBalancer&&ingress.nginx.enabled=false
+    label: 'nginx http lb port'
+    group: Networking
+
+  # Images
+  - variable: images.erpnext.repository
+    description: ''
+    type: string
+    required: true
+    label: 'erpnext repository'
+    group: Images
+  - variable: images.erpnext.tag
+    description: ''
+    type: string
+    required: true
+    label: 'erpnext tag'
+    group: Images
+  - variable: images.mariadb.repository
+    description: ''
+    type: string
+    required: true
+    label: 'mariadb repository'
+    group: Images
+  - variable: images.mariadb.tag
+    description: ''
+    type: string
+    required: true
+    label: 'mariadb tag'
+    group: Images
