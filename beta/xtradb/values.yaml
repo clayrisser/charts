@@ -139,11 +139,6 @@ persistence:
   storageClass: ''
   size:
     xtradb: 1Gi
-  velero:
-    enabled: false
-    restic: true
-    schedule: '@midnight'
-    ttl: 2160h0m00s
   kanister:
     enabled: false
     schedule: '0 0 * * *'

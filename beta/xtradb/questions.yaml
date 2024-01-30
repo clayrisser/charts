@@ -363,33 +363,6 @@ questions:
         type: string
         required: true
         label: 'xtradb size'
-      - variable: persistence.velero.enabled
-        description: ''
-        type: boolean
-        required: true
-        label: 'velero enabled'
-        group: Persistence
-      - variable: persistence.velero.schedule
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: false
-        label: 'velero schedule'
-        group: Persistence
-      - variable: persistence.velero.restic
-        description: ''
-        type: boolean
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero restic'
-        group: Persistence
-      - variable: persistence.velero.ttl
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero ttl'
-        group: Persistence
       - variable: persistence.kanister.enabled
         description: ''
         type: boolean
@@ -497,6 +470,8 @@ questions:
           - cloudflare-prod
           - letsencrypt-staging
           - letsencrypt-prod
+          - route53-staging
+          - route53-prod
         required: true
         label: 'phpmyadmin ingress issuer name'
       - variable: ingress.phpmyadmin.certificate
