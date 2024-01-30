@@ -61,7 +61,7 @@ spec:
               containerPort: 80
           volumeMounts:
             - name: data
-              mountPath: /data
+              mountPath: /data/zentao
           envFrom:
             - secretRef:
                 name: zentao
