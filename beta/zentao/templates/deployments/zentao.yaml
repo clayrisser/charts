@@ -63,23 +63,27 @@ spec:
             - name: data
               mountPath: /data
           envFrom:
-            - configMapRef:
+            - secretRef:
                 name: zentao
             - secretRef:
                 name: mysql
           livenessProbe:
-            httpGet:
-              path: /
-              port: container
+            exec:
+              command:
+              - sh
+              - -c
+              - 'true'
             initialDelaySeconds: 240
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
             successThreshold: 1
           readinessProbe:
-            httpGet:
-              path: /
-              port: container
+            exec:
+              command:
+              - sh
+              - -c
+              - 'true'
             initialDelaySeconds: 180
             periodSeconds: 10
             timeoutSeconds: 5
