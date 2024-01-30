@@ -33,27 +33,95 @@ questions:
     required: true
     label: istio
     group: Config
-  - variable: config.logs
+  - variable: config.backend.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Backend
+  - variable: config.backend.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Backend
+    subquestions:
+      - variable: config.backend.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.backend.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.backend.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.backend.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+  - variable: config.frontend.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Frontend
+  - variable: config.frontend.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Frontend
+    subquestions:
+      - variable: config.frontend.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.frontend.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.frontend.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.frontend.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+  - variable: config.exporter.enabled
     description: ''
     type: boolean
     required: true
-    label: logs
-    group: Config
-
-  # Nginx
-  - variable: config.nginx.replicas
+    label: 'exporter enabled'
+    group: Exporter
+  - variable: config.exporter.replicas
     description: ''
     type: int
     required: true
     label: replicas
-    group: Nginx
-  - variable: config.nginx.config
-    description: 'https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/stable/alpine/20-envsubst-on-templates.sh'
-    type: multiline
-    required: false
-    label: config
-    group: Nginx
-  - variable: config.nginx.resources.enabled
+    group: Exporter
+  - variable: config.exporter.resources.enabled
     description: ''
     type: enum
     options:
@@ -63,136 +131,66 @@ questions:
     required: true
     label: 'resources enabled'
     show_subquestion_if: custom
-    group: Nginx
+    group: Exporter
     subquestions:
-      - variable: config.nginx.resources.requests.cpu
+      - variable: config.exporter.resources.requests.cpu
         description: ''
         type: string
         required: true
         label: 'resources requests cpu'
-      - variable: config.nginx.resources.requests.memory
+      - variable: config.exporter.resources.requests.memory
         description: ''
         type: string
         required: true
         label: 'resources requests memory'
-      - variable: config.nginx.resources.limits.cpu
+      - variable: config.exporter.resources.limits.cpu
         description: ''
         type: string
         required: true
         label: 'resources limits cpu'
-      - variable: config.nginx.resources.limits.memory
+      - variable: config.exporter.resources.limits.memory
         description: ''
         type: string
         required: true
         label: 'resources limits memory'
-
-  # ERPNext
-  - variable: config.erpnext.replicas
-    description: ''
-    type: int
-    required: true
-    label: replicas
-    group: ERPNext
-  - variable: config.erpnext.initialApps
-    description: 'future apps must be installed with bench'
-    type: multiline
-    required: false
-    label: 'initial apps'
-    group: ERPNext
-  - variable: config.erpnext.adminPassword
-    description: ''
-    type: password
-    required: false
-    label: 'admin password'
-    group: ERPNext
-  - variable: config.erpnext.hostname
+  - variable: config.postgres.integration
     description: ''
     type: string
     required: false
-    label: hostname
-    group: ERPNext
-  - variable: config.erpnext.baseUrl
+    label: integration
+    group: Postgres
+  - variable: config.postgres.database
     description: ''
     type: string
-    required: false
-    label: 'base url'
-    group: ERPNext
-  - variable: config.erpnext.resources.enabled
-    description: ''
-    type: enum
-    options:
-      - defaults
-      - custom
-      - 'false'
     required: true
-    label: 'resources enabled'
-    show_subquestion_if: custom
-    group: ERPNext
-    subquestions:
-      - variable: config.erpnext.resources.requests.cpu
-        description: ''
-        type: string
-        required: true
-        label: 'resources requests cpu'
-      - variable: config.erpnext.resources.requests.memory
-        description: ''
-        type: string
-        required: true
-        label: 'resources requests memory'
-      - variable: config.erpnext.resources.limits.cpu
-        description: ''
-        type: string
-        required: true
-        label: 'resources limits cpu'
-      - variable: config.erpnext.resources.limits.memory
-        description: ''
-        type: string
-        required: true
-        label: 'resources limits memory'
-
-  # # MySQL
-  # - variable: config.mysql.integration
-  #   description: ''
-  #   type: string
-  #   required: false
-  #   label: integration
-  #   group: MySQL
-  # - variable: config.mysql.host
-  #   description: ''
-  #   type: string
-  #   required: true
-  #   label: host
-  #   show_if: config.mysql.integration=
-  #   group: MySQL
-  # - variable: config.mysql.username
-  #   description: ''
-  #   type: string
-  #   required: true
-  #   label: username
-  #   show_if: config.mysql.integration=
-  #   group: MySQL
-  - variable: config.mysql.password
+    label: database
+    group: Postgres
+  - variable: config.postgres.host
+    description: ''
+    type: string
+    required: true
+    label: host
+    group: Postgres
+  - variable: config.postgres.password
     description: ''
     type: password
     required: true
     label: password
-    # show_if: config.mysql.integration=
-    group: MySQL
-  # - variable: config.mysql.port
-  #   description: ''
-  #   type: int
-  #   min: 0
-  #   max: 65535
-  #   required: true
-  #   label: port
-  #   show_if: config.mysql.integration=
-  #   group: MySQL
-  # # - variable: config.mysql.url
-  # #   description: ''
-  # #   type: string
-  # #   required: false
-  # #   label: url
-  # #   group: MySQL
+    group: Postgres
+  - variable: config.postgres.port
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    group: Postgres
+  - variable: config.postgres.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: Postgres
 
   # Persistence
   - variable: persistence.enabled
