@@ -32,7 +32,8 @@ spec:
     username: root
     hostname: {{ template "xtradb.xtradb-hostname" . }}
     port: '3306'
-  configSecretName: {{ template "xtradb.name" . }}-{{ .Values.config.username }}-secret
+  configTemplate:
+    password: '{% .vars.BASE64_ENCODED_MYSQL_PASSWORD | b64dec %}'
   resources:
     - when: [coupled, updated]
       do: recreate
@@ -79,8 +80,8 @@ spec:
                     - name: MYSQL_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "xtradb.name" . }}-{{ .Values.config.username }}-secret
-                          key: password
+                          name: {{ template "xtradb.name" . }}
+                          key: root
                   command:
                     - sh
                     - -c
@@ -139,8 +140,8 @@ spec:
                     - name: MYSQL_PASSWORD
                       valueFrom:
                         secretKeyRef:
-                          name: {{ template "xtradb.name" . }}-{{ .Values.config.username }}-secret
-                          key: password
+                          name: {{ template "xtradb.name" . }}
+                          key: root
                   command:
                     - sh
                     - -c
@@ -154,3 +155,12 @@ spec:
                         -l job-name={{ template "xtradb.name" . }}-decoupled-{% .plug.metadata.namespace %} \
                         --field-selector status.phase=Failed \
                         -o yaml | kubectl delete -f -
+  vars:
+    - name: BASE64_ENCODED_MYSQL_PASSWORD
+      fieldref:
+        fieldPath: data.root
+      objref:
+        apiVersion: v1
+        kind: Secret
+        name: {{ template "xtradb.name" . }}
+        namespace: {{ .Release.Namespace }}

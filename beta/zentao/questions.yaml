@@ -99,8 +99,8 @@ questions:
     type: string
     required: true
     label: host
+    show_if: config.mysql.integration=
     group: Mysql
-    show_if: config.postgres.integration=
   - variable: config.mysql.database
     description: 'only letters, digits and _ allowed'
     type: string
@@ -112,8 +112,8 @@ questions:
     type: string
     required: true
     label: password
+    show_if: config.mysql.integration=
     group: Mysql
-    show_if: config.postgres.integration=
   - variable: config.mysql.port
     description: ''
     type: int
@@ -121,14 +121,15 @@ questions:
     max: 65535
     required: true
     label: port
-    show_if: config.postgres.integration=
+    show_if: config.mysql.integration=
+    group: Mysql
   - variable: config.mysql.username
     description: ''
     type: string
     required: true
     label: username
+    show_if: config.mysql.integration=
     group: Mysql
-    show_if: config.postgres.integration=
 
   # Persistence
   - variable: persistence.enabled
