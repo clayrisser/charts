@@ -15,7 +15,7 @@ spec:
         database:
           required: true
         cleanup: {}
-        create: {}
+        preserve: {}
       socket:
         protocol:
           required: true

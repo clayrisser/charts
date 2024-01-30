@@ -2,21 +2,6 @@ categories:
   - Database
 questions:
 
-   # Images
-  - variable: images.zentao.repository
-    description: ''
-    type: string
-    required: true
-    label: 'zentao repository'
-    group: Images
-  - variable: images.zentao.tag
-    description: ''
-    type: string
-    required: true
-    label: 'zentao tag'
-    group: Images
-
-
   # Config
   - variable: config.imagePullPolicy
     description: ''
@@ -49,24 +34,26 @@ questions:
     required: true
     label: istio
     group: Config
+
+  # Zentao
   - variable: config.zentao.hostname
     description: ''
     type: string
     required: false
     label: hostname
-    group: Config
+    group: Zentao
   - variable: config.zentao.baseUrl
-    label: "Zentao base URL"
+    label: 'base url'
     type: string
     required: false
     default: ''
-    group: Config
+    group: Zentao
   - variable: config.zentao.replicas
-    label: "Zentao replicas"
+    label: replicas
     type: int
     required: true
     default: 1
-    group: Config
+    group: Zentao
   - variable: config.zentao.resources.enabled
     description: ''
     type: enum
@@ -77,7 +64,7 @@ questions:
     required: true
     label: 'resources enabled'
     show_subquestion_if: custom
-    group: Config
+    group: Zentao
     subquestions:
       - variable: config.zentao.resources.requests.cpu
         description: ''
@@ -99,112 +86,176 @@ questions:
         type: string
         required: true
         label: 'resources limits memory'
+
+  # Mysql
   - variable: config.mysql.integration
     description: ''
     type: string
     required: true
-    label: 'mysql integration'
-    group: Config
-  - variable: config.mysql.database
-    description: ''
-    type: string
-    required: true
-    label: 'mysql database'
-    group: Config
+    label: integration
+    group: Mysql
   - variable: config.mysql.host
     description: ''
     type: string
     required: true
-    label: 'mysql host'
-    group: Config
+    label: host
+    group: Mysql
+    show_if: config.postgres.integration=
+  - variable: config.mysql.database
+    description: 'only letters, digits and _ allowed'
+    type: string
+    required: true
+    label: database
+    group: Mysql
   - variable: config.mysql.password
     description: ''
     type: string
     required: true
-    label: 'mysql password'
-    group: Config
+    label: password
+    group: Mysql
+    show_if: config.postgres.integration=
   - variable: config.mysql.port
     description: ''
     type: int
+    min: 0
+    max: 65535
     required: true
-    label: 'mysql port'
-    group: Config
+    label: port
+    show_if: config.postgres.integration=
   - variable: config.mysql.username
     description: ''
     type: string
     required: true
-    label: 'mysql username'
-    group: Config
+    label: username
+    group: Mysql
+    show_if: config.postgres.integration=
 
-  # Service
-  - variable: service.zentao.type
+  # Persistence
+  - variable: persistence.enabled
     description: ''
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
+    type: boolean
     required: true
-    label: 'zentao service type'
-    group: Service
-  - variable: service.zentao.externalTrafficPolicy
-    description: ''
-    type: enum
-    options:
-      - Cluster
-      - Local
-    required: true
-    label: 'zentao service external traffic policy'
-    group: Service
-  - variable: service.zentao.nodePorts.http
-    description: ''
-    type: int
-    required: true
-    label: 'zentao service node ports http'
-    group: Service
-  - variable: service.zentao.lbPorts.http
-    description: ''
-    type: int
-    required: true
-    label: 'zentao service node ports https'
-    group: Service
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.storageClass
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim.zentao
+        description: ''
+        type: string
+        required: false
+        label: 'zentao existing claim'
+      - variable: persistence.size.zentao
+        description: ''
+        type: string
+        required: true
+        label: 'zentao size'
+      - variable: persistence.kanister.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'kanister enabled'
+        group: Persistence
+        show_subquestion_if: true
+        subquestions:
+          - variable: persistence.kanister.schedule
+            description: ''
+            type: string
+            required: false
+            label: 'kanister schedule'
 
-  # Ingress
+  # Networking
   - variable: ingress.zentao.enabled
     description: ''
     type: boolean
-    required: true
     label: 'zentao ingress enabled'
-    group: Ingress
-  - variable: ingress.zentao.hostname
+    show_subquestion_if: true
+    group: Networking
+    subquestions:
+      - variable: ingress.zentao.tls
+        description: ''
+        type: boolean
+        required: true
+        label: 'zentao ingress tls'
+      - variable: ingress.zentao.hostname
+        default: nip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'zentao ingress hostname'
+      - variable: ingress.zentao.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.zentao.tls=true
+        options:
+          - cloudflare-staging
+          - cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - route53-staging
+          - route53-prod
+          - selfsigned
+        required: false
+        label: 'zentao ingress issuer name'
+      - variable: ingress.zentao.certificate
+        description: ''
+        type: string
+        show_if: ingress.zentao.tls=true&&ingress.zentao.issuer.name=
+        required: false
+        label: 'zentao ingress certificate'
+  - variable: service.zentao.type
+    description: ''
+    type: enum
+    show_if: ingress.zentao.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'zentao service type'
+    group: Networking
+  - variable: service.zentao.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.zentao.type=NodePort&&ingress.zentao.enabled=false
+    label: 'zentao http node port'
+    group: Networking
+  - variable: service.zentao.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.zentao.type=LoadBalancer&&ingress.zentao.enabled=false
+    label: 'zentao http lb port'
+    group: Networking
+
+  # Images
+  - variable: images.zentao.repository
     description: ''
     type: string
     required: true
-    label: 'zentao ingress hostname'
-    group: Ingress
-  - variable: ingress.zentao.certificate
+    label: 'zentao repository'
+    group: Images
+  - variable: images.zentao.tag
     description: ''
     type: string
     required: true
-    label: 'zentao ingress certificate'
-    group: Ingress
-  - variable: ingress.zentao.tls
-    description: ''
-    type: boolean
-    required: true
-    label: 'zentao ingress tls'
-    group: Ingress
-  - variable: ingress.zentao.issuer
-    description: ''
-    type: string
-    required: true
-    label: 'zentao ingress issuer'
-    group: Ingress
-
-
-
-
-
-
-
-
+    label: 'zentao tag'
+    group: Images

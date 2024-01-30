@@ -60,18 +60,13 @@ spec:
             - name: container
               containerPort: 80
           volumeMounts:
-            - name: config
-              mountPath: /config
-          env:
-            - name: zentao_SERVER_JSON_FILE
-              value: /config/servers.json
-            - name: zentao_DEFAULT_EMAIL
-              value: {{ .Values.config.zentao.email | quote }}
-            - name: zentao_DEFAULT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: zentao
-                  key: password
+            - name: data
+              mountPath: /data
+          envFrom:
+            - configMapRef:
+                name: zentao
+            - secretRef:
+                name: mysql
           livenessProbe:
             httpGet:
               path: /
@@ -91,6 +86,10 @@ spec:
             failureThreshold: 6
             successThreshold: 1
       volumes:
-        - name: config
-          configMap:
-            name: zentao
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim.zentao | default "zentao" }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

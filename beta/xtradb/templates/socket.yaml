@@ -14,8 +14,8 @@ spec:
       plug:
         database:
           required: true
-        cleanup: {}
-        create: {}
+        preserve: {}
+        preserve: {}
       socket:
         protocol:
           required: true
@@ -145,7 +145,7 @@ spec:
                     - sh
                     - -c
                     - |
-                      {%- if (and (not (eq .plugConfig.create "0")) (eq .plugConfig.cleanup "true")) %}
+                      {%- if (and (not (eq .plugConfig.create "0")) (eq .plugConfig.preserve "0")) %}
                       echo "Dropping database if exists"
                       mysql -h $MYSQL_HOSTNAME -u $MYSQL_USERNAME -p$MYSQL_PASSWORD -P $MYSQL_PORT -e "DROP DATABASE IF EXISTS $MYSQL_DATABASE;"
                       echo "STATUS_MESSAGE: Database $MYSQL_DATABASE dropped if existed"

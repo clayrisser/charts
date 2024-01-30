@@ -1,7 +1,7 @@
 images:
   zentao:
     repository: easysoft/quickon-zentao
-    tag: 12.3.1
+    tag: 18.5
 
 config:
   imagePullPolicy: IfNotPresent
@@ -34,9 +34,9 @@ service:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: 80
+      http:
     lbPorts:
-      http: 8088
+      http: 80
 
 ingress:
   zentao:
@@ -46,3 +46,15 @@ ingress:
     tls: false
     issuer:
       name: ''
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  storageClass: ''
+  existingClaim:
+    zentao: ''
+  size:
+    zentao: 1Gi
+  kanister:
+    enabled: false
+    schedule: '0 0 * * *'
