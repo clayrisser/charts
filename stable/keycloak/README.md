@@ -11,13 +11,13 @@ can run the following script.
 ```sql
 DO $$
 DECLARE
-    username varchar := 'username'; -- Replace with the username
+    v_username varchar := 'username'; -- Replace with the username
     new_id varchar := 'new-user-id'; -- Replace with the new user ID
     original_id varchar;
     rec record;
 BEGIN
     -- Get the original user ID
-    SELECT id INTO original_id FROM user_entity WHERE username = username;
+    SELECT id INTO original_id FROM user_entity WHERE username = v_username;
 
     -- Disable relevant foreign key constraints
     FOR rec IN SELECT tc.constraint_name, tc.table_name
