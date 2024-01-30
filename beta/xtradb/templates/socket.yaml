@@ -64,7 +64,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands-mysql:3.18
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands-mysql:3.19
                   imagePullPolicy: Always
                   env:
                     - name: MYSQL_PROTOCOL
@@ -124,7 +124,7 @@ spec:
                               - amd64
               containers:
                 - name: kubectl
-                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands-mysql:3.18
+                  image: registry.gitlab.com/bitspur/rock8s/images/kube-commands-mysql:3.19
                   imagePullPolicy: Always
                   env:
                     - name: MYSQL_PROTOCOL
