@@ -68,23 +68,17 @@ spec:
             - secretRef:
                 name: mysql
           livenessProbe:
-            exec:
-              command:
-              - sh
-              - -c
-              - 'true'
-            initialDelaySeconds: 240
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
             successThreshold: 1
           readinessProbe:
-            exec:
-              command:
-              - sh
-              - -c
-              - 'true'
-            initialDelaySeconds: 180
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
