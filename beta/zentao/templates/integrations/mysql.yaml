@@ -1,0 +1,37 @@
+{{- if .Values.config.mysql.integration }}
+{{- $name := (split "." .Values.config.mysql.integration)._1 | default "mysql" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.mysql.integration))._0 }}
+apiVersion: integration.rock8s.com/v1beta1
+kind: Plug
+metadata:
+  name: mysql
+  labels:
+    app.kubernetes.io/name: {{ template "zentao.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    database: {{ .Values.config.mysql.database | quote }}
+    create: '1'
+    preserve: '1'
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      stringTemplate: |
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: mysql
+          namespace: {{ .Release.Namespace }}
+        stringData:
+          MYSQL_PASSWORD: {% .socketConfig.password | quote %}
+          MYSQL_USER: {% .socketConfig.username | quote %}
+          MYSQL_DB: {% .plugConfig.database | quote %}
+          MYSQL_HOST: {% .socketConfig.hostname | quote %}
+          MYSQL_PORT: {% .socketConfig.port | quote %}
+{{- end }}

@@ -1,0 +1,101 @@
+{{- if .Values.persistence.kanister.enabled }}
+apiVersion: integration.rock8s.com/v1beta1
+kind: Plug
+metadata:
+  name: kanister-xtradb
+  labels:
+    app.kubernetes.io/name: {{ template "xtradb.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  socket:
+    name: kanister
+    namespace: kanister
+  config:
+    blueprint: xtradb
+    schedule: {{ .Values.persistence.kanister.schedule | quote }}
+    workload: {{ template "xtradb.name" . }}
+---
+apiVersion: cr.kanister.io/v1alpha1
+kind: Blueprint
+metadata:
+  name: xtradb
+actions:
+  backup:
+    kind: Deployment
+    outputArtifacts:
+      backup:
+        keyValue:
+          kopiaRoot: "{{"{{"}} .Phases.backup.Output.kopiaRoot {{"}}"}}"
+    phases:
+      - func: KubeTask
+        name: backup
+        objects:
+          xtradb:
+            kind: Secret
+            name: {{ template "xtradb.name" . }}-users
+            namespace: '{{ .Release.Namespace }}'
+        args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-xtradb:0.100.0-bookworm
+          namespace: {{ .Release.Namespace }}
+          command:
+            - /bin/bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              echo please implement >&2
+              exit 1
+  restore:
+    kind: Deployment
+    phases:
+      - func: KubeTask
+        name: restore
+        objects:
+          xtradb:
+            kind: Secret
+            name: {{ template "xtradb.name" . }}-users
+            namespace: '{{ .Release.Namespace }}'
+        args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-xtradb:0.100.0-bookworm
+          namespace: {{ .Release.Namespace }}
+          command:
+            - bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              echo please implement >&2
+              exit 1
+  restorefrom:
+    inputArtifactNames:
+      - backup
+    kind: Deployment
+    phases:
+      - func: KubeTask
+        name: restorefrom
+        objects:
+          xtradb:
+            kind: Secret
+            name: {{ template "xtradb.name" . }}-users
+            namespace: '{{ .Release.Namespace }}'
+        args:
+          image: registry.gitlab.com/bitspur/rock8s/images/kanukopia-xtradb:0.100.0-bookworm
+          namespace: {{ .Release.Namespace }}
+          command:
+            - bash
+            - -o
+            - errexit
+            - -o
+            - pipefail
+            - -c
+            - |
+              echo please implement >&2
+              exit 1
+{{- end }}

@@ -57,10 +57,6 @@ spec:
     configuration: |
 {{ .Values.config.xtradb.mysqlConfig | nindent 6 }}
 {{- end }}
-    {{- if .Values.persistence.velero.enabled }}
-    annotations:
-      backup.velero.io/backup-volumes: datadir
-    {{- end }}
     labels: {}
     nodeSelector: {}
     tolerations: []

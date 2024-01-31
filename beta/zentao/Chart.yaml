@@ -1,19 +1,19 @@
 apiVersion: v2
 name: zentao
-home: https://gitlab.com/risserlabs/community/charts
+home: https://zentao.pm
 version: 0.0.1
-appVersion: 12.3.1
+appVersion: 18.5.0
 type: application
 icon: https://cdn-1.webcatalog.io/catalog/zentao/zentao-icon-filled.png
-description: 'create and manage mysql clusters running in kubernetes'
+description: 'open source project management software'
 keywords:
   - project-management
 sources:
   - https://github.com/quicklyon/zentao-docker
   - https://github.com/easysoft/zentaopms
 maintainers:
-  - name: 'HariKrishna'
-    email: harikrishnasetti9999@gmail.com
+  - name: 'Clay Risser'
+    email: clayrisser@gmail.com
 annotations:
   catalog.cattle.io/display-name: Zentao
   catalog.cattle.io/os: linux

@@ -1,3 +1,3 @@
-# mysql
+# zentao
 
-> create and manage mysql clusters running in kubernetes
+> open source project management software
