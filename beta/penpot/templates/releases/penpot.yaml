@@ -67,9 +67,6 @@ spec:
 {{ toYaml .Values.config.backend.resources.requests | indent 10 }}
         limits:
 {{ toYaml .Values.config.backend.resources.limits | indent 10 }}
-    {{- else }}
-      resources: {}
-    {{- end }}
     frontend:
       image:
         repository: {{ .Values.images.frontend.repository }}
@@ -108,9 +105,6 @@ spec:
 {{ toYaml .Values.config.frontend.resources.requests | indent 10 }}
         limits:
 {{ toYaml .Values.config.frontend.resources.limits | indent 10 }}
-    {{- else }}
-      resources: {}
-    {{- end }}
     exporter:
       image:
         repository: {{ .Values.images.exporter.repository }}
@@ -140,13 +134,10 @@ spec:
 {{ toYaml .Values.config.exporter.resources.requests | indent 10 }}
         limits:
 {{ toYaml .Values.config.exporter.resources.limits | indent 10 }}
-    {{- else }}
-      resources: {}
-    {{- end }}
     persistence:
       enabled: {{ .Values.config.persistence.enabled }}
       {{- if .Values.persistence.storageClass }}
-      {{- if (eq "-" .Values.persistence.storageClass) }}
+      {{- if (eq (toString .Values.persistence.storageClass) "-") }}
       storageClass: ''
       {{- else }}
       storageClass: {{ .Values.persistence.storageClass | quote }}
