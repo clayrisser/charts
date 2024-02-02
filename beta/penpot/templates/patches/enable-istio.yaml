@@ -1,6 +1,6 @@
 {{- if .Values.config.istio }}
 apiVersion: kyverno.io/v1
-kind: Policy
+kind: ClusterPolicy
 metadata:
   name: enable-istio
 spec:
@@ -11,14 +11,10 @@ spec:
       match:
         resources:
           kinds:
-            - /*/Namespace
+            - Namespace
           names:
             - {{ .Release.Namespace }}
       mutate:
-        targets:
-          - apiVersion: v1
-            kind: Namespace
-            name: {{ .Release.Namespace }}
         patchStrategicMerge:
           metadata:
             labels:

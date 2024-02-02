@@ -17,7 +17,7 @@ spec:
       match:
         resources:
           kinds:
-            - helm.toolkit.fluxcd.io/*/HelmRelease
+            - HelmRelease
           names:
             - {{ .Release.Name }}-release
       mutate:
