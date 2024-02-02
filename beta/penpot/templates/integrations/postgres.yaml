@@ -29,8 +29,8 @@ spec:
           name: postgres
           namespace: {{ .Release.Namespace }}
         stringData:
-          password: {% .socketConfig.password | quote %}
-          username: {% .socketConfig.username | quote %}
+          password: {{ .socketConfig.password | quote }}
+          username: {{ .socketConfig.username | quote }}
     - when: [coupled, updated]
       do: recreate
       stringTemplate: |
@@ -59,11 +59,11 @@ spec:
                 patchesJson6902: |
                   - op: replace
                     path: /spec/values/config/postgresql/database
-                    value: {% .plugConfig.database | quote %}
+                    value: {{ .plugConfig.database | quote }}
                   - op: replace
                     path: /spec/values/config/postgresql/host
-                    value: {% .socketConfig.hostname | quote %}
+                    value: {{ .socketConfig.hostname | quote }}
                   - op: replace
                     path: /spec/values/config/postgresql/port
-                    value: {% .socketConfig.port %}
+                    value: {{ .socketConfig.port }}
 {{- end }}
