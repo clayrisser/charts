@@ -5,29 +5,11 @@ images:
   frontend:
     repository: penpotapp/frontend
     tag: latest
-
   exporter:
     repository: penpotapp/exporter
     tag: 1.19.3
-  penpot:
-    repository: penpotapp/backend
-    tag: 1.19.3
 
 config:
-  persistence:
-    enabled: true
-    size:
-      worker: 1Gi
-      logs: 1Gi
-      mariadb: 1Gi
-    storageClass:
-      erpnext: efs-sc
-      mariadb: ''
-    kanister:
-      enabled: false
-      schedule: '0 0 * * *'
-    existingClaim:
-      penpot: ''
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   debug: false
@@ -74,9 +56,6 @@ config:
     username: root
     # url: ''
 
-  mysql:
-   internal: false
-
 service:
   penpot:
     type: ClusterIP
@@ -87,13 +66,6 @@ service:
       http: 80
 
 ingress:
-  nginx:
-    enabled: false
-    annotations: {}
-    path: /
-    hosts:
-      - chart-example.local
-    tls: []
   penpot:
     certificate: ''
     enabled: false
