@@ -1,10 +1,10 @@
 images:
   backend:
     repository: penpotapp/backend
-    tag: 1.19.3
+    tag: latest
   frontend:
     repository: penpotapp/frontend
-    tag: 1.19.3
+    tag: latest
 
   exporter:
     repository: penpotapp/exporter
