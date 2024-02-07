@@ -56,6 +56,7 @@ ingresses:
 
 persistance:
   enabled: true
+  accessMode: ReadWriteOnce
   size:
     [name]: 1Gi
   storageClass: ''

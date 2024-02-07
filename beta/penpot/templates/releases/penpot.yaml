@@ -135,7 +135,7 @@ spec:
         limits:
 {{ toYaml .Values.config.exporter.resources.limits | indent 10 }}
     persistence:
-      enabled: {{ .Values.config.persistence.enabled }}
+      enabled: {{ .Values.persistence.enabled }}
       {{- if .Values.persistence.storageClass }}
       {{- if (eq (toString .Values.persistence.storageClass) "-") }}
       storageClass: ''
@@ -143,10 +143,10 @@ spec:
       storageClass: {{ .Values.persistence.storageClass | quote }}
       {{- end }}
       {{- end }}
-      size: {{ .Values.config.persistence.size.penpot }}
-      existingClaim: {{ .Values.config.persistence.existingClaim.penpot | default "" | quote }}
+      size: {{ .Values.persistence.size.penpot }}
+      existingClaim: ''
       accessModes:
-        - {{ .Values.config.persistence.accessModes | quote }}
+        - {{ .Values.persistence.accessMode | quote }}
     config:
       publicURI: {{ template "penpot.penpot-base-url" . }}
       flags: "enable-registration enable-login disable-demo-users disable-demo-warning"
@@ -160,9 +160,9 @@ spec:
           usernameKey: username
           passwordKey: password
       redis:
-        host: "redis-headless.penpot.svc.cluster.local"
+        host: '{{ .Release.Name }}-release-redis-headless.{{ .Release.Namespace }}.svc.cluster.local'
         port: 6379
-        database: "0"
+        database: '0'
       assets:
         storageBackend: "assets-fs"
         filesystem:

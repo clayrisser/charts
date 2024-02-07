@@ -14,10 +14,10 @@ config:
   updateStrategy: Recreate
   debug: false
   istio: false
-  penpot:
-    host: ''
-  backend:
+  frontend:
     replicas: 1
+    hostname: ''
+    baseUrl: ''
     resources:
       enabled: defaults
       requests:
@@ -26,7 +26,7 @@ config:
       limits:
         cpu: 200m
         memory: 512Mi
-  frontend:
+  backend:
     replicas: 1
     resources:
       enabled: defaults
@@ -76,13 +76,11 @@ ingress:
 
 persistence:
   enabled: true
+  accessMode: ReadWriteOnce
   size:
-    worker: 1Gi
-    logs: 1Gi
-    mariadb: 1Gi
+    penpot: 1Gi
   storageClass:
-    erpnext: efs-sc
-    mariadb: ''
+    penpot: ''
   kanister:
     enabled: false
     schedule: '0 0 * * *'
