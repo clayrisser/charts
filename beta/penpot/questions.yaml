@@ -201,59 +201,26 @@ questions:
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: persistence.storageClass.erpnext
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.storageClass.penpot
         description: ''
         type: storageclass
         required: false
-        label: 'erpnext storage class'
-      - variable: persistence.storageClass.mariadb
-        description: ''
-        type: storageclass
-        required: false
-        label: 'mariadb storage class'
-      - variable: persistence.size.worker
+        label: 'penpot storage class'
+      - variable: persistence.size.penpot
         description: ''
         type: string
         required: true
-        label: 'worker size'
-      - variable: persistence.size.logs
-        description: ''
-        type: string
-        required: true
-        show_if: config.logs=true
-        label: 'logs size'
-      - variable: persistence.size.mariadb
-        description: ''
-        type: string
-        required: true
-        label: 'mariadb size'
-      - variable: persistence.velero.enabled
-        description: ''
-        type: boolean
-        required: true
-        label: 'velero enabled'
-        group: Persistence
-      - variable: persistence.velero.schedule
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: false
-        label: 'velero schedule'
-        group: Persistence
-      - variable: persistence.velero.restic
-        description: ''
-        type: boolean
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero restic'
-        group: Persistence
-      - variable: persistence.velero.ttl
-        description: ''
-        type: string
-        show_if: persistence.velero.enabled=true
-        required: true
-        label: 'velero ttl'
-        group: Persistence
+        label: 'penpot size'
       - variable: persistence.kanister.enabled
         description: ''
         type: boolean
@@ -269,28 +236,28 @@ questions:
         group: Persistence
 
   # Networking
-  - variable: ingress.nginx.enabled
+  - variable: ingress.penpot.enabled
     description: ''
     type: boolean
-    label: 'nginx ingress enabled'
+    label: 'penpot ingress enabled'
     show_subquestion_if: true
     group: Networking
     subquestions:
-      - variable: ingress.nginx.tls
+      - variable: ingress.penpot.tls
         description: ''
         type: boolean
         required: true
-        label: 'nginx ingress tls'
-      - variable: ingress.nginx.hostname
-        default: xip.io
+        label: 'penpot ingress tls'
+      - variable: ingress.penpot.hostname
+        default: ''
         description: ''
         type: hostname
         required: true
-        label: 'nginx ingress hostname'
-      - variable: ingress.nginx.issuer.name
+        label: 'penpot ingress hostname'
+      - variable: ingress.penpot.issuer.name
         description: ''
         type: enum
-        show_if: ingress.nginx.tls=true
+        show_if: ingress.penpot.tls=true
         options:
           - none
           - cloudflare-staging
@@ -300,65 +267,79 @@ questions:
           - route53-staging
           - route53-prod
         required: true
-        label: 'nginx ingress issuer name'
-      - variable: ingress.nginx.certificate
+        label: 'penpot ingress issuer name'
+      - variable: ingress.penpot.certificate
         description: ''
         type: string
-        show_if: ingress.nginx.tls=true&&ingress.nginx.issuer.name=none
+        show_if: ingress.penpot.tls=true&&ingress.penpot.issuer.name=none
         required: false
-        label: 'nginx ingress certificate'
-  - variable: service.nginx.type
+        default: ''
+        label: 'penpot ingress certificate'
+  - variable: service.penpot.type
     description: ''
     type: enum
-    show_if: ingress.nginx.enabled=false
+    default: ClusterIP
     options:
       - ClusterIP
       - LoadBalancer
       - NodePort
     required: true
-    label: 'nginx service type'
+    label: 'penpot service type'
     group: Networking
-  - variable: service.nginx.nodePorts.http
+  - variable: service.penpot.nodePorts.http
     description: ''
     type: int
     required: false
     min: 30000
     max: 32767
-    show_if: service.nginx.type=NodePort&&ingress.nginx.enabled=false
-    label: 'nginx http node port'
+    show_if: service.penpot.type=NodePort&&ingress.penpot.enabled=false
+    label: 'penpot http node port'
     group: Networking
-  - variable: service.nginx.lbPorts.http
+  - variable: service.penpot.lbPorts.http
     description: ''
     type: int
     min: 0
     max: 65535
     required: true
-    show_if: service.nginx.type=LoadBalancer&&ingress.nginx.enabled=false
-    label: 'nginx http lb port'
+    default: 80
+    show_if: service.penpot.type=LoadBalancer&&ingress.penpot.enabled=false
+    label: 'penpot http lb port'
     group: Networking
 
   # Images
-  - variable: images.erpnext.repository
+  - variable: images.backend.repository
     description: ''
     type: string
     required: true
-    label: 'erpnext repository'
+    label: 'backend repository'
     group: Images
-  - variable: images.erpnext.tag
+  - variable: images.backend.tag
     description: ''
     type: string
     required: true
-    label: 'erpnext tag'
+    label: 'backend tag'
     group: Images
-  - variable: images.mariadb.repository
+  - variable: images.frontend.repository
     description: ''
     type: string
     required: true
-    label: 'mariadb repository'
+    label: 'frontend repository'
     group: Images
-  - variable: images.mariadb.tag
+  - variable: images.frontend.tag
     description: ''
     type: string
     required: true
-    label: 'mariadb tag'
+    label: 'frontend tag'
+    group: Images
+  - variable: images.exporter.repository
+    description: ''
+    type: string
+    required: true
+    label: 'exporter repository'
+    group: Images
+  - variable: images.exporter.tag
+    description: ''
+    type: string
+    required: true
+    label: 'exporter tag'
     group: Images
