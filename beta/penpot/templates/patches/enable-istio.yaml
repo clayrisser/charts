@@ -1,6 +1,6 @@
 {{- if .Values.config.istio }}
 apiVersion: kyverno.io/v1
-kind: ClusterPolicy
+kind: Policy
 metadata:
   name: enable-istio
 spec:
