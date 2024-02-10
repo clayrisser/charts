@@ -1,0 +1,69 @@
+{{- if .Values.config.postgres.integration }}
+{{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
+apiVersion: integration.rock8s.com/v1beta1
+kind: Plug
+metadata:
+  name: postgres
+  labels:
+    app.kubernetes.io/name: {{ template "keycloak.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    database: {{ .Values.config.postgres.database | quote }}
+    create: '1'
+    preserve: '1'
+  resources:
+    - when: [coupled, updated]
+      do: apply
+      stringTemplate: |
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: keycloak-db-secret
+          namespace: {{ .Release.Namespace }}
+        stringData:
+          POSTGRES_PASSWORD: {% .socketConfig.password | quote %}
+          POSTGRES_USERNAME: {% .socketConfig.username | quote %}
+    - when: [coupled, updated]
+      do: recreate
+      stringTemplate: |
+        apiVersion: kyverno.io/v1
+        kind: Policy
+        metadata:
+          name: postgres-coupled-or-updated
+          namespace: {{ .Release.Namespace }}
+        spec:
+          background: true
+          mutateExistingOnPolicyUpdate: true
+          schemaValidation: false
+          rules:
+            - name: keycloak
+              match:
+                resources:
+                  kinds:
+                    - k8s.keycloak.org/*/Keycloak
+                  names:
+                    - {{ template "keycloak.name" . }}
+              mutate:
+                targets:
+                  - apiVersion: k8s.keycloak.org/v2alpha1
+                    kind: Keycloak
+                    name: {{ template "keycloak.name" . }}
+                patchesJson6902: |
+                  - op: replace
+                    path: /spec/db/database
+                    value: {% .plugConfig.database | quote %}
+                  - op: replace
+                    path: /spec/db/host
+                    value: {% .socketConfig.hostname | quote %}
+                  - op: replace
+                    path: /spec/db/port
+                    value: {% .socketConfig.port %}
+{{- end }}

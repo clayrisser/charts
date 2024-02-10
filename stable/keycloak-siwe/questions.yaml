@@ -1,0 +1,331 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: istio
+    group: Config
+
+  # Keycloak
+  - variable: config.keycloak.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Keycloak
+  - variable: config.keycloak.hostname
+    description: ''
+    type: string
+    required: false
+    label: hostname
+    group: Keycloak
+  - variable: config.keycloak.baseUrl
+    description: ''
+    type: string
+    required: false
+    label: 'base url'
+    group: Keycloak
+  - variable: config.keycloak.adminPassword
+    description: ''
+    type: password
+    required: false
+    label: 'admin password'
+    group: Keycloak
+  - variable: config.keycloak.additionalRealms
+    description: ''
+    type: multiline
+    required: false
+    label: 'additional realms'
+    group: Keycloak
+  - variable: config.keycloak.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources defaults'
+    show_subquestion_if: custom
+    group: Keycloak
+    subquestions:
+      - variable: config.keycloak.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.keycloak.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.keycloak.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.keycloak.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+
+  # Ldap Config
+  - variable: config.ldap.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: 'Ldap Config'
+    subquestions:
+      - variable: config.ldap.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.ldap.hostname
+        description: ''
+        type: string
+        required: true
+        label: hostname
+        show_if: config.ldap.integration=
+      - variable: config.ldap.rootDN
+        description: 'use example.org or dc=example,dc=org'
+        type: string
+        required: true
+        label: 'root dn'
+        show_if: config.ldap.integration=
+      - variable: config.ldap.username
+        description: ''
+        type: string
+        required: true
+        label: username
+        show_if: config.ldap.integration=
+      - variable: config.ldap.password
+        description: ''
+        type: password
+        required: true
+        label: password
+        show_if: config.ldap.integration=
+      - variable: config.ldap.userObjectClasses
+        description: ''
+        type: string
+        required: true
+        label: 'user object classes'
+      - variable: config.ldap.tls.enabled
+        description: ''
+        type: boolean
+        required: true
+        label: 'tls enabled'
+      - variable: config.ldap.tls.certificate
+        description: ''
+        type: string
+        required: false
+        show_if: config.ldap.tls.enabled=true&&config.ldap.integration=
+        label: certificate
+
+  # Smtp
+  - variable: config.smtp.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Smtp
+    subquestions:
+      - variable: config.smtp.integration
+        description: ''
+        type: string
+        required: false
+        label: integration
+      - variable: config.smtp.from
+        description: ''
+        type: string
+        required: true
+        label: from
+      - variable: config.smtp.hostname
+        description: ''
+        type: string
+        required: true
+        label: hostname
+        show_if: config.smtp.integration=
+      - variable: config.smtp.port
+        description: ''
+        type: int
+        required: true
+        label: port
+        show_if: config.smtp.integration=
+      - variable: config.smtp.username
+        description: ''
+        type: string
+        required: true
+        label: username
+        show_if: config.smtp.integration=
+      - variable: config.smtp.password
+        description: ''
+        type: password
+        required: true
+        label: password
+        show_if: config.smtp.integration=
+
+  # Postgres
+  - variable: config.postgres.integration
+    description: ''
+    type: string
+    required: false
+    label: integration
+    group: Postgres
+  - variable: config.postgres.host
+    description: ''
+    type: string
+    required: true
+    label: host
+    show_if: config.postgres.integration=
+    group: Postgres
+  - variable: config.postgres.database
+    description: 'only letters, digits and _ allowed'
+    type: string
+    required: true
+    label: database
+    group: Postgres
+  - variable: config.postgres.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    show_if: config.postgres.integration=
+    group: Postgres
+  - variable: config.postgres.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    show_if: config.postgres.integration=
+    group: Postgres
+  - variable: config.postgres.port
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    label: port
+    show_if: config.postgres.integration=
+    group: Postgres
+  # - variable: config.postgres.url
+  #   description: ''
+  #   type: string
+  #   required: false
+  #   label: url
+  #   group: Postgres
+
+  # Networking
+  - variable: ingress.keycloak.enabled
+    description: ''
+    type: boolean
+    label: 'keycloak ingress enabled'
+    show_subquestion_if: true
+    group: Networking
+    subquestions:
+      - variable: ingress.keycloak.tls
+        description: ''
+        type: boolean
+        required: true
+        label: 'keycloak ingress tls'
+      - variable: ingress.keycloak.hostname
+        default: nip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'keycloak ingress hostname'
+      - variable: ingress.keycloak.issuer.name
+        description: ''
+        type: enum
+        show_if: ingress.keycloak.tls=true
+        options:
+          - cloudflare-staging
+          - cloudflare-prod
+          - letsencrypt-staging
+          - letsencrypt-prod
+          - route53-staging
+          - route53-prod
+          - selfsigned
+        required: false
+        label: 'keycloak ingress issuer name'
+      - variable: ingress.keycloak.certificate
+        description: ''
+        type: string
+        show_if: ingress.keycloak.tls=true&&ingress.keycloak.issuer.name=
+        required: false
+        label: 'keycloak ingress certificate'
+  - variable: service.keycloak.type
+    description: ''
+    type: enum
+    show_if: ingress.keycloak.enabled=false
+    options:
+      - ClusterIP
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'keycloak service type'
+    group: Networking
+  - variable: service.keycloak.nodePorts.http
+    description: ''
+    type: int
+    required: false
+    min: 30000
+    max: 32767
+    show_if: service.keycloak.type=NodePort&&ingress.keycloak.enabled=false
+    label: 'keycloak http node port'
+    group: Networking
+  - variable: service.keycloak.lbPorts.http
+    description: ''
+    type: int
+    min: 0
+    max: 65535
+    required: true
+    show_if: service.keycloak.type=LoadBalancer&&ingress.keycloak.enabled=false
+    label: 'keycloak http lb port'
+    group: Networking
+
+  # Images
+  - variable: images.keycloak.repository
+    description: ''
+    type: string
+    required: true
+    label: 'keycloak repository'
+    group: Images
+  - variable: images.keycloak.tag
+    description: ''
+    type: string
+    required: true
+    label: 'keycloak tag'
+    group: Images

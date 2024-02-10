@@ -1,0 +1,76 @@
+olm:
+  keycloak:
+    channel: fast
+    version: 21.1.0
+
+images:
+  keycloak:
+    repository: registry.gitlab.com/bitspur/internal/siwe-keycloak
+    tag: 21.1.0
+
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate
+  debug: false
+  istio: false
+  keycloak:
+    replicas: 1
+    hostname: ''
+    baseUrl: ''
+    adminPassword: ''
+    additionalRealms: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 500m
+        memory: 600Mi
+      limits:
+        cpu: 1500m
+        memory: 1000Mi
+  ldap:
+    enabled: false
+    integration: ''
+    hostname: ''
+    rootDN: ''
+    username: admin
+    password: ''
+    userObjectClasses: 'PostfixBookMailAccount, inetOrgPerson, organizationalPerson, person, posixAccount, top, arbitrarySlots, extendedPerson'
+    tls:
+      enabled: true
+      certificate: ''
+  postgres:
+    integration: ''
+    database: keycloak
+    host: ''
+    password: ''
+    port: 5432
+    username: postgres
+    # url: ''
+  smtp:
+    enabled: false
+    integration: ''
+    from: ''
+    hostname: ''
+    password: ''
+    port: ''
+    username: ''
+    tls:
+      enabled: false
+
+service:
+  keycloak:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+    lbPorts:
+      http: 80
+
+ingress:
+  keycloak:
+    certificate: ''
+    enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''
