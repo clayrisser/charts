@@ -1,3 +1,0 @@
-### keycloak
-
-[{{ include "keycloak.keycloak-base-url" . }}]({{ include "keycloak.keycloak-base-url" . }})
