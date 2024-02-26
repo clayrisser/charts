@@ -176,17 +176,17 @@ spec:
         dbType: mariadb
       dropSite:
         enabled: false
-      backup:
-        enabled: {{ (and .Values.config.backup.enabled (not .Values.config.backup.s3.integration)) }}
-        siteName: {{ template "erpnext.erpnext-hostname" . }}
-        withFiles: true
-        push:
-          enabled: true
-          bucket: {{ .Values.config.backup.s3.bucket | quote }}
-          region: {{ .Values.config.backup.s3.region | quote }}
-          accessKey: {{ .Values.config.backup.s3.accessKey | quote }}
-          secretKey: {{ .Values.config.backup.s3.secretKey | quote }}
-          endpoint: https://{{ (empty .Values.config.backup.s3.endpoint) | ternary (printf "s3.%s.amazonaws.com" .Values.config.backup.s3.region) .Values.config.backup.s3.endpoint }}/{{ .Values.config.backup.s3.prefix }}
+      # backup:
+      #   enabled: {\{ (and .Values.config.backup.enabled (not .Values.config.backup.s3.integration)) }}
+      #   siteName: {\{ template "erpnext.erpnext-hostname" . }}
+      #   withFiles: true
+      #   push:
+      #     enabled: true
+      #     bucket: {\{ .Values.config.backup.s3.bucket | quote }}
+      #     region: {\{ .Values.config.backup.s3.region | quote }}
+      #     accessKey: {\{ .Values.config.backup.s3.accessKey | quote }}
+      #     secretKey: {\{ .Values.config.backup.s3.secretKey | quote }}
+      #     endpoint: https://{\{ (empty .Values.config.backup.s3.endpoint) | ternary (printf "s3.%s.amazonaws.com" .Values.config.backup.s3.region) .Values.config.backup.s3.endpoint }}/{\{ .Values.config.backup.s3.prefix }}
       migrate:
         enabled: false
     imagePullSecrets: []
