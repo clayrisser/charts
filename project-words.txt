@@ -52,12 +52,14 @@ imaps
 imgproxy
 inet
 inetorgperson
+Inferencing
 irsa
 istio
 jboss
 kanister
 kanisterio
 keycloak
+kserve
 kube
 kubemod
 kubernetes
