@@ -1,0 +1,421 @@
+categories:
+  - Server
+questions:
+
+  # Config
+  - variable: config.imagePullPolicy
+    description: 'Policy for pulling images'
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'Image Pull Policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: 'Strategy to use when updates are available'
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+    required: true
+    label: 'Update Strategy'
+    group: Config
+  - variable: config.debug
+    description: 'Enable debugging mode'
+    type: boolean
+    required: true
+    label: 'Debug Mode'
+    group: Config
+  - variable: config.controller.deploymentMode
+    description: 'Mode of deployment for the controller'
+    type: enum
+    options:
+      - Serverless
+      - Server
+    required: true
+    label: 'Deployment Mode'
+    group: Config
+  - variable: config.controller.gateway.domain
+    description: 'Domain for the gateway'
+    type: string
+    required: true
+    label: 'Gateway Domain'
+    group: Config
+  - variable: config.controller.gateway.localGateway.gateway
+    description: 'Local gateway configuration'
+    type: string
+    required: true
+    label: 'Local Gateway'
+    group: Config
+  - variable: config.controller.gateway.localGateway.gatewayService
+    description: 'Service for the local gateway'
+    type: string
+    required: true
+    label: 'Local Gateway Service'
+    group: Config
+  - variable: config.controller.gateway.ingressGateway.gateway
+    description: 'Ingress gateway configuration'
+    type: string
+    required: true
+    label: 'Ingress Gateway'
+    group: Config
+  - variable: config.controller.gateway.ingressGateway.gatewayService
+    description: 'Service for the ingress gateway'
+    type: string
+    required: true
+    label: 'Ingress Gateway Service'
+    group: Config
+  - variable: config.controller.image
+    description: 'Image for the controller'
+    type: string
+    required: true
+    label: 'Controller Image'
+    group: Config
+  - variable: config.controller.resources.limits.cpu
+    description: 'CPU limits for the controller'
+    type: string
+    required: true
+    label: 'Controller CPU Limits'
+    group: Config
+  - variable: config.controller.resources.limits.memory
+    description: 'Memory limits for the controller'
+    type: string
+    required: true
+    label: 'Controller Memory Limits'
+    group: Config
+  - variable: config.controller.resources.requests.cpu
+    description: 'CPU requests for the controller'
+    type: string
+    required: true
+    label: 'Controller CPU Requests'
+    group: Config
+  - variable: config.controller.resources.requests.memory
+    description: 'Memory requests for the controller'
+    type: string
+    required: true
+    label: 'Controller Memory Requests'
+    group: Config
+  - variable: config.modelmesh.controller.image
+    description: 'Image for the modelmesh controller'
+    type: string
+    required: true
+    label: 'ModelMesh Controller Image'
+    group: Config
+  - variable: config.modelmesh.config.modelmeshImage
+    description: 'Image for the modelmesh'
+    type: string
+    required: true
+    label: 'ModelMesh Image'
+    group: Config
+  - variable: config.modelmesh.config.modelmeshImageTag
+    description: 'Image tag for the modelmesh'
+    type: string
+    required: true
+    label: 'ModelMesh Image Tag'
+    group: Config
+  - variable: config.modelmesh.config.modelmeshRuntimeAdapterImage
+    description: 'Runtime adapter image for the modelmesh'
+    type: string
+    required: true
+    label: 'ModelMesh Runtime Adapter Image'
+    group: Config
+  - variable: config.modelmesh.config.modelmeshRuntimeAdapterImageTag
+    description: 'Image tag for the modelmesh runtime adapter'
+    type: string
+    required: true
+    label: 'ModelMesh Runtime Adapter Image Tag'
+    group: Config
+  - variable: config.modelmesh.config.restProxyImage
+    description: 'REST proxy image for the modelmesh'
+    type: string
+    required: true
+    label: 'REST Proxy Image'
+    group: Config
+  - variable: config.modelmesh.config.restProxyImageTag
+    description: 'Image tag for the REST proxy'
+    type: string
+    required: true
+    label: 'REST Proxy Image Tag'
+    group: Config
+  - variable: config.modelmesh.config.podsPerRuntime
+    description: 'Number of pods per runtime'
+    type: int
+    required: true
+    label: 'Pods Per Runtime'
+    group: Config
+  - variable: config.servingruntime.modelNamePlaceholder
+    description: 'Placeholder for the model name'
+    type: string
+    required: true
+    label: 'Model Name Placeholder'
+    group: Config
+  - variable: config.servingruntime.tensorflow.image
+    description: 'Image for the TensorFlow serving runtime'
+    type: string
+    required: true
+    label: 'TensorFlow Image'
+    group: Config
+  - variable: config.servingruntime.tensorflow.tag
+    description: 'Tag for the TensorFlow serving runtime image'
+    type: string
+    required: true
+    label: 'TensorFlow Tag'
+    group: Config
+  - variable: config.servingruntime.mlserver.image
+    description: 'Image for the MLServer serving runtime'
+    type: string
+    required: true
+    label: 'MLServer Image'
+    group: Config
+  - variable: config.servingruntime.mlserver.tag
+    description: 'Tag for the MLServer serving runtime image'
+    type: string
+    required: true
+    label: 'MLServer Tag'
+    group: Config
+  - variable: config.servingruntime.mlserver.modelClassPlaceholder
+    description: 'Placeholder for the MLServer model class'
+    type: string
+    required: true
+    label: 'MLServer Model Class Placeholder'
+    group: Config
+  - variable: config.servingruntime.sklearnserver.image
+    description: 'Image for the SKLearnServer serving runtime'
+    type: string
+    required: true
+    label: 'SKLearnServer Image'
+    group: Config
+  - variable: config.servingruntime.sklearnserver.tag
+    description: 'Tag for the SKLearnServer serving runtime image'
+    type: string
+    required: true
+    label: 'SKLearnServer Tag'
+    group: Config
+  - variable: config.servingruntime.xgbserver.image
+    description: 'Image for the XGBServer serving runtime'
+    type: string
+    required: true
+    label: 'XGBServer Image'
+    group: Config
+  - variable: config.servingruntime.xgbserver.tag
+    description: 'Tag for the XGBServer serving runtime image'
+    type: string
+    required: true
+    label: 'XGBServer Tag'
+    group: Config
+  - variable: config.servingruntime.tritonserver.image
+    description: 'Image for the TritonServer serving runtime'
+    type: string
+    required: true
+    label: 'TritonServer Image'
+    group: Config
+  - variable: config.servingruntime.tritonserver.tag
+    description: 'Tag for the TritonServer serving runtime image'
+    type: string
+    required: true
+    label: 'TritonServer Tag'
+    group: Config
+  - variable: config.servingruntime.pmmlserver.image
+    description: 'Image for the PMMLServer serving runtime'
+    type: string
+    required: true
+    label: 'PMMLServer Image'
+    group: Config
+  - variable: config.servingruntime.pmmlserver.tag
+    description: 'Tag for the PMMLServer serving runtime image'
+    type: string
+    required: true
+    label: 'PMMLServer Tag'
+    group: Config
+  - variable: config.servingruntime.paddleserver.image
+    description: 'Image for the PaddleServer serving runtime'
+    type: string
+    required: true
+    label: 'PaddleServer Image'
+    group: Config
+  - variable: config.servingruntime.paddleserver.tag
+    description: 'Tag for the PaddleServer serving runtime image'
+    type: string
+    required: true
+    label: 'PaddleServer Tag'
+    group: Config
+  - variable: config.servingruntime.lgbserver.image
+    description: 'Image for the LGBServer serving runtime'
+    type: string
+    required: true
+    label: 'LGBServer Image'
+    group: Config
+  - variable: config.servingruntime.lgbserver.tag
+    description: 'Tag for the LGBServer serving runtime image'
+    type: string
+    required: true
+    label: 'LGBServer Tag'
+    group: Config
+  - variable: config.servingruntime.torchserve.image
+    description: 'Image for the TorchServe serving runtime'
+    type: string
+    required: true
+    label: 'TorchServe Image'
+    group: Config
+  - variable: config.servingruntime.torchserve.tag
+    description: 'Tag for the TorchServe serving runtime image'
+    type: string
+    required: true
+    label: 'TorchServe Tag'
+    group: Config
+  - variable: config.servingruntime.torchserve.serviceEnvelopePlaceholder
+    description: 'Placeholder for the TorchServe service envelope'
+    type: string
+    required: true
+    label: 'TorchServe Service Envelope Placeholder'
+    group: Config
+  - variable: config.servingruntime.alibi.image
+    description: 'Image for the Alibi serving runtime'
+    type: string
+    required: true
+    label: 'Alibi Image'
+    group: Config
+  - variable: config.servingruntime.alibi.defaultVersion
+    description: 'Default version for the Alibi serving runtime'
+    type: string
+    required: true
+    label: 'Alibi Default Version'
+    group: Config
+  - variable: config.servingruntime.art.image
+    description: 'Image for the ART serving runtime'
+    type: string
+    required: true
+    label: 'ART Image'
+    group: Config
+  - variable: config.servingruntime.art.defaultVersion
+    description: 'Default version for the ART serving runtime'
+    type: string
+    required: true
+    label: 'ART Default Version'
+    group: Config
+  - variable: config.servingruntime.aix.image
+    description: 'Image for the AIX serving runtime'
+    type: string
+    required: true
+    label: 'AIX Image'
+    group: Config
+  - variable: config.servingruntime.aix.defaultVersion
+    description: 'Default version for the AIX serving runtime'
+    type: string
+    required: true
+    label: 'AIX Default Version'
+    group: Config
+  - variable: config.certManager.enabled
+    description: 'Enable or disable the certificate manager'
+    type: boolean
+    required: true
+    label: 'Cert Manager Enabled'
+    group: Config
+
+
+  # images
+  - variable: images.agent.repository
+    description: 'Repository for the agent image'
+    type: string
+    required: true
+    label: 'Agent Repository'
+    group: Images
+  - variable: images.agent.tag
+    description: 'Tag for the agent image'
+    type: string
+    required: true
+    label: 'Agent Tag'
+    group: Images
+  - variable: images.storageInitializer.repository
+    description: 'Repository for the storage initializer image'
+    type: string
+    required: true
+    label: 'Storage Initializer Repository'
+    group: Images
+  - variable: images.storageInitializer.tag
+    description: 'Tag for the storage initializer image'
+    type: string
+    required: true
+    label: 'Storage Initializer Tag'
+    group: Images
+
+  # networking
+  - variable: networking.serviceType
+    description: 'Type of service to use for networking'
+    type: enum
+    options:
+      - LoadBalancer
+      - NodePort
+    required: true
+    label: 'Service Type'
+    group: Networking
+
+  # persistence
+  - variable: persistence.enabled
+    description: 'Enable or disable persistence'
+    type: boolean
+    required: true
+    label: 'Persistence Enabled'
+    group: Persistence
+  - variable: persistence.storageClass
+    description: 'Storage class to use for persistence'
+    type: string
+    required: true
+    label: 'Storage Class'
+    group: Persistence
+  - variable: persistence.size
+    description: 'Size of the persistent storage'
+    type: string
+    required: true
+    label: 'Persistence Size'
+    group: Persistence
+  - variable: persistence.kanister.enabled
+    description: 'Enable or disable Kanister for backup and restore'
+    type: boolean
+    required: true
+    label: 'Kanister Enabled'
+    group: Persistence
+  - variable: persistence.kanister.schedule
+    description: 'Cron schedule for Kanister backups'
+    type: string
+    show_if: persistence.kanister.enabled=true
+    required: false
+    label: 'Kanister Schedule'
+    group: Persistence
+
+  # ingress
+  - variable: ingress.kserve.enabled
+    description: 'Enable or disable KServe ingress'
+    type: boolean
+    required: true
+    label: 'KServe Ingress Enabled'
+    group: Ingress
+  - variable: ingress.kserve.certificate
+    description: 'Certificate to use for KServe ingress if TLS is enabled'
+    type: string
+    show_if: ingress.kserve.enabled=true
+    required: false
+    label: 'KServe Certificate'
+    group: Ingress
+  - variable: ingress.kserve.hostname
+    description: 'Hostname for KServe ingress'
+    type: string
+    show_if: ingress.kserve.enabled=true
+    required: false
+    label: 'KServe Hostname'
+    group: Ingress
+  - variable: ingress.kserve.tls
+    description: 'Enable TLS for KServe ingress'
+    type: boolean
+    show_if: ingress.kserve.enabled=true
+    required: false
+    label: 'KServe TLS'
+    group: Ingress
+  - variable: ingress.kserve.issuer.name
+    description: 'Name of the issuer for KServe ingress, used when TLS is enabled'
+    type: string
+    show_if: ingress.kserve.enabled=true
+    required: false
+    label: 'KServe Issuer Name'
+    group: Ingress
