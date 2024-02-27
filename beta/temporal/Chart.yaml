@@ -1,0 +1,37 @@
+apiVersion: v1
+name: temporal
+home: https://temporal.io
+icon: https://temporal.io/images/logos/logo-temporal-with-copy-white-text.svg
+version: 0.28.2
+appVersion: 1.22.0
+description: 'Distributed engine for executing asynchronous business logic'
+keywords:
+  - workflow
+  - temporal
+  - orchestration
+
+dependencies:
+  - name: cassandra
+    version: "0.14.3"
+    repository: https://charts.helm.sh/incubator
+    enabled: false
+    condition: cassandra.enabled
+  - name: prometheus
+    repository: https://prometheus-community.github.io/helm-charts
+    version: 15.1.3
+    condition: prometheus.enabled
+  - name: elasticsearch
+    repository: https://helm.elastic.co
+    version: 7.17.3
+    condition: elasticsearch.enabled
+  - name: grafana
+    repository: https://grafana.github.io/helm-charts
+    version: 5.0.10
+    condition: grafana.enabled
+
+
+sources:
+  - https://github.com/tootsuite/erpnext
+maintainers:
+  - name: 'Clay Risser'
+    email: email@clayrisser.com
