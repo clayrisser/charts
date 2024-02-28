@@ -138,3 +138,13 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO oc_a
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO oc_admin22;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON FUNCTIONS TO oc_admin22;
 ```
+
+## Apps
+
+### Passwords
+
+If sharing is stuck, run the following command.
+
+```sh
+su -p www-data -s /bin/sh -c "./occ config:app:delete passwords cron/sharing/time"
+```
