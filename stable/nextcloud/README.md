@@ -25,6 +25,24 @@ su -p www-data -s /bin/sh -c "./occ app:update -vvv --no-interaction --all"
 su -p www-data -s /bin/sh -c "./occ maintenance:repair -vvv"
 ```
 
+### Repair Filesystem
+
+```sh
+su -p www-data -s /bin/sh -c "./occ files:scan --all"
+su -p www-data -s /bin/sh -c "./occ files:cleanup"
+su -p www-data -s /bin/sh -c "./occ trashbin:cleanup --all-users"
+```
+
+### Apps
+
+#### Passwords
+
+If sharing is stuck, run the following command.
+
+```sh
+su -p www-data -s /bin/sh -c "./occ config:app:delete passwords cron/sharing/time"
+```
+
 ## Default Apps
 
 the following apps recommended
@@ -137,14 +155,4 @@ GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO oc_admin22;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO oc_admin22;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO oc_admin22;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON FUNCTIONS TO oc_admin22;
-```
-
-## Apps
-
-### Passwords
-
-If sharing is stuck, run the following command.
-
-```sh
-su -p www-data -s /bin/sh -c "./occ config:app:delete passwords cron/sharing/time"
 ```
