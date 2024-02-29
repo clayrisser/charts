@@ -36,6 +36,18 @@ questions:
     required: true
     label: 'Deployment Mode'
     group: Config
+  - variable: config.controller.gateway.s3.accessKeyIdName
+    description: 'Name of the access key ID for the S3 gateway'
+    type: string
+    required: true
+    label: 'S3 Access Key ID Name'
+    group: Config
+  - variable: config.controller.gateway.s3.secretAccessKeyName
+    description: 'Name of the secret access key for the S3 gateway'
+    type: string
+    required: true
+    label: 'S3 Secret Access Key Name'
+    group: Config
   - variable: config.controller.gateway.domain
     description: 'Domain for the gateway'
     type: string
@@ -419,3 +431,4 @@ questions:
     required: false
     label: 'KServe Issuer Name'
     group: Ingress
+
