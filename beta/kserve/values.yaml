@@ -13,6 +13,9 @@ config:
   controller:
     deploymentMode: "Serverless"
     gateway:
+      s3:
+        accessKeyIdName:
+        secretAccessKeyName:
       domain: example.com
       localGateway:
         gateway: knative-serving/knative-local-gateway

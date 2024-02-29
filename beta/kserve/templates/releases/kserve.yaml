@@ -1,0 +1,112 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kserve
+  labels:
+    app.kubernetes.io/name: {{ template "kserve.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  url: https://community-charts.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ .Release.Name }}-release
+  labels:
+    app.kubernetes.io/name: {{ template "kserve.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: community-charts/kserve
+      version: {{ .Chart.Version | quote }}
+      sourceRef:
+        apiVersion: source.toolkit.fluxcd.io/v1beta1
+        kind: HelmRepository
+        name: kserve
+  values:
+    kserve:
+      agent:
+        image: {{ .Values.images.agent.repository }}:{{ .Values.images.agent.tag }}
+      storage:
+        image: {{ .Values.images.storageInitializer.repository }}:{{ .Values.images.storageInitializer.tag }}
+        s3:
+          accessKeyIdName: {{ .Values.config.controller.gateway.s3.accessKeyIdName }}
+          secretAccessKeyName: {{ .Values.config.controller.gateway.s3.secretAccessKeyName }}
+      controller:
+        deploymentMode: {{ .Values.config.controller.deploymentMode | quote }}
+        gateway:
+          domain: {{ .Values.config.controller.gateway.domain | quote }}
+          localGateway:
+            gateway: {{ .Values.config.controller.gateway.localGateway.gateway | quote }}
+            gatewayService: {{ .Values.config.controller.gateway.localGateway.gatewayService | quote }}
+          ingressGateway:
+            gateway: {{ .Values.config.controller.gateway.ingressGateway.gateway | quote }}
+            gatewayService: {{ .Values.config.controller.gateway.ingressGateway.gatewayService | quote }}
+        image: {{ .Values.config.controller.image }}
+        resources:
+          limits:
+            cpu: {{ .Values.config.controller.resources.limits.cpu | quote }}
+            memory: {{ .Values.config.controller.resources.limits.memory | quote }}
+          requests:
+            cpu: {{ .Values.config.controller.resources.requests.cpu | quote }}
+            memory: {{ .Values.config.controller.resources.requests.memory | quote }}
+      modelmesh:
+        controller:
+          image: {{ .Values.config.modelmesh.controller.image }}
+        config:
+          modelmeshImage: {{ .Values.config.modelmesh.config.modelmeshImage }}
+          modelmeshImageTag: {{ .Values.config.modelmesh.config.modelmeshImageTag }}
+          modelmeshRuntimeAdapterImage: {{ .Values.config.modelmesh.config.modelmeshRuntimeAdapterImage }}
+          modelmeshRuntimeAdapterImageTag: {{ .Values.config.modelmesh.config.modelmeshRuntimeAdapterImageTag }}
+          restProxyImage: {{ .Values.config.modelmesh.config.restProxyImage }}
+          restProxyImageTag: {{ .Values.config.modelmesh.config.restProxyImageTag }}
+          podsPerRuntime: {{ .Values.config.modelmesh.config.podsPerRuntime }}
+      servingruntime:
+        modelNamePlaceholder: '{{ .Values.config.servingruntime.modelNamePlaceholder }}'
+        tensorflow:
+          image: {{ .Values.config.servingruntime.tensorflow.image }}
+          tag: {{ .Values.config.servingruntime.tensorflow.tag }}
+        mlserver:
+          image: {{ .Values.config.servingruntime.mlserver.image }}
+          tag: {{ .Values.config.servingruntime.mlserver.tag }}
+          modelClassPlaceholder: '{{ .Values.config.servingruntime.mlserver.modelClassPlaceholder }}'
+        sklearnserver:
+          image: {{ .Values.config.servingruntime.sklearnserver.image }}
+          tag: {{ .Values.config.servingruntime.sklearnserver.tag }}
+        xgbserver:
+          image: {{ .Values.config.servingruntime.xgbserver.image }}
+          tag: {{ .Values.config.servingruntime.xgbserver.tag }}
+        tritonserver:
+          image: {{ .Values.config.servingruntime.tritonserver.image }}
+          tag: {{ .Values.config.servingruntime.tritonserver.tag }}
+        pmmlserver:
+          image: {{ .Values.config.servingruntime.pmmlserver.image }}
+          tag: {{ .Values.config.servingruntime.pmmlserver.tag }}
+        paddleserver:
+          image: {{ .Values.config.servingruntime.paddleserver.image }}
+          tag: {{ .Values.config.servingruntime.paddleserver.tag }}
+        lgbserver:
+          image: {{ .Values.config.servingruntime.lgbserver.image }}
+          tag: {{ .Values.config.servingruntime.lgbserver.tag }}
+        torchserve:
+          image: {{ .Values.config.servingruntime.torchserve.image }}
+          tag: {{ .Values.config.servingruntime.torchserve.tag }}
+          serviceEnvelopePlaceholder: '{{ .Values.config.servingruntime.torchserve.serviceEnvelopePlaceholder }}'
+        alibi:
+          image: {{ .Values.config.servingruntime.alibi.image }}
+          defaultVersion: {{ .Values.config.servingruntime.alibi.defaultVersion }}
+        art:
+          image: {{ .Values.config.servingruntime.art.image }}
+          defaultVersion: {{ .Values.config.servingruntime.art.defaultVersion }}
+        aix:
+          image: {{ .Values.config.servingruntime.aix.image }}
+          defaultVersion: {{ .Values.config.servingruntime.aix.defaultVersion }}
+    certManager:
+      enabled: {{ .Values.certManager.enabled }}
