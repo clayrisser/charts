@@ -3,8 +3,29 @@ replicaCount: 1
 image:
   repository: temporalio/auto-setup
   tag: latest
-  pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
   port: 7233
+
+config:
+  logLevel: info
+  maxConcurrentWorkflowTaskPollers: 5
+  persistence:
+    enable: true
+    storageClassName: ""
+    storageSize: "1Gi"
+
+images:
+  worker:
+    repository: temporalio/auto-setup
+    tag: latest
+
+networking:
+  ingress:
+    enabled: false
+    host: ""
+    annotations: {}
+    tls:
+      enabled: false
+      secretName: ""

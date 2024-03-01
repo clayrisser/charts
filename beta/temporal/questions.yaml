@@ -1,29 +1,71 @@
-- variable: replicaCount
-  default: 1
-  description: "Number of replicas for the Temporal server"
-  type: int
-  required: true
+- variable: config.logLevel
+  default: "info"
+  description: "Log level for the Temporal server"
+  type: string
+  required: false
 
-- variable: image.repository
+- variable: config.maxConcurrentWorkflowTaskPollers
+  default: 5
+  description: "Maximum number of concurrent workflow task pollers"
+  type: int
+  required: false
+
+- variable: config.persistence.enable
+  default: true
+  description: "Enable persistence for Temporal server"
+  type: bool
+  required: false
+
+- variable: config.persistence.storageClassName
+  default: ""
+  description: "Storage class name for persistence"
+  type: string
+  required: false
+
+- variable: config.persistence.storageSize
+  default: "1Gi"
+  description: "Storage size for persistence"
+  type: string
+  required: false
+
+- variable: images.worker.repository
   default: "temporalio/auto-setup"
-  description: "Temporal server Docker image repository"
+  description: "Temporal worker Docker image repository"
   type: string
   required: true
 
-- variable: image.tag
+- variable: images.worker.tag
   default: "latest"
-  description: "Temporal server Docker image tag"
+  description: "Temporal worker Docker image tag"
   type: string
   required: true
 
-- variable: service.type
-  default: "ClusterIP"
-  description: "Service type for Temporal server"
-  type: string
-  required: true
+- variable: networking.ingress.enabled
+  default: false
+  description: "Enable ingress for Temporal server"
+  type: bool
+  required: false
 
-- variable: service.port
-  default: 7233
-  description: "Service port for Temporal server"
-  type: int
-  required: true
+- variable: networking.ingress.host
+  default: ""
+  description: "Host for ingress"
+  type: string
+  required: false
+
+- variable: networking.ingress.annotations
+  default: {}
+  description: "Annotations for ingress"
+  type: object
+  required: false
+
+- variable: networking.ingress.tls.enabled
+  default: false
+  description: "Enable TLS for ingress"
+  type: bool
+  required: false
+
+- variable: networking.ingress.tls.secretName
+  default: ""
+  description: "TLS secret name for ingress"
+  type: string
+  required: false
