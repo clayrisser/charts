@@ -1,31 +1,96 @@
 replicaCount: 1
 
 image:
-  repository: temporalio/auto-setup
-  tag: latest
-
-service:
-  type: ClusterIP
-  port: 7233
+  repository: temporalio/server
+  tag: 1.22.0
+  pullPolicy: IfNotPresent
 
 config:
-  logLevel: info
-  maxConcurrentWorkflowTaskPollers: 5
-  persistence:
-    enable: true
-    storageClassName: ""
-    storageSize: "1Gi"
+  logLevel: "debug,info"
+  numHistoryShards: 512
 
-images:
-  worker:
-    repository: temporalio/auto-setup
-    tag: latest
+persistence:
+  enabled: false
 
 networking:
-  ingress:
+  serviceType: ClusterIP
+
+ingress:
+  temporal:
     enabled: false
-    host: ""
-    annotations: {}
-    tls:
-      enabled: false
-      secretName: ""
+
+server:
+  replicaCount: 1
+
+frontend:
+  replicaCount: 3
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+history:
+  replicaCount: 6
+  autoscaling:
+    enabled: true
+    minReplicas: 6
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+matching:
+  replicaCount: 6
+  autoscaling:
+    enabled: true
+    minReplicas: 6
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+worker:
+  replicaCount: 1
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+admintools:
+  enabled: true
+  replicaCount: 1
+
+web:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: temporalio/ui
+    tag: 2.19.0
+    pullPolicy: IfNotPresent
+
+schema:
+  setup:
+    enabled: true
+  update:
+    enabled: true
+
+elasticsearch:
+  enabled: true
+  replicas: 3
+
+prometheus:
+  enabled: true
+
+grafana:
+  enabled: true
+  replicas: 1
+
+cassandra:
+  enabled: true
+  persistence:
+    enabled: false
+
+mysql:
+  enabled: false
