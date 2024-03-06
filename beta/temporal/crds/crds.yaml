@@ -1,0 +1,29 @@
+apiVersion: temporal.io/v1beta1
+kind: TemporalCluster
+metadata:
+  name: prod
+spec:
+  jobTtlSecondsAfterFinished: 300
+  numHistoryShards: 512
+  persistence:
+    defaultStore:
+      mysql:
+        host: ''
+        port: 3306
+        database: temporal
+        username: temporal
+        passwordSecretRef:
+          name: ''
+          key: ''
+    visibilityStore:
+      mysql:
+        host: ''
+        port: 3306
+        database: temporal_visibility
+        username: temporal
+        passwordSecretRef:
+          name: ''
+          key: ''
+  ui:
+    enabled: true
+  version: 1.20.0
