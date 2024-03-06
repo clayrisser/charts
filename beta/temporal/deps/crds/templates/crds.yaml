@@ -1,0 +1,14 @@
+{{- range .Values.crds }}
+---
+apiVersion: easyolm.rock8s.com/v1alpha1
+kind: CrdRef
+metadata:
+  name: {{ . }}
+  labels:
+    app.kubernetes.io/name: {{ template "temporal-crds.name" $ }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  crd: https://github.com/k8s-operatorhub/community-operators/tree/main/operators/temporal-operator/{{ $.Values.operatorVersion }}/manifests/{{ . }}.yml
+{{- end }}

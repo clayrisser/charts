@@ -1,0 +1,7 @@
+operatorVersion: 0.16.2
+crds:
+  - temporal.io_temporalclusterclients
+  - temporal.io_temporalclusters
+  - temporal.io_temporalnamespaces
+  - temporal.io_temporalworkerprocesses
+

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: temporal-crds
+version: 0.16.2
+annotations:
+  catalog.cattle.io/hidden: 'true'
+  catalog.cattle.io/namespace: kube-system
+  catalog.cattle.io/os: linux
+  catalog.cattle.io/release-name: keycloak-crds
