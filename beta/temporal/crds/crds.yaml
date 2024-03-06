@@ -1,29 +1,17 @@
-apiVersion: temporal.io/v1beta1
-kind: TemporalCluster
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
 metadata:
-  name: prod
+  name: temporalclusters.temporal.io
 spec:
-  jobTtlSecondsAfterFinished: 300
-  numHistoryShards: 512
-  persistence:
-    defaultStore:
-      mysql:
-        host: ''
-        port: 3306
-        database: temporal
-        username: temporal
-        passwordSecretRef:
-          name: ''
-          key: ''
-    visibilityStore:
-      mysql:
-        host: ''
-        port: 3306
-        database: temporal_visibility
-        username: temporal
-        passwordSecretRef:
-          name: ''
-          key: ''
-  ui:
-    enabled: true
-  version: 1.20.0
+  group: temporal.io
+  versions:
+    - name: v1beta1
+      served: true
+      storage: true
+  scope: Namespaced
+  names:
+    plural: temporalclusters
+    singular: temporalcluster
+    kind: TemporalCluster
+    shortNames:
+      - tc
