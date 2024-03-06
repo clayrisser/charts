@@ -1,17 +1,39 @@
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
+{{- range .Values.crds }}
+---
+apiVersion: temporal.io/v1beta1
+kind: TemporalCluster
 metadata:
-  name: temporalclusters.temporal.io
+  name: prod
+  labels:
+    app.kubernetes.io/name: {{ template "temporal-crds.name" $ }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
 spec:
-  group: temporal.io
-  versions:
-    - name: v1beta1
-      served: true
-      storage: true
-  scope: Namespaced
-  names:
-    plural: temporalclusters
-    singular: temporalcluster
-    kind: TemporalCluster
-    shortNames:
-      - tc
+  jobTtlSecondsAfterFinished: 300
+  numHistoryShards: 512
+  persistence:
+    defaultStore:
+      passwordSecretRef:
+        key: PASSWORD
+        name: mysql-password
+      sql:
+        connectAddr: 'mysql.demo.svc.cluster.local:3306'
+        connectProtocol: tcp
+        databaseName: temporal
+        pluginName: mysql
+        user: temporal
+    visibilityStore:
+      passwordSecretRef:
+        key: PASSWORD
+        name: mysql-password
+      sql:
+        connectAddr: 'mysql.demo.svc.cluster.local:3306'
+        connectProtocol: tcp
+        databaseName: temporal_visibility
+        pluginName: mysql
+        user: temporal
+  ui:
+    enabled: true
+  version: 1.20.0
+{{- end }}
