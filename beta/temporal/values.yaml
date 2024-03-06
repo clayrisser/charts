@@ -1,96 +1,169 @@
-replicaCount: 1
-
-image:
-  repository: temporalio/server
-  tag: 1.22.0
-  pullPolicy: IfNotPresent
+images:
+  temporal:
+    repository: temporalio/server
+    tag: latest
+    frontend:
+      repository: temporal/frontend
+      tag: latest
+    backend:
+      repository: temporal/backend
+      tag: latest
+    elasticSearch:
+      repository: docker.elastic.co/elasticsearch/elasticsearch
+      tag: 7.17.3
+    cassandra:
+      repository: cassandra
+      tag: 3.11.3
+    grafana:
+      repository: grafana/grafana
+      tag: 6.7.1
+    prometheus:
+      repository: quay.io/prometheus/prometheus
+      tag: v2.31.1
 
 config:
-  logLevel: "debug,info"
-  numHistoryShards: 512
+  imagePullPolicy: IfNotPresent
+  updateStrategy: Recreate
+  debug: false
+  istio: false
+  frontend:
+    replicas: 1
+    hostname: ''
+    baseUrl: ''
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+  backend:
+    replicas: 1
+    resources:
+      enabled: defaults
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
 
-persistence:
-  enabled: false
+  mysql:
+    enabled: false
+    port: 3306
+    host: ''
+    username: temporal
+    password: temporal
+    database: temporal
 
-networking:
-  serviceType: ClusterIP
+  cassandra:
+    enabled: false
+    port: 9042
+    host: ''
+    keyspace: temporal
+    user: temporal
+    password: temporal
+    replicationFactor: 1
+    consistency:
+      default:
+        consistency: "local_quorum"
+        serialConsistency: "local_serial"
+
+  grafana:
+  enabled: true
+  replicas: 1
+  testFramework:
+    enabled: false
+  rbac:
+    create: false
+    pspEnabled: false
+    namespaced: true
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: "default"
+          orgId: 1
+          folder: ""
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: TemporalMetrics
+          type: prometheus
+          url: http://{{ .Release.Name }}-prometheus-server
+          access: proxy
+          isDefault: true
+  elasticsearch:
+    enabled: true
+    replicas: 3
+    persistence:
+      enabled: false
+    imageTag: 7.17.3
+    host: elasticsearch-master-headless
+    scheme: http
+    port: 9200
+    version: "v7"
+    logLevel: "error"
+    username: ""
+    password: ""
+    visibilityIndex: "temporal_visibility_v1_dev"
+
+  prometheus:
+      timerType: histogram
+
+  admintools:
+  enabled: true
+  image:
+    repository: temporalio/admin-tools
+    tag: 1.22.0
+    pullPolicy: IfNotPresent
+
+# service
+service:
+  temporal:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80
+
 
 ingress:
   temporal:
+    externalDns: true
+    certificate: ''
     enabled: false
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''
 
-server:
-  replicaCount: 1
 
-frontend:
-  replicaCount: 3
-  autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 6
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
-
-history:
-  replicaCount: 6
-  autoscaling:
-    enabled: true
-    minReplicas: 6
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
-
-matching:
-  replicaCount: 6
-  autoscaling:
-    enabled: true
-    minReplicas: 6
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
-
-worker:
-  replicaCount: 1
-  autoscaling:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 3
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
-
-admintools:
+persistence:
+  accessMode: ReadWriteOnce
   enabled: true
-  replicaCount: 1
-
-web:
-  enabled: true
-  replicaCount: 1
-  image:
-    repository: temporalio/ui
-    tag: 2.19.0
-    pullPolicy: IfNotPresent
-
-schema:
-  setup:
-    enabled: true
-  update:
-    enabled: true
-
-elasticsearch:
-  enabled: true
-  replicas: 3
-
-prometheus:
-  enabled: true
-
-grafana:
-  enabled: true
-  replicas: 1
-
-cassandra:
-  enabled: true
-  persistence:
+  storageClass: ''
+  existingClaim:
+    temporal: ''
+  size:
+    temporal: 1Gi
+  velero:
     enabled: false
+    restic: true
+    schedule: '@midnight'
+    ttl: 2160h0m00s
 
-mysql:
-  enabled: false
+
+
+
+
+
+

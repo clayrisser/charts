@@ -1,15 +1,14 @@
 apiVersion: v1
 name: temporal
 home: https://temporal.io
-icon: https://temporal.io/images/logos/logo-temporal-with-copy-white-text.svg
+icon: https://artifacthub.io/static/media/placeholder_pkg_helm.png
 version: 0.28.2
 appVersion: 1.22.0
-description: 'Distributed engine for executing asynchronous business logic'
+description: 'Temporal is a distributed, scalable, durable, and highly available orchestration engine to execute asynchronous long-running business logic in a scalable and resilient way.'
 keywords:
   - workflow
   - temporal
   - orchestration
-
 
 sources:
   - https://github.com/temporalio/temporal

@@ -1,71 +1,692 @@
-- variable: config.logLevel
-  default: "info"
-  description: "Log level for the Temporal server"
-  type: string
-  required: false
+categories:
+  - Server
+questions:
 
-- variable: config.maxConcurrentWorkflowTaskPollers
-  default: 5
-  description: "Maximum number of concurrent workflow task pollers"
-  type: int
-  required: false
+  # Config
+  - variable: config.imagePullPolicy
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    description: ''
+    type: enum
+    options:
+      - Recreate
+      - RollingUpdate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.debug
+    description: ''
+    type: boolean
+    required: true
+    label: debug
+    group: Config
+  - variable: config.istio
+    description: ''
+    type: boolean
+    required: true
+    label: istio
+    group: Config
+  - variable: config.backend.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Backend
+  - variable: config.backend.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Backend
+    subquestions:
+      - variable: config.backend.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.backend.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.backend.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.backend.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+  - variable: config.frontend.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Frontend
+  - variable: config.frontend.resources.enabled
+    description: ''
+    type: enum
+    options:
+      - defaults
+      - custom
+      - 'false'
+    required: true
+    label: 'resources enabled'
+    show_subquestion_if: custom
+    group: Frontend
+    subquestions:
+      - variable: config.frontend.resources.requests.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests cpu'
+      - variable: config.frontend.resources.requests.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources requests memory'
+      - variable: config.frontend.resources.limits.cpu
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits cpu'
+      - variable: config.frontend.resources.limits.memory
+        description: ''
+        type: string
+        required: true
+        label: 'resources limits memory'
+  - variable: config.mysql.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: mysql
+    group: Database
+  - variable: config.cassandra.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: cassandra
+    group: Database
+  - variable: config.grafana.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: grafana
+    group: Monitoring
+  - variable: config.grafana.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Monitoring
+  - variable: config.rbac.create
+    description: ''
+    type: boolean
+    required: true
+    label: rbac
+    group: Security
+  - variable: config.ingress.temporal.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: ingress
+    group: Ingress
+  - variable: config.persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: persistence
+    group: Storage
+  - variable: config.persistence.storageClass
+    description: ''
+    type: string
+    required: true
+    label: 'storage class'
+    group: Storage
+  - variable: config.persistence.size.temporal
+    description: ''
+    type: string
+    required: true
+    label: 'storage size'
+    group: Storage
+  - variable: config.persistence.velero.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: velero
+    group: Storage
+  - variable: config.prometheus.timerType
+    description: ''
+    type: string
+    required: true
+    label: 'timer type'
+    group: Monitoring
+  - variable: config.service.temporal.type
+    description: ''
+    type: string
+    required: true
+    label: 'service type'
+    group: Service
+  - variable: config.service.temporal.externalTrafficPolicy
+    description: ''
+    type: string
+    required: true
+    label: 'external traffic policy'
+    group: Service
+  - variable: config.service.temporal.nodePorts.http
+    description: ''
+    type: int
+    required: true
+    label: 'node port'
+    group: Service
+  - variable: config.ingress.temporal.hostname
+    description: ''
+    type: string
+    required: true
+    label: hostname
+    group: Ingress
+  - variable: config.ingress.temporal.tls
+    description: ''
+    type: boolean
+    required: true
+    label: tls
+    group: Ingress
+  - variable: config.ingress.temporal.issuer.name
+    description: ''
+    type: string
+    required: true
+    label: issuer
+    group: Ingress
+  - variable: config.ingress.temporal.certificate
+    description: ''
+    type: string
+    required: true
+    label: certificate
+    group: Ingress
+  - variable: config.elasticsearch.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: elasticsearch
+    group: Database
+  - variable: config.elasticsearch.replicas
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    group: Database
+  - variable: config.elasticsearch.persistence.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: 'persistence enabled'
+    group: Database
+  - variable: config.elasticsearch.imageTag
+    description: ''
+    type: string
+    required: true
+    label: 'image tag'
+    group: Database
+  - variable: config.elasticsearch.host
+    description: ''
+    type: string
+    required: true
+    label: host
+    group: Database
+  - variable: config.elasticsearch.scheme
+    description: ''
+    type: string
+    required: true
+    label: scheme
+    group: Database
+  - variable: config.elasticsearch.port
+    description: ''
+    type: int
+    required: true
+    label: port
+    group: Database
+  - variable: config.elasticsearch.version
+    description: ''
+    type: string
+    required: true
+    label: version
+    group: Database
+  - variable: config.elasticsearch.logLevel
+    description: ''
+    type: string
+    required: true
+    label: 'log level'
+    group: Database
+  - variable: config.elasticsearch.username
+    description: ''
+    type: string
+    required: true
+    label: username
+    group: Database
+  - variable: config.elasticsearch.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Database
+  - variable: config.elasticsearch.visibilityIndex
+    description: ''
+    type: string
+    required: true
+    label: 'visibility index'
+    group: Database
+  - variable: config.cassandra.port
+    description: ''
+    type: int
+    required: true
+    label: port
+    group: Database
+  - variable: config.cassandra.host
+    description: ''
+    type: string
+    required: true
+    label: host
+    group: Database
+  - variable: config.cassandra.keyspace
+    description: ''
+    type: string
+    required: true
+    label: keyspace
+    group: Database
+  - variable: config.cassandra.user
+    description: ''
+    type: string
+    required: true
+    label: user
+    group: Database
+  - variable: config.cassandra.password
+    description: ''
+    type: password
+    required: true
+    label: password
+    group: Database
+  - variable: config.cassandra.replicationFactor
+    description: ''
+    type: int
+    required: true
+    label: 'replication factor'
+    group: Database
+  - variable: config.cassandra.consistency.default.consistency
+    description: ''
+    type: string
+    required: true
+    label: consistency
+    group: Database
+  - variable: config.cassandra.consistency.default.serialConsistency
+    description: ''
+    type: string
+    required: true
+    label: 'serial consistency'
+    group: Database
+  - variable: config.grafana.dashboardProviders.dashboardproviders.yaml.apiVersion
+    description: ''
+    type: int
+    required: true
+    label: 'api version'
+    group: Monitoring
+  - variable: config.grafana.dashboardProviders.dashboardproviders.yaml.providers.name
+    description: ''
+    type: string
+    required: true
+    label: name
+    group: Monitoring
+  - variable: config.grafana.dashboardProviders.dashboardproviders.yaml.providers.orgId
+    description: ''
+    type: int
+    required: true
+    label: 'org id'
+    group: Monitoring
+  - variable: config.grafana.dashboardProviders.dashboardproviders.yaml.providers.folder
+    description: ''
+    type: string
+    required: true
+    label: folder
+    group: Monitoring
+  - variable: config.grafana.dashboardProviders.dashboardproviders.yaml.providers.type
+    description: ''
+    type: string
+    required: true
+    label: type
+    group: Monitoring
+  - variable: config.grafana.dashboardProviders.dashboardproviders.yaml.providers.disableDeletion
+    description: ''
+    type: boolean
+    required: true
+    label: 'disable deletion'
+    group: Monitoring
+  - variable: config.grafana.dashboardProviders.dashboardproviders.yaml.providers.editable
+    description: ''
+    type: boolean
+    required: true
+    label: editable
+    group: Monitoring
+  - variable: config.grafana.dashboardProviders.dashboardproviders.yaml.providers.options.path
+    description: ''
+    type: string
+    required: true
+    label: path
+    group: Monitoring
+  - variable: config.grafana.datasources.datasources.yaml.apiVersion
+    description: ''
+    type: int
+    required: true
+    label: 'api version'
+    group: Monitoring
+  - variable: config.grafana.datasources.datasources.yaml.datasources.name
+    description: ''
+    type: string
+    required: true
+    label: name
+    group: Monitoring
+  - variable: config.grafana.datasources.datasources.yaml.datasources.type
+    description: ''
+    type: string
+    required: true
+    label: type
+    group: Monitoring
+  - variable: config.grafana.datasources.datasources.yaml.datasources.url
+    description: ''
+    type: string
+    required: true
+    label: url
+    group: Monitoring
+  - variable: config.grafana.datasources.datasources.yaml.datasources.access
+    description: ''
+    type: string
+    required: true
+    label: access
+    group: Monitoring
+  - variable: config.grafana.datasources.datasources.yaml.datasources.isDefault
+    description: ''
+    type: boolean
+    required: true
+    label: 'is default'
+    group: Monitoring
+  - variable: config.prometheus.timerType
+    description: ''
+    type: string
+    required: true
+    label: 'timer type'
+    group: Monitoring
+  - variable: config.admintools.enabled
+    description: ''
+    type: boolean
+    required: true
+    label: admintools
+    group: Tools
 
-- variable: config.persistence.enable
-  default: true
-  description: "Enable persistence for Temporal server"
-  type: bool
-  required: false
 
-- variable: config.persistence.storageClassName
-  default: ""
-  description: "Storage class name for persistence"
-  type: string
-  required: false
 
-- variable: config.persistence.storageSize
-  default: "1Gi"
-  description: "Storage size for persistence"
-  type: string
-  required: false
 
-- variable: images.worker.repository
-  default: "temporalio/auto-setup"
-  description: "Temporal worker Docker image repository"
-  type: string
-  required: true
+  # Images
+  - variable: images.temporal.repository
+    description: ''
+    type: string
+    required: true
+    label: 'temporal repository'
+    group: Images
+  - variable: images.temporal.tag
+    description: ''
+    type: string
+    required: true
+    label: 'temporal tag'
+    group: Images
+  - variable: images.temporal.frontend.repository
+    description: ''
+    type: string
+    required: true
+    label: 'frontend repository'
+    group: Images
+  - variable: images.temporal.frontend.tag
+    description: ''
+    type: string
+    required: true
+    label: 'frontend tag'
+    group: Images
+  - variable: images.temporal.backend.repository
+    description: ''
+    type: string
+    required: true
+    label: 'backend repository'
+    group: Images
+  - variable: images.temporal.backend.tag
+    description: ''
+    type: string
+    required: true
+    label: 'backend tag'
+    group: Images
+  - variable: images.temporal.elasticSearch.repository
+    description: ''
+    type: string
+    required: true
+    label: 'elastic search repository'
+    group: Images
+  - variable: images.temporal.elasticSearch.tag
+    description: ''
+    type: string
+    required: true
+    label: 'elastic search tag'
+    group: Images
+  - variable: images.temporal.cassandra.repository
+    description: ''
+    type: string
+    required: true
+    label: 'cassandra repository'
+    group: Images
+  - variable: images.temporal.cassandra.tag
+    description: ''
+    type: string
+    required: true
+    label: 'cassandra tag'
+    group: Images
+  - variable: images.temporal.grafana.repository
+    description: ''
+    type: string
+    required: true
+    label: 'grafana repository'
+    group: Images
+  - variable: images.temporal.grafana.tag
+    description: ''
+    type: string
+    required: true
+    label: 'grafana tag'
+    group: Images
+  - variable: images.temporal.prometheus.repository
+    description: ''
+    type: string
+    required: true
+    label: 'prometheus repository'
+    group: Images
+  - variable: images.temporal.prometheus.tag
+    description: ''
+    type: string
+    required: true
+    label: 'prometheus tag'
+    group: Images
 
-- variable: images.worker.tag
-  default: "latest"
-  description: "Temporal worker Docker image tag"
-  type: string
-  required: true
 
-- variable: networking.ingress.enabled
-  default: false
-  description: "Enable ingress for Temporal server"
-  type: bool
-  required: false
+## this is my values file
+# images:
+#   temporal:
+#     repository: temporalio/server
+#     tag: latest
+#     frontend:
+#       repository: temporal/frontend
+#       tag: latest
+#     backend:
+#       repository: temporal/backend
+#       tag: latest
+#     elasticSearch:
+#       repository: docker.elastic.co/elasticsearch/elasticsearch
+#       tag: 7.17.3
+#     cassandra:
+#       repository: cassandra
+#       tag: 3.11.3
+#     grafana:
+#       repository: grafana/grafana
+#       tag: 6.7.1
+#     prometheus:
+#       repository: quay.io/prometheus/prometheus
+#       tag: v2.31.1
 
-- variable: networking.ingress.host
-  default: ""
-  description: "Host for ingress"
-  type: string
-  required: false
+# config:
+#   imagePullPolicy: IfNotPresent
+#   updateStrategy: Recreate
+#   debug: false
+#   istio: false
+#   frontend:
+#     replicas: 1
+#     hostname: ''
+#     baseUrl: ''
+#     resources:
+#       enabled: defaults
+#       requests:
+#         cpu: 100m
+#         memory: 128Mi
+#       limits:
+#         cpu: 200m
+#         memory: 512Mi
+#   backend:
+#     replicas: 1
+#     resources:
+#       enabled: defaults
+#       requests:
+#         cpu: 100m
+#         memory: 128Mi
+#       limits:
+#         cpu: 200m
+#         memory: 512Mi
 
-- variable: networking.ingress.annotations
-  default: {}
-  description: "Annotations for ingress"
-  type: object
-  required: false
+#   mysql:
+#     enabled: false
+#     port: 3306
+#     host: ''
+#     username: temporal
+#     password: temporal
+#     database: temporal
 
-- variable: networking.ingress.tls.enabled
-  default: false
-  description: "Enable TLS for ingress"
-  type: bool
-  required: false
+#   cassandra:
+#     enabled: false
+#     port: 9042
+#     host: ''
+#     keyspace: temporal
+#     user: temporal
+#     password: temporal
+#     replicationFactor: 1
+#     consistency:
+#       default:
+#         consistency: "local_quorum"
+#         serialConsistency: "local_serial"
 
-- variable: networking.ingress.tls.secretName
-  default: ""
-  description: "TLS secret name for ingress"
-  type: string
-  required: false
+#   grafana:
+#   enabled: true
+#   replicas: 1
+#   testFramework:
+#     enabled: false
+#   rbac:
+#     create: false
+#     pspEnabled: false
+#     namespaced: true
+#   dashboardProviders:
+#     dashboardproviders.yaml:
+#       apiVersion: 1
+#       providers:
+#         - name: "default"
+#           orgId: 1
+#           folder: ""
+#           type: file
+#           disableDeletion: false
+#           editable: true
+#           options:
+#             path: /var/lib/grafana/dashboards/default
+#   datasources:
+#     datasources.yaml:
+#       apiVersion: 1
+#       datasources:
+#         - name: TemporalMetrics
+#           type: prometheus
+#           url: http://{{ .Release.Name }}-prometheus-server
+#           access: proxy
+#           isDefault: true
+#   elasticsearch:
+#     enabled: true
+#     replicas: 3
+#     persistence:
+#       enabled: false
+#     imageTag: 7.17.3
+#     host: elasticsearch-master-headless
+#     scheme: http
+#     port: 9200
+#     version: "v7"
+#     logLevel: "error"
+#     username: ""
+#     password: ""
+#     visibilityIndex: "temporal_visibility_v1_dev"
+
+#   prometheus:
+#       timerType: histogram
+
+#   admintools:
+#   enabled: true
+#   image:
+#     repository: temporalio/admin-tools
+#     tag: 1.22.0
+#     pullPolicy: IfNotPresent
+
+# # service
+# service:
+#   temporal:
+#     type: ClusterIP
+#     externalTrafficPolicy: Cluster
+#     nodePorts:
+#       http:
+#     lbPorts:
+#       http: 80
+
+
+# ingress:
+#   temporal:
+#     externalDns: true
+#     certificate: ''
+#     enabled: false
+#     hostname: ''
+#     tls: false
+#     issuer:
+#       name: ''
+
+
+# persistence:
+#   accessMode: ReadWriteOnce
+#   enabled: true
+#   storageClass: ''
+#   existingClaim:
+#     temporal: ''
+#   size:
+#     temporal: 1Gi
+#   velero:
+#     enabled: false
+#     restic: true
+#     schedule: '@midnight'
+#     ttl: 2160h0m00s
+
+
+
