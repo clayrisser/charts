@@ -48,5 +48,5 @@ spec:
       volumes:
         - name: sitedir
           persistentVolumeClaim:
-            claimName: reviewboard
+            claimName: temporal
 

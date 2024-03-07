@@ -140,7 +140,7 @@ ingress:
   temporal:
     externalDns: true
     certificate: ''
-    enabled: false
+    enabled: true
     hostname: ''
     tls: false
     issuer:
