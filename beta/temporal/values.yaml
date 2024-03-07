@@ -119,11 +119,11 @@ config:
       timerType: histogram
 
   admintools:
-  enabled: true
-  image:
-    repository: temporalio/admin-tools
-    tag: 1.22.0
-    pullPolicy: IfNotPresent
+    enabled: true
+    image:
+      repository: temporalio/admin-tools
+      tag: 1.22.0
+      pullPolicy: IfNotPresent
 
 # service
 service:

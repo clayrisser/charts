@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.config.frontend.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: temporal
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: temporal
+        app.kubernetes.io/instance: {{ .Release.Name }}
+
+    spec:
+      containers:
+      - name: temporal
+        image: {{ .Values.images.temporal.repository }}:{{ .Values.images.temporal.tag }}
+        imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+        {{- if (and .Values.config.frontend.resources.enabled (not (eq .Values.config.frontend.resources.enabled "false"))) }}
+        resources:
+          requests:
+{{ toYaml .Values.config.frontend.resources.requests | indent 12 }}
+          limits:
+{{ toYaml .Values.config.frontend.resources.limits | indent 12 }}
+        {{- end }}
+      - name: admin-tools
+        image: "{{ .Values.config.admintools.image.repository }}:{{ .Values.config.admintools.image.tag }}"
+        imagePullPolicy: {{ .Values.config.admintools.image.pullPolicy}}
+
+
+        ports:
+          - name: container
+            containerPort: 8080
+        volumeMounts:
+          - name: sitedir
+            mountPath: /site
+
+      volumes:
+        - name: sitedir
+          persistentVolumeClaim:
+            claimName: reviewboard
+
