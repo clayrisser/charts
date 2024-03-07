@@ -36,17 +36,3 @@ spec:
       - name: admin-tools
         image: "{{ .Values.config.admintools.image.repository }}:{{ .Values.config.admintools.image.tag }}"
         imagePullPolicy: {{ .Values.config.admintools.image.pullPolicy}}
-
-
-        ports:
-          - name: container
-            containerPort: 8080
-        volumeMounts:
-          - name: sitedir
-            mountPath: /site
-
-      volumes:
-        - name: sitedir
-          persistentVolumeClaim:
-            claimName: temporal
-
