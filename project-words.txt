@@ -149,6 +149,11 @@ subquestion
 subquestions
 supabase
 taigaio
+temporalclusterclients
+temporalclusters
+temporalio
+temporalnamespaces
+temporalworkerprocesses
 tootsuite
 tvial
 univention

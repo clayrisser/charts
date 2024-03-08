@@ -1,169 +1,70 @@
-images:
+olm:
   temporal:
+    channel: alpha
+    version: 0.16.2
+
+images:
+  temporalServer:
     repository: temporalio/server
-    tag: latest
-    frontend:
-      repository: temporal/frontend
-      tag: latest
-    backend:
-      repository: temporal/backend
-      tag: latest
-    elasticSearch:
-      repository: docker.elastic.co/elasticsearch/elasticsearch
-      tag: 7.17.3
-    cassandra:
-      repository: cassandra
-      tag: 3.11.3
-    grafana:
-      repository: grafana/grafana
-      tag: 6.7.1
-    prometheus:
-      repository: quay.io/prometheus/prometheus
-      tag: v2.31.1
+  temporalAdminTools:
+    repository: temporalio/admin-tools
+  temporalUi:
+    repository: temporalio/ui
 
 config:
   imagePullPolicy: IfNotPresent
   updateStrategy: Recreate
   debug: false
   istio: false
-  frontend:
-    replicas: 1
-    hostname: ''
+  temporalFrontend:
     baseUrl: ''
-    resources:
-      enabled: defaults
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 512Mi
-  backend:
-    replicas: 1
-    resources:
-      enabled: defaults
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 512Mi
-
-  mysql:
-    enabled: false
-    port: 3306
+    hostname: ''
+    resources: {}
+  temporalUi:
+    baseUrl: ''
+    hostname: ''
+    resources: {}
+  temporalHistory: {}
+  temporalWorker: {}
+  temporalMatching: {}
+  postgres:
+    integration: ''
+    defaultDatabase: temporal
+    visibilityDatabase: temporal_visibility
     host: ''
-    username: temporal
-    password: temporal
-    database: temporal
+    password: ''
+    port: 5432
+    username: postgres
+    # url: ''
 
-  cassandra:
-    enabled: false
-    port: 9042
-    host: ''
-    keyspace: temporal
-    user: temporal
-    password: temporal
-    replicationFactor: 1
-    consistency:
-      default:
-        consistency: "local_quorum"
-        serialConsistency: "local_serial"
-
-  grafana:
-  enabled: true
-  replicas: 1
-  testFramework:
-    enabled: false
-  rbac:
-    create: false
-    pspEnabled: false
-    namespaced: true
-  dashboardProviders:
-    dashboardproviders.yaml:
-      apiVersion: 1
-      providers:
-        - name: "default"
-          orgId: 1
-          folder: ""
-          type: file
-          disableDeletion: false
-          editable: true
-          options:
-            path: /var/lib/grafana/dashboards/default
-  datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-        - name: TemporalMetrics
-          type: prometheus
-          url: http://{{ .Release.Name }}-prometheus-server
-          access: proxy
-          isDefault: true
-  elasticsearch:
-    enabled: true
-    replicas: 3
-    persistence:
-      enabled: false
-    imageTag: 7.17.3
-    host: elasticsearch-master-headless
-    scheme: http
-    port: 9200
-    version: "v7"
-    logLevel: "error"
-    username: ""
-    password: ""
-    visibilityIndex: "temporal_visibility_v1_dev"
-
-  prometheus:
-      timerType: histogram
-
-  admintools:
-    enabled: true
-    image:
-      repository: temporalio/admin-tools
-      tag: 1.22.0
-      pullPolicy: IfNotPresent
-
-# service
 service:
-  temporal:
+  temporalFrontend:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      http:
+      http: ''
+    lbPorts:
+      http: 80
+  temporalUi:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
     lbPorts:
       http: 80
 
-
 ingress:
-  temporal:
-    externalDns: true
+  temporalFrontend:
     certificate: ''
-    enabled: true
+    enabled: false
     hostname: ''
     tls: false
     issuer:
       name: ''
-
-
-persistence:
-  accessMode: ReadWriteOnce
-  enabled: true
-  storageClass: ''
-  existingClaim:
-    temporal: ''
-  size:
-    temporal: 1Gi
-  velero:
+  temporalUi:
+    certificate: ''
     enabled: false
-    restic: true
-    schedule: '@midnight'
-    ttl: 2160h0m00s
-
-
-
-
-
-
-
+    hostname: ''
+    tls: false
+    issuer:
+      name: ''

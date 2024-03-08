@@ -1,0 +1,60 @@
+apiVersion: temporal.io/v1beta1
+kind: TemporalCluster
+metadata:
+  name: {{ template "temporal.name" . }}
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "temporal.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  jobTtlSecondsAfterFinished: 300
+  numHistoryShards: 1
+  image: {{ .Values.images.temporalServer.repository | quote }}
+  admintools:
+    enabled: true
+    image: {{ .Values.images.temporalAdminTools.repository | quote }}
+  persistence:
+    defaultStore:
+      passwordSecretRef:
+        key: POSTGRES_PASSWORD
+        name: {{ template "temporal.name" . }}
+      sql:
+        connectAddr: '{{ .Values.config.postgres.host }}:{{ .Values.config.postgres.port }}'
+        connectProtocol: tcp
+        databaseName: '{{ .Values.config.postgres.defaultDatabase }}'
+        pluginName: postgres
+        user: '{{ .Values.config.postgres.username }}'
+    visibilityStore:
+      passwordSecretRef:
+        key: POSTGRES_PASSWORD
+        name: {{ template "temporal.name" . }}
+      sql:
+        connectAddr: '{{ .Values.config.postgres.host }}:{{ .Values.config.postgres.port }}'
+        connectProtocol: tcp
+        databaseName: '{{ .Values.config.postgres.visibilityDatabase }}'
+        pluginName: postgres
+        user: '{{ .Values.config.postgres.username }}'
+  ui:
+    enabled: true
+    image: {{ .Values.images.temporalUi.repository | quote }}
+    ingress:
+    replicas:
+    resources:
+    service:
+  version: {{ .Chart.AppVersion | quote }}
+---
+apiVersion: temporal.io/v1beta1
+kind: TemporalNamespace
+metadata:
+  name: default
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "temporal.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  clusterRef:
+    name: {{ template "temporal.name" . }}
+  description: default namespace
+  retentionPeriod: 168h

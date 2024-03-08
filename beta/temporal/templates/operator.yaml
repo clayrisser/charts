@@ -1,0 +1,15 @@
+apiVersion: easyolm.rock8s.com/v1alpha1
+kind: ManualSubscription
+metadata:
+  name: {{ template "temporal.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "temporal.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  channel: {{ .Values.olm.temporal.channel }}
+  name: temporal-operator
+  source: operatorhubio-catalog
+  sourceNamespace: olm
+  startingCSV: temporal-operator.v{{ .Values.olm.temporal.version }}

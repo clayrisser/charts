@@ -98,3 +98,8 @@ $(CHARTS):
 	@$(MAKE) -C $@ -s prepack
 	@$(HELM) lint $@
 #	-@$(MAKE) -s debug CHART="$@"
+
+CHARTS_INSTALL := $(addsuffix /install,$(CHARTS))
+.PHONY: $(CHARTS_INSTALL)
+$(CHARTS_INSTALL):
+	@$(MAKE) -C $(@D) -s $(@F) ARGS=$(ARGS)

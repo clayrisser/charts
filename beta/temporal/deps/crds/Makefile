@@ -10,3 +10,6 @@ prepack: | \
 	$(PATCHES) \
 	patch-apply
 
+.PHONY: install
+install:
+	@helm upgrade --install crds ./ -n kube-system --debug $(ARGS)

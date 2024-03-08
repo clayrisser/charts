@@ -1,0 +1,58 @@
+{{- if .Values.config.postgres.integration }}
+{{- $name := (split "." .Values.config.postgres.integration)._1 | default "postgres" }}
+{{- $namespace := (split "." (printf "%s." .Values.config.postgres.integration))._0 }}
+apiVersion: integration.rock8s.com/v1beta1
+kind: Plug
+metadata:
+  name: postgres-visibility
+  labels:
+    app.kubernetes.io/name: {{ template "temporal.name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  epoch: {{ now | unixEpoch | quote }}
+  socket:
+    name: {{ $name }}
+    namespace: {{ $namespace }}
+  config:
+    database: {{ .Values.config.postgres.visibilityDatabase | quote }}
+    create: '1'
+    preserve: '1'
+  resources:
+    - when: [coupled, updated]
+      do: recreate
+      stringTemplate: |
+        apiVersion: kyverno.io/v1
+        kind: Policy
+        metadata:
+          name: postgres-visibility-coupled-or-updated
+          namespace: {{ .Release.Namespace }}
+        spec:
+          background: true
+          mutateExistingOnPolicyUpdate: true
+          schemaValidation: false
+          rules:
+            - name: temporal
+              match:
+                resources:
+                  kinds:
+                    - temporal.io/*/TemporalCluster
+                  names:
+                    - {{ template "temporal.name" . }}
+              mutate:
+                targets:
+                  - apiVersion: temporal.io/v1beta1
+                    kind: TemporalCluster
+                    name: {{ template "temporal.name" . }}
+                patchesJson6902: |
+                  - op: replace
+                    path: /spec/persistence/visibilityStore/sql/databaseName
+                    value: {% .plugConfig.database | quote %}
+                  - op: replace
+                    path: /spec/persistence/visibilityStore/sql/connectAddr
+                    value: {% (printf "%s:%s" .socketConfig.hostname .socketConfig.port) | quote %}
+                  - op: replace
+                    path: /spec/persistence/visibilityStore/sql/user
+                    value: {% .socketConfig.username | quote %}
+{{- end }}

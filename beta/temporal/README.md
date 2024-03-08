@@ -1,3 +1,3 @@
 # temporal
 
-> Distributed engine for executing asynchronous business logic
+> distributed engine for executing asynchronous business logic
